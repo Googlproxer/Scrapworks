@@ -1,0 +1,38 @@
+flowchart TB
+    subgraph Presentation[Presentation]
+        UI[Angular panels and menus]
+        Scene[Phaser world scene]
+        Facade[Game facade]
+        Views[Published read-only views]
+    end
+
+    subgraph Gameplay[Gameplay]
+        Loop[Fixed-step loop]
+        Sim[TypeScript simulation and gameplay systems]
+        State[(Active game state)]
+        Content[Recipe and technology definitions]
+    end
+
+    subgraph Persistence[Persistence]
+        Saves[Save service]
+        Codec[Snapshot codec: validation and migrations]
+        Repository[SaveRepository interface]
+        Local[(IndexedDB through Dexie)]
+        Files[JSON file backups]
+    end
+
+    UI -->|player commands| Facade
+    Scene -->|movement and world commands| Facade
+    Facade -->|queue commands| Sim
+    Loop -->|fixed simulation steps| Sim
+    Content -->|rules and costs| Sim
+    Sim <-->|read and update| State
+    Sim -->|publish completed state| Views
+    Views -->|Angular signals| UI
+    Views -->|render data| Scene
+    UI -->|save, load, import, export| Saves
+    Saves <-->|capture snapshot or restore world| Sim
+    Saves -->|encode or validate and migrate| Codec
+    Saves <-->|versioned snapshots| Repository
+    Repository <-->|transactional slot storage| Local
+    Saves <-->|import and export| Files

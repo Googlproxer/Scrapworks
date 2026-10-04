@@ -1,0 +1,19 @@
+flowchart LR
+    Angular[Angular components]
+    Phaser[Phaser scene and input adapter]
+    IndexedDb[IndexedDB adapter]
+    Application[Facade, loop and save orchestration]
+    Simulation[Simulation and gameplay modules]
+    Content[Content definitions]
+    Model[Plain state, command and snapshot types]
+    Port[SaveRepository interface]
+
+    Angular -->|uses| Application
+    Phaser -->|uses| Application
+    Application -->|runs| Simulation
+    Application -->|uses| Port
+    IndexedDb -->|implements| Port
+    Port -->|uses| Model
+    Simulation -->|uses| Content
+    Simulation -->|uses| Model
+    Content -->|uses| Model

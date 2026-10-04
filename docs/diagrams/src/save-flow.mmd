@@ -1,0 +1,17 @@
+flowchart TB
+    Request[Manual save or autosave request]
+    Queue[Serialize operation for its bound slot and world]
+    Capture[Capture detached completed-step state]
+    Encode[Encode versioned snapshot and metadata]
+    Write[Write snapshot, metadata and revision transaction]
+    Commit{Transaction committed?}
+    Success[Update last saved status and report success]
+    Failure[Keep last successful revision and report failure]
+
+    Request -->|enqueue| Queue
+    Queue -->|safe boundary| Capture
+    Capture -->|plain data| Encode
+    Encode -->|asynchronous storage| Write
+    Write -->|result| Commit
+    Commit -->|yes| Success
+    Commit -->|no| Failure

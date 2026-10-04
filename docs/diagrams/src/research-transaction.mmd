@@ -1,0 +1,23 @@
+flowchart TB
+    Command[Research command executes]
+    Known{Technology ID is valid?}
+    Unlocked{Already unlocked?}
+    Prerequisites{Prerequisite technologies unlocked?}
+    Totals{Cumulative production milestones met?}
+    Stock{Player inventory can pay every cost?}
+    Commit[Deduct costs and grant unlock together; preserve totals]
+    Publish[Publish new availability and unlock feedback]
+    Reject[Reject with reason; leave stock and unlocks unchanged]
+
+    Command -->|validate| Known
+    Known -->|yes| Unlocked
+    Known -->|no| Reject
+    Unlocked -->|yes| Reject
+    Unlocked -->|no| Prerequisites
+    Prerequisites -->|yes| Totals
+    Prerequisites -->|no| Reject
+    Totals -->|yes| Stock
+    Totals -->|no| Reject
+    Stock -->|yes| Commit
+    Stock -->|no| Reject
+    Commit -->|completed command| Publish

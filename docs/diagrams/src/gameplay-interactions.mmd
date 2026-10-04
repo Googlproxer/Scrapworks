@@ -1,0 +1,22 @@
+flowchart TB
+    Player[Player movement and manual salvage]
+    Production[Crafting and machine production]
+    Research[Research: check milestones and spend stock]
+    Construction[Construction]
+    Transport[Item and water transport]
+    Power[Power generation and storage]
+    Environment[Pollution and restoration]
+
+    Player -->|collected scrap in inventory| Production
+    Production -->|completed output and cumulative totals| Research
+    Research -->|unlocked recipes| Production
+    Research -->|unlocked equipment| Construction
+    Production -->|crafted equipment in inventory| Construction
+    Construction -->|placed production machines| Production
+    Construction -->|transport connections| Transport
+    Construction -->|power machines and connections| Power
+    Transport -->|machine input buffers| Production
+    Production -->|machine output buffers| Transport
+    Power -->|available energy| Production
+    Power -->|coal emissions| Environment
+    Transport -->|purified water supply| Environment

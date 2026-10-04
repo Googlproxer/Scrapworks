@@ -1,0 +1,39 @@
+<div class="container">
+  <!-- header-->
+  <div class="header">
+    <h1>Save/Load Component</h1>
+    <button class="button" (click)="close()">X</button>
+  </div>
+  <!-- content -->
+  <div class="content">
+    <div class="save-load-section">
+      <!-- table with rows containing:
+        save button | save name | load button | delete button -->
+      <table>
+        <thead>
+          <tr>
+            <th>Save Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (slot of slots(); track $index) {
+            <tr>
+              <td>{{ slot.name }} - {{ slot.value }}</td>
+              <td>
+                <button class="button" (click)="save(slot.id)">Save</button>
+                <button class="button" (click)="load(slot.id)">Load</button>
+                <button class="button" (click)="delete(slot.id)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="footer-buttons">
+    <!-- import/export buttons -->
+    <button class="button" (click)="export()">Export Data</button>
+    <button class="button" (click)="import()">Import Data</button>
+  </div>
+</div>

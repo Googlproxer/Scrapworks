@@ -1,0 +1,78 @@
+classDiagram
+    direction TB
+
+    class GameFacade {
+        +send(command)
+        +readView()
+    }
+    class GameLoop {
+        +advance(elapsedTime)
+        +pause()
+        +resume()
+    }
+    class Simulation {
+        +enqueue(command)
+        +step(deltaTime)
+        +captureSnapshot()
+        +replaceWorld(validatedWorld)
+    }
+    class GameState {
+        <<data>>
+        player
+        world
+        productionTotals
+        researchUnlocks
+        simulationTime
+    }
+    class GameSystem {
+        <<interface>>
+        +applyCommand(context, command)
+        +tick(context, deltaTime)
+    }
+    class ContentCatalog {
+        <<data>>
+        recipes
+        technologies
+        machineDefinitions
+    }
+    class SaveService {
+        +save(slotId)
+        +load(slotId)
+        +exportFile(slotId)
+        +importFile(file)
+    }
+    class SaveCodec {
+        +encode(state)
+        +validateAndMigrate(snapshot)
+    }
+    class SaveSnapshot {
+        <<data>>
+        schemaVersion
+        contentVersion
+        savedAt
+        state
+    }
+    class SaveRepository {
+        <<interface>>
+        +list()
+        +save(slotId, snapshot)
+        +load(slotId)
+        +delete(slotId)
+    }
+    class IndexedDbSaveRepository {
+        +transactionalWrites()
+    }
+
+    GameFacade --> Simulation : commands and views
+    GameFacade --> SaveService : save and load actions
+    GameLoop --> Simulation : fixed steps
+    Simulation "1" *-- "1" GameState : owns
+    Simulation "1" o-- "many" GameSystem : runs modules
+    GameSystem ..> GameState : reads and updates
+    GameSystem ..> ContentCatalog : reads definitions
+    SaveService --> Simulation : capture or replace world
+    SaveService --> SaveCodec : encode and validate
+    SaveService --> SaveRepository : storage operations
+    SaveCodec ..> SaveSnapshot : creates and validates
+    SaveRepository ..> SaveSnapshot : stores detached data
+    IndexedDbSaveRepository ..|> SaveRepository : implements

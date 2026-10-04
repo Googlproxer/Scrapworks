@@ -1,32 +1,64 @@
 {
   "name": "scrapworks",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Scrapworks, a Phaser game.",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "dev": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test --watch=false",
+    "test:watch": "ng test --watch",
+    "test:setup": "playwright install chromium --only-shell",
+    "lint": "eslint src --max-warnings 0",
+    "lint:fix": "eslint src --fix",
+    "format": "yarn run lint:fix && prettier --write src",
+    "test:lint": "node --test tools/eslint/*.test.mjs"
   },
-  "private": true,
-  "packageManager": "npm@12.2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/googlproxer/scrapworks.git"
+  },
+  "author": "googlproxer",
+  "license": "MIT",
+  "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
+  "bugs": {
+    "url": "https://github.com/googlproxer/scrapworks/issues"
+  },
+  "homepage": "https://github.com/googlproxer/scrapworks#readme",
+  "keywords": [
+    "phaser",
+    "phaser4",
+    "angular",
+    "Angular"
+  ],
   "dependencies": {
-    "@angular/common": "^22.2.0",
-    "@angular/compiler": "^22.2.0",
-    "@angular/core": "^22.2.0",
-    "@angular/forms": "^22.2.0",
-    "@angular/platform-browser": "^22.2.0",
-    "@angular/router": "^22.2.0",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "@angular/cdk": "^22.2.1",
+    "@angular/common": "^22.2.1",
+    "@angular/compiler": "^22.2.1",
+    "@angular/core": "^22.2.1",
+    "@angular/forms": "^22.2.1",
+    "@angular/platform-browser": "^22.2.1",
+    "@angular/router": "^22.2.1",
+    "dexie": "^4.4.6",
+    "phaser": "4.2.1",
+    "rxjs": "~7.8.2",
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "^22.2.1",
+    "@angular-devkit/build-angular": "^22.2.1",
+    "@angular-eslint/builder": "22.5.0",
     "@angular/cli": "^22.2.1",
-    "@angular/compiler-cli": "^22.2.0",
-    "jsdom": "^30.0.0",
-    "prettier": "^3.8.1",
-    "typescript": "~6.0.2",
-    "vitest": "^5.0.0"
-  }
+    "@angular/compiler-cli": "^22.2.1",
+    "@eslint/js": "^10.0.1",
+    "@vitest/browser-playwright": "^5.0.3",
+    "angular-eslint": "22.5.0",
+    "eslint": "^10.9.1",
+    "eslint-plugin-prettier": "^5.5.6",
+    "playwright": "^1.63.0",
+    "prettier": "^3.9.9",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "8.69.0",
+    "vitest": "^5.0.3"
+  },
+  "packageManager": "yarn@4.18.1"
 }

@@ -1,0 +1,22 @@
+<h1 class="visually-hidden">Scrapworks</h1>
+
+<app-phaser-game />
+
+@if (gameRuntimeService.errorMessage(); as errorMessage) {
+  <div class="centre">
+    <p role="alert">{{ errorMessage }}</p>
+  </div>
+} @else if (gameRuntimeService.currentSceneKey() !== 'Game') {
+  <div class="centre">
+    <div>
+      <button
+        type="button"
+        class="button"
+        [disabled]="!gameRuntimeService.isReady() || gameRuntimeService.currentSceneKey() !== 'MainMenu'"
+        (click)="startGame()"
+      >
+        Play Game!
+      </button>
+    </div>
+  </div>
+}
