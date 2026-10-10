@@ -1,0 +1,50 @@
+{
+  "tool": "built-in image_gen",
+  "generatedDate": "2026-10-04",
+  "timezone": "Australia/Sydney",
+  "prompt": "terrain-prompt.txt",
+  "transparentBackground": false,
+  "source": "terrain-source-v1.png",
+  "sourceDimensions": [
+    1391,
+    1131
+  ],
+  "runtime": "terrain-atlas-v1.png",
+  "runtimeDimensions": [
+    256,
+    208
+  ],
+  "tileset": "terrain-v1.tsx",
+  "tileDimensions": [
+    64,
+    52
+  ],
+  "columns": 4,
+  "rows": 4,
+  "tileCount": 16,
+  "margin": 0,
+  "spacing": 0,
+  "materialsByRow": [
+    "dirt",
+    "stone",
+    "water",
+    "grass"
+  ],
+  "preparation": "Copied the generated source unchanged. Extracted 16 cells using x boundaries [0,348,695,1043,1391] and y boundaries [0,282,566,848,1131], with a 2-pixel inset inside every cell to exclude antialiased material boundaries. Resampled each cell separately to 64 by 52 using Lanczos3, then packed them into a 256 by 208 opaque PNG with no margin or spacing.",
+  "defaultTileProperties": {
+    "land": {
+      "walkable": true,
+      "buildable": true
+    },
+    "water": {
+      "walkable": false,
+      "buildable": false
+    }
+  },
+  "limitations": "Basic full-fill tiles with four static variants per material. No shoreline or grass/dirt transition tiles, Wang/autotiling rules, water animation, or runtime loading integration. Generated textures may show repetition or mismatched surface details at joins.",
+  "verification": {
+    "tiledVersion": "1.12.2",
+    "method": "Loaded terrain.tsx through Tiled's --export-tileset json command and checked the resulting metadata and all 16 tile property definitions.",
+    "result": "Passed: 64 by 52 tiles, 4 columns, 16 tiles, 256 by 208 image, and expected walking/building flags. Copied source hash matches the generated original."
+  }
+}

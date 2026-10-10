@@ -31,6 +31,7 @@ export class Game extends Scene {
 
       // The player's world position appears at the viewport centre.
       camera.centerOn(this.player!.x, this.player!.y);
+      //  TODO: keep camera centred on player once world is added.
     };
 
     // Apply the initial layout.

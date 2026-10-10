@@ -1,0 +1,1360 @@
+{
+  "tiledVersion": "1.12.2",
+  "passed": true,
+  "checkedPatterns": 192,
+  "terrainSets": [
+    "World Terrain",
+    "Dirt / Grass",
+    "Dirt / Stone",
+    "Dirt / Water",
+    "Stone / Grass",
+    "Stone / Water",
+    "Water / Grass"
+  ],
+  "results": [
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 0,
+      "tileId": 2,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 1,
+      "tileId": 16,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 2,
+      "tileId": 16,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 3,
+      "tileId": 17,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 4,
+      "tileId": 16,
+      "flags": 3
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 5,
+      "tileId": 20,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 6,
+      "tileId": 18,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 7,
+      "tileId": 19,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 8,
+      "tileId": 16,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 9,
+      "tileId": 18,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 10,
+      "tileId": 20,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 11,
+      "tileId": 19,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 12,
+      "tileId": 17,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 13,
+      "tileId": 19,
+      "flags": 3
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 14,
+      "tileId": 19,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Grass",
+      "pair": "Dirt / Grass",
+      "mask": 15,
+      "tileId": 15,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 0,
+      "tileId": 2,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 1,
+      "tileId": 16,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 2,
+      "tileId": 16,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 3,
+      "tileId": 17,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 4,
+      "tileId": 16,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 5,
+      "tileId": 20,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 6,
+      "tileId": 18,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 7,
+      "tileId": 19,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 8,
+      "tileId": 16,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 9,
+      "tileId": 18,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 10,
+      "tileId": 20,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 11,
+      "tileId": 19,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 12,
+      "tileId": 17,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 13,
+      "tileId": 19,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 14,
+      "tileId": 19,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Grass",
+      "mask": 15,
+      "tileId": 12,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 0,
+      "tileId": 47,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 1,
+      "tileId": 21,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 2,
+      "tileId": 21,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 3,
+      "tileId": 22,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 4,
+      "tileId": 21,
+      "flags": 3
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 5,
+      "tileId": 25,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 6,
+      "tileId": 23,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 7,
+      "tileId": 24,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 8,
+      "tileId": 21,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 9,
+      "tileId": 23,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 10,
+      "tileId": 25,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 11,
+      "tileId": 24,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 12,
+      "tileId": 22,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 13,
+      "tileId": 24,
+      "flags": 3
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 14,
+      "tileId": 24,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Stone",
+      "pair": "Dirt / Stone",
+      "mask": 15,
+      "tileId": 6,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 0,
+      "tileId": 47,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 1,
+      "tileId": 21,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 2,
+      "tileId": 21,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 3,
+      "tileId": 22,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 4,
+      "tileId": 21,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 5,
+      "tileId": 25,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 6,
+      "tileId": 23,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 7,
+      "tileId": 24,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 8,
+      "tileId": 21,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 9,
+      "tileId": 23,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 10,
+      "tileId": 25,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 11,
+      "tileId": 24,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 12,
+      "tileId": 22,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 13,
+      "tileId": 24,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 14,
+      "tileId": 24,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Stone",
+      "mask": 15,
+      "tileId": 7,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 0,
+      "tileId": 2,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 1,
+      "tileId": 26,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 2,
+      "tileId": 26,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 3,
+      "tileId": 27,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 4,
+      "tileId": 26,
+      "flags": 3
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 5,
+      "tileId": 30,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 6,
+      "tileId": 28,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 7,
+      "tileId": 29,
+      "flags": 0
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 8,
+      "tileId": 26,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 9,
+      "tileId": 28,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 10,
+      "tileId": 30,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 11,
+      "tileId": 29,
+      "flags": 1
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 12,
+      "tileId": 27,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 13,
+      "tileId": 29,
+      "flags": 3
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 14,
+      "tileId": 29,
+      "flags": 2
+    },
+    {
+      "set": "Dirt / Water",
+      "pair": "Dirt / Water",
+      "mask": 15,
+      "tileId": 11,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 0,
+      "tileId": 47,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 1,
+      "tileId": 26,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 2,
+      "tileId": 26,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 3,
+      "tileId": 27,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 4,
+      "tileId": 26,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 5,
+      "tileId": 30,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 6,
+      "tileId": 28,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 7,
+      "tileId": 29,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 8,
+      "tileId": 26,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 9,
+      "tileId": 28,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 10,
+      "tileId": 30,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 11,
+      "tileId": 29,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 12,
+      "tileId": 27,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 13,
+      "tileId": 29,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 14,
+      "tileId": 29,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Dirt / Water",
+      "mask": 15,
+      "tileId": 8,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 0,
+      "tileId": 6,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 1,
+      "tileId": 31,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 2,
+      "tileId": 31,
+      "flags": 1
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 3,
+      "tileId": 32,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 4,
+      "tileId": 31,
+      "flags": 3
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 5,
+      "tileId": 35,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 6,
+      "tileId": 33,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 7,
+      "tileId": 34,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 8,
+      "tileId": 31,
+      "flags": 2
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 9,
+      "tileId": 33,
+      "flags": 1
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 10,
+      "tileId": 35,
+      "flags": 1
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 11,
+      "tileId": 34,
+      "flags": 1
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 12,
+      "tileId": 32,
+      "flags": 2
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 13,
+      "tileId": 34,
+      "flags": 3
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 14,
+      "tileId": 34,
+      "flags": 2
+    },
+    {
+      "set": "Stone / Grass",
+      "pair": "Stone / Grass",
+      "mask": 15,
+      "tileId": 15,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 0,
+      "tileId": 6,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 1,
+      "tileId": 31,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 2,
+      "tileId": 31,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 3,
+      "tileId": 32,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 4,
+      "tileId": 31,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 5,
+      "tileId": 35,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 6,
+      "tileId": 33,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 7,
+      "tileId": 34,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 8,
+      "tileId": 31,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 9,
+      "tileId": 33,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 10,
+      "tileId": 35,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 11,
+      "tileId": 34,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 12,
+      "tileId": 32,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 13,
+      "tileId": 34,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 14,
+      "tileId": 34,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Grass",
+      "mask": 15,
+      "tileId": 15,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 0,
+      "tileId": 4,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 1,
+      "tileId": 36,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 2,
+      "tileId": 36,
+      "flags": 1
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 3,
+      "tileId": 37,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 4,
+      "tileId": 36,
+      "flags": 3
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 5,
+      "tileId": 40,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 6,
+      "tileId": 38,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 7,
+      "tileId": 39,
+      "flags": 0
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 8,
+      "tileId": 36,
+      "flags": 2
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 9,
+      "tileId": 38,
+      "flags": 1
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 10,
+      "tileId": 40,
+      "flags": 1
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 11,
+      "tileId": 39,
+      "flags": 1
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 12,
+      "tileId": 37,
+      "flags": 2
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 13,
+      "tileId": 39,
+      "flags": 3
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 14,
+      "tileId": 39,
+      "flags": 2
+    },
+    {
+      "set": "Stone / Water",
+      "pair": "Stone / Water",
+      "mask": 15,
+      "tileId": 8,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 0,
+      "tileId": 6,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 1,
+      "tileId": 36,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 2,
+      "tileId": 36,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 3,
+      "tileId": 37,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 4,
+      "tileId": 36,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 5,
+      "tileId": 40,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 6,
+      "tileId": 38,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 7,
+      "tileId": 39,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 8,
+      "tileId": 36,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 9,
+      "tileId": 38,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 10,
+      "tileId": 40,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 11,
+      "tileId": 39,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 12,
+      "tileId": 37,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 13,
+      "tileId": 39,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 14,
+      "tileId": 39,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Stone / Water",
+      "mask": 15,
+      "tileId": 11,
+      "flags": 0
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 0,
+      "tileId": 10,
+      "flags": 0
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 1,
+      "tileId": 41,
+      "flags": 0
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 2,
+      "tileId": 41,
+      "flags": 1
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 3,
+      "tileId": 42,
+      "flags": 0
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 4,
+      "tileId": 41,
+      "flags": 3
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 5,
+      "tileId": 45,
+      "flags": 0
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 6,
+      "tileId": 43,
+      "flags": 0
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 7,
+      "tileId": 44,
+      "flags": 0
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 8,
+      "tileId": 41,
+      "flags": 2
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 9,
+      "tileId": 43,
+      "flags": 1
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 10,
+      "tileId": 45,
+      "flags": 1
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 11,
+      "tileId": 44,
+      "flags": 1
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 12,
+      "tileId": 42,
+      "flags": 2
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 13,
+      "tileId": 44,
+      "flags": 3
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 14,
+      "tileId": 44,
+      "flags": 2
+    },
+    {
+      "set": "Water / Grass",
+      "pair": "Water / Grass",
+      "mask": 15,
+      "tileId": 13,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 0,
+      "tileId": 8,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 1,
+      "tileId": 41,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 2,
+      "tileId": 41,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 3,
+      "tileId": 42,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 4,
+      "tileId": 41,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 5,
+      "tileId": 45,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 6,
+      "tileId": 43,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 7,
+      "tileId": 44,
+      "flags": 0
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 8,
+      "tileId": 41,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 9,
+      "tileId": 43,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 10,
+      "tileId": 45,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 11,
+      "tileId": 44,
+      "flags": 1
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 12,
+      "tileId": 42,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 13,
+      "tileId": 44,
+      "flags": 3
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 14,
+      "tileId": 44,
+      "flags": 2
+    },
+    {
+      "set": "World Terrain",
+      "pair": "Water / Grass",
+      "mask": 15,
+      "tileId": 13,
+      "flags": 0
+    }
+  ]
+}

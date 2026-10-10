@@ -1,0 +1,13 @@
+Use case: precise-object-edit
+Input Image 1: EDIT TARGET, exactly six separated rectangular tiles with a solid magenta (#ff00ff) background and gutters. Input Image 2: STYLE REFERENCE only, the approved terrain colours and flat-painted surface treatment.
+Change ONLY the interior surface rendering of the SIX TILE RECTANGLES in Image 1. KEEP THE RECTANGLES, POSITIONS, SIZES, MAGENTA GUTTERS, MATERIAL BOUNDARIES, MATERIAL CORNER COLOURS AND SHAPES EXACTLY THE SAME. This is a technical tile sheet, not a landscape. Do not rearrange any tiles.
+Material A is dirt: warm brown flat-painted dirt, broad simple earth patches, a few tiny muted pebbles. Material B is grass: muted natural green flat-painted grass with sparse simple grass strokes. Texture the corresponding guide colour regions using the same muted palette and simple broad painted finish as Image 2. Keep each material clearly distinct. 
+Layout is 3 COLUMNS x 2 ROWS, exactly as Image 1:
+TOP LEFT: completely material A.
+TOP MIDDLE: A with ONLY the TOP LEFT CORNER B, a rounded convex B patch whose boundary meets the midpoints of the tile top and left edges. The other three corners MUST be A.
+TOP RIGHT: TOP HALF B and BOTTOM HALF A, boundary across the exact horizontal centre, straight at the tile edges.
+BOTTOM LEFT: LEFT HALF A and RIGHT HALF B, boundary down the exact vertical centre, straight at tile edges.
+BOTTOM MIDDLE: B with ONLY the BOTTOM LEFT CORNER A, a rounded concave A cutout. The top-left, top-right and bottom-right corners MUST be B.
+BOTTOM RIGHT: A with TWO SEPARATE rounded convex B patches, one at the TOP LEFT CORNER and the other at the BOTTOM RIGHT CORNER. Top-right and bottom-left MUST be A. These patches MUST NOT TOUCH each other.
+Retain exact boundary geometry from Image 1: meet every relevant tile edge at precisely 50 percent, with no displacement. Do not add third materials, coloured rims, bevels, edge shadows, raised ledges or outlines.
+Preserve the entire magenta background and all magenta gutters around every tile UNCHANGED and clean, with no text or decoration. No outlines, no framing beyond the existing magenta spacing, no merging tiles. Output the same canvas layout and aspect ratio as Image 1, an opaque PNG. No text, letters, numbering, labels, watermarks or objects. Use broad quiet shapes readable at 64 by 52 pixels, limited flat base/shadow/highlight tones, no grain, no gradients, no pixel art.

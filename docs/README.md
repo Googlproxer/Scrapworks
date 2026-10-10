@@ -27,3 +27,5 @@ Milestone 1 remains partially complete. The representative grid scene, verified 
 Runtime images are kept in [public/assets](../public/assets/); source samples and generation records are documentation assets. All these paths are relative to the repository, including references inside art metadata.
 
 Follow the [Implementation Plan](plans/README.md) for ordered milestones, completion checks, a suggested module layout, and detailed diagrams for the game loop, persistence, and research.
+
+The [Tiled world integration plan](plans/tiled-world-integration.md) covers map authoring, exports, coordinate conversion, scene rendering, and the boundary with simulation state and saves.

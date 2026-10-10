@@ -23,6 +23,8 @@ Angular, Phaser, RxJS client state, Angular signals, and Dexie are installed. Th
 
 Keep one small authored map throughout these milestones. Add one working machine or technology at a time. Remote control, accounts, cloud synchronization, combat, and a large technology tree remain future work.
 
+Follow the [Tiled world integration plan](tiled-world-integration.md) to author that map, establish coordinate and layer conventions, and connect its exported data to the scene and simulation across Milestones 1–4.
+
 ## Detailed milestone plans
 
 Each milestone has a step-by-step checklist, completion checks, reference diagrams, and implementation notes. Progress was reconciled with source inspection and fresh checks on 4 October 2026. A scaffold is recorded without marking its full gameplay or persistence requirement complete.

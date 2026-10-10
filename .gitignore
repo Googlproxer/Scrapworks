@@ -43,3 +43,6 @@ debug.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Tiled Files
+*.tiled-session
