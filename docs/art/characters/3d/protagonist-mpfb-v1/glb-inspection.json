@@ -1,0 +1,23 @@
+{
+  "valid_glb_header": true,
+  "bytes": 25321044,
+  "meshes": 10,
+  "triangles": 195504,
+  "materials": 10,
+  "embedded_images": 9,
+  "skins": 1,
+  "joints_per_skin": [
+    53
+  ],
+  "animations": 0,
+  "all_images_embedded": true,
+  "all_meshes_have_skin_attributes": true,
+  "all_meshes_have_uvs": true,
+  "camera_or_light_nodes": [],
+  "alpha_materials": [
+    "Protagonist MPFB body.high-poly",
+    "Protagonist MPFB body.ponytail01",
+    "Protagonist MPFB body.eyebrow001",
+    "Protagonist MPFB body.eyelashes01"
+  ]
+}

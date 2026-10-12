@@ -10,6 +10,10 @@ Scrapworks is a web portfolio game about building an automated factory to restor
 
 Each document distinguishes agreed decisions from proposals that remain open for discussion.
 
+The [3D migration plan](plans/3d-migration.md), prepared 11 October 2026, proposes Babylon.js, a fully 3D world and character, and an elevated perspective camera. It covers the renderer replacement, existing model preparation, map authoring and validation before resuming the gameplay roadmap. The current runtime remains Phaser until that migration is implemented.
+
+The [Phase 2 implementation walkthrough](plans/3d-phase-2-walkthrough.md) builds on the completed Phase 1 Babylon prototype at `/3d`. It covers input ownership, suspension, graphics recovery and cleanup checks; the regular route retains Phaser during migration.
+
 ## Current implementation
 
 The Angular–Phaser integration is complete: a routed game page owns a scoped runtime and a component-owned canvas, the RxJS client reports lifecycle state, and Play Game switches to the current placeholder scene. The latest application suite passes 24 tests; normal lint and the production build pass.

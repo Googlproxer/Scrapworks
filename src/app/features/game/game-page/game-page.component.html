@@ -1,14 +1,18 @@
 <h1 class="visually-hidden">Scrapworks</h1>
 
-<app-phaser-game />
+<app-game-viewport />
 
 @if (gameRuntimeService.errorMessage(); as errorMessage) {
   <div class="centre">
     <p role="alert">{{ errorMessage }}</p>
+    <button type="button" class="button" (click)="gameRuntimeService.retry()">Retry</button>
   </div>
-} @else if (gameRuntimeService.currentSceneKey() !== 'Game') {
+} @else if (gameRuntimeService.currentSceneKey() !== 'Game' || gameRuntimeService.isLoading()) {
   <div class="centre">
-    <div>
+    @if (gameRuntimeService.isLoading()) {
+      <p role="status">Loading game…</p>
+    }
+    @if (gameRuntimeService.currentSceneKey() !== 'Game') {
       <button
         type="button"
         class="button"
@@ -17,6 +21,6 @@
       >
         Play Game!
       </button>
-    </div>
+    }
   </div>
 }

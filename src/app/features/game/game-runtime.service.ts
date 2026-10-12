@@ -53,6 +53,9 @@ export class GameRuntimeService {
     } catch (error) {
       if (generation !== this.generation) return;
       this.unmount();
+      console.error(error);
+      if (this.disposed) return;
+      this.host = host;
       this.stateValue.set({ phase: 'error', sceneKey: null, errorMessage: error instanceof Error ? error.message : String(error) });
     }
   }
@@ -80,5 +83,12 @@ export class GameRuntimeService {
     } catch (error) {
       this.stateValue.set({ phase: 'error', sceneKey: key, errorMessage: error instanceof Error ? error.message : String(error) });
     }
+  }
+
+  public retry(): void {
+    const host = this.host;
+    if (!host || this.state().phase !== 'error' || this.disposed) return;
+    this.unmount();
+    this.mount(host);
   }
 }

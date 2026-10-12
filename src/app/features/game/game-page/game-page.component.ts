@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { GameRuntimeService } from '../game-runtime.service';
-import { PhaserGame } from '../phaser-game/phaser-game.component';
+import { GameViewport } from '../game-viewport/game-viewport';
 
 @Component({
-  imports: [PhaserGame],
+  imports: [GameViewport],
   selector: 'app-game-page',
   styleUrl: './game-page.component.scss',
   templateUrl: './game-page.component.html',

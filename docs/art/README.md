@@ -12,6 +12,10 @@ The [current south-idle pose](characters/protagonist-south-idle-v2.png) is used 
 
 The world and machinery comparisons remain concepts. The multi-pose protagonist sheets still need alignment and animation cleanup; their presence does not imply completed directional animation or factory gameplay.
 
+The [MPFB 3D protagonist](characters/3d/protagonist-mpfb-v1/README.md), created 10 October 2026, uses an MPFB-generated body, fitted eyes, ponytail and clothing, with an MPFB game-engine rig. Its editable Blender file, rigged GLB, preset, bundled source assets and rendered review views are provided for the 3D experiment.
+
+The [smooth 3D protagonist prototype](characters/3d/protagonist-smooth-v1/README.md), created 10 October 2026, is an unrigged Blender/GLB mesh study for investigating a move to 3D. It includes material textures, actual mesh renders and a modelling turnaround. Facial likeness, hair and garment refinement remain open; it has not replaced the current 2D runtime asset or established a new rendering implementation.
+
 The [oblique world progression study](world/world-progression-oblique-v1.png) explores an alternative grid projection using the same four restoration stages and familiar landmarks. Its [generation record](world/world-progression-oblique-v1-generation.json) and [exact prompts](world/world-progression-oblique-v1-prompt.txt) preserve the reference and selected revision. It is a concept alternative; the agreed camera direction remains recorded below.
 
 The [terrain tileset](world/tilesets/README.md) supplies dirt, stone, water, and grass at 64 by 52 pixels, with edge and corner transitions for all six terrain pairs. Its [prepared atlas](../../public/assets/tilesets/terrain.png) and [Tiled tileset](../../map/tilesets/terrain.tsx) include configured Terrain Sets for painting connected terrain. The [example map](../../map/terrain-transitions-preview.tmx) shows the transitions; runtime map loading remains planned.

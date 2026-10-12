@@ -1,0 +1,37 @@
+# Cortu Johnstone - CC0
+
+tag pants
+ambientColor 1.0 1.0 1.0
+specularColor 0.0274509803922 0.0274509803922 0.0274509803922
+emissiveColor 0.0 0.0 0.0
+opacity 1.0
+translucency 0.0
+
+shadeless False
+wireframe False
+transparent False
+alphaToCoverage True
+backfaceCull True
+depthless False
+
+castShadows True
+
+receiveShadows True
+
+normalmapTexture cargo_pants_norm.png
+normalmapIntensity 1.0
+
+shader data/shaders/glsl/litsphere
+shaderParam litsphereTexture data/litspheres/lit_matte.png
+
+shaderConfig ambientOcclusion True
+shaderConfig normal True
+shaderConfig bump False
+shaderConfig displacement False
+shaderConfig vertexColors True
+shaderConfig spec False
+shaderConfig transparency True
+shaderConfig diffuse True
+name Scrapworks_cortu_cargo_pants
+diffuseColor 0.48 0.115 0.027
+roughness 0.88

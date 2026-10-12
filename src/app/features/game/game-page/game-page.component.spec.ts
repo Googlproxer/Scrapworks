@@ -5,7 +5,7 @@ import { Boot } from '@game/scenes/boot.scene';
 import { MainMenu } from '@game/scenes/main-menu.scene';
 import type { Game } from 'phaser';
 import { GameRuntimeService } from '../game-runtime.service';
-import { PhaserGame } from '../phaser-game/phaser-game.component';
+import { GameViewport } from '../game-viewport/game-viewport';
 import { GamePageComponent } from './game-page.component';
 
 describe('GamePageComponent integration', () => {
@@ -35,7 +35,9 @@ describe('GamePageComponent integration', () => {
   });
 
   function button() {
-    return (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button');
+    return [...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button')].find(
+      (element) => element.textContent?.trim() === 'Play Game!',
+    );
   }
 
   async function waitForMenu() {
@@ -51,7 +53,7 @@ describe('GamePageComponent integration', () => {
     expect(button()?.disabled).toBe(true);
     button()?.click();
     expect(runtime.currentSceneKey()).not.toBe('Game');
-    const childRuntime = fixture.debugElement.query(By.directive(PhaserGame)).injector.get(GameRuntimeService);
+    const childRuntime = fixture.debugElement.query(By.directive(GameViewport)).injector.get(GameRuntimeService);
     expect(childRuntime).toBe(runtime);
     const game = await waitForMenu();
     expect(button()?.disabled).toBe(false);
@@ -59,7 +61,7 @@ describe('GamePageComponent integration', () => {
     button()?.click();
     await expect.poll(() => runtime.isReady() && runtime.currentSceneKey()).toBe('Game');
     fixture.detectChanges();
-    expect(button()).toBeNull();
+    expect(button()).toBeUndefined();
     expect(game.scene.getScenes(true).map((scene) => scene.scene.key)).toEqual(['Game']);
     expect((fixture.nativeElement as HTMLElement).querySelectorAll('canvas')).toHaveLength(1);
   });
@@ -100,7 +102,7 @@ describe('GamePageComponent integration', () => {
     fixture.detectChanges();
     expect(runtime.errorMessage()).toContain('missing-required-asset');
     expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('missing-required-asset');
-    expect(button()).toBeNull();
+    expect(button()).toBeUndefined();
     expect(runtime.isReady()).toBe(false);
     const game = [...games][0];
     game.events.emit(GameEvent.SCENE_READY, { sceneKey: 'MainMenu' });

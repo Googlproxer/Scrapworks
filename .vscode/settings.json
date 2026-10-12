@@ -7,5 +7,5 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSaveMode": "file"
   },
-  "cSpell.words": ["Dexie", "WASD"]
+  "cSpell.words": ["babylonjs", "Dexie", "WASD"]
 }

@@ -2,6 +2,8 @@
 
 Prepared 4 October 2026. Status: planned; source and installed Phaser 4.2.1 inspected.
 
+For the planned Babylon.js runtime, follow the [3D migration plan](3d-migration.md), especially Phase 5. Retain this plan's authoring and gameplay-data conventions where useful; its Phaser tile-layer and pixel-projection steps describe the earlier 2D renderer path.
+
 Use Tiled to author the terrain, starting locations, resource deposits, and fixed obstacles for Scrapworks. Load its exported JSON with Phaser's existing tilemap support, and convert the gameplay data into a framework-independent world definition. The simulation will own the changing world; the scene will display it.
 
 The first checkpoint is a small authored map with the existing character at its spawn, a following camera, and correct tile selection. Add authoritative movement, resource interaction, and saving through the existing milestones after that checkpoint.

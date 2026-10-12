@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-10",
+  "packs": [
+    {
+      "pack": "makehuman_system_assets",
+      "url": "https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+      "license": "CC0",
+      "sha256": "b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107",
+      "bytes": 280737770,
+      "installed_with": "bpy.ops.mpfb.load_pack"
+    },
+    {
+      "pack": "pants01",
+      "url": "https://files.makehumancommunity.org/asset_packs/pants01/pants01_cc0.zip",
+      "license": "CC0",
+      "sha256": "e4e0ec60db34f279be291a83cfd7b342a7c5cf09bb7676682a5f39f4f6ac4ad9",
+      "bytes": 21908723,
+      "installed_with": "bpy.ops.mpfb.load_pack"
+    },
+    {
+      "pack": "shirts01",
+      "url": "https://files.makehumancommunity.org/asset_packs/shirts01/shirts01_cc0.zip",
+      "license": "CC0",
+      "sha256": "a5a723b0e84a109bb190fcfeac7f1de4138d875da3e30fe5b3340eac9f38bcd3",
+      "bytes": 24479483,
+      "installed_with": "bpy.ops.mpfb.load_pack"
+    },
+    {
+      "pack": "shoes01",
+      "url": "https://files.makehumancommunity.org/asset_packs/shoes01/shoes01_cc0.zip",
+      "license": "CC0",
+      "sha256": "ded3f70428505eabbf1f6d7b5f61196a7366ef20757103d276ad0ed336c35ada",
+      "bytes": 82953569,
+      "installed_with": "bpy.ops.mpfb.load_pack"
+    }
+  ],
+  "asset_files": "source-hashes.json",
+  "body_generator": "MPFB HumanService.create_human",
+  "attachment_service": "MPFB HumanService.add_mhclo_asset",
+  "rig_service": "MPFB HumanService.add_builtin_rig"
+}

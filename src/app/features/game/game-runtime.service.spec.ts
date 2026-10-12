@@ -100,8 +100,27 @@ describe('GameRuntimeService', () => {
     expect(service.state()).toEqual({ phase: 'error', sceneKey: null, errorMessage: 'Renderer failed' });
     const game = createClient();
     factory.mockReturnValue(game.client);
-    service.mount(host);
+    service.retry();
     expect(service.state().phase).toBe('loading');
+    expect(factory).toHaveBeenCalledTimes(2);
+    expect(factory).toHaveBeenLastCalledWith(host);
+  });
+
+  it('retries an asynchronous load failure by replacing the failed client on the same host', () => {
+    const previous = createClient();
+    const next = createClient();
+    factory.mockReturnValueOnce(previous.client).mockReturnValueOnce(next.client);
+    const host = document.createElement('div');
+    service.mount(host);
+    previous.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Missing model' });
+    service.retry();
+    expect(previous.unsubscribe).toHaveBeenCalledOnce();
+    expect(previous.destroy).toHaveBeenCalledOnce();
+    expect(factory).toHaveBeenLastCalledWith(host);
+    next.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
+    previous.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    expect(service.currentSceneKey()).toBe('MainMenu');
+    service.retry();
     expect(factory).toHaveBeenCalledTimes(2);
   });
 

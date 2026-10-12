@@ -6,6 +6,16 @@ This is a guide for you to implement Scrapworks yourself. Work through the miles
 
 Angular, Phaser, RxJS client state, Angular signals, and Dexie are installed. The renderer integration is implemented; the plain TypeScript simulation and browser-save service are scaffolds. Tick rates, resource access rules, and system ordering below remain starting recommendations rather than settled game balance.
 
+## Migration to 3D
+
+Follow the [3D migration plan](3d-migration.md), prepared 11 October 2026, for the proposed move to Babylon.js with a fully 3D world and character. It replaces the Phaser rendering approach in Milestones 1 and 3 while retaining the simulation, manual opening, research and save requirements. Its phases include a temporary browser scene, lifecycle checks, perspective camera and picking, runtime character preparation, world authoring and renderer cutover.
+
+The [Phase 1 walkthrough](3d-phase-1-walkthrough.md) includes code examples and completion checks for the Babylon prototype. Phase 1 was completed and verified on 11 October 2026; its validation and cleanup are recorded in the migration plan. Phase 0 was skipped, and Phase 2 remains the next migration checkpoint.
+
+The [Phase 2 walkthrough](3d-phase-2-walkthrough.md) gives the implementation sequence for input ownership, hidden-tab and viewport suspension, graphics recovery and browser tests, preserving the lifecycle and cleanup already completed in Phase 1.
+
+The milestone statuses below describe the existing Phaser implementation. Reconcile them as migration phases are completed; adding this plan does not complete their remaining gameplay or persistence work.
+
 ## Milestones at a glance
 
 | Milestone                       | Playable result                                     | Main work                                             | Current status                                    |

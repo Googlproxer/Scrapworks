@@ -1,0 +1,89 @@
+{
+  "generator": "MPFB 2.0.17",
+  "blender_version": "5.2.2 LTS",
+  "scene": "Scrapworks - MPFB Protagonist v1",
+  "body": "Protagonist MPFB body",
+  "rig": "Protagonist MPFB game rig",
+  "bones": 53,
+  "macro_settings": {
+    "gender": 0.0,
+    "age": 0.5,
+    "muscle": 0.5600000023841858,
+    "weight": 0.46000000834465027,
+    "proportions": 0.6499999761581421,
+    "height": 0.5199999809265137,
+    "cupsize": 0.4000000059604645,
+    "firmness": 0.5,
+    "race": {
+      "asian": 0.0,
+      "caucasian": 1.0,
+      "african": 0.0
+    }
+  },
+  "assets": [
+    {
+      "object": "Brown eyes [MPFB]",
+      "type": "Eyes",
+      "asset": "mpfb-library\\eyes\\high-poly\\high-poly.mhclo",
+      "source": "high-poly/high-poly.mhclo"
+    },
+    {
+      "object": "Eyebrows [MPFB]",
+      "type": "Eyebrows",
+      "asset": "mpfb-library\\eyebrows\\eyebrow001\\eyebrow001.mhclo",
+      "source": "eyebrow001/eyebrow001.mhclo"
+    },
+    {
+      "object": "Eyelashes [MPFB]",
+      "type": "Eyelashes",
+      "asset": "mpfb-library\\eyelashes\\eyelashes01\\eyelashes01.mhclo",
+      "source": "eyelashes01/eyelashes01.mhclo"
+    },
+    {
+      "object": "Teeth [MPFB]",
+      "type": "Teeth",
+      "asset": "mpfb-library\\teeth\\teeth_base\\teeth_base.mhclo",
+      "source": "teeth_base/teeth_base.mhclo"
+    },
+    {
+      "object": "Tongue [MPFB]",
+      "type": "Tongue",
+      "asset": "mpfb-library\\tongue\\tongue01\\tongue01.mhclo",
+      "source": "tongue01/tongue01.mhclo"
+    },
+    {
+      "object": "Brown ponytail [MPFB]",
+      "type": "Hair",
+      "asset": "mpfb-library\\hair\\ponytail01\\ponytail01.mhclo",
+      "source": "ponytail01/ponytail01.mhclo"
+    },
+    {
+      "object": "Cream sleeveless top [MPFB]",
+      "type": "Clothes",
+      "asset": "mpfb-library\\clothes\\toigo_camisole_top\\toigo_camisole_top.mhclo",
+      "source": "toigo_camisole_top/toigo_camisole_top.mhclo"
+    },
+    {
+      "object": "Orange cargo trousers [MPFB]",
+      "type": "Clothes",
+      "asset": "mpfb-library\\clothes\\cortu_cargo_pants\\cortu_cargo_pants.mhclo",
+      "source": "cortu_cargo_pants/cortu_cargo_pants.mhclo"
+    },
+    {
+      "object": "Charcoal ankle boots [MPFB]",
+      "type": "Clothes",
+      "asset": "mpfb-library\\clothes\\toigo_ankle_boots_male\\toigo_ankle_boots_male.mhclo",
+      "source": "toigo_ankle_boots_male/toigo_ankle_boots_male.mhclo"
+    }
+  ],
+  "asset_library": "L:\\Angular\\scrapworks\\docs\\art\\characters\\3d\\protagonist-mpfb-v1\\mpfb-library",
+  "asset_license": "CC0",
+  "asset_pack_pages": [
+    "https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html",
+    "https://static.makehumancommunity.org/assets/assetpacks/shirts01.html",
+    "https://static.makehumancommunity.org/assets/assetpacks/pants01.html",
+    "https://static.makehumancommunity.org/assets/assetpacks/shoes01.html"
+  ],
+  "character_meshes": 10,
+  "procedurally_modelled_character_parts": 0
+}

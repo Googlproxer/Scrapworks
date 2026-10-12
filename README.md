@@ -1,7 +1,8 @@
 # Scrapworks
 
-Scrapworks is a browser game project built with Angular, Phaser, and TypeScript.
-Angular provides the application shell and interface, while Phaser runs the game canvas and scenes.
+Scrapworks is a browser game project built with Angular and TypeScript.
+Angular provides the application shell and interface. Phaser runs the regular game route, while
+the Babylon.js prototype at `/3d` starts the [3D migration](docs/plans/3d-migration.md).
 
 The project is at an early stage: the application shell, asset loading, and scene transitions are
 in place, with placeholder scenes awaiting game-specific mechanics and content.
@@ -17,6 +18,7 @@ under `docs/`; browser-served assets remain under `public/assets/`.
 
 - Angular 22 for the application interface and build tooling.
 - Phaser 4 for rendering and game scenes.
+- Babylon.js 9 for the isolated 3D prototype.
 - TypeScript 6 with strict type checking.
 - SCSS for application styling.
 - Vitest through the Angular test runner, using Playwright and headless Chromium for tests.
@@ -36,6 +38,9 @@ yarn run dev
 Open [localhost:4200](http://localhost:4200/). The development server rebuilds and reloads the
 application when source files change. Angular CLI is included in the project dependencies, so a
 global installation is unnecessary.
+
+Open [localhost:4200/3d](http://localhost:4200/3d) and select Play Game to view the completed
+Phase 1 prototype, including the imported protagonist.
 
 ## Development commands
 
@@ -68,8 +73,9 @@ native Node canvas package. See [Angular's browser testing guide](https://angula
 
 The tests cover client state replay and unsubscribe, scoped runtime injection, remounting and
 stale callback rejection, required-asset failures, the actual Play Game button, responsive
-canvas sizing, and repeated removal of game loops, canvases, and listeners. Phaser integration
-tests use real browser rendering; service tests replace the client factory with a typed test client.
+canvas sizing, and repeated removal of game loops, canvases, and listeners. Phaser and Babylon
+integration tests use real browser rendering. Babylon checks also cover model loading, late-load
+cleanup, retry and axe accessibility checks; service tests use a typed test client.
 Browser failure screenshots are saved under `.vitest/` and excluded from Git.
 
 ## Formatting and access modifiers
@@ -95,7 +101,7 @@ The Yarn lint commands, `ng lint`, and the VS Code ESLint extension use this sam
 | `src/main.ts`                                   | Bootstrap the Angular application.                                                     |
 | `src/app/app.ts` , `app.html` , `app.scss`      | Root application component, interface, and styling.                                    |
 | `src/app/features/game/game-page/`              | Routed game page, its scoped runtime provider, and the Play Game button.               |
-| `src/app/features/game/phaser-game/`            | Own the canvas host element and delegate mount/unmount to the runtime.                 |
+| `src/app/features/game/game-viewport/`          | Provide the shared HTML host and delegate mount/unmount to the runtime.                |
 | `src/app/features/game/game-runtime.service.ts` | Own the client subscription and project lifecycle state into readonly Angular signals. |
 | `src/app/features/game/game-client-factory.ts`  | Provide the replaceable factory for creating a client.                                 |
 | `src/app/features/save/`                        | Save/load interface and local persistence service.                                     |
@@ -105,6 +111,7 @@ The Yarn lint commands, `ng lint`, and the VS Code ESLint extension use this sam
 | `src/game/bridge/phaser-game-client.ts`         | Own per-game Phaser listeners and replay lifecycle state through RxJS.                 |
 | `src/game/scenes/`                              | Boot, loading, menu, gameplay, and scene lifecycle reporting.                          |
 | `src/game/gameobjects/`                         | Phaser world objects and presentation behavior.                                        |
+| `src/game/babylon/`                             | Babylon prototype client, scene construction, asset loading and browser tests.         |
 | `src/simulation/`                               | Plain TypeScript simulation, independent of Angular and Phaser.                        |
 | `src/core/`                                     | Framework-independent application utilities.                                           |
 | `public/assets/`                                | Game images and other static assets, served under `assets/` .                          |

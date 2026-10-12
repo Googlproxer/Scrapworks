@@ -1,0 +1,11 @@
+{
+  "reimported_successfully": true,
+  "mesh_objects": 10,
+  "bones": 53,
+  "all_meshes_skinned": true,
+  "all_meshes_have_uvs": true,
+  "bounds_max_difference_meters": 0.0009018592536449432,
+  "forearm_pose_test_max_movement_meters": 0.09434863162078466,
+  "animations_included": false,
+  "blender_importer_bone_shape_helpers_excluded": 1
+}

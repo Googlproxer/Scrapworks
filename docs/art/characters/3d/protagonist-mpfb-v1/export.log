@@ -1,0 +1,19 @@
+{"server": {"name": "blender-mcp", "title": null, "version": "1.30.0", "websiteUrl": null, "icons": null}}
+[10/10/26 21:08:51] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[10/10/26 21:08:52] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+{
+  "status": "ok",
+  "result": {
+    "file": "L:\\Angular\\scrapworks\\docs\\art\\characters\\3d\\protagonist-mpfb-v1\\protagonist-mpfb-v1.glb",
+    "bytes": 25321044,
+    "staged_objects": 11,
+    "rigged": true,
+    "animations": false,
+    "studio_included": false,
+    "source_macro_shape_keys_preserved": true,
+    "source_objects_preserved": true
+  },
+  "stdout": "Info: Applied modifier was not first, result may not be as expected\nInfo: Applied modifier was not first, result may not be as expected\nInfo: Applied modifier was not first, result may not be as expected\nInfo: Applied modifier was not first, result may not be as expected\n21:08:51 | INFO: Starting glTF 2.0 export\n21:08:51 | INFO: Extracting primitive: high-poly.004\n21:08:52 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Extracting primitive: ponytail01.004\n21:08:52 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | WARNING: There are more than 4 joint vertex influences.The 4 with highest weight will be used (and normalized).\n21:08:52 | INFO: Extracting primitive: boots_ankle_male.004\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Extracting primitive: camisole_top.004\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Extracting primitive: eyebrow001.004\n21:08:52 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Extracting primitive: eyelashes01.004\n21:08:52 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Extracting primitive: cargo_pants.004\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Extracting primitive: base.004\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Extracting primitive: teeth_base.004\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Extracting primitive: tongue01.004\n21:08:52 | INFO: Primitives created: 1\n21:08:52 | INFO: Finished glTF 2.0 export in 1.0046625137329102 s\n\n"
+}
