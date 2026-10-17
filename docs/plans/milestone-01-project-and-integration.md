@@ -1,143 +1,55 @@
 # Milestone 1 Project and integration
 
-Updated 4 October 2026. Status: partially complete; Angular–Phaser integration complete.
+Updated 17 October 2026. Status: rendering foundation implemented; authored fixture, activity/input, and cutover work remain open.
 
-The shell, component-owned canvas, per-game client bridge, scoped runtime, and lifecycle checks are implemented. This milestone remains open because the representative grid scene, verified browser-storage experiment, custom formatter checks, and dependency commit are unfinished.
+The selected direction is Angular UI with a Babylon world and Editor-authored scenes. Keep the shared runtime, viewport, plain client contract, and existing asynchronous cleanup guarantees. `/` still uses Phaser and `/3d` uses Babylon until the [cleanup cutover gate](3d-cleanup.md#phase-4-make-babylon-the-default-and-remove-the-2d-runtime) passes.
 
 [High-level plan](README.md) · [Next milestone](milestone-02-simulation-foundation.md)
 
 ## Starting point and current evidence
 
-All project documentation, diagrams, generation prompts, and source artwork now live inside the `scrapworks/` Git repository. See the [documentation index](../README.md) for their organisation.
+The [17 October baseline](3d-cleanup-baseline.md) records passing production build, application lint, 33 Chromium tests, and all 30 lint-tooling checks. The original [4 October integration checklist](../history/2d/milestone-01-integration-2026-10-04.md) preserves its 24-test result and two then-failing lint-tooling fixtures with their original date. Those older failures are not the current tooling status.
 
-Fresh checks on 4 October 2026:
+## Step 1 Preserve a reproducible project
 
-| Check                                                                                 | Result                                                                              |
-| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `yarn test`                                                                           | 24 tests passed across 8 files in headless Chromium                                 |
-| `yarn run lint`                                                                       | Passed using the active `eslint.config.js`                                          |
-| `yarn run ng -- build`                                                                | Production build passed                                                             |
-| `yarn exec vitest run src/simulation/simulation.spec.ts --environment node --globals` | One plain TypeScript smoke test passed without Angular, Phaser, Dexie, or DOM setup |
-| `yarn run test:lint`                                                                  | 20 passed, 2 failed; constructor fixture and formatting integration require review  |
+- [x] Preserve the existing tracked/untracked authoring work in a checksum-verified checkpoint and Git history bundle.
+- [x] Record current routes, stack, ownership, and remaining implementation limits.
+- [x] Use one active ESLint configuration, with passing rule/format integration checks.
+- [x] Record runtime asset/request inventories and before/after deployment measurements in the [asset audit](../reports/assets/2026-10-17/README.md).
+- [ ] Complete the clean-install/export reproducibility check with the pinned package manager; see [the preflight checklist](3d-implementation-checklist.md#0-review-the-preserved-repository).
+- [ ] Finish the dependency/authoring commit after reviewing the preserved work; a file checkpoint does not mark untracked files as committed.
 
-The preceding integration verification on 4 October also checked the routed application at 320×240, 390×844, and 1440×900, keyboard activation of Play Game, and axe audits of menu, gameplay, and required-asset error states. Those audits reported no violations. They cover the current shell, not the future factory HUD.
+## Step 2 Retain the shared lifecycle boundary
 
-| Tool or dependency | Installed version on 4 October 2026 |
-| ------------------ | ----------------------------------- |
-| Node               | 24.21.0                             |
-| Yarn               | 4.18.1                              |
-| Angular core       | 22.2.1                              |
-| Phaser             | 4.2.1                               |
-| Dexie              | 4.4.6                               |
-| TypeScript         | 6.0.3                               |
-| Vitest             | 5.0.3                               |
+- [x] Keep Angular features, plain contracts, framework-independent simulation/core, and concrete renderer adapters separate.
+- [x] Provide one scoped `GameRuntimeService` to the game page and shared viewport.
+- [x] Expose plain replayable loading, ready, error, and stopped states; reject stale callbacks across remounts.
+- [x] Mount one canvas/engine/loop per Babylon client, resize through its host, and clean up idempotently.
+- [x] Dispose late scene assets after destruction or a superseded transition; publish readiness after a rendered frame.
+- [x] Exercise actual Play Game/Retry controls, resizing, failures, and teardown in Chromium.
+- [ ] Implement focus/modal input ownership, hidden/zero-size suspension, timing reset, and graphics recovery from the [Phase 2 walkthrough](3d-phase-2-walkthrough.md).
 
-## Step 1 Stabilize the project setup
+## Step 3 Establish the authored fixture
 
-- [x] Create the browser Angular application with strict TypeScript settings.
-- [x] Install Angular, Phaser, and Dexie and record the installed versions.
-- [x] Configure Yarn 4 and generate `yarn.lock`, replacing the npm lockfile.
-- [x] Exercise the installed Node, Angular, TypeScript, and Phaser toolchain through successful builds and browser tests.
-- [x] Update the README with current commands, source layout, client lifecycle, and browser testing.
-- [x] Keep the README's dependency versions at major-version granularity.
-- [x] Organise project documentation, art records, and diagrams inside the repository and repair their links.
-- [ ] Review and commit the intended dependency setup, Yarn configuration, and lockfile. They remain uncommitted.
+- [x] Keep one `.bjseditor` project with editable MainMenu/Game scenes and browser export/loading.
+- [x] Make saved authoring inputs export and reload automatically, with visible failures and no watch feedback loop. See the [17 October tooling/browser validation](../reports/workflow/2026-10-17/README.md).
+- [ ] Author a flat 10 by 10 grid with two-metre cells, spawn, deposit marker, and blocker.
+- [ ] Compile plain initial layout with stable IDs, bounds/footprints, and a tested centimetre/metre conversion.
+- [ ] Validate camera, picking, resize, focus, and repeated mount/unmount on that fixture.
+- [ ] Make Babylon the default and remove Phaser only after the cleanup gate passes; retain `/3d` as a compatibility redirect.
 
-## Step 2 Confirm the Angular configuration and boundaries
+## Step 4 Keep storage and gameplay evidence separate
 
-- [x] Configure standalone components, browser bootstrap, SCSS, and lazy loading of the game page.
-- [x] Enable TypeScript strictness and strict Angular template checking.
-- [x] Retain strict property initialization without a disabling override.
-- [x] Keep the prototype browser-only.
-- [x] Separate Angular features in `src/app/features/`, Phaser code in `src/game/`, plain contracts in `src/contracts/`, simulation in `src/simulation/`, and reusable utilities in `src/core/`.
-- [x] Provide `GameRuntimeService` on the game page so the page and its Phaser child share one instance.
-- [x] Remove the root component's unused runtime injection. Ancestors cannot resolve a provider belonging to a routed child.
-
-Follow [AGENTS.md](../../AGENTS.md) when writing application code. Future authoritative gameplay belongs in `src/simulation/`; `src/game/` is the Phaser presentation layer.
-
-## Step 3 Establish build and test checks
-
-- [x] Provide development, production, test, test-watch, and normal lint commands.
-- [x] Make builds and the complete application suite pass with real headless Chromium rendering.
-- [x] Run the simulation queue smoke test separately in Node to prove the plain TypeScript import boundary.
-- [x] Test the actual Play Game button, initial disabled state, and transition to a single active Game scene.
-- [x] Cover client replay, unsubscribe, loading/error/stopped states, idempotent destruction, and destruction during a notification.
-- [x] Cover scoped injection, same-host mounting, host replacement, stale callback rejection, subscription failure, and injector cleanup.
-- [ ] Reconcile the separate access-modifier rule tests with their implementation and the active ESLint configuration. The constructor valid fixture and formatting integration currently fail.
-
-The simulation smoke test verifies queueing only. It does not implement typed gameplay commands, world state, fixed steps, or save snapshots.
-
-## Step 4 Complete the canvas lifecycle
-
-- [x] Own the mount element through the Phaser host component's required view query.
-- [x] Mount after the Angular element exists and unmount when the component is destroyed.
-- [x] Attach client listeners before registering and starting application scenes.
-- [x] Replace the global EventBus with the emitter belonging to each Phaser game.
-- [x] Retain handlers and their callback context so teardown removes exactly the client's listeners.
-- [x] Unsubscribe the runtime before destroying the client; complete the client's RxJS subject and retain stopped-state replay for late subscribers.
-- [x] Ignore commands and callbacks after destruction; reject callbacks from an earlier mounted client.
-- [x] Make same-host mounts harmless and destroy the previous client when changing hosts.
-- [x] Provide injector-destruction cleanup through `DestroyRef`.
-- [x] Stop the previous scene before starting another, preventing menu/game overlap.
-- [x] Verify three repeated mount/unmount cycles, simultaneous independent games, and immediate host replacement.
-- [x] Verify eventual canvas removal and stopped Phaser loops after destruction.
-
-Phaser completes game destruction on a following frame. Runtime state and listener detachment are immediate; tests wait for the loop and canvas cleanup.
-
-## Step 5 Establish a representative scene and responsive interface
-
-- [x] Load the logo, background, and single-pose protagonist assets.
-- [x] Mount a full-size canvas with Phaser `RESIZE` and responsive scene layout.
-- [x] Publish renderer lifecycle state through plain contracts, RxJS, and readonly Angular signals.
-- [x] Expose idle, loading, ready, stopped, and error states; show required-asset failures instead of enabling gameplay.
-- [x] Enable Play Game only when MainMenu is ready.
-- [x] Verify canvas sizing and menu layout at small and large host sizes.
-- [x] Add a screen-reader heading, visible keyboard focus, and readable button/error states; audit the current shell with axe.
-- [ ] Draw a small square world grid around the placeholder character.
-- [ ] Verify that representative grid, character, camera, and essential controls remain usable on small screens.
-
-The old scene/sprite demo controls have been removed. Their former Add New Sprite regression is superseded by the Play Game regression. The current Player moves directly through Phaser frame updates; authoritative movement arrives in Milestones 2–3.
-
-## Step 6 Prove local browser storage
-
-- [x] Install Dexie and create a development `SaveService` with a `testData` table and a CDK save/load dialog.
-- [ ] Identify a disposable experiment record or development slot.
-- [ ] Await a committed write and read the plain record back.
-- [ ] Reload under the same origin and read that record again.
-- [ ] Delete the experiment record and verify its removal.
-- [ ] Show operation failure visibly and record the observed round trip.
-
-The current service stores `name`/`value` test records. Its `save()` method does not return or await the write, `load()` logs results instead of restoring a world, and dialog slot occupancy is initialized in memory. This scaffold does not satisfy the storage experiment or Milestone 4.
+- [x] Keep the simulation scaffold free of renderer and storage dependencies.
+- [ ] Demonstrate a small real IndexedDB reload experiment independently of future gameplay saves.
+- [ ] Implement plain `WorldState`, typed commands, and fixed-step behavior in Milestone 2.
+- [ ] Implement versioned gameplay snapshots in Milestone 4; test records and a save dialog do not establish world persistence.
 
 ## Completion checks
 
-- [x] Production build, normal lint, and all application tests pass.
-- [x] The current shell starts without unhandled errors, with one canvas per host.
-- [x] Host recreation and simultaneous games keep canvases, loops, and per-game listeners independent.
-- [x] A plain TypeScript test runs in Node without initializing the renderer.
-- [x] Current menu, game, and error states pass the recorded accessibility audits.
-- [ ] The representative grid scene loads and remains usable at small viewport sizes.
-- [ ] The Dexie experiment survives reload and can be deleted.
-- [ ] Separate custom formatter checks pass or their intended role is explicitly resolved.
-- [ ] The reviewed dependency setup and lockfile are committed.
+- [ ] One default 3D runtime and an authored fixture survive interaction, resize, failure/retry, suspension, and teardown.
+- [ ] Scene generation is reproducible from saved authoring inputs; generated outputs remain ignored.
+- [ ] Runtime packaging excludes unused source-library/2D contents after the asset audit and cutover.
+- [ ] Active docs and diagrams describe the implemented direction and distinguish unfinished gameplay.
 
-## Notes and implementation issues
-
-| Status              | Item                                       | Evidence or next action                                                                                                                                                            |
-| ------------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Complete            | Chat-plan Angular–Phaser integration stage | Client teardown, remounting, lifecycle states, button readiness, sizing, regression tests, and README are implemented. This is not completion of every requirement in Milestone 1. |
-| Complete            | Runtime provider and callback context      | Page-scoped injection and the Phaser event callback's explicit `this` context are covered by tests.                                                                                |
-| Complete            | Source organisation                        | Design, plans, source artwork, generation records, and diagrams are inside the repository. Runtime images remain in `public/assets/`.                                              |
-| Open                | Representative grid scene                  | Add the grid and check the eventual world projection and essential interface.                                                                                                      |
-| Open                | Storage verification                       | A Dexie test-data service exists, but reload persistence and deletion have not been demonstrated by the current tests.                                                             |
-| Open                | Custom lint tooling                        | `test:lint` has 2 failures; `eslint.config.js` is active, while `eslint.config.mjs` and the custom rule remain separate.                                                           |
-| Open                | Dependency commit                          | Yarn configuration and lockfile are present but uncommitted.                                                                                                                       |
-| Deliberate decision | Bundle budgets                             | No bundle-budget work is required at this stage.                                                                                                                                   |
-| Future milestone    | Authoritative gameplay and saves           | The current simulation and persistence scaffolds do not yet provide a saved world or factory mechanics.                                                                            |
-
-## References and diagrams
-
-- [Module dependency diagram](README.md#module-dependency-diagram)
-- [Application interaction diagram](../design/TDD.md#application-system-interaction-diagram)
-- [State ownership and module boundaries](../design/TDD.md#state-ownership-and-module-boundaries)
-- [Art direction](../art/README.md)
+Follow [AGENTS.md](../../AGENTS.md), the [Editor setup](babylon-editor-setup.md), and [cleanup plan](3d-cleanup.md). The user implements game/runtime behavior; cleanup utilities support preservation, validation, and documentation.

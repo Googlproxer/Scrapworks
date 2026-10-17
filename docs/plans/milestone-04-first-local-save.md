@@ -1,6 +1,6 @@
 # Milestone 4 First local save
 
-Updated 4 October 2026. Status: persistence scaffold only. Prerequisite: [Milestone 3](milestone-03-character-and-manual-opening.md).
+Updated 17 October 2026. Status: persistence scaffold only. Prerequisite: [Milestone 3](milestone-03-character-and-manual-opening.md).
 
 Implement one manual local save slot that restores the complete manual opening, including a craft in progress. Keep persistence behind an interface so a future cloud adapter can be introduced without changing game rules. Autosaves, revisions, and file transfer arrive in Milestone 9.
 
@@ -15,7 +15,7 @@ Dexie is installed, and `src/app/features/save/` contains a test-data service an
 - [ ] Define a `SaveSnapshot` envelope with schema version, content version, world ID, saved timestamp, and detached gameplay state.
 - [ ] Keep slot identity and revision metadata explicit; a slot is a storage location, while a world ID identifies the run.
 - [ ] Include position, deposits, inventories, active crafting work, production totals, tick, fixed-step version or duration, and the next entity-ID counter.
-- [ ] Exclude browser timestamps used by the loop, command queues, held keys, selected panels, services, and sprites.
+- [ ] Exclude browser timestamps used by the loop, command queues, held keys, selected panels, services, meshes, materials, scene handles, and attached presentation components.
 - [ ] Write a field checklist for capture and validation. Extend it whenever later milestones add persistent state.
 - [ ] Use wall-clock time only for save metadata, not to advance gameplay after loading.
 

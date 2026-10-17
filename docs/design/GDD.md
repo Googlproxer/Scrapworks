@@ -1,10 +1,12 @@
 # Scrapworks Game Design Document
 
-Updated 2 October 2026.
+Updated 17 October 2026. Gameplay rules retained; 3D presentation direction confirmed.
 
 Scrapworks is a web game about building an automated factory to restore a dead planet. The player balances industrial progress with the environmental impact of the machinery that enables it. This document records the agreed gameplay direction and proposed first playable milestone. Architecture, technology choices, state management, and persistence are covered in the [Technical Design Document](TDD.md). Visual direction and character asset specifications are covered in the [Art Document](../art/README.md).
 
 ## Agreed gameplay direction
+
+- Present the world and directly controlled protagonist in 3D with an angled overhead camera. The renderer does not change the progression and research rules below.
 
 - Factory building and automation are the main appeal, drawing on the player's enjoyment of Factorio and Satisfactory.
 - The setting is a damaged planet that the player gradually restores.

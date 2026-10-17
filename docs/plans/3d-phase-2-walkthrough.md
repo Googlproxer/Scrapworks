@@ -2,9 +2,13 @@
 
 Prepared 11 October 2026. Companion to [Phase 2 of the 3D migration plan](3d-migration.md#phase-2-preserve-lifecycle-and-input-ownership).
 
+Active implementation guidance, reconciled 17 October 2026. Apply it to the current `loadEditorScene` path and `BabylonGameClient`; the user implements these runtime changes. The input/activity/clock files currently exist as empty placeholders.
+
 Build on the completed Phase 1 client. The remaining work is input ownership, suspension when hidden, recovery from lost graphics capability, and broader lifecycle tests. Work through these checkpoints in order to implement Phase 2 yourself.
 
 Phase 1 is complete; the changes below are Phase 2 implementation guidance. Player movement and fixed-step simulation integration follow in Phase 3.
+
+Updated 12 October 2026: initial [Phase 1.5 Editor integration](3d-migration.md#phase-15-integrate-babylonjs-editor-authoring) now loads editable MainMenu and Game scenes through the official Editor loader. The 17 October cleanup adds automatic development export/reload and failure retention; world markers remain unfinished. Apply this walkthrough to the authored loader and keep presentation settings editable in the Editor. Its code excerpts describe the earlier Phase 1 baseline; inspect the current loader before applying them. This setup did not implement any Phase 2 checkpoint.
 
 ## Existing lifecycle foundations
 
@@ -20,7 +24,7 @@ The current implementation already provides these mechanisms:
 | Late assets        | Disposed after destruction or a superseded transition                  |
 | Errors             | Angular error display and Retry through remounting                     |
 
-Keep those mechanisms as you work through the following steps. The [Phase 1 walkthrough](3d-phase-1-walkthrough.md) and [migration plan verification record](3d-migration.md#phase-1-prove-babylon-inside-the-existing-application) describe the completed prototype.
+Keep those mechanisms as you work through the following steps. The [Phase 1 walkthrough](../history/3d/phase-1-walkthrough-2026-10-11.md) and [migration plan verification record](3d-migration.md#phase-1-prove-babylon-inside-the-existing-application) describe the completed prototype.
 
 ## 1 Separate the new responsibilities
 
@@ -32,7 +36,7 @@ Extend [BabylonGameClient](../../src/game/babylon/babylon-game-client.ts), keepi
 | `lifecycle/browser-activity.ts`          | Document visibility and browser focus events             |
 | `timing/frame-clock.ts`                  | Frame timing that can reset after suspension             |
 
-Scene builders should continue constructing scenes without attaching controls. Angular should continue consuming plain contracts.
+The authored-scene loader should prepare scenes without attaching controls; the runtime input module owns camera attachment. Angular should continue consuming plain contracts. Keep pending scenes and attached components within the same transition/disposal ownership as their assets.
 
 Leave player movement and the fixed-step simulation integration for Phase 3. Phase 2 can establish an input snapshot and resettable clock without moving the character.
 
@@ -139,7 +143,7 @@ Update the duplicate-scene guard to recognise a paused current scene too. Otherw
 
 Update the [page template](../../src/app/features/game/game-page/game-page.component.html) to show paused status through `role="status"`. Preserve the current error and Retry flow. Do not automatically restore canvas focus on resume.
 
-**Checkpoint:** let the GLB finish loading while hidden. Returning should render that scene without a second import or premature `ready` event.
+**Checkpoint:** let the authored scene and its assets finish loading while hidden. Returning should render that scene without a second import or premature `ready` event.
 
 ## 7 Reset timing when activity resumes
 
@@ -165,7 +169,7 @@ When notified, invalidate the current transition token, clear input, detach cont
 
 > Graphics rendering was interrupted. Select Retry to reload the prototype.
 
-Use the existing scene disposal and error publication path. Invalidating the token is essential: a GLB load already in progress must not subsequently publish `ready`.
+Use the existing scene disposal and error publication path. Invalidating the token is essential: an authored-scene load already in progress must not subsequently publish `ready`.
 
 Keep Babylon's built-in context handling enabled. Babylon can rebuild GPU resources and exposes loss/restoration observables, but under this policy restoration of the old engine should leave the application in `error` until Retry remounts it. [Babylon context-loss handling](https://doc.babylonjs.com/features/featuresDeepDive/scene/optimize_your_scene/#handling-webgl-context-lost)
 

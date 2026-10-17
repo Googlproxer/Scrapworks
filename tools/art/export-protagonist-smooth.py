@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 
 root=Path(__file__).resolve().parents[2]
-out=root/'docs/art/characters/3d/protagonist-smooth-v1'
+out=root/'art/characters/3d/protagonist-smooth-v1'
 export_temp=out/'.export-temp'
 export_temp.mkdir(exist_ok=True)
 tempfile.tempdir=str(export_temp)

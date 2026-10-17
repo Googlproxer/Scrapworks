@@ -4,7 +4,7 @@ import json
 from mathutils import Vector
 from pathlib import Path
 
-out = Path(__file__).resolve().parents[2] / 'docs/art/characters/3d/protagonist-mpfb-v1'
+out = Path(__file__).resolve().parents[2] / 'art/characters/3d/protagonist-mpfb-v1'
 source = bpy.data.scenes['Scrapworks - MPFB Protagonist v1']
 scene = bpy.data.scenes.new('MPFB GLB roundtrip check')
 bpy.context.window.scene = scene

@@ -1,0 +1,11 @@
+{
+  "recordedAt": "2026-10-17T05:12:35.211Z",
+  "method": "Copied project; real Editor CLI, native filesystem watcher, Angular/Vite and headless Chromium on loopback",
+  "initialMenuReady": true,
+  "validSaveReloaded": true,
+  "invalidSaveReloaded": false,
+  "failedExportPreservedAllPublishedHashes": true,
+  "correctedSaveRecoveredAndReloaded": true,
+  "gameReadyAfterRecovery": true,
+  "browserErrors": []
+}

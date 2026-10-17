@@ -1,6 +1,6 @@
 # Milestone 2 Simulation foundation
 
-Updated 4 October 2026. Status: scaffold only. Prerequisite: [Milestone 1](milestone-01-project-and-integration.md).
+Updated 17 October 2026. Status: scaffold only. Prerequisite: [Milestone 1](milestone-01-project-and-integration.md).
 
 Build an authoritative world that can advance, pause, and resume without depending on rendering. The first result is inspectable data and a stable clock; walking, mining, and factory rules arrive in later milestones.
 
@@ -8,7 +8,7 @@ Build an authoritative world that can advance, pause, and resume without dependi
 
 ## Current implementation
 
-The plain TypeScript `src/simulation/simulation.ts` exists and has a passing enqueue smoke test in both Chromium and a separate Node run. Its queue contains strings; `step()`, `captureSnapshot()`, and `replaceWorld()` only log. There is no authoritative world, typed command/result model, fixed-step clock, pause/resume behavior, or connection to the renderer yet. The completed Angular–Phaser lifecycle bridge is the starting integration point; `contracts/GameState` is lifecycle state, not the future saved world.
+The plain TypeScript `src/simulation/simulation.ts` exists and has a passing enqueue smoke test in both Chromium and a separate Node run. Its queue contains strings; `step()`, `captureSnapshot()`, and `replaceWorld()` only log. There is no authoritative world, typed command/result model, fixed-step clock, pause/resume behavior, or connection to the renderer yet. Use the existing shared runtime and Babylon adapter as the integration boundary. `contracts/GameState` is renderer lifecycle state, not the future saved `WorldState`.
 
 ## Step 1 Define the initial world data
 
@@ -23,9 +23,9 @@ The plain TypeScript `src/simulation/simulation.ts` exists and has a passing enq
 
 - [ ] Use JSON-compatible records, arrays, numbers, strings, and booleans for world state.
 - [ ] Keep content definitions outside mutable state and refer to them by stable IDs.
-- [ ] Keep sprites, services, event listeners, frame timestamps, held keys, queued commands, and selected panels outside saved world data.
+- [ ] Keep meshes, materials, scene handles, services, event listeners, frame timestamps, held keys, queued commands, and selected panels outside saved world data.
 - [ ] Give the simulation one owner of mutable state. Provide detached or deliberately constructed read views for other layers.
-- [x] Keep the current simulation scaffold independent of Angular, Phaser, Dexie, browser APIs, and wall-clock time. Retain this boundary as real rules are introduced.
+- [x] Keep the current simulation scaffold independent of Angular, Babylon, Phaser, Dexie, browser APIs, and wall-clock time. Retain this boundary as real rules are introduced.
 
 ## Step 3 Define the command boundary
 
@@ -34,7 +34,7 @@ The plain TypeScript `src/simulation/simulation.ts` exists and has a passing enq
 - [ ] Validate commands against the current authoritative state immediately before mutation.
 - [ ] Make rejection leave world state unchanged; make successful resource changes atomic within the synchronous step.
 - [ ] Keep command input separate from continuously sampled movement state.
-- [ ] Expose the new-world and stepping operations through a small facade or application service so both Angular and Phaser use the same session.
+- [ ] Expose the new-world and stepping operations through a small facade or application service so both Angular and Babylon use the same session.
 
 ## Step 4 Implement fixed simulation steps
 
@@ -66,7 +66,7 @@ The plain TypeScript `src/simulation/simulation.ts` exists and has a passing enq
 ## Completion checks
 
 - [ ] A new world can be created, advanced a chosen number of ticks, inspected, paused, and resumed.
-- [ ] Simulation progress depends on steps rather than frames or Phaser physics.
+- [ ] Simulation progress depends on steps rather than render frames or renderer physics.
 - [ ] Rendering and Angular panels observe the same authoritative session.
 - [ ] No hidden-time catch-up or stuck held input occurs.
 - [ ] Core data and rule boundaries are ready for manual gameplay and later snapshots.

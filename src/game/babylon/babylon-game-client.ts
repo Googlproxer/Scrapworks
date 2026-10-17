@@ -1,12 +1,10 @@
 import type { AssetContainer } from '@babylonjs/core/assetContainer';
 import { Engine } from '@babylonjs/core/Engines/engine';
-import type { Scene } from '@babylonjs/core/scene';
+import { Scene } from '@babylonjs/core/scene';
 import type { GameClient } from '@contracts/game-client';
 import type { GameState, SceneKey } from '@contracts/game-state';
 import { BehaviorSubject } from 'rxjs';
-import { loadPlayer } from './assets/load-player';
-import { createGameScene } from './scenes/game.scene';
-import { createMainMenuScene } from './scenes/main-menu.scene';
+import { loadEditorScene } from './assets/load-editor-scene';
 
 type BabylonSceneKey = Extract<SceneKey, 'MainMenu' | 'Game'>;
 
@@ -28,7 +26,7 @@ export class BabylonGameClient implements GameClient {
 
   public constructor(
     host: HTMLElement,
-    private readonly loadPlayerFn = loadPlayer,
+    private readonly loadSceneFn = loadEditorScene,
   ) {
     this.canvas = host.ownerDocument.createElement('canvas');
     this.canvas.tabIndex = 0;
@@ -88,18 +86,16 @@ export class BabylonGameClient implements GameClient {
 
   private async loadScene(key: BabylonSceneKey, transition: number): Promise<void> {
     try {
-      const scene = key === 'Game' ? createGameScene(this.engine) : createMainMenuScene(this.engine);
+      const scene = new Scene(this.engine);
       this.currentScene = scene;
 
-      if (key === 'Game') {
-        const assets = await this.loadPlayerFn(scene);
-        if (!this.isCurrentTransition(transition)) {
-          assets.dispose();
-          return;
-        }
-        this.currentAssets = assets;
-        assets.addAllToScene();
+      const assets = await this.loadSceneFn(scene, key);
+      if (!this.isCurrentTransition(transition)) {
+        assets.dispose();
+        return;
       }
+      this.currentAssets = assets;
+      assets.addAllToScene();
 
       await scene.whenReadyAsync();
       if (!this.isCurrentTransition(transition)) return;

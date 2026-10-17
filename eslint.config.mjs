@@ -7,7 +7,7 @@ import prettier from 'eslint-plugin-prettier';
 import explicitMemberAccessibility from './tools/eslint/explicit-member-accessibility.mjs';
 
 export default defineConfig([
-  { ignores: ['dist/**', '.angular/**', 'coverage/**'] },
+  { ignores: ['dist/**', '.angular/**', 'coverage/**', 'src/scripts.ts'] },
   {
     files: ['**/*.ts'],
     extends: [eslint.configs.recommended, tseslint.configs.recommended, tseslint.configs.stylistic, angular.configs.tsRecommended],

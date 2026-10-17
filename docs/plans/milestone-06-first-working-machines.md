@@ -1,6 +1,6 @@
 # Milestone 6 First working machines
 
-Updated 4 October 2026. Status: not started. Prerequisite: [Milestone 5](milestone-05-research.md).
+Updated 17 October 2026. Status: not started. Prerequisite: [Milestone 5](milestone-05-research.md).
 
 Let the player craft and place a coal generator and recycler, supply them manually, and collect useful output. Establish inspectable construction, power, and production rules before automating transport.
 
@@ -8,7 +8,7 @@ Let the player craft and place a coal generator and recycler, supply them manual
 
 ## Current implementation
 
-Recycler generation concepts exist in `docs/art/machinery/`, but they are source artwork. There are no simulation machine records, construction commands, footprints, fuel, power allocation, buffers, or machine jobs. Start these systems after research and gameplay saves have the required state boundaries.
+Recycler generation concepts exist in `art/machinery/`, but they are source artwork. There are no simulation machine records, construction commands, footprints, fuel, power allocation, buffers, or machine jobs. Start these systems after research and gameplay saves have the required state boundaries.
 
 ## Step 1 Define machine content and state
 
@@ -53,7 +53,7 @@ Recycler generation concepts exist in `docs/art/machinery/`, but they are source
 - [ ] Add an inspector showing buffers, selected recipe, work progress, fuel, power supply/demand, and blocking reason.
 - [ ] Keep inspection and selection in presentation/session state, referencing machines by ID.
 - [ ] Provide keyboard-accessible loading and collection actions alongside world interaction.
-- [ ] Render machine sprites from state without allowing animation or scene updates to advance production.
+- [ ] Render machine models from state without allowing animation or scene updates to advance production.
 
 ## Step 6 Extend saving and verify behavior
 

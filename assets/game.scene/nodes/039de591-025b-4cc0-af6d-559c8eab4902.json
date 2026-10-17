@@ -1,0 +1,58 @@
+{
+    "tags": null,
+    "position": [
+        -0.06150449812412262,
+        0.12021911889314651,
+        0.01733328402042389
+    ],
+    "rotation": [
+        0,
+        0,
+        0
+    ],
+    "rotationQuaternion": [
+        0.5232931971549988,
+        -0.2993890643119812,
+        0.703941822052002,
+        0.37549474835395813
+    ],
+    "scaling": [
+        1.000000238418579,
+        1.0000001192092896,
+        1.0000001192092896
+    ],
+    "billboardMode": 0,
+    "scalingDeterminant": 1,
+    "infiniteDistance": false,
+    "ignoreNonUniformScaling": false,
+    "reIntegrateRotationIntoRotationQuaternion": false,
+    "name": "mixamorig:LeftShoulder",
+    "id": "039de591-025b-4cc0-af6d-559c8eab4902",
+    "state": "",
+    "metadata": {
+        "parentId": 1791784069534
+    },
+    "type": "TransformNode",
+    "uniqueId": 1791784069512,
+    "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+    ],
+    "isEnabled": true,
+    "animations": [],
+    "ranges": []
+}

@@ -1,0 +1,58 @@
+{
+    "tags": null,
+    "position": [
+        -3.469446951953614e-18,
+        0.12220876663923264,
+        -4.656612873077393e-10
+    ],
+    "rotation": [
+        0,
+        0,
+        0
+    ],
+    "rotationQuaternion": [
+        -0.04378422722220421,
+        -1.1694084589564113e-10,
+        9.440656589809748e-12,
+        0.9990410208702087
+    ],
+    "scaling": [
+        1,
+        1,
+        1
+    ],
+    "billboardMode": 0,
+    "scalingDeterminant": 1,
+    "infiniteDistance": false,
+    "ignoreNonUniformScaling": false,
+    "reIntegrateRotationIntoRotationQuaternion": false,
+    "name": "mixamorig:Spine2",
+    "id": "a2de3061-6a19-4170-87d7-02475f575cb6",
+    "state": "",
+    "metadata": {
+        "parentId": 1791784069535
+    },
+    "type": "TransformNode",
+    "uniqueId": 1791784069534,
+    "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+    ],
+    "isEnabled": true,
+    "animations": [],
+    "ranges": []
+}

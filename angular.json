@@ -27,7 +27,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "ignore": ["assets/models/Protag-v1.glb", "assets/map/basic-map.json", "assets/tilesets/terrain.png", "assets/star.png", "assets/.gitkeep"]
               }
             ],
             "styles": ["src/styles.scss"]

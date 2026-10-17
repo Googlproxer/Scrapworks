@@ -3,7 +3,7 @@ import bpy
 import importlib
 from pathlib import Path
 
-out = Path(__file__).resolve().parents[2] / 'docs/art/characters/3d/protagonist-mpfb-v1'
+out = Path(__file__).resolve().parents[2] / 'art/characters/3d/protagonist-mpfb-v1'
 scene = bpy.data.scenes['Scrapworks - MPFB Protagonist v1']
 bpy.context.window.scene = scene
 pkg = next(name for name in bpy.context.preferences.addons.keys() if name.endswith('.mpfb'))

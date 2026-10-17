@@ -1,0 +1,58 @@
+{
+    "tags": null,
+    "position": [
+        -0.011218786239624023,
+        0.031034693121910095,
+        0.02329062670469284
+    ],
+    "rotation": [
+        0,
+        0,
+        0
+    ],
+    "rotationQuaternion": [
+        0.21868789196014404,
+        -0.6147788763046265,
+        -0.5288592576980591,
+        0.5427065491676331
+    ],
+    "scaling": [
+        1.0000001192092896,
+        0.9999998807907104,
+        1
+    ],
+    "billboardMode": 0,
+    "scalingDeterminant": 1,
+    "infiniteDistance": false,
+    "ignoreNonUniformScaling": false,
+    "reIntegrateRotationIntoRotationQuaternion": false,
+    "name": "mixamorig:RightHandThumb1",
+    "id": "d7e1b901-841a-497b-8a6e-a2422d253389",
+    "state": "",
+    "metadata": {
+        "parentId": 1791784069530
+    },
+    "type": "TransformNode",
+    "uniqueId": 1791784069529,
+    "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+    ],
+    "isEnabled": true,
+    "animations": [],
+    "ranges": []
+}

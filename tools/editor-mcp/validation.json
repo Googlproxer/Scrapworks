@@ -1,0 +1,34 @@
+{
+  "validatedOn": "2026-10-12",
+  "editorVersion": "5.5.2",
+  "server": { "name": "babylonjs-editor-mcp", "version": "0.1.0", "toolCount": 79 },
+  "source": "Installed Editor resources/app.asar.unpacked/build/mcp/index.mjs",
+  "bundleSha256": "abde6017fdb47dc34e27e726b9ef4d5b09c1716805ce716cb547b8b37ac9bdee",
+  "transport": "stdio",
+  "bridge": "http://127.0.0.1:3712",
+  "project": "L:/Angular/scrapworks/scrapworks.bjseditor",
+  "checks": {
+    "initialize": "passed",
+    "ping": "passed",
+    "discovery": "passed",
+    "liveProjectIdentity": "passed",
+    "mainMenuOpen": "passed",
+    "gameOpen": "passed",
+    "nativeSaveAndReopen": "passed",
+    "protagonistImport": "passed",
+    "propertyWriteAndReadback": "passed",
+    "temporaryPrimitiveCreateTransformAndRemoval": "passed",
+    "viewportScreenshot": "passed",
+    "gamePreviewCompile": "passed",
+    "gamePreviewRuntime": "passed",
+    "gamePreviewStop": "passed",
+    "bridgeReconnectAfterEditorReload": "passed"
+  },
+  "gamePreview": { "camera": "ArcRotateCamera", "errors": [], "warnings": [] },
+  "limitations": [
+    "Native Save confirmation requires the Editor window.",
+    "Leave the viewport visible for preview and screenshot checks.",
+    "Wait for Play preparation before stopping; an early stop can require Editor reload.",
+    "MainMenu preview completion was not confirmed; both scenes passed browser loading and MainMenu opened in the Editor."
+  ]
+}

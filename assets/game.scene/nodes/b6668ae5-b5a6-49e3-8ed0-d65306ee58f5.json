@@ -1,0 +1,58 @@
+{
+    "tags": null,
+    "position": [
+        3.958120942115784e-9,
+        0.382436066865921,
+        -1.6298145055770874e-9
+    ],
+    "rotation": [
+        0,
+        0,
+        0
+    ],
+    "rotationQuaternion": [
+        0.5441797375679016,
+        0.27146002650260925,
+        0.2435939460992813,
+        0.7555394768714905
+    ],
+    "scaling": [
+        0.9999999403953552,
+        1.0000001192092896,
+        1
+    ],
+    "billboardMode": 0,
+    "scalingDeterminant": 1,
+    "infiniteDistance": false,
+    "ignoreNonUniformScaling": false,
+    "reIntegrateRotationIntoRotationQuaternion": false,
+    "name": "mixamorig:RightFoot",
+    "id": "b6668ae5-b5a6-49e3-8ed0-d65306ee58f5",
+    "state": "",
+    "metadata": {
+        "parentId": 1791784069492
+    },
+    "type": "TransformNode",
+    "uniqueId": 1791784069491,
+    "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+    ],
+    "isEnabled": true,
+    "animations": [],
+    "ranges": []
+}

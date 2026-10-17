@@ -1,7 +1,13 @@
 flowchart TB
+    subgraph Authoring[Authored initial layout]
+        Editor[Editor scenes and markers]
+        Compiler[World definition compiler]
+        Definition[Plain WorldDefinition]
+    end
+
     subgraph Presentation[Presentation]
         UI[Angular panels and menus]
-        Scene[Phaser world scene]
+        Scene[Babylon world scene]
         Facade[Game facade]
         Views[Published read-only views]
     end
@@ -21,6 +27,9 @@ flowchart TB
         Files[JSON file backups]
     end
 
+    Editor -->|saved layout| Compiler
+    Compiler -->|validate and convert units| Definition
+    Definition -->|initialise world| Sim
     UI -->|player commands| Facade
     Scene -->|movement and world commands| Facade
     Facade -->|queue commands| Sim

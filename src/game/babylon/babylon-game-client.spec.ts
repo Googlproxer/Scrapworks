@@ -1,21 +1,22 @@
 import { AssetContainer } from '@babylonjs/core/assetContainer';
 import { EngineStore } from '@babylonjs/core/Engines/engineStore';
+import { Material } from '@babylonjs/core/Materials/material';
 import type { GameState } from '@contracts/game-state';
-import { loadPlayer } from './assets/load-player';
+import { loadEditorScene } from './assets/load-editor-scene';
 import { BabylonGameClient } from './babylon-game-client';
 
 describe('BabylonGameClient in the browser', () => {
   let host: HTMLDivElement;
   let client: BabylonGameClient;
   let states: GameState[];
-  let loadPlayerFn: ReturnType<typeof vi.fn<typeof loadPlayer>>;
+  let loadSceneFn: ReturnType<typeof vi.fn<typeof loadEditorScene>>;
 
   beforeEach(() => {
     host = document.createElement('div');
     host.style.cssText = 'width: 480px; height: 320px;';
     document.body.append(host);
-    loadPlayerFn = vi.fn(loadPlayer);
-    client = new BabylonGameClient(host, loadPlayerFn);
+    loadSceneFn = vi.fn(loadEditorScene);
+    client = new BabylonGameClient(host, loadSceneFn);
     states = [];
     client.subscribe((state) => states.push(state));
   });
@@ -31,10 +32,10 @@ describe('BabylonGameClient in the browser', () => {
     return EngineStore.LastCreatedEngine!;
   }
 
-  function deferModel() {
+  function deferScene() {
     let resolve!: (assets: AssetContainer) => void;
     const promise = new Promise<AssetContainer>((complete) => (resolve = complete));
-    loadPlayerFn.mockReturnValueOnce(promise);
+    loadSceneFn.mockReturnValueOnce(promise);
     return resolve;
   }
 
@@ -50,7 +51,51 @@ describe('BabylonGameClient in the browser', () => {
     await expect.poll(() => engine.getRenderHeight()).toBe(240);
   });
 
-  it('loads the actual rigged GLB and disposes the previous scene without duplicating the render loop', async () => {
+  it('deserializes a GridMaterial and renders it with the authored menu camera', async () => {
+    const engine = await waitForMenu();
+    const scene = engine.scenes[0];
+    // Do not import GridMaterial in the test: that would register the missing
+    // class and mask a regression in the runtime's serialized-type imports.
+    const material = Material.Parse(
+      { customType: 'BABYLON.GridMaterial', id: 'grid-regression', name: 'grid-regression', gridRatio: 100, lineColor: [0, 1, 0] },
+      scene,
+      '',
+    );
+    expect(material?.getClassName()).toBe('GridMaterial');
+    expect(material).toMatchObject({ gridRatio: 100, lineColor: { r: 0, g: 1, b: 0 } });
+    scene.getMeshByName('ground')!.material = material;
+    await scene.whenReadyAsync();
+    const previousFrame = scene.getFrameId();
+    scene.render();
+    expect(scene.getFrameId()).toBeGreaterThan(previousFrame);
+    expect(scene.activeCamera?.getClassName()).toBe('UniversalCamera');
+    expect(states.at(-1)?.phase).toBe('ready');
+  });
+
+  it('loads the packaged logo as an opaque cutout instead of a fallback texture', async () => {
+    const engine = await waitForMenu();
+    const material = engine.scenes[0].getMeshByName('title')!.material!;
+    expect(material.needAlphaBlending()).toBe(false);
+    expect(material.needAlphaTesting()).toBe(true);
+    const texture = material.getAlphaTestTexture()!;
+    expect(texture.hasAlpha).toBe(true);
+    expect(texture.name).toContain('assets/textures/branding/title-logo-v1.png');
+    // A failed-image checker can still report ready. Inspect the uploaded image
+    // to prove the actual PNG, with both transparent and solid pixels, loaded.
+    const pixels = await texture.readPixels();
+    expect(pixels).not.toBeNull();
+    const rgba = new Uint8Array(pixels!.buffer, pixels!.byteOffset, pixels!.byteLength);
+    let solid = 0;
+    let transparent = 0;
+    for (let index = 3; index < rgba.length; index += 4) {
+      if (rgba[index] >= 128) ++solid;
+      if (rgba[index] === 0) ++transparent;
+    }
+    expect(solid).toBeGreaterThan(0);
+    expect(transparent).toBeGreaterThan(0);
+  });
+
+  it('loads the authored Game scene and rig and disposes the menu without duplicating the render loop', async () => {
     const engine = await waitForMenu();
     const menu = engine.scenes[0];
     client.setScene('Game');
@@ -59,7 +104,7 @@ describe('BabylonGameClient in the browser', () => {
     expect(menu.isDisposed).toBe(true);
     await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('ready');
     expect(states.at(-1)?.sceneKey).toBe('Game');
-    expect(loadPlayerFn).toHaveBeenCalledOnce();
+    expect(loadSceneFn).toHaveBeenCalledTimes(2);
     expect(engine.activeRenderLoops).toHaveLength(1);
     expect(engine.scenes).toHaveLength(1);
     const scene = engine.scenes[0];
@@ -72,20 +117,21 @@ describe('BabylonGameClient in the browser', () => {
     const skinnedMeshes = scene.meshes.filter((mesh) => mesh.skeleton);
     expect(skinnedMeshes).toHaveLength(10);
     expect(skinnedMeshes.every((mesh) => mesh.isVerticesDataPresent('matricesWeights'))).toBe(true);
-    const bounds = scene.getMeshByName('__root__')!.getHierarchyBoundingVectors(true);
-    expect(Math.abs(bounds.min.y)).toBeLessThan(0.05);
-    expect(bounds.max.y - bounds.min.y).toBeGreaterThan(1);
-    expect(bounds.max.y - bounds.min.y).toBeLessThan(2);
+    const bounds = scene.getMeshByName('Protag-v1.glb')!.getHierarchyBoundingVectors(true);
+    expect(Math.abs(bounds.min.y)).toBeLessThan(5);
+    expect(bounds.max.y - bounds.min.y).toBeGreaterThan(100);
+    expect(bounds.max.y - bounds.min.y).toBeLessThan(200);
+    expect(scene.getMeshByName('obstacle')!.position.asArray()).toEqual([300, 75, 0]);
     expect(scene.cameras).toHaveLength(1);
-    expect(scene.lights).toHaveLength(1);
+    expect(scene.lights.filter((light) => light.getClassName() === 'HemisphericLight')).toHaveLength(1);
     expect(scene.animationGroups).toHaveLength(0);
   });
 
-  it('reports an asynchronous model failure and can return to the menu', async () => {
+  it('reports an asynchronous scene failure and can return to the menu', async () => {
     const engine = await waitForMenu();
-    loadPlayerFn.mockRejectedValueOnce(new Error('Missing protagonist GLB'));
+    loadSceneFn.mockRejectedValueOnce(new Error('Missing authored scene'));
     client.setScene('Game');
-    await expect.poll(() => states.at(-1)).toEqual({ phase: 'error', sceneKey: 'Game', errorMessage: 'Missing protagonist GLB' });
+    await expect.poll(() => states.at(-1)).toEqual({ phase: 'error', sceneKey: 'Game', errorMessage: 'Missing authored scene' });
     expect(engine.scenes).toHaveLength(0);
     client.setScene('MainMenu');
     await waitForMenu();
@@ -94,7 +140,7 @@ describe('BabylonGameClient in the browser', () => {
 
   it('disposes assets that finish loading after the client is destroyed', async () => {
     const engine = await waitForMenu();
-    const complete = deferModel();
+    const complete = deferScene();
     client.setScene('Game');
     const scene = engine.scenes[0];
     const assets = new AssetContainer(scene);
@@ -117,9 +163,9 @@ describe('BabylonGameClient in the browser', () => {
     expect(host.querySelector('canvas')).toBeNull();
   });
 
-  it('rejects a late model completion from a superseded transition', async () => {
+  it('rejects a late scene completion from a superseded transition', async () => {
     const engine = await waitForMenu();
-    const complete = deferModel();
+    const complete = deferScene();
     client.setScene('Game');
     const assets = new AssetContainer(engine.scenes[0]);
     const dispose = vi.spyOn(assets, 'dispose');
@@ -139,7 +185,7 @@ describe('BabylonGameClient in the browser', () => {
       if (state.phase === 'loading') client.destroy();
     });
     client.setScene('Game');
-    expect(loadPlayerFn).not.toHaveBeenCalled();
+    expect(loadSceneFn).toHaveBeenCalledOnce(); // Only the initial menu.
     expect(engine.isDisposed).toBe(true);
     expect(states.at(-1)?.phase).toBe('stopped');
   });

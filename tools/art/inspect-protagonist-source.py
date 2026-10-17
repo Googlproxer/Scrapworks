@@ -3,7 +3,7 @@ import gzip
 import json
 from pathlib import Path
 
-root = Path(__file__).resolve().parents[2] / 'docs/art/characters/3d/protagonist-smooth-v1/sources'
+root = Path(__file__).resolve().parents[2] / 'art/characters/3d/protagonist-smooth-v1/sources'
 vertices, faces, groups = [], [], {}
 group = ''
 for line in (root / 'makehuman-base.obj').read_text().splitlines():

@@ -34,6 +34,7 @@ it('checks accessibility in external and inline Angular templates', async () => 
 });
 
 it('ignores generated output for TypeScript and templates', async () => {
+  assert.equal(await eslint.isPathIgnored('src/scripts.ts'), true);
   for (const directory of ['dist', '.angular', 'coverage']) {
     for (const extension of ['ts', 'html']) {
       assert.equal(await eslint.isPathIgnored(`${directory}/generated.${extension}`), true);

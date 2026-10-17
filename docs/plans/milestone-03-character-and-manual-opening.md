@@ -1,22 +1,22 @@
 # Milestone 3 Character and manual opening
 
-Updated 4 October 2026. Status: presentation scaffold only. Prerequisite: [Milestone 2](milestone-02-simulation-foundation.md).
+Updated 17 October 2026. Status: presentation scaffold only. Prerequisite: [Milestone 2](milestone-02-simulation-foundation.md).
 
-Make the first playable loop: walk to scrap, salvage it, and craft basic plates and wire by hand. The player starts with abilities and an empty inventory. Use a marker or the existing idle character sample while movement animation remains unfinished.
+Make the first playable loop: walk to scrap, salvage it, and craft basic plates and wire by hand. The player starts with abilities and an empty inventory. Use a simple 3D marker or the static rig while movement animation remains unfinished.
 
 [High-level plan](README.md) · [Next milestone](milestone-04-first-local-save.md)
 
 ## Current implementation
 
-The Game scene creates a Player from `public/assets/player/player.png`, and the current Phaser object samples WASD/Shift and moves directly during frame updates. This is a presentation scaffold. Authoritative movement, normalized input, collision, coordinate conversion, deposits, salvage, crafting, inventory, and completed movement animations are not implemented. The approved single idle pose is available; the generated direction sheet still needs cleanup.
+The Editor-authored Babylon Game scene contains placeholder geometry and a static rigged protagonist. The earlier `/` Phaser Player samples WASD/Shift and moves its sprite directly; that prototype is not authoritative gameplay. World movement, normalized input, collision, picking/grid conversion, deposits, salvage, crafting, inventory, and animation remain unimplemented. Follow the 3D fixture and lifecycle prerequisites in the cleanup plan.
 
 ## Step 1 Define coordinates and picking
 
-- [ ] Keep positions, distances, and collision footprints in square-grid world coordinates.
-- [ ] Implement world-to-screen and screen-to-world transforms in the Phaser adapter for the angled overhead presentation.
-- [ ] Account for camera position and zoom when converting a pointer to a world tile.
+- [ ] Keep positions, distances, and collision footprints in metres on the square-grid X/Z ground plane.
+- [ ] Pick the ground with Babylon camera rays, convert Editor centimetres to gameplay metres at the boundary, and resolve the logical grid independently of mesh bounds.
+- [ ] Account for camera position, rotation, zoom, and canvas bounds when converting a pointer to a ground/grid position.
 - [ ] Check transform round trips and selection at tile centers, boundaries, and several camera positions.
-- [ ] Keep drawing order, sprite offsets, and camera following separate from physical world positions.
+- [ ] Keep mesh pivots, character animation, occlusion, and camera following separate from authoritative world positions.
 
 ## Step 2 Add player movement
 
@@ -80,7 +80,7 @@ The Game scene creates a Player from `public/assets/player/player.png`, and the 
 | Input stays active when a panel is focused              | Track whether gameplay owns input and clear held movement when ownership changes.                                           |
 | Crafted output fills the inventory unexpectedly         | Define capacity accounting before accepting a job. Preserve a finished-but-blocked job if space disappears during crafting. |
 | Craft cancellation creates free resources               | Leave cancellation unavailable until reserved ingredients and refund rules are explicit.                                    |
-| The character sample is mistaken for finished animation | The current asset is a single south-facing idle pose. Keep runtime sizing and animation preparation as separate art work.   |
+| The character sample is mistaken for finished animation | The 3D import is a static rig. Keep runtime scale, deformation checks, and animation preparation as separate art work.      |
 
 Record implementation notes here:
 

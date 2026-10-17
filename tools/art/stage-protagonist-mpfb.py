@@ -5,7 +5,7 @@ from mathutils import Vector
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[2]
-out = root / 'docs/art/characters/3d/protagonist-mpfb-v1'
+out = root / 'art/characters/3d/protagonist-mpfb-v1'
 scene = bpy.data.scenes['Scrapworks - MPFB Protagonist v1']
 bpy.context.window.scene = scene
 character = scene.collection.children['01 MPFB character']

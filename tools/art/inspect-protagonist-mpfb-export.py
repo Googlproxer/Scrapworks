@@ -3,7 +3,7 @@ import json
 import struct
 from pathlib import Path
 
-out = Path(__file__).resolve().parents[2] / 'docs/art/characters/3d/protagonist-mpfb-v1'
+out = Path(__file__).resolve().parents[2] / 'art/characters/3d/protagonist-mpfb-v1'
 data = (out / 'protagonist-mpfb-v1.glb').read_bytes()
 magic, version, length = struct.unpack_from('<4sII', data)
 assert magic == b'glTF' and version == 2 and length == len(data)

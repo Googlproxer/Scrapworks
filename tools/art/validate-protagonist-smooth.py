@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 
 root=Path(__file__).resolve().parents[2]
-out=root/'docs/art/characters/3d/protagonist-smooth-v1'
+out=root/'art/characters/3d/protagonist-smooth-v1'
 validation_temp=out/'.validation-temp'
 validation_temp.mkdir(exist_ok=True)
 tempfile.tempdir=str(validation_temp)

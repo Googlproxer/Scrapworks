@@ -1,7 +1,7 @@
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { EngineStore } from '@babylonjs/core/Engines/engineStore';
 import { LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
-import { loadPlayer } from '@game/babylon/assets/load-player';
+import { loadEditorScene } from '@game/babylon/assets/load-editor-scene';
 import { BabylonGameClient } from '@game/babylon/babylon-game-client';
 import axe from 'axe-core';
 import { GAME_CLIENT_FACTORY } from '../game-client-factory';
@@ -9,13 +9,13 @@ import { GamePageComponent } from './game-page.component';
 
 describe('Babylon game page integration', () => {
   let fixture: ComponentFixture<GamePageComponent>;
-  let loadPlayerFn: ReturnType<typeof vi.fn<typeof loadPlayer>>;
+  let loadSceneFn: ReturnType<typeof vi.fn<typeof loadEditorScene>>;
 
   beforeEach(async () => {
-    loadPlayerFn = vi.fn(loadPlayer);
+    loadSceneFn = vi.fn(loadEditorScene);
     await TestBed.configureTestingModule({
       imports: [GamePageComponent],
-      providers: [{ provide: GAME_CLIENT_FACTORY, useValue: (host: HTMLElement) => new BabylonGameClient(host, loadPlayerFn) }],
+      providers: [{ provide: GAME_CLIENT_FACTORY, useValue: (host: HTMLElement) => new BabylonGameClient(host, loadSceneFn) }],
     }).compileComponents();
     fixture = TestBed.createComponent(GamePageComponent);
     (fixture.nativeElement as HTMLElement).style.cssText = 'width: 480px; height: 320px;';
@@ -63,11 +63,11 @@ describe('Babylon game page integration', () => {
   it('shows a load error and remounts through Retry before allowing Play Game again', async () => {
     const runtime = fixture.componentInstance.gameRuntimeService;
     const previousEngine = EngineStore.LastCreatedEngine!;
-    loadPlayerFn.mockImplementationOnce((scene) => LoadAssetContainerAsync('/assets/models/missing-protagonist.glb', scene));
+    loadSceneFn.mockImplementationOnce((scene) => LoadAssetContainerAsync('/scene/missing-game.babylon', scene));
     button('Play Game!')!.click();
     await expect.poll(() => runtime.state().phase).toBe('error');
     fixture.detectChanges();
-    expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('missing-protagonist.glb');
+    expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('missing-game.babylon');
     expect(button('Play Game!')).toBeUndefined();
     await expectAccessible();
     button('Retry')!.click();

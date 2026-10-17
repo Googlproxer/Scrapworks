@@ -46,3 +46,11 @@ Thumbs.db
 
 # Tiled Files
 *.tiled-session
+
+# Babylon.js Editor generated output and local caches
+/public/scene/
+/src/scripts.ts
+/.bjseditor/
+/assets/.export-cache.json
+/assets/.assets-cache.json
+/agentdata/

@@ -16,7 +16,7 @@ classDiagram
         +captureSnapshot()
         +replaceWorld(validatedWorld)
     }
-    class GameState {
+    class WorldState {
         <<data>>
         player
         world
@@ -66,9 +66,9 @@ classDiagram
     GameFacade --> Simulation : commands and views
     GameFacade --> SaveService : save and load actions
     GameLoop --> Simulation : fixed steps
-    Simulation "1" *-- "1" GameState : owns
+    Simulation "1" *-- "1" WorldState : owns
     Simulation "1" o-- "many" GameSystem : runs modules
-    GameSystem ..> GameState : reads and updates
+    GameSystem ..> WorldState : reads and updates
     GameSystem ..> ContentCatalog : reads definitions
     SaveService --> Simulation : capture or replace world
     SaveService --> SaveCodec : encode and validate

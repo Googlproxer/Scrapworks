@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 root=Path(__file__).resolve().parents[2]
-out=root/'docs/art/characters/3d/protagonist-smooth-v1'
+out=root/'art/characters/3d/protagonist-smooth-v1'
 scene=bpy.data.scenes['Scrapworks - Smooth Protagonist v1']
 bpy.context.window.scene=scene
 scene.render.resolution_percentage=100

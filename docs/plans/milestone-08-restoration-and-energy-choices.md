@@ -8,7 +8,7 @@ Complete the small-map restoration loop: coal supports rapid progress, while cle
 
 ## Current implementation
 
-World-progression concepts exist in `docs/art/world/`, but the playable world has no daylight, coal/solar allocation, storage, water, pollution, vegetation, greenhouse state, or restoration objective. The environmental rules below remain planned gameplay rather than implemented visuals.
+World-progression concepts exist in `art/world/`, but the playable world has no daylight, coal/solar allocation, storage, water, pollution, vegetation, greenhouse state, or restoration objective. The environmental rules below remain planned gameplay rather than implemented visuals.
 
 ## Step 1 Define the remaining prototype content
 

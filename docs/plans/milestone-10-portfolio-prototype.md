@@ -1,6 +1,6 @@
 # Milestone 10 Portfolio prototype
 
-Updated 4 October 2026. Status: foundation only. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
+Updated 17 October 2026. Status: foundation only. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
 
 Turn the working systems into an understandable small-map demo that can be shown in your portfolio. Prioritize a complete playable route, readable feedback, and reliable persistence before expanding the map or technology tree.
 
@@ -8,13 +8,13 @@ Turn the working systems into an understandable small-map demo that can be shown
 
 ## Current implementation
 
-The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/cursor assets, source artwork, and repository documentation are in place. The latest application checks pass 24 tests, normal lint, and production build; the preceding shell axe audits passed. These checks do not prove a complete factory loop or accessible future HUD. Manual progression, research, automation, restoration, reliable gameplay saves, and portfolio balancing remain open.
+The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/cursor assets, source artwork, and repository documentation are in place. The 17 October baseline records 33 passing Chromium tests, normal lint, a production build, and 30 passing lint-tooling checks. Existing shell accessibility checks cover their tested states. These checks do not prove a complete factory loop or accessible future HUD. Manual progression, research, automation, restoration, reliable gameplay saves, and portfolio balancing remain open.
 
 ## Step 1 Prepare a consistent presentation
 
 - [ ] Audit the placeholder assets against the Art Document's preferred flat finish and angled overhead square-grid view.
 - [ ] Replace terrain and machines gradually, keeping the progression from improvised scrap construction to clean advanced technology readable.
-- [ ] Prepare runtime sprite dimensions, pivots, footprints, and any directional/animation frames before using concept artwork as game assets.
+- [ ] Prepare runtime model scale, ground pivots, logical footprints, materials, and animation clips; concept images are references rather than runtime meshes.
 - [ ] Keep the protagonist readable against both derelict and restored terrain through silhouette, contrast, and a clear selection/position cue.
 - [ ] Drive the gradual landscape transition from environmental state while equipment appearance follows its own technology stage.
 - [ ] Check asset licenses and maintain attribution for anything used in the demo.
@@ -42,7 +42,7 @@ The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/curs
 
 - [ ] Measure rendering frame time, fixed-step cost, published-view cost, and save capture/write duration on a representative factory.
 - [ ] Check whether Angular views update only when useful values change, rather than on every renderer frame.
-- [ ] Avoid unnecessary full-world copying outside snapshot capture and avoid recreating sprites each frame.
+- [ ] Avoid unnecessary full-world copying outside snapshot capture and avoid recreating meshes/materials each frame.
 - [ ] Measure the bundle and set meaningful warning/error budgets for this project.
 - [ ] Verify pause/resume and bounded catch-up under a deliberate frame stall.
 - [ ] Add workers or a more complex state library only if a measured problem warrants their added complexity.
@@ -72,7 +72,7 @@ The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/curs
 ## Step 7 Prepare portfolio material
 
 - [ ] Write a concise project description explaining the restoration setting, environmental trade-off, and production-based research.
-- [ ] Explain the Angular presentation boundary, plain TypeScript simulation, Phaser adapter, and versioned local-save repository.
+- [ ] Explain the Angular presentation boundary, plain TypeScript simulation, Babylon adapter, and versioned local-save repository.
 - [ ] Record a short reproducible route or capture screenshots showing both early and restored states.
 - [ ] Document setup commands, controls, save ownership, known limitations, and the supported prototype scope.
 - [ ] Separate future ideas such as remote control and cloud saves from completed features.

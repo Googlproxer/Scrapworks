@@ -14,7 +14,7 @@ from pathlib import Path
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'docs/art/characters/3d/protagonist-smooth-v1'
+OUT = ROOT / 'art/characters/3d/protagonist-smooth-v1'
 SOURCE = OUT / 'sources'
 SCENE_NAME = 'Scrapworks - Smooth Protagonist v1'
 

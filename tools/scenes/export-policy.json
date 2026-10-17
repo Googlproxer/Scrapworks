@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "additionalSceneAssets": [],
+  "excludedPublicAssets": [
+    {
+      "path": "assets/models/Protag-v1.glb",
+      "reason": "Standalone import probe; Game loads its already serialized rig, materials and geometry.",
+      "source": "art/characters/3d/Protag-v1.glb"
+    },
+    {
+      "path": "assets/map/basic-map.json",
+      "reason": "Historical Tiled export; no current route loads a map.",
+      "source": "map/basic-map.tmx"
+    },
+    {
+      "path": "assets/tilesets/terrain.png",
+      "reason": "Historical Tiled atlas; no current route loads terrain tiles.",
+      "source": "art/world/tilesets/README.md"
+    },
+    {
+      "path": "assets/star.png",
+      "reason": "Unused original template artwork. Keep its existing source file.",
+      "source": "public/assets/star.png"
+    },
+    {
+      "path": "assets/.gitkeep",
+      "reason": "Repository placeholder, not a runtime resource.",
+      "source": "public/assets/.gitkeep"
+    }
+  ],
+  "retainedPublicAssets": [
+    { "path": "assets/bg.png", "consumer": "src/game/scenes/boot.scene.ts" },
+    { "path": "assets/logo.png", "consumer": "src/game/scenes/preloader.scene.ts" },
+    { "path": "assets/player/player.png", "consumer": "src/game/scenes/preloader.scene.ts" },
+    { "path": "assets/ui/cursor.png", "consumer": "src/styles.scss" }
+  ],
+  "provenance": [
+    {
+      "source": "assets/ambientcg/Grass001/",
+      "record": "Original source pack retained byte-for-byte, with existing material/source documents and names. No current scene references its material or textures. No local license/attribution file was found; review provenance before using it in a future shipped scene."
+    },
+    {
+      "source": "assets/models/Protag-v1.glb",
+      "record": "Byte-identical to art/characters/3d/Protag-v1.glb and public/assets/models/Protag-v1.glb. Preserve this identity separately from the MPFB source export and its original validation reports."
+    },
+    {
+      "source": "art/",
+      "record": "Exact prompts, generation/validation records, original art, Blender sources and individual source-asset license comments are organised under art/. The relocation record preserves former paths and hashes; original source/validation content is retained."
+    }
+  ]
+}

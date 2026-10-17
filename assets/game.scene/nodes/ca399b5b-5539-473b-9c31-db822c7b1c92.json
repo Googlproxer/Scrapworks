@@ -1,0 +1,58 @@
+{
+    "tags": null,
+    "position": [
+        -1.862645149230957e-8,
+        0.02542795240879059,
+        0
+    ],
+    "rotation": [
+        0,
+        0,
+        0
+    ],
+    "rotationQuaternion": [
+        -0.04392864555120468,
+        0.09618579596281052,
+        0.05413190647959709,
+        0.9929190874099731
+    ],
+    "scaling": [
+        1,
+        0.9999999403953552,
+        0.9999998807907104
+    ],
+    "billboardMode": 0,
+    "scalingDeterminant": 1,
+    "infiniteDistance": false,
+    "ignoreNonUniformScaling": false,
+    "reIntegrateRotationIntoRotationQuaternion": false,
+    "name": "mixamorig:LeftHandMiddle3",
+    "id": "ca399b5b-5539-473b-9c31-db822c7b1c92",
+    "state": "",
+    "metadata": {
+        "parentId": 1791784069498
+    },
+    "type": "TransformNode",
+    "uniqueId": 1791784069497,
+    "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+    ],
+    "isEnabled": true,
+    "animations": [],
+    "ranges": []
+}

@@ -1,0 +1,58 @@
+{
+    "tags": null,
+    "position": [
+        2.9802322387695312e-8,
+        0.027446359395980835,
+        -1.4901161193847656e-8
+    ],
+    "rotation": [
+        0,
+        0,
+        0
+    ],
+    "rotationQuaternion": [
+        0.04055672511458397,
+        -0.13419954478740692,
+        -0.07458280026912689,
+        0.9873110055923462
+    ],
+    "scaling": [
+        1,
+        1.0000001192092896,
+        1
+    ],
+    "billboardMode": 0,
+    "scalingDeterminant": 1,
+    "infiniteDistance": false,
+    "ignoreNonUniformScaling": false,
+    "reIntegrateRotationIntoRotationQuaternion": false,
+    "name": "mixamorig:RightHandRing2",
+    "id": "dba277b7-5309-46f3-938c-825e8613f2fc",
+    "state": "",
+    "metadata": {
+        "parentId": 1791784069526
+    },
+    "type": "TransformNode",
+    "uniqueId": 1791784069525,
+    "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+    ],
+    "isEnabled": true,
+    "animations": [],
+    "ranges": []
+}

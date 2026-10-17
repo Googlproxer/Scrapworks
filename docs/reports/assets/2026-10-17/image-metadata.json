@@ -1,0 +1,82 @@
+[
+  {
+    "path": "assets/ambientcg/Grass001/editor_preview.png",
+    "bytes": 513685,
+    "width": 512,
+    "height": 512,
+    "channels": 4,
+    "depth": "uchar"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass 001_NormalParallax.png",
+    "bytes": 53539524,
+    "width": 4096,
+    "height": 4096,
+    "channels": 4,
+    "depth": "uchar"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass 001_ORM.png",
+    "bytes": 42943289,
+    "width": 4096,
+    "height": 4096,
+    "channels": 4,
+    "depth": "uchar"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass001.png",
+    "bytes": 513474,
+    "width": 512,
+    "height": 512,
+    "channels": 4,
+    "depth": "uchar"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass001_4K-PNG_AmbientOcclusion.png",
+    "bytes": 13103808,
+    "width": 4096,
+    "height": 4096,
+    "channels": 1,
+    "depth": "uchar"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass001_4K-PNG_Color.png",
+    "bytes": 28628548,
+    "width": 4096,
+    "height": 4096,
+    "channels": 3,
+    "depth": "uchar"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass001_4K-PNG_Displacement.png",
+    "bytes": 29975106,
+    "width": 4096,
+    "height": 4096,
+    "channels": 1,
+    "depth": "ushort"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass001_4K-PNG_NormalDX.png",
+    "bytes": 96110233,
+    "width": 4096,
+    "height": 4096,
+    "channels": 3,
+    "depth": "ushort"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass001_4K-PNG_NormalGL.png",
+    "bytes": 96110859,
+    "width": 4096,
+    "height": 4096,
+    "channels": 3,
+    "depth": "ushort"
+  },
+  {
+    "path": "assets/ambientcg/Grass001/Grass001_4K-PNG_Roughness.png",
+    "bytes": 11253938,
+    "width": 4096,
+    "height": 4096,
+    "channels": 1,
+    "depth": "uchar"
+  }
+]

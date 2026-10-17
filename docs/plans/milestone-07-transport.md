@@ -1,6 +1,6 @@
 # Milestone 7 Transport
 
-Updated 4 October 2026. Status: not started. Prerequisite: [Milestone 6](milestone-06-first-working-machines.md).
+Updated 17 October 2026. Status: not started. Prerequisite: [Milestone 6](milestone-06-first-working-machines.md).
 
 Automate supply and collection for the recycler with a small conveyor route. Transfers must preserve item quantities, survive blocked destinations, and resume from a save without changing where items are. Begin with direct routes rather than a general routing system.
 
@@ -8,7 +8,7 @@ Automate supply and collection for the recycler with a small conveyor route. Tra
 
 ## Current implementation
 
-There are no conveyor entities, port connections, saved items in transit, or transport phase. The current Phaser Player movement is unrelated to item transport. Add transport after a working, inspectable recycler and its persistent buffers exist.
+There are no conveyor entities, port connections, saved items in transit, or transport phase. Neither the static Babylon rig nor the earlier 2D movement prototype implements item transport. Add transport after a working, inspectable recycler and its persistent buffers exist.
 
 ## Step 1 Define transport content and topology
 
@@ -51,7 +51,7 @@ There are no conveyor entities, port connections, saved items in transit, or tra
 - [ ] Render conveyed items from authoritative segment/transit state and stable IDs.
 - [ ] Add directional cues and blocked/disconnected feedback that remain readable at the normal camera zoom.
 - [ ] Interpolate visual positions if useful, without moving quantities in the simulation.
-- [ ] Rebuild sprite mappings after load without spawning extra logical items.
+- [ ] Rebuild render-object mappings after load without spawning extra logical items.
 - [ ] Include segment contents and connection information in the inspector or development panel.
 
 ## Step 6 Verify conservation and continuation

@@ -1,0 +1,58 @@
+{
+    "tags": null,
+    "position": [
+        -0.013004519045352936,
+        0.08382675051689148,
+        -0.018539004027843475
+    ],
+    "rotation": [
+        0,
+        0,
+        0
+    ],
+    "rotationQuaternion": [
+        -0.08131858706474304,
+        0.2972714602947235,
+        0.20863060653209686,
+        0.9281650185585022
+    ],
+    "scaling": [
+        1.0000001192092896,
+        1.0000001192092896,
+        1
+    ],
+    "billboardMode": 0,
+    "scalingDeterminant": 1,
+    "infiniteDistance": false,
+    "ignoreNonUniformScaling": false,
+    "reIntegrateRotationIntoRotationQuaternion": false,
+    "name": "mixamorig:LeftHandPinky1",
+    "id": "a2486319-28a1-4c1b-a3af-6011efc07e04",
+    "state": "",
+    "metadata": {
+        "parentId": 1791784069509
+    },
+    "type": "TransformNode",
+    "uniqueId": 1791784069502,
+    "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+    ],
+    "isEnabled": true,
+    "animations": [],
+    "ranges": []
+}

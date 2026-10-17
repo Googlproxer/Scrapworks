@@ -2,7 +2,7 @@
 import bpy
 from pathlib import Path
 
-out = Path(__file__).resolve().parents[2] / 'docs/art/characters/3d/protagonist-mpfb-v1'
+out = Path(__file__).resolve().parents[2] / 'art/characters/3d/protagonist-mpfb-v1'
 scene = bpy.data.scenes['Scrapworks - MPFB Protagonist v1']
 bpy.context.window.scene = scene
 for view in ('front', 'three-quarter', 'back', 'face'):

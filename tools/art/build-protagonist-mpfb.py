@@ -10,7 +10,7 @@ import shutil
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[2]
-out = root / 'docs/art/characters/3d/protagonist-mpfb-v1'
+out = root / 'art/characters/3d/protagonist-mpfb-v1'
 library = out / 'mpfb-library'
 out.mkdir(parents=True, exist_ok=True)
 pkg = next(name for name in bpy.context.preferences.addons.keys() if name.endswith('.mpfb'))

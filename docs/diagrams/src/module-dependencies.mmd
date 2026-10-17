@@ -1,6 +1,9 @@
 flowchart LR
     Angular[Angular components]
-    Phaser[Phaser scene and input adapter]
+    Babylon[Babylon scene and input adapter]
+    Editor[Editor scenes and markers]
+    Compiler[World definition compiler]
+    Definition[Plain initial world definition]
     IndexedDb[IndexedDB adapter]
     Application[Facade, loop and save orchestration]
     Simulation[Simulation and gameplay modules]
@@ -8,8 +11,11 @@ flowchart LR
     Model[Plain state, command and snapshot types]
     Port[SaveRepository interface]
 
+    Editor -->|compile layout| Compiler
+    Compiler -->|validates and emits| Definition
+    Simulation -->|uses plain layout| Definition
     Angular -->|uses| Application
-    Phaser -->|uses| Application
+    Babylon -->|uses| Application
     Application -->|runs| Simulation
     Application -->|uses| Port
     IndexedDb -->|implements| Port

@@ -1,0 +1,101 @@
+{
+    "tags": null,
+    "ellipsoid": [
+        0.5,
+        1,
+        0.5
+    ],
+    "ellipsoidOffset": [
+        0,
+        0,
+        0
+    ],
+    "checkCollisions": false,
+    "applyGravity": false,
+    "updateUpVectorFromRotation": false,
+    "rotation": [
+        0,
+        0,
+        0
+    ],
+    "speed": 2,
+    "inertia": 0.9,
+    "mode": 0,
+    "position": [
+        0,
+        239.64549881423386,
+        -884.1475209603025
+    ],
+    "upVector": [
+        0,
+        1,
+        0
+    ],
+    "fov": 0.7675951295000157,
+    "projectionPlaneTilt": 0,
+    "minZ": 100,
+    "maxZ": 1000000,
+    "layerMask": 268435455,
+    "fovMode": 0,
+    "cameraRigMode": 0,
+    "ignoreCameraMaxZ": false,
+    "name": "camera",
+    "id": "camera",
+    "state": "",
+    "metadata": {
+        "sensorSize": 36,
+        "focalLength": 44.57400356070398
+    },
+    "uniqueId": 9,
+    "type": "UniversalCamera",
+    "inputsmgr": {
+        "FreeCameraKeyboardMoveInput": {
+            "tags": null,
+            "keysUp": [
+                38
+            ],
+            "keysUpward": [
+                33
+            ],
+            "keysDown": [
+                40
+            ],
+            "keysDownward": [
+                34
+            ],
+            "keysLeft": [
+                37
+            ],
+            "keysRight": [
+                39
+            ],
+            "rotationSpeed": 0.5,
+            "keysRotateLeft": [],
+            "keysRotateRight": [],
+            "keysRotateUp": [],
+            "keysRotateDown": []
+        },
+        "FreeCameraMouseInput": {
+            "tags": null,
+            "buttons": [
+                0,
+                1,
+                2
+            ],
+            "angularSensibility": 2000
+        },
+        "FreeCameraTouchInput": {
+            "tags": null,
+            "touchAngularSensibility": 200000,
+            "touchMoveSensibility": 250
+        },
+        "FreeCameraGamepadInput": {
+            "tags": null,
+            "gamepadAngularSensibility": 200,
+            "gamepadMoveSensibility": 40
+        }
+    },
+    "animations": [],
+    "ranges": [],
+    "isEnabled": true
+}
