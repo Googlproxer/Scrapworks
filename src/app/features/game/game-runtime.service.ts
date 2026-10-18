@@ -85,6 +85,15 @@ export class GameRuntimeService {
     }
   }
 
+  public setInputEnabled(on: boolean) {
+    if (!this.client || !this.isReady()) return;
+    try {
+      this.client.setInputEnabled(on);
+    } catch (error) {
+      this.stateValue.set({ phase: 'error', sceneKey: this.state().sceneKey, errorMessage: error instanceof Error ? error.message : String(error) });
+    }
+  }
+
   public retry(): void {
     const host = this.host;
     if (!host || this.state().phase !== 'error' || this.disposed) return;

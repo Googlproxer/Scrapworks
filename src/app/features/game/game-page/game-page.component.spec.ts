@@ -1,16 +1,19 @@
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { GameClient } from '@contracts/game-client';
 import { GameEvent } from '@contracts/game-events';
 import { Boot } from '@game/scenes/boot.scene';
 import { MainMenu } from '@game/scenes/main-menu.scene';
 import type { Game } from 'phaser';
+import { GAME_CLIENT_FACTORY } from '../game-client-factory';
 import { GameRuntimeService } from '../game-runtime.service';
-import { GameViewport } from '../game-viewport/game-viewport';
 import { GamePageComponent } from './game-page.component';
 
 describe('GamePageComponent integration', () => {
+  let component: GamePageComponent;
   let fixture: ComponentFixture<GamePageComponent>;
   let runtime: GameRuntimeService;
+  let client: GameClient;
+  let factory: ReturnType<typeof vi.fn<(host: HTMLElement) => GameClient>>;
   const games = new Set<Game>();
 
   beforeEach(async () => {
@@ -19,8 +22,14 @@ describe('GamePageComponent integration', () => {
       games.add(this.game);
       init.call(this);
     });
-    await TestBed.configureTestingModule({ imports: [GamePageComponent] }).compileComponents();
+    client = { subscribe: vi.fn(() => () => undefined), setScene: vi.fn(), destroy: vi.fn(), setInputEnabled: vi.fn() };
+    factory = vi.fn(() => client);
+    await TestBed.configureTestingModule({
+      imports: [GamePageComponent],
+      providers: [GameRuntimeService, { provide: GAME_CLIENT_FACTORY, useValue: factory }],
+    }).compileComponents();
     fixture = TestBed.createComponent(GamePageComponent);
+    component = fixture.componentInstance;
     runtime = fixture.componentInstance.gameRuntimeService;
     const host = fixture.nativeElement as HTMLElement;
     host.style.width = '480px';
@@ -48,13 +57,21 @@ describe('GamePageComponent integration', () => {
     return game;
   }
 
+  it('mounts into a renderer-neutral host and destroys the client with the viewport', () => {
+    expect(component).toBeTruthy();
+    const host = (fixture.nativeElement as HTMLElement).querySelector('.game-container');
+    expect(host).toBeInstanceOf(HTMLDivElement);
+    expect(factory).toHaveBeenCalledExactlyOnceWith(host);
+    expect(host?.querySelector('canvas')).toBeNull();
+    fixture.destroy();
+    expect(client.destroy).toHaveBeenCalledOnce();
+  });
+
   it('shares a scoped runtime and switches to Game through the actual Play Game button', async () => {
     fixture.detectChanges();
     expect(button()?.disabled).toBe(true);
     button()?.click();
     expect(runtime.currentSceneKey()).not.toBe('Game');
-    const childRuntime = fixture.debugElement.query(By.directive(GameViewport)).injector.get(GameRuntimeService);
-    expect(childRuntime).toBe(runtime);
     const game = await waitForMenu();
     expect(button()?.disabled).toBe(false);
     button()?.click();

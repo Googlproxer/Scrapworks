@@ -2,11 +2,11 @@ import type { AssetContainer } from '@babylonjs/core/assetContainer';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
 import type { GameClient } from '@contracts/game-client';
-import type { GameState, SceneKey } from '@contracts/game-state';
-import { BehaviorSubject } from 'rxjs';
+import { BabylonSceneKey, isValidSceneKey, type GameState, type SceneKey } from '@contracts/game-state';
+import { BehaviorSubject, combineLatest, fromEvent, map, Subscription } from 'rxjs';
 import { loadEditorScene } from './assets/load-editor-scene';
-
-type BabylonSceneKey = Extract<SceneKey, 'MainMenu' | 'Game'>;
+import { ViewportInput } from './input/viewport-input';
+import { BrowserActivity } from './lifecycle/browser-activity';
 
 export class BabylonGameClient implements GameClient {
   private readonly stateSubject = new BehaviorSubject<GameState>({
@@ -15,7 +15,12 @@ export class BabylonGameClient implements GameClient {
     errorMessage: null,
   });
 
-  private destroyed = false;
+  private readonly destroyedSubject = new BehaviorSubject(false);
+  private readonly scenePreparedSubject = new BehaviorSubject(false);
+  private readonly hostHasSizeSubject = new BehaviorSubject(false);
+
+  private readonly viewportInput: ViewportInput;
+  private readonly browserActivity = new BrowserActivity();
 
   private readonly canvas: HTMLCanvasElement;
   private readonly engine: Engine;
@@ -24,7 +29,19 @@ export class BabylonGameClient implements GameClient {
   private currentAssets?: AssetContainer;
   private transition = 0;
 
-  public constructor(
+  private canvasActiveSubject = new BehaviorSubject(false);
+
+  public get hasError() {
+    return this.stateSubject.value.phase === 'error';
+  }
+
+  public get currentKey() {
+    return this.stateSubject.value.sceneKey;
+  }
+
+  private subs: Subscription[] = [];
+
+  constructor(
     host: HTMLElement,
     private readonly loadSceneFn = loadEditorScene,
   ) {
@@ -41,17 +58,55 @@ export class BabylonGameClient implements GameClient {
       throw error;
     }
 
+    this.viewportInput = new ViewportInput(this.canvas);
+
+    this.subs.push(
+      fromEvent<FocusEvent>(this.canvas, 'focus').subscribe(this.checkCanvasActive.bind(this)),
+      fromEvent<FocusEvent>(this.canvas, 'blur').subscribe(this.checkCanvasActive.bind(this)),
+    );
+    this.checkCanvasActive();
+
     this.resizeObserver = new ResizeObserver(() => {
-      if (!this.destroyed) this.engine.resize();
+      if (this.destroyedSubject.value) return;
+      this.engine.resize();
+      this.hostHasSizeSubject.next(host.clientWidth > 0 && host.clientHeight > 0);
     });
     this.resizeObserver.observe(host);
     this.engine.resize();
+    this.hostHasSizeSubject.next(host.clientWidth > 0 && host.clientHeight > 0);
     this.engine.runRenderLoop(this.renderFrame);
+
+    // watch relevant observables for updates an update camera/render as necessary
+    const errorObs = this.stateSubject.pipe(map((s) => s.phase === 'error'));
+    const renderObs = combineLatest([this.scenePreparedSubject, this.destroyedSubject, errorObs, this.browserActivity.visibleObs, this.hostHasSizeSubject]);
+
+    this.subs.push(
+      combineLatest([
+        renderObs,
+        this.stateSubject.pipe(map((s) => s.sceneKey === 'Game')),
+        this.browserActivity.hasFocusObs,
+        this.canvasActiveSubject,
+        this.viewportInput.enabledObs,
+      ])
+        //  flatten array
+        .pipe(map(([[a, b, c, d, e], f, g, h, i]) => [a, b, c, d, e, f, g, h, i] as const))
+        .subscribe((flags) => {
+          if (!this.currentScene) return;
+          this.attachCamera(this.currentScene, ...flags);
+        }),
+      //  clear input on error
+      errorObs.subscribe(() => {
+        this.viewportInput.clear();
+      }),
+      renderObs.subscribe(([scenePrepared, destroyed, hasError]) => this.updateRenderState(destroyed, hasError, scenePrepared)),
+      this.stateSubject.subscribe((state) => console.log('Game State', state)),
+    );
+
     this.setScene('MainMenu');
   }
 
   public subscribe(listener: (state: GameState) => void): () => void {
-    if (this.destroyed) {
+    if (this.destroyedSubject.value) {
       listener(this.stateSubject.value);
       return () => undefined;
     }
@@ -61,20 +116,28 @@ export class BabylonGameClient implements GameClient {
   }
 
   public destroy(): void {
-    if (this.destroyed) return;
-    this.destroyed = true;
+    if (this.destroyedSubject.value) return;
+    this.destroyedSubject.next(true);
     ++this.transition;
+    for (const sub of this.subs) {
+      sub.unsubscribe();
+    }
+    this.subs = [];
     this.resizeObserver.disconnect();
     this.engine.stopRenderLoop(this.renderFrame);
     this.disposeCurrentScene();
     this.engine.dispose();
+    this.viewportInput.dispose();
     this.canvas.remove();
     this.stateSubject.next({ phase: 'stopped', sceneKey: null, errorMessage: null });
     this.stateSubject.complete();
+    this.destroyedSubject.complete();
+    this.scenePreparedSubject.complete();
+    this.hostHasSizeSubject.complete();
   }
 
   public setScene(key: SceneKey): void {
-    if (this.destroyed || (key !== 'MainMenu' && key !== 'Game')) return;
+    if (this.destroyedSubject.value || !isValidSceneKey(key)) return;
     const state = this.stateSubject.value;
     if (state.sceneKey === key && (state.phase === 'loading' || state.phase === 'ready')) return;
 
@@ -82,6 +145,10 @@ export class BabylonGameClient implements GameClient {
     this.disposeCurrentScene();
     this.stateSubject.next({ phase: 'loading', sceneKey: key, errorMessage: null });
     if (this.isCurrentTransition(transition)) void this.loadScene(key, transition);
+  }
+
+  public setInputEnabled(on: boolean) {
+    this.viewportInput.setEnabled(on);
   }
 
   private async loadScene(key: BabylonSceneKey, transition: number): Promise<void> {
@@ -99,19 +166,39 @@ export class BabylonGameClient implements GameClient {
 
       await scene.whenReadyAsync();
       if (!this.isCurrentTransition(transition)) return;
-      scene.activeCamera?.attachControl(this.canvas, true);
-      scene.render();
-      this.stateSubject.next({ phase: 'ready', sceneKey: key, errorMessage: null });
+      this.scenePreparedSubject.next(true);
     } catch (error) {
       if (this.isCurrentTransition(transition)) this.reportError(error);
     }
   }
 
+  private attachCamera(
+    scene: Scene,
+    scenePrepared: boolean,
+    destroyed: boolean,
+    hasError: boolean,
+    visible: boolean,
+    hostHasSize: boolean,
+    isGame: boolean,
+    hasFocus: boolean,
+    canvasActive: boolean,
+    inputEnabled: boolean,
+  ) {
+    const camera = scene.activeCamera;
+    if (!camera) return;
+    const canAcceptInput = scenePrepared && isGame && visible && hostHasSize && hasFocus && canvasActive && inputEnabled && !destroyed && !hasError;
+    if (canAcceptInput) {
+      camera.attachControl(this.canvas, true);
+      camera.inputs.removeByType('ArcRotateCameraKeyboardMoveInput');
+    } else camera.detachControl();
+  }
+
   private isCurrentTransition(transition: number): boolean {
-    return !this.destroyed && this.transition === transition;
+    return !this.destroyedSubject.value && this.transition === transition;
   }
 
   private disposeCurrentScene(): void {
+    this.scenePreparedSubject.next(false);
     const assets = this.currentAssets;
     const scene = this.currentScene;
     this.currentAssets = undefined;
@@ -126,11 +213,49 @@ export class BabylonGameClient implements GameClient {
     this.stateSubject.next({ phase: 'error', sceneKey, errorMessage: error instanceof Error ? error.message : String(error) });
   }
 
-  private readonly renderFrame = () => {
-    if (!this.destroyed && this.stateSubject.value.phase === 'ready') {
-      try {
-        this.currentScene?.render();
-      } catch (error) {
+  private checkCanvasActive() {
+    this.canvasActiveSubject.next(this.browserActivity.activeElement === this.canvas);
+  }
+
+  private canRenderCurrentScene(): boolean {
+    return (
+      this.currentScene !== undefined &&
+      this.scenePreparedSubject.value &&
+      this.browserActivity.isVisible &&
+      this.hostHasSizeSubject.value &&
+      !this.destroyedSubject.value &&
+      !this.hasError
+    );
+  }
+
+  private updateRenderState(destroyed: boolean, hasError: boolean, scenePrepared: boolean): void {
+    if (destroyed || hasError || !scenePrepared || !this.currentScene) return;
+
+    const state = this.stateSubject.value;
+    if (!this.canRenderCurrentScene() && state.phase !== 'paused') {
+      this.stateSubject.next({ ...state, phase: 'paused' });
+    }
+  }
+
+  private renderFrame = () => {
+    const scene = this.currentScene;
+    const transition = this.transition;
+    if (!scene || !this.canRenderCurrentScene()) return;
+
+    try {
+      // Initial/resumed frames resize before drawing.
+      if (this.stateSubject.value.phase !== 'ready') this.engine.resize();
+      scene.render();
+
+      // Rendering callbacks may replace/dispose the scene or change activity.
+      if (!this.isCurrentTransition(transition) || this.currentScene !== scene || !this.canRenderCurrentScene()) return;
+
+      const state = this.stateSubject.value;
+      if (state.phase !== 'ready') {
+        this.stateSubject.next({ ...state, phase: 'ready' });
+      }
+    } catch (error) {
+      if (this.isCurrentTransition(transition) && this.currentScene === scene) {
         this.reportError(error);
       }
     }

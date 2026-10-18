@@ -10271,8 +10271,8 @@ __metadata:
 
 "scrapworks-editor-mcp-plugin@file:tools/editor-mcp::locator=scrapworks%40workspace%3A.":
   version: 0.1.0
-  resolution: "scrapworks-editor-mcp-plugin@file:tools/editor-mcp#tools/editor-mcp::hash=7fb622&locator=scrapworks%40workspace%3A."
-  checksum: 10c0/e29dc33fc957b2da19c3f039843c0cf2bd36755730f2256bdedf0af7c4397ab5ca26330e07efaffaeb81ac94cf66a2e0c6ea3e026bd3e02d56dfb9c05cc78feb
+  resolution: "scrapworks-editor-mcp-plugin@file:tools/editor-mcp#tools/editor-mcp::hash=8a4bfc&locator=scrapworks%40workspace%3A."
+  checksum: 10c0/dbb42e3b9dd0411a2d1b0924e5cd6a6163fa7a365a6bc689f2a4fc781e9dc9c8b87c21b419361be5bc62e64ef6445c15420d7e94bfcb34be5e416965776387e2
   languageName: node
   linkType: hard
 

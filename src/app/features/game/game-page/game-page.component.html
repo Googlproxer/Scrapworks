@@ -1,6 +1,6 @@
 <h1 class="visually-hidden">Scrapworks</h1>
 
-<app-game-viewport />
+<div #rendererHost class="game-container"></div>
 
 @if (gameRuntimeService.errorMessage(); as errorMessage) {
   <div class="centre">
@@ -24,3 +24,18 @@
     }
   </div>
 }
+@if (gameRuntimeService.state(); as state) {
+  <div class="top-left">
+    <pre>{{ state | json }}</pre>
+  </div>
+}
+
+<div class="top-right">
+  <div>
+    <button class="button" (click)="openSaveDialog()">Open Test Save Dialog</button>
+  </div>
+</div>
+
+<div id="focus-indicator" class="top-centre">
+  <div class="circle"></div>
+</div>

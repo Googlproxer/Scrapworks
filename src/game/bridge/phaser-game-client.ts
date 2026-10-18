@@ -51,6 +51,10 @@ export class PhaserGameClient implements GameClient {
     }
   }
 
+  public setInputEnabled(on: boolean): void {
+    // noop
+  }
+
   private onSceneLoading(data: SceneEvent): void {
     if (this.destroyed || this.stateSubject.value.phase === 'error') return;
     this.stateSubject.next({ phase: 'loading', sceneKey: data.sceneKey, errorMessage: null });

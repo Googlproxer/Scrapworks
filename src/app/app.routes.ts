@@ -5,10 +5,7 @@ import { GAME_CLIENT_FACTORY } from './features/game/game-client-factory';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./features/game/game-page/game-page.component').then((p) => p.GamePageComponent),
-  },
-  {
-    path: '3d',
+    //  TODO: remove once phaser has been fully stripped.
     providers: [
       {
         provide: GAME_CLIENT_FACTORY,

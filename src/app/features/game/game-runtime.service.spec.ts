@@ -10,6 +10,7 @@ describe('GameRuntimeService', () => {
     const unsubscribe = vi.fn();
     const destroy = vi.fn();
     const setScene = vi.fn();
+    const setInputEnabled = vi.fn();
     const client: GameClient = {
       subscribe: vi.fn((callback) => {
         listener = callback;
@@ -18,6 +19,7 @@ describe('GameRuntimeService', () => {
       }),
       destroy,
       setScene,
+      setInputEnabled,
     };
     return { client, unsubscribe, destroy, setScene, emit: (state: GameState) => listener?.(state) };
   }

@@ -8,10 +8,10 @@ Work in this order. The Babylon cutover needs a reliable authored shell and coor
 
 ## 0 Review the preserved repository
 
-* [ ] Review `git status` and `git diff`, including the earlier user-authored Editor integration and the art moves. Track the `.bjseditor` project, complete `assets/` scenes/library, root `art/`, tools and docs together. Run `yarn cleanup:audit`; its JSON lists the untracked source/tool paths. Nothing was staged or committed during cleanup.
-* [ ] In a clean checkout with package-host access, confirm Yarn 4.18.1 and run `yarn install --immutable`, then `yarn scenes:export` and `yarn build`. The installed-dependency build works, but Corepack's offline cache lacks the pinned release; a fresh bootstrap is unverified. Keep the current lockfile unless an intentional dependency change requires updating it.
-* [ ] Open the one Scrapworks Editor project and run `yarn editor:mcp:check`. Check project/scene identity before any scene edit. The Editor was closed during the final documentation handoff.
-* [ ] After reviewing/staging authored inputs, run `node tools/cleanup/audit-repository.mjs --require-tracked`. It must report no ignored sources, tracked generated files or remaining untracked source/tool files. Generated scenes, script registry, caches,  `tmp/` and build output stay ignored.
+* [x] Review `git status` and `git diff`, including the earlier user-authored Editor integration and the art moves. Track the `.bjseditor` project, complete `assets/` scenes/library, root `art/`, tools and docs together. Run `yarn cleanup:audit`; its JSON lists the untracked source/tool paths. Nothing was staged or committed during cleanup.
+* [x] In a clean checkout with package-host access, confirm Yarn 4.18.1 and run `yarn install --immutable`, then `yarn scenes:export` and `yarn build`. The installed-dependency build works, but Corepack's offline cache lacks the pinned release; a fresh bootstrap is unverified. Keep the current lockfile unless an intentional dependency change requires updating it.
+* [x] Open the one Scrapworks Editor project and run `yarn editor:mcp:check`. Check project/scene identity before any scene edit. The Editor was closed during the final documentation handoff.
+* [x] After reviewing/staging authored inputs, run `node tools/cleanup/audit-repository.mjs --require-tracked`. It must report no ignored sources, tracked generated files or remaining untracked source/tool files. Generated scenes, script registry, caches,  `tmp/` and build output stay ignored.
 
 **Acceptance:** a clean checkout contains all authored inputs, installs the locked dependencies and produces both scenes through the project export wrapper. The [checkpoint/provenance notes](../reports/cleanup/2026-10-17/README.md) preserve the earlier work and remaining environment limits.
 
@@ -19,8 +19,8 @@ Work in this order. The Babylon cutover needs a reliable authored shell and coor
 
 Start in [app.html](../../src/app/app.html), [app.ts](../../src/app/app.ts), the [save dialog](../../src/app/features/save/save-load/save-load.component.html) and [save service](../../src/app/features/save/save.service.ts).
 
-* [ ] Hide the experimental save entry from the normal player flow, or label the entry and dialog clearly as a test-data tool. The current button says `Open Save Dialog`; its `name`/`value` records do not save game progress.
-* [ ] Preserve the existing `GameSaveDatabase` and test records while designing gameplay persistence. Do not clear or silently reinterpret them as world snapshots.
+* [x] Hide the experimental save entry from the normal player flow, or label the entry and dialog clearly as a test-data tool. The current button says `Open Save Dialog`; its `name`/`value` records do not save game progress.
+* [x] Preserve the existing `GameSaveDatabase` and test records while designing gameplay persistence. Do not clear or silently reinterpret them as world snapshots.
 
 **Acceptance:** a player cannot mistake the existing test-data controls for a working gameplay save. This can be a small independent change before the renderer cutover.
 
