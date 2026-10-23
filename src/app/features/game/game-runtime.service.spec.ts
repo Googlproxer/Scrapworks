@@ -10,7 +10,7 @@ describe('GameRuntimeService', () => {
     const unsubscribe = vi.fn();
     const destroy = vi.fn();
     const setScene = vi.fn();
-    const setInputEnabled = vi.fn();
+    const setInputEnabled = vi.fn<(on: boolean) => void>();
     const client: GameClient = {
       subscribe: vi.fn((callback) => {
         listener = callback;
@@ -21,7 +21,14 @@ describe('GameRuntimeService', () => {
       setScene,
       setInputEnabled,
     };
-    return { client, unsubscribe, destroy, setScene, emit: (state: GameState) => listener?.(state) };
+    return {
+      client,
+      unsubscribe,
+      destroy,
+      setScene,
+      setInputEnabled,
+      emit: (state: GameState) => listener?.(state),
+    };
   }
 
   let factory: ReturnType<typeof vi.fn<(host: HTMLElement) => GameClient>>;
@@ -29,7 +36,9 @@ describe('GameRuntimeService', () => {
 
   beforeEach(() => {
     factory = vi.fn<(host: HTMLElement) => GameClient>();
-    TestBed.configureTestingModule({ providers: [GameRuntimeService, { provide: GAME_CLIENT_FACTORY, useValue: factory }] });
+    TestBed.configureTestingModule({
+      providers: [GameRuntimeService, { provide: GAME_CLIENT_FACTORY, useValue: factory }],
+    });
     service = TestBed.inject(GameRuntimeService);
   });
 
@@ -57,6 +66,87 @@ describe('GameRuntimeService', () => {
     expect(factory).toHaveBeenCalledExactlyOnceWith(host);
     expect(game.client.subscribe).toHaveBeenCalledOnce();
     expect(game.destroy).not.toHaveBeenCalled();
+  });
+
+  it('retains a pre-mount input block and applies it to replacement clients', () => {
+    const previous = createClient();
+    const next = createClient();
+    factory.mockReturnValueOnce(previous.client).mockReturnValueOnce(next.client);
+
+    service.setInputEnabled(false);
+    service.mount(document.createElement('div'));
+    expect(previous.setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
+
+    service.mount(document.createElement('div'));
+    expect(previous.destroy).toHaveBeenCalledOnce();
+    expect(next.setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
+    next.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    service.setInputEnabled(true);
+    expect(next.setInputEnabled.mock.calls).toEqual([[false], [true]]);
+  });
+
+  it('retains the current dialog block when Retry replaces a failed client', () => {
+    const previous = createClient();
+    const next = createClient();
+    factory.mockReturnValueOnce(previous.client).mockReturnValueOnce(next.client);
+    service.mount(document.createElement('div'));
+    previous.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    service.setInputEnabled(false);
+    previous.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Graphics failed' });
+
+    service.retry();
+
+    expect(previous.destroy).toHaveBeenCalledOnce();
+    expect(next.setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
+  });
+
+  it('forwards permission while ready and reports a renderer permission failure', () => {
+    const game = createClient();
+    factory.mockReturnValue(game.client);
+    service.mount(document.createElement('div'));
+    expect(game.setInputEnabled).toHaveBeenCalledExactlyOnceWith(true);
+    game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    service.setInputEnabled(false);
+    expect(game.setInputEnabled.mock.calls).toEqual([[true], [false]]);
+
+    game.setInputEnabled.mockImplementationOnce(() => {
+      throw new Error('Could not update input');
+    });
+    service.setInputEnabled(true);
+    expect(service.state()).toEqual({
+      phase: 'error',
+      sceneKey: 'Game',
+      errorMessage: 'Could not update input',
+    });
+  });
+
+  it('forwards a new input block to the existing client during loading', () => {
+    const game = createClient();
+    factory.mockReturnValue(game.client);
+    service.mount(document.createElement('div'));
+    expect(service.isLoading()).toBe(true);
+
+    service.setInputEnabled(false);
+
+    expect(game.setInputEnabled.mock.calls).toEqual([[true], [false]]);
+    game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    expect(game.setInputEnabled).toHaveBeenLastCalledWith(false);
+  });
+
+  it('forwards an input unblock during pause before the existing client resumes', () => {
+    const game = createClient();
+    factory.mockReturnValue(game.client);
+    service.mount(document.createElement('div'));
+    game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    service.setInputEnabled(false);
+    game.emit({ phase: 'paused', sceneKey: 'Game', errorMessage: null });
+
+    service.setInputEnabled(true);
+
+    expect(service.state().phase).toBe('paused');
+    expect(game.setInputEnabled.mock.calls).toEqual([[true], [false], [true]]);
+    game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    expect(game.setInputEnabled).toHaveBeenLastCalledWith(true);
   });
 
   it('unsubscribes before destroying the old client and rejects stale callbacks after remounting', () => {
@@ -99,7 +189,11 @@ describe('GameRuntimeService', () => {
     });
     const host = document.createElement('div');
     service.mount(host);
-    expect(service.state()).toEqual({ phase: 'error', sceneKey: null, errorMessage: 'Renderer failed' });
+    expect(service.state()).toEqual({
+      phase: 'error',
+      sceneKey: null,
+      errorMessage: 'Renderer failed',
+    });
     const game = createClient();
     factory.mockReturnValue(game.client);
     service.retry();

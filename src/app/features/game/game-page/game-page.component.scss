@@ -71,6 +71,6 @@ div.circle {
   display: none;
 }
 
-app-game-viewport:focus-within ~ #focus-indicator {
+.game-container:focus-within ~ #focus-indicator {
   display: block;
 }

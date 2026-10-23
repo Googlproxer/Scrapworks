@@ -2,10 +2,15 @@ import type { AssetContainer } from '@babylonjs/core/assetContainer';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
 import type { GameClient } from '@contracts/game-client';
-import { BabylonSceneKey, isValidSceneKey, type GameState, type SceneKey } from '@contracts/game-state';
+import {
+  BabylonSceneKey,
+  isValidSceneKey,
+  type GameState,
+  type SceneKey,
+} from '@contracts/game-state';
 import { BehaviorSubject, combineLatest, fromEvent, map, Subscription } from 'rxjs';
 import { loadEditorScene } from './assets/load-editor-scene';
-import { ViewportInput } from './input/viewport-input';
+import { InputManager } from './input/input-manager';
 import { BrowserActivity } from './lifecycle/browser-activity';
 
 export class BabylonGameClient implements GameClient {
@@ -19,7 +24,7 @@ export class BabylonGameClient implements GameClient {
   private readonly scenePreparedSubject = new BehaviorSubject(false);
   private readonly hostHasSizeSubject = new BehaviorSubject(false);
 
-  private readonly viewportInput: ViewportInput;
+  private readonly inputManager: InputManager;
   private readonly browserActivity = new BrowserActivity();
 
   private readonly canvas: HTMLCanvasElement;
@@ -58,7 +63,7 @@ export class BabylonGameClient implements GameClient {
       throw error;
     }
 
-    this.viewportInput = new ViewportInput(this.canvas);
+    this.inputManager = new InputManager(this.engine);
 
     this.subs.push(
       fromEvent<FocusEvent>(this.canvas, 'focus').subscribe(this.checkCanvasActive.bind(this)),
@@ -78,15 +83,22 @@ export class BabylonGameClient implements GameClient {
 
     // watch relevant observables for updates an update camera/render as necessary
     const errorObs = this.stateSubject.pipe(map((s) => s.phase === 'error'));
-    const renderObs = combineLatest([this.scenePreparedSubject, this.destroyedSubject, errorObs, this.browserActivity.visibleObs, this.hostHasSizeSubject]);
+    const renderObs = combineLatest([
+      this.scenePreparedSubject,
+      this.destroyedSubject,
+      errorObs,
+      this.browserActivity.visibleObs,
+      this.hostHasSizeSubject,
+    ]);
+    const gameSceneObs = this.stateSubject.pipe(map((s) => s.sceneKey === 'Game'));
 
     this.subs.push(
       combineLatest([
         renderObs,
-        this.stateSubject.pipe(map((s) => s.sceneKey === 'Game')),
+        gameSceneObs,
         this.browserActivity.hasFocusObs,
         this.canvasActiveSubject,
-        this.viewportInput.enabledObs,
+        this.inputManager.enabledObs,
       ])
         //  flatten array
         .pipe(map(([[a, b, c, d, e], f, g, h, i]) => [a, b, c, d, e, f, g, h, i] as const))
@@ -96,10 +108,24 @@ export class BabylonGameClient implements GameClient {
         }),
       //  clear input on error
       errorObs.subscribe(() => {
-        this.viewportInput.clear();
+        this.inputManager.clear();
       }),
-      renderObs.subscribe(([scenePrepared, destroyed, hasError]) => this.updateRenderState(destroyed, hasError, scenePrepared)),
-      this.stateSubject.subscribe((state) => console.log('Game State', state)),
+      renderObs.subscribe(([scenePrepared, destroyed, hasError]) =>
+        this.updateRenderState(destroyed, hasError, scenePrepared),
+      ),
+
+      combineLatest([
+        this.scenePreparedSubject,
+        gameSceneObs,
+        this.hostHasSizeSubject,
+        this.canvasActiveSubject,
+        this.destroyedSubject,
+        errorObs,
+      ]).subscribe(([scenePrepared, isGame, hostHasSize, canvasFocused, destroyed, hasError]) => {
+        const viewportActive =
+          scenePrepared && isGame && hostHasSize && canvasFocused && !destroyed && !hasError;
+        this.inputManager.setViewportActive(viewportActive);
+      }),
     );
 
     this.setScene('MainMenu');
@@ -127,13 +153,14 @@ export class BabylonGameClient implements GameClient {
     this.engine.stopRenderLoop(this.renderFrame);
     this.disposeCurrentScene();
     this.engine.dispose();
-    this.viewportInput.dispose();
+    this.inputManager.dispose();
     this.canvas.remove();
     this.stateSubject.next({ phase: 'stopped', sceneKey: null, errorMessage: null });
     this.stateSubject.complete();
     this.destroyedSubject.complete();
     this.scenePreparedSubject.complete();
     this.hostHasSizeSubject.complete();
+    this.canvasActiveSubject.complete();
   }
 
   public setScene(key: SceneKey): void {
@@ -148,7 +175,7 @@ export class BabylonGameClient implements GameClient {
   }
 
   public setInputEnabled(on: boolean) {
-    this.viewportInput.setEnabled(on);
+    this.inputManager.setEnabled(on);
   }
 
   private async loadScene(key: BabylonSceneKey, transition: number): Promise<void> {
@@ -186,7 +213,16 @@ export class BabylonGameClient implements GameClient {
   ) {
     const camera = scene.activeCamera;
     if (!camera) return;
-    const canAcceptInput = scenePrepared && isGame && visible && hostHasSize && hasFocus && canvasActive && inputEnabled && !destroyed && !hasError;
+    const canAcceptInput =
+      scenePrepared &&
+      isGame &&
+      visible &&
+      hostHasSize &&
+      hasFocus &&
+      canvasActive &&
+      inputEnabled &&
+      !destroyed &&
+      !hasError;
     if (canAcceptInput) {
       camera.attachControl(this.canvas, true);
       camera.inputs.removeByType('ArcRotateCameraKeyboardMoveInput');
@@ -210,7 +246,11 @@ export class BabylonGameClient implements GameClient {
   private reportError(error: unknown): void {
     const sceneKey = this.stateSubject.value.sceneKey;
     this.disposeCurrentScene();
-    this.stateSubject.next({ phase: 'error', sceneKey, errorMessage: error instanceof Error ? error.message : String(error) });
+    this.stateSubject.next({
+      phase: 'error',
+      sceneKey,
+      errorMessage: error instanceof Error ? error.message : String(error),
+    });
   }
 
   private checkCanvasActive() {
@@ -245,10 +285,17 @@ export class BabylonGameClient implements GameClient {
     try {
       // Initial/resumed frames resize before drawing.
       if (this.stateSubject.value.phase !== 'ready') this.engine.resize();
+      //  TODO: don't handle in render, run in update loop
+      this.inputManager.takeFrame();
       scene.render();
 
       // Rendering callbacks may replace/dispose the scene or change activity.
-      if (!this.isCurrentTransition(transition) || this.currentScene !== scene || !this.canRenderCurrentScene()) return;
+      if (
+        !this.isCurrentTransition(transition) ||
+        this.currentScene !== scene ||
+        !this.canRenderCurrentScene()
+      )
+        return;
 
       const state = this.stateSubject.value;
       if (state.phase !== 'ready') {

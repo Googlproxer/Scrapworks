@@ -1,8 +1,8 @@
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { EngineStore } from '@babylonjs/core/Engines/engineStore';
 import { LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
-import { loadEditorScene } from '@game/babylon/assets/load-editor-scene';
-import { BabylonGameClient } from '@game/babylon/babylon-game-client';
+import { loadEditorScene } from '@game/assets/load-editor-scene';
+import { BabylonGameClient } from '@game/babylon-game-client';
 import axe from 'axe-core';
 import { GAME_CLIENT_FACTORY } from '../game-client-factory';
 import { GamePageComponent } from './game-page.component';
@@ -15,7 +15,12 @@ describe('Babylon game page integration', () => {
     loadSceneFn = vi.fn(loadEditorScene);
     await TestBed.configureTestingModule({
       imports: [GamePageComponent],
-      providers: [{ provide: GAME_CLIENT_FACTORY, useValue: (host: HTMLElement) => new BabylonGameClient(host, loadSceneFn) }],
+      providers: [
+        {
+          provide: GAME_CLIENT_FACTORY,
+          useValue: (host: HTMLElement) => new BabylonGameClient(host, loadSceneFn),
+        },
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(GamePageComponent);
     (fixture.nativeElement as HTMLElement).style.cssText = 'width: 480px; height: 320px;';
@@ -33,12 +38,16 @@ describe('Babylon game page integration', () => {
   });
 
   function button(label: string) {
-    return [...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button')].find((element) => element.textContent?.trim() === label);
+    return [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
+    ].find((element) => element.textContent?.trim() === label);
   }
 
   async function expectAccessible() {
     const results = await axe.run(fixture.nativeElement as HTMLElement);
-    expect(results.violations.map(({ id, nodes }) => ({ id, elements: nodes.map((node) => node.html) }))).toEqual([]);
+    expect(
+      results.violations.map(({ id, nodes }) => ({ id, elements: nodes.map((node) => node.html) })),
+    ).toEqual([]);
   }
 
   it('enters the loaded 3D scene through Play Game and releases its renderer on page destruction', async () => {
@@ -63,11 +72,15 @@ describe('Babylon game page integration', () => {
   it('shows a load error and remounts through Retry before allowing Play Game again', async () => {
     const runtime = fixture.componentInstance.gameRuntimeService;
     const previousEngine = EngineStore.LastCreatedEngine!;
-    loadSceneFn.mockImplementationOnce((scene) => LoadAssetContainerAsync('/scene/missing-game.babylon', scene));
+    loadSceneFn.mockImplementationOnce((scene) =>
+      LoadAssetContainerAsync('/scene/missing-game.babylon', scene),
+    );
     button('Play Game!')!.click();
     await expect.poll(() => runtime.state().phase).toBe('error');
     fixture.detectChanges();
-    expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('missing-game.babylon');
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
+    ).toContain('missing-game.babylon');
     expect(button('Play Game!')).toBeUndefined();
     await expectAccessible();
     button('Retry')!.click();

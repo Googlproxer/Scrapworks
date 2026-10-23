@@ -24,7 +24,9 @@ export class GameRuntimeService {
   public readonly isLoading = computed(() => this.state().phase === 'loading');
   public readonly errorMessage = computed(() => this.state().errorMessage);
 
-  public constructor() {
+  private currentInputRequest = true;
+
+  constructor() {
     inject(DestroyRef).onDestroy(() => {
       this.disposed = true;
       this.unmount();
@@ -50,13 +52,18 @@ export class GameRuntimeService {
       });
       if (generation === this.generation && this.client === client) this.unsubscribe = unsubscribe;
       else unsubscribe();
+      this.client.setInputEnabled(this.currentInputRequest);
     } catch (error) {
       if (generation !== this.generation) return;
       this.unmount();
       console.error(error);
       if (this.disposed) return;
       this.host = host;
-      this.stateValue.set({ phase: 'error', sceneKey: null, errorMessage: error instanceof Error ? error.message : String(error) });
+      this.stateValue.set({
+        phase: 'error',
+        sceneKey: null,
+        errorMessage: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 
@@ -81,16 +88,25 @@ export class GameRuntimeService {
     try {
       this.client.setScene(key);
     } catch (error) {
-      this.stateValue.set({ phase: 'error', sceneKey: key, errorMessage: error instanceof Error ? error.message : String(error) });
+      this.stateValue.set({
+        phase: 'error',
+        sceneKey: key,
+        errorMessage: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 
   public setInputEnabled(on: boolean) {
-    if (!this.client || !this.isReady()) return;
+    this.currentInputRequest = on;
+    if (!this.client) return;
     try {
       this.client.setInputEnabled(on);
     } catch (error) {
-      this.stateValue.set({ phase: 'error', sceneKey: this.state().sceneKey, errorMessage: error instanceof Error ? error.message : String(error) });
+      this.stateValue.set({
+        phase: 'error',
+        sceneKey: this.state().sceneKey,
+        errorMessage: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 

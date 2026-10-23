@@ -11,4 +11,5 @@ export interface GameState {
 
 const supportedScenes = new Set<SceneKey>(['MainMenu', 'Game']);
 
-export const isValidSceneKey = (key: string): key is BabylonSceneKey => supportedScenes.has(key as SceneKey);
+export const isValidSceneKey = (key: string): key is BabylonSceneKey =>
+  supportedScenes.has(key as SceneKey);

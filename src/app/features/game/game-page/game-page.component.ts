@@ -1,7 +1,7 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { JsonPipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnDestroy, viewChild } from '@angular/core';
 import { SaveLoadComponent } from '@app/features/save/save-load/save-load.component';
+import { UiService } from '@app/features/ui/ui.service';
 import { GameRuntimeService } from '../game-runtime.service';
 
 @Component({
@@ -9,12 +9,12 @@ import { GameRuntimeService } from '../game-runtime.service';
   selector: 'app-game-page',
   styleUrl: './game-page.component.scss',
   templateUrl: './game-page.component.html',
-  providers: [GameRuntimeService],
+  providers: [GameRuntimeService, UiService],
 })
 export class GamePageComponent implements AfterViewInit, OnDestroy {
   private readonly rendererHost = viewChild.required<ElementRef<HTMLElement>>('rendererHost');
   public readonly gameRuntimeService = inject(GameRuntimeService);
-  private readonly dialog = inject(Dialog);
+  private readonly uiService = inject(UiService);
 
   public ngAfterViewInit() {
     this.gameRuntimeService.mount(this.rendererHost().nativeElement);
@@ -29,12 +29,8 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
   }
 
   public async openSaveDialog() {
-    this.gameRuntimeService.setInputEnabled(false);
-    const dialog = this.dialog.open(SaveLoadComponent);
-    const resultSub = dialog.closed.subscribe((result) => {
-      console.log('Dialog closed with result:', result);
-      this.gameRuntimeService.setInputEnabled(true);
-      resultSub.unsubscribe();
+    this.uiService.openUIDialog('save-dialog', SaveLoadComponent, {
+      ariaLabelledBy: 'save-load-component',
     });
   }
 }

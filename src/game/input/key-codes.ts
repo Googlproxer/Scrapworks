@@ -194,3 +194,11 @@ export const keyCodes = [
   'Sleep',
   'WakeUp',
 ] as const;
+
+export type KeyCode = (typeof keyCodes)[number];
+
+const supportedCodes = new Set<string>(keyCodes);
+
+export function isKeyCode(code: string): code is KeyCode {
+  return supportedCodes.has(code);
+}

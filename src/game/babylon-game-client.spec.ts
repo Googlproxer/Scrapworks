@@ -4,6 +4,7 @@ import { Material } from '@babylonjs/core/Materials/material';
 import type { GameState } from '@contracts/game-state';
 import { loadEditorScene } from './assets/load-editor-scene';
 import { BabylonGameClient } from './babylon-game-client';
+import { InputManager } from './input/input-manager';
 
 describe('BabylonGameClient in the browser', () => {
   let host: HTMLDivElement;
@@ -28,7 +29,9 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   async function waitForMenu() {
-    await expect.poll(() => states.at(-1)).toEqual({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
+    await expect
+      .poll(() => states.at(-1))
+      .toEqual({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
     return EngineStore.LastCreatedEngine!;
   }
 
@@ -38,6 +41,99 @@ describe('BabylonGameClient in the browser', () => {
     loadSceneFn.mockReturnValueOnce(promise);
     return resolve;
   }
+
+  function observeInputPermission() {
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(false);
+    window.dispatchEvent(new FocusEvent('focus'));
+    document.dispatchEvent(new Event('visibilitychange'));
+    const inputs: InputManager[] = [];
+    const original = InputManager.prototype.setViewportActive;
+    vi.spyOn(InputManager.prototype, 'setViewportActive').mockImplementation(function (
+      this: InputManager,
+      active,
+    ) {
+      inputs.push(this);
+      original.call(this, active);
+    });
+    const canvas = host.querySelector('canvas')!;
+    canvas.focus();
+    const input = inputs.at(-1)!;
+    expect(input).toBeDefined();
+    const permissions: boolean[] = [];
+    const completed = vi.fn();
+    const subscription = input.enabledObs.subscribe({
+      next: (enabled) => permissions.push(enabled),
+      complete: completed,
+    });
+    return {
+      canvas,
+      input,
+      completed,
+      enabled: () => permissions.at(-1)!,
+      unsubscribe: () => subscription.unsubscribe(),
+    };
+  }
+
+  it('withholds gameplay input permission in the menu, during loading and after scene errors', async () => {
+    const observed = observeInputPermission();
+    try {
+      await waitForMenu();
+      expect(observed.enabled()).toBe(false);
+      loadSceneFn.mockRejectedValueOnce(new Error('Input ownership load failure'));
+      client.setScene('Game');
+      expect(states.at(-1)?.phase).toBe('loading');
+      expect(observed.enabled()).toBe(false);
+      await expect.poll(() => states.at(-1)?.phase).toBe('error');
+      expect(observed.enabled()).toBe(false);
+      client.setScene('MainMenu');
+      await waitForMenu();
+      expect(observed.enabled()).toBe(false);
+    } finally {
+      observed.unsubscribe();
+    }
+  });
+
+  it('updates gameplay input permission on resize, blur and destruction while preserving UI blocking', async () => {
+    // Physical bindings and action transitions are tested in input/capture and
+    // input/evaluator. This boundary verifies the client's ownership signal.
+    const observed = observeInputPermission();
+    const button = document.createElement('button');
+    document.body.append(button);
+    try {
+      const engine = await waitForMenu();
+      client.setScene('Game');
+      await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('ready');
+      expect(observed.enabled()).toBe(true);
+      client.setInputEnabled(false);
+      expect(observed.enabled()).toBe(false);
+
+      const scene = engine.scenes[0];
+      const frame = scene.getFrameId();
+      await expect.poll(() => scene.getFrameId()).toBeGreaterThan(frame);
+      host.style.width = '0px';
+      await expect.poll(() => states.at(-1)?.phase).toBe('paused');
+      expect(observed.enabled()).toBe(false);
+      host.style.width = '480px';
+      await expect.poll(() => states.at(-1)?.phase).toBe('ready');
+      expect(engine.scenes[0]).toBe(scene);
+      expect(observed.enabled()).toBe(false);
+
+      client.setInputEnabled(true);
+      expect(observed.enabled()).toBe(true);
+      button.focus();
+      expect(observed.enabled()).toBe(false);
+      observed.canvas.focus();
+      expect(observed.enabled()).toBe(true);
+
+      client.destroy();
+      expect(observed.enabled()).toBe(false);
+      expect(observed.completed).toHaveBeenCalledOnce();
+    } finally {
+      observed.unsubscribe();
+      button.remove();
+    }
+  }, 45000);
 
   it('publishes ready after a first frame and resizes the renderer with its host', async () => {
     expect(states.at(-1)?.phase).toBe('loading');
@@ -49,6 +145,35 @@ describe('BabylonGameClient in the browser', () => {
     host.style.height = '240px';
     await expect.poll(() => engine.getRenderWidth()).toBe(320);
     await expect.poll(() => engine.getRenderHeight()).toBe(240);
+    const renderCallback = engine.activeRenderLoops[0];
+    const stopRenderLoop = vi.spyOn(engine, 'stopRenderLoop');
+    client.destroy();
+    expect(stopRenderLoop).toHaveBeenCalledWith(renderCallback);
+  });
+
+  it('defers every frame while a scene prepares hidden and resumes the same scene once visible', async () => {
+    const engine = await waitForMenu();
+    const hidden = vi.spyOn(document, 'hidden', 'get');
+    try {
+      hidden.mockReturnValue(true);
+      document.dispatchEvent(new Event('visibilitychange'));
+      client.setScene('Game');
+      await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('paused');
+      const scene = engine.scenes[0];
+      expect(scene.getFrameId()).toBe(0);
+      expect(states.at(-1)?.sceneKey).toBe('Game');
+
+      hidden.mockReturnValue(false);
+      document.dispatchEvent(new Event('visibilitychange'));
+      await expect.poll(() => states.at(-1)?.phase).toBe('ready');
+      expect(engine.scenes[0] === scene).toBe(true);
+      expect(scene.getFrameId()).toBeGreaterThan(0);
+      expect(loadSceneFn).toHaveBeenCalledTimes(2);
+      expect(engine.activeRenderLoops).toHaveLength(1);
+    } finally {
+      hidden.mockRestore();
+      document.dispatchEvent(new Event('visibilitychange'));
+    }
   });
 
   it('deserializes a GridMaterial and renders it with the authored menu camera', async () => {
@@ -57,7 +182,13 @@ describe('BabylonGameClient in the browser', () => {
     // Do not import GridMaterial in the test: that would register the missing
     // class and mask a regression in the runtime's serialized-type imports.
     const material = Material.Parse(
-      { customType: 'BABYLON.GridMaterial', id: 'grid-regression', name: 'grid-regression', gridRatio: 100, lineColor: [0, 1, 0] },
+      {
+        customType: 'BABYLON.GridMaterial',
+        id: 'grid-regression',
+        name: 'grid-regression',
+        gridRatio: 100,
+        lineColor: [0, 1, 0],
+      },
       scene,
       '',
     );
@@ -123,7 +254,9 @@ describe('BabylonGameClient in the browser', () => {
     expect(bounds.max.y - bounds.min.y).toBeLessThan(200);
     expect(scene.getMeshByName('obstacle')!.position.asArray()).toEqual([300, 75, 0]);
     expect(scene.cameras).toHaveLength(1);
-    expect(scene.lights.filter((light) => light.getClassName() === 'HemisphericLight')).toHaveLength(1);
+    expect(
+      scene.lights.filter((light) => light.getClassName() === 'HemisphericLight'),
+    ).toHaveLength(1);
     expect(scene.animationGroups).toHaveLength(0);
   });
 
@@ -131,7 +264,9 @@ describe('BabylonGameClient in the browser', () => {
     const engine = await waitForMenu();
     loadSceneFn.mockRejectedValueOnce(new Error('Missing authored scene'));
     client.setScene('Game');
-    await expect.poll(() => states.at(-1)).toEqual({ phase: 'error', sceneKey: 'Game', errorMessage: 'Missing authored scene' });
+    await expect
+      .poll(() => states.at(-1))
+      .toEqual({ phase: 'error', sceneKey: 'Game', errorMessage: 'Missing authored scene' });
     expect(engine.scenes).toHaveLength(0);
     client.setScene('MainMenu');
     await waitForMenu();

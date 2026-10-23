@@ -16,13 +16,13 @@ Archived into `docs/history/3d/` on 17 October 2026. The original code examples 
 
 ## 1. Add a separate Babylon factory
 
-Create these files under `L:\Angular\scrapworks\src\game\babylon\`:
+Create these files under `L:\Angular\scrapworks\src\game\babylon\` :
 
 | File                     | Responsibility                                               |
 | ------------------------ | ------------------------------------------------------------ |
-| `bootstrap.ts`           | Return a Babylon implementation of `GameClient`              |
+| `bootstrap.ts` | Return a Babylon implementation of `GameClient` |
 | `babylon-game-client.ts` | Own the canvas, engine, lifecycle state and rendering        |
-| `prototype-scene.ts`     | Build the ground, placeholder character, obstacle and camera |
+| `prototype-scene.ts` | Build the ground, placeholder character, obstacle and camera |
 
 Keep the factory synchronous:
 
@@ -43,7 +43,7 @@ In [app.routes.ts](../../../src/app/app.routes.ts), import:
 
 ```ts
 import { GAME_CLIENT_FACTORY } from '@app/features/game/game-client-factory';
-import { createBabylonGameClient } from '@game/babylon/bootstrap';
+import { createBabylonGameClient } from '@game/bootstrap';
 ```
 
 Add this entry before the existing route:
@@ -63,7 +63,7 @@ Add this entry before the existing route:
 },
 ```
 
-The current canvas-host component already mounts through `GameRuntimeService`; it contains no Phaser rendering calls. Reuse it for this checkpoint despite its current name.
+The current canvas-host component already mounts through `GameRuntimeService` ; it contains no Phaser rendering calls. Reuse it for this checkpoint despite its current name.
 
 Visiting `/3d` will use Babylon, while `/` continues using Phaser.
 
@@ -74,13 +74,13 @@ Implement the existing [GameClient interface](../../../src/contracts/game-client
 | Method             | Behavior                                                                               |
 | ------------------ | -------------------------------------------------------------------------------------- |
 | Constructor        | Create and append a canvas, create the Babylon engine, then publish `ready / MainMenu` |
-| `subscribe()`      | Replay the current lifecycle state and return an unsubscribe function                  |
+| `subscribe()` | Replay the current lifecycle state and return an unsubscribe function                  |
 | `setScene('Game')` | Publish loading, construct the scene asynchronously, then publish ready                |
-| `destroy()`        | Stop rendering, dispose owned resources, remove the canvas and publish stopped         |
+| `destroy()` | Stop rendering, dispose owned resources, remove the canvas and publish stopped         |
 
 Initially, `MainMenu` can simply mean "engine initialized, waiting for Play Game." The existing Angular page displays the button.
 
-Make the canvas fill its host with `width: 100%`, `height: 100%` and `display: block`. Set its `tabIndex` to `0` and call `engine.resize()` after attaching it.
+Make the canvas fill its host with `width: 100%` , `height: 100%` and `display: block` . Set its `tabIndex` to `0` and call `engine.resize()` after attaching it.
 
 Store the render callback:
 
@@ -92,11 +92,11 @@ private readonly renderFrame = () => {
 
 Start rendering with `engine.runRenderLoop(this.renderFrame)` and stop that same callback during destruction.
 
-Catch errors inside the asynchronous scene-loading method. Publish them through `GameState.errorMessage`, because an asynchronous rejection will not reach the mounting service's synchronous `try/catch`.
+Catch errors inside the asynchronous scene-loading method. Publish them through `GameState.errorMessage` , because an asynchronous rejection will not reach the mounting service's synchronous `try/catch` .
 
 ## 4. Build the primitive scene
 
-In `L:\Angular\scrapworks\src\game\babylon\prototype-scene.ts`:
+In `L:\Angular\scrapworks\src\game\babylon\prototype-scene.ts` :
 
 ```ts
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
@@ -141,7 +141,7 @@ Copy the [existing protagonist GLB](../../../art/characters/3d/protagonist-mpfb-
 L:\Angular\scrapworks\public\assets\models\protagonist-mpfb-v1.glb
 ```
 
-Create a separate helper at `L:\Angular\scrapworks\src\game\babylon\load-protagonist.ts`:
+Create a separate helper at `L:\Angular\scrapworks\src\game\babylon\load-protagonist.ts` :
 
 ```ts
 import { LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
@@ -170,11 +170,11 @@ Initially, place the model beside the capsule to compare scale and ground contac
 
 ## 6. Finish the Phase 1 checks
 
-- [x] `/` still uses Phaser; `/3d` uses Babylon.
-- [x] Play Game enters a visible prototype scene.
-- [x] The GLB's materials, transparency and proportions look reasonable.
-- [x] An incorrect model URL produces the Angular error display.
-- [x] Leaving the route removes the canvas and stops the render loop.
-- [x] `yarn run ng -- build` succeeds.
+* [x] `/` still uses Phaser;  `/3d` uses Babylon.
+* [x] Play Game enters a visible prototype scene.
+* [x] The GLB's materials, transparency and proportions look reasonable.
+* [x] An incorrect model URL produces the Angular error display.
+* [x] Leaving the route removes the canvas and stops the render loop.
+* [x] `yarn run ng -- build` succeeds.
 
 Movement, animation, factory rules and extensive lifecycle tests belong to later phases. Implement the client and primitive scene first; add the model after that works.

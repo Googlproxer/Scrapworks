@@ -2,7 +2,7 @@
 
 Scrapworks is a browser-first 3D factory-restoration game built with Angular and TypeScript. The player starts empty-handed, salvages and crafts materials, researches machinery, automates production, and restores a damaged planet.
 
-The application and rendering foundation works; authoritative gameplay and world saving remain to be implemented. Babylon.js is the selected world renderer and Babylon.js Editor the scene/world-layout tool. During the transition, `/` still runs the earlier Phaser prototype and `/3d` loads the Editor-authored Babylon menu and static game fixture.
+The application and rendering foundation works; authoritative gameplay and world saving remain to be implemented. Babylon.js is the selected world renderer and Babylon.js Editor the scene/world-layout tool. 
 
 Start with the [documentation index](docs/README.md), [3D cleanup plan](docs/plans/3d-cleanup.md), and [implementation roadmap](docs/plans/README.md). Earlier 2D work is indexed under [history](docs/history/README.md). Editable Blender projects, artwork, references and provenance are indexed in [art/](art/README.md); visual guidance remains in the [Art Document](docs/art/README.md).
 
@@ -19,7 +19,7 @@ For the changes still yours to implement, follow the [ordered implementation che
 | Saves                 | Versioned plain snapshots through Dexie/IndexedDB; currently a test-data experiment.                              |
 | Tests                 | Vitest with Playwright/headless Chromium, plus separate lint-tooling checks.                                      |
 
-Keep gameplay rules and saved world state outside scene components. `GameClient` reports renderer lifecycle; it is not the world-state model. Phaser remains installed until the cutover checks pass.
+Keep gameplay rules and saved world state outside scene components. `GameClient` reports renderer lifecycle; it is not the world-state model.
 
 ## Getting started
 
@@ -63,8 +63,7 @@ Direct Angular targets need `yarn scenes:export` first. Do not rely on an old `p
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | `src/app/` | Angular UI, routed page, scoped runtime, viewport, and current save experiment. |
 | `src/contracts/` | Plain renderer lifecycle, client, and event contracts.                          |
-| `src/game/babylon/` | Active 3D presentation adapter and authored-scene loader.                       |
-| `src/game/bridge/` , `scenes/` , `gameobjects/` , `bootstrap.ts` | Earlier Phaser runtime, retained during cutover.                                |
+| `src/game/` | Active 3D presentation adapter and authored-scene loader.                       |
 | `src/simulation/` | Framework-independent gameplay scaffold.                                        |
 | `src/core/` | Framework-independent utilities.                                                |
 | `scrapworks.bjseditor` , `assets/` | Authored Editor project and complete scene/asset sources.                       |

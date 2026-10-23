@@ -58,7 +58,6 @@
     "@recast-navigation/generators": "0.43.1",
     "babylonjs-editor-tools": "5.5.2",
     "dexie": "^4.4.6",
-    "phaser": "^4.2.1",
     "rxjs": "^7.8.2",
     "tslib": "^2.8.1"
   },
@@ -80,6 +79,7 @@
     "scrapworks-editor-mcp-plugin": "file:tools/editor-mcp",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.1",
+    "vite": "^8.3.5",
     "vitest": "^5.0.3"
   },
   "packageManager": "yarn@4.18.1"

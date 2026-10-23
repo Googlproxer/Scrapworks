@@ -1,6 +1,6 @@
+import { NullEngine } from '@babylonjs/core';
 import type { Subscription } from 'rxjs';
-import type { ReadonlyKeyMap } from '../input/key-map';
-import { ViewportInput } from '../input/viewport-input';
+import { InputManager } from '../input/input-manager';
 import { BrowserActivity } from './browser-activity';
 
 describe('BrowserActivity', () => {
@@ -15,7 +15,8 @@ describe('BrowserActivity', () => {
   let visibleValues: boolean[];
   let focusValues: boolean[];
   let subscriptions: Subscription[];
-  let inputs: ViewportInput[];
+  let inputs: InputManager[];
+  let engines: NullEngine[];
   let elements: HTMLElement[];
 
   beforeEach(() => {
@@ -29,6 +30,7 @@ describe('BrowserActivity', () => {
     focusValues = [];
     subscriptions = [];
     inputs = [];
+    engines = [];
     elements = [];
 
     vi.spyOn(document, 'hidden', 'get').mockImplementation(() => hidden);
@@ -61,6 +63,7 @@ describe('BrowserActivity', () => {
 
   afterEach(() => {
     for (const input of inputs) input.dispose();
+    for (const engine of engines) engine.dispose();
     windowEvents.dispatchEvent(new Event('beforeunload'));
     for (const subscription of subscriptions) subscription.unsubscribe();
     for (const element of elements) element.remove();
@@ -83,17 +86,20 @@ describe('BrowserActivity', () => {
     { hidden: false, focused: false },
     { hidden: true, focused: true },
     { hidden: true, focused: false },
-  ])('initializes and immediately publishes state when hidden=$hidden and focused=$focused', (initial) => {
-    hidden = initial.hidden;
-    focused = initial.focused;
+  ])(
+    'initializes and immediately publishes state when hidden=$hidden and focused=$focused',
+    (initial) => {
+      hidden = initial.hidden;
+      focused = initial.focused;
 
-    const activity = createActivity();
+      const activity = createActivity();
 
-    expect(activity.isVisible).toBe(!hidden);
-    expect(activity.hasFocus).toBe(focused);
-    expect(visibleValues).toEqual([!hidden]);
-    expect(focusValues).toEqual([focused]);
-  });
+      expect(activity.isVisible).toBe(!hidden);
+      expect(activity.hasFocus).toBe(focused);
+      expect(visibleValues).toEqual([!hidden]);
+      expect(focusValues).toEqual([focused]);
+    },
+  );
 
   it('reuses the singleton without registering duplicate activity listeners', () => {
     const activity = createActivity();
@@ -184,7 +190,9 @@ describe('BrowserActivity', () => {
 
   it('removes the registered unload callback and runs cleanup only once', () => {
     createActivity();
-    const registration = vi.mocked(window.addEventListener).mock.calls.find(([type]) => type === 'beforeunload');
+    const registration = vi
+      .mocked(window.addEventListener)
+      .mock.calls.find(([type]) => type === 'beforeunload');
     expect(registration).toBeDefined();
     const registeredCallback = registration?.[1];
     const removeListener = vi.mocked(window.removeEventListener);
@@ -197,28 +205,29 @@ describe('BrowserActivity', () => {
     expect(removeListener.mock.calls.filter(([type]) => type === 'beforeunload')).toHaveLength(1);
   });
 
-  it.each(['focus', 'visibility'] as const)('clears held viewport input when browser %s is lost', (reason) => {
-    createActivity();
-    const canvas = document.createElement('canvas');
-    elements.push(canvas);
-    document.body.append(canvas);
-    const input = new ViewportInput(canvas);
-    inputs.push(input);
-    const states: ReadonlyKeyMap[] = [];
-    subscriptions.push(input.stateObs.subscribe((state) => states.push(state)));
+  it.each(['focus', 'visibility'] as const)(
+    'withdraws viewport input permission when browser %s is lost',
+    (reason) => {
+      createActivity();
+      const engine = new NullEngine();
+      engines.push(engine);
+      const input = new InputManager(engine);
+      inputs.push(input);
+      input.setViewportActive(true);
+      const permissions: boolean[] = [];
+      subscriptions.push(input.enabledObs.subscribe((enabled) => permissions.push(enabled)));
+      expect(permissions.at(-1)).toBe(true);
 
-    canvas.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyW' }));
-    expect(states.at(-1)?.KeyW).toBe(true);
+      if (reason === 'focus') {
+        focused = false;
+        windowEvents.dispatchEvent(new FocusEvent('blur'));
+      } else {
+        hidden = true;
+        documentEvents.dispatchEvent(new Event('visibilitychange'));
+      }
 
-    if (reason === 'focus') {
-      focused = false;
-      windowEvents.dispatchEvent(new FocusEvent('blur'));
-    } else {
-      hidden = true;
-      documentEvents.dispatchEvent(new Event('visibilitychange'));
-    }
-
-    expect(states.at(-1)?.KeyW).toBe(false);
-    expect(Object.values(states.at(-1) ?? {}).every((down) => !down)).toBe(true);
-  });
+      expect(permissions.at(-1)).toBe(false);
+      expect(input.enabled).toBe(false);
+    },
+  );
 });

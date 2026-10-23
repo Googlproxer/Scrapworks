@@ -45,6 +45,7 @@
 		"animations": [],
 		"invertY": true,
 		"samplingMode": 3,
+		"_creationFlags": 0,
 		"_useSRGBBuffer": false,
 		"internalTextureLabel": "data:assets/textures/branding/title-logo-v1.png",
 		"noMipmap": false

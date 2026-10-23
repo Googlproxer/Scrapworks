@@ -40,7 +40,7 @@ The migration changes presentation and its integration. Completing it does not c
 | [GameClient](../../src/contracts/game-client.ts) and [lifecycle state](../../src/contracts/game-state.ts) expose subscriptions, scene switching and destruction                                        | Retain this boundary while introducing a Babylon adapter. Keep lifecycle state separate from authoritative `WorldState` .                                        |
 | [GameRuntimeService](../../src/app/features/game/game-runtime.service.ts) is page-scoped, rejects stale callbacks and unsubscribes before destroying a client                                          | Preserve these lifecycle guarantees and test asynchronous model loading against them.                                                                           |
 | [Client factory](../../src/app/features/game/game-client-factory.ts) chooses the renderer behind an injection token                                                                                    | Use this composition point for the temporary Babylon test route and final cutover.                                                                              |
-| [Shared game viewport](../../src/app/features/game/game-viewport/game-viewport.ts) and [game page](../../src/app/features/game/game-page/game-page.component.ts) own mounting and the Play Game action | The renderer-neutral host is implemented in Phase 1. Preserve its HTML host, actual button flow and readable errors during cutover.                             |
+| [Game page](../../src/app/features/game/game-page/game-page.component.ts) owns the merged renderer host, mounting and the Play Game action | The former viewport component is merged into the page. Preserve its renderer-neutral HTML host, actual button flow and readable errors during cutover. |
 | [Main menu](../../src/game/scenes/main-menu.scene.ts) draws the background and logo; the page draws the Play Game button                                                                               | Move menu imagery and loading UI to Angular. Retain the existing logo and background assets.                                                                    |
 | [Game scene](../../src/game/scenes/game.scene.ts) contains a player and placeholder background                                                                                                         | Replace it with a small 3D scene; there is no implemented factory world to port.                                                                                |
 | [Player](../../src/game/gameobjects/player.ts) moves directly in render-frame updates                                                                                                                  | Replace this movement scaffold with sampled input and simulation-owned position.                                                                                |
@@ -80,8 +80,7 @@ Introduce modules as their phases need them. The intended layout is:
 
 ```text
 src/app/features/game/
-  game-viewport/             Angular host and accessible fallback
-  game-page/                 Menu, loading, error and game presentation
+  game-page/                Renderer host, menu, loading, error and game presentation
   game-runtime.service.ts   Mounting, subscriptions and session composition
   game-client-factory.ts    Renderer selection
   session/                  GameFacade and fixed-step orchestration
@@ -263,7 +262,7 @@ Use Babylon.js Editor as the active world-layout tool, building on Phase 1.5's m
 
 **Result:** the regular game route uses Babylon, with coherent UI, dependencies and documentation.
 
-* [ ] Switch the factory's default implementation after the [cleanup Phase 4 gate](3d-cleanup.md#phase-4-make-babylon-the-default-and-remove-the-2d-runtime) passes: authored fixture, tested coordinates/picking, and lifecycle/input checks. Character animation polish, construction gameplay, and the full manual opening can continue after cutover. Retain the shared `GameViewport` introduced in Phase 1 and update route providers and tests for the default Babylon adapter.
+* [ ] Complete the default-renderer cutover after the [cleanup Phase 4 gate](3d-cleanup.md#phase-4-make-babylon-the-default-and-remove-the-2d-runtime) passes: authored fixture, tested coordinates/picking, and lifecycle/input checks. Character animation polish, construction gameplay, and the full manual opening can continue after cutover. The root route currently provides Babylon; retain the renderer-neutral host now merged into `GamePageComponent` and finish route/factory/dependency cleanup with matching tests.
 * [ ] Move title imagery, loading status and asset errors into Angular. Keep `MainMenu` and `Game` as logical screen keys for the first cutover; retire `Boot` and `Preloader` from the contract after their callers/tests are migrated. No duplicate Babylon boot scene hierarchy is required.
 * [ ] Preserve lifecycle subscription replay, stopped/error behavior and stale-callback rejection. Extend gameplay commands and views through plain session interfaces when needed; do not add Babylon types to `GameClient`.
 * [ ] Replace Phaser-specific tests with tests of the same user behavior and a real Babylon browser check. Retain the actual Play Game click, resize and teardown coverage rather than only testing component creation.

@@ -1,6 +1,7 @@
 {
-  "printWidth": 160,
+  "printWidth": 100,
   "singleQuote": true,
+  "objectWrap": "preserve",
   "overrides": [
     {
       "files": "*.html",

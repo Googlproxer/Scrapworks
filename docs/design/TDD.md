@@ -6,22 +6,21 @@ Scrapworks uses Angular for UI and selects Babylon.js with Babylon.js Editor for
 
 ## Agreed technical requirements
 
-- Keep the game browser-first, with Angular UI and a fully 3D world/character.
-- Author scenes and world layout in one Scrapworks Editor project; attached scripts handle presentation and scene bindings.
-- Keep authoritative gameplay in plain TypeScript and save progress locally through versioned data snapshots.
-- Defer accounts/cloud saves, remote control, physics, and navigation systems until a defined requirement needs them.
+* Keep the game browser-first, with Angular UI and a fully 3D world/character.
+* Author scenes and world layout in one Scrapworks Editor project; attached scripts handle presentation and scene bindings.
+* Keep authoritative gameplay in plain TypeScript and save progress locally through versioned data snapshots.
+* Defer accounts/cloud saves, remote control, physics, and navigation systems until a defined requirement needs them.
 
 ## Technical stack and current implementation
 
 | Responsibility      | Choice                         | Current implementation                                                                                    |
 | ------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | Application and UI  | Angular 22, signals, CDK       | Shell, shared page/viewport, dialogs, lifecycle views, errors and retry. Gameplay panels remain planned.  |
-| 3D presentation     | Babylon.js 9.30.0              | `/3d` loads Editor-authored MainMenu/Game scenes, a static rig, and placeholder geometry.                 |
+| 3D presentation     | Babylon.js 9.30.0              | `/` loads Editor-authored MainMenu/Game scenes, a static rig, and placeholder geometry.                   |
 | Authoring           | Babylon.js Editor 5.5.2        | Saved inputs export/reload automatically through the project tooling; marker compilation remains planned. |
 | Client subscription | RxJS behind plain `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                              |
 | Gameplay            | Plain TypeScript               | Queue/logging scaffold only; no authoritative world or fixed-step rules.                                  |
 | Persistence         | Dexie / IndexedDB              | Test-data service/dialog only; no playable-world snapshot or round trip.                                  |
-| Earlier runtime     | Phaser 4.2.1                   | Still serves `/` until the cleanup cutover gate passes. New gameplay follows the 3D direction.            |
 
 The [cleanup plan](../plans/3d-cleanup.md) defines the staged transition and the [baseline](../plans/3d-cleanup-baseline.md) records dated validation. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements. Historical 2D instructions remain in [history](../history/README.md).
 
@@ -176,11 +175,11 @@ flowchart TB
 
 Commands are checked and applied inside the simulation. At a completed step, it publishes views and can supply a detached save snapshot. Storage writes happen asynchronously; saving succeeds only after the repository commits the transaction. Loading validates and migrates data, constructs a candidate world, and replaces the active world at a safe step boundary only after all checks pass. An invalid load leaves the current session intact.
 
-A future cloud repository can implement `SaveRepository`. Accounts, synchronization, and conflict handling remain later work; they are not needed by the prototype simulation.
+A future cloud repository can implement `SaveRepository` . Accounts, synchronization, and conflict handling remain later work; they are not needed by the prototype simulation.
 
 ### Gameplay system interactions
 
-This closer view shows the dependencies between gameplay systems. Arrows describe resources and rules shared through `WorldState`; they do not require the systems to call each other or maintain duplicate inventories. Construction establishes the machines and connections that power, transport, and production subsequently use.
+This closer view shows the dependencies between gameplay systems. Arrows describe resources and rules shared through `WorldState` ; they do not require the systems to call each other or maintain duplicate inventories. Construction establishes the machines and connections that power, transport, and production subsequently use.
 
 [SVG image](../diagrams/gameplay-interactions.svg) / [PNG image](../diagrams/gameplay-interactions.png) / [Mermaid source](../diagrams/src/gameplay-interactions.mmd)
 
@@ -221,9 +220,9 @@ Angular owns the shell, menus, dialogs, and future gameplay panels. Babylon owns
 
 Use `src/app/features/` for Angular/session integration, `src/game/babylon/` for 3D presentation, `src/contracts/` for plain boundaries, `src/simulation/` for authoritative rules, and `src/core/` for framework-independent utilities. Keep simulation/contracts/core free of framework, storage, DOM, and wall-clock dependencies. The earlier Phaser Player still moves directly during frames; that behavior is a historical prototype, not the future movement authority.
 
-The Editor owns saved cameras, lights, materials, static geometry, and world markers in `assets/`. A planned compiler extracts marker metadata into versioned `WorldDefinition` records without executing attached scripts. Validate IDs, bounds, footprints, and references; convert centimetres to metres on the X/Z ground plane. Mutable `WorldState` belongs to the simulation and its save format. Scene serialization and attached presentation components are not gameplay saves.
+The Editor owns saved cameras, lights, materials, static geometry, and world markers in `assets/` . A planned compiler extracts marker metadata into versioned `WorldDefinition` records without executing attached scripts. Validate IDs, bounds, footprints, and references; convert centimetres to metres on the X/Z ground plane. Mutable `WorldState` belongs to the simulation and its save format. Scene serialization and attached presentation components are not gameplay saves.
 
-`GamePageComponent` provides a scoped runtime to its shared `GameViewport`. The runtime owns its `GameClient` subscription, readonly signals, generation guards, mount/unmount, retry, and fallback injector cleanup. `GameState` describes this renderer lifecycle. Babylon owns one engine/loop, scenes/assets, resize observation, transition guards, first-frame readiness, and late-load disposal. Both concrete clients remain under `src/game/` during transition: `/` is Phaser and `/3d` is Babylon. Focus/visibility suspension and graphics recovery remain unfinished; see the [Phase 2 walkthrough](../plans/3d-phase-2-walkthrough.md).
+`GamePageComponent` provides a scoped runtime and directly owns the renderer host; the former `GameViewport` has been merged into the page. The runtime owns its `GameClient` subscription, readonly signals, generation guards, mount/unmount, retry, and fallback injector cleanup. `GameState` describes this renderer lifecycle. Babylon owns one engine/loop, scenes/assets, resize observation, transition guards, first-frame readiness, and late-load disposal. The root route currently provides Babylon; both concrete clients and the legacy Phaser factory remain under `src/game/` during transition. Focus/visibility suspension is implemented; complete input ownership and graphics recovery remain unfinished. See the [Phase 2 walkthrough](../plans/3d-phase-2-walkthrough.md).
 
 Production history and research unlocks belong to the saved world. A research action checks cumulative eligibility, current stock and prerequisites, then spends stock and grants the unlock atomically. It preserves production totals and cannot charge again for completed research. Crafting and placement enforce unlocks. The GDD defines these rules.
 
@@ -237,12 +236,12 @@ Implement the proposed pause and resume behaviour described in the GDD: pause wh
 
 Keep active gameplay state in memory. Save a versioned data snapshot containing:
 
-- Player position, inventory, and crafting queues.
-- Remaining deposits, placed machines, and connections.
-- Machine buffers, work progress, and items in transit.
-- Stored energy and water.
-- Cumulative production totals and research unlocks.
-- Pollution, vegetation, and simulation time.
+* Player position, inventory, and crafting queues.
+* Remaining deposits, placed machines, and connections.
+* Machine buffers, work progress, and items in transit.
+* Stored energy and water.
+* Cumulative production totals and research unlocks.
+* Pollution, vegetation, and simulation time.
 
 Store identifiers and data rather than Angular services, Babylon meshes/materials, scene handles, or Editor components. Recipe and technology definitions belong to the game content; saves reference their identifiers and record a compatible content version.
 
@@ -270,9 +269,9 @@ Keep persistence behind a small save repository interface for listing, loading, 
 
 The first implementation checks should cover:
 
-- Saving and loading a running factory without changing inventory, research, production totals, or machine progress.
-- Continuing the simulation with the same results after restoration.
-- Migrating supported older save schemas.
-- Invalid saves or failed writes preserving the last usable state.
-- Research consuming the required materials exactly once while retaining cumulative production totals.
-- Crafting and placement rejecting equipment whose technology has not been researched.
+* Saving and loading a running factory without changing inventory, research, production totals, or machine progress.
+* Continuing the simulation with the same results after restoration.
+* Migrating supported older save schemas.
+* Invalid saves or failed writes preserving the last usable state.
+* Research consuming the required materials exactly once while retaining cumulative production totals.
+* Crafting and placement rejecting equipment whose technology has not been researched.
