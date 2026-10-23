@@ -3,6 +3,7 @@ import { EngineStore } from '@babylonjs/core/Engines/engineStore';
 import { LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
 import { loadEditorScene } from '@game/assets/load-editor-scene';
 import { BabylonGameClient } from '@game/babylon-game-client';
+import type { GameClientOptions } from '@contracts/game-client';
 import axe from 'axe-core';
 import { GAME_CLIENT_FACTORY } from '../game-client-factory';
 import { GamePageComponent } from './game-page.component';
@@ -18,7 +19,8 @@ describe('Babylon game page integration', () => {
       providers: [
         {
           provide: GAME_CLIENT_FACTORY,
-          useValue: (host: HTMLElement) => new BabylonGameClient(host, loadSceneFn),
+          useValue: (host: HTMLElement, options: GameClientOptions) =>
+            new BabylonGameClient(host, loadSceneFn, options),
         },
       ],
     }).compileComponents();

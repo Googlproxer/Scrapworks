@@ -1,17 +1,19 @@
 import type { AssetContainer } from '@babylonjs/core/assetContainer';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
-import type { GameClient } from '@contracts/game-client';
-import {
-  BabylonSceneKey,
-  isValidSceneKey,
-  type GameState,
-  type SceneKey,
-} from '@contracts/game-state';
-import { BehaviorSubject, combineLatest, fromEvent, map, Subscription } from 'rxjs';
+import type { GameClient, GameClientOptions, GameInputPort } from '@contracts/game-client';
+import { isValidSceneKey, type GameState, type SceneKey } from '@contracts/game-state';
+import { assertWorldDefinition, type WorldDefinition } from '@contracts/world';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { loadEditorScene } from './assets/load-editor-scene';
 import { InputManager } from './input/input-manager';
 import { BrowserActivity } from './lifecycle/browser-activity';
+import { FrameClock } from './timing/frame-clock';
+import { loadInspector } from './debug/inspector-loader';
+import { SceneInspector, type InspectorLoader } from './debug/scene-inspector';
+import type { Context } from '@contracts/input';
+import { WorldScene } from './views/world-scene';
+import { FrameOwnershipChanged } from './views/world-frame';
 
 export class BabylonGameClient implements GameClient {
   private readonly stateSubject = new BehaviorSubject<GameState>({
@@ -19,170 +21,224 @@ export class BabylonGameClient implements GameClient {
     sceneKey: null,
     errorMessage: null,
   });
-
-  private readonly destroyedSubject = new BehaviorSubject(false);
-  private readonly scenePreparedSubject = new BehaviorSubject(false);
-  private readonly hostHasSizeSubject = new BehaviorSubject(false);
-
-  private readonly inputManager: InputManager;
-  private readonly browserActivity = new BrowserActivity();
-
+  private readonly clock = new FrameClock();
   private readonly canvas: HTMLCanvasElement;
-  private readonly engine: Engine;
-  private readonly resizeObserver: ResizeObserver;
+  private readonly ownerDocument: Document;
+  private readonly ownerWindow: Window;
+  private engine!: Engine;
+  private inputManager!: InputManager;
+  private browserActivity!: BrowserActivity;
+  private resizeObserver?: ResizeObserver;
   private currentScene?: Scene;
   private currentAssets?: AssetContainer;
+  private world?: WorldScene;
+  private definition?: WorldDefinition;
+  private worldAbort?: AbortController;
   private transition = 0;
+  private destroyed = false;
+  private scenePrepared = false;
+  private hostHasSize = false;
+  private contextLost = false;
+  private suspendingWorld = false;
+  private recoveryFrame?: number;
+  private readonly subscriptions: Subscription[] = [];
+  private readonly handlers: (() => void)[] = [];
+  private readonly pendingSceneDisposals = new Set<Promise<void>>();
+  private pointer?: { x: number; y: number };
+  private requestedInputContext: Context | null = 'ui';
+  private readonly inspector = new SceneInspector(
+    () => this.inspectorLoader(),
+    (state) => {
+      this.inputManager?.setContext(this.inspectorActive ? null : this.requestedInputContext);
+      if (this.inspectorActive) this.suspendWorld();
+      this.options.onInspectorState?.(state);
+      if (this.inputManager) this.attachCamera();
+    },
+  );
+  public readonly input: GameInputPort;
 
-  private canvasActiveSubject = new BehaviorSubject(false);
-
-  public get hasError() {
-    return this.stateSubject.value.phase === 'error';
+  private get inspectorActive(): boolean {
+    return ['loading', 'open'].includes(this.inspector.state.phase);
   }
 
-  public get currentKey() {
+  public get hasError(): boolean {
+    return this.stateSubject.value.phase === 'error';
+  }
+  public get currentKey(): SceneKey | null {
     return this.stateSubject.value.sceneKey;
   }
 
-  private subs: Subscription[] = [];
-
-  constructor(
+  public constructor(
     host: HTMLElement,
     private readonly loadSceneFn = loadEditorScene,
+    private readonly options: GameClientOptions = {},
+    private readonly inspectorLoader: InspectorLoader = loadInspector,
   ) {
-    this.canvas = host.ownerDocument.createElement('canvas');
+    this.ownerDocument = host.ownerDocument;
+    const ownerWindow = host.ownerDocument.defaultView;
+    if (!ownerWindow) throw new Error('The viewport document has no window.');
+    this.ownerWindow = ownerWindow;
+    this.canvas = this.ownerDocument.createElement('canvas');
     this.canvas.tabIndex = 0;
     this.canvas.setAttribute('aria-label', 'Scrapworks 3D viewport');
-    this.canvas.style.cssText = 'display: block; width: 100%; height: 100%;';
+    this.canvas.style.cssText = 'display:block;width:100%;height:100%;touch-action:none;';
     host.append(this.canvas);
-
     try {
       this.engine = new Engine(this.canvas, true);
+      this.engine.canvasTabIndex = 0;
+      this.browserActivity = new BrowserActivity(this.ownerDocument);
+      this.inputManager = new InputManager(this.engine, options.bindings, this.ownerDocument);
+      this.input = {
+        setContext: (context) => {
+          this.requestedInputContext = context;
+          this.inputManager.setContext(this.inspectorActive ? null : context);
+          if (context !== 'gameplay') this.suspendWorld();
+        },
+        updateBindings: (profile) => this.inputManager.updateBindings(profile),
+        selectController: (id) => this.inputManager.selectController(id),
+        subscribeControllers: (listener) => this.inputManager.subscribeControllers(listener),
+        captureBinding: (listener) => this.inputManager.subscribeRawInput(listener),
+        handleUiKeyboard: (event) => this.inputManager.handleUiKeyboard(event),
+        handleUiPointer: (event) => this.inputManager.handleUiPointer(event),
+        focus: () => this.canvas.focus(),
+      };
+      const listen = <K extends keyof HTMLElementEventMap>(
+        name: K,
+        listener: (event: HTMLElementEventMap[K]) => void,
+      ) => {
+        this.canvas.addEventListener(name, listener);
+        this.handlers.push(() => this.canvas.removeEventListener(name, listener));
+      };
+      listen('focus', () => this.reconcileActivity());
+      listen('blur', () => this.reconcileActivity());
+      listen('pointermove', (event) => {
+        this.inputManager.markPointerActivity();
+        const rect = this.canvas.getBoundingClientRect();
+        this.pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      });
+      listen('pointerdown', (event) => {
+        this.inputManager.markPointerActivity();
+        this.canvas.focus();
+        const rect = this.canvas.getBoundingClientRect();
+        this.pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      });
+      listen('contextmenu', (event) => {
+        if (this.inputManager.enabled) event.preventDefault();
+      });
+      listen('wheel', () => this.inputManager.markPointerActivity());
+      this.resizeObserver = new ResizeObserver(() => {
+        if (this.destroyed) return;
+        this.hostHasSize = host.clientWidth > 0 && host.clientHeight > 0;
+        if (this.hostHasSize && !this.contextLost) this.engine.resize();
+        this.reconcileActivity();
+      });
+      this.hostHasSize = host.clientWidth > 0 && host.clientHeight > 0;
+      this.resizeObserver.observe(host);
+      this.subscriptions.push(
+        this.browserActivity.visibleObs.subscribe(() => this.reconcileActivity()),
+        this.browserActivity.hasFocusObs.subscribe(() => this.reconcileActivity()),
+        this.inputManager.enabledObs.subscribe(() => this.attachCamera()),
+      );
+      const contextObserver = this.engine.onContextLostObservable.add(() => {
+        if (this.destroyed || this.contextLost) return;
+        this.contextLost = true;
+        ++this.transition;
+        this.suspendWorld(false);
+        this.inputManager.clear();
+        this.reportError(
+          new Error('Graphics context was lost. Choose Retry to restore the 3D viewport.'),
+        );
+        this.inputManager.setContext('ui');
+        this.engine.stopRenderLoop(this.renderFrame);
+        this.recoveryFrame = this.ownerWindow.requestAnimationFrame(this.recoveryTick);
+      });
+      this.handlers.push(() => this.engine.onContextLostObservable.remove(contextObserver));
+      this.engine.resize();
+      this.engine.runRenderLoop(this.renderFrame);
+      this.setScene('MainMenu');
     } catch (error) {
-      this.canvas.remove();
+      this.destroyed = true;
+      this.cleanup();
+      this.stateSubject.complete();
       throw error;
     }
-
-    this.inputManager = new InputManager(this.engine);
-
-    this.subs.push(
-      fromEvent<FocusEvent>(this.canvas, 'focus').subscribe(this.checkCanvasActive.bind(this)),
-      fromEvent<FocusEvent>(this.canvas, 'blur').subscribe(this.checkCanvasActive.bind(this)),
-    );
-    this.checkCanvasActive();
-
-    this.resizeObserver = new ResizeObserver(() => {
-      if (this.destroyedSubject.value) return;
-      this.engine.resize();
-      this.hostHasSizeSubject.next(host.clientWidth > 0 && host.clientHeight > 0);
-    });
-    this.resizeObserver.observe(host);
-    this.engine.resize();
-    this.hostHasSizeSubject.next(host.clientWidth > 0 && host.clientHeight > 0);
-    this.engine.runRenderLoop(this.renderFrame);
-
-    // watch relevant observables for updates an update camera/render as necessary
-    const errorObs = this.stateSubject.pipe(map((s) => s.phase === 'error'));
-    const renderObs = combineLatest([
-      this.scenePreparedSubject,
-      this.destroyedSubject,
-      errorObs,
-      this.browserActivity.visibleObs,
-      this.hostHasSizeSubject,
-    ]);
-    const gameSceneObs = this.stateSubject.pipe(map((s) => s.sceneKey === 'Game'));
-
-    this.subs.push(
-      combineLatest([
-        renderObs,
-        gameSceneObs,
-        this.browserActivity.hasFocusObs,
-        this.canvasActiveSubject,
-        this.inputManager.enabledObs,
-      ])
-        //  flatten array
-        .pipe(map(([[a, b, c, d, e], f, g, h, i]) => [a, b, c, d, e, f, g, h, i] as const))
-        .subscribe((flags) => {
-          if (!this.currentScene) return;
-          this.attachCamera(this.currentScene, ...flags);
-        }),
-      //  clear input on error
-      errorObs.subscribe(() => {
-        this.inputManager.clear();
-      }),
-      renderObs.subscribe(([scenePrepared, destroyed, hasError]) =>
-        this.updateRenderState(destroyed, hasError, scenePrepared),
-      ),
-
-      combineLatest([
-        this.scenePreparedSubject,
-        gameSceneObs,
-        this.hostHasSizeSubject,
-        this.canvasActiveSubject,
-        this.destroyedSubject,
-        errorObs,
-      ]).subscribe(([scenePrepared, isGame, hostHasSize, canvasFocused, destroyed, hasError]) => {
-        const viewportActive =
-          scenePrepared && isGame && hostHasSize && canvasFocused && !destroyed && !hasError;
-        this.inputManager.setViewportActive(viewportActive);
-      }),
-    );
-
-    this.setScene('MainMenu');
   }
 
   public subscribe(listener: (state: GameState) => void): () => void {
-    if (this.destroyedSubject.value) {
+    if (this.destroyed) {
       listener(this.stateSubject.value);
       return () => undefined;
     }
-
     const subscription = this.stateSubject.subscribe(listener);
     return () => subscription.unsubscribe();
   }
 
   public destroy(): void {
-    if (this.destroyedSubject.value) return;
-    this.destroyedSubject.next(true);
+    if (this.destroyed) return;
+    this.destroyed = true;
     ++this.transition;
-    for (const sub of this.subs) {
-      sub.unsubscribe();
-    }
-    this.subs = [];
-    this.resizeObserver.disconnect();
-    this.engine.stopRenderLoop(this.renderFrame);
-    this.disposeCurrentScene();
-    this.engine.dispose();
-    this.inputManager.dispose();
-    this.canvas.remove();
+    this.cleanup();
     this.stateSubject.next({ phase: 'stopped', sceneKey: null, errorMessage: null });
     this.stateSubject.complete();
-    this.destroyedSubject.complete();
-    this.scenePreparedSubject.complete();
-    this.hostHasSizeSubject.complete();
-    this.canvasActiveSubject.complete();
+  }
+
+  private cleanup(): void {
+    if (this.recoveryFrame !== undefined) this.ownerWindow.cancelAnimationFrame(this.recoveryFrame);
+    this.recoveryFrame = undefined;
+    this.resizeObserver?.disconnect();
+    for (const subscription of this.subscriptions) subscription.unsubscribe();
+    for (const remove of this.handlers) remove();
+    this.handlers.length = 0;
+    this.engine?.stopRenderLoop(this.renderFrame);
+    this.suspendWorld(false);
+    this.disposeCurrentScene();
+    this.inspector.dispose();
+    this.inputManager?.dispose();
+    this.browserActivity?.release();
+    this.canvas.remove();
+    // Inspector's React/service teardown must complete before its scene and engine disappear.
+    // Everything that drives frames or accepts input has already stopped synchronously.
+    if (this.pendingSceneDisposals.size) {
+      const engine = this.engine;
+      void Promise.allSettled([...this.pendingSceneDisposals]).then(() => engine?.dispose());
+    } else this.engine?.dispose();
   }
 
   public setScene(key: SceneKey): void {
-    if (this.destroyedSubject.value || !isValidSceneKey(key)) return;
+    if (this.destroyed || this.contextLost || !isValidSceneKey(key)) return;
     const state = this.stateSubject.value;
-    if (state.sceneKey === key && (state.phase === 'loading' || state.phase === 'ready')) return;
-
+    if (state.sceneKey === key && ['loading', 'ready', 'paused'].includes(state.phase)) return;
     const transition = ++this.transition;
+    this.suspendWorld();
+    if (!this.isCurrentTransition(transition)) return;
     this.disposeCurrentScene();
+    this.pointer = undefined;
+    this.inputManager.clear();
     this.stateSubject.next({ phase: 'loading', sceneKey: key, errorMessage: null });
+    this.reconcileActivity();
     if (this.isCurrentTransition(transition)) void this.loadScene(key, transition);
   }
 
-  public setInputEnabled(on: boolean) {
+  public setInputEnabled(on: boolean): void {
     this.inputManager.setEnabled(on);
+    if (!on) this.suspendWorld();
+    this.attachCamera();
   }
 
-  private async loadScene(key: BabylonSceneKey, transition: number): Promise<void> {
-    try {
-      const scene = new Scene(this.engine);
-      this.currentScene = scene;
+  public async toggleInspector(): Promise<void> {
+    if (this.inspectorActive) {
+      await this.inspector.close();
+      return;
+    }
+    if (!this.canRender() || !this.currentScene) return;
+    const host = this.canvas.parentElement;
+    if (host) await this.inspector.toggle(this.currentScene, host);
+  }
 
+  private async loadScene(key: SceneKey, transition: number): Promise<void> {
+    const scene = new Scene(this.engine);
+    this.currentScene = scene;
+    try {
       const assets = await this.loadSceneFn(scene, key);
       if (!this.isCurrentTransition(transition)) {
         assets.dispose();
@@ -190,121 +246,188 @@ export class BabylonGameClient implements GameClient {
       }
       this.currentAssets = assets;
       assets.addAllToScene();
-
+      if (key === 'Game') {
+        const abort = new AbortController();
+        this.worldAbort = abort;
+        const response = await fetch(
+          new URL('scene/worlds/game.json', this.ownerDocument.baseURI),
+          { signal: abort.signal },
+        );
+        if (!response.ok) throw new Error(`World definition failed to load (${response.status}).`);
+        const definition: unknown = await response.json();
+        assertWorldDefinition(definition);
+        if (!this.isCurrentTransition(transition)) return;
+        this.options.session?.initialize(definition);
+        const world = await WorldScene.create(scene, definition, this.options);
+        if (!this.isCurrentTransition(transition)) {
+          world.dispose();
+          return;
+        }
+        this.definition = definition;
+        this.world = world;
+      }
       await scene.whenReadyAsync();
       if (!this.isCurrentTransition(transition)) return;
-      this.scenePreparedSubject.next(true);
+      this.scenePrepared = true;
+      this.clock.reset();
+      this.reconcileActivity();
     } catch (error) {
       if (this.isCurrentTransition(transition)) this.reportError(error);
     }
   }
 
-  private attachCamera(
-    scene: Scene,
-    scenePrepared: boolean,
-    destroyed: boolean,
-    hasError: boolean,
-    visible: boolean,
-    hostHasSize: boolean,
-    isGame: boolean,
-    hasFocus: boolean,
-    canvasActive: boolean,
-    inputEnabled: boolean,
-  ) {
-    const camera = scene.activeCamera;
+  private isCurrentTransition(transition: number): boolean {
+    return !this.destroyed && this.transition === transition;
+  }
+  private canRender(): boolean {
+    return (
+      !!this.currentScene &&
+      this.scenePrepared &&
+      this.hostHasSize &&
+      this.browserActivity.isVisible &&
+      !this.destroyed &&
+      !this.hasError &&
+      !this.contextLost
+    );
+  }
+
+  private reconcileActivity(): void {
+    if (!this.inputManager) return;
+    const eligible =
+      this.scenePrepared &&
+      this.currentKey === 'Game' &&
+      this.hostHasSize &&
+      this.ownerDocument.activeElement === this.canvas &&
+      !this.destroyed &&
+      !this.hasError;
+    this.inputManager.setViewportActive(eligible);
+    this.attachCamera();
+    if (!this.canRender()) {
+      this.suspendWorld();
+      if (this.scenePrepared && !this.hasError && !this.destroyed) {
+        const state = this.stateSubject.value;
+        if (state.phase !== 'paused') this.stateSubject.next({ ...state, phase: 'paused' });
+      }
+    }
+    if (!this.browserActivity.hasFocus) this.suspendWorld();
+  }
+
+  private attachCamera(): void {
+    const camera = this.currentScene?.activeCamera;
     if (!camera) return;
-    const canAcceptInput =
-      scenePrepared &&
-      isGame &&
-      visible &&
-      hostHasSize &&
-      hasFocus &&
-      canvasActive &&
-      inputEnabled &&
-      !destroyed &&
-      !hasError;
-    if (canAcceptInput) {
-      camera.attachControl(this.canvas, true);
+    if (this.canRender() && this.inputManager.enabled) {
       camera.inputs.removeByType('ArcRotateCameraKeyboardMoveInput');
+      camera.attachControl(this.canvas, true);
     } else camera.detachControl();
   }
 
-  private isCurrentTransition(transition: number): boolean {
-    return !this.destroyedSubject.value && this.transition === transition;
+  private suspendWorld(publish = true): void {
+    this.clock.reset();
+    if (this.suspendingWorld) return;
+    this.suspendingWorld = true;
+    try {
+      if (this.definition && this.options.session) {
+        const view = this.options.session.frame(0, { x: 0, z: 0 }, false, false);
+        if (publish) this.options.onWorldView?.(view);
+      }
+    } finally {
+      this.suspendingWorld = false;
+    }
   }
 
   private disposeCurrentScene(): void {
-    this.scenePreparedSubject.next(false);
-    const assets = this.currentAssets;
-    const scene = this.currentScene;
+    this.scenePrepared = false;
+    const inspectorCleanup = this.inspector.close();
+    this.worldAbort?.abort();
+    this.worldAbort = undefined;
+    const assets = this.currentAssets,
+      scene = this.currentScene,
+      world = this.world;
     this.currentAssets = undefined;
     this.currentScene = undefined;
-    assets?.dispose();
-    scene?.dispose();
+    this.world = undefined;
+    this.definition = undefined;
+    const release = () => {
+      world?.dispose();
+      assets?.dispose();
+      scene?.dispose();
+    };
+    if (inspectorCleanup) {
+      const pending = inspectorCleanup.finally(release);
+      this.pendingSceneDisposals.add(pending);
+      void pending
+        .finally(() => this.pendingSceneDisposals.delete(pending))
+        .catch((error: unknown) => console.error('Scene cleanup failed', error));
+    } else release();
   }
 
   private reportError(error: unknown): void {
-    const sceneKey = this.stateSubject.value.sceneKey;
+    const transition = this.transition;
+    const sceneKey = this.currentKey;
+    this.suspendWorld(false);
+    if (!this.isCurrentTransition(transition)) return;
     this.disposeCurrentScene();
+    this.inputManager.clear();
     this.stateSubject.next({
       phase: 'error',
       sceneKey,
       errorMessage: error instanceof Error ? error.message : String(error),
     });
+    this.reconcileActivity();
   }
 
-  private checkCanvasActive() {
-    this.canvasActiveSubject.next(this.browserActivity.activeElement === this.canvas);
-  }
-
-  private canRenderCurrentScene(): boolean {
-    return (
-      this.currentScene !== undefined &&
-      this.scenePreparedSubject.value &&
-      this.browserActivity.isVisible &&
-      this.hostHasSizeSubject.value &&
-      !this.destroyedSubject.value &&
-      !this.hasError
-    );
-  }
-
-  private updateRenderState(destroyed: boolean, hasError: boolean, scenePrepared: boolean): void {
-    if (destroyed || hasError || !scenePrepared || !this.currentScene) return;
-
-    const state = this.stateSubject.value;
-    if (!this.canRenderCurrentScene() && state.phase !== 'paused') {
-      this.stateSubject.next({ ...state, phase: 'paused' });
-    }
-  }
+  private recoveryTick = () => {
+    if (this.destroyed || !this.contextLost) return;
+    this.renderFrame();
+    if (!this.destroyed)
+      this.recoveryFrame = this.ownerWindow.requestAnimationFrame(this.recoveryTick);
+  };
 
   private renderFrame = () => {
-    const scene = this.currentScene;
+    if (this.destroyed) return;
     const transition = this.transition;
-    if (!scene || !this.canRenderCurrentScene()) return;
-
     try {
-      // Initial/resumed frames resize before drawing.
-      if (this.stateSubject.value.phase !== 'ready') this.engine.resize();
-      //  TODO: don't handle in render, run in update loop
-      this.inputManager.takeFrame();
-      scene.render();
-
-      // Rendering callbacks may replace/dispose the scene or change activity.
-      if (
-        !this.isCurrentTransition(transition) ||
-        this.currentScene !== scene ||
-        !this.canRenderCurrentScene()
-      )
+      const frame = this.inputManager.takeFrame();
+      // UI polling is independent of scene readiness and rendering capability.
+      this.options.onActionFrame?.(frame);
+      if (!this.isCurrentTransition(transition) || !this.inputManager.isCurrent(frame)) return;
+      const scene = this.currentScene;
+      if (!scene || !this.canRender()) {
+        this.suspendWorld();
         return;
-
+      }
+      const seconds = Math.min(0.25, this.clock.sample(this.ownerWindow.performance.now()));
+      const active = frame.context === 'gameplay' && this.inputManager.enabled;
+      const world = this.world;
+      if (world) {
+        const rect = this.canvas.getBoundingClientRect();
+        const pointer = this.inputManager.usingController ? undefined : this.pointer;
+        world.beginFrame(
+          frame,
+          seconds,
+          active,
+          { x: pointer?.x ?? rect.width / 2, y: pointer?.y ?? rect.height / 2 },
+          () =>
+            this.isCurrentTransition(transition) &&
+            this.currentScene === scene &&
+            this.canRender() &&
+            this.inputManager.isCurrent(frame),
+        );
+      }
+      if (this.stateSubject.value.phase !== 'ready') this.engine.resize();
+      try {
+        scene.render();
+      } finally {
+        world?.endFrame();
+      }
+      if (world && !world.initialized) return;
+      if (!this.isCurrentTransition(transition) || this.currentScene !== scene || !this.canRender())
+        return;
       const state = this.stateSubject.value;
-      if (state.phase !== 'ready') {
-        this.stateSubject.next({ ...state, phase: 'ready' });
-      }
+      if (state.phase !== 'ready') this.stateSubject.next({ ...state, phase: 'ready' });
     } catch (error) {
-      if (this.isCurrentTransition(transition) && this.currentScene === scene) {
+      if (!(error instanceof FrameOwnershipChanged) && this.isCurrentTransition(transition))
         this.reportError(error);
-      }
     }
   };
 }

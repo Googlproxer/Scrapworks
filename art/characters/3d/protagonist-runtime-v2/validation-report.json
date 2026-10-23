@@ -1,0 +1,196 @@
+{
+  "runtime_sha256": "b4503d89ff5a3e108da1ee3e8da0a081b2bca79803a5f3d1c379b702efbbe663",
+  "bytes": 4236032,
+  "triangles": 37655,
+  "meshes": 10,
+  "materials": 10,
+  "skin_joints": 52,
+  "image_count": 13,
+  "images": [
+    {
+      "name": "BootsAnkle",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "BootsAnkle-norm",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "BootsAnkle-spec",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "braid01_diffuse",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "brown_eye",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "name": "cargo_pants_diff",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "cargo_pants_norm",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "CrudeFemaleTshirtDiffuse",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "eyebrow001",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "name": "eyelashes02",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "name": "teeth",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "tongue01_diffuse",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "name": "young_lightskinned_female_diffuse2",
+      "width": 2048,
+      "height": 2048
+    }
+  ],
+  "texture_encoding": "WebP only; exact retained source WebP payloads",
+  "external_resources": false,
+  "all_meshes_have_uvs_and_skin_weights": true,
+  "idle_bounds_blender_m": [
+    [
+      -0.23319971561431885,
+      -0.2153015434741974,
+      0.00012701377272605896
+    ],
+    [
+      0.28281378746032715,
+      0.11862950026988983,
+      1.6059197187423706
+    ]
+  ],
+  "idle_height_m": 1.6057927049696445,
+  "clips": [
+    {
+      "name": "Idle",
+      "frames": [
+        1,
+        251
+      ],
+      "seconds": 8.333333333333334,
+      "boot_floor_range_m": [
+        -6.51925802230835e-08,
+        0.0001355484127998352
+      ],
+      "hip_loop_displacement_m": [
+        -4.656612873077393e-10,
+        0.0,
+        2.384185791015625e-07
+      ],
+      "maximum_body_vertex_deformation_m": 0.012539315550788011,
+      "maximum_hip_heading_change_rad": 0.0047897035256028175,
+      "maximum_loop_bone_rotation_difference_rad": 0.0
+    },
+    {
+      "name": "Run",
+      "frames": [
+        1,
+        22
+      ],
+      "seconds": 0.7,
+      "boot_floor_range_m": [
+        -3.8929283618927e-07,
+        0.09893012791872025
+      ],
+      "hip_loop_displacement_m": [
+        -9.313225746154785e-10,
+        4.6566128730773926e-08,
+        2.980232238769531e-07
+      ],
+      "maximum_body_vertex_deformation_m": 0.176196847222895,
+      "maximum_hip_heading_change_rad": 0.22500750422477722,
+      "maximum_loop_bone_rotation_difference_rad": 0.0
+    },
+    {
+      "name": "TurnLeft",
+      "frames": [
+        1,
+        36
+      ],
+      "seconds": 1.1666666666666667,
+      "boot_floor_range_m": [
+        8.381903171539307e-08,
+        0.0016788579523563385
+      ],
+      "hip_loop_displacement_m": [
+        4.656612873077393e-10,
+        0.0,
+        -1.1920928955078125e-07
+      ],
+      "maximum_body_vertex_deformation_m": 0.19666041947832577,
+      "maximum_hip_heading_change_rad": 1.750886866602741e-07,
+      "maximum_loop_bone_rotation_difference_rad": 0.0
+    },
+    {
+      "name": "TurnRight",
+      "frames": [
+        1,
+        36
+      ],
+      "seconds": 1.1666666666666667,
+      "boot_floor_range_m": [
+        1.0672956705093384e-06,
+        0.002469465136528015
+      ],
+      "hip_loop_displacement_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maximum_body_vertex_deformation_m": 0.17182948584858812,
+      "maximum_hip_heading_change_rad": 2.905727285451576e-07,
+      "maximum_loop_bone_rotation_difference_rad": 0.0
+    },
+    {
+      "name": "Walk",
+      "frames": [
+        1,
+        30
+      ],
+      "seconds": 0.9666666666666667,
+      "boot_floor_range_m": [
+        -1.9185245037078857e-07,
+        0.005286723375320435
+      ],
+      "hip_loop_displacement_m": [
+        -4.656612873077393e-10,
+        3.725290298461914e-08,
+        1.1920928955078125e-07
+      ],
+      "maximum_body_vertex_deformation_m": 0.35468355115717304,
+      "maximum_hip_heading_change_rad": 0.2576843202114105,
+      "maximum_loop_bone_rotation_difference_rad": 0.0
+    }
+  ],
+  "root_stationary": true,
+  "reimport_succeeded": true
+}

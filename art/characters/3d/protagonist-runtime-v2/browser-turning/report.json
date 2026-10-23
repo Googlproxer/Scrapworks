@@ -1,0 +1,6655 @@
+{
+  "recordedAt": "2026-10-23T09:46:41.438Z",
+  "method": "Actual local development keyboard input: quick right/left taps, then forward movement and reversal. Camera radius set to 6 metres in this browser only for character inspection. Presentation and simulation read through Angular debug access. No physical controller used.",
+  "screenshots": [
+    "standing-right.png",
+    "standing-left.png",
+    "moving-reversal.png"
+  ],
+  "video": "turning.webm",
+  "errors": [],
+  "samples": [
+    {
+      "time": 3241.8,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3291.9,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3325.2,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3358.5,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3391.9,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3441.9,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3475.2,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3508.5,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3558.6,
+      "phase": "initial",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3591.8,
+      "phase": "right-tap",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        100,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3625.2,
+      "phase": "right-tap",
+      "player": {
+        "position": {
+          "x": 1.075,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.18331193122461234,
+      "visualPosition": [
+        105.83499999642372,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.5366549191904645,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.4633450808095355,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3675.2,
+      "phase": "right-tap",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.3812322684007693,
+      "visualPosition": [
+        113.53359999942778,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.2740622524660683,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.7259377475339317,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3708.5,
+      "phase": "right-tap",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.5480508383344752,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.15554814211016593,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.8444518578898341,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3741.9,
+      "phase": "right-tap",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.6006949492964501,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.08320898038845699,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9167910196115431,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3791.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.6525312222464501,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.044941213962928765,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9550587860370713,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3825.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.7020786208225004,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.024942053617234436,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9750579463827656,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3858.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.7516260193985507,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.013842662086479506,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9861573379135204,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3891.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.7996923815725003,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.007818989131835994,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.992181010868164,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3925.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.8492397801485506,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0043394832707388965,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9956605167292611,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 3975.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.8970368629985506,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0024590012682248596,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9975409987317752,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4008.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.9457764235225002,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0013778926670494959,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9986221073329505,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4041.9,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 0.9953238220985505,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0007647206149947756,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9992352793850052,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4075.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.04231306689645,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0004375148107404719,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9995624851892595,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4108.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.0895715910985506,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0002495128852044998,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9997504871147955,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4158.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.1408693053605254,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.00013562728309858346,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9998643727169014,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4191.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.1918977402985507,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.00007395897576799017,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.999926041024232,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4225.1,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.2399641024725003,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.00004177552150871778,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9999582244784913,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4258.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.2891075820225004,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.00002329667294125382,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9999767033270587,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4291.9,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.3426941706985507,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.000012323531416289185,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9999876764685837,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4341.9,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.3947997229725004,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.000006634680800288863,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9999933653191997,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4375.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.4498673480105255,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.000003448400699011471,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.999996551599301,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4425.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5010304226105255,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0000018774426496409835,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9999981225573503,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4458.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5501739021605256,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0000010469807627780213,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.9999989530192372,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4491.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.4342488981541011,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.5657511018458989,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4525.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.6988061034323436,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.3011938965676564,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4575.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.8416901430954142,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.15830985690458574,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4608.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9185039761295087,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.08149602387049125,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4641.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9549147910197342,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.045085208980265815,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4691.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9757272521851681,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.024272747814831953,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4725.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9870983626211557,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.012901637378844344,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4758.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9927241966564487,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.00727580334355132,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4791.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9959490386136791,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.0040509613863209185,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4841.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9977227826608956,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.0022772173391043507,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4875.1,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9987621769499908,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.0012378230500092275,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4908.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9993303805866126,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.0006696194133874248,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4941.9,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9996301455644164,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.00036985443558354577,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 4975.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9997870389019241,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.00021296109807587057,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5025.1,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9998823740692205,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.00011762593077941417,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5058.4,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999349270133827,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.0000650729866173065,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5091.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999650223421237,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.00003497765787633098,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5125.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999808651838462,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.000019134816153818065,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5175.1,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999891917523803,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.00001080824761969131,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5208.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999940110894882,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.000005988910511808855,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5241.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.999996579080033,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.0000034209199669246626,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5275.1,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999980646087331,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.000001935391266931689,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5308.4,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.999998898018954,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 0.0000011019810459358786,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5341.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999993854656726,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 6.145343274594811e-7,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5391.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999996583916895,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 3.416083105957822e-7,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5425.1,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999998048702368,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 1.9512976329839193e-7,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5458.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999998949470205,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 1.050529795712229e-7,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5491.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999411339343,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 5.886606566834389e-8,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5525.1,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999663751697,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 3.362483026287758e-8,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5575.1,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999816933426,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 1.8306657471842492e-8,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5608.5,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999902226862,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 9.77731386269674e-9,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5641.8,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999945125438,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 5.487456165201481e-9,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5675.2,
+      "phase": "right-settle",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999970219617,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 2.9780382845304657e-9,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5725.1,
+      "phase": "left-tap",
+      "player": {
+        "position": {
+          "x": 1.15,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 1.5707963267948966
+      },
+      "visualHeading": 1.5707963267948966,
+      "visualPosition": [
+        114.99999999999999,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999984120168,
+        "Run": 0,
+        "TurnLeft": 0,
+        "TurnRight": 1.5879832108416523e-9,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5758.5,
+      "phase": "left-tap",
+      "player": {
+        "position": {
+          "x": 1.075,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 1.4134025348219599,
+      "visualPosition": [
+        109.98999999910592,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.5860207961739616,
+        "Run": 0,
+        "TurnLeft": 0.4139792028954472,
+        "TurnRight": 9.305911870060722e-10,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5791.8,
+      "phase": "left-tap",
+      "player": {
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 1.2338605146973913,
+      "visualPosition": [
+        102.37762000097811,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.3185423003673791,
+        "Run": 0,
+        "TurnLeft": 0.6814576991267811,
+        "TurnRight": 5.058398257295419e-10,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5825.1,
+      "phase": "left-tap",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 1.0585596445428167,
+      "visualPosition": [
+        95.02867071671788,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.1756608727897959,
+        "Run": 0,
+        "TurnLeft": 0.8243391269312577,
+        "TurnRight": 2.789465172349495e-10,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5858.5,
+      "phase": "left-tap",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.8832587745286823,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.09686858608228481,
+        "Run": 0,
+        "TurnLeft": 0.9031314137638895,
+        "TurnRight": 1.5382568860091026e-10,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5908.5,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.8299822611367013,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.05140601954601034,
+        "Run": 0,
+        "TurnLeft": 0.9485939803723578,
+        "TurnRight": 8.163189610489232e-11,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5941.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.7812799938126442,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.02880518129704285,
+        "Run": 0,
+        "TurnLeft": 0.971194818657215,
+        "TurnRight": 4.5742144357591774e-11,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 5975.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.7329813364546253,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.01621854396879442,
+        "Run": 0,
+        "TurnLeft": 0.9837814560054509,
+        "TurnRight": 2.5754775567640832e-11,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6008.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.6848172157786823,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.009146353518599559,
+        "Run": 0,
+        "TurnLeft": 0.9908536464668762,
+        "TurnRight": 1.4524255851022847e-11,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6041.8,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.6375948516367013,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.005216127547206721,
+        "Run": 0,
+        "TurnLeft": 0.9947838724445102,
+        "TurnRight": 8.28312298372638e-12,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6091.8,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.5875472178126442,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0028764453464060623,
+        "Run": 0,
+        "TurnLeft": 0.9971235546490262,
+        "TurnRight": 4.567746924249933e-12,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6125.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.5397867070626442,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0016299596780304285,
+        "Run": 0,
+        "TurnLeft": 0.9983700403193813,
+        "TurnRight": 2.5883486071714398e-12,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6158.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.4909499031367012,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0009118819641064625,
+        "Run": 0,
+        "TurnLeft": 0.9990881180344455,
+        "TurnRight": 1.448053251569857e-12,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6191.8,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.4423821724546252,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0005117880405350752,
+        "Run": 0,
+        "TurnLeft": 0.9994882119586522,
+        "TurnRight": 8.127108171698176e-13,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6225.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.3919309287046252,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0002808752318594105,
+        "Run": 0,
+        "TurnLeft": 0.9997191247676945,
+        "TurnRight": 4.4602515324228077e-13,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6275.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.34094153838670127,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.00015316420120076253,
+        "Run": 0,
+        "TurnLeft": 0.999846835798556,
+        "TurnRight": 2.432221803950165e-13,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6308.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.2888758548126442,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.00008245977148810748,
+        "Run": 0,
+        "TurnLeft": 0.999917540228381,
+        "TurnRight": 1.309447329008919e-13,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6341.8,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.23950090427868223,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.00004583786775039665,
+        "Run": 0,
+        "TurnLeft": 0.9999541621321768,
+        "TurnRight": 7.278976452399884e-14,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6375.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.18797336731264422,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.000024836405887820808,
+        "Run": 0,
+        "TurnLeft": 0.9999751635940727,
+        "TurnRight": 3.9439795630137944e-14,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6425.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.13738758692066322,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.000013608717175357662,
+        "Run": 0,
+        "TurnLeft": 0.999986391282803,
+        "TurnRight": 2.161041442987738e-14,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6458.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.09083790602868222,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.000007823332043157033,
+        "Run": 0,
+        "TurnLeft": 0.9999921766679444,
+        "TurnRight": 1.2423319957100913e-14,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6491.8,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": 0.04092480888670124,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.000004321102406435364,
+        "Run": 0,
+        "TurnLeft": 0.9999956788975867,
+        "TurnRight": 6.8618380846433046e-15,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6525.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.006163018613298758,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0000024682528603748056,
+        "Run": 0,
+        "TurnLeft": 0.9999975317471357,
+        "TurnRight": 3.919544108611247e-15,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6558.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.05782509222131776,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.0000013352393394642133,
+        "Run": 0,
+        "TurnLeft": 0.9999986647606584,
+        "TurnRight": 2.120337656891529e-15,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6608.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.10908355586329874,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 7.257937150197825e-7,
+        "Run": 0,
+        "TurnLeft": 0.9999992742062838,
+        "TurnRight": 1.1525482358160327e-15,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6641.8,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.15617138336329872,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 4.145799485038035e-7,
+        "Run": 0,
+        "TurnLeft": 0.9999995854200509,
+        "TurnRight": 6.583459988210792e-16,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6675.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.20648809047131772,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 2.2789063327719506e-7,
+        "Run": 0,
+        "TurnLeft": 0.9999997721093664,
+        "TurnRight": 3.618865001269274e-16,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6708.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.25801562743735573,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1.2347834975495696e-7,
+        "Run": 0,
+        "TurnLeft": 0.9999998765216501,
+        "TurnRight": 1.960815466246793e-16,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6741.8,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.30362355179537476,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 7.178430328669123e-8,
+        "Run": 0,
+        "TurnLeft": 0.9999999282156966,
+        "TurnRight": 1.1399226860224873e-16,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6775.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.3490969394713177,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 4.179872494105967e-8,
+        "Run": 0,
+        "TurnLeft": 0.999999958201275,
+        "TurnRight": 6.637567354639445e-17,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6825,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.4010280863632987,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 2.2539421332300984e-8,
+        "Run": 0,
+        "TurnLeft": 0.9999999774605787,
+        "TurnRight": 3.57922227146176e-17,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6858.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.4510757201873557,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1.2429414928072746e-8,
+        "Run": 0,
+        "TurnLeft": 0.9999999875705851,
+        "TurnRight": 1.9737702257707267e-17,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6891.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.4988362309373557,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 7.043222698314417e-9,
+        "Run": 0,
+        "TurnLeft": 0.9999999929567773,
+        "TurnRight": 1.1184519412902964e-17,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6941.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.5612612365453747,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 3.3523642224875273e-9,
+        "Run": 0,
+        "TurnLeft": 0.9999999966476358,
+        "TurnRight": 5.323498110390049e-18,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 6975,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.6141341399713178,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1.7875855154681987e-9,
+        "Run": 0,
+        "TurnLeft": 0.9999999982124145,
+        "TurnRight": 2.8386557910149587e-18,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7008.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.6645853837213178,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 9.810477314020857e-10,
+        "Run": 0,
+        "TurnLeft": 0.9999999990189523,
+        "TurnRight": 1.557887328974702e-18,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7058.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.7120768211873558,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 5.576999613285001e-10,
+        "Run": 0,
+        "TurnLeft": 0.9999999994423001,
+        "TurnRight": 8.856181766830438e-19,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7091.8,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.7637388947953748,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 3.016963699053128e-10,
+        "Run": 0,
+        "TurnLeft": 0.9999999996983037,
+        "TurnRight": 4.790887709422944e-19,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7125,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.8137865285793368,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1.6637114637280401e-10,
+        "Run": 0,
+        "TurnLeft": 0.9999999998336289,
+        "TurnRight": 2.641945876280284e-19,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7158.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.8638341623632987,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 9.17457454131388e-11,
+        "Run": 0,
+        "TurnLeft": 0.9999999999082543,
+        "TurnRight": 1.4569070361357132e-19,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7208.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.9133436495793367,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 5.0918235166839285e-11,
+        "Run": 0,
+        "TurnLeft": 0.9999999999490817,
+        "TurnRight": 8.085730269902781e-20,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7241.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -0.9632567467213177,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 2.8123938405927975e-11,
+        "Run": 0,
+        "TurnLeft": 0.999999999971876,
+        "TurnRight": 4.466034208227823e-20,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7275,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.0114208674373557,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1.586033144332869e-11,
+        "Run": 0,
+        "TurnLeft": 0.9999999999841397,
+        "TurnRight": 2.518594009038476e-20,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7308.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.0606612813293368,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 8.830583678175093e-12,
+        "Run": 0,
+        "TurnLeft": 0.9999999999911694,
+        "TurnRight": 1.402281864514237e-20,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7341.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.1084217920793369,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 5.003917542491394e-12,
+        "Run": 0,
+        "TurnLeft": 0.9999999999949961,
+        "TurnRight": 7.946137058530684e-21,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7375.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.1551060096132988,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 2.872035794403029e-12,
+        "Run": 0,
+        "TurnLeft": 0.999999999997128,
+        "TurnRight": 4.560744629690662e-21,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7425,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.2050191067953748,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1.586326734974887e-12,
+        "Run": 0,
+        "TurnLeft": 0.9999999999984137,
+        "TurnRight": 2.5190602260496008e-21,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7458.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.2565466437213177,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 8.595219763245564e-13,
+        "Run": 0,
+        "TurnLeft": 0.9999999999991405,
+        "TurnRight": 1.36490646992028e-21,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7491.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.3049798377213178,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 4.831737854714914e-13,
+        "Run": 0,
+        "TurnLeft": 0.9999999999995168,
+        "TurnRight": 7.672718604659494e-22,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7525.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.3552965448293368,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 2.6559600953066255e-13,
+        "Run": 0,
+        "TurnLeft": 0.9999999999997344,
+        "TurnRight": 4.217620046709825e-22,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7558.3,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.4010390058293367,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 1.5415774450552602e-13,
+        "Run": 0,
+        "TurnLeft": 0.9999999999998459,
+        "TurnRight": 2.447999104847304e-22,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7608.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.4497412731132986,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 8.638174712142127e-14,
+        "Run": 0,
+        "TurnLeft": 0.9999999999999136,
+        "TurnRight": 1.3717276436981423e-22,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7641.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.4997889069373556,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 4.7635410038026484e-14,
+        "Run": 0,
+        "TurnLeft": 0.9999999999999524,
+        "TurnRight": 7.564423150206572e-23,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7675,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5478184909713175,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 2.6906728709477966e-14,
+        "Run": 0,
+        "TurnLeft": 0.9999999999999731,
+        "TurnRight": 4.2727433517172527e-23,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7708.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.4324350007689579,
+        "Run": 0,
+        "TurnLeft": 0.5675649992310421,
+        "TurnRight": 2.425059577131908e-23,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7741.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.699768069181064,
+        "Run": 0,
+        "TurnLeft": 0.30023193081893595,
+        "TurnRight": 1.2828139863798773e-23,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7791.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.8323035870229948,
+        "Run": 0,
+        "TurnLeft": 0.1676964129770052,
+        "TurnRight": 7.165237336543491e-24,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7825,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.908991284305664,
+        "Run": 0,
+        "TurnLeft": 0.09100871569433604,
+        "TurnRight": 3.888568849313104e-24,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7858.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9516263483162303,
+        "Run": 0,
+        "TurnLeft": 0.048373651683769725,
+        "TurnRight": 2.0668819863011877e-24,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7891.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9726325246063773,
+        "Run": 0,
+        "TurnLeft": 0.027367475393622706,
+        "TurnRight": 1.1693419854139009e-24,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7941.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9849322713893198,
+        "Run": 0,
+        "TurnLeft": 0.015067728610680117,
+        "TurnRight": 6.438053724676505e-25,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 7975,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9912962385832184,
+        "Run": 0,
+        "TurnLeft": 0.008703761416781556,
+        "TurnRight": 3.718893872848754e-25,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8008.3,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.995036280896199,
+        "Run": 0,
+        "TurnLeft": 0.004963719103800907,
+        "TurnRight": 2.1208697800557817e-25,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8041.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9972052147249632,
+        "Run": 0,
+        "TurnLeft": 0.0027947852750367674,
+        "TurnRight": 1.1941400203390945e-25,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8075,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9984188454957869,
+        "Run": 0,
+        "TurnLeft": 0.0015811545042130936,
+        "TurnRight": 6.755867395914468e-26,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8108.3,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9991111659407677,
+        "Run": 0,
+        "TurnLeft": 0.0008888340592323179,
+        "TurnRight": 3.797759817364848e-26,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8141.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9994873924421523,
+        "Run": 0,
+        "TurnLeft": 0.0005126075578476864,
+        "TurnRight": 2.1902405348337785e-26,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8191.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9997177733256597,
+        "Run": 0,
+        "TurnLeft": 0.0002822266743403117,
+        "TurnRight": 1.2058821464648693e-26,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8225.1,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9998463448881029,
+        "Run": 0,
+        "TurnLeft": 0.00015365511189715579,
+        "TurnRight": 6.565288578159606e-27,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8258.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999123711257928,
+        "Run": 0,
+        "TurnLeft": 0.00008762887420719383,
+        "TurnRight": 3.744156896872649e-27,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8291.6,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999515219771627,
+        "Run": 0,
+        "TurnLeft": 0.00004847802283722561,
+        "TurnRight": 2.0713414978215844e-27,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8325,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999721756772273,
+        "Run": 0,
+        "TurnLeft": 0.000027824322772728602,
+        "TurnRight": 1.1888619014321427e-27,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8358.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999844585514021,
+        "Run": 0,
+        "TurnLeft": 0.000015541448597917594,
+        "TurnRight": 6.640462117280961e-28,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8391.6,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999910512795287,
+        "Run": 0,
+        "TurnLeft": 0.000008948720471285526,
+        "TurnRight": 3.8235585900062343e-28,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8441.6,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999949453401638,
+        "Run": 0,
+        "TurnLeft": 0.000005054659836260616,
+        "TurnRight": 2.1597264210575345e-28,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8475,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999972524473836,
+        "Run": 0,
+        "TurnLeft": 0.0000027475526164417686,
+        "TurnRight": 1.1739587175395225e-28,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8508.3,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.99999848727818,
+        "Run": 0,
+        "TurnLeft": 0.0000015127218200585826,
+        "TurnRight": 6.463472099653105e-29,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8541.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999991163457761,
+        "Run": 0,
+        "TurnLeft": 8.836542238787231e-7,
+        "TurnRight": 3.7756277102947846e-29,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8575,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999994903797518,
+        "Run": 0,
+        "TurnLeft": 5.096202482288801e-7,
+        "TurnRight": 2.177476527520502e-29,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8608.3,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999997107573843,
+        "Run": 0,
+        "TurnLeft": 2.892426157941556e-7,
+        "TurnRight": 1.2358594636678192e-29,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8641.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999998360984673,
+        "Run": 0,
+        "TurnLeft": 1.639015326682889e-7,
+        "TurnRight": 7.003091840447183e-30,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8691.6,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999097606272,
+        "Run": 0,
+        "TurnLeft": 9.02393727444725e-8,
+        "TurnRight": 3.855696799570902e-30,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8725,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999501576095,
+        "Run": 0,
+        "TurnLeft": 4.984239050193808e-8,
+        "TurnRight": 2.1296374265085677e-30,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8758.4,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999723820524,
+        "Run": 0,
+        "TurnLeft": 2.76179476002109e-8,
+        "TurnRight": 1.1800440199687974e-30,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8791.7,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999845984857,
+        "Run": 0,
+        "TurnLeft": 1.54015143154235e-8,
+        "TurnRight": 6.580671789760562e-31,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8825,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999912025155,
+        "Run": 0,
+        "TurnLeft": 8.797484573967178e-9,
+        "TurnRight": 3.7589393725254354e-31,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8874.9,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999950148384,
+        "Run": 0,
+        "TurnLeft": 4.985161682831056e-9,
+        "TurnRight": 2.1300316437552553e-31,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8908.3,
+      "phase": "left-settle",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.999999997097229,
+        "Run": 0,
+        "TurnLeft": 2.902771113277598e-9,
+        "TurnRight": 1.2402795975814077e-31,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8941.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": -1.5707963267948966
+      },
+      "visualHeading": -1.5707963267948966,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 0.9999999985056881,
+        "Run": 0,
+        "TurnLeft": 1.4943119055487637e-9,
+        "TurnRight": 6.38481125982559e-32,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 8975,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.075
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -1.4002078456207068,
+      "visualPosition": [
+        92.5,
+        0,
+        105.4300000026822
+      ],
+      "weights": {
+        "Idle": 0.5603464634762705,
+        "Run": 0,
+        "TurnLeft": 8.373323928559721e-10,
+        "TurnRight": 0.4396535356863972,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 9008.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.075
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -1.2362167091875835,
+      "visualPosition": [
+        92.5,
+        0,
+        107.5
+      ],
+      "weights": {
+        "Idle": 0.32110085939073585,
+        "Run": 0,
+        "TurnLeft": 4.798248377865241e-10,
+        "TurnRight": 0.6788991401294393,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 9058.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.15
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -1.058088405672866,
+      "visualPosition": [
+        92.5,
+        0,
+        113.17000000178813
+      ],
+      "weights": {
+        "Idle": 0.17538004015253317,
+        "Run": 0,
+        "TurnLeft": 2.620724823871686e-10,
+        "TurnRight": 0.8246199595853944,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 9091.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.2249999999999999
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -0.8747764743078137,
+      "visualPosition": [
+        92.5,
+        0,
+        120.42874000150917
+      ],
+      "weights": {
+        "Idle": 0.09411856123079887,
+        "Run": 0,
+        "TurnLeft": 1.406424867904668e-10,
+        "TurnRight": 0.9058814386285586,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 9125,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.2999999999999998
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -0.7131415323648829,
+      "visualPosition": [
+        92.5,
+        0,
+        126.99462435705091
+      ],
+      "weights": {
+        "Idle": 0.05436688720707213,
+        "Run": 0,
+        "TurnLeft": 8.124108694255418e-11,
+        "TurnRight": 0.9456331127116868,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 9158.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.2999999999999998
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -0.5312433176096818,
+      "visualPosition": [
+        92.5,
+        0,
+        129.99999999999997
+      ],
+      "weights": {
+        "Idle": 0.029316640123101846,
+        "Run": 0,
+        "TurnLeft": 4.3808204432102775e-11,
+        "TurnRight": 0.97068335983309,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 9208.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.3749999999999998
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -0.35735616434583883,
+      "visualPosition": [
+        92.5,
+        0,
+        135.5349999964237
+      ],
+      "weights": {
+        "Idle": 0.016244514417675503,
+        "Run": 0,
+        "TurnLeft": 2.4274371330464526e-11,
+        "TurnRight": 0.9837554855580501,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 9241.7,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.4499999999999997
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -0.186767683171649,
+      "visualPosition": [
+        92.5,
+        0,
+        142.38766000239787
+      ],
+      "weights": {
+        "Idle": 0.009102556218435812,
+        "Run": 0,
+        "TurnLeft": 1.3602058148461283e-11,
+        "TurnRight": 0.9908974437679622,
+        "Walk": 0
+      }
+    },
+    {
+      "time": 9274.9,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.5249999999999997
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": -0.009581857537272698,
+      "visualPosition": [
+        92.5,
+        0,
+        149.99213967938917
+      ],
+      "weights": {
+        "Idle": 0.004987602220264531,
+        "Run": 0,
+        "TurnLeft": 7.453033389019892e-12,
+        "TurnRight": 0.5429466374052021,
+        "Walk": 0.45206576036708035
+      }
+    },
+    {
+      "time": 9308.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.5249999999999997
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        152.49999999999997
+      ],
+      "weights": {
+        "Idle": 0.002862671493525793,
+        "Run": 0,
+        "TurnLeft": 4.277724100842907e-12,
+        "TurnRight": 0.31162827201627186,
+        "Walk": 0.6855090564859246
+      }
+    },
+    {
+      "time": 9341.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.5999999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        157.97499999999997
+      ],
+      "weights": {
+        "Idle": 0.001596406678226719,
+        "Run": 0,
+        "TurnLeft": 2.3855295089364655e-12,
+        "TurnRight": 0.17378363381762113,
+        "Walk": 0.8246199595017667
+      }
+    },
+    {
+      "time": 9374.9,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.6749999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        164.33770000113543
+      ],
+      "weights": {
+        "Idle": 0.0009355275140774531,
+        "Run": 0,
+        "TurnLeft": 1.3979699043433799e-12,
+        "TurnRight": 0.10184082361352806,
+        "Walk": 0.8972236488709966
+      }
+    },
+    {
+      "time": 9408.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.6749999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        167.49999999999997
+      ],
+      "weights": {
+        "Idle": 0.0005183810327344152,
+        "Run": 0,
+        "TurnLeft": 7.746229499832282e-13,
+        "TurnRight": 0.05643057048018939,
+        "Walk": 0.9430510484863016
+      }
+    },
+    {
+      "time": 9458.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.7499999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        173.04999999999995
+      ],
+      "weights": {
+        "Idle": 0.00028677861915542605,
+        "Run": 0,
+        "TurnLeft": 4.2853670550115535e-13,
+        "TurnRight": 0.031218505420804666,
+        "Walk": 0.9684947159596113
+      }
+    },
+    {
+      "time": 9491.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.8249999999999995
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        179.92960000112646
+      ],
+      "weights": {
+        "Idle": 0.0001601819819655854,
+        "Run": 0,
+        "TurnLeft": 2.3936184306325284e-13,
+        "TurnRight": 0.017437290433418448,
+        "Walk": 0.9824025275843766
+      }
+    },
+    {
+      "time": 9524.9,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.8999999999999995
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        187.1601472015181
+      ],
+      "weights": {
+        "Idle": 0.00009018927847484804,
+        "Run": 0,
+        "TurnLeft": 1.3477091277920803e-13,
+        "TurnRight": 0.009817937220206581,
+        "Walk": 0.9900918735011838
+      }
+    },
+    {
+      "time": 9558.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.8999999999999995
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        189.99999999999994
+      ],
+      "weights": {
+        "Idle": 0.00005110644201473646,
+        "Run": 0,
+        "TurnLeft": 7.636896486697729e-14,
+        "TurnRight": 0.005563408952082272,
+        "Walk": 0.9943854846058267
+      }
+    },
+    {
+      "time": 9591.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.9749999999999994
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        195.32499999999993
+      ],
+      "weights": {
+        "Idle": 0.00002895985486937915,
+        "Run": 0,
+        "TurnLeft": 4.327505597894403e-14,
+        "TurnRight": 0.0031525480835635153,
+        "Walk": 0.9968184920615238
+      }
+    },
+    {
+      "time": 9624.9,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.0499999999999994
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        202.27164999538655
+      ],
+      "weights": {
+        "Idle": 0.000016305631785803524,
+        "Run": 0,
+        "TurnLeft": 2.4365699741430504e-14,
+        "TurnRight": 0.001775018848315425,
+        "Walk": 0.9982086755198745
+      }
+    },
+    {
+      "time": 9674.9,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.0499999999999994
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        204.99999999999994
+      ],
+      "weights": {
+        "Idle": 0.000009328838874595601,
+        "Run": 0,
+        "TurnLeft": 1.3940195016085331e-14,
+        "TurnRight": 0.0010155304040240748,
+        "Walk": 0.9989751407570874
+      }
+    },
+    {
+      "time": 9708.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.1249999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        210.18999999910588
+      ],
+      "weights": {
+        "Idle": 0.000005362930477034816,
+        "Run": 0,
+        "TurnLeft": 8.013890872438685e-15,
+        "TurnRight": 0.0005838045899717911,
+        "Walk": 0.9994108324795431
+      }
+    },
+    {
+      "time": 9741.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.1999999999999997
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        216.88042000439341
+      ],
+      "weights": {
+        "Idle": 0.0000031077859394681954,
+        "Run": 0,
+        "TurnLeft": 4.644001536183959e-15,
+        "TurnRight": 0.0003383112467858212,
+        "Walk": 0.99965858096727
+      }
+    },
+    {
+      "time": 9774.9,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.1999999999999997
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        219.99999999999997
+      ],
+      "weights": {
+        "Idle": 0.000001809608559418971,
+        "Run": 0,
+        "TurnLeft": 2.704119618763513e-15,
+        "TurnRight": 0.00019699263072027652,
+        "Walk": 0.9998011977607175
+      }
+    },
+    {
+      "time": 9808.2,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.275
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        224.9800000026822
+      ],
+      "weights": {
+        "Idle": 0.0000010638671840300608,
+        "Run": 0,
+        "TurnLeft": 1.5897494013943386e-15,
+        "TurnRight": 0.00011581178384033741,
+        "Walk": 0.999883124348974
+      }
+    },
+    {
+      "time": 9841.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.35
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        231.37275999619305
+      ],
+      "weights": {
+        "Idle": 6.385920527819185e-7,
+        "Run": 0,
+        "TurnLeft": 9.542557086868008e-16,
+        "TurnRight": 0.00006951665197415015,
+        "Walk": 0.999929844755972
+      }
+    },
+    {
+      "time": 9874.9,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.35
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        235
+      ],
+      "weights": {
+        "Idle": 3.665246713524526e-7,
+        "Run": 0,
+        "TurnLeft": 5.477021808977557e-16,
+        "TurnRight": 0.0000398996008599712,
+        "Walk": 0.9999597338744681
+      }
+    },
+    {
+      "time": 9908.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.4250000000000003
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        240.10000000000002
+      ],
+      "weights": {
+        "Idle": 2.1273895169272175e-7,
+        "Run": 0,
+        "TurnLeft": 3.1789834876343667e-16,
+        "TurnRight": 0.000023158602744495693,
+        "Walk": 0.9999766286583035
+      }
+    },
+    {
+      "time": 9941.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.5000000000000004
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        247.0695999976397
+      ],
+      "weights": {
+        "Idle": 1.2113018003904705e-7,
+        "Run": 0,
+        "TurnLeft": 1.81006270424093e-16,
+        "TurnRight": 0.000013186140561345561,
+        "Walk": 0.9999866927292584
+      }
+    },
+    {
+      "time": 9974.9,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.5750000000000006
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        253.89108160291357
+      ],
+      "weights": {
+        "Idle": 7.178430329341543e-8,
+        "Run": 0,
+        "TurnLeft": 1.0726813920316605e-16,
+        "TurnRight": 0.00000781438542417842,
+        "Walk": 0.9999921138302724
+      }
+    },
+    {
+      "time": 10008.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.5750000000000006
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        257.50000000000006
+      ],
+      "weights": {
+        "Idle": 4.3574226282862976e-8,
+        "Run": 0,
+        "TurnLeft": 6.511348520685784e-17,
+        "TurnRight": 0.00000474345759605485,
+        "Walk": 0.9999952129681776
+      }
+    },
+    {
+      "time": 10041.6,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.650000000000001
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        262.62999999821193
+      ],
+      "weights": {
+        "Idle": 2.5210632634037465e-8,
+        "Run": 0,
+        "TurnLeft": 3.76725485477529e-17,
+        "TurnRight": 0.000002744410562633543,
+        "Walk": 0.9999972303788047
+      }
+    },
+    {
+      "time": 10075,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.725000000000001
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        269.4995200018097
+      ],
+      "weights": {
+        "Idle": 1.4446697406623865e-8,
+        "Run": 0,
+        "TurnLeft": 2.15878719628375e-17,
+        "TurnRight": 0.0000015726566458463205,
+        "Walk": 0.9999984128966567
+      }
+    },
+    {
+      "time": 10108.3,
+      "phase": "forward",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.725000000000001
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        272.5000000000001
+      ],
+      "weights": {
+        "Idle": 8.54773072184363e-9,
+        "Run": 0,
+        "TurnLeft": 1.277297580216267e-17,
+        "TurnRight": 9.304995562825761e-7,
+        "Walk": 0.999999060952713
+      }
+    },
+    {
+      "time": 10141.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.725000000000001
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 0
+      },
+      "visualHeading": 0,
+      "visualPosition": [
+        92.5,
+        0,
+        272.5000000000001
+      ],
+      "weights": {
+        "Idle": 0.42970414471587876,
+        "Run": 0,
+        "TurnLeft": 7.284375221882623e-18,
+        "TurnRight": 5.306600448276062e-7,
+        "Walk": 0.5702953246240764
+      }
+    },
+    {
+      "time": 10175,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.650000000000001
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 0.14796901401216728,
+      "visualPosition": [
+        92.5,
+        0,
+        267.789999999106
+      ],
+      "weights": {
+        "Idle": 0.2600039793895151,
+        "Run": 0,
+        "TurnLeft": 4.407605950154748e-18,
+        "TurnRight": 0.3949235896067356,
+        "Walk": 0.3450724310037493
+      }
+    },
+    {
+      "time": 10208.3,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.650000000000001
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 0.3030066113544715,
+      "visualPosition": [
+        92.5,
+        0,
+        265.00000000000006
+      ],
+      "weights": {
+        "Idle": 0.15359157003520407,
+        "Run": 0,
+        "TurnLeft": 2.603695218705082e-18,
+        "TurnRight": 0.6425645635048515,
+        "Walk": 0.2038438664599445
+      }
+    },
+    {
+      "time": 10241.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.5750000000000006
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 0.4580442088372158,
+      "visualPosition": [
+        92.5,
+        0,
+        260.06499999910596
+      ],
+      "weights": {
+        "Idle": 0.09073080508236842,
+        "Run": 0,
+        "TurnLeft": 1.5380750605523395e-18,
+        "TurnRight": 0.7888529630191334,
+        "Walk": 0.1204162318984982
+      }
+    },
+    {
+      "time": 10275,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.5750000000000006
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 0.6093118950794763,
+      "visualPosition": [
+        92.5,
+        0,
+        257.50000000000006
+      ],
+      "weights": {
+        "Idle": 0.05428765953834277,
+        "Run": 0,
+        "TurnLeft": 9.202882654450013e-19,
+        "TurnRight": 0.8736627714728096,
+        "Walk": 0.07204956898884773
+      }
+    },
+    {
+      "time": 10308.3,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.5000000000000004
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 0.765763209312512,
+      "visualPosition": [
+        92.5,
+        0,
+        252.51999999731785
+      ],
+      "weights": {
+        "Idle": 0.03191566440157828,
+        "Run": 0,
+        "TurnLeft": 5.410366127850549e-19,
+        "TurnRight": 0.9257264611996865,
+        "Walk": 0.04235787439873527
+      }
+    },
+    {
+      "time": 10341.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.4250000000000003
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 0.9222145234051076,
+      "visualPosition": [
+        92.5,
+        0,
+        245.86672000148778
+      ],
+      "weights": {
+        "Idle": 0.018763189338830297,
+        "Run": 0,
+        "TurnLeft": 3.1807492011425543e-19,
+        "TurnRight": 0.9563346558028626,
+        "Walk": 0.024902154858307126
+      }
+    },
+    {
+      "time": 10374.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.4250000000000003
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 1.0706547762872254,
+      "visualPosition": [
+        92.5,
+        0,
+        242.50000000000003
+      ],
+      "weights": {
+        "Idle": 0.01133501873188851,
+        "Run": 0,
+        "TurnLeft": 1.9215204369215132e-19,
+        "TurnRight": 0.9736213558648784,
+        "Walk": 0.01504362540323309
+      }
+    },
+    {
+      "time": 10408.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.35
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 1.2355883906006895,
+      "visualPosition": [
+        92.5,
+        0,
+        237.25
+      ],
+      "weights": {
+        "Idle": 0.006474665438550816,
+        "Run": 0,
+        "TurnLeft": 1.0975898899403032e-19,
+        "TurnRight": 0.9849322793779761,
+        "Walk": 0.008593055183473024
+      }
+    },
+    {
+      "time": 10441.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.275
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 1.3910972269533843,
+      "visualPosition": [
+        92.5,
+        0,
+        230.815
+      ],
+      "weights": {
+        "Idle": 0.003818649921768379,
+        "Run": 0,
+        "TurnLeft": 6.473402505709109e-20,
+        "TurnRight": 0.9911133091399704,
+        "Walk": 0.0050680409382612285
+      }
+    },
+    {
+      "time": 10474.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.275
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 1.5550883635269477,
+      "visualPosition": [
+        92.5,
+        0,
+        227.5
+      ],
+      "weights": {
+        "Idle": 0.0021882386183016116,
+        "Run": 0,
+        "TurnLeft": 3.709517668549009e-20,
+        "TurnRight": 0.9949075719096504,
+        "Walk": 0.002904189472048029
+      }
+    },
+    {
+      "time": 10508.3,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.1999999999999997
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 1.7105971998796425,
+      "visualPosition": [
+        92.5,
+        0,
+        222.54999999999998
+      ],
+      "weights": {
+        "Idle": 0.001290586719560029,
+        "Run": 0,
+        "TurnLeft": 2.187811785681027e-20,
+        "TurnRight": 0.9969965706624716,
+        "Walk": 0.0017128426179683779
+      }
+    },
+    {
+      "time": 10541.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.1249999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 1.8731746197029144,
+      "visualPosition": [
+        92.5,
+        0,
+        215.61549999999994
+      ],
+      "weights": {
+        "Idle": 0.000743116043818691,
+        "Run": 0,
+        "TurnLeft": 1.2597356025400895e-20,
+        "TurnRight": 0.9982706342058487,
+        "Walk": 0.0009862497503326485
+      }
+    },
+    {
+      "time": 10574.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.0499999999999994
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 2.0423493841268128,
+      "visualPosition": [
+        92.5,
+        0,
+        207.99357099873447
+      ],
+      "weights": {
+        "Idle": 0.0004184059841979641,
+        "Run": 0,
+        "TurnLeft": 7.09284800125512e-21,
+        "TurnRight": 0.9990262933990472,
+        "Walk": 0.0005553006167548297
+      }
+    },
+    {
+      "time": 10608.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 2.0499999999999994
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 2.2105816706703703,
+      "visualPosition": [
+        92.5,
+        0,
+        204.99999999999994
+      ],
+      "weights": {
+        "Idle": 0.00023633545503753907,
+        "Run": 0,
+        "TurnLeft": 4.006375442029074e-21,
+        "TurnRight": 0.9994500045379362,
+        "Walk": 0.0003136600070262985
+      }
+    },
+    {
+      "time": 10641.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.9749999999999994
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 2.3632630736629223,
+      "visualPosition": [
+        92.5,
+        0,
+        200.13999999910587
+      ],
+      "weights": {
+        "Idle": 0.00014073127421905686,
+        "Run": 0,
+        "TurnLeft": 2.385686569402514e-21,
+        "TurnRight": 0.999672492804016,
+        "Walk": 0.00018677592176492486
+      }
+    },
+    {
+      "time": 10674.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.8999999999999995
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 2.523955537865952,
+      "visualPosition": [
+        92.5,
+        0,
+        193.2245200009244
+      ],
+      "weights": {
+        "Idle": 0.00008155292658423537,
+        "Run": 0,
+        "TurnLeft": 1.382491011519127e-21,
+        "TurnRight": 0.9998102115506443,
+        "Walk": 0.00010823552277149193
+      }
+    },
+    {
+      "time": 10708.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.8999999999999995
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 2.679464374218647,
+      "visualPosition": [
+        92.5,
+        0,
+        189.99999999999994
+      ],
+      "weights": {
+        "Idle": 0.00004809855886400463,
+        "Run": 0,
+        "TurnLeft": 8.153701906433365e-22,
+        "TurnRight": 0.9998880659311029,
+        "Walk": 0.00006383551003315264
+      }
+    },
+    {
+      "time": 10741.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.8249999999999995
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 2.8448692274020617,
+      "visualPosition": [
+        92.5,
+        0,
+        184.73500000089402
+      ],
+      "weights": {
+        "Idle": 0.00002743040899974892,
+        "Run": 0,
+        "TurnLeft": 4.650022442208326e-22,
+        "TurnRight": 0.9999361644638972,
+        "Walk": 0.000036405127103036105
+      }
+    },
+    {
+      "time": 10774.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.7499999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.018756380806345,
+      "visualPosition": [
+        92.5,
+        0,
+        177.5505699990737
+      ],
+      "weights": {
+        "Idle": 0.000015199343185154045,
+        "Run": 0,
+        "TurnLeft": 2.576603466555654e-22,
+        "TurnRight": 0.5540702264801274,
+        "Walk": 0.44591457417668745
+      }
+    },
+    {
+      "time": 10808.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.7499999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        174.99999999999994
+      ],
+      "weights": {
+        "Idle": 0.000009094339759169852,
+        "Run": 0,
+        "TurnLeft": 1.5416789438901313e-22,
+        "TurnRight": 0.3315210946070495,
+        "Walk": 0.6684698110531914
+      }
+    },
+    {
+      "time": 10841.5,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.6749999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        169.66000000089403
+      ],
+      "weights": {
+        "Idle": 0.000005145138126171951,
+        "Run": 0,
+        "TurnLeft": 8.722074743829103e-23,
+        "TurnRight": 0.18755862092936473,
+        "Walk": 0.8124362339325091
+      }
+    },
+    {
+      "time": 10874.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.5999999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        162.93663999796865
+      ],
+      "weights": {
+        "Idle": 0.000002948369233849962,
+        "Run": 0,
+        "TurnLeft": 4.998096494093245e-23,
+        "TurnRight": 0.10747856596473919,
+        "Walk": 0.892518485666027
+      }
+    },
+    {
+      "time": 10924.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.5999999999999996
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        159.99999999999997
+      ],
+      "weights": {
+        "Idle": 0.0000016600574584942942,
+        "Run": 0,
+        "TurnLeft": 2.814141210006909e-23,
+        "TurnRight": 0.06051501047073938,
+        "Walk": 0.9394833294718021
+      }
+    },
+    {
+      "time": 10958.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.5249999999999997
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        154.4649999991059
+      ],
+      "weights": {
+        "Idle": 9.19847130932694e-7,
+        "Run": 0,
+        "TurnLeft": 1.559331398331362e-23,
+        "TurnRight": 0.03353170607140336,
+        "Walk": 0.9664673740814658
+      }
+    },
+    {
+      "time": 10991.5,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.4499999999999997
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        148.46419000192938
+      ],
+      "weights": {
+        "Idle": 5.539129222824859e-7,
+        "Run": 0,
+        "TurnLeft": 9.389971252948986e-24,
+        "TurnRight": 0.0201921000506849,
+        "Walk": 0.9798073460363929
+      }
+    },
+    {
+      "time": 11024.8,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.3749999999999998
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        141.16203945803034
+      ],
+      "weights": {
+        "Idle": 3.2512427511451175e-7,
+        "Run": 0,
+        "TurnLeft": 5.511529834655515e-24,
+        "TurnRight": 0.01185193850500317,
+        "Walk": 0.9881477363707217
+      }
+    },
+    {
+      "time": 11058.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.3749999999999998
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        137.49999999999997
+      ],
+      "weights": {
+        "Idle": 1.82182238109811e-7,
+        "Run": 0,
+        "TurnLeft": 3.0883662572808015e-24,
+        "TurnRight": 0.006641191839707542,
+        "Walk": 0.9933586259780544
+      }
+    },
+    {
+      "time": 11091.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.2999999999999998
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        132.31000000089404
+      ],
+      "weights": {
+        "Idle": 1.0473229201055021e-7,
+        "Run": 0,
+        "TurnLeft": 1.7754292627478936e-24,
+        "TurnRight": 0.0038178652884651126,
+        "Walk": 0.9961820299792429
+      }
+    },
+    {
+      "time": 11124.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.2249999999999999
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        125.63920000028608
+      ],
+      "weights": {
+        "Idle": 6.078891750584301e-8,
+        "Run": 0,
+        "TurnLeft": 1.0304980528810486e-24,
+        "TurnRight": 0.0022159726824802833,
+        "Walk": 0.9977839665286022
+      }
+    },
+    {
+      "time": 11158.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.2249999999999999
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        122.49999999999999
+      ],
+      "weights": {
+        "Idle": 3.368347949291546e-8,
+        "Run": 0,
+        "TurnLeft": 5.710047399408242e-25,
+        "TurnRight": 0.0012278828686168156,
+        "Walk": 0.9987720834479037
+      }
+    },
+    {
+      "time": 11191.5,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.15
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        117.07000000178813
+      ],
+      "weights": {
+        "Idle": 1.887441864863495e-8,
+        "Run": 0,
+        "TurnLeft": 3.1996048728471817e-25,
+        "TurnRight": 0.0006880398243487597,
+        "Walk": 0.9993119413012326
+      }
+    },
+    {
+      "time": 11224.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1.075
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        110.25615999595165
+      ],
+      "weights": {
+        "Idle": 1.0678234321980146e-8,
+        "Run": 0,
+        "TurnLeft": 1.810181876647241e-25,
+        "TurnRight": 0.00038925969610096976,
+        "Walk": 0.9996107296256647
+      }
+    },
+    {
+      "time": 11274.8,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        102.54352768021865
+      ],
+      "weights": {
+        "Idle": 5.8509702038363365e-9,
+        "Run": 0,
+        "TurnLeft": 9.918606301779976e-26,
+        "TurnRight": 0.00021328871560282624,
+        "Walk": 0.999786705433427
+      }
+    },
+    {
+      "time": 11308.3,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 1
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        100
+      ],
+      "weights": {
+        "Idle": 3.4014693301869324e-9,
+        "Run": 0,
+        "TurnLeft": 5.766194999862136e-26,
+        "TurnRight": 0.00012399567923321287,
+        "Walk": 0.9998760009192974
+      }
+    },
+    {
+      "time": 11341.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.925
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        94.39000000357628
+      ],
+      "weights": {
+        "Idle": 1.869755165189258e-9,
+        "Run": 0,
+        "TurnLeft": 3.1696222537711947e-26,
+        "TurnRight": 0.00006815923919993393,
+        "Walk": 0.9999318388910449
+      }
+    },
+    {
+      "time": 11374.9,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.8500000000000001
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        87.8170000010729
+      ],
+      "weights": {
+        "Idle": 1.0680210975342422e-9,
+        "Run": 0,
+        "TurnLeft": 1.810516960331015e-26,
+        "TurnRight": 0.00003893317521604171,
+        "Walk": 0.9999610657567628
+      }
+    },
+    {
+      "time": 11408.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.8500000000000001
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        85.00000000000001
+      ],
+      "weights": {
+        "Idle": 6.110402138628149e-10,
+        "Run": 0,
+        "TurnLeft": 1.0358397162725033e-26,
+        "TurnRight": 0.00002227459341888688,
+        "Walk": 0.9999777247955408
+      }
+    },
+    {
+      "time": 11441.5,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.7750000000000001
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        79.62999999821187
+      ],
+      "weights": {
+        "Idle": 3.445925736711169e-10,
+        "Run": 0,
+        "TurnLeft": 5.841557816377024e-27,
+        "TurnRight": 0.000012561627368465182,
+        "Walk": 0.9999874380280389
+      }
+    },
+    {
+      "time": 11474.8,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.7000000000000002
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        73.12012000286461
+      ],
+      "weights": {
+        "Idle": 2.0065013581153282e-10,
+        "Run": 0,
+        "TurnLeft": 3.4014353725615845e-27,
+        "TurnRight": 0.000007314412526782985,
+        "Walk": 0.9999926853868231
+      }
+    },
+    {
+      "time": 11524.8,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.7000000000000002
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        70.00000000000001
+      ],
+      "weights": {
+        "Idle": 1.1279395797416957e-10,
+        "Run": 0,
+        "TurnLeft": 1.912091197510734e-27,
+        "TurnRight": 0.000004111741742984056,
+        "Walk": 0.999995888145463
+      }
+    },
+    {
+      "time": 11558.2,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": true,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        64.68999999910595
+      ],
+      "weights": {
+        "Idle": 6.401790267087747e-11,
+        "Run": 0,
+        "TurnLeft": 1.0852360390448913e-27,
+        "TurnRight": 0.000002333680699195052,
+        "Walk": 0.9999976662552829
+      }
+    },
+    {
+      "time": 11591.6,
+      "phase": "reverse",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        63.038739998996874
+      ],
+      "weights": {
+        "Idle": 0.4529417544122808,
+        "Run": 0,
+        "TurnLeft": 5.936873236064704e-28,
+        "TurnRight": 0.0000012766592691452962,
+        "Walk": 0.5470569689284501
+      }
+    },
+    {
+      "time": 11624.9,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.64114987999409
+      ],
+      "weights": {
+        "Idle": 0.696871963484139,
+        "Run": 0,
+        "TurnLeft": 3.2896546969298785e-28,
+        "TurnRight": 7.074040482472442e-7,
+        "Walk": 0.3031273291118127
+      }
+    },
+    {
+      "time": 11658.2,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.8229282037903499,
+        "Run": 0,
+        "TurnLeft": 1.921646947574269e-28,
+        "TurnRight": 4.132290332127141e-7,
+        "Walk": 0.1770713829806169
+      }
+    },
+    {
+      "time": 11691.5,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.8963981404869448,
+        "Run": 0,
+        "TurnLeft": 1.1243247166283108e-28,
+        "TurnRight": 2.4177365996181217e-7,
+        "Walk": 0.10360161773939529
+      }
+    },
+    {
+      "time": 11724.9,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9396744771364054,
+        "Run": 0,
+        "TurnLeft": 6.546743148999056e-29,
+        "TurnRight": 1.4078050838463307e-7,
+        "Walk": 0.06032538208308624
+      }
+    },
+    {
+      "time": 11758.2,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9652091201616415,
+        "Run": 0,
+        "TurnLeft": 3.7756316633084054e-29,
+        "TurnRight": 8.11908047919892e-8,
+        "Walk": 0.03479079864755373
+      }
+    },
+    {
+      "time": 11791.5,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9797094496227193,
+        "Run": 0,
+        "TurnLeft": 2.2020036522890653e-29,
+        "TurnRight": 4.735166579453629e-8,
+        "Walk": 0.020290503025614942
+      }
+    },
+    {
+      "time": 11824.8,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.988071204360777,
+        "Run": 0,
+        "TurnLeft": 1.2945558930915158e-29,
+        "TurnRight": 2.783800014967909e-8,
+        "Walk": 0.011928767801222913
+      }
+    },
+    {
+      "time": 11874.9,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9935158853946158,
+        "Run": 0,
+        "TurnLeft": 7.036794851510784e-30,
+        "TurnRight": 1.513185310692261e-8,
+        "Walk": 0.0064840994735311155
+      }
+    },
+    {
+      "time": 11908.2,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.996284343871348,
+        "Run": 0,
+        "TurnLeft": 4.032363939769348e-30,
+        "TurnRight": 8.671154992836158e-9,
+        "Walk": 0.003715647457497037
+      }
+    },
+    {
+      "time": 11941.5,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9979212738485448,
+        "Run": 0,
+        "TurnLeft": 2.255908535008743e-30,
+        "TurnRight": 4.8510830988736785e-9,
+        "Walk": 0.0020787213003721494
+      }
+    },
+    {
+      "time": 11974.9,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9988107114409257,
+        "Run": 0,
+        "TurnLeft": 1.2906588052138144e-30,
+        "TurnRight": 2.775419756262842e-9,
+        "Walk": 0.001189285783654534
+      }
+    },
+    {
+      "time": 12008.2,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9993119162515003,
+        "Run": 0,
+        "TurnLeft": 7.467332818007598e-31,
+        "TurnRight": 1.6057677634062864e-9,
+        "Walk": 0.000688082142731918
+      }
+    },
+    {
+      "time": 12041.5,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9996107154537363,
+        "Run": 0,
+        "TurnLeft": 4.224656190757129e-31,
+        "TurnRight": 9.084658321687913e-10,
+        "Walk": 0.00038928363779792497
+      }
+    },
+    {
+      "time": 12074.9,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9997762094527024,
+        "Run": 0,
+        "TurnLeft": 2.4286556714044828e-31,
+        "TurnRight": 5.222556809240641e-10,
+        "Walk": 0.00022379002504188653
+      }
+    },
+    {
+      "time": 12108.2,
+      "phase": "final",
+      "player": {
+        "position": {
+          "x": 0.925,
+          "y": 0,
+          "z": 0.6250000000000002
+        },
+        "moving": false,
+        "sprinting": false,
+        "facing": 3.141592653589793
+      },
+      "visualHeading": 3.141592653589793,
+      "visualPosition": [
+        92.5,
+        0,
+        62.50000000000002
+      ],
+      "weights": {
+        "Idle": 0.9998694820770558,
+        "Run": 0,
+        "TurnLeft": 1.4164275372929537e-31,
+        "TurnRight": 3.0458715769318564e-10,
+        "Walk": 0.00013051761835694808
+      }
+    }
+  ]
+}

@@ -6,8 +6,31 @@
 }
 
 div.game-container {
+  position: relative;
+  z-index: 0;
   width: 100%;
   height: 100%;
+}
+
+.inspector-close {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  margin: 0;
+  width: auto;
+}
+
+.inspector-status {
+  position: absolute;
+  top: 6rem;
+  right: 1rem;
+  z-index: 2;
+  max-width: min(30rem, calc(100% - 2rem));
+  padding: 0.75rem;
+  background: #101916;
+  color: #f1f5f3;
 }
 
 .visually-hidden {
@@ -71,6 +94,52 @@ div.circle {
   display: none;
 }
 
-.game-container:focus-within ~ #focus-indicator {
+.title-image {
+  position: absolute;
+  left: 50%;
+  top: 14%;
+  transform: translateX(-50%);
+  width: min(70vw, 640px);
+  pointer-events: none;
+}
+.menu-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgb(12 19 19 / 15%), rgb(12 19 19 / 65%)),
+    url('/assets/bg.png') center/cover;
+  pointer-events: none;
+}
+.title-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.game-help {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  pointer-events: none;
+  font:
+    14px/1.5 system-ui,
+    sans-serif;
+}
+.game-help p {
+  margin: 4px 0;
+  padding: 6px 10px;
+  border: 0;
+  background: rgb(15 25 22 / 92%);
+  color: #f1f5f3;
+  border-radius: 5px;
+}
+.paused-status {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.game-container:focus-within ~ div #focus-indicator {
   display: block;
 }

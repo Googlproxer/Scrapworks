@@ -1,0 +1,18 @@
+{
+  "name": "Blocker Footprint",
+  "id": "blocker",
+  "uniqueId": 900000004,
+  "type": "TransformNode",
+  "position": [300, 0, -100],
+  "rotation": [0, 0, 0],
+  "scaling": [1, 1, 1],
+  "isEnabled": true,
+  "metadata": {
+    "scrapworks": {
+      "version": 1,
+      "kind": "Blocker",
+      "id": "blocker-1",
+      "footprint": { "width": 1, "depth": 1 }
+    }
+  }
+}

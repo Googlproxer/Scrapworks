@@ -1,6 +1,6 @@
 # Scrapworks Art Document
 
-Updated 17 October 2026. Active production direction: fully 3D world and character with the established flat painted finish.
+Updated 23 October 2026. Active production direction: fully 3D world and character with the established flat painted finish.
 
 This document owns visual identity, camera/readability, and 3D asset preparation. The [GDD](../design/GDD.md) owns gameplay; the [TDD](../design/TDD.md) owns architecture. Earlier sprite/tile production specifications remain in [the historical art brief](../history/2d/art-direction-2026-10-04.md).
 
@@ -8,9 +8,9 @@ Art projects, source assets, references and provenance are organised under the r
 
 ## Current repository assets
 
-- The [south-idle illustration](../../art/characters/protagonist-south-idle-v2.png) defines the preferred finish and character identity. It remains the earlier Phaser runtime image; it is not the 3D animation asset.
-- The [MPFB character source](../../art/characters/3d/protagonist-mpfb-v1/README.md) includes editable Blender/rigged GLB sources, licensing, and original validation. Its source mesh statistics are distinct from the separately authored runtime model.
-- The [retained model source](../../art/characters/3d/Protag-v1.glb), `assets/models/Protag-v1.glb` and `public/assets/models/Protag-v1.glb` are byte-identical source/import/public copies. The Editor Game scene includes a static rig; idle/walk animation is not implemented. The asset/export audit excludes the unused standalone public copy from deployment while preserving its source.
+- The [south-idle illustration](../../art/characters/protagonist-south-idle-v2.png) defines the preferred finish and character identity. Its obsolete runtime sprite duplicate has been removed; the original remains source artwork.
+- The retired [MPFB character experiment](../../art/README.md#recovering-retired-mpfb-sources) is recoverable from Git with its editable Blender/rigged GLB sources, licensing and original validation. Its source mesh statistics are distinct from the separately authored runtime model.
+- The [retained model source](../../art/characters/3d/Protag-v1.glb) and `assets/models/Protag-v1.glb` preserve the earlier import identity. The unused public duplicate has been removed. The former serialized static rig is [recoverable from Git commit `6cd9f6f`](../../assets/README.md#recovering-retired-scene-sources); the active Game scene supplies a neutral binding for the [runtime derivative](../../art/characters/3d/protagonist-runtime-v2/README.md).
 - World and machinery comparisons are concepts, not runtime meshes. The [generation log](../../art/generation.json), [historical prompts](../../art/prompts.md), branding/UI records, [tileset record](../../art/world/tilesets/README.md), and Tiled sources retain exact provenance.
 - References to an earlier smooth character study existed in older prose, but its deliverable folder is absent from this checkout. Do not treat that study as an available runtime asset.
 
@@ -25,7 +25,7 @@ Art projects, source assets, references and provenance are organised under the r
 
 ## Camera and painted finish
 
-Begin with an elevated perspective camera with bounded pitch, zoom, and rotation. Compare orthographic projection in the same authored fixture if it improves placement/readability; orthographic remains a 3D option. Exact camera angles, lighting, and zoom limits remain prototype choices, not inherited pixel-tile constraints.
+The authored perspective camera starts at 45 degrees and a 12 metre radius with field of view 0.8 radians. Pitch is bounded to 20–75 degrees, radius to 6–24 metres; right dragging rotates and free panning is disabled. Compare orthographic projection in the same fixture when assessing placement/readability; it remains a 3D option. The two-metre construction grid uses a subdued soil palette, independent of historical pixel-tile dimensions.
 
 Gameplay dimensions are metres; Editor scene coordinates are centimetres. Logical footprints and ground-plane positions remain independent of rendered mesh bounds. Character scale, pivots, occlusion, and selection must be checked in the browser, including at different camera rotations and viewport sizes.
 

@@ -2,20 +2,20 @@
 
 Scrapworks is a browser-first 3D factory-restoration game built with Angular and TypeScript. The player starts empty-handed, salvages and crafts materials, researches machinery, automates production, and restores a damaged planet.
 
-The application and rendering foundation works; authoritative gameplay and world saving remain to be implemented. Babylon.js is the selected world renderer and Babylon.js Editor the scene/world-layout tool. 
+Babylon.js is the sole world renderer and Babylon.js Editor owns scene/world-layout authoring. The migration adds an authored world definition, authoritative fixed-step movement and construction-preview validation. Manual salvage, crafting, research, factory systems and gameplay saving remain future milestones.
 
 Start with the [documentation index](docs/README.md), [3D cleanup plan](docs/plans/3d-cleanup.md), and [implementation roadmap](docs/plans/README.md). Earlier 2D work is indexed under [history](docs/history/README.md). Editable Blender projects, artwork, references and provenance are indexed in [art/](art/README.md); visual guidance remains in the [Art Document](docs/art/README.md).
 
 ## Technology and ownership
 
-For the changes still yours to implement, follow the [ordered implementation checklist](docs/plans/3d-implementation-checklist.md). It includes the current files, runtime cutover gate and acceptance checks.
+The [migration plan](docs/plans/3d-migration.md) records the current integration and validation work. At Phase 7, update milestone progress and stop; migration work does not authorize continuing the later gameplay milestones.
 
 | Responsibility        | Direction                                                                                                         |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | Application interface | Angular 22, signals, CDK dialogs/overlays, and SCSS.                                                              |
 | World presentation    | Babylon.js 9: rendering, camera, picking, animation, effects, and input adaptation.                               |
 | Scene authoring       | One Babylon.js Editor project in this repository. Attached scripts handle presentation and scene bindings.        |
-| Gameplay              | Strict TypeScript 6, independent of Angular, Babylon, the DOM, and storage. The current simulation is a scaffold. |
+| Gameplay              | Strict TypeScript 6, independent of Angular, Babylon, the DOM, and storage. A plain world/session owns fixed-step movement and footprint checks. |
 | Saves                 | Versioned plain snapshots through Dexie/IndexedDB; currently a test-data experiment.                              |
 | Tests                 | Vitest with Playwright/headless Chromium, plus separate lint-tooling checks.                                      |
 
@@ -33,9 +33,11 @@ yarn test:setup
 yarn dev
 ```
 
-Visit [localhost:4200/3d](http://localhost:4200/3d) and select Play Game. Open `scrapworks.bjseditor` in Babylon.js Editor 5.5.2 to edit `assets/main-menu.scene` or `assets/game.scene` . Follow the [Editor/MCP setup guide](docs/plans/babylon-editor-setup.md) for authoring and workstation setup.
+Visit [localhost:4200](http://localhost:4200) and select Play Game; `/3d` is a compatibility redirect. Open `scrapworks.bjseditor` in Babylon.js Editor 5.5.2 to edit `assets/main-menu.scene` or `assets/game.scene` . Follow the [Editor/MCP setup guide](docs/plans/babylon-editor-setup.md) for authoring and workstation setup.
 
 The development command exports scenes before starting Angular, then watches saved Editor inputs and attached presentation scripts. Save in the Editor to export and reload automatically. Failed exports leave the last working scenes available and report the error in the terminal; correcting the save retries. See the [workflow validation](docs/reports/workflow/2026-10-17/README.md).
+
+In a development build, select **Inspector** to load the [Babylon.js Inspector](https://doc.babylonjs.com/toolsAndResources/inspectorv2) for the current scene. Select **Close Inspector** at the top of the viewport to restore the game interface and focus; click the viewport to resume movement. Gameplay and application menu input pause while the Inspector owns input, and changing scenes or unmounting closes it. Scene edits are temporary runtime diagnostics; save authored changes through the Editor workflow. The Inspector and its UI/editor dependencies are excluded from production builds through a development-only loader replacement. Restart an already-running dev server after installing these dependencies or changing `angular.json`.
 
 ## Development commands
 
@@ -46,6 +48,7 @@ The development command exports scenes before starting Angular, then watches sav
 | `yarn scenes:export` | Pack saved Editor inputs into generated browser assets and the script registry. |
 | `yarn test` | Export scenes and run the Chromium application suite once.                      |
 | `yarn test:export` | Check staged export, retention, physics guards and watcher behavior.            |
+| `yarn test:world` | Run authored marker, coordinate, movement, scheduler and placement checks in Node without a renderer. |
 | `yarn test:workflow` | Verify dev reload/failure recovery in an isolated browser fixture.              |
 | `yarn test:watch` | Export scenes once, then watch application tests.                               |
 | `yarn test:setup` | Install the matching Playwright Chromium headless shell.                        |
@@ -64,7 +67,7 @@ Direct Angular targets need `yarn scenes:export` first. Do not rely on an old `p
 | `src/app/` | Angular UI, routed page, scoped runtime, viewport, and current save experiment. |
 | `src/contracts/` | Plain renderer lifecycle, client, and event contracts.                          |
 | `src/game/` | Active 3D presentation adapter and authored-scene loader.                       |
-| `src/simulation/` | Framework-independent gameplay scaffold.                                        |
+| `src/simulation/` | Plain authoritative world, fixed movement and collision/placement rules. |
 | `src/core/` | Framework-independent utilities.                                                |
 | `scrapworks.bjseditor` , `assets/` | Authored Editor project and complete scene/asset sources.                       |
 | `public/scene/` , `src/scripts.ts` | Generated Editor exports and script map; ignored by Git.                        |
@@ -74,7 +77,7 @@ Direct Angular targets need `yarn scenes:export` first. Do not rely on an old `p
 | `map/` | Historical Tiled sources.                                                       |
 | `tools/` | Scene export, Editor connection, art, diagram, and cleanup utilities.           |
 
-Gameplay coordinates use metres on an X/Z ground plane; Editor coordinates use centimetres. Convert at the adapter/compiler boundary. Authored layout will compile into a plain initial-world definition; that compiler has not been implemented.
+Gameplay coordinates use metres on an X/Z ground plane; Editor coordinates use centimetres. Saved marker metadata compiles to `public/scene/worlds/game.json` in the same staged export as the scenes. The simulation creates an empty-handed world from that definition; scene serialization is not a gameplay save. See [marker authoring](tools/world/README.md).
 
 ## Validation and current limits
 
@@ -90,7 +93,7 @@ Use `eslint.config.mjs` for application lint, Angular template accessibility, th
 yarn build
 ```
 
-The static browser application is written to `dist/scrapworks/browser/` . Configure the host to serve `index.html` for application routes. The [asset/export audit](docs/reports/assets/2026-10-17/README.md) reduced this output from 470.2 MiB to 17.5 MiB by filtering generated library copies and excluding unused public assets. Original files remain available. Initial JavaScript and measured scene-download bytes are unchanged; code-level loading improvements remain implementation work.
+The static browser application is written to `dist/scrapworks/browser/` . Configure the host to serve `index.html` for application routes. The [17 October asset/export audit](docs/reports/assets/2026-10-17/README.md) preserves the earlier packaging measurements. The current runtime retains only live public assets and scene-declared dependencies. Historical maps, the final terrain atlas and original character sources remain outside deployment. Retired authored scenes are [recoverable from Git commit `6cd9f6f`](assets/README.md#recovering-retired-scene-sources). Record fresh measurements after the final migration build rather than reusing the earlier totals.
 
 ## License
 

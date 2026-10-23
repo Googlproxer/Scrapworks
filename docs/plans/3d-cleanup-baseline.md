@@ -88,3 +88,21 @@ A final file/history handoff checkpoint is saved outside the repository at `L:/A
 | First gameplay              | Plain world/session, movement, manual salvage/crafting, and validated save/reload follow Milestones 2–4.                                                                                                                  |
 
 Continue with the [3D cleanup plan](3d-cleanup.md). Updating guidance does not complete any unchecked gameplay requirement.
+
+## 23 October 2026 migration implementation appendix
+
+The preceding sections retain their 17 October scope and measurements. On 23 October the user authorized runtime implementation and removal of obsolete 2D runtime files, with an explicit stop after updating milestone progress at migration Phase 7.
+
+The current implementation adds a validated plain WorldDefinition compiled from saved Editor marker transforms, a private plain WorldState, a 20 Hz application session, deterministic movement/collision and isolated developer-fixture placement. Normal worlds start with empty inventory, equipment, research and buildings. Manual salvage/crafting, factory systems and gameplay saves remain separate milestones.
+
+The final historical 48-tile atlas moved unchanged to `art/world/tilesets/terrain-atlas-v2.png` and its Tiled reference was repaired. Unused public sprite/GLB duplicates, generated Tiled JSON and template assets were removed. Complete prior Game/MainMenu authoring is preserved in Git commit `6cd9f6f`; see the [retired scene source recovery instructions](../../assets/README.md#recovering-retired-scene-sources). The active character anchor has unit scale; the two-metre soil grid and bounded camera remain Editor-authored.
+
+Fresh supporting checks passed on 23 October:
+
+- Real scene export retained 11 generated files and filtered 33 unused library exports; scene/world publication is validated together.
+- All 25 pure Node world/export tests passed, including invalid marker retention, hierarchy conversion, half-open bounds, frame-schedule equivalence, collision, pause and unavailable/repeated placement.
+- Focused world/session TypeScript and ESLint passed. Asset/export consistency passed with two scene manifests and zero obsolete public exclusions.
+- The [isolated Chromium development workflow](../reports/workflow/2026-10-23/README.md) passed valid-save reload, invalid-save retention without reload, corrected-save recovery and Play Game after recovery, with no browser errors. The process required localhost access because the execution sandbox rejects loopback connections with EACCES; its installed browser cache was selected explicitly.
+- Documentation checks passed all 568 local links across 46 Markdown documents and eight synchronized diagram sources; current technical diagrams were regenerated and visually inspected. Repository audit found no ignored source or tracked generated-output violations. Untracked files remain for normal review; no commit was made.
+
+These checks are supporting migration evidence, not the final end-to-end acceptance or milestone completion claim. The migration plan records final integration results and the documentation-only Phase 7 handoff.

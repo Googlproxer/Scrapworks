@@ -1,4 +1,4 @@
-import { type IVector2Like, Vector2 } from '@babylonjs/core';
+import type { InputVector } from '@contracts/input';
 import type { ButtonControl, Vector2Binding } from '../bindings';
 import type { Rules } from './evaluator.types';
 
@@ -22,18 +22,18 @@ export function compileRules(
   );
 }
 
-export function clampVector(value: IVector2Like): Vector2 {
+export function clampVector(value: InputVector): InputVector {
   const divisor = Math.max(1, Math.hypot(value.x, value.y));
-  return new Vector2(value.x / divisor, value.y / divisor);
+  return { x: value.x / divisor, y: value.y / divisor };
 }
 
-export function deadzone(value: IVector2Like, radius: number): Vector2 {
+export function deadzone(value: InputVector, radius: number): InputVector {
   const length = Math.hypot(value.x, value.y);
-  if (length <= radius) return Vector2.Zero();
+  if (length <= radius) return { x: 0, y: 0 };
 
   const magnitude = (Math.min(length, 1) - radius) / (1 - radius);
 
-  return new Vector2((value.x / length) * magnitude, (value.y / length) * magnitude);
+  return { x: (value.x / length) * magnitude, y: (value.y / length) * magnitude };
 }
 
 export function stickId(binding: Extract<Vector2Binding, { kind: 'stick2d' }>): string {

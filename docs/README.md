@@ -1,31 +1,34 @@
 # Scrapworks documentation
 
-Updated 17 October 2026.
+Updated 24 October 2026. The technical design describes Toolkit core scripts and independent gameplay ticks. Dated migration acceptance remains in the migration plan.
 
-Scrapworks is a browser-first 3D factory-restoration game. Angular owns the interface, Babylon.js owns world presentation, Babylon.js Editor owns authored scenes/layout, and plain TypeScript will own gameplay and versioned local saves.
+Scrapworks is a browser-first 3D factory-restoration game. Angular owns the interface, Babylon.js owns world presentation, Babylon.js Editor owns authored scenes/layout, and plain TypeScript owns world state, movement and placement rules. Factory progression and versioned local saves remain planned.
 
 ## Active guidance
 
-- [3D cleanup plan](plans/3d-cleanup.md): ordered cleanup, documentation treatment, asset/export audit, and the renderer-removal gate.
+- [3D cleanup record](plans/3d-cleanup.md): active asset boundaries, source provenance and renderer acceptance checks.
 - [Cleanup baseline and progress](plans/3d-cleanup-baseline.md): verified preservation checkpoint, dated validation, and remaining work.
 - [Asset/export audit](reports/assets/2026-10-17/README.md): source/consumer inventories, export policy, before/after browser measurements, and deployment cleanup results.
 - [Game Design Document](design/GDD.md): empty-handed opening, progression, research, environmental trade-offs, and prototype scope.
 - [Technical Design Document](design/TDD.md): ownership, current implementation, planned simulation/persistence, and architecture diagrams.
 - [Art Document](art/README.md): current 3D production brief, visual identity, readability, and source/runtime asset distinctions.
-- [Implementation roadmap](plans/README.md): milestone order and detailed gameplay checklists for the user to implement.
-- [3D migration details](plans/3d-migration.md): completed renderer foundation and remaining authoring/lifecycle/camera work.
+- [Implementation roadmap](plans/README.md): milestone order and detailed gameplay checklists, reconciled with migration progress.
+- [3D migration details](plans/3d-migration.md): renderer, authored world, lifecycle, camera and migration acceptance.
 - [Editor/MCP setup](plans/babylon-editor-setup.md): executable authoring, export, and desktop-tool workflow.
-- [Phase 2 walkthrough](plans/3d-phase-2-walkthrough.md): unfinished focus, input ownership, suspension, and graphics recovery work.
+- [Runtime walkthrough](plans/3d-phase-2-walkthrough.md): current lifecycle/input/session ownership and historical implementation links.
+- [Authoring workflow validation](reports/workflow/2026-10-23/README.md): real export/reload, failed-save retention and corrected-save recovery.
 
 ## Current implementation
 
-Use [your implementation checklist](plans/3d-implementation-checklist.md) for the remaining application/game changes, with concrete files and acceptance checks. The [cleanup handoff report](reports/cleanup/2026-10-17/README.md) records source tracking, reference classifications and environment limits.
+Use the [migration plan](plans/3d-migration.md) for the current implementation and validation checkpoint, supported by the [acceptance checklist](plans/3d-implementation-checklist.md). The [17 October cleanup handoff report](reports/cleanup/2026-10-17/README.md) preserves the former implementation order and dated environment evidence.
 
-Both renderers remain in the checkout: `/` runs Phaser and `/3d` loads the Editor-authored Babylon MainMenu and Game scenes. The shared runtime and viewport handle mounting, lifecycle state, failures, retry, and cleanup. The 3D fixture includes a static rigged protagonist.
+Babylon is the only renderer: `/` loads Editor-authored MainMenu and Game scenes and `/3d` redirects to it. Angular owns menu imagery and controls. Active Game authoring contains the 10 by 10 world markers, reusable geometry, camera and neutral character binding; the retired static rig and Babylon title are [recoverable from Git commit `6cd9f6f`](../assets/README.md#recovering-retired-scene-sources).
 
-The simulation is a queue/logging scaffold; Dexie stores test records. There is no authoritative world, manual gameplay loop, research, automation, or gameplay-save round trip. Automatic scene export/reload and failure retention are implemented by `yarn dev`; see the [workflow validation](reports/workflow/2026-10-17/README.md). World-marker compilation and Phase 2 input/activity work remain for user implementation. Documentation cleanup does not change those statuses.
+The plain simulation now owns world data, fixed-step movement, collision and fixture placement checks. New worlds have empty inventory/equipment/research. Manual salvage, crafting, research, automation and gameplay saving remain unimplemented; Dexie still stores separate test records. Saved world markers compile without executing scripts and publish atomically with the scenes. Automatic export/reload and failure retention remain available through `yarn dev`.
 
-The [17 October validation record](plans/3d-cleanup-baseline.md) replaces undated latest-test claims. Older results remain in dated historical records. The user owns actual game implementation; cleanup work may add supporting tools without changing gameplay source.
+`WorldScene` composes focused Toolkit scripts for player input and presentation, camera, selection and placement. Plain `PlayerMotor` owns authoritative movement. Optional script tick hooks join the existing independent 20 Hz session scheduler; no physics scheduler or second frame loop is introduced. [Factory ECS](design/TDD.md#future-factory-ecs), with Miniplex the first candidate to evaluate, is deferred to the first-working-machines milestone.
+
+The [17 October validation record](plans/3d-cleanup-baseline.md) is dated historical evidence. Current migration validation is recorded separately. The user authorized this runtime migration on 23 October and explicitly required Phase 7 to update milestone progress and stop, without resuming the later gameplay milestones.
 
 ## Organisation and history
 
@@ -38,4 +41,4 @@ The [17 October validation record](plans/3d-cleanup-baseline.md) replaces undate
 
 The [historical Tiled plan](history/2d/tiled-world-integration.md), [earlier sprite production brief](history/2d/art-direction-2026-10-04.md), [original art prompts](../art/prompts.md), and [tileset records](../art/world/tilesets/README.md) preserve the 2D work. Their pixel dimensions and sprite-sheet requirements are historical. The approved flat finish, character identity, and environmental/machinery progression still inform 3D production.
 
-Authored Editor assets live in `assets/`; generated browser scenes live in ignored `public/scene/`. `public/assets/` keeps its original files, while Angular excludes unused GLB/map/atlas/template copies from deployment. The [export tools and policy](../tools/scenes/README.md) retain manifest-declared scene dependencies without shipping the whole source library. Use the [cleanup tools](../tools/cleanup/README.md) to preserve work and check links/diagrams.
+Authored Editor assets live in `assets/`; generated browser scenes and plain world definitions live in ignored `public/scene/`. `public/assets/` contains live browser assets. Historical art/maps remain outside deployment; retired authored scenes are preserved in Git as described above. The [export tools and policy](../tools/scenes/README.md) retain manifest-declared dependencies without shipping the whole source library.

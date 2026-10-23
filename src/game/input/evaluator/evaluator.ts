@@ -1,4 +1,4 @@
-import { Vector2 } from '@babylonjs/core';
+import type { InputVector } from '@contracts/input';
 import type { ButtonControl, Vector2Binding } from '../bindings';
 import { clampVector, controlId, deadzone, stickId } from './evaluator.helpers';
 import type { ActionFrame, ActionState, Context, RawInput, Rules } from './evaluator.types';
@@ -6,7 +6,7 @@ import type { ActionFrame, ActionState, Context, RawInput, Rules } from './evalu
 export class ActionEvaluator {
   private raw: RawInput = {
     down: new Set(),
-    sticks: { left: Vector2.Zero(), right: Vector2.Zero() },
+    sticks: { left: { x: 0, y: 0 }, right: { x: 0, y: 0 } },
   };
 
   private context: Context | null = null;
@@ -74,7 +74,7 @@ export class ActionEvaluator {
           released: (old?.released ?? false) || ((old?.held ?? false) && !held),
         };
       } else {
-        let value = Vector2.Zero();
+        let value = { x: 0, y: 0 };
 
         for (const binding of rule.bindings) {
           const candidate = this.vector(binding);
@@ -117,7 +117,7 @@ export class ActionEvaluator {
     return this.raw.down.has(id) && !this.blockedButtons.has(id);
   }
 
-  private vector(binding: Vector2Binding): Vector2 {
+  private vector(binding: Vector2Binding): InputVector {
     if (binding.kind === 'buttons2d') {
       return clampVector({
         x: Number(this.isDown(binding.right)) - Number(this.isDown(binding.left)),
@@ -134,7 +134,7 @@ export class ActionEvaluator {
         this.blockedSticks.delete(id);
       }
 
-      return Vector2.Zero();
+      return { x: 0, y: 0 };
     }
 
     return value;

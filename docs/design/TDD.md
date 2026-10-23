@@ -1,8 +1,8 @@
 # Scrapworks Technical Design Document
 
-Updated 17 October 2026.
+Updated 24 October 2026. Core objects use Toolkit scripts while the application retains its independent gameplay scheduler. Migration evidence remains dated separately from this refactor and future gameplay requirements.
 
-Scrapworks uses Angular for UI and selects Babylon.js with Babylon.js Editor for its 3D world. The shared renderer lifecycle and authored-scene loading are implemented. The authoritative simulation and versioned world saves remain planned. The [GDD](GDD.md) owns gameplay rules and the [roadmap](../plans/README.md) orders implementation.
+Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step movement session now connect scene presentation to authoritative state. Manual/factory rules and versioned world saves remain planned. The [GDD](GDD.md) owns gameplay rules and the [roadmap](../plans/README.md) orders implementation.
 
 ## Agreed technical requirements
 
@@ -16,21 +16,22 @@ Scrapworks uses Angular for UI and selects Babylon.js with Babylon.js Editor for
 | Responsibility      | Choice                         | Current implementation                                                                                    |
 | ------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | Application and UI  | Angular 22, signals, CDK       | Shell, shared page/viewport, dialogs, lifecycle views, errors and retry. Gameplay panels remain planned.  |
-| 3D presentation     | Babylon.js 9.30.0              | `/` loads Editor-authored MainMenu/Game scenes, a static rig, and placeholder geometry.                   |
-| Authoring           | Babylon.js Editor 5.5.2        | Saved inputs export/reload automatically through the project tooling; marker compilation remains planned. |
+| 3D presentation     | Babylon.js 9.30.0              | Sole renderer at `/`, with `/3d` compatibility redirect; authored scene bindings and runtime character presentation. |
+| Core object scripts | Babylon Toolkit 9.30.0        | TypeScript-attached scripts own player input/presentation, camera, selection and placement; no physics engine is enabled. |
+| Authoring           | Babylon.js Editor 5.5.2        | Saved inputs export/reload automatically; validated marker metadata compiles into a plain world definition. |
 | Client subscription | RxJS behind plain `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                              |
-| Gameplay            | Plain TypeScript               | Queue/logging scaffold only; no authoritative world or fixed-step rules.                                  |
+| Gameplay            | Plain TypeScript               | Private plain WorldState, typed placement command, deterministic 20 Hz movement, collision and detached views. Manual/factory progression remains planned. |
 | Persistence         | Dexie / IndexedDB              | Test-data service/dialog only; no playable-world snapshot or round trip.                                  |
 
 The [cleanup plan](../plans/3d-cleanup.md) defines the staged transition and the [baseline](../plans/3d-cleanup-baseline.md) records dated validation. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements. Historical 2D instructions remain in [history](../history/README.md).
 
 ## Technical structure diagrams
 
-These diagrams describe the proposed complete gameplay architecture, not a list of implemented classes. GameFacade, GameLoop, gameplay systems, SaveCodec, and SaveRepository remain future work. Data boxes represent plain TypeScript records; Angular services, Babylon scene objects, and Editor components stay outside them. The diagram's `WorldState` is planned authoritative gameplay data; the implemented `src/contracts/game-state.ts` describes renderer lifecycle.
+The class diagram describes the implemented migration boundary. The application diagram separates the current movement/session path from planned factory content and gameplay persistence; the final gameplay diagram remains the future design. Angular services, Babylon objects and Editor components stay outside plain state records. `GameState` describes renderer lifecycle and is separate from authoritative `WorldState`.
 
 ### Core class diagram
 
-This diagram shows ownership and dependencies. `Simulation` owns the live world, `GameFacade` provides the presentation boundary, and `SaveService` handles persistence. `GameSystem` represents separate modules for movement and salvage, construction, crafting and machine production, transport, power, research, and pollution and restoration. It does not represent one class containing all those rules.
+The application runtime owns one `GameSession`; its scheduler advances `Simulation` through the renderer's existing frame callback. `Simulation` exclusively owns `WorldState` and delegates authoritative player movement to plain [`PlayerMotor`](../../src/simulation/player-motor.ts). [`WorldScene`](../../src/game/views/world-scene.ts) composes Toolkit scripts and entity views that consume the initial definition and detached `WorldView` values. [`WorldSessionBridge`](../../src/contracts/game-client.ts) connects these scene objects to the application-owned session without exposing its mutable state.
 
 [SVG image](../diagrams/core-class-diagram.svg) / [PNG image](../diagrams/core-class-diagram.png) / [Mermaid source](../diagrams/src/core-class-diagram.mmd)
 
@@ -38,84 +39,114 @@ This diagram shows ownership and dependencies. `Simulation` owns the live world,
 classDiagram
     direction TB
 
-    class GameFacade {
-        +send(command)
-        +readView()
+    class GameRuntimeService {
+        +mount(host)
+        +unmount()
+        +retry()
     }
-    class GameLoop {
-        +advance(elapsedTime)
-        +pause()
-        +resume()
+    class GameClient {
+        <<interface>>
+        +subscribe(listener)
+        +setScene(key)
+        +destroy()
+    }
+    class BabylonGameClient {
+        +subscribe(listener)
+        +setScene(key)
+        +destroy()
+    }
+    class GameSession {
+        +advance(deltaSeconds)
+        +registerTickHandler(handler, order)
+        +setMovement(direction, sprint)
+        +setPaused(paused)
+        +enqueue(command)
+        +view
     }
     class Simulation {
         +enqueue(command)
-        +step(deltaTime)
-        +captureSnapshot()
-        +replaceWorld(validatedWorld)
+        +step(movement)
+        +view
+    }
+    class PlayerMotor {
+        movement and collision
+        authoritative facing
     }
     class WorldState {
         <<data>>
         player
-        world
+        tick
+        stepSeconds
+        inventory
+        research
         productionTotals
-        researchUnlocks
-        simulationTime
+        deposits
+        buildings
     }
-    class GameSystem {
-        <<interface>>
-        +applyCommand(context, command)
-        +tick(context, deltaTime)
-    }
-    class ContentCatalog {
+    class WorldDefinition {
         <<data>>
-        recipes
-        technologies
-        machineDefinitions
+        version
+        grid
+        terrain
+        spawn
+        deposits
+        blockers
     }
-    class SaveService {
-        +save(slotId)
-        +load(slotId)
-        +exportFile(slotId)
-        +importFile(file)
-    }
-    class SaveCodec {
-        +encode(state)
-        +validateAndMigrate(snapshot)
-    }
-    class SaveSnapshot {
+    class WorldView {
         <<data>>
-        schemaVersion
-        contentVersion
-        savedAt
-        state
+        detached world data
+        movement presentation
+        command result
     }
-    class SaveRepository {
+    class WorldScene {
+        compose scripts and entity views
+        explicit frame phases
+        +dispose()
+    }
+    class GameplayScript {
+        Toolkit lifecycle
+        optional onGameTick(context)
+        automatic tick subscription
+    }
+    class WorldSessionBridge {
         <<interface>>
-        +list()
-        +save(slotId, snapshot)
-        +load(slotId)
-        +delete(slotId)
+        +frame(seconds, movement, sprint, active)
+        +registerTickHandler(handler, order)
+        +place(cell, rotation)
+        +preview(cell, rotation)
     }
-    class IndexedDbSaveRepository {
-        +transactionalWrites()
+    class InputManager {
+        +takeFrame()
+        +setEnabled(enabled)
+        +clear()
+    }
+    class FrameClock {
+        +sample(timestamp)
+        +reset()
     }
 
-    GameFacade --> Simulation : commands and views
-    GameFacade --> SaveService : save and load actions
-    GameLoop --> Simulation : fixed steps
-    Simulation "1" *-- "1" WorldState : owns
-    Simulation "1" o-- "many" GameSystem : runs modules
-    GameSystem ..> WorldState : reads and updates
-    GameSystem ..> ContentCatalog : reads definitions
-    SaveService --> Simulation : capture or replace world
-    SaveService --> SaveCodec : encode and validate
-    SaveService --> SaveRepository : storage operations
-    SaveCodec ..> SaveSnapshot : creates and validates
-    SaveRepository ..> SaveSnapshot : stores detached data
-    IndexedDbSaveRepository ..|> SaveRepository : implements
+    GameRuntimeService "1" *-- "1" GameSession : owns session
+    GameRuntimeService --> GameClient : lifecycle and input bridge
+    BabylonGameClient ..|> GameClient : implements
+    BabylonGameClient "1" *-- "1" WorldScene : owns scene composition
+    BabylonGameClient "1" *-- "1" InputManager : owns input
+    BabylonGameClient "1" *-- "1" FrameClock : owns frame timing
+    GameSession "1" *-- "1" Simulation : advances fixed steps
+    Simulation "1" *-- "1" PlayerMotor : owns movement rules
+    Simulation "1" *-- "1" WorldState : owns mutable data
+    Simulation ..> WorldDefinition : initializes world
+    WorldScene ..> WorldDefinition : binds authored layout
+    Simulation ..> WorldView : publishes detached views
+    WorldScene ..> WorldView : displays completed state
+    GameSession ..> WorldView : exposes current view
+    WorldScene "1" *-- "many" GameplayScript : composes core objects
+    GameplayScript ..> WorldSessionBridge : sends intent and registers ticks
+    WorldScene ..> WorldSessionBridge : advances once per frame
+    GameRuntimeService --> WorldSessionBridge : supplies guarded adapter
+    WorldSessionBridge ..> GameSession : delegates to current session
 ```
 
-A filled diamond means ownership, a hollow diamond means a collection of modules, a dotted arrow means a dependency, and the hollow triangle means interface implementation. Presentation receives read-only views. Only the simulation and its gameplay modules change live gameplay state.
+A filled diamond means ownership, a dotted arrow means a dependency, and the hollow triangle means interface implementation. Presentation receives detached read-only views; simulation alone changes live world data.
 
 ### Application system interaction diagram
 
@@ -133,20 +164,22 @@ flowchart TB
 
     subgraph Presentation[Presentation]
         UI[Angular panels and menus]
-        Scene[Babylon world scene]
-        Facade[Game facade]
+        Scene[WorldScene and Toolkit core scripts]
+        Facade[GameRuntimeService session bridge]
         Views[Published read-only views]
     end
 
     subgraph Gameplay[Gameplay]
-        Loop[Fixed-step loop]
-        Sim[TypeScript simulation and gameplay systems]
-        State[(Active game state)]
-        Content[Recipe and technology definitions]
+        Loop[GameSession independent 20 Hz scheduler]
+        Hooks[Ordered optional script tick handlers]
+        Sim[Plain Simulation and PlayerMotor]
+        State[(Private WorldState)]
+        Content[Planned recipe and technology definitions]
+        Factory[Planned factory ECS systems]
     end
 
-    subgraph Persistence[Persistence]
-        Saves[Save service]
+    subgraph Persistence[Planned gameplay persistence]
+        Saves[Planned gameplay save service]
         Codec[Snapshot codec: validation and migrations]
         Repository[SaveRepository interface]
         Local[(IndexedDB through Dexie)]
@@ -159,7 +192,14 @@ flowchart TB
     UI -->|player commands| Facade
     Scene -->|movement and world commands| Facade
     Facade -->|queue commands| Sim
-    Loop -->|fixed simulation steps| Sim
+    Scene -->|advance once per browser frame| Loop
+    Facade -->|session ownership| Loop
+    Scene -->|register and dispose tick hooks| Hooks
+    Loop -->|before each fixed step| Hooks
+    Hooks -->|submit typed intents and commands| Sim
+    Loop -->|fixed simulation steps after hooks| Sim
+    Loop -->|future session schedule| Factory
+    Factory <-->|plain factory data| State
     Content -->|rules and costs| Sim
     Sim <-->|read and update| State
     Sim -->|publish completed state| Views
@@ -173,7 +213,7 @@ flowchart TB
     Saves <-->|import and export| Files
 ```
 
-Commands are checked and applied inside the simulation. At a completed step, it publishes views and can supply a detached save snapshot. Storage writes happen asynchronously; saving succeeds only after the repository commits the transaction. Loading validates and migrates data, constructs a candidate world, and replaces the active world at a safe step boundary only after all checks pass. An invalid load leaves the current session intact.
+Commands are checked and applied inside the simulation and completed state is published as detached views. Gameplay snapshot capture/replacement and the persistence branch are planned. Their eventual implementation must await committed transactions, validate a separate candidate world and preserve the active session on failure. The existing test-data save dialog does not implement this branch.
 
 A future cloud repository can implement `SaveRepository` . Accounts, synchronization, and conflict handling remain later work; they are not needed by the prototype simulation.
 
@@ -214,23 +254,66 @@ The dependency arrows do not prescribe tick order. Commands are processed in a c
 
 ## State ownership and module boundaries
 
-The simulation owns authoritative player/world state and separate gameplay modules for crafting, research, transport, power, and restoration. Angular and Babylon send commands to the same session and display published views. Scene frames, animation callbacks, and UI handlers do not advance production or directly spend inventory.
+The simulation owns authoritative player/world state, movement, collision and placement validation. Planned crafting, research, transport, power and restoration modules will join this boundary. Angular and Babylon send commands to the same session and display published views. Scene frames, animation callbacks, and UI handlers must not advance production or directly spend inventory.
 
-Angular owns the shell, menus, dialogs, and future gameplay panels. Babylon owns rendering, cameras, picking, visual effects, animation, and input adaptation. Signals expose lifecycle today and selected gameplay views later, without duplicating the world.
+Angular owns the shell, menus, dialogs, controls and future gameplay panels. Babylon owns rendering, cameras, picking, visual effects, animation, and input adaptation. Signals expose lifecycle, selection and detached world views without becoming an authoritative world owner.
 
-Use `src/app/features/` for Angular/session integration, `src/game/babylon/` for 3D presentation, `src/contracts/` for plain boundaries, `src/simulation/` for authoritative rules, and `src/core/` for framework-independent utilities. Keep simulation/contracts/core free of framework, storage, DOM, and wall-clock dependencies. The earlier Phaser Player still moves directly during frames; that behavior is a historical prototype, not the future movement authority.
+Use `src/app/features/` for Angular/session integration, `src/game/` for 3D presentation, `src/contracts/` for plain boundaries, `src/simulation/` for authoritative rules, and `src/core/` for framework-independent utilities. Simulation/contracts/core remain free of framework, storage, DOM, and wall-clock dependencies. Phaser source and its package dependency have been removed.
 
-The Editor owns saved cameras, lights, materials, static geometry, and world markers in `assets/` . A planned compiler extracts marker metadata into versioned `WorldDefinition` records without executing attached scripts. Validate IDs, bounds, footprints, and references; convert centimetres to metres on the X/Z ground plane. Mutable `WorldState` belongs to the simulation and its save format. Scene serialization and attached presentation components are not gameplay saves.
+The Editor owns saved cameras, lights, materials, static geometry, and world markers in `assets/`. The compiler in `tools/world/` extracts marker metadata into versioned `WorldDefinition` records without executing attached scripts, validates IDs, bounds, alignment, footprints and hierarchy transforms, and converts centimetres to metres on X/Z. Mutable `WorldState` belongs exclusively to the simulation; detached views cross into presentation. Scene serialization and attached components are not gameplay saves.
 
-`GamePageComponent` provides a scoped runtime and directly owns the renderer host; the former `GameViewport` has been merged into the page. The runtime owns its `GameClient` subscription, readonly signals, generation guards, mount/unmount, retry, and fallback injector cleanup. `GameState` describes this renderer lifecycle. Babylon owns one engine/loop, scenes/assets, resize observation, transition guards, first-frame readiness, and late-load disposal. The root route currently provides Babylon; both concrete clients and the legacy Phaser factory remain under `src/game/` during transition. Focus/visibility suspension is implemented; complete input ownership and graphics recovery remain unfinished. See the [Phase 2 walkthrough](../plans/3d-phase-2-walkthrough.md).
+`GamePageComponent` provides a scoped runtime and directly owns the renderer host. The runtime owns its `GameClient` subscription, readonly signals, generation guards, mount/unmount, retry, and application session. Babylon owns one engine/frame callback, scene assets, resize observation, transition guards, first-frame readiness and late-load disposal. Its frame advances the application-owned scheduler; no independent simulation timer is started. See the [migration plan](../plans/3d-migration.md) for current lifecycle acceptance and the [dated Phase 2 walkthrough](../plans/3d-phase-2-walkthrough.md) for implementation history.
+
+### Core object scripts
+
+`@babylonjs-toolkit/next` is pinned to 9.30.0 alongside Babylon 9.30.0. Core scripts are constructed and attached in TypeScript; the Editor continues to own scenes, layout and visual bindings. Toolkit owns initialization, render updates, late updates and destruction. Physics callbacks are reserved for future physics features; Havok and physics-based scheduling are not part of this integration.
+
+The adapter uses Toolkit's public `SceneManager.AttachScriptComponent` registration directly. It deliberately omits `InitializeRuntime`, which installs global glTF loader overrides that these code-attached scripts do not need. Native startup calls `awake` on the first render, `start` on the second and `update` from the third. The client waits for script initialization before reporting Game ready. No component lifecycle method is invoked manually.
+
+| Responsibility | Owner |
+| --- | --- |
+| Shared movement and sprint input | `PlayerController` interprets the frame's shared `ActionFrame` and submits plain intent. |
+| Authoritative position, collision and facing | Session-owned `PlayerMotor` in plain simulation code. |
+| Character rig, interpolation, turning and animation | `PlayerView`. |
+| Orbit, zoom, following and occlusion | `CameraController`. |
+| Picking and interaction feedback | `SelectionController`. |
+| Build mode, rotation, preview and confirmation | `PlacementController`. |
+| Entity meshes and materials | Individual view objects, synchronized by entity ID. |
+
+`WorldScene` is the composition root for those objects. `BabylonGameClient` retains browser/render lifecycle responsibilities rather than gameplay-feature branches. The integration defines frame phases explicitly, so incidental construction or array order does not determine behavior:
+
+1. Sample one shared `ActionFrame`, dispatch application/UI actions, and validate ownership.
+2. Run camera controls and player input interpretation.
+3. Advance the session once, executing zero to five gameplay ticks.
+4. Publish completed world state and update player/entity presentation.
+5. Follow the player, update occlusion, pick the world and update placement feedback.
+6. Draw the scene.
+
+[`attachScriptsInOrder`](../../src/game/toolkit/attach-scripts-in-order.ts) sorts explicit numeric phases before native Toolkit registration. During one `scene.render()`, native `update` runs camera controls (10), player interpretation (20), `SessionDriver` advancement/publication (30), player presentation (40) and entity presentation (50). Native `late`, before render targets are drawn, runs camera follow/occlusion (10), selection (60) and placement feedback (70). The script ordering belongs to the composition root; optional gameplay tick ordering belongs separately to the session.
+
+Generation, transition and input-revision checks invalidate remaining work when ownership changes during a frame. Scene destruction unregisters scripts before disposing their assets; asynchronous Inspector closure remains ahead of scene/engine disposal. Cancelled loads cannot attach scripts or publish into a newer scene. A healthy session survives viewport recreation and renderer-only Retry. A failed authoritative session exposes only its last completed state and is recreated on explicit Retry.
+
+[`GameplayScript`](../../src/game/toolkit/gameplay-script.ts) guards callbacks against stale ownership and observes both node and scene disposal. Its idempotent teardown calls public `SceneManager.DestroyScriptComponent`: Toolkit 9.30.0's base `ScriptComponent.dispose()` is empty. Native destruction then removes the application's tick subscription and disposes the script's owned resources.
+
+### Future factory ECS
+
+Use ECS for factory entities and shared processing, including machines, production, power, and transport. Evaluate Miniplex first when implementation begins. Keep factory state and scheduling independent of Babylon scene objects.
+
+This is the intended architecture for [Milestone 6: First working machines](../plans/milestone-06-first-working-machines.md), not an installed ECS dependency or an implemented factory. Miniplex remains the leading candidate to evaluate against deterministic queries, entity lifetime, persistence and workload measurements. Factory systems will join the session's explicit simulation schedule, independently of scene-script subscriptions; player and camera continue to use the simpler Toolkit object lifecycle.
 
 Production history and research unlocks belong to the saved world. A research action checks cumulative eligibility, current stock and prerequisites, then spends stock and grants the unlock atomically. It preserves production totals and cannot charge again for completed research. Crafting and placement enforce unlocks. The GDD defines these rules.
 
 ## Simulation timing and save boundaries
 
-Use fixed simulation steps with rendering handled separately. A completed step provides a consistent point to capture a save. Exact tick rates should follow prototype measurements.
+`GameSession.advance(deltaSeconds)` retains a 50 ms accumulator (20 Hz), a five-step catch-up limit and the existing browser frame source. It adds no timer or animation loop and does not depend on physics, physics substeps or global Babylon timing. A zero-tick render frame still updates presentation; excess elapsed time beyond the bounded catch-up budget is discarded.
 
-Implement the proposed pause and resume behaviour described in the GDD: pause when the game is hidden or closed, then resume from the saved simulation time without offline production.
+`registerTickHandler(handler, order?)` accepts a synchronous callback and returns an idempotent unregister function. Each `GameTickContext` contains the upcoming tick number and fixed duration in seconds. Before each authoritative step, handlers run in numeric execution order, with registration order breaking ties. Additions become eligible on the next tick. Removal or disabling prevents subsequent invocation immediately. Session suspension prevents dispatch.
+
+The narrow `GameplayScript` base connects an implemented optional `onGameTick(context)` method through `WorldSessionBridge` during native `start` and disconnects it during destruction. The adapter checks script and object activation at dispatch time. Toolkit lifecycle registration and application tick registration remain distinct; this is not a second component framework or a manual invocation of Toolkit's physics hooks.
+
+Continuous movement is sampled state. Discrete commands are captured once and queued until a tick consumes them, so catch-up cannot repeat a button press. Placement confirmation happens after the current frame's session advance and therefore targets a subsequent tick. Each authoritative step processes queued commands, advances player movement, increments the tick and publishes completed state. A failed step cannot expose partial state.
+
+Pause/suspension clears movement, pending commands and accumulated time while UI input polling remains available. Resumption cannot replay hidden or blocked time. A completed step is the future save-capture boundary; gameplay snapshot saving and offline production remain unimplemented.
 
 ## Persistent game state
 

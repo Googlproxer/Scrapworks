@@ -1,34 +1,38 @@
 flowchart TB
     Frame[Browser frame callback]
-    Paused{Session paused or page hidden?}
-    Accumulate[Accumulate elapsed time with bounded catch-up]
-    Enough{Full step remains and step budget available?}
-    Commands[Apply commands and movement]
-    Transport[Commit transport transfers]
-    Prepare[Prepare jobs and energy requests]
-    Power[Allocate power and record emissions]
-    Work[Advance jobs and commit completed output]
-    Environment[Update pollution, water use and restoration]
-    Time[Advance tick and objective progress]
-    Publish[Publish views and capture requested snapshot]
-    Deduct[Subtract one step and consume frame budget]
-    Render[Render latest views without changing gameplay]
+    Input[Sample one ActionFrame and dispatch UI actions]
+    Controls[Validate ownership and interpret camera and player input]
+    Paused{Session paused or runtime inactive?}
+    Reset[Clear accumulator and held or queued input]
+    Accumulate[Accumulate seconds capped at 0.25]
+    Enough{At least 0.05 seconds and fewer than five steps?}
+    Hooks[Dispatch ordered active gameplay tick handlers]
+    Commands[Revalidate and execute typed placement commands in order]
+    Movement[Advance movement and collision by 0.05 seconds]
+    Time[Increment simulation tick]
+    Deduct[Subtract 0.05 seconds and consume step budget]
+    Publish[Expose detached completed WorldView]
+    Present[Update player and entity views]
+    Feedback[Camera follow, occlusion, picking and placement feedback]
+    Render[Draw scene]
     Next[Request next browser frame]
 
-    Frame -->|begin| Paused
-    Paused -->|yes| Render
+    Frame -->|begin| Input
+    Input -->|shared frame| Controls
+    Controls -->|advance session once| Paused
+    Paused -->|yes| Reset
+    Reset -->|latest state| Publish
     Paused -->|no| Accumulate
     Accumulate -->|check| Enough
-    Enough -->|yes| Commands
-    Commands -->|then| Transport
-    Transport -->|then| Prepare
-    Prepare -->|then| Power
-    Power -->|then| Work
-    Work -->|then| Environment
-    Environment -->|then| Time
-    Time -->|then| Publish
-    Publish -->|then| Deduct
+    Enough -->|yes| Hooks
+    Hooks -->|before authoritative step| Commands
+    Commands -->|then| Movement
+    Movement -->|then| Time
+    Time -->|then| Deduct
     Deduct -->|check again| Enough
-    Enough -->|no| Render
+    Enough -->|no| Publish
+    Publish -->|completed state| Present
+    Present -->|then| Feedback
+    Feedback -->|queue confirmation for subsequent tick| Render
     Render -->|finish frame| Next
     Next -->|next callback| Frame

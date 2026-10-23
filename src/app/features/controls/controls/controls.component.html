@@ -1,0 +1,326 @@
+<section aria-labelledby="controls-title">
+  <header>
+    <div>
+      <h2 id="controls-title">Controls</h2>
+      <p>Choose a binding to change it. Changes apply when saved.</p>
+    </div>
+    <button type="button" data-capture-cancel (click)="close()" aria-label="Close controls">
+      Close
+    </button>
+  </header>
+  <div class="tabs" role="tablist" aria-label="Control devices">
+    <button
+      type="button"
+      role="tab"
+      id="controls-tab-keyboard"
+      aria-controls="controls-panel-keyboard"
+      data-capture-cancel
+      [attr.aria-selected]="tab() === 'keyboard'"
+      [tabIndex]="tab() === 'keyboard' ? 0 : -1"
+      (click)="selectTab('keyboard')"
+      (keydown)="tabKey($event)"
+    >
+      Keyboard &amp; mouse
+    </button>
+    <button
+      type="button"
+      role="tab"
+      id="controls-tab-gamepad"
+      aria-controls="controls-panel-gamepad"
+      data-capture-cancel
+      [attr.aria-selected]="tab() === 'gamepad'"
+      [tabIndex]="tab() === 'gamepad' ? 0 : -1"
+      (click)="selectTab('gamepad')"
+      (keydown)="tabKey($event)"
+    >
+      Gamepad
+    </button>
+  </div>
+  @if (captureLabel()) {
+    <div class="capture-status" role="status">
+      <span
+        >Press {{ tab() === 'gamepad' ? 'a gamepad button' : 'a key or mouse button' }} for
+        <strong>{{ captureLabel() }}</strong
+        >. Escape cancels.</span
+      >
+      <button type="button" data-capture-cancel (click)="cancelCapture()">Cancel capture</button>
+    </div>
+  }
+  @if (settings.error()) {
+    <p class="error" role="alert">{{ settings.error() }}</p>
+  }
+  <div class="content">
+    @for (device of ['keyboard', 'gamepad']; track device) {
+      <div
+        role="tabpanel"
+        [id]="'controls-panel-' + device"
+        [attr.aria-labelledby]="'controls-tab-' + device"
+        [hidden]="tab() !== device"
+      >
+        @if (tab() === device) {
+          @if (tab() === 'gamepad') {
+            <fieldset class="gamepad-settings" [disabled]="!loaded()">
+              <legend>Controller and sticks</legend>
+              <div class="controller-settings">
+                <label
+                  >Controller
+                  <select aria-label="Selected controller" (change)="selectController($event)">
+                    <option value="" [selected]="selectedController() === null">Automatic</option>
+                    @for (controller of runtime.controllers(); track controller.id) {
+                      <option
+                        [value]="controller.id"
+                        [selected]="selectedController() === controller.id"
+                      >
+                        {{ controller.name }}
+                      </option>
+                    }
+                  </select>
+                </label>
+                <label
+                  >Button names
+                  <select [value]="labelStyle()" (change)="selectLabelStyle($event)">
+                    <option value="automatic">Automatic</option>
+                    <option value="xbox">Xbox</option>
+                    <option value="dualshock">DualShock</option>
+                    <option value="dualsense">DualSense</option>
+                  </select>
+                </label>
+              </div>
+              <div class="stick-settings">
+                @for (setting of stickSettings(); track setting.id) {
+                  <label class="deadzone">
+                    <span
+                      >{{ label(setting.name) }}
+                      <output>{{ (setting.binding.deadzone * 100).toFixed(0) }}%</output></span
+                    >
+                    <small>{{ labels.stick(setting.binding.stick) }} deadzone</small>
+                    <input
+                      type="range"
+                      min="0"
+                      max="0.9"
+                      step="0.01"
+                      [value]="setting.binding.deadzone"
+                      [attr.aria-label]="
+                        label(setting.name) +
+                        ' ' +
+                        labels.stick(setting.binding.stick) +
+                        ' deadzone'
+                      "
+                      (input)="changeDeadzone(setting.context, setting.name, setting.index, $event)"
+                    />
+                  </label>
+                }
+              </div>
+              <p class="hint">
+                Deadzone filters small stick movements. Controller selection applies immediately.
+              </p>
+              @if (!runtime.controllers().length) {
+                <p class="hint">Connect a gamepad to select it or capture its buttons.</p>
+              }
+            </fieldset>
+          } @else {
+            <p class="hint">
+              Right-drag to orbit; scroll to zoom. Escape always leaves the viewport.
+            </p>
+          }
+          <fieldset class="bindings" [attr.aria-busy]="!loaded()">
+            <legend class="visually-hidden">
+              {{ tab() === 'gamepad' ? 'Gamepad' : 'Keyboard and mouse' }} bindings
+            </legend>
+            @for (context of contexts; track context) {
+              @let columnNumbers = columns(context);
+              <div
+                class="table-scroll"
+                role="region"
+                tabindex="0"
+                [attr.aria-label]="labels.context(context) + ' bindings'"
+              >
+                <table>
+                  <caption>
+                    {{
+                      labels.context(context)
+                    }}
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Action</th>
+                      @for (column of columnNumbers; track column) {
+                        <th scope="col">
+                          {{
+                            column === 0
+                              ? 'Primary'
+                              : column === 1
+                                ? 'Alternate'
+                                : 'Alternate ' + column
+                          }}
+                        </th>
+                      }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of rows(context); track row.name) {
+                      @let entries = visibleBindings(row.bindings);
+                      <tr [attr.data-action]="context + '.' + row.name">
+                        <th scope="row">{{ label(row.name) }}</th>
+                        @for (column of columnNumbers; track column) {
+                          <td>
+                            @if (entries[column]; as entry) {
+                              <div class="binding-cell">
+                                <button
+                                  class="binding-value"
+                                  [disabled]="!loaded()"
+                                  type="button"
+                                  [attr.aria-label]="
+                                    'Change ' +
+                                    label(row.name) +
+                                    ' binding ' +
+                                    (column + 1) +
+                                    ': ' +
+                                    describeBinding(entry.binding)
+                                  "
+                                  [attr.aria-expanded]="
+                                    isButton(entry.binding)
+                                      ? null
+                                      : !!editing(context, row.name) &&
+                                        editor()?.index === entry.index
+                                  "
+                                  (click)="
+                                    activateBinding(context, row.name, entry.index, entry.binding)
+                                  "
+                                >
+                                  {{ describeBinding(entry.binding) }}
+                                </button>
+                                <button
+                                  class="remove"
+                                  [disabled]="!loaded()"
+                                  type="button"
+                                  (click)="remove(context, row.name, entry.index)"
+                                  [attr.aria-label]="
+                                    'Remove ' + label(row.name) + ' binding ' + (column + 1)
+                                  "
+                                  title="Remove binding"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                              @if (column === columnNumbers.length - 1) {
+                                <button
+                                  class="add-binding additional"
+                                  [disabled]="!loaded()"
+                                  type="button"
+                                  (click)="add(context, row.name, row.kind)"
+                                  [attr.aria-label]="'Bind ' + label(row.name) + ' alternative'"
+                                >
+                                  + Bind
+                                </button>
+                              }
+                            } @else if (column === entries.length) {
+                              <button
+                                class="add-binding"
+                                [disabled]="!loaded()"
+                                type="button"
+                                (click)="add(context, row.name, row.kind)"
+                                [attr.aria-label]="'Bind ' + label(row.name) + ' alternative'"
+                              >
+                                + Bind
+                              </button>
+                            } @else {
+                              <span class="empty" aria-hidden="true">—</span>
+                            }
+                          </td>
+                        }
+                      </tr>
+                      @if (editing(context, row.name); as binding) {
+                        @let index = editor()!.index;
+                        <tr class="binding-editor">
+                          <td [attr.colspan]="columnNumbers.length + 1">
+                            <div class="editor-heading">
+                              <strong>{{ label(row.name) }} binding</strong>
+                              <button
+                                type="button"
+                                data-capture-cancel
+                                (click)="cancelCapture(); editor.set(null)"
+                              >
+                                Done
+                              </button>
+                            </div>
+                            @if (tab() === 'gamepad') {
+                              <label
+                                >Input
+                                <select
+                                  [value]="
+                                    binding.kind === 'stick2d' ? binding.stick : 'directions'
+                                  "
+                                  [disabled]="!loaded()"
+                                  [attr.aria-label]="label(row.name) + ' input'"
+                                  (change)="changeVectorType(context, row.name, index, $event)"
+                                >
+                                  <option value="left">{{ labels.stick('left') }}</option>
+                                  <option value="right">{{ labels.stick('right') }}</option>
+                                  <option value="directions">Direction buttons</option>
+                                </select>
+                              </label>
+                            }
+                            @if (binding.kind === 'buttons2d') {
+                              <div class="direction-bindings">
+                                @for (direction of directions; track direction) {
+                                  <button
+                                    type="button"
+                                    [disabled]="!loaded()"
+                                    (click)="capture(context, row.name, index, direction)"
+                                  >
+                                    <span>{{ labels.direction(direction) }}</span>
+                                    <strong>{{
+                                      matchesTab(binding[direction])
+                                        ? describe(binding[direction])
+                                        : 'Unbound here'
+                                    }}</strong>
+                                  </button>
+                                }
+                              </div>
+                            }
+                          </td>
+                        </tr>
+                      }
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </fieldset>
+          @if (conflicts().length) {
+            <details class="conflicts">
+              <summary>Shared bindings ({{ conflicts().length }})</summary>
+              <p>Shared bindings are allowed. Placement controls apply while building.</p>
+              <ul>
+                @for (conflict of conflicts(); track conflict) {
+                  <li>{{ conflict }}</li>
+                }
+              </ul>
+            </details>
+          }
+        }
+      </div>
+    }
+  </div>
+  <footer>
+    <button
+      class="reset"
+      type="button"
+      data-capture-cancel
+      [disabled]="!loaded()"
+      (click)="reset()"
+    >
+      Reset defaults
+    </button>
+    <button
+      class="save"
+      type="button"
+      data-capture-cancel
+      [disabled]="!loaded() || saving() || !!captureLabel()"
+      (click)="save()"
+    >
+      {{ saving() ? 'Saving…' : 'Save controls' }}
+    </button>
+  </footer>
+</section>

@@ -1,25 +1,24 @@
 flowchart LR
     Angular[Angular components]
-    Babylon[Babylon scene and input adapter]
+    Babylon[WorldScene core scripts and input adapter]
+    Toolkit[Babylon Toolkit lifecycle without physics]
     Editor[Editor scenes and markers]
     Compiler[World definition compiler]
     Definition[Plain initial world definition]
-    IndexedDb[IndexedDB adapter]
-    Application[Facade, loop and save orchestration]
-    Simulation[Simulation and gameplay modules]
-    Content[Content definitions]
-    Model[Plain state, command and snapshot types]
-    Port[SaveRepository interface]
+    Application[GameRuntimeService and GameSession]
+    Simulation[Simulation and plain PlayerMotor own world state]
+    Grid[Plain grid and placement rules]
+    Model[Plain commands, tick contracts and detached WorldView]
+    Settings[Controls settings IndexedDB adapter]
 
     Editor -->|compile layout| Compiler
     Compiler -->|validates and emits| Definition
     Simulation -->|uses plain layout| Definition
     Angular -->|uses| Application
     Babylon -->|uses| Application
+    Babylon -->|script lifecycle| Toolkit
     Application -->|runs| Simulation
-    Application -->|uses| Port
-    IndexedDb -->|implements| Port
-    Port -->|uses| Model
-    Simulation -->|uses| Content
+    Angular -->|controls settings only| Settings
+    Simulation -->|uses| Grid
     Simulation -->|uses| Model
-    Content -->|uses| Model
+    Babylon -->|reads and submits| Model

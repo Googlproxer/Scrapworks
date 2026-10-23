@@ -7,20 +7,22 @@ flowchart TB
 
     subgraph Presentation[Presentation]
         UI[Angular panels and menus]
-        Scene[Babylon world scene]
-        Facade[Game facade]
+        Scene[WorldScene and Toolkit core scripts]
+        Facade[GameRuntimeService session bridge]
         Views[Published read-only views]
     end
 
     subgraph Gameplay[Gameplay]
-        Loop[Fixed-step loop]
-        Sim[TypeScript simulation and gameplay systems]
-        State[(Active game state)]
-        Content[Recipe and technology definitions]
+        Loop[GameSession independent 20 Hz scheduler]
+        Hooks[Ordered optional script tick handlers]
+        Sim[Plain Simulation and PlayerMotor]
+        State[(Private WorldState)]
+        Content[Planned recipe and technology definitions]
+        Factory[Planned factory ECS systems]
     end
 
-    subgraph Persistence[Persistence]
-        Saves[Save service]
+    subgraph Persistence[Planned gameplay persistence]
+        Saves[Planned gameplay save service]
         Codec[Snapshot codec: validation and migrations]
         Repository[SaveRepository interface]
         Local[(IndexedDB through Dexie)]
@@ -33,7 +35,14 @@ flowchart TB
     UI -->|player commands| Facade
     Scene -->|movement and world commands| Facade
     Facade -->|queue commands| Sim
-    Loop -->|fixed simulation steps| Sim
+    Scene -->|advance once per browser frame| Loop
+    Facade -->|session ownership| Loop
+    Scene -->|register and dispose tick hooks| Hooks
+    Loop -->|before each fixed step| Hooks
+    Hooks -->|submit typed intents and commands| Sim
+    Loop -->|fixed simulation steps after hooks| Sim
+    Loop -->|future session schedule| Factory
+    Factory <-->|plain factory data| State
     Content -->|rules and costs| Sim
     Sim <-->|read and update| State
     Sim -->|publish completed state| Views

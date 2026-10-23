@@ -1,6 +1,6 @@
 # Milestone 6 First working machines
 
-Updated 17 October 2026. Status: not started. Prerequisite: [Milestone 5](milestone-05-research.md).
+Updated 24 October 2026. Status: not started; ECS direction recorded. Prerequisite: [Milestone 5](milestone-05-research.md).
 
 Let the player craft and place a coal generator and recycler, supply them manually, and collect useful output. Establish inspectable construction, power, and production rules before automating transport.
 
@@ -10,8 +10,11 @@ Let the player craft and place a coal generator and recycler, supply them manual
 
 Recycler generation concepts exist in `art/machinery/`, but they are source artwork. There are no simulation machine records, construction commands, footprints, fuel, power allocation, buffers, or machine jobs. Start these systems after research and gameplay saves have the required state boundaries.
 
+Follow the [factory ECS decision](../design/TDD.md#future-factory-ecs): use ECS for factory entities and shared processing, including machines, production, power, and transport. Evaluate Miniplex first when implementation begins. Keep factory state and scheduling independent of Babylon scene objects. The Toolkit refactor adds no ECS dependency or factory systems; these systems will join the application session's simulation schedule rather than scene-script subscriptions.
+
 ## Step 1 Define machine content and state
 
+- [ ] Evaluate Miniplex first against deterministic processing order, entity lifetime, plain save data and representative factory workloads before selecting an ECS dependency.
 - [ ] Define machine IDs, crafted equipment items, research gates, square-grid footprints, allowed orientations, and connection ports.
 - [ ] Define input/output capacities, allowed recipes, fuel capacity, and power requirements.
 - [ ] Add persistent machine instances with stable IDs, position, orientation, inventories, job state, and fuel/energy state.
@@ -87,6 +90,7 @@ Record implementation notes here:
 | Date           | Observation or decision                | Follow-up and status                                                           |
 | -------------- | -------------------------------------- | ------------------------------------------------------------------------------ |
 | 4 October 2026 | Not started; current source inspected. | See Current implementation above; unchecked gameplay requirements remain open. |
+| 24 October 2026 | ECS selected as factory architecture; Miniplex leads the evaluation. | Integrate factory systems at session level. No ECS package or factory implementation added by the core-object refactor. |
 
 ## References and diagrams
 

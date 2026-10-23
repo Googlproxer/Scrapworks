@@ -1,27 +1,5 @@
-import { IVector2Like } from '@babylonjs/core';
-import { actions, ButtonControl, Vector2Binding } from '../bindings';
-
-export type Context = keyof typeof actions;
-
-export interface RawInput {
-  readonly down: ReadonlySet<string>;
-  readonly sticks: Readonly<Record<'left' | 'right', IVector2Like>>;
-}
-
-export type ButtonState = Readonly<{
-  kind: 'button';
-  held: boolean;
-  pressed: boolean;
-  released: boolean;
-}>;
-
-export type ActionState = ButtonState | Readonly<{ kind: 'vector2'; value: IVector2Like }>;
-
-export interface ActionFrame {
-  readonly context: Context | null;
-  readonly revision: number;
-  readonly states: Readonly<Record<string, ActionState>>;
-}
+import type { ButtonControl, Vector2Binding } from '@contracts/input';
+export type { Context, RawInput, ButtonState, ActionState, ActionFrame } from '@contracts/input';
 
 export type Rule =
   | {

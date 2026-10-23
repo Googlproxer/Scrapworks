@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.12.2" name="terrain" tilewidth="64" tileheight="52" tilecount="48" columns="4">
- <image source="../../public/assets/tilesets/terrain.png" width="256" height="624"/>
+ <image source="../../art/world/tilesets/terrain-atlas-v2.png" width="256" height="624"/>
  <tile id="0" type="Dirt">
   <properties>
    <property name="buildable" type="bool" value="true"/>

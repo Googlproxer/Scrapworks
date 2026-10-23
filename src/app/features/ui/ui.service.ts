@@ -1,15 +1,16 @@
 import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import type { ComponentType } from '@angular/cdk/overlay';
-import { DestroyRef, inject, Service } from '@angular/core';
+import { DestroyRef, inject, Injector, Service } from '@angular/core';
 import { take } from 'rxjs';
 import { GameRuntimeService } from '../game/game-runtime.service';
 
-export type DialogKey = 'save-dialog';
+export type DialogKey = 'save-dialog' | 'controls' | 'game-menu';
 
 @Service({ autoProvided: false })
 export class UiService {
   private readonly gameRuntimeService = inject(GameRuntimeService);
   private readonly dialog = inject(Dialog);
+  private readonly injector = inject(Injector);
 
   private readonly openDialogKeys = new Set<DialogKey>();
 
@@ -34,11 +35,14 @@ export class UiService {
 
     this.gameRuntimeService.setInputEnabled(false);
     try {
-      const dialog = this.dialog.open<unknown, D, C>(component, config);
+      const dialog = this.dialog.open<unknown, D, C>(component, {
+        injector: this.injector,
+        restoreFocus: true,
+        ...config,
+      });
       this.openDialogs.add(dialog);
 
-      dialog.closed.pipe(take(1)).subscribe((result) => {
-        console.log('Dialog closed with result:', result);
+      dialog.closed.pipe(take(1)).subscribe(() => {
         this.openDialogKeys.delete(key);
         this.openDialogs.delete(dialog);
         //  only release input once last dialog closed
@@ -48,5 +52,17 @@ export class UiService {
       this.openDialogKeys.delete(key);
       if (this.openDialogs.size === 0) this.gameRuntimeService.setInputEnabled(true);
     }
+  }
+  public closeTopDialog(): boolean {
+    const top = [...this.openDialogs].at(-1);
+    top?.close();
+    return !!top;
+  }
+  public get hasDialogs(): boolean {
+    return this.openDialogs.size > 0;
+  }
+  public get activeElement(): HTMLElement | null {
+    const top = [...this.openDialogs].at(-1) as DialogRef | undefined;
+    return top?.overlayRef.overlayElement ?? null;
   }
 }

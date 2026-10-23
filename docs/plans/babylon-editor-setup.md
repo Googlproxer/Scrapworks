@@ -1,6 +1,6 @@
 # Babylon.js Editor setup
 
-Updated 17 October 2026. Saved Editor changes export/reload automatically during development. The [cleanup baseline](3d-cleanup-baseline.md) records preservation and tooling changes; marker compilation, input/activity handling and cutover remain user implementation work.
+Updated 23 October 2026. Saved Editor scenes and world markers export/reload automatically during development. The [cleanup baseline](3d-cleanup-baseline.md) preserves earlier evidence; the [migration plan](3d-migration.md) owns current implementation and final acceptance.
 
 Scrapworks is an Editor 5.5.2 project and an Angular browser app. Open
 `scrapworks/scrapworks.bjseditor` in Babylon.js Editor. Install dependencies with
@@ -9,15 +9,19 @@ Scrapworks is an Editor 5.5.2 project and an Angular browser app. Open
 ## Scene authoring
 
 Open `assets/main-menu.scene` or `assets/game.scene` from the Editor's Assets
-browser. MainMenu contains the existing ground, title plane, camera and light.
-Game contains the existing ground, capsule, cube, camera, light and static rigged
-protagonist. Angular continues to display the menu buttons and loading/errors.
-Editor Play previews the selected 3D scene; use `/3d` to test the Angular flow.
+browser. MainMenu contains ground, camera and light; Angular displays the title
+and menu controls. Game contains the 20 metre ground, reusable capsule/cube,
+camera, light, WorldSettings/Spawn/Deposit/Blocker markers and a neutral
+`player-visual` anchor. The runtime binds the animated character derivative.
+Editor Play previews authored geometry; use `/` to test the complete Angular/runtime flow.
 
-Scene coordinates are centimetres: the ground is 2, 000 units wide, the cube is
-150 units wide and the capsule is 170 units tall. The imported protagonist has
-the Editor's normal 100-fold glTF conversion. Its original GLB remains at
-`art/characters/3d/Protag-v1.glb` , with byte-identical Editor-import and original public copies. The standalone public GLB is now excluded from deployment because the Game scene already contains its rig/materials and binary geometry. Preserve all source copies and licence records; see the [asset/export audit](../reports/assets/2026-10-17/README.md).
+Scene coordinates are centimetres: the ground is 2,000 units wide and its grid
+cells are 200 units. Marker compilation converts once to gameplay metres.
+The neutral character anchor has unit scale; the model adapter owns the one-time
+glTF scale conversion. Original model sources remain under `art/characters/3d/`.
+The retired serialized rig and complete prior scenes are recoverable from Git commit
+`6cd9f6f` using the [recovery instructions](../../assets/README.md#recovering-retired-scene-sources).
+The obsolete public GLB duplicate is removed. Keep licences and source/export records with each derivative.
 
 Start development from the project root:
 
@@ -25,12 +29,12 @@ Start development from the project root:
 yarn dev
 ```
 
-Visit `http://localhost:4200/3d` and click Play Game. `dev` exports before starting
+Visit `http://localhost:4200/` and click Play Game (`/3d` redirects here). `dev` exports before starting
 Angular, then watches saved Editor inputs and enabled attached presentation scripts.
 Save in the Editor to export and reload. Failed saves report a terminal error and
 retain the last working export; correcting the save retries automatically.
-`build` , `test` and `test:watch` export once before starting. World-marker
-compilation remains user implementation work. See the [tool guide](../../tools/scenes/README.md)
+`build`, `test` and `test:watch` export once before starting. World-marker
+compilation publishes `public/scene/worlds/game.json` in the same generation; invalid metadata retains previous output. See [marker authoring](../../tools/world/README.md), the [tool guide](../../tools/scenes/README.md)
 and [workflow validation](../reports/workflow/2026-10-17/README.md).
 
 `assets/**/*.scene` and the project file are authored inputs. `public/scene/` , 
@@ -39,18 +43,24 @@ Run `yarn scenes:export` before invoking Angular CLI targets directly. The
 export wrapper packs an isolated workspace copy and checks dependencies before
 publishing. It disables the CLI's unconditional physics flag only after verifying
 that no authored/packed physics bodies exist. Physics bodies produce an explicit
-error until intentional runtime physics is implemented. A world grid remains planned.
+error until intentional runtime physics is implemented. The current fixture is a flat 10 by 10 two-metre grid.
 
 Attached presentation components are loaded through the Editor-generated script
 map and the official `babylonjs-editor-tools` loader. Keep Babylon presentation
-code under `src/game/babylon/` ; simulation rules and gameplay saves stay plain
+code under `src/game/`; simulation rules and gameplay saves stay plain
 TypeScript. The runtime registers Babylon core types and the
 `@babylonjs/materials` library, including Editor-selected Grid, Sky and Water
 materials. Installing a package alone does not register its serialized classes; 
 add registrations when introducing other libraries or loaders.
 
-The logo uses `assets/textures/branding/title-logo-v1.png` , an unchanged copy of
-the source in `art/branding/` . Import textures into `assets/` so the Editor
+Core runtime objects use `@babylonjs-toolkit/next` 9.30.0 scripts constructed and
+attached in TypeScript by `WorldScene`. This is separate from Editor-generated
+presentation bindings. Toolkit supplies script lifecycle callbacks; the existing
+application `GameSession` supplies independent 20 Hz gameplay ticks. No Havok or
+physics scheduler is required. See the [core object design](../design/TDD.md#core-object-scripts).
+
+Angular's title uses the prepared `public/assets/logo.png` derivative. The original
+`assets/textures/branding/title-logo-v1.png` import remains source material and is no longer a MainMenu mesh dependency. Import world textures into `assets/` so the Editor
 exporter packages them with the scenes. On Editor 5.5.2 for Windows, use a
 project-relative `sourcePath` with MCP `import_asset` ; its absolute-path check
 does not recognise Windows drive letters.
@@ -78,8 +88,8 @@ Normal export/build uses the repository's Node/Yarn dependencies and official CL
 | Playwright Chromium                         | Application/browser workflow tests. Use `yarn test:setup` ; set `PLAYWRIGHT_BROWSERS_PATH` when using a different existing browser cache.                                                                           |
 | Babylon.js Editor 5.5.2                     | Interactive scene authoring and live desktop MCP. `run-server.mjs` discovers the Windows installation or uses `SCRAPWORKS_BABYLON_EDITOR_PATH` . The desktop bundle is a workstation dependency.                    |
 | Python 3 standard library                   | Optional file/history checkpoint and source-verification tools; not required to run the game.                                                                                                                      |
-| Blender with MPFB                           | Optional editable protagonist work and `tools/art/*.py` scripts run inside Blender. The [source README](../../art/characters/3d/protagonist-mpfb-v1/README.md) describes the local library and preserved licences. |
-| `L:/Angular/tools/mpfb-assets` | Historical downloaded asset-pack cache used by `tools/art/install-mpfb-packs.py` ; only needed to reinstall/recreate packs. Selected source meshes/textures/licences remain in root `art/` .                         |
+| Blender (MPFB for historical sources)                           | Optional editable protagonist work and `tools/art/*.py` scripts run inside Blender. See the [runtime derivative guide](../../art/characters/3d/protagonist-runtime-v2/README.md); older MPFB tooling requires [source recovery from Git](../../art/README.md#recovering-retired-mpfb-sources). |
+| `L:/Angular/tools/mpfb-assets` | Historical downloaded asset-pack cache used by `tools/art/install-mpfb-packs.py` ; only needed to reinstall/recreate packs. Selected MPFB source meshes, textures and licences are recoverable from the documented Git commit.                         |
 | `@viz-js/viz` and `sharp` | Optional diagram renderer; pass an absolute module directory as described in the [diagram guide](../diagrams/README.md). These are not app dependencies.                                                           |
 | Texture compression tools                   | Optional when enabling compression in the Editor project. The current project has compressed textures disabled, so normal exports do not require PVRTexTool/Khronos tools.                                         |
 | `L:/Angular/babylon` and graph-server setup | Template/reference and separately installed authoring tools; neither is an application runtime input. The graph-server validation path below is historical workstation evidence.                                   |
@@ -127,8 +137,7 @@ the scene Editor. Its workstation bundle is separate from the app dependencies.
 
 ## Scope
 
-This setup converts the current presentation and preserves `/` as the Phaser
-route. Automatic export/reload and failure retention are implemented as tooling.
-World grids, spawn/deposit/blocker components, simulation exports and Phase 2
-lifecycle/input work remain user implementation work.
-Continue with the [migration plan](3d-migration.md) when ready.
+Babylon is the sole runtime. Saved authoring exports, plain world definitions,
+movement/session integration and character presentation are migration work.
+At Phase 7, reconcile milestone progress and stop; manual gameplay, factory
+systems and gameplay saves remain separately planned. Follow the [migration plan](3d-migration.md).

@@ -1,0 +1,131 @@
+{
+  "source_glb": "art\\characters\\3d\\Protag-v1.glb",
+  "source_glb_sha256": "240ec7086392aeaeb5d3c7a0bcf455d8aaad30674588b7e6847a60dae091b732",
+  "source_blend": "art/characters/3d/Protag-v1.blend",
+  "source_blend_sha256": "a5b4b47572a509a4f3602a1cb3a684950ad1ee92ee1a127baea1af6bd3ad6a41",
+  "animation_archive": "art\\characters\\3d\\Female Locomotion Pack.zip",
+  "animation_archive_sha256": "5c3071e05bca02f57ee78863ba41bcaf6cd8935f6d68eed6ef0749f81484def6",
+  "animation_provenance": "Existing user-supplied archive; FBX stacks identify mixamo.com. No download receipt or license file accompanies the archive.",
+  "blender_version": "5.2.2 LTS",
+  "source_bounds_blender_m": [
+    [
+      -0.4901309013366699,
+      -0.29552701115608215,
+      -0.018241513520479202
+    ],
+    [
+      0.4901304244995117,
+      0.11448827385902405,
+      1.6161116361618042
+    ]
+  ],
+  "concealed_lower_body_triangles_removed": 2335,
+  "runtime_glb": "public\\assets\\models\\protagonist-v2.glb",
+  "runtime_bytes": 4236032,
+  "runtime_sha256": "b4503d89ff5a3e108da1ee3e8da0a081b2bca79803a5f3d1c379b702efbbe663",
+  "clips": [
+    {
+      "name": "Idle",
+      "source": "idle.fbx",
+      "source_sha256": "48ba5891f1cbd9b19894579d40b6d0ca1f3c3db2f68df6da305b87bf07fe92f8",
+      "frames": 251,
+      "fps": 30,
+      "seconds": 8.333333333333334,
+      "source_horizontal_travel_m": 3.0091953317455035e-08,
+      "reference_speed_mps": 3.6110343980946038e-09,
+      "source_yaw_degrees": -8.537736462515939e-07,
+      "root_yaw_removed": false,
+      "reference_turn_radians_per_second": 0,
+      "ground_offset_m": 0.02170626074075699,
+      "boot_floor_range_m": [
+        0,
+        0.00013556703925132751
+      ],
+      "mapped_bones": 52,
+      "omitted_terminal_bones": 13
+    },
+    {
+      "name": "Walk",
+      "source": "walking.fbx",
+      "source_sha256": "d1879a7ed55b7534aaa994e0e607d378a936bcf5711c51f89fa76dece431f09d",
+      "frames": 30,
+      "fps": 30,
+      "seconds": 0.9666666666666667,
+      "source_horizontal_travel_m": 1.4593993816524746,
+      "reference_speed_mps": 1.5097234982611807,
+      "source_yaw_degrees": 6.830189170012751e-06,
+      "root_yaw_removed": false,
+      "reference_turn_radians_per_second": 0,
+      "ground_offset_m": 0.026484105736017227,
+      "boot_floor_range_m": [
+        0,
+        0.005286712199449539
+      ],
+      "mapped_bones": 52,
+      "omitted_terminal_bones": 13
+    },
+    {
+      "name": "Run",
+      "source": "running.fbx",
+      "source_sha256": "b0662ad999789ad31d821f583487876d630898eb5ba74aa3ee62caa6db756a06",
+      "frames": 22,
+      "fps": 30,
+      "seconds": 0.7,
+      "source_horizontal_travel_m": 2.3767013270407915,
+      "reference_speed_mps": 3.395287610058274,
+      "source_yaw_degrees": 4.482311642820868e-06,
+      "root_yaw_removed": false,
+      "reference_turn_radians_per_second": 0,
+      "ground_offset_m": 0.025620710104703903,
+      "boot_floor_range_m": [
+        0,
+        0.09892881289124489
+      ],
+      "mapped_bones": 52,
+      "omitted_terminal_bones": 13
+    },
+    {
+      "name": "TurnLeft",
+      "source": "left turn.fbx",
+      "source_sha256": "28cef7119df36df3ea1e1fa73dc59d531966bea77f4942b1b483b1444fff12b8",
+      "frames": 36,
+      "fps": 30,
+      "seconds": 1.1666666666666667,
+      "source_horizontal_travel_m": 0.019911079927418942,
+      "reference_speed_mps": 0.017066639937787665,
+      "source_yaw_degrees": 89.93112687688776,
+      "root_yaw_removed": true,
+      "reference_turn_radians_per_second": 1.3453665120261056,
+      "ground_offset_m": 0.022031312808394432,
+      "boot_floor_range_m": [
+        0,
+        0.0016789138317108154
+      ],
+      "mapped_bones": 52,
+      "omitted_terminal_bones": 13
+    },
+    {
+      "name": "TurnRight",
+      "source": "right turn.fbx",
+      "source_sha256": "ba32466b1b3d6598162f6e593c344121e6a8e956c23420acca93603da103460c",
+      "frames": 36,
+      "fps": 30,
+      "seconds": 1.1666666666666667,
+      "source_horizontal_travel_m": 0.01992273313962313,
+      "reference_speed_mps": 0.017076628405391255,
+      "source_yaw_degrees": -89.99998884409983,
+      "root_yaw_removed": true,
+      "reference_turn_radians_per_second": 1.3463966846466064,
+      "ground_offset_m": 0.024067826569080353,
+      "boot_floor_range_m": [
+        0,
+        0.002468632534146309
+      ],
+      "mapped_bones": 52,
+      "omitted_terminal_bones": 13
+    }
+  ],
+  "retarget": "Bone-name mapping with source/target rest-frame roll correction after anatomical bone-axis alignment; visible geometry, proportions and skin weights retained. Concealed lower-body faces are omitted to prevent trouser penetration.",
+  "coordinate_convention": "Blender metres, Z up, character faces -Y; glTF metres, Y up, character faces +Z. Root armature is identity; simulation owns horizontal world translation.",
+  "original_files_modified": false
+}

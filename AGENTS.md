@@ -9,10 +9,10 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ## Scrapworks 3D direction and implementation ownership
 
 * Angular owns application UI; Babylon owns world presentation; one Babylon.js Editor project owns scenes and world layout. Attached Editor scripts are presentation/scene bindings only.
-* The user implements actual game/runtime behavior. Cleanup work may change documentation, metadata, and supporting tools, but must not implement gameplay or alter `src/` without a later user request. You have explict permission to add tests to the project.
+* The user authorized implementation of the complete 3D migration on 23 October 2026, including runtime, simulation movement, authored-world tooling, character presentation, and cleanup. At migration Phase 7, reconcile milestone progress with verified implementation and stop; do not continue into salvage, crafting, research, machines, transport, restoration, or gameplay saves. Tests are authorized.
 * Keep authoritative movement, inventory, production, research, pollution, and time in plain TypeScript. Keep simulation/contracts/core free of Angular, renderer, storage, DOM, and wall-clock dependencies.
-* Distinguish renderer lifecycle `GameState`, planned mutable `WorldState`, and planned authored initial `WorldDefinition`. Convert Editor centimetres to gameplay metres at the boundary. Scene serialization is not a gameplay save.
-* Keep source Blender projects, artwork, references and provenance together under root `art/`;  `docs/art/README.md` owns visual guidance. Editor-authored scenes/imports remain in `assets/`. Preserve complete authored scene directories and exact art provenance. Generated exports, caches, and `src/scripts.ts` stay ignored. Update authoritative Mermaid blocks and regenerate matching `.mmd`, SVG, and PNG files together.
+* Distinguish renderer lifecycle `GameState`, mutable simulation-owned `WorldState`, and authored initial `WorldDefinition`. Convert Editor centimetres to gameplay metres at the boundary. Scene serialization is not a gameplay save.
+* Keep source Blender projects, artwork, references and provenance together under root `art/`;  `docs/art/README.md` owns visual guidance. Editor-authored scenes/imports remain in `assets/`. Preserve complete active authored scene directories and exact art provenance. Retired scene sources are recovered from documented Git commits; see [scene recovery](assets/README.md#recovering-retired-scene-sources) rather than retaining duplicate archive folders. Generated exports, caches, and `src/scripts.ts` stay ignored. Update authoritative Mermaid blocks and regenerate matching `.mmd`, SVG, and PNG files together.
 * Keep older 2D instructions under clearly labelled history, with forwarding links and unchanged dated evidence. See `docs/plans/3d-cleanup.md` and `docs/plans/3d-cleanup-baseline.md`.
 
 ## Angular Best Practices
@@ -38,7 +38,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 * Use `model()` for two-way bound properties with `[(prop)]` syntax instead of pairing `input()` with `output()`
 * Use `computed()` for derived state
 * Use `linkedSignal()` for state derived from multiple reactive sources that must stay synchronized
-* Prefer inline templates for small components
+* Keep every production Angular component template in a separate HTML file, as explicitly requested by the user. Inline templates are permitted only in tests.
 * Prefer Signal Forms (`@angular/forms/signals`) for new forms. They are stable in Angular v22+ and provide signal-based state, type-safe field access, and schema-based validation
 * When not using Signal Forms, prefer Reactive forms instead of Template-driven ones
 * Do NOT use `ngClass`, use `class` bindings instead

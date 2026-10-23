@@ -2,40 +2,108 @@
 
 <div #rendererHost class="game-container"></div>
 
-@if (gameRuntimeService.errorMessage(); as errorMessage) {
-  <div class="centre">
-    <p role="alert">{{ errorMessage }}</p>
-    <button type="button" class="button" (click)="gameRuntimeService.retry()">Retry</button>
-  </div>
-} @else if (gameRuntimeService.currentSceneKey() !== 'Game' || gameRuntimeService.isLoading()) {
-  <div class="centre">
-    @if (gameRuntimeService.isLoading()) {
-      <p role="status">Loading game…</p>
-    }
-    @if (gameRuntimeService.currentSceneKey() !== 'Game') {
-      <button
-        type="button"
-        class="button"
-        [disabled]="!gameRuntimeService.isReady() || gameRuntimeService.currentSceneKey() !== 'MainMenu'"
-        (click)="startGame()"
-      >
-        Play Game!
-      </button>
-    }
-  </div>
-}
-@if (gameRuntimeService.state(); as state) {
-  <div class="top-left">
-    <pre>{{ state | json }}</pre>
-  </div>
+@if (developer && gameRuntimeService.inspectorState().phase === 'open') {
+  <button
+    class="button inspector-close"
+    type="button"
+    (click)="gameRuntimeService.toggleInspector()"
+  >
+    Close Inspector
+  </button>
 }
 
-<div class="top-right">
-  <div>
-    <button class="button" (click)="openSaveDialog()">Open Test Save Dialog</button>
-  </div>
-</div>
+<div [hidden]="gameRuntimeService.inspectorState().phase === 'open'">
+  @if (gameRuntimeService.currentSceneKey() !== 'Game') {
+    <div class="menu-backdrop" aria-hidden="true"></div>
+    <div class="title-image">
+      <img ngSrc="assets/logo.png" width="1024" height="357" priority alt="Scrapworks" />
+    </div>
+  }
 
-<div id="focus-indicator" class="top-centre">
-  <div class="circle"></div>
+  @if (gameRuntimeService.errorMessage(); as errorMessage) {
+    <div class="centre">
+      <p role="alert">{{ errorMessage }}</p>
+      <button type="button" class="button" (click)="gameRuntimeService.retry()">Retry</button>
+    </div>
+  } @else if (gameRuntimeService.currentSceneKey() !== 'Game' || gameRuntimeService.isLoading()) {
+    <div class="centre">
+      @if (gameRuntimeService.isLoading()) {
+        <p role="status">Loading game…</p>
+      }
+      @if (gameRuntimeService.currentSceneKey() !== 'Game') {
+        <button
+          type="button"
+          class="button"
+          [disabled]="
+            !gameRuntimeService.isReady() || gameRuntimeService.currentSceneKey() !== 'MainMenu'
+          "
+          (click)="startGame()"
+        >
+          Play Game!
+        </button>
+      }
+    </div>
+  }
+  @if (developer && gameRuntimeService.state(); as state) {
+    <div class="top-left">
+      <pre>{{ state | json }}</pre>
+    </div>
+  }
+
+  <div class="top-right">
+    <div>
+      <button class="button" type="button" (click)="openControls()">Controls</button>
+      @if (gameRuntimeService.currentSceneKey() === 'Game') {
+        <button class="button" type="button" (click)="inputAdapter.openMenu()">Menu</button>
+      }
+      @if (developer) {
+        <button
+          class="button"
+          type="button"
+          [disabled]="!gameRuntimeService.isReady() && !gameRuntimeService.inspectorActive()"
+          [attr.aria-pressed]="gameRuntimeService.inspectorActive()"
+          (click)="gameRuntimeService.toggleInspector()"
+        >
+          {{ gameRuntimeService.inspectorActive() ? 'Close Inspector' : 'Inspector' }}
+        </button>
+        <button class="button" type="button" (click)="openSaveDialog()">
+          Open Test Save Dialog
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (developer && gameRuntimeService.inspectorState().phase === 'loading') {
+    <p class="inspector-status" role="status">Loading Inspector…</p>
+  }
+  @if (developer && gameRuntimeService.inspectorState().errorMessage; as error) {
+    <p class="inspector-status" role="alert">Inspector could not open: {{ error }}. Try again.</p>
+  }
+
+  @if (gameRuntimeService.state().phase === 'paused') {
+    <p class="paused-status" role="status">Game paused while the viewport is unavailable.</p>
+  }
+  @if (gameRuntimeService.currentSceneKey() === 'Game') {
+    <div class="game-help">
+      <p>
+        WASD / left stick to move · Shift / stick press to sprint · Right drag / right stick to
+        orbit · Escape for menu
+      </p>
+      @if (gameRuntimeService.selection(); as selection) {
+        <p aria-live="polite">{{ selection }}</p>
+      }
+      @if (developer) {
+        <p>
+          Development fixture: B / Select toggles placement, R / right shoulder rotates, click /
+          south button places.
+        </p>
+      }
+    </div>
+  }
+
+  @if (developer) {
+    <div id="focus-indicator" class="top-centre">
+      <div class="circle"></div>
+    </div>
+  }
 </div>

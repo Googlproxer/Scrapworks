@@ -6,7 +6,7 @@ Prepared 4 October 2026 with the built-in image generation tool, following the f
 
 ## Files
 
-- [Prepared terrain atlas](../../../public/assets/tilesets/terrain.png): 256 by 624 pixels, 48 tiles, zero margin and spacing.
+- [Prepared terrain atlas](terrain-atlas-v2.png): 256 by 624 pixels, 48 tiles, zero margin and spacing.
 - [Tiled tileset](../../../map/tilesets/terrain.tsx): the shared atlas named `terrain`, with seven preconfigured Corner Terrain Sets.
 - [Example map](../../../map/terrain-transitions-preview.tmx) and [rendered example](terrain-transitions-preview.png): all six terrain pairings with connected edges, outside corners, inside corners, and diagonal joins.
 - [Transition generation record](terrain-transitions-generation.json): exact source bounds, final prompts, layout guides, original generated sheets, tile assignments, and verification details.
@@ -60,7 +60,7 @@ Each tile supplies `terrainId`, `walkable`, and `buildable`. Land transitions al
 
 Terrain painting can produce horizontally or vertically flipped map GIDs. Follow the integration plan: strip transform bits before resolving tile properties, retain supported flips for rendering, and reject diagonal/hex rotations for this rectangular profile. Local tile IDs are not map GIDs.
 
-For Phaser, the prepared image is available at `assets/tilesets/terrain.png`. Runtime map loading has not been added by this asset work.
+The final 48-tile atlas is retained at `art/world/tilesets/terrain-atlas-v2.png`. Its original public runtime copy moved here unchanged on 23 October 2026; the historical Tiled project now references this source path. It is not shipped by the 3D runtime.
 
 ## Verification and provenance
 

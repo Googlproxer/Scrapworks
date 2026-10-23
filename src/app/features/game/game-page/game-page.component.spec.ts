@@ -1,7 +1,7 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
-import { SaveLoadComponent } from '@app/features/save/save-load/save-load.component';
-import type { GameClient } from '@contracts/game-client';
+import { ControlsComponent } from '@app/features/controls/controls/controls.component';
+import type { GameClient, GameClientOptions } from '@contracts/game-client';
 import type { GameState } from '@contracts/game-state';
 import axe from 'axe-core';
 import { BehaviorSubject } from 'rxjs';
@@ -14,7 +14,9 @@ describe('GamePageComponent integration', () => {
   let runtime: GameRuntimeService;
   let client: GameClient;
   let states: BehaviorSubject<GameState>;
-  let factory: ReturnType<typeof vi.fn<(host: HTMLElement) => GameClient>>;
+  let factory: ReturnType<
+    typeof vi.fn<(host: HTMLElement, options?: GameClientOptions) => GameClient>
+  >;
 
   beforeEach(async () => {
     states = new BehaviorSubject<GameState>({
@@ -59,13 +61,48 @@ describe('GamePageComponent integration', () => {
   it('mounts into the page renderer host and destroys the client with the page', () => {
     const host = (fixture.nativeElement as HTMLElement).querySelector('.game-container');
     expect(host).toBeInstanceOf(HTMLDivElement);
-    expect(factory).toHaveBeenCalledExactlyOnceWith(host);
+    expect(factory).toHaveBeenCalledExactlyOnceWith(
+      host,
+      expect.objectContaining({ session: expect.any(Object) }),
+    );
     expect(host?.querySelector('canvas')).toBeNull();
     fixture.destroy();
     expect(client.destroy).toHaveBeenCalledOnce();
   });
 
-  it('opens the named Save dialog through the page button and restores focus on close', async () => {
+  it('keeps Inspector close accessible while hiding the game HUD and restores its trigger focus', async () => {
+    states.next({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    await fixture.whenStable();
+    const options = factory.mock.calls[0][1]!;
+    client.toggleInspector = vi.fn(async () => {
+      if (runtime.inspectorActive()) {
+        options.onInspectorState!({ phase: 'closed', errorMessage: null });
+        return;
+      }
+      options.onInspectorState!({ phase: 'loading', errorMessage: null });
+      options.onInspectorState!({ phase: 'open', errorMessage: null });
+    });
+    const trigger = [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')].find(
+      (element) => element.textContent?.trim() === 'Inspector',
+    )!;
+    expect(trigger).toBeDefined();
+    trigger.focus();
+    trigger.click();
+    await fixture.whenStable();
+    expect(client.toggleInspector).toHaveBeenCalledOnce();
+    expect(trigger.closest('[hidden]')).not.toBeNull();
+    const close = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
+      '.inspector-close',
+    )!;
+    expect(close.closest('[hidden]')).toBeNull();
+    close.focus();
+    close.click();
+    await fixture.whenStable();
+    expect(trigger.closest('[hidden]')).toBeNull();
+    await expect.poll(() => document.activeElement).toBe(trigger);
+  });
+
+  it('opens Controls through the page button and restores focus on close', async () => {
     states.next({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
     await fixture.whenStable();
     const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
@@ -81,17 +118,22 @@ describe('GamePageComponent integration', () => {
       expect(dialogs.openDialogs).toHaveLength(1);
       const ref = dialogs.openDialogs[0];
       const overlay = ref.overlayRef.overlayElement;
-      expect(ref.componentInstance).toBeInstanceOf(SaveLoadComponent);
-      expect(ref.config.ariaLabelledBy).toBe('save-load-component');
+      expect(ref.componentInstance).toBeInstanceOf(ControlsComponent);
+      expect(ref.config.ariaLabelledBy).toBe('controls-title');
       expect(document.getElementById(ref.config.ariaLabelledBy!)?.textContent).toContain(
-        'Save/Load Test Component',
+        'Controls',
       );
       expect(vi.mocked(client.setInputEnabled).mock.calls).toEqual([[true], [false]]);
       await expect.poll(() => overlay.contains(document.activeElement)).toBe(true);
 
       const accessibility = await axe.run(overlay);
-      expect(accessibility.violations.map(({ id }) => id)).toEqual([]);
-      overlay.querySelector<HTMLButtonElement>('button[aria-label="close"]')!.click();
+      expect(
+        accessibility.violations.map(({ id, nodes }) => ({
+          id,
+          elements: nodes.map((node) => node.html),
+        })),
+      ).toEqual([]);
+      overlay.querySelector<HTMLButtonElement>('button[aria-label="Close controls"]')!.click();
       await fixture.whenStable();
 
       expect(dialogs.openDialogs).toHaveLength(0);
@@ -180,14 +222,14 @@ describe('GamePageComponent integration', () => {
     expect(runtime.isReady()).toBe(false);
   });
 
-  it('shows the focus indicator only while the renderer host contains focus', () => {
+  it('shows the development focus indicator only while the viewport contains focus', () => {
     const page = fixture.nativeElement as HTMLElement;
     const host = page.querySelector<HTMLElement>('.game-container')!;
     const indicator = page.querySelector<HTMLElement>('#focus-indicator')!;
+    expect(getComputedStyle(indicator).display).toBe('none');
     const canvas = document.createElement('canvas');
     canvas.tabIndex = 0;
     host.append(canvas);
-    expect(getComputedStyle(indicator).display).toBe('none');
 
     canvas.focus();
     expect(document.activeElement).toBe(canvas);

@@ -27,7 +27,7 @@ for filename in ['albedo-atlas.png','roughness-atlas.png']:
     png=(out/filename).read_bytes()
     assert png[:8]==b'\x89PNG\r\n\x1a\n'
     assert struct.unpack_from('>II',png,16)==(1024,1024)
-source=root/'public/assets/player/player.png'
+source=root/'art/characters/protagonist-south-idle-v2.png'
 assert hashlib.sha256(source.read_bytes()).hexdigest()=='fe4718cc934c9adc174b3fa6e3fe7b8a48cf901a8ab6fa9cea5c932b945cf085'
 
 # This validator is only run in a separate background process.

@@ -1,0 +1,122 @@
+[
+  {
+    "file": "idle-turn-000.png",
+    "clip": "Idle",
+    "frame": 1,
+    "camera_degrees": 0
+  },
+  {
+    "file": "idle-turn-090.png",
+    "clip": "Idle",
+    "frame": 1,
+    "camera_degrees": 90
+  },
+  {
+    "file": "idle-turn-180.png",
+    "clip": "Idle",
+    "frame": 1,
+    "camera_degrees": 180
+  },
+  {
+    "file": "idle-turn-270.png",
+    "clip": "Idle",
+    "frame": 1,
+    "camera_degrees": 270
+  },
+  {
+    "file": "walk-01.png",
+    "clip": "Walk",
+    "frame": 1,
+    "camera_degrees": 25
+  },
+  {
+    "file": "walk-08.png",
+    "clip": "Walk",
+    "frame": 8,
+    "camera_degrees": 25
+  },
+  {
+    "file": "walk-15.png",
+    "clip": "Walk",
+    "frame": 15,
+    "camera_degrees": 25
+  },
+  {
+    "file": "walk-22.png",
+    "clip": "Walk",
+    "frame": 22,
+    "camera_degrees": 25
+  },
+  {
+    "file": "run-01.png",
+    "clip": "Run",
+    "frame": 1,
+    "camera_degrees": 25
+  },
+  {
+    "file": "run-06.png",
+    "clip": "Run",
+    "frame": 6,
+    "camera_degrees": 25
+  },
+  {
+    "file": "run-11.png",
+    "clip": "Run",
+    "frame": 11,
+    "camera_degrees": 25
+  },
+  {
+    "file": "run-17.png",
+    "clip": "Run",
+    "frame": 17,
+    "camera_degrees": 25
+  },
+  {
+    "file": "turn-left-01.png",
+    "clip": "TurnLeft",
+    "frame": 1,
+    "camera_degrees": 25
+  },
+  {
+    "file": "turn-left-10.png",
+    "clip": "TurnLeft",
+    "frame": 10,
+    "camera_degrees": 25
+  },
+  {
+    "file": "turn-left-19.png",
+    "clip": "TurnLeft",
+    "frame": 19,
+    "camera_degrees": 25
+  },
+  {
+    "file": "turn-left-28.png",
+    "clip": "TurnLeft",
+    "frame": 28,
+    "camera_degrees": 25
+  },
+  {
+    "file": "turn-right-01.png",
+    "clip": "TurnRight",
+    "frame": 1,
+    "camera_degrees": 25
+  },
+  {
+    "file": "turn-right-10.png",
+    "clip": "TurnRight",
+    "frame": 10,
+    "camera_degrees": 25
+  },
+  {
+    "file": "turn-right-19.png",
+    "clip": "TurnRight",
+    "frame": 19,
+    "camera_degrees": 25
+  },
+  {
+    "file": "turn-right-28.png",
+    "clip": "TurnRight",
+    "frame": 28,
+    "camera_degrees": 25
+  }
+]

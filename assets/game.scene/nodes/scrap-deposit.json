@@ -1,0 +1,20 @@
+{
+  "name": "Scrap Deposit",
+  "id": "scrap-deposit",
+  "uniqueId": 900000003,
+  "type": "TransformNode",
+  "position": [-300, 0, 100],
+  "rotation": [0, 0, 0],
+  "scaling": [1, 1, 1],
+  "isEnabled": true,
+  "metadata": {
+    "scrapworks": {
+      "version": 1,
+      "kind": "Deposit",
+      "id": "scrap-deposit-1",
+      "resource": "scrap",
+      "quantity": 100,
+      "footprint": { "width": 1, "depth": 1 }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "recordedAt": "2026-10-23T09:53:15.098Z",
+  "method": "Local development Chromium, actual keyboard/mouse flow; no physical gamepad attached. Orthographic is a comparison only; perspective restored.",
+  "results": [
+    {
+      "deviceScaleFactor": 1,
+      "walkMetres": 1.5000000000000004,
+      "sprintMetres": 2.7000000000000015,
+      "camera": {
+        "before": {
+          "alpha": -1.5707963267948966,
+          "beta": 0.7853981633974483,
+          "radius": 1200,
+          "fov": 0.8,
+          "mode": 0
+        },
+        "after": {
+          "alpha": -3.0473992800286442,
+          "beta": 0.3490658503988659,
+          "radius": 1215.068544731747,
+          "fov": 0.8,
+          "mode": 0
+        }
+      },
+      "routeRedirect": true,
+      "modalPause": true,
+      "heldRelease": true,
+      "ctrlTabAltCapture": true,
+      "settingsReload": true,
+      "spatialSaveLoadNavigation": true,
+      "controlTabsAndLabels": true,
+      "independentDeadzones": true,
+      "controlsAxe": [],
+      "placement": true,
+      "resize": true,
+      "axe": [],
+      "errors": []
+    },
+    {
+      "deviceScaleFactor": 2,
+      "walkMetres": 1.5000000000000004,
+      "sprintMetres": 3.300000000000003,
+      "camera": {
+        "before": {
+          "alpha": -1.5707963267948966,
+          "beta": 0.7853981633974483,
+          "radius": 1200,
+          "fov": 0.8,
+          "mode": 0
+        },
+        "after": {
+          "alpha": -3.0512768881551393,
+          "beta": 0.3490658503988659,
+          "radius": 1207.5544201544812,
+          "fov": 0.8,
+          "mode": 0
+        }
+      },
+      "routeRedirect": true,
+      "modalPause": true,
+      "heldRelease": true,
+      "ctrlTabAltCapture": true,
+      "settingsReload": true,
+      "spatialSaveLoadNavigation": true,
+      "controlTabsAndLabels": true,
+      "independentDeadzones": true,
+      "controlsAxe": [],
+      "placement": true,
+      "resize": true,
+      "axe": [],
+      "errors": []
+    }
+  ]
+}

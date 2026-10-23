@@ -1,6 +1,6 @@
 # Milestone 4 First local save
 
-Updated 17 October 2026. Status: persistence scaffold only. Prerequisite: [Milestone 3](milestone-03-character-and-manual-opening.md).
+Updated 23 October 2026 at migration Phase 7. Status: gameplay persistence unimplemented; controls-settings persistence verified separately. Prerequisite: [Milestone 3](milestone-03-character-and-manual-opening.md).
 
 Implement one manual local save slot that restores the complete manual opening, including a craft in progress. Keep persistence behind an interface so a future cloud adapter can be introduced without changing game rules. Autosaves, revisions, and file transfer arrive in Milestone 9.
 
@@ -9,6 +9,8 @@ Implement one manual local save slot that restores the complete manual opening, 
 ## Current implementation
 
 Dexie is installed, and `src/app/features/save/` contains a test-data service and a CDK save/load dialog. They store `name`/`value` records, not gameplay snapshots. Writes are not awaited by `save()`, `load()` logs rather than restores a world, and dialog occupancy is in-memory. There is no SaveRepository, versioned codec, detached snapshot, world-replacement boundary, or verified reload round trip. Keep the snapshot and transaction requirements below open.
+
+Migration added plain authoritative `WorldState`, detached presentation views and a separate controls-settings IndexedDB adapter. The [23 October browser evidence](../reports/migration/2026-10-23/README.md) verifies bindings survive page reload, including modifier capture. That proves settings persistence only. Neither `WorldDefinition` (initial authored layout) nor `WorldView` (presentation state) is a gameplay save format. Save/test-data controls are absent from the production game menu. Every gameplay snapshot/restore checklist item below remains pending.
 
 ## Step 1 Define the snapshot contract
 
@@ -84,9 +86,10 @@ Dexie is installed, and `src/app/features/save/` contains a test-data service an
 
 Record implementation notes here:
 
-| Date           | Observation or decision                              | Follow-up and status                                                           |
-| -------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------ |
-| 4 October 2026 | Persistence scaffold only; current source inspected. | See Current implementation above; unchecked gameplay requirements remain open. |
+| Date            | Observation or decision                                                        | Follow-up and status                                                                                                             |
+| --------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| 4 October 2026  | Persistence scaffold only; current source inspected.                           | See Current implementation above; unchecked gameplay requirements remain open.                                                   |
+| 23 October 2026 | Controls settings survive real IndexedDB reload; world/session data now exist. | No gameplay persistence credit: snapshots, transaction semantics, world restore and mid-craft continuation remain unimplemented. |
 
 ## References and diagrams
 

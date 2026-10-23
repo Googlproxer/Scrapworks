@@ -1,78 +1,108 @@
 classDiagram
     direction TB
 
-    class GameFacade {
-        +send(command)
-        +readView()
+    class GameRuntimeService {
+        +mount(host)
+        +unmount()
+        +retry()
     }
-    class GameLoop {
-        +advance(elapsedTime)
-        +pause()
-        +resume()
+    class GameClient {
+        <<interface>>
+        +subscribe(listener)
+        +setScene(key)
+        +destroy()
+    }
+    class BabylonGameClient {
+        +subscribe(listener)
+        +setScene(key)
+        +destroy()
+    }
+    class GameSession {
+        +advance(deltaSeconds)
+        +registerTickHandler(handler, order)
+        +setMovement(direction, sprint)
+        +setPaused(paused)
+        +enqueue(command)
+        +view
     }
     class Simulation {
         +enqueue(command)
-        +step(deltaTime)
-        +captureSnapshot()
-        +replaceWorld(validatedWorld)
+        +step(movement)
+        +view
+    }
+    class PlayerMotor {
+        movement and collision
+        authoritative facing
     }
     class WorldState {
         <<data>>
         player
-        world
+        tick
+        stepSeconds
+        inventory
+        research
         productionTotals
-        researchUnlocks
-        simulationTime
+        deposits
+        buildings
     }
-    class GameSystem {
-        <<interface>>
-        +applyCommand(context, command)
-        +tick(context, deltaTime)
-    }
-    class ContentCatalog {
+    class WorldDefinition {
         <<data>>
-        recipes
-        technologies
-        machineDefinitions
+        version
+        grid
+        terrain
+        spawn
+        deposits
+        blockers
     }
-    class SaveService {
-        +save(slotId)
-        +load(slotId)
-        +exportFile(slotId)
-        +importFile(file)
-    }
-    class SaveCodec {
-        +encode(state)
-        +validateAndMigrate(snapshot)
-    }
-    class SaveSnapshot {
+    class WorldView {
         <<data>>
-        schemaVersion
-        contentVersion
-        savedAt
-        state
+        detached world data
+        movement presentation
+        command result
     }
-    class SaveRepository {
+    class WorldScene {
+        compose scripts and entity views
+        explicit frame phases
+        +dispose()
+    }
+    class GameplayScript {
+        Toolkit lifecycle
+        optional onGameTick(context)
+        automatic tick subscription
+    }
+    class WorldSessionBridge {
         <<interface>>
-        +list()
-        +save(slotId, snapshot)
-        +load(slotId)
-        +delete(slotId)
+        +frame(seconds, movement, sprint, active)
+        +registerTickHandler(handler, order)
+        +place(cell, rotation)
+        +preview(cell, rotation)
     }
-    class IndexedDbSaveRepository {
-        +transactionalWrites()
+    class InputManager {
+        +takeFrame()
+        +setEnabled(enabled)
+        +clear()
+    }
+    class FrameClock {
+        +sample(timestamp)
+        +reset()
     }
 
-    GameFacade --> Simulation : commands and views
-    GameFacade --> SaveService : save and load actions
-    GameLoop --> Simulation : fixed steps
-    Simulation "1" *-- "1" WorldState : owns
-    Simulation "1" o-- "many" GameSystem : runs modules
-    GameSystem ..> WorldState : reads and updates
-    GameSystem ..> ContentCatalog : reads definitions
-    SaveService --> Simulation : capture or replace world
-    SaveService --> SaveCodec : encode and validate
-    SaveService --> SaveRepository : storage operations
-    SaveCodec ..> SaveSnapshot : creates and validates
-    SaveRepository ..> SaveSnapshot : stores detached data
-    IndexedDbSaveRepository ..|> SaveRepository : implements
+    GameRuntimeService "1" *-- "1" GameSession : owns session
+    GameRuntimeService --> GameClient : lifecycle and input bridge
+    BabylonGameClient ..|> GameClient : implements
+    BabylonGameClient "1" *-- "1" WorldScene : owns scene composition
+    BabylonGameClient "1" *-- "1" InputManager : owns input
+    BabylonGameClient "1" *-- "1" FrameClock : owns frame timing
+    GameSession "1" *-- "1" Simulation : advances fixed steps
+    Simulation "1" *-- "1" PlayerMotor : owns movement rules
+    Simulation "1" *-- "1" WorldState : owns mutable data
+    Simulation ..> WorldDefinition : initializes world
+    WorldScene ..> WorldDefinition : binds authored layout
+    Simulation ..> WorldView : publishes detached views
+    WorldScene ..> WorldView : displays completed state
+    GameSession ..> WorldView : exposes current view
+    WorldScene "1" *-- "many" GameplayScript : composes core objects
+    GameplayScript ..> WorldSessionBridge : sends intent and registers ticks
+    WorldScene ..> WorldSessionBridge : advances once per frame
+    GameRuntimeService --> WorldSessionBridge : supplies guarded adapter
+    WorldSessionBridge ..> GameSession : delegates to current session

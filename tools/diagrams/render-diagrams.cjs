@@ -79,7 +79,7 @@ function classGraph(source, title) {
     if (toCount) attributes.push(`headlabel=${quote(toCount)}`);
     dot += `${from} -> ${to} [${attributes.join(', ')}];\n`;
   }
-  if (relationCount !== 13) throw new Error(`Expected 13 class relationships, found ${relationCount}.`);
+  if (!nodeNames.size || !relationCount) throw new Error('Expected classes and relationships in the class diagram.');
   return dot + '}';
 }
 

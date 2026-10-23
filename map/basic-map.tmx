@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="52" infinite="0" nextlayerid="2" nextobjectid="1">
  <editorsettings>
-  <export target="../public/assets/map/basic-map.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source="tilesets/terrain.tsx"/>
  <layer id="1" name="Tile Layer 1" width="64" height="64">

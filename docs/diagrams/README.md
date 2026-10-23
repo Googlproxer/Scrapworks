@@ -1,10 +1,10 @@
 # Scrapworks diagrams
 
-Updated 17 October 2026 for the 3D direction. Presentation diagrams use Babylon and show the planned Editor-marker compiler and plain initial world definition. `WorldState` is planned gameplay data; the existing `GameState` contract remains renderer lifecycle state. Authoring compilation, simulation systems, and complete saves are not implemented.
+Updated 24 October 2026. The core class diagram shows `WorldScene`, Toolkit scripts, the plain session bridge and `PlayerMotor`. The frame diagram makes shared input, independent 20 Hz tick dispatch and presentation order explicit. Editor-marker compilation and plain WorldDefinition/WorldState remain the movement fixture's state boundary. The application diagram labels planned factory ECS and gameplay persistence; GameState remains a separate renderer lifecycle contract.
 
 The [technical design](../design/TDD.md) and [implementation roadmap](../plans/README.md) contain the editable Mermaid blocks. Standalone sources are under [src/](src/), and matching SVG and PNG files are stored in this folder for GitHub preview and export.
 
-These diagrams describe the planned complete gameplay architecture. They do not imply that every system or class is implemented; current progress is recorded in the milestone plans.
+The factory, save and research diagrams remain future design; they do not imply those systems are implemented. Current acceptance and remaining work are recorded in the migration and milestone plans.
 
 ## Regeneration
 

@@ -1,0 +1,66 @@
+{
+  "recordedAt": "2026-10-23T08:58:48.944Z",
+  "method": "Local development Chromium, actual keyboard/mouse flow; no physical gamepad attached. Orthographic is a comparison only; perspective restored.",
+  "results": [
+    {
+      "deviceScaleFactor": 1,
+      "walkMetres": 1.5000000000000004,
+      "sprintMetres": 2.7000000000000015,
+      "camera": {
+        "before": {
+          "alpha": -1.5707963267948966,
+          "beta": 0.7853981633974483,
+          "radius": 1200,
+          "fov": 0.8,
+          "mode": 0
+        },
+        "after": {
+          "alpha": -3.0491409091636053,
+          "beta": 0.3490658503988659,
+          "radius": 1215.135867446835,
+          "fov": 0.8,
+          "mode": 0
+        }
+      },
+      "routeRedirect": true,
+      "modalPause": true,
+      "heldRelease": true,
+      "ctrlTabAltCapture": true,
+      "settingsReload": true,
+      "placement": true,
+      "resize": true,
+      "axe": [],
+      "errors": []
+    },
+    {
+      "deviceScaleFactor": 2,
+      "walkMetres": 1.5750000000000006,
+      "sprintMetres": 3.000000000000003,
+      "camera": {
+        "before": {
+          "alpha": -1.5707963267948966,
+          "beta": 0.7853981633974483,
+          "radius": 1200,
+          "fov": 0.8,
+          "mode": 0
+        },
+        "after": {
+          "alpha": -3.0532303337721975,
+          "beta": 0.3490658503988659,
+          "radius": 1207.5150830383086,
+          "fov": 0.8,
+          "mode": 0
+        }
+      },
+      "routeRedirect": true,
+      "modalPause": true,
+      "heldRelease": true,
+      "ctrlTabAltCapture": true,
+      "settingsReload": true,
+      "placement": true,
+      "resize": true,
+      "axe": [],
+      "errors": []
+    }
+  ]
+}

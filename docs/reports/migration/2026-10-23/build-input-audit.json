@@ -1,0 +1,12 @@
+{
+  "recordedAt": "2026-10-23T09:05:11.908Z",
+  "method": "Read the final Angular 22 production build metafile. The browser profiler probes the older stats.json filename; this supplemental audit reads the actual browser-stats.json emitted by this Angular version.",
+  "source": "dist/scrapworks/browser-stats.json",
+  "sourceLastModifiedAt": "2026-10-23T09:03:05.687Z",
+  "sourceSha256": "6fe475fb2f5d81bcba8ac7b4d48b3f49edf08dd6323898777df6082a463bbd9c",
+  "buildInputsScanned": 3777,
+  "phaserBuildInputs": [],
+  "phaserDeclaredDependencies": [],
+  "productionReport": "performance.json",
+  "status": "passed"
+}

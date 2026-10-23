@@ -1,6 +1,6 @@
 # Babylon Phase 1 implementation walkthrough
 
-Prepared 11 October 2026. Companion to [Phase 1 of the 3D migration plan](../../plans/3d-migration.md#phase-1-prove-babylon-inside-the-existing-application).
+Prepared 11 October 2026. Companion to [Phase 1 of the 3D migration plan](../../plans/3d-migration.md#phase-1-babylon-foundation).
 
 Historical completed walkthrough, classified 17 October 2026. The code-built scene snippets below are retained as earlier implementation guidance; the [Editor setup](../../plans/babylon-editor-setup.md) and [cleanup plan](../../plans/3d-cleanup.md) describe the active path. Do not recreate obsolete scene-builder files.
 
@@ -10,7 +10,7 @@ Start with a `/3d` prototype that uses the existing game page and client interfa
 
 Work through these checkpoints in order.
 
-**Implementation status:** Phase 1 was completed on 11 October 2026. See the [migration plan's verification record](../../plans/3d-migration.md#phase-1-prove-babylon-inside-the-existing-application). On 12 October, the code-built Babylon scenes were replaced with editable [Game](../../../assets/game.scene) and [MainMenu](../../../assets/main-menu.scene) sources and [the authored-scene loader](../../../src/game/babylon/assets/load-editor-scene.ts). The [Babylon client](../../../src/game/babylon/babylon-game-client.ts) retains its lifecycle boundary. See the [Editor setup guide](../../plans/babylon-editor-setup.md); the snippets below remain historical Phase 1 implementation guidance.
+**Implementation status:** Phase 1 was completed on 11 October 2026. See the [migration plan's verification record](../../plans/3d-migration.md#phase-1-babylon-foundation). On 12 October, the code-built Babylon scenes were replaced with editable [Game](../../../assets/game.scene) and [MainMenu](../../../assets/main-menu.scene) sources and [the authored-scene loader](../../../src/game/assets/load-editor-scene.ts). The [Babylon client](../../../src/game/babylon-game-client.ts) retains its lifecycle boundary. See the [Editor setup guide](../../plans/babylon-editor-setup.md); the snippets below remain historical Phase 1 implementation guidance.
 
 Archived into `docs/history/3d/` on 17 October 2026. The original code examples and dated evidence are retained; navigation links are rebased.
 
@@ -135,7 +135,7 @@ The first visible checkpoint is `/3d` → Play Game → ground, capsule and box,
 
 ## 5. Add the protagonist import
 
-Copy the [existing protagonist GLB](../../../art/characters/3d/protagonist-mpfb-v1/protagonist-mpfb-v1.glb) into:
+For this historical walkthrough, recover the [original protagonist GLB from Git](../../../art/README.md#recovering-retired-mpfb-sources), then copy it into:
 
 ```text
 L:\Angular\scrapworks\public\assets\models\protagonist-mpfb-v1.glb

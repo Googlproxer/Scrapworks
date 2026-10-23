@@ -1,0 +1,3471 @@
+{
+  "recordedAt": "2026-10-23T09:04:10.956Z",
+  "browserVersion": "156.0.8078.4",
+  "method": "Production output on localhost; gzip for text, fresh headless Chromium context per route, no-store, desktop 1440x900. Body bytes from Resource Timing. RAF intervals measured after a 1000 ms warmup, then 2000 ms stationary and 2000 ms with forward input. This is a small migration-scene sample on the recorded renderer, not WAN latency, GPU timing, target-hardware qualification, or a factory-scale benchmark.",
+  "productionAssets": {
+    "files": 759,
+    "bytes": 13594432,
+    "javascriptFilesScanned": 740,
+    "phaserMarkers": [],
+    "buildStatsAvailable": false,
+    "buildInputsScanned": 0,
+    "worldDefinition": {
+      "path": "scene/worlds/game.json",
+      "id": "migration-world-v1",
+      "grid": {
+        "origin": {
+          "x": -10,
+          "z": -10
+        },
+        "columns": 10,
+        "rows": 10,
+        "metresPerCell": 2
+      },
+      "bytes": 1950,
+      "sha256": "ce5aff5813f314007443881df275e396e0af7439333a3832730a8de395fa9b46"
+    },
+    "phaserBuildInputs": [],
+    "retiredRuntimeAssets": [],
+    "models": [
+      {
+        "path": "assets/models/protagonist-v2.glb",
+        "bytes": 4102120,
+        "sha256": "6707f196afc943e97af9fcb726bd18efe884f5b0a2af731fd787f4a8cf308396"
+      }
+    ],
+    "sceneAssets": [
+      {
+        "path": "scene/assets-list.json",
+        "bytes": 406,
+        "sha256": "d88980f7763d6135569f628f56bf07f72f4069286a5f0911a1b21908ce58e358"
+      },
+      {
+        "path": "scene/game.babylon",
+        "bytes": 16355,
+        "sha256": "86fae43535318ae24a74db42b602b8a4f356a8e2ca8b2db2e8251385cdd96ee1"
+      },
+      {
+        "path": "scene/game.babylon.manifest",
+        "bytes": 81,
+        "sha256": "7447f40652276ca8542fded5284367d042dbe0fce51aa492b095c4799a23d322"
+      },
+      {
+        "path": "scene/game/4d021133-a604-4067-b462-782e96530f46.babylonbinarymeshdata",
+        "bytes": 13556,
+        "sha256": "e1914fe212e59e6a9afa7d22bba34592d3eb5d2cc2d909470b150a17bc842916"
+      },
+      {
+        "path": "scene/game/72e821f3-ce08-4e3e-ae10-a2d2d7d75f52.babylonbinarymeshdata",
+        "bytes": 932,
+        "sha256": "0fe22e5ab4787537bf82612f029846e6ef3958c27f0e8135f757c30ac425a0fb"
+      },
+      {
+        "path": "scene/game/ef50338a-79a4-4ef4-9b01-e658a4bdf0bc.babylonbinarymeshdata",
+        "bytes": 172,
+        "sha256": "9a7d6fc799914edbbaeacf5ca2dec11385e9ee995ab0826646f5aba6e1c0dcb1"
+      },
+      {
+        "path": "scene/main-menu.babylon",
+        "bytes": 5786,
+        "sha256": "82e732f7e85907f4d0411433e431cbc856f34c2c0449e1e380648ff4e18bc1b6"
+      },
+      {
+        "path": "scene/main-menu.babylon.manifest",
+        "bytes": 81,
+        "sha256": "7447f40652276ca8542fded5284367d042dbe0fce51aa492b095c4799a23d322"
+      },
+      {
+        "path": "scene/main-menu/da6e63a5-b1a8-47af-866e-0bad5038c9b0.babylonbinarymeshdata",
+        "bytes": 172,
+        "sha256": "9a7d6fc799914edbbaeacf5ca2dec11385e9ee995ab0826646f5aba6e1c0dcb1"
+      },
+      {
+        "path": "scene/scenes-used-files.json",
+        "bytes": 370,
+        "sha256": "cb5ddb44ada69a709ef935972bbda2f592174b26493080627699581f1f0bc996"
+      },
+      {
+        "path": "scene/worlds/game.json",
+        "bytes": 1950,
+        "sha256": "ce5aff5813f314007443881df275e396e0af7439333a3832730a8de395fa9b46"
+      }
+    ]
+  },
+  "routes": [
+    {
+      "route": "/",
+      "finalPath": "/",
+      "renderer": "Babylon.js",
+      "menuButtons": [
+        " Play Game! ",
+        "Controls"
+      ],
+      "readyFrameObserved": true,
+      "menu": [
+        {
+          "path": "/",
+          "encodedBodyBytes": 468,
+          "decodedBodyBytes": 854,
+          "transferBytes": 768
+        },
+        {
+          "path": "/main-AABFDKT7.js",
+          "encodedBodyBytes": 73237,
+          "decodedBodyBytes": 236586,
+          "transferBytes": 73537
+        },
+        {
+          "path": "/styles-UHWQAIRH.css",
+          "encodedBodyBytes": 347,
+          "decodedBodyBytes": 624,
+          "transferBytes": 647
+        },
+        {
+          "path": "/chunk-fiR6xlLx.js",
+          "encodedBodyBytes": 1475988,
+          "decodedBodyBytes": 6681371,
+          "transferBytes": 1476288
+        },
+        {
+          "path": "/chunk-CgQDO-0U.js",
+          "encodedBodyBytes": 176,
+          "decodedBodyBytes": 469,
+          "transferBytes": 476
+        },
+        {
+          "path": "/chunk-jM4r0w1N.js",
+          "encodedBodyBytes": 297,
+          "decodedBodyBytes": 533,
+          "transferBytes": 597
+        },
+        {
+          "path": "/chunk-CRxO8jYr.js",
+          "encodedBodyBytes": 241,
+          "decodedBodyBytes": 516,
+          "transferBytes": 541
+        },
+        {
+          "path": "/chunk-DAYxXgsS.js",
+          "encodedBodyBytes": 274,
+          "decodedBodyBytes": 718,
+          "transferBytes": 574
+        },
+        {
+          "path": "/chunk-BVicQ7x_.js",
+          "encodedBodyBytes": 266,
+          "decodedBodyBytes": 380,
+          "transferBytes": 566
+        },
+        {
+          "path": "/chunk-DHn2PClP.js",
+          "encodedBodyBytes": 278,
+          "decodedBodyBytes": 434,
+          "transferBytes": 578
+        },
+        {
+          "path": "/chunk-CC_ghydL.js",
+          "encodedBodyBytes": 362,
+          "decodedBodyBytes": 1038,
+          "transferBytes": 662
+        },
+        {
+          "path": "/chunk-B4Wx_0AO.js",
+          "encodedBodyBytes": 230,
+          "decodedBodyBytes": 279,
+          "transferBytes": 530
+        },
+        {
+          "path": "/chunk-9k_tylK7.js",
+          "encodedBodyBytes": 393,
+          "decodedBodyBytes": 1175,
+          "transferBytes": 693
+        },
+        {
+          "path": "/chunk-CBZjweNO.js",
+          "encodedBodyBytes": 232,
+          "decodedBodyBytes": 330,
+          "transferBytes": 532
+        },
+        {
+          "path": "/chunk-RiWV2KRT.js",
+          "encodedBodyBytes": 193,
+          "decodedBodyBytes": 229,
+          "transferBytes": 493
+        },
+        {
+          "path": "/chunk-BSHnS6Sa.js",
+          "encodedBodyBytes": 268,
+          "decodedBodyBytes": 714,
+          "transferBytes": 568
+        },
+        {
+          "path": "/chunk-T6zhySZ3.js",
+          "encodedBodyBytes": 88,
+          "decodedBodyBytes": 80,
+          "transferBytes": 388
+        },
+        {
+          "path": "/chunk-BiXzqMrX.js",
+          "encodedBodyBytes": 305,
+          "decodedBodyBytes": 563,
+          "transferBytes": 605
+        },
+        {
+          "path": "/chunk-DLGEZiRi.js",
+          "encodedBodyBytes": 272,
+          "decodedBodyBytes": 695,
+          "transferBytes": 572
+        },
+        {
+          "path": "/chunk-CmyWyoZ7.js",
+          "encodedBodyBytes": 984,
+          "decodedBodyBytes": 2096,
+          "transferBytes": 1284
+        },
+        {
+          "path": "/chunk-BTyrH7TK.js",
+          "encodedBodyBytes": 2933,
+          "decodedBodyBytes": 12615,
+          "transferBytes": 3233
+        },
+        {
+          "path": "/chunk-0t4X2XQ_.js",
+          "encodedBodyBytes": 15711,
+          "decodedBodyBytes": 65142,
+          "transferBytes": 16011
+        },
+        {
+          "path": "/chunk-DwgrAKru.js",
+          "encodedBodyBytes": 143,
+          "decodedBodyBytes": 152,
+          "transferBytes": 443
+        },
+        {
+          "path": "/chunk-755K5oQS.js",
+          "encodedBodyBytes": 228,
+          "decodedBodyBytes": 359,
+          "transferBytes": 528
+        },
+        {
+          "path": "/chunk-1fEoxt_A.js",
+          "encodedBodyBytes": 264,
+          "decodedBodyBytes": 504,
+          "transferBytes": 564
+        },
+        {
+          "path": "/chunk-BfB55RP-.js",
+          "encodedBodyBytes": 837,
+          "decodedBodyBytes": 1881,
+          "transferBytes": 1137
+        },
+        {
+          "path": "/chunk-DAw9LdIM.js",
+          "encodedBodyBytes": 1119,
+          "decodedBodyBytes": 3253,
+          "transferBytes": 1419
+        },
+        {
+          "path": "/chunk-CrZ6KQ0F.js",
+          "encodedBodyBytes": 3368,
+          "decodedBodyBytes": 11245,
+          "transferBytes": 3668
+        },
+        {
+          "path": "/chunk-B5QGl-DV.js",
+          "encodedBodyBytes": 942,
+          "decodedBodyBytes": 2711,
+          "transferBytes": 1242
+        },
+        {
+          "path": "/chunk-B6pCXfQR.js",
+          "encodedBodyBytes": 438,
+          "decodedBodyBytes": 949,
+          "transferBytes": 738
+        },
+        {
+          "path": "/chunk-Dv7keEa1.js",
+          "encodedBodyBytes": 235,
+          "decodedBodyBytes": 353,
+          "transferBytes": 535
+        },
+        {
+          "path": "/chunk-rMd5HW5B.js",
+          "encodedBodyBytes": 211,
+          "decodedBodyBytes": 283,
+          "transferBytes": 511
+        },
+        {
+          "path": "/chunk-DaNVPWcH.js",
+          "encodedBodyBytes": 224,
+          "decodedBodyBytes": 323,
+          "transferBytes": 524
+        },
+        {
+          "path": "/chunk-MN-84V65.js",
+          "encodedBodyBytes": 893,
+          "decodedBodyBytes": 2732,
+          "transferBytes": 1193
+        },
+        {
+          "path": "/chunk-Dvnh9Bw0.js",
+          "encodedBodyBytes": 245,
+          "decodedBodyBytes": 307,
+          "transferBytes": 545
+        },
+        {
+          "path": "/chunk-BS6M8yHQ.js",
+          "encodedBodyBytes": 262,
+          "decodedBodyBytes": 362,
+          "transferBytes": 562
+        },
+        {
+          "path": "/chunk-BiRlMaft.js",
+          "encodedBodyBytes": 386,
+          "decodedBodyBytes": 925,
+          "transferBytes": 686
+        },
+        {
+          "path": "/chunk-DonoV55g.js",
+          "encodedBodyBytes": 224,
+          "decodedBodyBytes": 273,
+          "transferBytes": 524
+        },
+        {
+          "path": "/chunk-k6CmMD1h.js",
+          "encodedBodyBytes": 890,
+          "decodedBodyBytes": 2829,
+          "transferBytes": 1190
+        },
+        {
+          "path": "/chunk-gA3tkmxM.js",
+          "encodedBodyBytes": 342,
+          "decodedBodyBytes": 926,
+          "transferBytes": 642
+        },
+        {
+          "path": "/chunk-CNtIQhsA.js",
+          "encodedBodyBytes": 261,
+          "decodedBodyBytes": 657,
+          "transferBytes": 561
+        },
+        {
+          "path": "/chunk-Dw_UL1sT.js",
+          "encodedBodyBytes": 188,
+          "decodedBodyBytes": 215,
+          "transferBytes": 488
+        },
+        {
+          "path": "/chunk-CE6z5kUR.js",
+          "encodedBodyBytes": 930,
+          "decodedBodyBytes": 3431,
+          "transferBytes": 1230
+        },
+        {
+          "path": "/chunk-r9P0MlhI.js",
+          "encodedBodyBytes": 187,
+          "decodedBodyBytes": 219,
+          "transferBytes": 487
+        },
+        {
+          "path": "/chunk-Dep3TC2E.js",
+          "encodedBodyBytes": 322,
+          "decodedBodyBytes": 881,
+          "transferBytes": 622
+        },
+        {
+          "path": "/chunk-iQ3ElPpz.js",
+          "encodedBodyBytes": 644,
+          "decodedBodyBytes": 1491,
+          "transferBytes": 944
+        },
+        {
+          "path": "/chunk-D1Tp95HZ.js",
+          "encodedBodyBytes": 934,
+          "decodedBodyBytes": 2650,
+          "transferBytes": 1234
+        },
+        {
+          "path": "/chunk-CNySHaMW.js",
+          "encodedBodyBytes": 249,
+          "decodedBodyBytes": 568,
+          "transferBytes": 549
+        },
+        {
+          "path": "/chunk-2J_FqxjX.js",
+          "encodedBodyBytes": 457,
+          "decodedBodyBytes": 2088,
+          "transferBytes": 757
+        },
+        {
+          "path": "/chunk-RInWFa_H.js",
+          "encodedBodyBytes": 146,
+          "decodedBodyBytes": 146,
+          "transferBytes": 446
+        },
+        {
+          "path": "/chunk-CAIcALcr.js",
+          "encodedBodyBytes": 2295,
+          "decodedBodyBytes": 6808,
+          "transferBytes": 2595
+        },
+        {
+          "path": "/chunk-KrD2B8Ql.js",
+          "encodedBodyBytes": 245,
+          "decodedBodyBytes": 328,
+          "transferBytes": 545
+        },
+        {
+          "path": "/chunk-DCasZjlB.js",
+          "encodedBodyBytes": 247,
+          "decodedBodyBytes": 316,
+          "transferBytes": 547
+        },
+        {
+          "path": "/chunk-Cr9PO_Qb.js",
+          "encodedBodyBytes": 286,
+          "decodedBodyBytes": 388,
+          "transferBytes": 586
+        },
+        {
+          "path": "/chunk-DM6Fxipl.js",
+          "encodedBodyBytes": 3231,
+          "decodedBodyBytes": 22162,
+          "transferBytes": 3531
+        },
+        {
+          "path": "/chunk-D_rJF1s7.js",
+          "encodedBodyBytes": 1024,
+          "decodedBodyBytes": 3495,
+          "transferBytes": 1324
+        },
+        {
+          "path": "/chunk-CI7dPHV2.js",
+          "encodedBodyBytes": 1843,
+          "decodedBodyBytes": 6635,
+          "transferBytes": 2143
+        },
+        {
+          "path": "/chunk-1wTpl_is.js",
+          "encodedBodyBytes": 355,
+          "decodedBodyBytes": 790,
+          "transferBytes": 655
+        },
+        {
+          "path": "/chunk-Cc298M5-.js",
+          "encodedBodyBytes": 1930,
+          "decodedBodyBytes": 8901,
+          "transferBytes": 2230
+        },
+        {
+          "path": "/chunk-BfVpc4FD.js",
+          "encodedBodyBytes": 453,
+          "decodedBodyBytes": 950,
+          "transferBytes": 753
+        },
+        {
+          "path": "/chunk-CVgDFVp3.js",
+          "encodedBodyBytes": 255,
+          "decodedBodyBytes": 330,
+          "transferBytes": 555
+        },
+        {
+          "path": "/chunk-CgRyGK3k.js",
+          "encodedBodyBytes": 245,
+          "decodedBodyBytes": 518,
+          "transferBytes": 545
+        },
+        {
+          "path": "/chunk-DlbG7iMw.js",
+          "encodedBodyBytes": 289,
+          "decodedBodyBytes": 816,
+          "transferBytes": 589
+        },
+        {
+          "path": "/chunk-gQN__koA.js",
+          "encodedBodyBytes": 3874,
+          "decodedBodyBytes": 28423,
+          "transferBytes": 4174
+        },
+        {
+          "path": "/chunk-D1JD_bZf.js",
+          "encodedBodyBytes": 2174,
+          "decodedBodyBytes": 6487,
+          "transferBytes": 2474
+        },
+        {
+          "path": "/chunk-Do1R1Dq3.js",
+          "encodedBodyBytes": 2548,
+          "decodedBodyBytes": 8641,
+          "transferBytes": 2848
+        },
+        {
+          "path": "/chunk-C0vtTu9D.js",
+          "encodedBodyBytes": 4122,
+          "decodedBodyBytes": 11929,
+          "transferBytes": 4422
+        },
+        {
+          "path": "/chunk-CMLzao1K.js",
+          "encodedBodyBytes": 366,
+          "decodedBodyBytes": 683,
+          "transferBytes": 666
+        },
+        {
+          "path": "/chunk-dpZZKVC2.js",
+          "encodedBodyBytes": 225,
+          "decodedBodyBytes": 268,
+          "transferBytes": 525
+        },
+        {
+          "path": "/chunk-Cw6Zzup5.js",
+          "encodedBodyBytes": 3064,
+          "decodedBodyBytes": 19532,
+          "transferBytes": 3364
+        },
+        {
+          "path": "/chunk-BFW063Oj.js",
+          "encodedBodyBytes": 1746,
+          "decodedBodyBytes": 7827,
+          "transferBytes": 2046
+        },
+        {
+          "path": "/chunk-D6k7bkmE.js",
+          "encodedBodyBytes": 1535,
+          "decodedBodyBytes": 6044,
+          "transferBytes": 1835
+        },
+        {
+          "path": "/chunk-CpDioWwB.js",
+          "encodedBodyBytes": 350,
+          "decodedBodyBytes": 762,
+          "transferBytes": 650
+        },
+        {
+          "path": "/chunk-DEGlgt_P.js",
+          "encodedBodyBytes": 437,
+          "decodedBodyBytes": 879,
+          "transferBytes": 737
+        },
+        {
+          "path": "/chunk-CFySfjNp.js",
+          "encodedBodyBytes": 3902,
+          "decodedBodyBytes": 25893,
+          "transferBytes": 4202
+        },
+        {
+          "path": "/chunk-d0AHqG-F.js",
+          "encodedBodyBytes": 950,
+          "decodedBodyBytes": 4054,
+          "transferBytes": 1250
+        },
+        {
+          "path": "/chunk-BSQPrHW2.js",
+          "encodedBodyBytes": 1827,
+          "decodedBodyBytes": 4837,
+          "transferBytes": 2127
+        },
+        {
+          "path": "/chunk-B_ppgoHr.js",
+          "encodedBodyBytes": 228,
+          "decodedBodyBytes": 293,
+          "transferBytes": 528
+        },
+        {
+          "path": "/chunk-I474rV70.js",
+          "encodedBodyBytes": 418,
+          "decodedBodyBytes": 852,
+          "transferBytes": 718
+        },
+        {
+          "path": "/chunk-DqERNKmj.js",
+          "encodedBodyBytes": 230,
+          "decodedBodyBytes": 272,
+          "transferBytes": 530
+        },
+        {
+          "path": "/chunk-BWYtKP1L.js",
+          "encodedBodyBytes": 326,
+          "decodedBodyBytes": 499,
+          "transferBytes": 626
+        },
+        {
+          "path": "/chunk-D7eHhQtn.js",
+          "encodedBodyBytes": 3213,
+          "decodedBodyBytes": 11770,
+          "transferBytes": 3513
+        },
+        {
+          "path": "/chunk-C3XgIcfA.js",
+          "encodedBodyBytes": 1621,
+          "decodedBodyBytes": 3926,
+          "transferBytes": 1921
+        },
+        {
+          "path": "/chunk-BsvZbjg_.js",
+          "encodedBodyBytes": 398,
+          "decodedBodyBytes": 647,
+          "transferBytes": 698
+        },
+        {
+          "path": "/chunk-DVWeYBUG.js",
+          "encodedBodyBytes": 2072,
+          "decodedBodyBytes": 5698,
+          "transferBytes": 2372
+        },
+        {
+          "path": "/chunk-DdDU0TfP.js",
+          "encodedBodyBytes": 1120,
+          "decodedBodyBytes": 3024,
+          "transferBytes": 1420
+        },
+        {
+          "path": "/chunk-DhS4DsP1.js",
+          "encodedBodyBytes": 7717,
+          "decodedBodyBytes": 29149,
+          "transferBytes": 8017
+        },
+        {
+          "path": "/chunk-BORs7tkL.js",
+          "encodedBodyBytes": 4042,
+          "decodedBodyBytes": 18322,
+          "transferBytes": 4342
+        },
+        {
+          "path": "/chunk-DWVLgGbN.js",
+          "encodedBodyBytes": 178,
+          "decodedBodyBytes": 256,
+          "transferBytes": 478
+        },
+        {
+          "path": "/chunk-C7z_JRfa.js",
+          "encodedBodyBytes": 4590,
+          "decodedBodyBytes": 13595,
+          "transferBytes": 4890
+        },
+        {
+          "path": "/chunk-0qxjIJdr.js",
+          "encodedBodyBytes": 145,
+          "decodedBodyBytes": 177,
+          "transferBytes": 445
+        },
+        {
+          "path": "/chunk-DGwXqyuP.js",
+          "encodedBodyBytes": 2061,
+          "decodedBodyBytes": 7882,
+          "transferBytes": 2361
+        },
+        {
+          "path": "/chunk-Xq_KM6aX.js",
+          "encodedBodyBytes": 747,
+          "decodedBodyBytes": 1807,
+          "transferBytes": 1047
+        },
+        {
+          "path": "/chunk-DZ1g2FLB.js",
+          "encodedBodyBytes": 11203,
+          "decodedBodyBytes": 33486,
+          "transferBytes": 11503
+        },
+        {
+          "path": "/chunk-DwB8h9LK.js",
+          "encodedBodyBytes": 8635,
+          "decodedBodyBytes": 34749,
+          "transferBytes": 8935
+        },
+        {
+          "path": "/chunk-DFAs7c6O.js",
+          "encodedBodyBytes": 14905,
+          "decodedBodyBytes": 60775,
+          "transferBytes": 15205
+        },
+        {
+          "path": "/chunk-BgL4xvi-.js",
+          "encodedBodyBytes": 413,
+          "decodedBodyBytes": 734,
+          "transferBytes": 713
+        },
+        {
+          "path": "/chunk-kdSydZ_5.js",
+          "encodedBodyBytes": 214,
+          "decodedBodyBytes": 268,
+          "transferBytes": 514
+        },
+        {
+          "path": "/chunk-Dgh0n7ri.js",
+          "encodedBodyBytes": 1780,
+          "decodedBodyBytes": 5300,
+          "transferBytes": 2080
+        },
+        {
+          "path": "/chunk-Bv6N65uZ.js",
+          "encodedBodyBytes": 2508,
+          "decodedBodyBytes": 7645,
+          "transferBytes": 2808
+        },
+        {
+          "path": "/chunk-I3Qqm9YO.js",
+          "encodedBodyBytes": 3620,
+          "decodedBodyBytes": 14217,
+          "transferBytes": 3920
+        },
+        {
+          "path": "/chunk-QwJ5t4KE.js",
+          "encodedBodyBytes": 7776,
+          "decodedBodyBytes": 31669,
+          "transferBytes": 8076
+        },
+        {
+          "path": "/chunk-CFwqRcN3.js",
+          "encodedBodyBytes": 17168,
+          "decodedBodyBytes": 68374,
+          "transferBytes": 17468
+        },
+        {
+          "path": "/chunk-BqR4WH0d.js",
+          "encodedBodyBytes": 20676,
+          "decodedBodyBytes": 80465,
+          "transferBytes": 20976
+        },
+        {
+          "path": "/chunk-DNk_ag_s.js",
+          "encodedBodyBytes": 448,
+          "decodedBodyBytes": 1137,
+          "transferBytes": 748
+        },
+        {
+          "path": "/chunk-DqM1RO0d.js",
+          "encodedBodyBytes": 780,
+          "decodedBodyBytes": 4474,
+          "transferBytes": 1080
+        },
+        {
+          "path": "/chunk-By1Kp5FY.js",
+          "encodedBodyBytes": 335,
+          "decodedBodyBytes": 692,
+          "transferBytes": 635
+        },
+        {
+          "path": "/chunk-BOCpRj47.js",
+          "encodedBodyBytes": 649,
+          "decodedBodyBytes": 2822,
+          "transferBytes": 949
+        },
+        {
+          "path": "/chunk-DR_cYdsw.js",
+          "encodedBodyBytes": 437,
+          "decodedBodyBytes": 849,
+          "transferBytes": 737
+        },
+        {
+          "path": "/chunk-D6M21Pnn.js",
+          "encodedBodyBytes": 495,
+          "decodedBodyBytes": 2738,
+          "transferBytes": 795
+        },
+        {
+          "path": "/chunk-Cyo6iXmg.js",
+          "encodedBodyBytes": 556,
+          "decodedBodyBytes": 1140,
+          "transferBytes": 856
+        },
+        {
+          "path": "/chunk-ceaKFUTo.js",
+          "encodedBodyBytes": 318,
+          "decodedBodyBytes": 643,
+          "transferBytes": 618
+        },
+        {
+          "path": "/chunk-D6GfUJJN.js",
+          "encodedBodyBytes": 208,
+          "decodedBodyBytes": 256,
+          "transferBytes": 508
+        },
+        {
+          "path": "/chunk-DH0qkjeU.js",
+          "encodedBodyBytes": 558,
+          "decodedBodyBytes": 1987,
+          "transferBytes": 858
+        },
+        {
+          "path": "/chunk-CbDItLXo.js",
+          "encodedBodyBytes": 514,
+          "decodedBodyBytes": 1659,
+          "transferBytes": 814
+        },
+        {
+          "path": "/chunk-Bij2AlMw.js",
+          "encodedBodyBytes": 289,
+          "decodedBodyBytes": 472,
+          "transferBytes": 589
+        },
+        {
+          "path": "/chunk-CcDF2DXW.js",
+          "encodedBodyBytes": 260,
+          "decodedBodyBytes": 344,
+          "transferBytes": 560
+        },
+        {
+          "path": "/chunk-Bi6AlFNR.js",
+          "encodedBodyBytes": 813,
+          "decodedBodyBytes": 2694,
+          "transferBytes": 1113
+        },
+        {
+          "path": "/chunk-GYf4n53q.js",
+          "encodedBodyBytes": 529,
+          "decodedBodyBytes": 1102,
+          "transferBytes": 829
+        },
+        {
+          "path": "/chunk-DDZEaEpa.js",
+          "encodedBodyBytes": 465,
+          "decodedBodyBytes": 976,
+          "transferBytes": 765
+        },
+        {
+          "path": "/chunk-CqWtzUNA.js",
+          "encodedBodyBytes": 1580,
+          "decodedBodyBytes": 4023,
+          "transferBytes": 1880
+        },
+        {
+          "path": "/chunk-Cmy8tYa0.js",
+          "encodedBodyBytes": 319,
+          "decodedBodyBytes": 460,
+          "transferBytes": 619
+        },
+        {
+          "path": "/chunk-Q0i7-REW.js",
+          "encodedBodyBytes": 781,
+          "decodedBodyBytes": 2875,
+          "transferBytes": 1081
+        },
+        {
+          "path": "/chunk-D8lbYRV5.js",
+          "encodedBodyBytes": 857,
+          "decodedBodyBytes": 3253,
+          "transferBytes": 1157
+        },
+        {
+          "path": "/chunk-KoAA4Ujj.js",
+          "encodedBodyBytes": 319,
+          "decodedBodyBytes": 482,
+          "transferBytes": 619
+        },
+        {
+          "path": "/chunk-CzJQ82e9.js",
+          "encodedBodyBytes": 227,
+          "decodedBodyBytes": 273,
+          "transferBytes": 527
+        },
+        {
+          "path": "/chunk-BjxrveLq.js",
+          "encodedBodyBytes": 2506,
+          "decodedBodyBytes": 8689,
+          "transferBytes": 2806
+        },
+        {
+          "path": "/chunk-CJ7BbUmP.js",
+          "encodedBodyBytes": 345,
+          "decodedBodyBytes": 660,
+          "transferBytes": 645
+        },
+        {
+          "path": "/chunk-C7G3NlFB.js",
+          "encodedBodyBytes": 4298,
+          "decodedBodyBytes": 12759,
+          "transferBytes": 4598
+        },
+        {
+          "path": "/chunk-BjhhKfhC.js",
+          "encodedBodyBytes": 502,
+          "decodedBodyBytes": 2393,
+          "transferBytes": 802
+        },
+        {
+          "path": "/chunk-Sbypnn6h.js",
+          "encodedBodyBytes": 552,
+          "decodedBodyBytes": 1334,
+          "transferBytes": 852
+        },
+        {
+          "path": "/chunk-5G-9SCM1.js",
+          "encodedBodyBytes": 1004,
+          "decodedBodyBytes": 4557,
+          "transferBytes": 1304
+        },
+        {
+          "path": "/chunk-DD3_oQXX.js",
+          "encodedBodyBytes": 2397,
+          "decodedBodyBytes": 8248,
+          "transferBytes": 2697
+        },
+        {
+          "path": "/chunk-Ce-AaTtG.js",
+          "encodedBodyBytes": 7742,
+          "decodedBodyBytes": 26598,
+          "transferBytes": 8042
+        },
+        {
+          "path": "/chunk-BqX4JN14.js",
+          "encodedBodyBytes": 744,
+          "decodedBodyBytes": 1328,
+          "transferBytes": 1044
+        },
+        {
+          "path": "/chunk-m93jI7xc.js",
+          "encodedBodyBytes": 198,
+          "decodedBodyBytes": 361,
+          "transferBytes": 498
+        },
+        {
+          "path": "/chunk-BGlTulh0.js",
+          "encodedBodyBytes": 391,
+          "decodedBodyBytes": 785,
+          "transferBytes": 691
+        },
+        {
+          "path": "/chunk-BwuK1g58.js",
+          "encodedBodyBytes": 49355,
+          "decodedBodyBytes": 77869,
+          "transferBytes": 49655
+        },
+        {
+          "path": "/chunk-B85UvPAD.js",
+          "encodedBodyBytes": 479,
+          "decodedBodyBytes": 1161,
+          "transferBytes": 779
+        },
+        {
+          "path": "/chunk-tPwQ2lZZ.js",
+          "encodedBodyBytes": 488,
+          "decodedBodyBytes": 1079,
+          "transferBytes": 788
+        },
+        {
+          "path": "/chunk-BTmyUZcv.js",
+          "encodedBodyBytes": 1511,
+          "decodedBodyBytes": 11568,
+          "transferBytes": 1811
+        },
+        {
+          "path": "/chunk-fydy3hPH.js",
+          "encodedBodyBytes": 622,
+          "decodedBodyBytes": 2589,
+          "transferBytes": 922
+        },
+        {
+          "path": "/chunk-BRH1yb6C.js",
+          "encodedBodyBytes": 35209,
+          "decodedBodyBytes": 162392,
+          "transferBytes": 35509
+        },
+        {
+          "path": "/chunk-LbrsduCF.js",
+          "encodedBodyBytes": 358,
+          "decodedBodyBytes": 612,
+          "transferBytes": 658
+        },
+        {
+          "path": "/chunk-Byvt2D3K.js",
+          "encodedBodyBytes": 4150,
+          "decodedBodyBytes": 18491,
+          "transferBytes": 4450
+        },
+        {
+          "path": "/chunk-CsAq_VBQ.js",
+          "encodedBodyBytes": 882,
+          "decodedBodyBytes": 2725,
+          "transferBytes": 1182
+        },
+        {
+          "path": "/chunk-P_CPoUDX.js",
+          "encodedBodyBytes": 1199,
+          "decodedBodyBytes": 2904,
+          "transferBytes": 1499
+        },
+        {
+          "path": "/chunk-ChIE9YCw.js",
+          "encodedBodyBytes": 823,
+          "decodedBodyBytes": 2056,
+          "transferBytes": 1123
+        },
+        {
+          "path": "/chunk-CnRLgDT3.js",
+          "encodedBodyBytes": 985,
+          "decodedBodyBytes": 3187,
+          "transferBytes": 1285
+        },
+        {
+          "path": "/chunk-DE86jhPa.js",
+          "encodedBodyBytes": 320,
+          "decodedBodyBytes": 727,
+          "transferBytes": 620
+        },
+        {
+          "path": "/chunk-CRRpgr80.js",
+          "encodedBodyBytes": 501,
+          "decodedBodyBytes": 1130,
+          "transferBytes": 801
+        },
+        {
+          "path": "/chunk-BxI6EGJV.js",
+          "encodedBodyBytes": 321,
+          "decodedBodyBytes": 520,
+          "transferBytes": 621
+        },
+        {
+          "path": "/chunk-ChpjomNN.js",
+          "encodedBodyBytes": 3903,
+          "decodedBodyBytes": 17080,
+          "transferBytes": 4203
+        },
+        {
+          "path": "/chunk-DAEP2N2c.js",
+          "encodedBodyBytes": 884,
+          "decodedBodyBytes": 2528,
+          "transferBytes": 1184
+        },
+        {
+          "path": "/chunk-B53eG6VO.js",
+          "encodedBodyBytes": 789,
+          "decodedBodyBytes": 1898,
+          "transferBytes": 1089
+        },
+        {
+          "path": "/chunk-DrPrY-85.js",
+          "encodedBodyBytes": 238,
+          "decodedBodyBytes": 361,
+          "transferBytes": 538
+        },
+        {
+          "path": "/chunk-0ELF9yYx.js",
+          "encodedBodyBytes": 298,
+          "decodedBodyBytes": 673,
+          "transferBytes": 598
+        },
+        {
+          "path": "/chunk-_HulO4HV.js",
+          "encodedBodyBytes": 893,
+          "decodedBodyBytes": 2372,
+          "transferBytes": 1193
+        },
+        {
+          "path": "/chunk-Cm6p4020.js",
+          "encodedBodyBytes": 1182,
+          "decodedBodyBytes": 2672,
+          "transferBytes": 1482
+        },
+        {
+          "path": "/chunk-pqeI4Btn.js",
+          "encodedBodyBytes": 993,
+          "decodedBodyBytes": 3790,
+          "transferBytes": 1293
+        },
+        {
+          "path": "/chunk-CqdSt7g5.js",
+          "encodedBodyBytes": 1075,
+          "decodedBodyBytes": 3901,
+          "transferBytes": 1375
+        },
+        {
+          "path": "/chunk-DJJCxJt0.js",
+          "encodedBodyBytes": 193,
+          "decodedBodyBytes": 227,
+          "transferBytes": 493
+        },
+        {
+          "path": "/chunk-RrDdprB9.js",
+          "encodedBodyBytes": 274,
+          "decodedBodyBytes": 432,
+          "transferBytes": 574
+        },
+        {
+          "path": "/chunk-DCI7kjcm.js",
+          "encodedBodyBytes": 6207,
+          "decodedBodyBytes": 29258,
+          "transferBytes": 6507
+        },
+        {
+          "path": "/chunk-V6u6CBIw.js",
+          "encodedBodyBytes": 205,
+          "decodedBodyBytes": 260,
+          "transferBytes": 505
+        },
+        {
+          "path": "/chunk-DBWOWRIL.js",
+          "encodedBodyBytes": 2504,
+          "decodedBodyBytes": 6932,
+          "transferBytes": 2804
+        },
+        {
+          "path": "/chunk-BFKK9Xdk.js",
+          "encodedBodyBytes": 198,
+          "decodedBodyBytes": 228,
+          "transferBytes": 498
+        },
+        {
+          "path": "/chunk-BMbyXX5q.js",
+          "encodedBodyBytes": 1020,
+          "decodedBodyBytes": 5137,
+          "transferBytes": 1320
+        },
+        {
+          "path": "/chunk-lDW6AREf.js",
+          "encodedBodyBytes": 528,
+          "decodedBodyBytes": 1425,
+          "transferBytes": 828
+        },
+        {
+          "path": "/chunk-YXLiiuEc.js",
+          "encodedBodyBytes": 1522,
+          "decodedBodyBytes": 6548,
+          "transferBytes": 1822
+        },
+        {
+          "path": "/chunk-B8ArCPXI.js",
+          "encodedBodyBytes": 199,
+          "decodedBodyBytes": 237,
+          "transferBytes": 499
+        },
+        {
+          "path": "/chunk-7hRybxXt.js",
+          "encodedBodyBytes": 301,
+          "decodedBodyBytes": 560,
+          "transferBytes": 601
+        },
+        {
+          "path": "/chunk-ButKJkkV.js",
+          "encodedBodyBytes": 216,
+          "decodedBodyBytes": 271,
+          "transferBytes": 516
+        },
+        {
+          "path": "/chunk-c74nLDIM.js",
+          "encodedBodyBytes": 7817,
+          "decodedBodyBytes": 36498,
+          "transferBytes": 8117
+        },
+        {
+          "path": "/chunk-0FniuPiG.js",
+          "encodedBodyBytes": 2521,
+          "decodedBodyBytes": 7819,
+          "transferBytes": 2821
+        },
+        {
+          "path": "/chunk-Bc5u3jp1.js",
+          "encodedBodyBytes": 646,
+          "decodedBodyBytes": 1716,
+          "transferBytes": 946
+        },
+        {
+          "path": "/chunk-BAUKdA0e.js",
+          "encodedBodyBytes": 254,
+          "decodedBodyBytes": 339,
+          "transferBytes": 554
+        },
+        {
+          "path": "/chunk-BLByUE_2.js",
+          "encodedBodyBytes": 248,
+          "decodedBodyBytes": 388,
+          "transferBytes": 548
+        },
+        {
+          "path": "/chunk-D2hbdlK9.js",
+          "encodedBodyBytes": 632,
+          "decodedBodyBytes": 2314,
+          "transferBytes": 932
+        },
+        {
+          "path": "/chunk-CZm2YEh6.js",
+          "encodedBodyBytes": 269,
+          "decodedBodyBytes": 392,
+          "transferBytes": 569
+        },
+        {
+          "path": "/chunk-BDcj3y3J.js",
+          "encodedBodyBytes": 378,
+          "decodedBodyBytes": 697,
+          "transferBytes": 678
+        },
+        {
+          "path": "/chunk-BtFEJffl.js",
+          "encodedBodyBytes": 281,
+          "decodedBodyBytes": 479,
+          "transferBytes": 581
+        },
+        {
+          "path": "/chunk-ZJwW9FyU.js",
+          "encodedBodyBytes": 414,
+          "decodedBodyBytes": 828,
+          "transferBytes": 714
+        },
+        {
+          "path": "/chunk-LZpXSqTy.js",
+          "encodedBodyBytes": 184,
+          "decodedBodyBytes": 220,
+          "transferBytes": 484
+        },
+        {
+          "path": "/chunk-D1YyTVXJ.js",
+          "encodedBodyBytes": 314,
+          "decodedBodyBytes": 567,
+          "transferBytes": 614
+        },
+        {
+          "path": "/chunk-D9quRCRt.js",
+          "encodedBodyBytes": 205,
+          "decodedBodyBytes": 244,
+          "transferBytes": 505
+        },
+        {
+          "path": "/chunk-B9qKOCBM.js",
+          "encodedBodyBytes": 440,
+          "decodedBodyBytes": 1052,
+          "transferBytes": 740
+        },
+        {
+          "path": "/chunk-BTRo_yQt.js",
+          "encodedBodyBytes": 2907,
+          "decodedBodyBytes": 8463,
+          "transferBytes": 3207
+        },
+        {
+          "path": "/chunk-DM7yIYjr.js",
+          "encodedBodyBytes": 2751,
+          "decodedBodyBytes": 7874,
+          "transferBytes": 3051
+        },
+        {
+          "path": "/chunk-vwOBMW6N.js",
+          "encodedBodyBytes": 189,
+          "decodedBodyBytes": 226,
+          "transferBytes": 489
+        },
+        {
+          "path": "/chunk-VqUReiHK.js",
+          "encodedBodyBytes": 180,
+          "decodedBodyBytes": 216,
+          "transferBytes": 480
+        },
+        {
+          "path": "/chunk-CyHAW9TS.js",
+          "encodedBodyBytes": 337,
+          "decodedBodyBytes": 643,
+          "transferBytes": 637
+        },
+        {
+          "path": "/chunk-JLA9FFnR.js",
+          "encodedBodyBytes": 416,
+          "decodedBodyBytes": 712,
+          "transferBytes": 716
+        },
+        {
+          "path": "/chunk-BWfjzop3.js",
+          "encodedBodyBytes": 362,
+          "decodedBodyBytes": 674,
+          "transferBytes": 662
+        },
+        {
+          "path": "/chunk-BO-u6Dsn.js",
+          "encodedBodyBytes": 424,
+          "decodedBodyBytes": 1036,
+          "transferBytes": 724
+        },
+        {
+          "path": "/chunk-CRudpZiU.js",
+          "encodedBodyBytes": 236,
+          "decodedBodyBytes": 399,
+          "transferBytes": 536
+        },
+        {
+          "path": "/chunk-DP5otGld.js",
+          "encodedBodyBytes": 277,
+          "decodedBodyBytes": 744,
+          "transferBytes": 577
+        },
+        {
+          "path": "/chunk-HpEFRs9W.js",
+          "encodedBodyBytes": 188,
+          "decodedBodyBytes": 326,
+          "transferBytes": 488
+        },
+        {
+          "path": "/chunk-BqLDI53b.js",
+          "encodedBodyBytes": 4580,
+          "decodedBodyBytes": 14017,
+          "transferBytes": 4880
+        },
+        {
+          "path": "/chunk-DRRxiKIE.js",
+          "encodedBodyBytes": 2876,
+          "decodedBodyBytes": 9483,
+          "transferBytes": 3176
+        },
+        {
+          "path": "/chunk-FtbK_7tm.js",
+          "encodedBodyBytes": 1788,
+          "decodedBodyBytes": 5796,
+          "transferBytes": 2088
+        },
+        {
+          "path": "/chunk-AN9XD-jW.js",
+          "encodedBodyBytes": 283,
+          "decodedBodyBytes": 396,
+          "transferBytes": 583
+        },
+        {
+          "path": "/chunk-0qLsWM5l.js",
+          "encodedBodyBytes": 12967,
+          "decodedBodyBytes": 53907,
+          "transferBytes": 13267
+        },
+        {
+          "path": "/chunk-PVOFJqhW.js",
+          "encodedBodyBytes": 500,
+          "decodedBodyBytes": 1535,
+          "transferBytes": 800
+        },
+        {
+          "path": "/chunk-DhKbuDW8.js",
+          "encodedBodyBytes": 494,
+          "decodedBodyBytes": 1236,
+          "transferBytes": 794
+        },
+        {
+          "path": "/chunk-Bwd5pS9i.js",
+          "encodedBodyBytes": 265,
+          "decodedBodyBytes": 376,
+          "transferBytes": 565
+        },
+        {
+          "path": "/chunk-D428RwDM.js",
+          "encodedBodyBytes": 520,
+          "decodedBodyBytes": 1177,
+          "transferBytes": 820
+        },
+        {
+          "path": "/chunk-jyCET3-c.js",
+          "encodedBodyBytes": 121,
+          "decodedBodyBytes": 109,
+          "transferBytes": 421
+        },
+        {
+          "path": "/chunk-ZMaKK0O8.js",
+          "encodedBodyBytes": 3582,
+          "decodedBodyBytes": 12567,
+          "transferBytes": 3882
+        },
+        {
+          "path": "/chunk-DKsfLGrk.js",
+          "encodedBodyBytes": 874,
+          "decodedBodyBytes": 3057,
+          "transferBytes": 1174
+        },
+        {
+          "path": "/chunk-B83swcIt.js",
+          "encodedBodyBytes": 469,
+          "decodedBodyBytes": 1504,
+          "transferBytes": 769
+        },
+        {
+          "path": "/chunk-CKpnrxOs.js",
+          "encodedBodyBytes": 3664,
+          "decodedBodyBytes": 16111,
+          "transferBytes": 3964
+        },
+        {
+          "path": "/chunk-CAyeApYk.js",
+          "encodedBodyBytes": 2509,
+          "decodedBodyBytes": 7134,
+          "transferBytes": 2809
+        },
+        {
+          "path": "/chunk-ZRGi1952.js",
+          "encodedBodyBytes": 623,
+          "decodedBodyBytes": 1193,
+          "transferBytes": 923
+        },
+        {
+          "path": "/media/cursor-ZLAKVPRK.png",
+          "encodedBodyBytes": 2432,
+          "decodedBodyBytes": 2432,
+          "transferBytes": 2732
+        },
+        {
+          "path": "/assets/bg.png",
+          "encodedBodyBytes": 302554,
+          "decodedBodyBytes": 302554,
+          "transferBytes": 302854
+        },
+        {
+          "path": "/scene/main-menu.babylon",
+          "encodedBodyBytes": 2295,
+          "decodedBodyBytes": 5786,
+          "transferBytes": 2595
+        },
+        {
+          "path": "/assets/logo.png",
+          "encodedBodyBytes": 281696,
+          "decodedBodyBytes": 281696,
+          "transferBytes": 281996
+        },
+        {
+          "path": "/scene/main-menu/da6e63a5-b1a8-47af-866e-0bad5038c9b0.babylonbinarymeshdata",
+          "encodedBodyBytes": 172,
+          "decodedBodyBytes": 172,
+          "transferBytes": 472
+        },
+        {
+          "path": "/chunk-BBsMkpRA.js",
+          "encodedBodyBytes": 800,
+          "decodedBodyBytes": 1988,
+          "transferBytes": 1100
+        },
+        {
+          "path": "/chunk-wFo-TGLc.js",
+          "encodedBodyBytes": 2032,
+          "decodedBodyBytes": 5988,
+          "transferBytes": 2332
+        }
+      ],
+      "gameAdditionalRequests": [
+        {
+          "path": "/scene/game.babylon",
+          "encodedBodyBytes": 3935,
+          "decodedBodyBytes": 16355,
+          "transferBytes": 4235
+        },
+        {
+          "path": "/scene/game/ef50338a-79a4-4ef4-9b01-e658a4bdf0bc.babylonbinarymeshdata",
+          "encodedBodyBytes": 172,
+          "decodedBodyBytes": 172,
+          "transferBytes": 472
+        },
+        {
+          "path": "/scene/game/72e821f3-ce08-4e3e-ae10-a2d2d7d75f52.babylonbinarymeshdata",
+          "encodedBodyBytes": 932,
+          "decodedBodyBytes": 932,
+          "transferBytes": 1232
+        },
+        {
+          "path": "/scene/game/4d021133-a604-4067-b462-782e96530f46.babylonbinarymeshdata",
+          "encodedBodyBytes": 13556,
+          "decodedBodyBytes": 13556,
+          "transferBytes": 13856
+        },
+        {
+          "path": "/chunk-D25S2dLu.js",
+          "encodedBodyBytes": 334,
+          "decodedBodyBytes": 887,
+          "transferBytes": 634
+        },
+        {
+          "path": "/chunk-DnIA-Xy4.js",
+          "encodedBodyBytes": 353,
+          "decodedBodyBytes": 970,
+          "transferBytes": 653
+        },
+        {
+          "path": "/scene/worlds/game.json",
+          "encodedBodyBytes": 303,
+          "decodedBodyBytes": 1950,
+          "transferBytes": 603
+        },
+        {
+          "path": "/assets/models/protagonist-v2.glb",
+          "encodedBodyBytes": 4102120,
+          "decodedBodyBytes": 4102120,
+          "transferBytes": 4102420
+        },
+        {
+          "path": "/chunk-CI-SccuI.js",
+          "encodedBodyBytes": 373,
+          "decodedBodyBytes": 1006,
+          "transferBytes": 673
+        },
+        {
+          "path": "/chunk-D3yZzLN_.js",
+          "encodedBodyBytes": 160,
+          "decodedBodyBytes": 248,
+          "transferBytes": 460
+        },
+        {
+          "path": "/chunk-1jo7A8_T.js",
+          "encodedBodyBytes": 426,
+          "decodedBodyBytes": 1144,
+          "transferBytes": 726
+        },
+        {
+          "path": "/chunk-KwSCXGFh.js",
+          "encodedBodyBytes": 114,
+          "decodedBodyBytes": 131,
+          "transferBytes": 414
+        },
+        {
+          "path": "/chunk-DIhsZmgQ.js",
+          "encodedBodyBytes": 343,
+          "decodedBodyBytes": 771,
+          "transferBytes": 643
+        },
+        {
+          "path": "/chunk-BIc-kJqI.js",
+          "encodedBodyBytes": 107,
+          "decodedBodyBytes": 105,
+          "transferBytes": 407
+        },
+        {
+          "path": "/chunk-CedAKmKB.js",
+          "encodedBodyBytes": 137,
+          "decodedBodyBytes": 189,
+          "transferBytes": 437
+        },
+        {
+          "path": "/chunk-BAq_GFhW.js",
+          "encodedBodyBytes": 106,
+          "decodedBodyBytes": 104,
+          "transferBytes": 406
+        },
+        {
+          "path": "/chunk-BoPR1o08.js",
+          "encodedBodyBytes": 336,
+          "decodedBodyBytes": 912,
+          "transferBytes": 636
+        },
+        {
+          "path": "/chunk-Cty6cLGp.js",
+          "encodedBodyBytes": 380,
+          "decodedBodyBytes": 1079,
+          "transferBytes": 680
+        }
+      ],
+      "productionUi": {
+        "menu": {
+          "diagnosticPanels": 0,
+          "saveTestButtons": 0,
+          "saveTestDialogs": 0,
+          "fixtureInstructions": 0
+        },
+        "game": {
+          "diagnosticPanels": 0,
+          "saveTestButtons": 0,
+          "saveTestDialogs": 0,
+          "fixtureInstructions": 0
+        },
+        "pauseMenu": {
+          "diagnosticPanels": 0,
+          "saveTestButtons": 0,
+          "saveTestDialogs": 0,
+          "fixtureInstructions": 0
+        },
+        "controls": {
+          "diagnosticPanels": 0,
+          "saveTestButtons": 0,
+          "saveTestDialogs": 0,
+          "fixtureInstructions": 0
+        }
+      },
+      "screenshots": {
+        "menu": "babylon-canonical-menu.png",
+        "game": "babylon-canonical-game.png",
+        "movement": "babylon-canonical-movement.png"
+      },
+      "hardware": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+        "hardwareConcurrency": 24,
+        "devicePixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "canvas": {
+          "width": 1440,
+          "height": 900
+        },
+        "webglRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "webglVendor": "Google Inc. (Google)"
+      },
+      "frameCadence": {
+        "warmup": {
+          "elapsedMs": 1016.5999999999985,
+          "frames": 29,
+          "meanMs": 35.05517241379305,
+          "minMs": 33.20000000000073,
+          "p50Ms": 33.30000000000291,
+          "p95Ms": 50,
+          "p99Ms": 50,
+          "maxMs": 50,
+          "over33_34Ms": 13,
+          "intervalsMs": [
+            33.29999999999927,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            50,
+            33.30000000000291,
+            33.39999999999782,
+            33.29999999999927,
+            33.30000000000291,
+            33.39999999999782,
+            49.900000000001455,
+            33.39999999999782,
+            33.30000000000291,
+            33.29999999999927,
+            33.39999999999782,
+            33.30000000000291,
+            33.39999999999782,
+            50,
+            33.20000000000073,
+            33.400000000001455,
+            33.29999999999927,
+            33.39999999999782,
+            33.30000000000291,
+            33.29999999999927,
+            33.39999999999782,
+            33.30000000000291,
+            33.39999999999782
+          ]
+        },
+        "stationary": {
+          "elapsedMs": 2016.6000000000022,
+          "frames": 58,
+          "meanMs": 34.76896551724142,
+          "minMs": 33.19999999999709,
+          "p50Ms": 33.29999999999927,
+          "p95Ms": 50,
+          "p99Ms": 50.10000000000218,
+          "maxMs": 50.10000000000218,
+          "over33_34Ms": 24,
+          "intervalsMs": [
+            33.30000000000291,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.39999999999782,
+            33.29999999999927,
+            33.20000000000073,
+            33.400000000001455,
+            33.29999999999927,
+            33.400000000001455,
+            50,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            50,
+            33.29999999999927,
+            33.400000000001455,
+            33.39999999999782,
+            33.20000000000073,
+            50,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            50.10000000000218,
+            33.19999999999709,
+            33.5,
+            33.30000000000291,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            49.89999999999782,
+            33.400000000001455,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.29999999999927,
+            33.29999999999927,
+            33.30000000000291,
+            33.39999999999782,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455
+          ]
+        },
+        "movement": {
+          "elapsedMs": 2016.7000000000007,
+          "frames": 61,
+          "meanMs": 33.06065573770493,
+          "minMs": 16.600000000002183,
+          "p50Ms": 33.30000000000291,
+          "p95Ms": 33.400000000001455,
+          "p99Ms": 33.400000000001455,
+          "maxMs": 33.400000000001455,
+          "over33_34Ms": 24,
+          "intervalsMs": [
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.30000000000291,
+            33.29999999999927,
+            33.39999999999782,
+            33.400000000001455,
+            33.20000000000073,
+            33.39999999999782,
+            33.400000000001455,
+            33.20000000000073,
+            33.39999999999782,
+            33.400000000001455,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            16.600000000002183,
+            33.29999999999927,
+            33.39999999999782,
+            33.30000000000291,
+            33.39999999999782,
+            33.29999999999927,
+            33.30000000000291,
+            33.39999999999782,
+            33.29999999999927,
+            33.400000000001455,
+            33.20000000000073,
+            33.39999999999782,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.30000000000291,
+            33.39999999999782,
+            33.29999999999927,
+            33.30000000000291,
+            33.29999999999927,
+            33.39999999999782,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.30000000000291,
+            33.39999999999782,
+            33.29999999999927,
+            33.30000000000291,
+            33.29999999999927,
+            33.39999999999782,
+            33.30000000000291,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            33.39999999999782,
+            33.30000000000291,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.39999999999782
+          ]
+        },
+        "movementInput": "W held for 2000 ms after focusing the game canvas; no developer inspection hooks."
+      },
+      "errors": [],
+      "failures": []
+    },
+    {
+      "route": "/3d",
+      "finalPath": "/",
+      "renderer": "Babylon.js",
+      "menuButtons": [
+        " Play Game! ",
+        "Controls"
+      ],
+      "readyFrameObserved": true,
+      "menu": [
+        {
+          "path": "/3d",
+          "encodedBodyBytes": 468,
+          "decodedBodyBytes": 854,
+          "transferBytes": 768
+        },
+        {
+          "path": "/main-AABFDKT7.js",
+          "encodedBodyBytes": 73237,
+          "decodedBodyBytes": 236586,
+          "transferBytes": 73537
+        },
+        {
+          "path": "/styles-UHWQAIRH.css",
+          "encodedBodyBytes": 347,
+          "decodedBodyBytes": 624,
+          "transferBytes": 647
+        },
+        {
+          "path": "/chunk-fiR6xlLx.js",
+          "encodedBodyBytes": 1475988,
+          "decodedBodyBytes": 6681371,
+          "transferBytes": 1476288
+        },
+        {
+          "path": "/chunk-CgQDO-0U.js",
+          "encodedBodyBytes": 176,
+          "decodedBodyBytes": 469,
+          "transferBytes": 476
+        },
+        {
+          "path": "/chunk-jM4r0w1N.js",
+          "encodedBodyBytes": 297,
+          "decodedBodyBytes": 533,
+          "transferBytes": 597
+        },
+        {
+          "path": "/chunk-CRxO8jYr.js",
+          "encodedBodyBytes": 241,
+          "decodedBodyBytes": 516,
+          "transferBytes": 541
+        },
+        {
+          "path": "/chunk-DAYxXgsS.js",
+          "encodedBodyBytes": 274,
+          "decodedBodyBytes": 718,
+          "transferBytes": 574
+        },
+        {
+          "path": "/chunk-BVicQ7x_.js",
+          "encodedBodyBytes": 266,
+          "decodedBodyBytes": 380,
+          "transferBytes": 566
+        },
+        {
+          "path": "/chunk-DHn2PClP.js",
+          "encodedBodyBytes": 278,
+          "decodedBodyBytes": 434,
+          "transferBytes": 578
+        },
+        {
+          "path": "/chunk-CC_ghydL.js",
+          "encodedBodyBytes": 362,
+          "decodedBodyBytes": 1038,
+          "transferBytes": 662
+        },
+        {
+          "path": "/chunk-B4Wx_0AO.js",
+          "encodedBodyBytes": 230,
+          "decodedBodyBytes": 279,
+          "transferBytes": 530
+        },
+        {
+          "path": "/chunk-BSHnS6Sa.js",
+          "encodedBodyBytes": 268,
+          "decodedBodyBytes": 714,
+          "transferBytes": 568
+        },
+        {
+          "path": "/chunk-DLGEZiRi.js",
+          "encodedBodyBytes": 272,
+          "decodedBodyBytes": 695,
+          "transferBytes": 572
+        },
+        {
+          "path": "/chunk-BiXzqMrX.js",
+          "encodedBodyBytes": 305,
+          "decodedBodyBytes": 563,
+          "transferBytes": 605
+        },
+        {
+          "path": "/chunk-9k_tylK7.js",
+          "encodedBodyBytes": 393,
+          "decodedBodyBytes": 1175,
+          "transferBytes": 693
+        },
+        {
+          "path": "/chunk-RiWV2KRT.js",
+          "encodedBodyBytes": 193,
+          "decodedBodyBytes": 229,
+          "transferBytes": 493
+        },
+        {
+          "path": "/chunk-CBZjweNO.js",
+          "encodedBodyBytes": 232,
+          "decodedBodyBytes": 330,
+          "transferBytes": 532
+        },
+        {
+          "path": "/chunk-T6zhySZ3.js",
+          "encodedBodyBytes": 88,
+          "decodedBodyBytes": 80,
+          "transferBytes": 388
+        },
+        {
+          "path": "/chunk-0t4X2XQ_.js",
+          "encodedBodyBytes": 15711,
+          "decodedBodyBytes": 65142,
+          "transferBytes": 16011
+        },
+        {
+          "path": "/chunk-CmyWyoZ7.js",
+          "encodedBodyBytes": 984,
+          "decodedBodyBytes": 2096,
+          "transferBytes": 1284
+        },
+        {
+          "path": "/chunk-1fEoxt_A.js",
+          "encodedBodyBytes": 264,
+          "decodedBodyBytes": 504,
+          "transferBytes": 564
+        },
+        {
+          "path": "/chunk-DwgrAKru.js",
+          "encodedBodyBytes": 143,
+          "decodedBodyBytes": 152,
+          "transferBytes": 443
+        },
+        {
+          "path": "/chunk-BfB55RP-.js",
+          "encodedBodyBytes": 837,
+          "decodedBodyBytes": 1881,
+          "transferBytes": 1137
+        },
+        {
+          "path": "/chunk-755K5oQS.js",
+          "encodedBodyBytes": 228,
+          "decodedBodyBytes": 359,
+          "transferBytes": 528
+        },
+        {
+          "path": "/chunk-DAw9LdIM.js",
+          "encodedBodyBytes": 1119,
+          "decodedBodyBytes": 3253,
+          "transferBytes": 1419
+        },
+        {
+          "path": "/chunk-BTyrH7TK.js",
+          "encodedBodyBytes": 2933,
+          "decodedBodyBytes": 12615,
+          "transferBytes": 3233
+        },
+        {
+          "path": "/chunk-rMd5HW5B.js",
+          "encodedBodyBytes": 211,
+          "decodedBodyBytes": 283,
+          "transferBytes": 511
+        },
+        {
+          "path": "/chunk-Dvnh9Bw0.js",
+          "encodedBodyBytes": 245,
+          "decodedBodyBytes": 307,
+          "transferBytes": 545
+        },
+        {
+          "path": "/chunk-MN-84V65.js",
+          "encodedBodyBytes": 893,
+          "decodedBodyBytes": 2732,
+          "transferBytes": 1193
+        },
+        {
+          "path": "/chunk-DaNVPWcH.js",
+          "encodedBodyBytes": 224,
+          "decodedBodyBytes": 323,
+          "transferBytes": 524
+        },
+        {
+          "path": "/chunk-B5QGl-DV.js",
+          "encodedBodyBytes": 942,
+          "decodedBodyBytes": 2711,
+          "transferBytes": 1242
+        },
+        {
+          "path": "/chunk-B6pCXfQR.js",
+          "encodedBodyBytes": 438,
+          "decodedBodyBytes": 949,
+          "transferBytes": 738
+        },
+        {
+          "path": "/chunk-CrZ6KQ0F.js",
+          "encodedBodyBytes": 3368,
+          "decodedBodyBytes": 11245,
+          "transferBytes": 3668
+        },
+        {
+          "path": "/chunk-Dv7keEa1.js",
+          "encodedBodyBytes": 235,
+          "decodedBodyBytes": 353,
+          "transferBytes": 535
+        },
+        {
+          "path": "/chunk-k6CmMD1h.js",
+          "encodedBodyBytes": 890,
+          "decodedBodyBytes": 2829,
+          "transferBytes": 1190
+        },
+        {
+          "path": "/chunk-DonoV55g.js",
+          "encodedBodyBytes": 224,
+          "decodedBodyBytes": 273,
+          "transferBytes": 524
+        },
+        {
+          "path": "/chunk-gA3tkmxM.js",
+          "encodedBodyBytes": 342,
+          "decodedBodyBytes": 926,
+          "transferBytes": 642
+        },
+        {
+          "path": "/chunk-BS6M8yHQ.js",
+          "encodedBodyBytes": 262,
+          "decodedBodyBytes": 362,
+          "transferBytes": 562
+        },
+        {
+          "path": "/chunk-BiRlMaft.js",
+          "encodedBodyBytes": 386,
+          "decodedBodyBytes": 925,
+          "transferBytes": 686
+        },
+        {
+          "path": "/chunk-CE6z5kUR.js",
+          "encodedBodyBytes": 930,
+          "decodedBodyBytes": 3431,
+          "transferBytes": 1230
+        },
+        {
+          "path": "/chunk-Dw_UL1sT.js",
+          "encodedBodyBytes": 188,
+          "decodedBodyBytes": 215,
+          "transferBytes": 488
+        },
+        {
+          "path": "/chunk-CNtIQhsA.js",
+          "encodedBodyBytes": 261,
+          "decodedBodyBytes": 657,
+          "transferBytes": 561
+        },
+        {
+          "path": "/chunk-Dep3TC2E.js",
+          "encodedBodyBytes": 322,
+          "decodedBodyBytes": 881,
+          "transferBytes": 622
+        },
+        {
+          "path": "/chunk-iQ3ElPpz.js",
+          "encodedBodyBytes": 644,
+          "decodedBodyBytes": 1491,
+          "transferBytes": 944
+        },
+        {
+          "path": "/chunk-r9P0MlhI.js",
+          "encodedBodyBytes": 187,
+          "decodedBodyBytes": 219,
+          "transferBytes": 487
+        },
+        {
+          "path": "/chunk-CNySHaMW.js",
+          "encodedBodyBytes": 249,
+          "decodedBodyBytes": 568,
+          "transferBytes": 549
+        },
+        {
+          "path": "/chunk-2J_FqxjX.js",
+          "encodedBodyBytes": 457,
+          "decodedBodyBytes": 2088,
+          "transferBytes": 757
+        },
+        {
+          "path": "/chunk-D1Tp95HZ.js",
+          "encodedBodyBytes": 934,
+          "decodedBodyBytes": 2650,
+          "transferBytes": 1234
+        },
+        {
+          "path": "/chunk-RInWFa_H.js",
+          "encodedBodyBytes": 146,
+          "decodedBodyBytes": 146,
+          "transferBytes": 446
+        },
+        {
+          "path": "/chunk-KrD2B8Ql.js",
+          "encodedBodyBytes": 245,
+          "decodedBodyBytes": 328,
+          "transferBytes": 545
+        },
+        {
+          "path": "/chunk-DCasZjlB.js",
+          "encodedBodyBytes": 247,
+          "decodedBodyBytes": 316,
+          "transferBytes": 547
+        },
+        {
+          "path": "/chunk-DM6Fxipl.js",
+          "encodedBodyBytes": 3231,
+          "decodedBodyBytes": 22162,
+          "transferBytes": 3531
+        },
+        {
+          "path": "/chunk-Cr9PO_Qb.js",
+          "encodedBodyBytes": 286,
+          "decodedBodyBytes": 388,
+          "transferBytes": 586
+        },
+        {
+          "path": "/chunk-CAIcALcr.js",
+          "encodedBodyBytes": 2295,
+          "decodedBodyBytes": 6808,
+          "transferBytes": 2595
+        },
+        {
+          "path": "/chunk-Cc298M5-.js",
+          "encodedBodyBytes": 1930,
+          "decodedBodyBytes": 8901,
+          "transferBytes": 2230
+        },
+        {
+          "path": "/chunk-1wTpl_is.js",
+          "encodedBodyBytes": 355,
+          "decodedBodyBytes": 790,
+          "transferBytes": 655
+        },
+        {
+          "path": "/chunk-CI7dPHV2.js",
+          "encodedBodyBytes": 1843,
+          "decodedBodyBytes": 6635,
+          "transferBytes": 2143
+        },
+        {
+          "path": "/chunk-gQN__koA.js",
+          "encodedBodyBytes": 3874,
+          "decodedBodyBytes": 28423,
+          "transferBytes": 4174
+        },
+        {
+          "path": "/chunk-D_rJF1s7.js",
+          "encodedBodyBytes": 1024,
+          "decodedBodyBytes": 3495,
+          "transferBytes": 1324
+        },
+        {
+          "path": "/chunk-CgRyGK3k.js",
+          "encodedBodyBytes": 245,
+          "decodedBodyBytes": 518,
+          "transferBytes": 545
+        },
+        {
+          "path": "/chunk-D1JD_bZf.js",
+          "encodedBodyBytes": 2174,
+          "decodedBodyBytes": 6487,
+          "transferBytes": 2474
+        },
+        {
+          "path": "/chunk-BfVpc4FD.js",
+          "encodedBodyBytes": 453,
+          "decodedBodyBytes": 950,
+          "transferBytes": 753
+        },
+        {
+          "path": "/chunk-DlbG7iMw.js",
+          "encodedBodyBytes": 289,
+          "decodedBodyBytes": 816,
+          "transferBytes": 589
+        },
+        {
+          "path": "/chunk-Do1R1Dq3.js",
+          "encodedBodyBytes": 2548,
+          "decodedBodyBytes": 8641,
+          "transferBytes": 2848
+        },
+        {
+          "path": "/chunk-CVgDFVp3.js",
+          "encodedBodyBytes": 255,
+          "decodedBodyBytes": 330,
+          "transferBytes": 555
+        },
+        {
+          "path": "/chunk-CMLzao1K.js",
+          "encodedBodyBytes": 366,
+          "decodedBodyBytes": 683,
+          "transferBytes": 666
+        },
+        {
+          "path": "/chunk-C0vtTu9D.js",
+          "encodedBodyBytes": 4122,
+          "decodedBodyBytes": 11929,
+          "transferBytes": 4422
+        },
+        {
+          "path": "/chunk-BFW063Oj.js",
+          "encodedBodyBytes": 1746,
+          "decodedBodyBytes": 7827,
+          "transferBytes": 2046
+        },
+        {
+          "path": "/chunk-CpDioWwB.js",
+          "encodedBodyBytes": 350,
+          "decodedBodyBytes": 762,
+          "transferBytes": 650
+        },
+        {
+          "path": "/chunk-Cw6Zzup5.js",
+          "encodedBodyBytes": 3064,
+          "decodedBodyBytes": 19532,
+          "transferBytes": 3364
+        },
+        {
+          "path": "/chunk-dpZZKVC2.js",
+          "encodedBodyBytes": 225,
+          "decodedBodyBytes": 268,
+          "transferBytes": 525
+        },
+        {
+          "path": "/chunk-D6k7bkmE.js",
+          "encodedBodyBytes": 1535,
+          "decodedBodyBytes": 6044,
+          "transferBytes": 1835
+        },
+        {
+          "path": "/chunk-CFySfjNp.js",
+          "encodedBodyBytes": 3902,
+          "decodedBodyBytes": 25893,
+          "transferBytes": 4202
+        },
+        {
+          "path": "/chunk-d0AHqG-F.js",
+          "encodedBodyBytes": 950,
+          "decodedBodyBytes": 4054,
+          "transferBytes": 1250
+        },
+        {
+          "path": "/chunk-B_ppgoHr.js",
+          "encodedBodyBytes": 228,
+          "decodedBodyBytes": 293,
+          "transferBytes": 528
+        },
+        {
+          "path": "/chunk-BSQPrHW2.js",
+          "encodedBodyBytes": 1827,
+          "decodedBodyBytes": 4837,
+          "transferBytes": 2127
+        },
+        {
+          "path": "/chunk-I474rV70.js",
+          "encodedBodyBytes": 418,
+          "decodedBodyBytes": 852,
+          "transferBytes": 718
+        },
+        {
+          "path": "/chunk-DEGlgt_P.js",
+          "encodedBodyBytes": 437,
+          "decodedBodyBytes": 879,
+          "transferBytes": 737
+        },
+        {
+          "path": "/chunk-DdDU0TfP.js",
+          "encodedBodyBytes": 1120,
+          "decodedBodyBytes": 3024,
+          "transferBytes": 1420
+        },
+        {
+          "path": "/chunk-BsvZbjg_.js",
+          "encodedBodyBytes": 398,
+          "decodedBodyBytes": 647,
+          "transferBytes": 698
+        },
+        {
+          "path": "/chunk-DVWeYBUG.js",
+          "encodedBodyBytes": 2072,
+          "decodedBodyBytes": 5698,
+          "transferBytes": 2372
+        },
+        {
+          "path": "/chunk-D7eHhQtn.js",
+          "encodedBodyBytes": 3213,
+          "decodedBodyBytes": 11770,
+          "transferBytes": 3513
+        },
+        {
+          "path": "/chunk-BWYtKP1L.js",
+          "encodedBodyBytes": 326,
+          "decodedBodyBytes": 499,
+          "transferBytes": 626
+        },
+        {
+          "path": "/chunk-DqERNKmj.js",
+          "encodedBodyBytes": 230,
+          "decodedBodyBytes": 272,
+          "transferBytes": 530
+        },
+        {
+          "path": "/chunk-C3XgIcfA.js",
+          "encodedBodyBytes": 1621,
+          "decodedBodyBytes": 3926,
+          "transferBytes": 1921
+        },
+        {
+          "path": "/chunk-DhS4DsP1.js",
+          "encodedBodyBytes": 7717,
+          "decodedBodyBytes": 29149,
+          "transferBytes": 8017
+        },
+        {
+          "path": "/chunk-BORs7tkL.js",
+          "encodedBodyBytes": 4042,
+          "decodedBodyBytes": 18322,
+          "transferBytes": 4342
+        },
+        {
+          "path": "/chunk-C7z_JRfa.js",
+          "encodedBodyBytes": 4590,
+          "decodedBodyBytes": 13595,
+          "transferBytes": 4890
+        },
+        {
+          "path": "/chunk-Xq_KM6aX.js",
+          "encodedBodyBytes": 747,
+          "decodedBodyBytes": 1807,
+          "transferBytes": 1047
+        },
+        {
+          "path": "/chunk-0qxjIJdr.js",
+          "encodedBodyBytes": 145,
+          "decodedBodyBytes": 177,
+          "transferBytes": 445
+        },
+        {
+          "path": "/chunk-DWVLgGbN.js",
+          "encodedBodyBytes": 178,
+          "decodedBodyBytes": 256,
+          "transferBytes": 478
+        },
+        {
+          "path": "/chunk-DZ1g2FLB.js",
+          "encodedBodyBytes": 11203,
+          "decodedBodyBytes": 33486,
+          "transferBytes": 11503
+        },
+        {
+          "path": "/chunk-Dgh0n7ri.js",
+          "encodedBodyBytes": 1780,
+          "decodedBodyBytes": 5300,
+          "transferBytes": 2080
+        },
+        {
+          "path": "/chunk-DGwXqyuP.js",
+          "encodedBodyBytes": 2061,
+          "decodedBodyBytes": 7882,
+          "transferBytes": 2361
+        },
+        {
+          "path": "/chunk-BgL4xvi-.js",
+          "encodedBodyBytes": 413,
+          "decodedBodyBytes": 734,
+          "transferBytes": 713
+        },
+        {
+          "path": "/chunk-DFAs7c6O.js",
+          "encodedBodyBytes": 14905,
+          "decodedBodyBytes": 60775,
+          "transferBytes": 15205
+        },
+        {
+          "path": "/chunk-DwB8h9LK.js",
+          "encodedBodyBytes": 8635,
+          "decodedBodyBytes": 34749,
+          "transferBytes": 8935
+        },
+        {
+          "path": "/chunk-BqR4WH0d.js",
+          "encodedBodyBytes": 20676,
+          "decodedBodyBytes": 80465,
+          "transferBytes": 20976
+        },
+        {
+          "path": "/chunk-Bv6N65uZ.js",
+          "encodedBodyBytes": 2508,
+          "decodedBodyBytes": 7645,
+          "transferBytes": 2808
+        },
+        {
+          "path": "/chunk-kdSydZ_5.js",
+          "encodedBodyBytes": 214,
+          "decodedBodyBytes": 268,
+          "transferBytes": 514
+        },
+        {
+          "path": "/chunk-DqM1RO0d.js",
+          "encodedBodyBytes": 780,
+          "decodedBodyBytes": 4474,
+          "transferBytes": 1080
+        },
+        {
+          "path": "/chunk-I3Qqm9YO.js",
+          "encodedBodyBytes": 3620,
+          "decodedBodyBytes": 14217,
+          "transferBytes": 3920
+        },
+        {
+          "path": "/chunk-QwJ5t4KE.js",
+          "encodedBodyBytes": 7776,
+          "decodedBodyBytes": 31669,
+          "transferBytes": 8076
+        },
+        {
+          "path": "/chunk-CFwqRcN3.js",
+          "encodedBodyBytes": 17168,
+          "decodedBodyBytes": 68374,
+          "transferBytes": 17468
+        },
+        {
+          "path": "/chunk-DNk_ag_s.js",
+          "encodedBodyBytes": 448,
+          "decodedBodyBytes": 1137,
+          "transferBytes": 748
+        },
+        {
+          "path": "/chunk-By1Kp5FY.js",
+          "encodedBodyBytes": 335,
+          "decodedBodyBytes": 692,
+          "transferBytes": 635
+        },
+        {
+          "path": "/chunk-DR_cYdsw.js",
+          "encodedBodyBytes": 437,
+          "decodedBodyBytes": 849,
+          "transferBytes": 737
+        },
+        {
+          "path": "/chunk-BOCpRj47.js",
+          "encodedBodyBytes": 649,
+          "decodedBodyBytes": 2822,
+          "transferBytes": 949
+        },
+        {
+          "path": "/chunk-D6M21Pnn.js",
+          "encodedBodyBytes": 495,
+          "decodedBodyBytes": 2738,
+          "transferBytes": 795
+        },
+        {
+          "path": "/chunk-Cyo6iXmg.js",
+          "encodedBodyBytes": 556,
+          "decodedBodyBytes": 1140,
+          "transferBytes": 856
+        },
+        {
+          "path": "/chunk-ceaKFUTo.js",
+          "encodedBodyBytes": 318,
+          "decodedBodyBytes": 643,
+          "transferBytes": 618
+        },
+        {
+          "path": "/chunk-D6GfUJJN.js",
+          "encodedBodyBytes": 208,
+          "decodedBodyBytes": 256,
+          "transferBytes": 508
+        },
+        {
+          "path": "/chunk-DH0qkjeU.js",
+          "encodedBodyBytes": 558,
+          "decodedBodyBytes": 1987,
+          "transferBytes": 858
+        },
+        {
+          "path": "/chunk-CbDItLXo.js",
+          "encodedBodyBytes": 514,
+          "decodedBodyBytes": 1659,
+          "transferBytes": 814
+        },
+        {
+          "path": "/chunk-Bij2AlMw.js",
+          "encodedBodyBytes": 289,
+          "decodedBodyBytes": 472,
+          "transferBytes": 589
+        },
+        {
+          "path": "/chunk-CcDF2DXW.js",
+          "encodedBodyBytes": 260,
+          "decodedBodyBytes": 344,
+          "transferBytes": 560
+        },
+        {
+          "path": "/chunk-Bi6AlFNR.js",
+          "encodedBodyBytes": 813,
+          "decodedBodyBytes": 2694,
+          "transferBytes": 1113
+        },
+        {
+          "path": "/chunk-GYf4n53q.js",
+          "encodedBodyBytes": 529,
+          "decodedBodyBytes": 1102,
+          "transferBytes": 829
+        },
+        {
+          "path": "/chunk-DDZEaEpa.js",
+          "encodedBodyBytes": 465,
+          "decodedBodyBytes": 976,
+          "transferBytes": 765
+        },
+        {
+          "path": "/chunk-CqWtzUNA.js",
+          "encodedBodyBytes": 1580,
+          "decodedBodyBytes": 4023,
+          "transferBytes": 1880
+        },
+        {
+          "path": "/chunk-Cmy8tYa0.js",
+          "encodedBodyBytes": 319,
+          "decodedBodyBytes": 460,
+          "transferBytes": 619
+        },
+        {
+          "path": "/chunk-Q0i7-REW.js",
+          "encodedBodyBytes": 781,
+          "decodedBodyBytes": 2875,
+          "transferBytes": 1081
+        },
+        {
+          "path": "/chunk-D8lbYRV5.js",
+          "encodedBodyBytes": 857,
+          "decodedBodyBytes": 3253,
+          "transferBytes": 1157
+        },
+        {
+          "path": "/chunk-KoAA4Ujj.js",
+          "encodedBodyBytes": 319,
+          "decodedBodyBytes": 482,
+          "transferBytes": 619
+        },
+        {
+          "path": "/chunk-CzJQ82e9.js",
+          "encodedBodyBytes": 227,
+          "decodedBodyBytes": 273,
+          "transferBytes": 527
+        },
+        {
+          "path": "/chunk-BjxrveLq.js",
+          "encodedBodyBytes": 2506,
+          "decodedBodyBytes": 8689,
+          "transferBytes": 2806
+        },
+        {
+          "path": "/chunk-C7G3NlFB.js",
+          "encodedBodyBytes": 4298,
+          "decodedBodyBytes": 12759,
+          "transferBytes": 4598
+        },
+        {
+          "path": "/chunk-CJ7BbUmP.js",
+          "encodedBodyBytes": 345,
+          "decodedBodyBytes": 660,
+          "transferBytes": 645
+        },
+        {
+          "path": "/chunk-BjhhKfhC.js",
+          "encodedBodyBytes": 502,
+          "decodedBodyBytes": 2393,
+          "transferBytes": 802
+        },
+        {
+          "path": "/chunk-Sbypnn6h.js",
+          "encodedBodyBytes": 552,
+          "decodedBodyBytes": 1334,
+          "transferBytes": 852
+        },
+        {
+          "path": "/chunk-5G-9SCM1.js",
+          "encodedBodyBytes": 1004,
+          "decodedBodyBytes": 4557,
+          "transferBytes": 1304
+        },
+        {
+          "path": "/chunk-DD3_oQXX.js",
+          "encodedBodyBytes": 2397,
+          "decodedBodyBytes": 8248,
+          "transferBytes": 2697
+        },
+        {
+          "path": "/chunk-BqX4JN14.js",
+          "encodedBodyBytes": 744,
+          "decodedBodyBytes": 1328,
+          "transferBytes": 1044
+        },
+        {
+          "path": "/chunk-Ce-AaTtG.js",
+          "encodedBodyBytes": 7742,
+          "decodedBodyBytes": 26598,
+          "transferBytes": 8042
+        },
+        {
+          "path": "/chunk-m93jI7xc.js",
+          "encodedBodyBytes": 198,
+          "decodedBodyBytes": 361,
+          "transferBytes": 498
+        },
+        {
+          "path": "/chunk-BGlTulh0.js",
+          "encodedBodyBytes": 391,
+          "decodedBodyBytes": 785,
+          "transferBytes": 691
+        },
+        {
+          "path": "/chunk-B85UvPAD.js",
+          "encodedBodyBytes": 479,
+          "decodedBodyBytes": 1161,
+          "transferBytes": 779
+        },
+        {
+          "path": "/chunk-BwuK1g58.js",
+          "encodedBodyBytes": 49355,
+          "decodedBodyBytes": 77869,
+          "transferBytes": 49655
+        },
+        {
+          "path": "/chunk-BRH1yb6C.js",
+          "encodedBodyBytes": 35209,
+          "decodedBodyBytes": 162392,
+          "transferBytes": 35509
+        },
+        {
+          "path": "/chunk-tPwQ2lZZ.js",
+          "encodedBodyBytes": 488,
+          "decodedBodyBytes": 1079,
+          "transferBytes": 788
+        },
+        {
+          "path": "/chunk-fydy3hPH.js",
+          "encodedBodyBytes": 622,
+          "decodedBodyBytes": 2589,
+          "transferBytes": 922
+        },
+        {
+          "path": "/chunk-BTmyUZcv.js",
+          "encodedBodyBytes": 1511,
+          "decodedBodyBytes": 11568,
+          "transferBytes": 1811
+        },
+        {
+          "path": "/chunk-LbrsduCF.js",
+          "encodedBodyBytes": 358,
+          "decodedBodyBytes": 612,
+          "transferBytes": 658
+        },
+        {
+          "path": "/chunk-CsAq_VBQ.js",
+          "encodedBodyBytes": 882,
+          "decodedBodyBytes": 2725,
+          "transferBytes": 1182
+        },
+        {
+          "path": "/chunk-Byvt2D3K.js",
+          "encodedBodyBytes": 4150,
+          "decodedBodyBytes": 18491,
+          "transferBytes": 4450
+        },
+        {
+          "path": "/chunk-P_CPoUDX.js",
+          "encodedBodyBytes": 1199,
+          "decodedBodyBytes": 2904,
+          "transferBytes": 1499
+        },
+        {
+          "path": "/chunk-ChIE9YCw.js",
+          "encodedBodyBytes": 823,
+          "decodedBodyBytes": 2056,
+          "transferBytes": 1123
+        },
+        {
+          "path": "/chunk-DE86jhPa.js",
+          "encodedBodyBytes": 320,
+          "decodedBodyBytes": 727,
+          "transferBytes": 620
+        },
+        {
+          "path": "/chunk-CnRLgDT3.js",
+          "encodedBodyBytes": 985,
+          "decodedBodyBytes": 3187,
+          "transferBytes": 1285
+        },
+        {
+          "path": "/chunk-CRRpgr80.js",
+          "encodedBodyBytes": 501,
+          "decodedBodyBytes": 1130,
+          "transferBytes": 801
+        },
+        {
+          "path": "/chunk-BxI6EGJV.js",
+          "encodedBodyBytes": 321,
+          "decodedBodyBytes": 520,
+          "transferBytes": 621
+        },
+        {
+          "path": "/chunk-DAEP2N2c.js",
+          "encodedBodyBytes": 884,
+          "decodedBodyBytes": 2528,
+          "transferBytes": 1184
+        },
+        {
+          "path": "/chunk-ChpjomNN.js",
+          "encodedBodyBytes": 3903,
+          "decodedBodyBytes": 17080,
+          "transferBytes": 4203
+        },
+        {
+          "path": "/chunk-DrPrY-85.js",
+          "encodedBodyBytes": 238,
+          "decodedBodyBytes": 361,
+          "transferBytes": 538
+        },
+        {
+          "path": "/chunk-B53eG6VO.js",
+          "encodedBodyBytes": 789,
+          "decodedBodyBytes": 1898,
+          "transferBytes": 1089
+        },
+        {
+          "path": "/chunk-0ELF9yYx.js",
+          "encodedBodyBytes": 298,
+          "decodedBodyBytes": 673,
+          "transferBytes": 598
+        },
+        {
+          "path": "/chunk-_HulO4HV.js",
+          "encodedBodyBytes": 893,
+          "decodedBodyBytes": 2372,
+          "transferBytes": 1193
+        },
+        {
+          "path": "/chunk-Cm6p4020.js",
+          "encodedBodyBytes": 1182,
+          "decodedBodyBytes": 2672,
+          "transferBytes": 1482
+        },
+        {
+          "path": "/chunk-pqeI4Btn.js",
+          "encodedBodyBytes": 993,
+          "decodedBodyBytes": 3790,
+          "transferBytes": 1293
+        },
+        {
+          "path": "/chunk-DJJCxJt0.js",
+          "encodedBodyBytes": 193,
+          "decodedBodyBytes": 227,
+          "transferBytes": 493
+        },
+        {
+          "path": "/chunk-CqdSt7g5.js",
+          "encodedBodyBytes": 1075,
+          "decodedBodyBytes": 3901,
+          "transferBytes": 1375
+        },
+        {
+          "path": "/chunk-RrDdprB9.js",
+          "encodedBodyBytes": 274,
+          "decodedBodyBytes": 432,
+          "transferBytes": 574
+        },
+        {
+          "path": "/chunk-V6u6CBIw.js",
+          "encodedBodyBytes": 205,
+          "decodedBodyBytes": 260,
+          "transferBytes": 505
+        },
+        {
+          "path": "/chunk-DCI7kjcm.js",
+          "encodedBodyBytes": 6207,
+          "decodedBodyBytes": 29258,
+          "transferBytes": 6507
+        },
+        {
+          "path": "/chunk-DBWOWRIL.js",
+          "encodedBodyBytes": 2504,
+          "decodedBodyBytes": 6932,
+          "transferBytes": 2804
+        },
+        {
+          "path": "/chunk-BFKK9Xdk.js",
+          "encodedBodyBytes": 198,
+          "decodedBodyBytes": 228,
+          "transferBytes": 498
+        },
+        {
+          "path": "/chunk-lDW6AREf.js",
+          "encodedBodyBytes": 528,
+          "decodedBodyBytes": 1425,
+          "transferBytes": 828
+        },
+        {
+          "path": "/chunk-BMbyXX5q.js",
+          "encodedBodyBytes": 1020,
+          "decodedBodyBytes": 5137,
+          "transferBytes": 1320
+        },
+        {
+          "path": "/chunk-YXLiiuEc.js",
+          "encodedBodyBytes": 1522,
+          "decodedBodyBytes": 6548,
+          "transferBytes": 1822
+        },
+        {
+          "path": "/chunk-B8ArCPXI.js",
+          "encodedBodyBytes": 199,
+          "decodedBodyBytes": 237,
+          "transferBytes": 499
+        },
+        {
+          "path": "/chunk-7hRybxXt.js",
+          "encodedBodyBytes": 301,
+          "decodedBodyBytes": 560,
+          "transferBytes": 601
+        },
+        {
+          "path": "/chunk-ButKJkkV.js",
+          "encodedBodyBytes": 216,
+          "decodedBodyBytes": 271,
+          "transferBytes": 516
+        },
+        {
+          "path": "/chunk-Bc5u3jp1.js",
+          "encodedBodyBytes": 646,
+          "decodedBodyBytes": 1716,
+          "transferBytes": 946
+        },
+        {
+          "path": "/chunk-0FniuPiG.js",
+          "encodedBodyBytes": 2521,
+          "decodedBodyBytes": 7819,
+          "transferBytes": 2821
+        },
+        {
+          "path": "/chunk-c74nLDIM.js",
+          "encodedBodyBytes": 7817,
+          "decodedBodyBytes": 36498,
+          "transferBytes": 8117
+        },
+        {
+          "path": "/chunk-BAUKdA0e.js",
+          "encodedBodyBytes": 254,
+          "decodedBodyBytes": 339,
+          "transferBytes": 554
+        },
+        {
+          "path": "/chunk-BLByUE_2.js",
+          "encodedBodyBytes": 248,
+          "decodedBodyBytes": 388,
+          "transferBytes": 548
+        },
+        {
+          "path": "/chunk-D2hbdlK9.js",
+          "encodedBodyBytes": 632,
+          "decodedBodyBytes": 2314,
+          "transferBytes": 932
+        },
+        {
+          "path": "/chunk-CZm2YEh6.js",
+          "encodedBodyBytes": 269,
+          "decodedBodyBytes": 392,
+          "transferBytes": 569
+        },
+        {
+          "path": "/chunk-BDcj3y3J.js",
+          "encodedBodyBytes": 378,
+          "decodedBodyBytes": 697,
+          "transferBytes": 678
+        },
+        {
+          "path": "/chunk-BtFEJffl.js",
+          "encodedBodyBytes": 281,
+          "decodedBodyBytes": 479,
+          "transferBytes": 581
+        },
+        {
+          "path": "/chunk-ZJwW9FyU.js",
+          "encodedBodyBytes": 414,
+          "decodedBodyBytes": 828,
+          "transferBytes": 714
+        },
+        {
+          "path": "/chunk-LZpXSqTy.js",
+          "encodedBodyBytes": 184,
+          "decodedBodyBytes": 220,
+          "transferBytes": 484
+        },
+        {
+          "path": "/chunk-D1YyTVXJ.js",
+          "encodedBodyBytes": 314,
+          "decodedBodyBytes": 567,
+          "transferBytes": 614
+        },
+        {
+          "path": "/chunk-D9quRCRt.js",
+          "encodedBodyBytes": 205,
+          "decodedBodyBytes": 244,
+          "transferBytes": 505
+        },
+        {
+          "path": "/chunk-B9qKOCBM.js",
+          "encodedBodyBytes": 440,
+          "decodedBodyBytes": 1052,
+          "transferBytes": 740
+        },
+        {
+          "path": "/chunk-BTRo_yQt.js",
+          "encodedBodyBytes": 2907,
+          "decodedBodyBytes": 8463,
+          "transferBytes": 3207
+        },
+        {
+          "path": "/chunk-DM7yIYjr.js",
+          "encodedBodyBytes": 2751,
+          "decodedBodyBytes": 7874,
+          "transferBytes": 3051
+        },
+        {
+          "path": "/chunk-vwOBMW6N.js",
+          "encodedBodyBytes": 189,
+          "decodedBodyBytes": 226,
+          "transferBytes": 489
+        },
+        {
+          "path": "/chunk-VqUReiHK.js",
+          "encodedBodyBytes": 180,
+          "decodedBodyBytes": 216,
+          "transferBytes": 480
+        },
+        {
+          "path": "/chunk-CyHAW9TS.js",
+          "encodedBodyBytes": 337,
+          "decodedBodyBytes": 643,
+          "transferBytes": 637
+        },
+        {
+          "path": "/chunk-JLA9FFnR.js",
+          "encodedBodyBytes": 416,
+          "decodedBodyBytes": 712,
+          "transferBytes": 716
+        },
+        {
+          "path": "/chunk-BWfjzop3.js",
+          "encodedBodyBytes": 362,
+          "decodedBodyBytes": 674,
+          "transferBytes": 662
+        },
+        {
+          "path": "/chunk-BO-u6Dsn.js",
+          "encodedBodyBytes": 424,
+          "decodedBodyBytes": 1036,
+          "transferBytes": 724
+        },
+        {
+          "path": "/chunk-DP5otGld.js",
+          "encodedBodyBytes": 277,
+          "decodedBodyBytes": 744,
+          "transferBytes": 577
+        },
+        {
+          "path": "/chunk-BqLDI53b.js",
+          "encodedBodyBytes": 4580,
+          "decodedBodyBytes": 14017,
+          "transferBytes": 4880
+        },
+        {
+          "path": "/chunk-CRudpZiU.js",
+          "encodedBodyBytes": 236,
+          "decodedBodyBytes": 399,
+          "transferBytes": 536
+        },
+        {
+          "path": "/chunk-HpEFRs9W.js",
+          "encodedBodyBytes": 188,
+          "decodedBodyBytes": 326,
+          "transferBytes": 488
+        },
+        {
+          "path": "/chunk-DRRxiKIE.js",
+          "encodedBodyBytes": 2876,
+          "decodedBodyBytes": 9483,
+          "transferBytes": 3176
+        },
+        {
+          "path": "/chunk-0qLsWM5l.js",
+          "encodedBodyBytes": 12967,
+          "decodedBodyBytes": 53907,
+          "transferBytes": 13267
+        },
+        {
+          "path": "/chunk-AN9XD-jW.js",
+          "encodedBodyBytes": 283,
+          "decodedBodyBytes": 396,
+          "transferBytes": 583
+        },
+        {
+          "path": "/chunk-FtbK_7tm.js",
+          "encodedBodyBytes": 1788,
+          "decodedBodyBytes": 5796,
+          "transferBytes": 2088
+        },
+        {
+          "path": "/chunk-PVOFJqhW.js",
+          "encodedBodyBytes": 500,
+          "decodedBodyBytes": 1535,
+          "transferBytes": 800
+        },
+        {
+          "path": "/chunk-DhKbuDW8.js",
+          "encodedBodyBytes": 494,
+          "decodedBodyBytes": 1236,
+          "transferBytes": 794
+        },
+        {
+          "path": "/chunk-Bwd5pS9i.js",
+          "encodedBodyBytes": 265,
+          "decodedBodyBytes": 376,
+          "transferBytes": 565
+        },
+        {
+          "path": "/chunk-D428RwDM.js",
+          "encodedBodyBytes": 520,
+          "decodedBodyBytes": 1177,
+          "transferBytes": 820
+        },
+        {
+          "path": "/chunk-jyCET3-c.js",
+          "encodedBodyBytes": 121,
+          "decodedBodyBytes": 109,
+          "transferBytes": 421
+        },
+        {
+          "path": "/chunk-B83swcIt.js",
+          "encodedBodyBytes": 469,
+          "decodedBodyBytes": 1504,
+          "transferBytes": 769
+        },
+        {
+          "path": "/chunk-ZMaKK0O8.js",
+          "encodedBodyBytes": 3582,
+          "decodedBodyBytes": 12567,
+          "transferBytes": 3882
+        },
+        {
+          "path": "/chunk-CKpnrxOs.js",
+          "encodedBodyBytes": 3664,
+          "decodedBodyBytes": 16111,
+          "transferBytes": 3964
+        },
+        {
+          "path": "/chunk-DKsfLGrk.js",
+          "encodedBodyBytes": 874,
+          "decodedBodyBytes": 3057,
+          "transferBytes": 1174
+        },
+        {
+          "path": "/chunk-CAyeApYk.js",
+          "encodedBodyBytes": 2509,
+          "decodedBodyBytes": 7134,
+          "transferBytes": 2809
+        },
+        {
+          "path": "/chunk-ZRGi1952.js",
+          "encodedBodyBytes": 623,
+          "decodedBodyBytes": 1193,
+          "transferBytes": 923
+        },
+        {
+          "path": "/media/cursor-ZLAKVPRK.png",
+          "encodedBodyBytes": 2432,
+          "decodedBodyBytes": 2432,
+          "transferBytes": 2732
+        },
+        {
+          "path": "/assets/bg.png",
+          "encodedBodyBytes": 302554,
+          "decodedBodyBytes": 302554,
+          "transferBytes": 302854
+        },
+        {
+          "path": "/scene/main-menu.babylon",
+          "encodedBodyBytes": 2295,
+          "decodedBodyBytes": 5786,
+          "transferBytes": 2595
+        },
+        {
+          "path": "/assets/logo.png",
+          "encodedBodyBytes": 281696,
+          "decodedBodyBytes": 281696,
+          "transferBytes": 281996
+        },
+        {
+          "path": "/scene/main-menu/da6e63a5-b1a8-47af-866e-0bad5038c9b0.babylonbinarymeshdata",
+          "encodedBodyBytes": 172,
+          "decodedBodyBytes": 172,
+          "transferBytes": 472
+        },
+        {
+          "path": "/chunk-BBsMkpRA.js",
+          "encodedBodyBytes": 800,
+          "decodedBodyBytes": 1988,
+          "transferBytes": 1100
+        },
+        {
+          "path": "/chunk-wFo-TGLc.js",
+          "encodedBodyBytes": 2032,
+          "decodedBodyBytes": 5988,
+          "transferBytes": 2332
+        }
+      ],
+      "gameAdditionalRequests": [
+        {
+          "path": "/scene/game.babylon",
+          "encodedBodyBytes": 3935,
+          "decodedBodyBytes": 16355,
+          "transferBytes": 4235
+        },
+        {
+          "path": "/scene/game/ef50338a-79a4-4ef4-9b01-e658a4bdf0bc.babylonbinarymeshdata",
+          "encodedBodyBytes": 172,
+          "decodedBodyBytes": 172,
+          "transferBytes": 472
+        },
+        {
+          "path": "/scene/game/72e821f3-ce08-4e3e-ae10-a2d2d7d75f52.babylonbinarymeshdata",
+          "encodedBodyBytes": 932,
+          "decodedBodyBytes": 932,
+          "transferBytes": 1232
+        },
+        {
+          "path": "/scene/game/4d021133-a604-4067-b462-782e96530f46.babylonbinarymeshdata",
+          "encodedBodyBytes": 13556,
+          "decodedBodyBytes": 13556,
+          "transferBytes": 13856
+        },
+        {
+          "path": "/chunk-D25S2dLu.js",
+          "encodedBodyBytes": 334,
+          "decodedBodyBytes": 887,
+          "transferBytes": 634
+        },
+        {
+          "path": "/chunk-DnIA-Xy4.js",
+          "encodedBodyBytes": 353,
+          "decodedBodyBytes": 970,
+          "transferBytes": 653
+        },
+        {
+          "path": "/scene/worlds/game.json",
+          "encodedBodyBytes": 303,
+          "decodedBodyBytes": 1950,
+          "transferBytes": 603
+        },
+        {
+          "path": "/assets/models/protagonist-v2.glb",
+          "encodedBodyBytes": 4102120,
+          "decodedBodyBytes": 4102120,
+          "transferBytes": 4102420
+        },
+        {
+          "path": "/chunk-CI-SccuI.js",
+          "encodedBodyBytes": 373,
+          "decodedBodyBytes": 1006,
+          "transferBytes": 673
+        },
+        {
+          "path": "/chunk-D3yZzLN_.js",
+          "encodedBodyBytes": 160,
+          "decodedBodyBytes": 248,
+          "transferBytes": 460
+        },
+        {
+          "path": "/chunk-1jo7A8_T.js",
+          "encodedBodyBytes": 426,
+          "decodedBodyBytes": 1144,
+          "transferBytes": 726
+        },
+        {
+          "path": "/chunk-KwSCXGFh.js",
+          "encodedBodyBytes": 114,
+          "decodedBodyBytes": 131,
+          "transferBytes": 414
+        },
+        {
+          "path": "/chunk-DIhsZmgQ.js",
+          "encodedBodyBytes": 343,
+          "decodedBodyBytes": 771,
+          "transferBytes": 643
+        },
+        {
+          "path": "/chunk-BIc-kJqI.js",
+          "encodedBodyBytes": 107,
+          "decodedBodyBytes": 105,
+          "transferBytes": 407
+        },
+        {
+          "path": "/chunk-CedAKmKB.js",
+          "encodedBodyBytes": 137,
+          "decodedBodyBytes": 189,
+          "transferBytes": 437
+        },
+        {
+          "path": "/chunk-BAq_GFhW.js",
+          "encodedBodyBytes": 106,
+          "decodedBodyBytes": 104,
+          "transferBytes": 406
+        },
+        {
+          "path": "/chunk-BoPR1o08.js",
+          "encodedBodyBytes": 336,
+          "decodedBodyBytes": 912,
+          "transferBytes": 636
+        },
+        {
+          "path": "/chunk-Cty6cLGp.js",
+          "encodedBodyBytes": 380,
+          "decodedBodyBytes": 1079,
+          "transferBytes": 680
+        }
+      ],
+      "productionUi": {
+        "menu": {
+          "diagnosticPanels": 0,
+          "saveTestButtons": 0,
+          "saveTestDialogs": 0,
+          "fixtureInstructions": 0
+        },
+        "game": {
+          "diagnosticPanels": 0,
+          "saveTestButtons": 0,
+          "saveTestDialogs": 0,
+          "fixtureInstructions": 0
+        },
+        "pauseMenu": {
+          "diagnosticPanels": 0,
+          "saveTestButtons": 0,
+          "saveTestDialogs": 0,
+          "fixtureInstructions": 0
+        },
+        "controls": {
+          "diagnosticPanels": 0,
+          "saveTestButtons": 0,
+          "saveTestDialogs": 0,
+          "fixtureInstructions": 0
+        }
+      },
+      "screenshots": {
+        "menu": "babylon-alias-menu.png",
+        "game": "babylon-alias-game.png",
+        "movement": "babylon-alias-movement.png"
+      },
+      "hardware": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+        "hardwareConcurrency": 24,
+        "devicePixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "canvas": {
+          "width": 1440,
+          "height": 900
+        },
+        "webglRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "webglVendor": "Google Inc. (Google)"
+      },
+      "frameCadence": {
+        "warmup": {
+          "elapsedMs": 1016.6999999999998,
+          "frames": 30,
+          "meanMs": 33.88999999999999,
+          "minMs": 16.59999999999991,
+          "p50Ms": 33.30000000000018,
+          "p95Ms": 50,
+          "p99Ms": 50.09999999999991,
+          "maxMs": 50.09999999999991,
+          "over33_34Ms": 12,
+          "intervalsMs": [
+            33.30000000000018,
+            33.40000000000009,
+            33.40000000000009,
+            33.19999999999982,
+            33.40000000000009,
+            33.29999999999973,
+            33.40000000000009,
+            33.30000000000018,
+            33.29999999999973,
+            33.40000000000009,
+            33.30000000000018,
+            33.29999999999973,
+            33.30000000000018,
+            33.40000000000009,
+            33.29999999999973,
+            33.30000000000018,
+            33.40000000000009,
+            33.40000000000009,
+            33.29999999999973,
+            33.30000000000018,
+            50,
+            16.59999999999991,
+            50.09999999999991,
+            33.30000000000018,
+            33.29999999999973,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.399999999999636
+          ]
+        },
+        "stationary": {
+          "elapsedMs": 2033.1999999999998,
+          "frames": 59,
+          "meanMs": 34.46101694915254,
+          "minMs": 33.19999999999982,
+          "p50Ms": 33.30000000000018,
+          "p95Ms": 50,
+          "p99Ms": 50.100000000000364,
+          "maxMs": 50.100000000000364,
+          "over33_34Ms": 26,
+          "intervalsMs": [
+            33.400000000000546,
+            33.19999999999982,
+            33.399999999999636,
+            33.30000000000018,
+            50.100000000000364,
+            33.29999999999927,
+            33.20000000000073,
+            33.399999999999636,
+            33.399999999999636,
+            33.30000000000018,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.30000000000018,
+            50,
+            33.399999999999636,
+            33.399999999999636,
+            33.20000000000073,
+            33.399999999999636,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.399999999999636,
+            33.19999999999982,
+            33.400000000000546,
+            33.399999999999636,
+            33.19999999999982,
+            33.400000000000546,
+            33.399999999999636,
+            33.30000000000018,
+            49.899999999999636,
+            33.400000000000546,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            50,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.30000000000018,
+            33.29999999999927,
+            33.30000000000018,
+            33.400000000000546,
+            33.29999999999927
+          ]
+        },
+        "movement": {
+          "elapsedMs": 2033.3000000000002,
+          "frames": 62,
+          "meanMs": 32.79516129032258,
+          "minMs": 16.69999999999891,
+          "p50Ms": 33.30000000000018,
+          "p95Ms": 33.400000000001455,
+          "p99Ms": 50,
+          "maxMs": 50,
+          "over33_34Ms": 23,
+          "intervalsMs": [
+            33.30000000000018,
+            33.5,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.19999999999982,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.400000000000546,
+            33.29999999999927,
+            16.700000000000728,
+            33.29999999999927,
+            33.30000000000018,
+            33.400000000000546,
+            33.29999999999927,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            33.400000000000546,
+            33.29999999999927,
+            33.30000000000018,
+            33.30000000000018,
+            33.399999999999636,
+            33.400000000000546,
+            33.19999999999982,
+            33.399999999999636,
+            33.30000000000018,
+            50,
+            33.30000000000018,
+            33.399999999999636,
+            33.30000000000018,
+            16.699999999999818,
+            33.30000000000018,
+            33.400000000000546,
+            33.29999999999927,
+            33.30000000000018,
+            33.400000000000546,
+            33.19999999999982,
+            33.399999999999636,
+            33.400000000000546,
+            33.29999999999927,
+            33.30000000000109,
+            33.399999999999636,
+            33.29999999999927,
+            33.30000000000109,
+            16.69999999999891,
+            33.30000000000109,
+            33.399999999999636,
+            33.19999999999891,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.400000000001455,
+            33.399999999999636,
+            33.19999999999891,
+            33.400000000001455,
+            33.29999999999927,
+            33.29999999999927,
+            33.30000000000109,
+            33.399999999999636
+          ]
+        },
+        "movementInput": "W held for 2000 ms after focusing the game canvas; no developer inspection hooks."
+      },
+      "errors": [],
+      "failures": []
+    }
+  ]
+}

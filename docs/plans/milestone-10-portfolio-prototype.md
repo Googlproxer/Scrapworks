@@ -1,6 +1,6 @@
 # Milestone 10 Portfolio prototype
 
-Updated 17 October 2026. Status: foundation only. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
+Updated 23 October 2026 at migration Phase 7. Status: migration presentation, UI and production checks verified; complete factory demo, persistence and representative performance pending. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
 
 Turn the working systems into an understandable small-map demo that can be shown in your portfolio. Prioritize a complete playable route, readable feedback, and reliable persistence before expanding the map or technology tree.
 
@@ -8,13 +8,17 @@ Turn the working systems into an understandable small-map demo that can be shown
 
 ## Current implementation
 
-The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/cursor assets, source artwork, and repository documentation are in place. The 17 October baseline records 33 passing Chromium tests, normal lint, a production build, and 30 passing lint-tooling checks. Existing shell accessibility checks cover their tested states. These checks do not prove a complete factory loop or accessible future HUD. Manual progression, research, automation, restoration, reliable gameplay saves, and portfolio balancing remain open.
+The 3D migration provides the Angular shell/menu/controls, animated protagonist, authored grid fixture, orbit/follow camera, selection/placement preview and stable lifecycle/input boundaries. The [23 October evidence](../reports/migration/2026-10-23/README.md) records 181 Chromium tests, 27 Node world/export tests, 30 lint-tooling checks, source lint/type checks, production build/export checks and actual browser flows at device pixel ratios 1 and 2. Tested UI states have zero axe violations; production routes have zero recorded browser errors or failed requests.
+
+The [production profile](../reports/migration/2026-10-23/performance.json) measures bundle/assets, requests and RAF intervals on the small migration scene. It is not target-hardware qualification, representative factory performance, a gameplay-save test or a completed objective route. Manual progression, research, automation, restoration, gameplay saves and portfolio balancing remain open.
 
 ## Step 1 Prepare a consistent presentation
 
 - [ ] Audit the placeholder assets against the Art Document's preferred flat finish and angled overhead square-grid view.
+- [x] Establish the migration fixture's understated ground/grid, angled perspective camera and readable protagonist/selection presentation.
 - [ ] Replace terrain and machines gradually, keeping the progression from improvised scrap construction to clean advanced technology readable.
-- [ ] Prepare runtime model scale, ground pivots, logical footprints, materials, and animation clips; concept images are references rather than runtime meshes.
+- [x] Prepare the current protagonist's runtime scale, ground alignment, materials and idle/walk/run clips, and fixture logical footprints.
+- [ ] Prepare remaining terrain/machine models and action clips for the complete prototype; concept images remain references rather than runtime meshes.
 - [ ] Keep the protagonist readable against both derelict and restored terrain through silhouette, contrast, and a clear selection/position cue.
 - [ ] Drive the gradual landscape transition from environmental state while equipment appearance follows its own technology stage.
 - [ ] Check asset licenses and maintain attribution for anything used in the demo.
@@ -26,8 +30,9 @@ The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/curs
 - [ ] Show machine input, output, no-power, disconnected, and blocked states in the inspector.
 - [ ] Show coal emissions, restoration health, daylight, water shortage, and storage status in understandable terms.
 - [ ] Provide pause, save status, recovery, and backup/import controls with useful failure messages.
-- [ ] Keep diagnostics such as tick timings and IDs in a development panel rather than the normal game flow.
-- [ ] Check keyboard focus, menu input ownership, readable contrast, and accessible Angular controls against the application's accessibility requirements.
+- [x] Keep fixture diagnostics, IDs, construction test controls and test-data saving outside the production game UI.
+- [x] Check implemented menu/controls keyboard focus, input ownership and accessibility; tested migration UI states pass axe.
+- [ ] Repeat accessibility and readable-feedback checks for future inventory, research, machines and restoration HUD.
 
 ## Step 3 Balance the complete opening and objective
 
@@ -41,19 +46,22 @@ The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/curs
 ## Step 4 Measure and address performance
 
 - [ ] Measure rendering frame time, fixed-step cost, published-view cost, and save capture/write duration on a representative factory.
+- [x] Record small-fixture production asset/request sizes and stationary/movement RAF intervals with renderer/method metadata. This does not measure factory simulation/save cost or qualify target hardware.
 - [ ] Check whether Angular views update only when useful values change, rather than on every renderer frame.
 - [ ] Avoid unnecessary full-world copying outside snapshot capture and avoid recreating meshes/materials each frame.
 - [ ] Measure the bundle and set meaningful warning/error budgets for this project.
-- [ ] Verify pause/resume and bounded catch-up under a deliberate frame stall.
+- [x] Verify pause/resume and five-step catch-up using controlled long frame deltas plus browser focus/modal transitions.
 - [ ] Add workers or a more complex state library only if a measured problem warrants their added complexity.
 
 ## Step 5 Verify the production build
 
-- [ ] Run the production build and test commands, then serve the output through a local static preview.
-- [ ] Check asset paths, fonts, scene startup, input, resize, and console output in the production bundle.
+- [x] Run production build/test commands and serve the migration output through a local static preview.
+- [x] Verify production routes, scene/world/character loading, input, console output and exclusion of Phaser/retired assets/development UI.
+- [ ] Repeat the complete asset/font/input/resize route after the factory HUD and final content exist.
 - [ ] Verify real IndexedDB save/reload, recovery, and JSON transfer under the preview origin.
-- [ ] Check smaller viewports and the desktop browsers you intend to support.
-- [ ] Recreate the canvas host and repeat pause/focus transitions without duplicate callbacks or stuck controls.
+- [x] Check migration resize behavior and Chromium at device pixel ratios 1 and 2.
+- [ ] Qualify the intended desktop browser/device support matrix with the complete prototype.
+- [x] Recreate the canvas host and repeat pause/focus transitions without duplicate callbacks or stuck controls in migration tests.
 - [ ] Document that another hosting origin has its own browser saves; use export/import to transfer a run.
 
 ## Step 6 Run the complete acceptance route
@@ -75,6 +83,7 @@ The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/curs
 - [ ] Explain the Angular presentation boundary, plain TypeScript simulation, Babylon adapter, and versioned local-save repository.
 - [ ] Record a short reproducible route or capture screenshots showing both early and restored states.
 - [ ] Document setup commands, controls, save ownership, known limitations, and the supported prototype scope.
+- [x] Document current migration setup, controls, ownership, limitations and evidence; explicitly separate settings storage from future gameplay saves.
 - [ ] Separate future ideas such as remote control and cloud saves from completed features.
 - [ ] Prepare the production artifact and hosting instructions. Publish when you choose the destination and are ready to release.
 
@@ -99,9 +108,10 @@ The shell, Play Game action, current canvas sizing, runtime lifecycle, logo/curs
 
 Record implementation notes here:
 
-| Date           | Observation or decision                    | Follow-up and status                                                           |
-| -------------- | ------------------------------------------ | ------------------------------------------------------------------------------ |
-| 4 October 2026 | Foundation only; current source inspected. | See Current implementation above; unchecked gameplay requirements remain open. |
+| Date            | Observation or decision                                                             | Follow-up and status                                                                                                                                               |
+| --------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 4 October 2026  | Foundation only; current source inspected.                                          | See Current implementation above; unchecked gameplay requirements remain open.                                                                                     |
+| 23 October 2026 | Migration presentation/UI, production packaging and small-scene profiling verified. | Credits above apply to the migration fixture only. Full acceptance route, representative factory/target-hardware performance and portfolio release remain pending. |
 
 ## References and diagrams
 

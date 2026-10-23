@@ -1,0 +1,11 @@
+{
+  "name": "Player Spawn",
+  "id": "player-spawn",
+  "uniqueId": 900000002,
+  "type": "TransformNode",
+  "position": [100, 0, 100],
+  "rotation": [0, 0, 0],
+  "scaling": [1, 1, 1],
+  "isEnabled": true,
+  "metadata": { "scrapworks": { "version": 1, "kind": "PlayerSpawn", "id": "player-spawn" } }
+}
