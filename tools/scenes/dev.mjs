@@ -36,7 +36,16 @@ try {
   if (!controller.signal.aborted) {
     const require = createRequire(import.meta.url);
     const cli = path.join(path.dirname(require.resolve('@angular/cli/package.json')), 'bin/ng.js');
-    server = spawn(process.execPath, [cli, 'serve', ...process.argv.slice(2)], { cwd: root, stdio: 'inherit' });
+    const serveArguments = process.argv.slice(2);
+    // Parcel reports atomic asset replacement as creation on Linux. Angular
+    // then rebuilds without reloading an existing asset; polling detects it.
+    if (
+      process.platform === 'linux' &&
+      !serveArguments.some((argument) => argument === '--poll' || argument.startsWith('--poll='))
+    ) {
+      serveArguments.push('--poll=500');
+    }
+    server = spawn(process.execPath, [cli, 'serve', ...serveArguments], { cwd: root, stdio: 'inherit' });
     process.exitCode = await new Promise((resolve, reject) => {
       server.once('error', reject);
       server.once('exit', (code) => resolve(controller.signal.aborted ? 0 : (code ?? 1)));

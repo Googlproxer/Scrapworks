@@ -159,7 +159,8 @@ try {
   const report = {
     recordedAt: new Date().toISOString(),
     method:
-      'Copied project; real Editor CLI, native filesystem watcher, Angular/Vite and headless Chromium on loopback',
+      'Copied project; real Editor CLI, native authoring watcher, Angular/Vite and headless Chromium on loopback',
+    angularWatchMode: process.platform === 'linux' ? 'polling-500ms' : 'native',
     initialMenuReady: true,
     validSaveReloaded: true,
     invalidSaveReloaded: false,

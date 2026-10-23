@@ -24,6 +24,8 @@ yarn dev --port 4300
 
 The coordinator exports before starting Angular, then watches `assets/`, the `.bjseditor` file, enabled attached presentation-script paths under `src/`, and `export-policy.json`. It excludes generated `public/scene/`, `src/scripts.ts`, export caches, temporary files, source `art/` projects and documentation. Import art into the Editor's asset library and save before expecting a browser update. Angular continues to handle ordinary application edits through its own watcher.
 
+On Linux, the coordinator defaults Angular to `--poll=500`. Parcel's native Linux watcher reports an atomically replaced asset as newly created, which Angular can rebuild without sending a browser reload. Polling detects the replacement while preserving atomic scene publication and rollback. An explicit `--poll` argument overrides the interval; the authoring watcher itself continues using native filesystem events on every platform.
+
 Restart `yarn dev` after changing export/compiler tooling. A running Node process retains its imported modules; a coordinator started before a tooling change can otherwise republish an older output format on the next authored save. Stop the previous coordinator before starting a replacement.
 
 Saves within 200 milliseconds are coalesced. Exports never overlap. A further save during packing supersedes the staged attempt and schedules the latest inputs; only validated output reaches the served tree. Angular/Vite sends the reload after publication. An invalid save prints `Export failed; last working scenes retained` in the terminal, preserves existing output and retries when the next relevant save arrives. Fix an initial export error and restart `yarn dev`; Angular does not start against missing or invalid initial output.
