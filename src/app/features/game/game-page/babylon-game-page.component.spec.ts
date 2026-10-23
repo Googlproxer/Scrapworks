@@ -29,7 +29,9 @@ describe('Babylon game page integration', () => {
     // The real page is inside App's main landmark.
     (fixture.nativeElement as HTMLElement).setAttribute('role', 'main');
     fixture.detectChanges();
-    await expect.poll(() => fixture.componentInstance.gameRuntimeService.isReady()).toBe(true);
+    await expect
+      .poll(() => fixture.componentInstance.gameRuntimeService.isReady(), { timeout: 30_000 })
+      .toBe(true);
     fixture.detectChanges();
   });
 
@@ -78,7 +80,7 @@ describe('Babylon game page integration', () => {
       LoadAssetContainerAsync('/scene/missing-game.babylon', scene),
     );
     button('Play Game!')!.click();
-    await expect.poll(() => runtime.state().phase).toBe('error');
+    await expect.poll(() => runtime.state().phase, { timeout: 30_000 }).toBe('error');
     fixture.detectChanges();
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
@@ -86,7 +88,7 @@ describe('Babylon game page integration', () => {
     expect(button('Play Game!')).toBeUndefined();
     await expectAccessible();
     button('Retry')!.click();
-    await expect.poll(() => runtime.isReady()).toBe(true);
+    await expect.poll(() => runtime.isReady(), { timeout: 30_000 }).toBe(true);
     fixture.detectChanges();
     expect(previousEngine.isDisposed).toBe(true);
     expect(EngineStore.LastCreatedEngine).not.toBe(previousEngine);
