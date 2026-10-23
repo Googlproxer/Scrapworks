@@ -12329,12 +12329,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scrapworks-editor-mcp-plugin@file:tools/editor-mcp::locator=scrapworks%40workspace%3A.":
-  version: 0.1.0
-  resolution: "scrapworks-editor-mcp-plugin@file:tools/editor-mcp#tools/editor-mcp::hash=8a4bfc&locator=scrapworks%40workspace%3A."
-  checksum: 10c0/dbb42e3b9dd0411a2d1b0924e5cd6a6163fa7a365a6bc689f2a4fc781e9dc9c8b87c21b419361be5bc62e64ef6445c15420d7e94bfcb34be5e416965776387e2
+"scrapworks-editor-mcp-plugin@portal:tools/editor-mcp::locator=scrapworks%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "scrapworks-editor-mcp-plugin@portal:tools/editor-mcp::locator=scrapworks%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "scrapworks@workspace:.":
   version: 0.0.0-use.local
@@ -12390,7 +12389,7 @@ __metadata:
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
     rxjs: "npm:^7.8.2"
-    scrapworks-editor-mcp-plugin: "file:tools/editor-mcp"
+    scrapworks-editor-mcp-plugin: "portal:tools/editor-mcp"
     tslib: "npm:^2.8.1"
     typescript: "npm:~6.0.3"
     typescript-eslint: "npm:^8.71.1"

@@ -97,7 +97,7 @@
     "prettier": "^3.9.10",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "scrapworks-editor-mcp-plugin": "file:tools/editor-mcp",
+    "scrapworks-editor-mcp-plugin": "portal:tools/editor-mcp",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.1",
     "usehooks-ts": "^3.1.1",

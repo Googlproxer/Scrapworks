@@ -70,6 +70,8 @@ CI exports the authored scenes, then runs lint, lint-rule tests, documentation c
 
 These configurations take effect after they are committed and pushed to GitHub; Dependabot configuration must be present on the default branch. Repository branch rules and Dependabot security-update settings are managed separately in GitHub. To require CI before merging, select the `Lint, test and build` check in the branch rule for `master` after its first run.
 
+The local Editor MCP package uses Yarn's `portal:` protocol so Windows and Linux installs share the same lockfile without platform-dependent file-archive permission hashes.
+
 ## Source and asset layout
 
 | Path                                                          | Purpose                                                                         |
