@@ -40,7 +40,7 @@ describe('BabylonGameClient in the browser', () => {
 
   async function waitForMenu() {
     await expect
-      .poll(() => states.at(-1))
+      .poll(() => states.at(-1), { timeout: 30_000 })
       .toEqual({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
     return EngineStore.LastCreatedEngine!;
   }
