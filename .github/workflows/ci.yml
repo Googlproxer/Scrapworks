@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: 'true'
+  NG_CLI_ANALYTICS: 'false'
+
+jobs:
+  validate:
+    name: Lint, test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Enable the project's pinned Yarn version
+        run: |
+          corepack enable
+          yarn --version
+
+      # setup-node queries Yarn for its cache directory, so enable Corepack first.
+      - name: Restore Yarn download cache
+        uses: actions/setup-node@v7
+        with:
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Install locked dependencies
+        run: yarn install --immutable
+
+      - name: Install Chromium and Linux browser dependencies
+        run: yarn playwright install --with-deps chromium --only-shell
+
+      # A clean checkout has neither public/scene nor src/scripts.ts.
+      - name: Export authored scenes
+        run: yarn scenes:export
+
+      - name: Lint application and templates
+        run: yarn lint
+
+      - name: Test lint rules and configuration
+        run: yarn test:lint
+
+      - name: Check documentation links and diagrams
+        run: yarn docs:check
+
+      - name: Test scene export tooling
+        run: yarn test:export
+
+      - name: Test world compilation and simulation
+        run: yarn test:world
+
+      - name: Run Chromium application and accessibility tests
+        run: yarn test
+
+      - name: Build production application
+        run: yarn build
+
+      - name: Verify exported and built assets
+        run: yarn assets:check --build
+
+      - name: Verify development reload and export recovery
+        run: yarn test:workflow
+
+      - name: Upload browser diagnostics
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: browser-diagnostics
+          path: |
+            tmp/workflow-browser/
+            .vitest/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload production build
+        uses: actions/upload-artifact@v7
+        with:
+          name: scrapworks-production
+          path: dist/scrapworks/browser/
+          if-no-files-found: error
+          retention-days: 7

@@ -60,6 +60,16 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 
 Direct Angular targets need `yarn scenes:export` first. Do not rely on an old `public/scene/` export or generated `src/scripts.ts` from a previous checkout.
 
+## Continuous integration and dependency updates
+
+[GitHub Actions CI](.github/workflows/ci.yml) runs on pull requests, pushes to `master`, and manual dispatch. It uses GitHub's `ubuntu-latest` runner, Node 24, and the Yarn version pinned in `package.json`, with an immutable lockfile install and a Yarn download cache. Chromium and its Linux dependencies are installed before browser checks.
+
+CI exports the authored scenes, then runs lint, lint-rule tests, documentation checks, scene-export tests, world/simulation tests, Chromium application/accessibility tests, a production build, built-asset validation, and the isolated development reload/recovery check. Successful runs retain the production build for seven days; browser diagnostics are retained when available, including on failure. The workflow validates and packages the application; deployment remains a separate task.
+
+[Dependabot](.github/dependabot.yml) checks Yarn dependencies and GitHub Actions every Monday at 09:00 Australia/Sydney. Related Angular, Babylon, navigation, React/Fluent UI, browser-test, and lint packages are grouped; other minor/patch updates share a group and other major updates get separate PRs. Angular framework, CLI/devkit, CDK, and Angular ESLint major-version updates are excluded from Dependabot version updates: perform these upgrades manually with `ng update` so package migrations run. Angular minor and patch updates remain enabled. Actions use major-version tags maintained by Dependabot. Review Babylon Editor compatibility when merging dependency updates; CI does not run upgrade migrations or automatically merge PRs. The local Editor MCP package has no external dependencies, so the root manifest covers all current package updates.
+
+These configurations take effect after they are committed and pushed to GitHub; Dependabot configuration must be present on the default branch. Repository branch rules and Dependabot security-update settings are managed separately in GitHub. To require CI before merging, select the `Lint, test and build` check in the branch rule for `master` after its first run.
+
 ## Source and asset layout
 
 | Path                                                          | Purpose                                                                         |

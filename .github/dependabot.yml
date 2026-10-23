@@ -1,0 +1,81 @@
+version: 2
+
+updates:
+  # Dependabot uses the npm ecosystem for Yarn manifests and lockfiles.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: Australia/Sydney
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: chore(deps)
+    # Angular major upgrades are manual so ng update can run package migrations.
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@angular-devkit/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@angular-eslint/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: angular-eslint
+        update-types: ['version-update:semver-major']
+    groups:
+      angular:
+        patterns:
+          - '@angular/*'
+          - '@angular-devkit/*'
+          - '@angular-eslint/*'
+          - angular-eslint
+          - typescript
+      babylon:
+        patterns:
+          - '@babylonjs/*'
+          - '@babylonjs-toolkit/*'
+          - babylonjs-*
+      navigation:
+        patterns:
+          - '@recast-navigation/*'
+      react-and-fluent:
+        patterns:
+          - react
+          - react-dom
+          - '@types/react'
+          - '@types/react-dom'
+          - '@fluentui/*'
+          - '@fluentui-contrib/*'
+          - usehooks-ts
+      browser-tests:
+        patterns:
+          - '@vitest/*'
+          - vitest
+          - vite
+          - playwright
+          - axe-core
+      lint:
+        patterns:
+          - '@eslint/*'
+          - '@typescript-eslint/*'
+          - eslint
+          - eslint-*
+          - typescript-eslint
+          - prettier
+      other-minor-and-patch:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: Australia/Sydney
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore(ci)
+    groups:
+      github-actions:
+        patterns: ['*']
