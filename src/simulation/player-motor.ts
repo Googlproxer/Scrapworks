@@ -1,5 +1,5 @@
-import type { BuildingView, WorldDefinition, WorldPosition } from '../contracts/world';
-import { circleOverlapsCell } from '../core/world-grid';
+import type { BuildingView, WorldDefinition, WorldPosition } from '@contracts/world';
+import { circleOverlapsCell } from '@core/world-grid';
 import {
   FIXED_STEP_SECONDS,
   occupiedCells,

@@ -1,10 +1,10 @@
 import { JsonPipe, NgOptimizedImage } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnDestroy, viewChild } from '@angular/core';
-import { SaveLoadComponent } from '@app/features/save/save-load/save-load.component';
-import { UiService } from '@app/features/ui/ui.service';
 import { ControlsComponent } from '@app/features/controls/controls/controls.component';
+import { SaveLoadComponent } from '@app/features/save/save-load/save-load.component';
 import { UiInputAdapterService } from '@app/features/ui/ui-input-adapter.service';
-import { environment } from '../../../../environments/environment';
+import { UiService } from '@app/features/ui/ui.service';
+import { environment } from '@environments/environment';
 import { GameRuntimeService } from '../game-runtime.service';
 
 @Component({

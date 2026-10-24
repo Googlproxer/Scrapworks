@@ -4,12 +4,12 @@ import type {
   QuarterTurn,
   WorldDefinition,
   WorldView,
-} from '../contracts/world';
-import { cellCenter, cellInBounds, circleOverlapsCell, footprintCells } from '../core/world-grid';
+} from '@contracts/world';
+import { cellCenter, cellInBounds, circleOverlapsCell, footprintCells } from '@core/world-grid';
 import {
   occupiedCells,
-  PLAYER_RADIUS,
   PLACEMENT_REACH,
+  PLAYER_RADIUS,
   TEST_BUILDING_FOOTPRINT,
 } from './world-rules';
 export { PLACEMENT_REACH, TEST_BUILDING_FOOTPRINT } from './world-rules';

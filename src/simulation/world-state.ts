@@ -1,4 +1,4 @@
-import type { BuildingView, DepositDefinition, WorldPosition } from '../contracts/world';
+import type { BuildingView, DepositDefinition, WorldPosition } from '@contracts/world';
 
 /** Plain player data changed only by the simulation-owned motor. */
 export interface PlayerState {

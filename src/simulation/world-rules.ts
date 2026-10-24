@@ -1,5 +1,5 @@
-import type { BuildingView, GridCell, WorldDefinition } from '../contracts/world';
-import { footprintCells, worldToCell } from '../core/world-grid';
+import type { BuildingView, GridCell, WorldDefinition } from '@contracts/world';
+import { footprintCells, worldToCell } from '@core/world-grid';
 
 export const FIXED_STEP_SECONDS = 0.05;
 export const PLAYER_RADIUS = 0.35;

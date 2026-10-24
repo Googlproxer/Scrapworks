@@ -23,7 +23,8 @@
       "@core/*": ["./src/core/*"],
       "@game/*": ["./src/game/*"],
       "@simulation/*": ["./src/simulation/*"],
-      "@contracts/*": ["./src/contracts/*"]
+      "@contracts/*": ["./src/contracts/*"],
+      "@environments/*": ["./src/environments/*"]
     }
   },
   "angularCompilerOptions": {

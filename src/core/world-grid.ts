@@ -4,7 +4,7 @@ import type {
   GridDefinition,
   QuarterTurn,
   WorldPosition,
-} from '../contracts/world';
+} from '@contracts/world';
 
 export const SCENE_UNITS_PER_METRE = 100;
 

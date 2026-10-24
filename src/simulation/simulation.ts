@@ -1,12 +1,12 @@
-import { assertWorldDefinition } from '../contracts/world';
-import type { CommandResult, WorldCommand, WorldDefinition, WorldView } from '../contracts/world';
-import { cellCenter } from '../core/world-grid';
+import type { CommandResult, WorldCommand, WorldDefinition, WorldView } from '@contracts/world';
+import { assertWorldDefinition } from '@contracts/world';
+import { cellCenter } from '@core/world-grid';
 import { TEST_BUILDING_FOOTPRINT, validatePlacement } from './placement';
 import { PlayerMotor, type MovementIntent } from './player-motor';
 import { FIXED_STEP_SECONDS } from './world-rules';
 import type { WorldState } from './world-state';
-export { FIXED_STEP_SECONDS, PLAYER_RADIUS, WALK_SPEED, SPRINT_SPEED } from './world-rules';
 export type { MovementIntent } from './player-motor';
+export { FIXED_STEP_SECONDS, PLAYER_RADIUS, SPRINT_SPEED, WALK_SPEED } from './world-rules';
 
 /** One owner of authoritative mutable world data. This is not a gameplay-save codec. */
 export class Simulation {

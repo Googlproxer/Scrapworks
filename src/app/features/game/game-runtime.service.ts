@@ -17,11 +17,11 @@ import type {
 import type { GameState, SceneKey } from '@contracts/game-state';
 import type { ActionFrame, ButtonControl, ControllerInfo } from '@contracts/input';
 import type { WorldDefinition, WorldView } from '@contracts/world';
-import { environment } from '../../../environments/environment';
-import { ControlSettingsService } from '../controls/control-settings.service';
+import { environment } from '@environments/environment';
 import { validatePlacement } from '@simulation/placement';
-import { GameSession } from './session/game-session';
+import { ControlSettingsService } from '../controls/control-settings.service';
 import { GAME_CLIENT_FACTORY } from './game-client-factory';
+import { GameSession } from './session/game-session';
 
 @Service({ autoProvided: false })
 export class GameRuntimeService {

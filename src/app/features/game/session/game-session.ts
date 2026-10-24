@@ -1,6 +1,6 @@
-import type { GameTickContext, GameTickHandler } from '../../../../contracts/game-tick';
-import type { WorldCommand, WorldDefinition, WorldView } from '../../../../contracts/world';
-import { FIXED_STEP_SECONDS, Simulation } from '../../../../simulation/simulation';
+import type { GameTickContext, GameTickHandler } from '@contracts/game-tick';
+import type { WorldCommand, WorldDefinition, WorldView } from '@contracts/world';
+import { FIXED_STEP_SECONDS, Simulation } from '@simulation/simulation';
 
 interface TickRegistration {
   readonly handler: GameTickHandler;
