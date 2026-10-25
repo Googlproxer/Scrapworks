@@ -1,16 +1,46 @@
-import fs from 'node:fs';
 import { registerHooks } from 'node:module';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import ts from 'typescript';
 
-// The browser build resolves extensionless TS imports. Match that resolution for pure Node tests.
+const configFile = fileURLToPath(new URL('../../tsconfig.json', import.meta.url));
+const configuration = ts.getParsedCommandLineOfConfigFile(
+  configFile,
+  {},
+  {
+    ...ts.sys,
+    onUnRecoverableConfigFileDiagnostic(diagnostic) {
+      throw new Error(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
+    },
+  },
+);
+if (configuration.errors.length)
+  throw new Error(
+    configuration.errors
+      .map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+      .join('\n'),
+  );
+
+const cache = ts.createModuleResolutionCache(
+  path.dirname(configFile),
+  ts.sys.useCaseSensitiveFileNames ? (name) => name : (name) => name.toLowerCase(),
+  configuration.options,
+);
+
+// Native Node strips types but ignores tsconfig paths and extensionless TS imports.
+// Use the same configuration as the browser build; leave packages and built-ins to Node.
 registerHooks({
   resolve(specifier, context, nextResolve) {
-    if (
-      specifier.startsWith('.') &&
-      context.parentURL?.endsWith('.ts') &&
-      !/\.[a-z]+$/i.test(specifier)
-    ) {
-      const candidate = new URL(specifier + '.ts', context.parentURL);
-      if (fs.existsSync(candidate)) return nextResolve(candidate.href, context);
+    if (context.parentURL?.endsWith('.ts') && !specifier.startsWith('node:')) {
+      const { resolvedModule } = ts.resolveModuleName(
+        specifier,
+        fileURLToPath(context.parentURL),
+        configuration.options,
+        ts.sys,
+        cache,
+      );
+      if (resolvedModule?.extension === ts.Extension.Ts && !resolvedModule.isExternalLibraryImport)
+        return nextResolve(pathToFileURL(resolvedModule.resolvedFileName).href, context);
     }
     return nextResolve(specifier, context);
   },
