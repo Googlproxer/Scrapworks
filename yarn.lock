@@ -12425,7 +12425,7 @@ __metadata:
     rxjs: "npm:^7.8.2"
     scrapworks-editor-mcp-plugin: "portal:tools/editor-mcp"
     tslib: "npm:^2.8.1"
-    typescript: "npm:~6.0.3"
+    typescript: "npm:~7.0.2"
     typescript-eslint: "npm:^8.72.0"
     usehooks-ts: "npm:^3.1.1"
     vite: "npm:^8.3.5"
@@ -13088,7 +13088,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:6.0.3, typescript@npm:~6.0.3":
+"typescript@npm:6.0.3":
   version: 6.0.3
   resolution: "typescript@npm:6.0.3"
   bin:
@@ -13098,7 +13098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:7.0.2":
+"typescript@npm:7.0.2, typescript@npm:~7.0.2":
   version: 7.0.2
   resolution: "typescript@npm:7.0.2"
   dependencies:
@@ -13169,7 +13169,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A~6.0.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>":
   version: 6.0.3
   resolution: "typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>::version=6.0.3&hash=5786d5"
   bin:
@@ -13179,7 +13179,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A7.0.2#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A7.0.2#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A~7.0.2#optional!builtin<compat/typescript>":
   version: 7.0.2
   resolution: "typescript@patch:typescript@npm%3A7.0.2#optional!builtin<compat/typescript>::version=7.0.2&hash=3bafbf"
   dependencies:

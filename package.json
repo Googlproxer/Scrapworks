@@ -100,7 +100,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "scrapworks-editor-mcp-plugin": "portal:tools/editor-mcp",
-    "typescript": "~6.0.3",
+    "typescript": "~7.0.2",
     "typescript-eslint": "^8.72.0",
     "usehooks-ts": "^3.1.1",
     "vite": "^8.3.5",
