@@ -8794,10 +8794,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dexie@npm:^4.4.6":
-  version: 4.4.6
-  resolution: "dexie@npm:4.4.6"
-  checksum: 10c0/fc8be52970dc33c2a904ee77bfc459084afe6bb44f80cdce2ff5da989f0992bf56a5413cf3c3599d6e58f1fc1136632dde52cbf2d441cb9d430a92f5e99b28fc
+"dexie@npm:^4.4.7":
+  version: 4.4.7
+  resolution: "dexie@npm:4.4.7"
+  checksum: 10c0/5de6b45d928d61f8fd77dbb92ff206928007392c92c5500486655d2bed918eefb2c00ec07a932488bc09948463f91e7679607b241e2cd51930721a6e294da06c
   languageName: node
   linkType: hard
 
@@ -12381,7 +12381,7 @@ __metadata:
     babylonjs-editor-cli: "npm:5.5.2"
     babylonjs-editor-tools: "npm:5.5.2"
     babylonjs-gltf2interface: "npm:^9.30.0"
-    dexie: "npm:^4.4.6"
+    dexie: "npm:^4.4.7"
     eslint: "npm:^10.12.0"
     eslint-plugin-prettier: "npm:^5.5.6"
     playwright: "npm:^1.64.0"
