@@ -1,5 +1,5 @@
 import {
-  DeviceSourceManager,
+  type DeviceSourceManager,
   DeviceType,
   DualSenseInput,
   DualShockInput,
@@ -69,7 +69,7 @@ export class InputCapture {
   private sticks: RawInput['sticks'] = { left: { x: 0, y: 0 }, right: { x: 0, y: 0 } };
 
   constructor(
-    private readonly dsm: DeviceSourceManager,
+    private readonly dsm: Pick<DeviceSourceManager, 'getDeviceSource'>,
     private evaluator: ActionEvaluator,
     private readonly onPress: (control: ButtonControl) => void = () => undefined,
     private readonly onControllerActivity: (

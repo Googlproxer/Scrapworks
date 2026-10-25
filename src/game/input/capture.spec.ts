@@ -1,9 +1,8 @@
 import type { MockInstance } from 'vitest';
 import {
   DeviceSource,
-  DeviceSourceManager,
+  type DeviceSourceManager,
   DeviceType,
-  NullEngine,
   PointerInput,
   XboxInput,
   type IKeyboardEvent,
@@ -18,15 +17,13 @@ import { compileRules } from './evaluator/evaluator.helpers';
 import type { ActionFrame, RawInput } from './evaluator/evaluator.types';
 
 describe('InputCapture', () => {
-  let engine: NullEngine;
-  let dsm: DeviceSourceManager;
+  let dsm: Pick<DeviceSourceManager, 'getDeviceSource'>;
   let evaluator: ActionEvaluator;
   let capture: InputCapture;
   let sampled: MockInstance<ActionEvaluator['sample']>;
 
   beforeEach(() => {
-    engine = new NullEngine();
-    dsm = new DeviceSourceManager(engine);
+    dsm = { getDeviceSource: vi.fn(() => null) };
     evaluator = new ActionEvaluator({
       gameplay: compileRules(actions.gameplay, defaultProfile.contexts.gameplay),
       ui: compileRules(actions.ui, defaultProfile.contexts.ui),
@@ -37,8 +34,6 @@ describe('InputCapture', () => {
   });
 
   afterEach(() => {
-    dsm.dispose();
-    engine.dispose();
     vi.restoreAllMocks();
   });
 

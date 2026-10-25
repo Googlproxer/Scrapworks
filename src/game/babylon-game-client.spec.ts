@@ -1,15 +1,20 @@
 import { AssetContainer } from '@babylonjs/core/assetContainer';
+import { FreeCamera } from '@babylonjs/core/Cameras/freeCamera';
 import { EngineStore } from '@babylonjs/core/Engines/engineStore';
 import { Material } from '@babylonjs/core/Materials/material';
+import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type { GameClientOptions, WorldSessionBridge } from '@contracts/game-client';
 import type { GameState } from '@contracts/game-state';
 import { defaultProfile, type BindingProfile } from '@contracts/input';
 import type { WorldView } from '@contracts/world';
 import { GameSession } from '../app/features/game/session/game-session';
 import { loadEditorScene } from './assets/load-editor-scene';
+import { loadCharacter, type CharacterLoader } from './assets/load-character';
 import { BabylonGameClient } from './babylon-game-client';
+import type { InspectorLoader } from './debug/scene-inspector';
 import { InputManager } from './input/input-manager';
 import { FrameClock } from './timing/frame-clock';
+import { AuthoredWorldFixture } from './testing/authored-world-fixture';
 import { CameraController } from './views/camera-controller';
 import { PlacementController } from './views/placement-controller';
 import { PlayerController } from './views/player-controller';
@@ -17,26 +22,50 @@ import { PlayerView } from './views/player-view';
 import { SelectionController } from './views/selection-controller';
 
 describe('BabylonGameClient in the browser', () => {
+  let fixture: AuthoredWorldFixture;
   let host: HTMLDivElement;
   let client: BabylonGameClient;
+  let clients: BabylonGameClient[];
   let states: GameState[];
   let loadSceneFn: ReturnType<typeof vi.fn<typeof loadEditorScene>>;
+
+  beforeAll(async () => {
+    fixture = await AuthoredWorldFixture.load();
+  }, 30000);
 
   beforeEach(() => {
     host = document.createElement('div');
     host.style.cssText = 'width: 480px; height: 320px;';
     document.body.append(host);
-    loadSceneFn = vi.fn(loadEditorScene);
-    client = new BabylonGameClient(host, loadSceneFn);
+    clients = [];
+    loadSceneFn = vi.fn(async (scene, key) => {
+      if (key === 'Game') return fixture.loadScene(scene);
+      // Lifecycle checks need a renderable menu, not its authored assets.
+      const assets = new AssetContainer(scene);
+      const camera = new FreeCamera('test-menu-camera', Vector3.Zero(), scene);
+      assets.cameras.push(camera);
+      scene.activeCamera = camera;
+      return assets;
+    });
     states = [];
-    client.subscribe((state) => states.push(state));
   });
 
   afterEach(() => {
-    client.destroy();
+    for (const created of clients) created.destroy();
     host.remove();
     vi.restoreAllMocks();
   });
+
+  function startClient(
+    options: GameClientOptions = {},
+    inspectorLoader?: InspectorLoader,
+    characterLoader: CharacterLoader = fixture.loadCharacter,
+  ): void {
+    client = new BabylonGameClient(host, loadSceneFn, options, inspectorLoader, characterLoader);
+    clients.push(client);
+    states = [];
+    client.subscribe((state) => states.push(state));
+  }
 
   async function waitForMenu() {
     await expect
@@ -46,16 +75,13 @@ describe('BabylonGameClient in the browser', () => {
   }
 
   it('stops input and frames immediately but waits for Inspector before disposing its scene and engine', async () => {
-    client.destroy();
     let completeCleanup!: () => void;
     const cleanup = new Promise<void>((resolve) => (completeCleanup = resolve));
     const disposeInspector = vi.fn(() => cleanup);
-    client = new BabylonGameClient(host, loadSceneFn, {}, async () => () => ({
+    startClient({}, async () => () => ({
       dispose: disposeInspector,
       onClose: () => () => undefined,
     }));
-    states = [];
-    client.subscribe((state) => states.push(state));
     const engine = await waitForMenu();
     const scene = engine.scenes[0];
     await client.toggleInspector();
@@ -111,7 +137,6 @@ describe('BabylonGameClient in the browser', () => {
   }
 
   async function createPlayableWorld(options: Omit<GameClientOptions, 'session'> = {}) {
-    client.destroy();
     let session: GameSession | undefined;
     const currentSession = () => {
       if (!session) throw new Error('World not initialized');
@@ -134,13 +159,11 @@ describe('BabylonGameClient in the browser', () => {
       ),
       preview: vi.fn(() => ({ valid: false, reason: 'unavailable', cells: [] })),
     };
-    client = new BabylonGameClient(host, loadSceneFn, {
+    startClient({
       developerFixture: true,
       ...options,
       session: bridge,
     });
-    states = [];
-    client.subscribe((state) => states.push(state));
     const observed = observeInputPermission();
     const engine = await waitForMenu();
     client.setScene('Game');
@@ -323,6 +346,7 @@ describe('BabylonGameClient in the browser', () => {
   }, 45000);
 
   it('withholds gameplay input permission in the menu, during loading and after scene errors', async () => {
+    startClient();
     const observed = observeInputPermission();
     try {
       await waitForMenu();
@@ -342,6 +366,7 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('updates gameplay input permission on resize, blur and destruction while preserving UI blocking', async () => {
+    startClient();
     // Physical bindings and action transitions are tested in input/capture and
     // input/evaluator. This boundary verifies the client's ownership signal.
     const observed = observeInputPermission();
@@ -389,6 +414,7 @@ describe('BabylonGameClient in the browser', () => {
   }, 45000);
 
   it('publishes ready after a first frame and resizes the renderer with its host', async () => {
+    startClient();
     expect(states.at(-1)?.phase).toBe('loading');
     const engine = await waitForMenu();
     expect(engine.scenes[0].getFrameId()).toBeGreaterThan(0);
@@ -405,6 +431,7 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('defers every frame while a scene prepares hidden and resumes the same scene once visible', async () => {
+    startClient();
     const engine = await waitForMenu();
     const hidden = vi.spyOn(document, 'hidden', 'get');
     try {
@@ -430,6 +457,8 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('deserializes a GridMaterial and renders it with the authored menu camera', async () => {
+    loadSceneFn.mockImplementation(loadEditorScene);
+    startClient();
     const engine = await waitForMenu();
     const scene = engine.scenes[0];
     // Do not import GridMaterial in the test: that would register the missing
@@ -457,6 +486,8 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('keeps the menu scene free of the title now owned by Angular', async () => {
+    loadSceneFn.mockImplementation(loadEditorScene);
+    startClient();
     const engine = await waitForMenu();
     const scene = engine.scenes[0];
     expect(scene.getMeshByName('title')).toBeNull();
@@ -465,6 +496,8 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('loads the authored Game scene and rig and disposes the menu without duplicating the render loop', async () => {
+    loadSceneFn.mockImplementation(loadEditorScene);
+    startClient({}, undefined, loadCharacter);
     const engine = await waitForMenu();
     const menu = engine.scenes[0];
     client.setScene('Game');
@@ -511,6 +544,7 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('reports an asynchronous scene failure and can return to the menu', async () => {
+    startClient();
     const engine = await waitForMenu();
     loadSceneFn.mockRejectedValueOnce(new Error('Missing authored scene'));
     client.setScene('Game');
@@ -523,7 +557,49 @@ describe('BabylonGameClient in the browser', () => {
     expect(engine.scenes).toHaveLength(1);
   });
 
+  it('reports character load failures and disposes the partially prepared scene', async () => {
+    const characterLoader = vi
+      .fn<CharacterLoader>()
+      .mockRejectedValue(new Error('Missing character'));
+    startClient({}, undefined, characterLoader);
+    const engine = await waitForMenu();
+    client.setScene('Game');
+    await expect
+      .poll(() => states.at(-1))
+      .toEqual({
+        phase: 'error',
+        sceneKey: 'Game',
+        errorMessage: 'Missing character',
+      });
+    expect(characterLoader).toHaveBeenCalledOnce();
+    expect(engine.scenes).toHaveLength(0);
+    client.setScene('MainMenu');
+    await waitForMenu();
+    expect(engine.scenes).toHaveLength(1);
+  });
+
+  it('disposes a character that finishes loading after its client is destroyed', async () => {
+    let complete!: (assets: AssetContainer) => void;
+    const pending = new Promise<AssetContainer>((resolve) => (complete = resolve));
+    const characterLoader = vi.fn<CharacterLoader>(() => pending);
+    startClient({}, undefined, characterLoader);
+    const engine = await waitForMenu();
+    client.setScene('Game');
+    await expect.poll(() => characterLoader.mock.calls.length).toBe(1);
+    const scene = engine.scenes[0];
+    const assets = await fixture.loadCharacter(scene);
+    const dispose = vi.spyOn(assets, 'dispose');
+    client.destroy();
+    dispose.mockClear(); // Scene disposal may already release unattached assets.
+    complete(assets);
+    await expect.poll(() => dispose.mock.calls.length).toBe(1);
+    expect(scene.isDisposed).toBe(true);
+    expect(engine.isDisposed).toBe(true);
+    expect(states.at(-1)?.phase).toBe('stopped');
+  });
+
   it('disposes assets that finish loading after the client is destroyed', async () => {
+    startClient();
     const engine = await waitForMenu();
     const complete = deferScene();
     client.setScene('Game');
@@ -549,6 +625,7 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('rejects a late scene completion from a superseded transition', async () => {
+    startClient();
     const engine = await waitForMenu();
     const complete = deferScene();
     client.setScene('Game');
@@ -565,6 +642,7 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('does not construct a scene if a subscriber destroys the client during loading', async () => {
+    startClient();
     const engine = await waitForMenu();
     client.subscribe((state) => {
       if (state.phase === 'loading') client.destroy();
@@ -576,11 +654,8 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('stops the renderer on context loss, keeps UI polling alive, and disposes recovery on remount', async () => {
-    client.destroy();
     const onActionFrame = vi.fn();
-    client = new BabylonGameClient(host, loadSceneFn, { onActionFrame });
-    states = [];
-    client.subscribe((state) => states.push(state));
+    startClient({ onActionFrame });
     const engine = await waitForMenu();
     const scene = engine.scenes[0];
     const requestFrame = vi.spyOn(window, 'requestAnimationFrame');
@@ -607,9 +682,7 @@ describe('BabylonGameClient in the browser', () => {
 
     // The page's Retry action constructs a fresh client; the damaged instance
     // cannot silently reuse its lost WebGL context.
-    client = new BabylonGameClient(host, loadSceneFn);
-    states = [];
-    client.subscribe((state) => states.push(state));
+    startClient();
     const replacement = await waitForMenu();
     expect(replacement).not.toBe(engine);
     expect(replacement.activeRenderLoops).toHaveLength(1);
@@ -617,20 +690,17 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('releases shared document activity only after the final viewport is destroyed', async () => {
-    client.destroy();
     const baselineEngines = EngineStore.Instances.length;
     const add = vi.spyOn(document, 'addEventListener');
     const remove = vi.spyOn(document, 'removeEventListener');
-    client = new BabylonGameClient(host, loadSceneFn);
-    states = [];
-    client.subscribe((state) => states.push(state));
+    startClient();
     await waitForMenu();
     const visibilityListener = add.mock.calls.find(([name]) => name === 'visibilitychange')?.[1];
     expect(visibilityListener).toBeDefined();
     const otherHost = document.createElement('div');
     otherHost.style.cssText = 'width:320px;height:240px';
     document.body.append(otherHost);
-    const other = new BabylonGameClient(otherHost);
+    const other = new BabylonGameClient(otherHost, loadSceneFn);
     try {
       expect(add.mock.calls.filter(([name]) => name === 'visibilitychange')).toHaveLength(1);
       expect(EngineStore.Instances).toHaveLength(baselineEngines + 2);
@@ -656,6 +726,7 @@ describe('BabylonGameClient in the browser', () => {
   });
 
   it('cleans up an engine and its canvas if input construction fails', async () => {
+    startClient();
     await waitForMenu();
     const initialEngines = [...EngineStore.Instances];
     const failedHost = document.createElement('div');

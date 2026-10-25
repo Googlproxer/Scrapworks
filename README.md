@@ -47,6 +47,8 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 | `yarn build` | Export scenes, then create a production build.                                  |
 | `yarn scenes:export` | Pack saved Editor inputs into generated browser assets and the script registry. |
 | `yarn test` | Export scenes and run the Chromium application suite once.                      |
+| `yarn test:unit` | Run application, simulation, capture and Inspector ownership tests without creating Babylon engines. |
+| `yarn test:renderer` | Run the real Babylon device, Toolkit, renderer and authored-world integration tests. |
 | `yarn test:export` | Check staged export, retention, physics guards and watcher behavior.            |
 | `yarn test:world` | Run authored marker, coordinate, movement, scheduler and placement checks in Node without a renderer. |
 | `yarn test:workflow` | Verify dev reload/failure recovery in an isolated browser fixture.              |
@@ -59,6 +61,12 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 | `node tools/cleanup/check-docs.mjs` | Check documentation links, anchors, and Mermaid source consistency.             |
 
 Direct Angular targets need `yarn scenes:export` first. Do not rely on an old `public/scene/` export or generated `src/scripts.ts` from a previous checkout.
+
+Use `yarn test:unit` for routine logic/UI changes, or `yarn test:unit --watch` while editing. These tests use client/device/scene doubles and still run in Chromium for DOM, IndexedDB, focus and accessibility checks. They currently need scene export for the default factory's generated script imports, even though they never construct its renderer. `yarn test:renderer` covers the tests that need a real engine: browser device wiring, native Toolkit lifecycle, WebGL/context loss, authored assets, animation and picking. `yarn test` continues to run both groups and remains the CI gate. Add future engine-dependent suites to both test configurations in `angular.json`.
+
+Renderer behavior suites prepare the real authored world and character once per suite using [Babylon scene serialization](https://github.com/BabylonJS/Babylon.js/blob/master/packages/dev/core/src/Misc/sceneSerializer.ts). The test-only `AuthoredWorldFixture` retains JSON strings after disposing its source engine, then restores fresh geometry, materials, skeletons, animation groups and world definitions for each test. `WorldScene` tests reuse one engine's compiled shaders, reset render state and dimensions, and dispose every test scene; client lifecycle/context-loss tests retain separate engines. Scripts and simulation sessions are always reconstructed. An isolation regression mutates and disposes one owner while another remains usable. The client authored-load check, WorldScene construction-failure check and Angular Play Game/Retry tests still use the uncached production loaders, so snapshots do not replace end-to-end import coverage. Snapshots are rebuilt from the current exported assets on each test/watch run and are never committed.
+
+Application tests fail on unexpected `console.error`, `console.warn` or `console.trace` calls, including module imports and Angular teardown. Failure-path tests declare exact messages with `expectConsoleMessage` from `src/testing/console-policy.ts`; missing expected messages also fail. The setup remains active when tests restore mocks. Dexie's development-only traces are asserted in the storage-failure tests when Chromium async-task debugging is available.
 
 ## Continuous integration and dependency updates
 

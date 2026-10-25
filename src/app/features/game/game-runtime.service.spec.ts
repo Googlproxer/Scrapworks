@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { expectConsoleMessage } from '../../../testing/console-policy';
 import type { GameClient, GameClientOptions } from '@contracts/game-client';
 import {
   defaultProfile,
@@ -274,8 +275,10 @@ describe('GameRuntimeService', () => {
   });
 
   it('reports factory failures and allows a later mount to retry', () => {
+    const error = new Error('Renderer failed');
+    expectConsoleMessage('error', error);
     factory.mockImplementationOnce(() => {
-      throw new Error('Renderer failed');
+      throw error;
     });
     const host = document.createElement('div');
     service.mount(host);
@@ -317,9 +320,11 @@ describe('GameRuntimeService', () => {
   });
 
   it('destroys a client if subscription setup fails', () => {
+    const error = new Error('Subscription failed');
+    expectConsoleMessage('error', error);
     const game = createClient();
     vi.mocked(game.client.subscribe).mockImplementation(() => {
-      throw new Error('Subscription failed');
+      throw error;
     });
     factory.mockReturnValue(game.client);
     service.mount(document.createElement('div'));

@@ -1,5 +1,5 @@
-import { NullEngine } from '@babylonjs/core/Engines/nullEngine';
-import { Scene } from '@babylonjs/core/scene';
+import { Observable } from '@babylonjs/core/Misc/observable';
+import type { Scene } from '@babylonjs/core/scene';
 import type { InspectorState } from '@contracts/game-client';
 import { SceneInspector, type InspectorFactory, type InspectorHandle } from './scene-inspector';
 
@@ -33,21 +33,37 @@ function createHandle() {
   };
 }
 
+function createScene(): Scene {
+  // Inspector ownership only needs identity and disposal notifications.
+  let disposed = false;
+  const scene: Pick<Scene, 'isDisposed' | 'onDisposeObservable' | 'dispose'> = {
+    get isDisposed() {
+      return disposed;
+    },
+    onDisposeObservable: new Observable<Scene>(),
+    dispose() {
+      if (scene.isDisposed) return;
+      disposed = true;
+      scene.onDisposeObservable.notifyObservers(scene as Scene);
+      scene.onDisposeObservable.clear();
+    },
+  };
+  return scene as Scene;
+}
+
 describe('SceneInspector', () => {
-  let engine: NullEngine;
   let scene: Scene;
   let host: HTMLElement;
   let helpers: SceneInspector[];
 
   beforeEach(() => {
-    engine = new NullEngine();
-    scene = new Scene(engine);
+    scene = createScene();
     host = document.createElement('div');
     helpers = [];
   });
   afterEach(async () => {
     await Promise.all(helpers.map((helper) => helper.dispose()));
-    engine.dispose();
+    scene.dispose();
   });
 
   function create(
@@ -113,7 +129,7 @@ describe('SceneInspector', () => {
     const factory = vi.fn().mockReturnValueOnce(first.handle).mockReturnValueOnce(second.handle);
     const helper = create(async () => factory);
     await helper.toggle(scene, host);
-    const replacement = new Scene(engine);
+    const replacement = createScene();
     await helper.toggle(replacement, host);
     expect(first.unsubscribe).toHaveBeenCalledOnce();
     expect(first.handle.dispose).toHaveBeenCalledOnce();
@@ -133,7 +149,7 @@ describe('SceneInspector', () => {
       .mockResolvedValueOnce(() => owned.handle);
     const helper = create(loader);
     const stale = helper.toggle(scene, host);
-    await helper.toggle(new Scene(engine), host);
+    await helper.toggle(createScene(), host);
     first.reject(new Error('Old download failed'));
     await stale;
     expect(helper.state).toEqual({ phase: 'open', errorMessage: null });
@@ -220,7 +236,7 @@ describe('SceneInspector', () => {
     const firstHelper = create(async () => () => first.handle);
     const secondHelper = create(async () => () => second.handle);
     await firstHelper.toggle(scene, host);
-    await secondHelper.toggle(new Scene(engine), document.createElement('div'));
+    await secondHelper.toggle(createScene(), document.createElement('div'));
     firstHelper.dispose();
     expect(first.handle.dispose).toHaveBeenCalledOnce();
     expect(second.handle.dispose).not.toHaveBeenCalled();
@@ -293,8 +309,8 @@ describe('SceneInspector', () => {
     const factory = vi.fn().mockReturnValueOnce(first.handle).mockReturnValueOnce(second.handle);
     const helper = create(async () => factory);
     await helper.toggle(scene, host);
-    const supersededScene = new Scene(engine),
-      replacement = new Scene(engine);
+    const supersededScene = createScene(),
+      replacement = createScene();
     const superseded = helper.toggle(supersededScene, host);
     const newest = helper.toggle(replacement, host);
     expect(factory).toHaveBeenCalledOnce();

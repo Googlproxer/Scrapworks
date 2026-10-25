@@ -1,11 +1,10 @@
-import { LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
-import '@babylonjs/loaders/glTF';
 import type { AssetContainer } from '@babylonjs/core/assetContainer';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import type { Scene } from '@babylonjs/core/scene';
 import type { GameClientOptions } from '@contracts/game-client';
 import type { ActionFrame } from '@contracts/input';
 import type { WorldDefinition } from '@contracts/world';
+import { loadCharacter, type CharacterLoader } from '../assets/load-character';
 import { attachScriptsInOrder } from '../toolkit/attach-scripts-in-order';
 import type { GameplayScript } from '../toolkit/gameplay-script';
 import { CameraController } from './camera-controller';
@@ -79,14 +78,9 @@ export class WorldScene {
     scene: Scene,
     definition: WorldDefinition,
     options: GameClientOptions = {},
+    loadCharacterFn: CharacterLoader = loadCharacter,
   ): Promise<WorldScene> {
-    const character = await LoadAssetContainerAsync(
-      new URL(
-        'assets/models/protagonist-v2.glb',
-        scene.getEngine().getRenderingCanvas()!.ownerDocument.baseURI,
-      ).href,
-      scene,
-    );
+    const character = await loadCharacterFn(scene);
     if (scene.isDisposed) {
       character.dispose();
       throw new Error('Character owner was disposed.');

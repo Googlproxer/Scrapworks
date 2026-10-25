@@ -12,12 +12,12 @@ import { UiService } from './ui.service';
 
 const TEST_SLOT = new InjectionToken<number>('UI dialog test slot');
 
-@Component({ template: '<p>Save dialog test content</p>' })
+@Component({ selector: 'app-test-dialog', template: '<p>Save dialog test content</p>' })
 class TestDialog {
   public readonly slot = inject(TEST_SLOT, { optional: true });
 }
 
-@Component({ template: '<p>Alternative dialog test content</p>' })
+@Component({ selector: 'app-alternate-dialog', template: '<p>Alternative dialog test content</p>' })
 class AlternateDialog {}
 
 describe('UiService', () => {

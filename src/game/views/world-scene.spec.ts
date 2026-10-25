@@ -6,12 +6,13 @@ import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { Scene } from '@babylonjs/core/scene';
 import type { WorldSessionBridge } from '@contracts/game-client';
 import type { ActionFrame, ActionState } from '@contracts/input';
-import { assertWorldDefinition, type WorldDefinition, type WorldView } from '@contracts/world';
-import { loadEditorScene } from '../assets/load-editor-scene';
+import type { WorldDefinition, WorldView } from '@contracts/world';
+import { AuthoredWorldFixture } from '../testing/authored-world-fixture';
 import { WorldScene } from './world-scene';
 import { GameSession } from '../../app/features/game/session/game-session';
 
 describe('WorldScene with the exported character and authored scene', () => {
+  let fixture: AuthoredWorldFixture;
   let canvas: HTMLCanvasElement;
   let engine: Engine;
   let scene: Scene;
@@ -22,21 +23,30 @@ describe('WorldScene with the exported character and authored scene', () => {
   let session: GameSession;
   let bridge: WorldSessionBridge;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
+    fixture = await AuthoredWorldFixture.load();
     canvas = document.createElement('canvas');
+    engine = new Engine(canvas, true);
+  }, 30000);
+
+  afterAll(() => {
+    engine?.dispose();
+    canvas?.remove();
+  });
+
+  beforeEach(async () => {
+    expect(engine.scenes).toHaveLength(0);
+    expect(engine.activeRenderLoops).toHaveLength(0);
     canvas.style.cssText = 'position:fixed;left:73px;top:47px;width:640px;height:480px';
     document.body.append(canvas);
-    engine = new Engine(canvas, true);
+    // Keep compiled shaders, but reset render state and dimensions for each owner.
+    engine.wipeCaches(true);
     engine.setHardwareScalingLevel(1);
     engine.resize();
     scene = new Scene(engine);
-    assets = await loadEditorScene(scene, 'Game');
+    assets = await fixture.loadScene(scene);
     assets.addAllToScene();
-    const response = await fetch(new URL('scene/worlds/game.json', document.baseURI));
-    expect(response.ok).toBe(true);
-    const data: unknown = await response.json();
-    assertWorldDefinition(data);
-    definition = data;
+    definition = fixture.definition();
     session = new GameSession(definition, { developerFixture: true });
     bridge = {
       initialize: () => undefined,
@@ -51,7 +61,12 @@ describe('WorldScene with the exported character and authored scene', () => {
         session.enqueue({ type: 'place', buildingId: 'test-building', cell, rotation }),
       preview: () => ({ valid: true, reason: null, cells: [] }),
     };
-    world = await WorldScene.create(scene, definition, { session: bridge, developerFixture: true });
+    world = await WorldScene.create(
+      scene,
+      definition,
+      { session: bridge, developerFixture: true },
+      fixture.loadCharacter,
+    );
     expect(scene.activeCamera).toBeInstanceOf(ArcRotateCamera);
     camera = scene.activeCamera as ArcRotateCamera;
     await scene.whenReadyAsync();
@@ -62,9 +77,10 @@ describe('WorldScene with the exported character and authored scene', () => {
     world?.dispose();
     assets?.dispose();
     scene?.dispose();
-    engine?.dispose();
     canvas?.remove();
     vi.restoreAllMocks();
+    expect(engine.scenes).toHaveLength(0);
+    expect(engine.activeRenderLoops).toHaveLength(0);
   });
 
   function view(overrides: Partial<WorldView> = {}): WorldView {
@@ -212,6 +228,90 @@ describe('WorldScene with the exported character and authored scene', () => {
     expect(Math.abs(bounds.min.y)).toBeLessThan(5);
     expect(scene.getMeshByName('obstacle')!.isEnabled()).toBe(false);
     expect(scene.getMeshByName('player-placeholder')!.isEnabled()).toBe(false);
+  });
+
+  it('isolates snapshot geometry, materials, rigs, animations, scripts and simulation across owners', async () => {
+    const otherCanvas = document.createElement('canvas');
+    const otherEngine = new Engine(otherCanvas, true);
+    const otherScene = new Scene(otherEngine);
+    let otherWorld: WorldScene | undefined;
+    try {
+      const otherAssets = await fixture.loadScene(otherScene);
+      otherAssets.addAllToScene();
+      const otherDefinition = fixture.definition();
+      const otherSession = new GameSession(otherDefinition, { developerFixture: true });
+      otherWorld = await WorldScene.create(
+        otherScene,
+        otherDefinition,
+        { developerFixture: true },
+        fixture.loadCharacter,
+      );
+      await otherScene.whenReadyAsync();
+      const otherCamera = otherScene.activeCamera as ArcRotateCamera;
+      const originalAlpha = otherCamera.alpha;
+      expect(otherWorld.player).not.toBe(world.player);
+      expect(otherWorld.player.root).not.toBe(world.player.root);
+      expect(otherDefinition).not.toBe(definition);
+      expect(otherDefinition.grid).not.toBe(definition.grid);
+      expect(otherDefinition.deposits[0]).not.toBe(definition.deposits[0]);
+
+      const mesh = scene.meshes.find((candidate) => candidate.skeleton)!;
+      const otherMesh = otherScene.meshes.find((candidate) => candidate.skeleton)!;
+      const vertices = mesh.getVerticesData('position')!;
+      const otherVertices = otherMesh.getVerticesData('position')!;
+      const originalVertex = otherVertices[0];
+      expect(otherMesh).not.toBe(mesh);
+      expect(otherMesh.getScene()).toBe(otherScene);
+      expect(otherVertices).not.toBe(vertices);
+      expect(otherMesh.material).not.toBe(mesh.material);
+      expect(otherScene.skeletons[0]).not.toBe(scene.skeletons[0]);
+      expect(otherScene.skeletons[0].bones[0]).not.toBe(scene.skeletons[0].bones[0]);
+      const originalBonePosition = otherScene.skeletons[0].bones[0].getPosition();
+      const originalAlphaValue = otherMesh.material!.alpha;
+
+      const animation = scene.animationGroups.find((clip) => clip.name === 'Walk')!;
+      const otherAnimation = otherScene.animationGroups.find((clip) => clip.name === 'Walk')!;
+      const key = animation.targetedAnimations[0].animation.getKeys()[0];
+      const otherKey = otherAnimation.targetedAnimations[0].animation.getKeys()[0];
+      const originalFrame = otherKey.frame;
+      expect(otherAnimation).not.toBe(animation);
+      expect(otherAnimation.targetedAnimations[0].target).not.toBe(
+        animation.targetedAnimations[0].target,
+      );
+      expect(otherKey).not.toBe(key);
+
+      vertices[0] += 100;
+      mesh.material!.alpha = 0.25;
+      scene.skeletons[0].bones[0].setPosition(new Vector3(100, 200, 300));
+      key.frame += 10;
+      animation.speedRatio = 7;
+      camera.alpha += 1;
+      world.player.root.position.x = 9999;
+      session.advance(0.25);
+      expect(session.view.tick).toBeGreaterThan(0);
+      expect(otherSession.view.tick).toBe(0);
+      expect(otherVertices[0]).toBe(originalVertex);
+      expect(otherMesh.material!.alpha).toBe(originalAlphaValue);
+      expect(otherScene.skeletons[0].bones[0].getPosition()).toEqual(originalBonePosition);
+      expect(otherKey.frame).toBe(originalFrame);
+      expect(otherAnimation.speedRatio).not.toBe(7);
+      expect(otherCamera.alpha).toBe(originalAlpha);
+      expect(otherWorld.player.root.position.x).not.toBe(9999);
+
+      // Destruction must not invalidate another owner's assets or render hooks.
+      world.dispose();
+      assets.dispose();
+      scene.dispose();
+      otherWorld.player.present(otherSession.view, 0.05, true);
+      expect(() => otherScene.render()).not.toThrow();
+      expect(otherMesh.isDisposed()).toBe(false);
+      expect(otherScene.skeletons).toHaveLength(1);
+      expect(otherAnimation.animatables[0].weight).toBeGreaterThanOrEqual(0);
+      expect(fixture.definition()).toEqual(otherDefinition);
+    } finally {
+      otherWorld?.dispose();
+      otherEngine.dispose();
+    }
   });
 
   it('interpolates published metre positions and blends movement clips without moving the root itself', () => {
@@ -524,6 +624,7 @@ describe('WorldScene with the exported character and authored scene', () => {
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
     scene.activeCamera = null;
     const beforeUpdates = scene.onBeforeRenderObservable.observers.length;
+    // Keep a cold glTF construction-failure check alongside the snapshot behavior cases.
     await expect(WorldScene.create(scene, definition)).rejects.toThrow('authored ArcRotateCamera');
     expect(scene.getTransformNodeByName('world-scripts')).toBeNull();
     expect(scene.getTransformNodeByName('player-visual')).toBeNull();

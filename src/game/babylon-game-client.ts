@@ -6,6 +6,7 @@ import { isValidSceneKey, type GameState, type SceneKey } from '@contracts/game-
 import { assertWorldDefinition, type WorldDefinition } from '@contracts/world';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { loadEditorScene } from './assets/load-editor-scene';
+import { loadCharacter, type CharacterLoader } from './assets/load-character';
 import { InputManager } from './input/input-manager';
 import { BrowserActivity } from './lifecycle/browser-activity';
 import { FrameClock } from './timing/frame-clock';
@@ -73,6 +74,7 @@ export class BabylonGameClient implements GameClient {
     private readonly loadSceneFn = loadEditorScene,
     private readonly options: GameClientOptions = {},
     private readonly inspectorLoader: InspectorLoader = loadInspector,
+    private readonly loadCharacterFn: CharacterLoader = loadCharacter,
   ) {
     this.ownerDocument = host.ownerDocument;
     const ownerWindow = host.ownerDocument.defaultView;
@@ -258,7 +260,12 @@ export class BabylonGameClient implements GameClient {
         assertWorldDefinition(definition);
         if (!this.isCurrentTransition(transition)) return;
         this.options.session?.initialize(definition);
-        const world = await WorldScene.create(scene, definition, this.options);
+        const world = await WorldScene.create(
+          scene,
+          definition,
+          this.options,
+          this.loadCharacterFn,
+        );
         if (!this.isCurrentTransition(transition)) {
           world.dispose();
           return;

@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { defaultProfile, type BindingProfile } from '@contracts/input';
 import { Dexie } from 'dexie';
+import { expectConsoleMessage } from '../../../testing/console-policy';
 import { ControlSettingsService } from './control-settings.service';
 
 describe('ControlSettingsService persistence', () => {
@@ -41,6 +42,15 @@ describe('ControlSettingsService persistence', () => {
     };
   }
 
+  function expectStorageTrace(name: string, message: string): void {
+    // Dexie traces handled failures when Chromium's async-task debugger is available.
+    if (Dexie.debug && 'createTask' in console && typeof console.createTask === 'function')
+      expectConsoleMessage(
+        'trace',
+        expect.objectContaining({ name, message: expect.stringContaining(message) }),
+      );
+  }
+
   it('writes controls, reloads them through a fresh service and preserves legacy save records', async () => {
     const first = TestBed.inject(ControlSettingsService);
     await first.ready;
@@ -75,6 +85,7 @@ describe('ControlSettingsService persistence', () => {
   });
 
   it('reports an IndexedDB read failure while keeping defaults usable', async () => {
+    expectStorageTrace('UnknownError', 'Storage unavailable');
     vi.spyOn(IDBObjectStore.prototype, 'get').mockImplementationOnce(() => {
       throw new DOMException('Storage unavailable', 'UnknownError');
     });
@@ -88,6 +99,7 @@ describe('ControlSettingsService persistence', () => {
     const service = TestBed.inject(ControlSettingsService);
     await service.ready;
     expect(await service.save(defaultProfile)).toBe(true);
+    expectStorageTrace('QuotaExceededError', 'Quota exhausted');
     vi.spyOn(IDBObjectStore.prototype, 'put').mockImplementationOnce(() => {
       throw new DOMException('Quota exhausted', 'QuotaExceededError');
     });
@@ -99,6 +111,35 @@ describe('ControlSettingsService persistence', () => {
     );
     expect(await service.save(changedProfile())).toBe(true);
     expect(service.error()).toBeNull();
+  });
+
+  it('finishes its initial read before closing on destruction and ignores the late result', async () => {
+    await settingsDatabase.table('preferences').put({ key: 'controls', profile: changedProfile() });
+    const close = vi.spyOn(Dexie.prototype, 'close');
+    const service = TestBed.inject(ControlSettingsService);
+    TestBed.resetTestingModule();
+    expect(close).not.toHaveBeenCalled();
+    await service.ready;
+    expect(close).toHaveBeenCalledOnce();
+    expect(service.profile()).toEqual(defaultProfile);
+    expect(service.error()).toBeNull();
+  });
+
+  it('finishes a requested save before closing and rejects writes after destruction', async () => {
+    const service = TestBed.inject(ControlSettingsService);
+    await service.ready;
+    const close = vi.spyOn(Dexie.prototype, 'close');
+    const saving = service.save(changedProfile());
+    TestBed.resetTestingModule();
+    expect(close).not.toHaveBeenCalled();
+    await expect(saving).resolves.toBe(true);
+    expect(close).toHaveBeenCalledOnce();
+    expect(service.profile()).toEqual(defaultProfile);
+    expect(service.error()).toBeNull();
+    await expect(service.save(defaultProfile)).resolves.toBe(false);
+    expect((await settingsDatabase.table('preferences').get('controls')).profile).toEqual(
+      changedProfile(),
+    );
   });
 
   it('rejects invalid changes before writing and does not let an initial read overwrite a newer save', async () => {

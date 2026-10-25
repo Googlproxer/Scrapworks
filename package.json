@@ -8,6 +8,8 @@
     "dev": "node tools/scenes/dev.mjs",
     "build": "yarn scenes:export && ng build",
     "test": "yarn scenes:export && ng test --watch=false",
+    "test:unit": "yarn scenes:export && ng test --configuration=unit --watch=false",
+    "test:renderer": "yarn scenes:export && ng test --configuration=renderer --watch=false",
     "test:watch": "yarn scenes:export && ng test --watch",
     "scenes:export": "node tools/scenes/export.mjs",
     "editor:mcp:check": "node tools/editor-mcp/check.mjs",

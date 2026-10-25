@@ -70,7 +70,28 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "browsers": ["chromiumHeadless"]
+            "browsers": ["chromiumHeadless"],
+            "setupFiles": ["src/testing/setup-tests.ts"]
+          },
+          "configurations": {
+            "unit": {
+              "exclude": [
+                "game/babylon-game-client.spec.ts",
+                "game/input/input-manager.spec.ts",
+                "game/toolkit/gameplay-script.spec.ts",
+                "game/views/world-scene.spec.ts",
+                "app/features/game/game-page/babylon-game-page.component.spec.ts"
+              ]
+            },
+            "renderer": {
+              "include": [
+                "game/babylon-game-client.spec.ts",
+                "game/input/input-manager.spec.ts",
+                "game/toolkit/gameplay-script.spec.ts",
+                "game/views/world-scene.spec.ts",
+                "app/features/game/game-page/babylon-game-page.component.spec.ts"
+              ]
+            }
           }
         },
         "lint": {
