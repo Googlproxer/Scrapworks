@@ -2468,52 +2468,52 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babylonjs/addons@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/addons@npm:9.30.0"
+"@babylonjs/addons@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/addons@npm:9.31.3"
   peerDependencies:
     "@babylonjs/core": ^9.0.0
-  checksum: 10c0/61991f56a076f9ca005c708c65c118686c3b5883da101cde5fc5da06f664b4d41dde34e3f09407533962fe89f747d6734f3cf0166a7729f55a0fa7e85ec5245e
+  checksum: 10c0/608b07cca8a62f29e358fbb5e0d46c812416ea6656c931c9e79a08f34e118f75dfa70a2a2b4cef09faa13f75d14580c3d2a35433530b35cf4063df982f8a1272
   languageName: node
   linkType: hard
 
-"@babylonjs/core@npm:^9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/core@npm:9.30.0"
-  checksum: 10c0/a511fc882b58f5e1e8dc63bb2b3f9d3fece63c3dccaaa86c7c803556b9d76e7931d7c75b7c8da52e1b968250ddb7f28b34df90a935d8f82ba2c260d415f1ca6b
+"@babylonjs/core@npm:^9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/core@npm:9.31.3"
+  checksum: 10c0/ec9bb7c1893db7f87fe88eae59fb1689b5455c970bb40e32ed83c7b33fa0836b42630eace5b7c9b6117805192fc303fad3d5f3aadacd57fb62deb5475b91836e
   languageName: node
   linkType: hard
 
-"@babylonjs/gui-editor@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/gui-editor@npm:9.30.0"
+"@babylonjs/gui-editor@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/gui-editor@npm:9.31.3"
   peerDependencies:
     "@babylonjs/core": ^9.0.0
     "@babylonjs/gui": ^9.0.0
     "@types/react": ">=16.7.3"
     "@types/react-dom": ">=16.0.9"
-  checksum: 10c0/283ce2ba393f8909032ccdd6f5ff57efb5e57b9a6b9159e9356e57b3bdf6add4f20219c70b0c2216ee799087f33056d8d59c4bbb6997a4c5c9f048b87e843940
+  checksum: 10c0/fbaa79cc58777584eb430407ba0933d607206a701c29a969dc2825f231a742224f7d9e4fe44c0c32ba976ea3e4a7b5f657a55aaa9e1f37947faa20645824585b
   languageName: node
   linkType: hard
 
-"@babylonjs/gui@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/gui@npm:9.30.0"
+"@babylonjs/gui@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/gui@npm:9.31.3"
   peerDependencies:
     "@babylonjs/core": ^9.0.0
-  checksum: 10c0/7a4bf1221691923a0441b70e2b2150de7121f8cecaf104f3f298adeb19d5741f76280091d385db05cda16a12c449bfbfad147e7aa940164be49b27c9ab0a507b
+  checksum: 10c0/6e86e0d94b93c20b83a2eb629a2372b8fecb8584c65071d6e8dd63ee0c3a15de0cfa7455a535975af5a8721c225a01beac99f799f409da3d532f182e29a9b247
   languageName: node
   linkType: hard
 
-"@babylonjs/inspector@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/inspector@npm:9.30.0"
+"@babylonjs/inspector@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/inspector@npm:9.31.3"
   peerDependencies:
     "@babylonjs/addons": ^9.0.0
     "@babylonjs/core": ^9.0.0
     "@babylonjs/gui": ^9.0.0
     "@babylonjs/gui-editor": ^9.0.0
-    "@babylonjs/lite": ^1.27.0
+    "@babylonjs/lite": ^1.32.0
     "@babylonjs/loaders": ^9.0.0
     "@babylonjs/materials": ^9.0.0
     "@babylonjs/node-editor": ^9.0.0
@@ -2523,6 +2523,7 @@ __metadata:
     "@babylonjs/serializers": ^9.0.0
     "@fluentui-contrib/react-resize-handle": ^0.8.4
     "@fluentui-contrib/react-virtualizer": ^1.0.0
+    "@fluentui/react-charts": ^9.3.27
     "@fluentui/react-components": ^9.70.0
     "@fluentui/react-icons": ^2.0.310
     "@fluentui/react-motion-components-preview": ^0.15.2
@@ -2535,78 +2536,78 @@ __metadata:
       optional: true
   bin:
     babylon-inspector: bin/inspector-cli.mjs
-  checksum: 10c0/282362d68f6a7660d1651e1c0d7e47316f0fc3935acf7714fadc7ff7a652c8def85308ba2d65aed9b5c603e4b160fb292db050cdef1d0c4ee24eb8277f2bc044
+  checksum: 10c0/47aba439e5e7a08fe2a85432299bf0a12aca8eecbfcaf343b2e9e2a6647a22b3b5be62bf82d463b0836c6873f13c35561599329b58000bddc33e10248ba44cca
   languageName: node
   linkType: hard
 
-"@babylonjs/loaders@npm:^9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/loaders@npm:9.30.0"
+"@babylonjs/loaders@npm:^9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/loaders@npm:9.31.3"
   peerDependencies:
     "@babylonjs/core": ^9.0.0
     babylonjs-gltf2interface: ^9.0.0
-  checksum: 10c0/7f74580469ba79911a1944d2a5f197dea5ac0244c9f1e4b658310dc373c03764fde99ba5db0fd53147bc2372784fddbab6d870a04bfac5e56c6e9c7e7e35216b
+  checksum: 10c0/79f42665879fc6cfe0c2133c8d3e3a741e0181d822ecf173398c938505c356117a8b2a82eca2fcca0d020acebfc8c447c06628a6c95f436ef6fa298f5e9c1662
   languageName: node
   linkType: hard
 
-"@babylonjs/materials@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/materials@npm:9.30.0"
+"@babylonjs/materials@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/materials@npm:9.31.3"
   peerDependencies:
     "@babylonjs/core": ^9.0.0
-  checksum: 10c0/0053e9cbca629137ea140511ba6a457b8cc1740d7b5f654b7e3bcc96e51167154ca1dd4fc2f9f6016e14bceb1ed9ec1b7b2bc00d5f80310c1217c7a78dbef938
+  checksum: 10c0/5c1ea3e345a633a09c16a6bbf8426683def25b139fcff707003f39689729ce6106aa89b96ce16583bb05e910f9baac11c7664669360226ceb4f18ba42df92a9d
   languageName: node
   linkType: hard
 
-"@babylonjs/node-editor@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/node-editor@npm:9.30.0"
-  peerDependencies:
-    "@babylonjs/core": ^9.0.0
-    "@types/react": ">=16.7.3"
-    "@types/react-dom": ">=16.0.9"
-  checksum: 10c0/23cd7e42e793a331a6db72d4f56e1395172aaa133540b0a5dd05bc100106ffe6d111ac7fd5b65154eab552920de5f43948ea7769b0c1756bf312a4b134563bde
-  languageName: node
-  linkType: hard
-
-"@babylonjs/node-geometry-editor@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/node-geometry-editor@npm:9.30.0"
+"@babylonjs/node-editor@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/node-editor@npm:9.31.3"
   peerDependencies:
     "@babylonjs/core": ^9.0.0
     "@types/react": ">=16.7.3"
     "@types/react-dom": ">=16.0.9"
-  checksum: 10c0/157f203f887564d31a308c4bf96b006de3c36a060b845ad824f788995d4a1eff736561ee63de5a4ab7de7ee401fd13dd25bdf69a94229ee458580f8d905a2887
+  checksum: 10c0/b3ba4d60f4c64799ae005ac5622895adb743dc69bab5ab9dc3c2898b51521329e23b2413f01b8a0a2dab4068d1a0bbf238c58d68dd35377e121e6bdea66677a1
   languageName: node
   linkType: hard
 
-"@babylonjs/node-particle-editor@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/node-particle-editor@npm:9.30.0"
-  peerDependencies:
-    "@babylonjs/core": ^9.0.0
-  checksum: 10c0/ad448be5776b5939c2fa9a01e64d269cbb00381a4e3330d256ca62b15d250d816d5d5f2eba7187915d5de8b9f09c90d9f4ee83ea6902c86a716b790c25a042ea
-  languageName: node
-  linkType: hard
-
-"@babylonjs/node-render-graph-editor@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/node-render-graph-editor@npm:9.30.0"
+"@babylonjs/node-geometry-editor@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/node-geometry-editor@npm:9.31.3"
   peerDependencies:
     "@babylonjs/core": ^9.0.0
     "@types/react": ">=16.7.3"
     "@types/react-dom": ">=16.0.9"
-  checksum: 10c0/feadbc5082b312b68e5ef9cb90bce123515d2fb2d2c2fe554cdf07aa1dcea781a36138928bdf9f1628e84c15695e1b363c5b88e2e51a85d9bec707c3ad7530e0
+  checksum: 10c0/16951983c7e2d5c6f89ac032328f16df1eacce288335bd4a78172df282636e7136f871f34503d5780ce167aa31ae522a21e5f0db4c3a927a0b8923fa610baa50
   languageName: node
   linkType: hard
 
-"@babylonjs/serializers@npm:9.30.0":
-  version: 9.30.0
-  resolution: "@babylonjs/serializers@npm:9.30.0"
+"@babylonjs/node-particle-editor@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/node-particle-editor@npm:9.31.3"
+  peerDependencies:
+    "@babylonjs/core": ^9.0.0
+  checksum: 10c0/f2b89684536c901a86cbd25aba2c13b8061c2a1f3c6693935e568f109a19053bfad26650fd79f7152efc573bd0f8d4c59c9ae43f12fe91c6d87e370a50a9e26d
+  languageName: node
+  linkType: hard
+
+"@babylonjs/node-render-graph-editor@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/node-render-graph-editor@npm:9.31.3"
+  peerDependencies:
+    "@babylonjs/core": ^9.0.0
+    "@types/react": ">=16.7.3"
+    "@types/react-dom": ">=16.0.9"
+  checksum: 10c0/bbe6ce15a152125b2246037ae7f4f28501992406a6787715770012bef448daa14caa2471cc684f3a82055cc14628762b0649606e988555cdf71572064911dee9
+  languageName: node
+  linkType: hard
+
+"@babylonjs/serializers@npm:9.31.3":
+  version: 9.31.3
+  resolution: "@babylonjs/serializers@npm:9.31.3"
   peerDependencies:
     "@babylonjs/core": ^9.0.0
     babylonjs-gltf2interface: ^9.0.0
-  checksum: 10c0/8ce54351d11e6a7493240c1e32b9664684e35a7ebccc1f9ccbe4dda9dd40d42a56a6db3ad1c50451a77e306ef3a85078891fd1f87800392524db3e5e2858f906
+  checksum: 10c0/fb259cdfc458228264eeea846deea0cb5b9c40ad2d62c631f405efaf67b2f186539e8b7dfea1435c06f4b0fe8accdf96f703957b24c82eaa6da388ebfa9afcb0
   languageName: node
   linkType: hard
 
@@ -8128,10 +8129,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babylonjs-gltf2interface@npm:^9.30.0":
-  version: 9.30.0
-  resolution: "babylonjs-gltf2interface@npm:9.30.0"
-  checksum: 10c0/fb97bf2ad259ae0be90e66543f939b0e4f948bced3362818adaa6f3601a3ccc31493f2faec508d69342a7f43786ba169aa6cb05df1a68904f430da90ccf2a844
+"babylonjs-gltf2interface@npm:^9.31.3":
+  version: 9.31.3
+  resolution: "babylonjs-gltf2interface@npm:9.31.3"
+  checksum: 10c0/3e80028a70a24a704eac0053890802eef0fc195a0cff39ed6e401e7af0dbc4187958c7a458a3d2e23e99b5d593584159a41468148058f2a29c22e9b4ea6bbd1d
   languageName: node
   linkType: hard
 
@@ -12351,18 +12352,18 @@ __metadata:
     "@angular/platform-browser": "npm:^22.2.2"
     "@angular/router": "npm:^22.2.2"
     "@babylonjs-toolkit/next": "npm:9.30.0"
-    "@babylonjs/addons": "npm:9.30.0"
-    "@babylonjs/core": "npm:^9.30.0"
-    "@babylonjs/gui": "npm:9.30.0"
-    "@babylonjs/gui-editor": "npm:9.30.0"
-    "@babylonjs/inspector": "npm:9.30.0"
-    "@babylonjs/loaders": "npm:^9.30.0"
-    "@babylonjs/materials": "npm:9.30.0"
-    "@babylonjs/node-editor": "npm:9.30.0"
-    "@babylonjs/node-geometry-editor": "npm:9.30.0"
-    "@babylonjs/node-particle-editor": "npm:9.30.0"
-    "@babylonjs/node-render-graph-editor": "npm:9.30.0"
-    "@babylonjs/serializers": "npm:9.30.0"
+    "@babylonjs/addons": "npm:9.31.3"
+    "@babylonjs/core": "npm:^9.31.3"
+    "@babylonjs/gui": "npm:9.31.3"
+    "@babylonjs/gui-editor": "npm:9.31.3"
+    "@babylonjs/inspector": "npm:9.31.3"
+    "@babylonjs/loaders": "npm:^9.31.3"
+    "@babylonjs/materials": "npm:9.31.3"
+    "@babylonjs/node-editor": "npm:9.31.3"
+    "@babylonjs/node-geometry-editor": "npm:9.31.3"
+    "@babylonjs/node-particle-editor": "npm:9.31.3"
+    "@babylonjs/node-render-graph-editor": "npm:9.31.3"
+    "@babylonjs/serializers": "npm:9.31.3"
     "@eslint/js": "npm:^10.0.1"
     "@fluentui-contrib/react-resize-handle": "npm:^0.8.4"
     "@fluentui-contrib/react-virtualizer": "npm:^1.0.0"
@@ -12380,7 +12381,7 @@ __metadata:
     axe-core: "npm:4.14.0"
     babylonjs-editor-cli: "npm:5.5.2"
     babylonjs-editor-tools: "npm:5.5.2"
-    babylonjs-gltf2interface: "npm:^9.30.0"
+    babylonjs-gltf2interface: "npm:^9.31.3"
     dexie: "npm:^4.4.6"
     eslint: "npm:^10.12.0"
     eslint-plugin-prettier: "npm:^5.5.6"
