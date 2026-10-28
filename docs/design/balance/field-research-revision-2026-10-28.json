@@ -1,0 +1,64 @@
+{
+  "recordedOn": "2026-10-28",
+  "source": "User chose background Field Research and gradual irreversible inventory consumption.",
+  "sourcePath": "docs/design/player-progression.md#research-progression",
+  "task": {
+    "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+    "state": "Done"
+  },
+  "agreed": {
+    "backgroundWithClosedUiAndOtherTasks": true,
+    "singleActiveFieldTechnology": true,
+    "directInventoryConsumptionOverSimulationTime": true,
+    "fullCostUpfrontPaymentOrReservation": false,
+    "automaticWaitAndResumeForMissingInputs": true,
+    "disabledFieldResearchDrawsFromBag": false,
+    "pauseSwitchPreserveConsumedContributionsAndPartialWork": true,
+    "cancellationResetOrResearchInputRefund": false,
+    "enabledFieldInventoryContributionsAlongsideLabs": true,
+    "labAdvantages": [
+      "More labs",
+      "Faster throughput",
+      "Speed upgrades"
+    ],
+    "handcraftSharing": "Consume-only exception on uncommitted stock, after player commands; never take current craft inputs or occupy protected result/refund space.",
+    "researchCanConsumeCompletedOutputStillInBag": true,
+    "noOfflineProgressOrDuplicatePayment": true,
+    "consumptionCycle": "One whole item of each still-required resource in parallel, atomic complete bundle; satisfied material totals excluded.",
+    "missingAnyRequiredInput": "Whole cycle waits without consuming other available inputs; resume automatically, preserve partial cycle time, no unpaid catch-up.",
+    "initialProvisionalCycleSeconds": "Nominal fully supplied technology work seconds divided by largest input quantity; numeric tuning remains provisional."
+  },
+  "stillOpen": [],
+  "laterIntegration": [
+    "Shared field/lab progress coordination and lab input buffers",
+    "Later field capability limits if needed"
+  ],
+  "unchanged": {
+    "catalogueRecords": 64,
+    "prerequisiteLinks": 32,
+    "balanceValues": "Provisional",
+    "technologyWorkflow": "Draft"
+  },
+  "whiteboardsModified": false,
+  "implementationAdded": false,
+  "nextTask": {
+    "id": "a0420262-df0c-4e2d-ab73-d15285d87f49",
+    "state": "In Progress"
+  },
+  "supersedes": "Earlier proposed active-UI research and blanket handcraft inventory-mutation exclusivity. Field Research is background and consume-only on uncommitted stock; protected handcraft capacity/refunds remain intact.",
+  "verification": {
+    "fiberyReadback": "Passed",
+    "taskRecordsCompared": 11,
+    "catalogueNoteRecordsCompared": 27,
+    "technologyRecords": 21,
+    "prerequisiteLinks": 32,
+    "allTechnologyWorkflowsDraft": true,
+    "milestone3CompletedTasks": 8,
+    "milestone3UnfinishedTasks": 7,
+    "docsChecked": 38,
+    "localLinksChecked": 416,
+    "diagramSourcesChecked": 8,
+    "docsFailures": 0,
+    "diffWhitespaceFailures": 0
+  }
+}

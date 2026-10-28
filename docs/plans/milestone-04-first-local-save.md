@@ -14,10 +14,12 @@ Migration added plain authoritative `WorldState`, detached presentation views an
 
 ## Step 1 Define the snapshot contract
 
+- [ ] Build on the Milestone 3 ECS capture/rebuild contract: persist stable game IDs and plain component/resource data, never ECS queries/indexes/observers or renderer objects. Rebuild a fresh runtime and ID mappings before world replacement; test continuation without duplicate production/research/refunds.
 - [ ] Define a `SaveSnapshot` envelope with schema version, content version, world ID, saved timestamp, and detached gameplay state.
 - [ ] Keep slot identity and revision metadata explicit; a slot is a storage location, while a world ID identifies the run.
-- [ ] Include position, deposits, inventories, MiniFab subsystem/tool ownership, selected target/batch, precursor plan, local charge/capacity, crafted/applied upgrade state, reservations, blocked outputs, active crafting work, production/extraction histories, field-research contributions/work, unlocked technologies, tick, fixed-step version or duration, and the next entity-ID counter.
+- [ ] Include ground resource IDs/item types/quantities/positions, bag capacity, equipped-tool state, interaction reach and per-item stack definitions/content version alongside position, deposits, inventories, MiniFab subsystem/tool ownership, selected target/batch, precursor plan, stored active-boost seconds/capacity, gearing/battery upgrade levels, crafted/applied upgrade state, input/output buffer contents/capacities, current operation, cancelled recipe/input-type residue, reservations, blocked reasons/outputs, active crafting work, production/extraction histories, per-technology consumed research contributions/partial work, active field technology and enabled/material-wait state, unlocked technologies, tick, fixed-step version or duration, and the next entity-ID counter.
 - [ ] Exclude browser timestamps used by the loop, command queues, held keys, selected panels, services, meshes, materials, scene handles, and attached presentation components.
+- [ ] Never resume a handcraft job invisibly after load/world replacement: if its UI is absent, cancel/refund its unfinished unit exactly once while preserving completed output/history, before enabling Field Research draws, other inventory writers or MiniFab deliveries. Background research resumes from its saved enable/target/progress state on simulation steps, without offline catch-up or re-consuming invested items. MiniFab background work retains its separate continuation rules.
 - [ ] Write a field checklist for capture and validation. Extend it whenever later milestones add persistent state.
 - [ ] Use wall-clock time only for save metadata, not to advance gameplay after loading.
 
@@ -44,7 +46,7 @@ Migration added plain authoritative `WorldState`, detached presentation views an
 - [ ] Treat repository data as untrusted input and validate its envelope and supported schema/content versions.
 - [ ] Validate finite numbers, nonnegative quantities, valid positions, unique entity IDs, content IDs, and all referenced entities.
 - [ ] Validate crafting reservations and remaining work so a restored job cannot consume ingredients again or finish twice.
-- [ ] Validate Mini Fabricator dependency/stack limits and field-research contributions/progress; restoring cannot replan already-paid inputs, grant locked recipes or pay twice.
+- [ ] Validate MiniFab dependency/stack/capacity limits, held finished output and field-research progress. Restore inventory-full pause/delivery exactly once without re-consuming inputs, bypassing player priority, duplicating ground pickups or paying twice.
 - [ ] Validate local MiniFab charge/capacity and upgrade ownership separately from research. Do not save active pointer/stick winding gestures or restore them as charge input; depleted charge must still allow baseline crafting.
 - [ ] Construct a complete candidate world separately from the active one.
 - [ ] Pause gameplay and command input during replacement, preserving the prior pause state and browser visibility rules.

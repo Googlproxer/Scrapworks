@@ -1,0 +1,62 @@
+{
+  "recordedOn": "2026-10-28",
+  "source": "User wants ECS scalability without rebuilding the opening at Milestone 6.",
+  "decision": "Move actual ECS runtime selection/foundation to Milestone 3 before inventory/salvage/research/crafting; Milestone 6 extends it.",
+  "librarySelected": null,
+  "candidateSources": [
+    "https://github.com/hmans/miniplex",
+    "https://github.com/NateTheGreatt/bitECS"
+  ],
+  "foundationTask": {
+    "sourceId": "milestone.03.step.00.ecs-foundation",
+    "name": "M03.0 — Establish and prove the ECS foundation",
+    "state": "Open",
+    "id": "7aa1d483-0362-436c-a2f6-cd75ba42796a",
+    "url": "https://scrapworks.fibery.io/Project_Tracking/Task/85"
+  },
+  "criteria": [
+    "- [ ] Compare Miniplex (first candidate) with a data-oriented alternative such as bitECS using current official APIs, TypeScript ergonomics, indexed queries, lifetime/mutation behavior, deterministic ordering, memory and plain capture/restore boundaries. Record the selected exact dependency version and measured rationale before committing feature code to its storage model; do not select by an empty-world demo alone.",
+    "- [ ] Prove representative headless/browser workloads: many inventory/buffer owners and active/idle/blocked processors, deposits/ground piles, add/remove churn, and capture/rebuild/continued steps. Use synthetic processors rather than implementing future factory gameplay. Record repeatable scale timings/allocations and view-publication overhead against the existing 20 Hz budget, with headroom; ECS adoption alone is not proof of speed or threading.",
+    "- [ ] Give Simulation one private ECS runtime and one authoritative set of component data/world resources. Use stable game-owned entity IDs and ownership links; keep queries, indexes and library handles private. Do not mirror ECS component state into a second mutable WorldState or put meshes/services/signals/DOM in components.",
+    "- [ ] Model the opening with meaningful entities/components: player bag/equipped tool and movement data, deposits, ground resource piles, handcraft/MiniFab work with real input/output/reservation state, owner links and local charge. Keep immutable content and world-level clock/ID allocation/research/history ledgers as explicit resources where appropriate. Inventory units/each technology do not need one entity each.",
+    "- [ ] Run ECS systems inside the existing authoritative fixed step, advanced by GameSession's sole 20 Hz clock. Preserve manual/current-handcraft, requested MiniFab, then Field Research spending priority and explicit structural-mutation boundaries; query iteration order is not a gameplay-priority policy. Do not register authoritative systems as Editor script tick hooks or introduce another ticker.",
+    "- [ ] Reuse the tested PlayerMotor algorithms against authoritative ECS-held movement data; keep camera/player Toolkit scripts as input/presentation bindings. Preserve existing movement, collision, picking, pause, catch-up, teardown and development-fixture behavior through focused regression checks.",
+    "- [ ] Keep recipe eligibility, slot transactions, material-value accounting and work progression as plain reusable domain rules, called by ECS systems. Handcraft, MiniFab and later factory executors share these rules with explicit policy differences; do not build duplicate inventory/crafting engines or force every executor into identical behavior.",
+    "- [ ] Publish detached projections with stable IDs through the existing GameClient/WorldView boundary. Rebuild query/index state from plain component data without importing ECS types into Angular/Babylon/contracts. Measure/select changed projections rather than making full-world cloning on every entity/system the scaling strategy.",
+    "- [ ] Define a plain component/resource capture-and-rebuild contract and verify continuation on a fresh runtime, including ID references, work/reservations/held output, research/history and charge without duplicate credits. This is groundwork for Milestone 4; no IndexedDB slots, import UI or gameplay save delivery is added here."
+  ],
+  "milestone3CompletedTasksUnchanged": 10,
+  "milestone3UnfinishedTasks": 6,
+  "projectTaskCount": 78,
+  "preserve": [
+    "Single 20 Hz clock",
+    "Simulation authority and game-owned IDs",
+    "Existing movement/collision algorithms",
+    "Angular/Babylon command/projection boundaries",
+    "Plain snapshot schema"
+  ],
+  "implementationAdded": false,
+  "dependencyInstalled": false,
+  "whiteboardsModified": false,
+  "catalogueRecordsUnchanged": 64,
+  "prerequisiteLinksUnchanged": 32,
+  "verification": {
+    "fiberyReadback": "Passed",
+    "projectTasks": 78,
+    "uniqueSourceIds": 78,
+    "taskDependencyGraph": "Acyclic",
+    "addedDependencyEdges": 8,
+    "milestone3CompletedTasks": 10,
+    "milestone3UnfinishedTasks": 6,
+    "milestone3State": "In Progress",
+    "openingDesignCredit": "Unchanged",
+    "documentsChecked": 38,
+    "localLinksChecked": 424,
+    "diagramSourcesChecked": 8,
+    "docsFailures": 0,
+    "jsonParsing": "Passed",
+    "diffWhitespaceFailures": 0,
+    "trackedChangesOutsideDocs": [],
+    "systemInteractionsDiagram": "Mermaid/SVG/PNG regenerated together and PNG inspected"
+  }
+}

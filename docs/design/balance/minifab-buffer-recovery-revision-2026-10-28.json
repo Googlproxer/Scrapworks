@@ -1,0 +1,74 @@
+{
+  "recordedOn": "2026-10-28",
+  "source": "User specified MiniFab buffers, direct operation intake and material recovery, then answered four edge cases.",
+  "sources": [
+    "docs/design/player-progression.md#initial-capability-and-requested-jobs",
+    "docs/design/player-progression.md#cancellation-and-retained-buffers",
+    "docs/design/player-progression.md#resources-and-dismantling"
+  ],
+  "task": {
+    "id": "a0420262-df0c-4e2d-ab73-d15285d87f49",
+    "state": "Done"
+  },
+  "nextTask": {
+    "id": "e993d612-8caf-485c-9d38-71e3035b4b97",
+    "state": "In Progress"
+  },
+  "agreed": {
+    "initialRecipeCapability": "Researched handcraftable recipes only",
+    "laterCapabilities": [
+      "Hazardous material handling",
+      "Liquid handling",
+      "Input/output buffer stack capacity"
+    ],
+    "initialInputCapacity": "One complete operation ingredient set",
+    "initialOutputCapacity": "One item or complete multi-output recipe batch",
+    "intake": "One complete immediate operation from uncommitted inventory just before starting; assigned job only",
+    "missingStock": "Valid request waits for a complete next operation; no partial intake",
+    "directPrecursorTransfer": true,
+    "noHiddenIntermediateStorage": true,
+    "outputFullAndBagFull": "Pause with items retained, notify and resume when capacity returns",
+    "deadlockException": "Validate next full operation intake that genuinely frees bag capacity, ingest then deliver held output",
+    "productionCredit": "Once at output-buffer completion; delivery/direct use is transfer only",
+    "cancel": "Discard unfinished operation work, retain original ingredients and completed output; return if possible or keep buffers",
+    "residualRecipeCompatibility": "Same input material types; quantities may differ",
+    "unclearedOutput": "Other compatible recipe waits; exact same cancelled recipe may start if another complete result fits",
+    "recovery": "Full solid equivalent: scrap-origin as scrap, other material as source ore needing full reprocessing; liquids lost",
+    "recraftHistory": "Every genuinely completed craft counts; recovery/refunds/transfers do not",
+    "research": "Permanent consumption; pause/switch only, never cancel or refund"
+  },
+  "remainingThisDesignGroup": [],
+  "laterDesign": [
+    "Concrete advanced portable fabrication/consumable role",
+    "Handling module/buffer upgrade costs and tiers",
+    "Source-ore equivalents and alternate recipe origin tracking",
+    "Detailed liquid recovery/loss",
+    "Future multi-output request rounding"
+  ],
+  "unchanged": {
+    "catalogueRecords": 64,
+    "prerequisiteLinks": 32,
+    "balance": "Provisional",
+    "technologyWorkflow": "Draft"
+  },
+  "whiteboardsModified": false,
+  "implementationAdded": false,
+  "supersedes": "Initial manual feeding, bag-only MiniFab output capacity and all-materials-to-scrap assumptions. Per-request intake is distinct from autonomous replenishment; output-buffer commits are production, later transfers are not.",
+  "verification": {
+    "fiberyReadback": "Passed",
+    "taskRecordsCompared": 9,
+    "catalogueNoteRecordsCompared": 18,
+    "technologyRecords": 21,
+    "prerequisiteLinks": 32,
+    "allTechnologyWorkflowsDraft": true,
+    "milestone3CompletedTasks": 9,
+    "milestone3UnfinishedTasks": 6,
+    "documentsChecked": 38,
+    "localLinksChecked": 417,
+    "diagramSourcesChecked": 8,
+    "docsFailures": 0,
+    "jsonParsing": "Passed",
+    "diffWhitespaceFailures": 0,
+    "gameplayDiagram": "Mermaid/SVG/PNG regenerated together; PNG visually inspected"
+  }
+}

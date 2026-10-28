@@ -26,7 +26,7 @@ The [production profile](../reports/migration/2026-10-23/performance.json) measu
 ## Step 2 Finish feedback and onboarding
 
 - [ ] Teach movement and promptly guide the player to scrap, first field research, improved tools and the Mini Fabricator.
-- [ ] Explain the scrap-only MiniFab bootstrap and separate inventory-side panel. Demonstrate optional pointer/controller winding with accessible alternatives; depletion must not stop baseline crafting, and research alone must not grant upgrades.
+- [ ] Explain safe UI-bound handcrafting, per-item cancellation/refunds, the component-led MiniFab opening and its separate inventory-side panel. Demonstrate optional pointer/controller winding with accessible alternatives; depletion must not stop baseline crafting, and research alone must not grant upgrades.
 - [ ] Explain research's historical eligibility, available stock, contributed materials and timed work before the first payment.
 - [ ] Show machine input, output, no-power, disconnected, and blocked states in the inspector.
 - [ ] Explain renewable daylight/wind limitations, weather, storage, optional coal emissions, water supply and greenhouse-led restoration without implying a fail state.
@@ -39,11 +39,11 @@ The [production profile](../reports/migration/2026-10-23/performance.json) measu
 
 - [ ] Play from a genuinely empty new world without debug grants or pre-unlocked research.
 - [ ] Record the time and materials needed for salvage, basic crafts, research payments, equipment crafting, and first automation.
-- [ ] Target improved tools in about a minute, first manually fed automatic crafting within 15–20 minutes for relaxed new players, and under five minutes for experienced players; never enforce minimum waits.
+- [ ] Target improved tools in about a minute, first player-requested automatic crafting within 15–20 minutes for relaxed new players, and under five minutes for experienced players; never enforce minimum waits.
 - [ ] Tune their combined cost so research does not accidentally leave the player unable to build what they unlocked.
 - [ ] Confirm the authored map supplies enough resources for a viable objective route.
 - [ ] Compare a viable coal-free route and optional coal-heavy choices through day/night and weather, with continued research and eventual greening recovery in either case.
-- [ ] Verify generous finite resources, durable usefulness of base components, full scrap recovery and mixed recycler sorting support progression without duplication or depletion pressure.
+- [ ] Verify generous finite resources, durable usefulness of base components, full solid recovery as scrap/source ore, explicit liquid loss and mixed recycler sorting support progression without duplication or depletion pressure.
 - [ ] Remove unexplained waiting and unclear failure states before adding more content.
 
 ## Step 4 Measure and address performance

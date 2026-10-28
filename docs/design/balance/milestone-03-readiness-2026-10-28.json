@@ -1,0 +1,60 @@
+{
+  "recordedOn": "2026-10-28",
+  "source": "User requested a pre-implementation review and chose MiniFab stock priority plus intact full-capacity disassembly.",
+  "sourcePath": "docs/plans/milestone-03-character-and-manual-opening.md#implementation-readiness-and-scope",
+  "openingDesignTasksComplete": 5,
+  "openGameplayImplementationTasks": 5,
+  "remainingOpeningDesignBlockers": [],
+  "confirmedRules": {
+    "stockPriority": [
+      "Manual player actions/current handcraft input commitment",
+      "Player-requested MiniFab operation",
+      "Field Research using remaining uncommitted stock"
+    ],
+    "disassemblyCapacity": "Preflight full body/material recovery and intact buffers after actual item removal. If it cannot fit, leave item/device/job/contents intact; no partial dismantle or spill."
+  },
+  "milestone3Scope": {
+    "coreTechnologies": 5,
+    "openingRecipes": 6,
+    "deliver": [
+      "Slot inventory/equipped tool/ground items",
+      "Onboarding and salvage",
+      "Field Research",
+      "Safe handcrafting",
+      "Requested MiniFab with base buffers and crank/battery",
+      "UI/accessibility and full validation"
+    ],
+    "later": [
+      "Actual upgrade progression",
+      "Labs/factory electricity/machines",
+      "Transport/restoration",
+      "Advanced ores/liquids/hazards",
+      "Gameplay persistence"
+    ]
+  },
+  "engineeringPreparation": [
+    "Versioned checked-in plain catalogue",
+    "Replace slotless inventory and string-array research/equipment placeholders",
+    "Preserve authoritative plain state and detached views",
+    "Review/commit the accumulated design baseline"
+  ],
+  "whiteboardsModified": false,
+  "implementationAdded": false,
+  "commitCreated": false,
+  "verification": {
+    "fiberyReadback": "Passed",
+    "taskRecordsCompared": 6,
+    "openingDesignTasksDone": 5,
+    "openGameplayTasks": 5,
+    "milestoneState": "In Progress",
+    "documentsChecked": 38,
+    "localLinksChecked": 421,
+    "diagramSourcesChecked": 8,
+    "docsFailures": 0,
+    "balanceLedger": "Existing opening snapshot revalidated: 64 records, 32 acyclic/reachable prerequisites, eight conserving recipes; serial budgets unchanged",
+    "jsonParsing": "Passed",
+    "diffWhitespaceFailures": 0,
+    "trackedChangesOutsideDocs": [],
+    "head": "cef9078"
+  }
+}

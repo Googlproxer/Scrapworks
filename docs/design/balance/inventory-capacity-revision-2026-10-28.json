@@ -1,0 +1,62 @@
+{
+  "recordedOn": "2026-10-28",
+  "status": "Agreed inventory, reach and capacity behavior; salvage controls/rates/tool progression remain discussion.",
+  "sources": [
+    "docs/design/player-progression.md#inventory-interaction-range-and-overflow",
+    "docs/design/opening-catalogue.md"
+  ],
+  "inventory": {
+    "bagSlots": 24,
+    "equippedToolSlots": 1,
+    "weightLimit": null,
+    "capacityUpgradesLater": true,
+    "simpleItemStackLimit": 100,
+    "stackLimitsPerItem": true,
+    "complexItemsMayUseSmallerStacks": true
+  },
+  "interaction": {
+    "initialGroundPlaneRadiusMetres": 2,
+    "upgradeable": true
+  },
+  "salvage": {
+    "overflow": "Recoverable ground items; insert what fits and drop the remainder atomically.",
+    "fullInventoryFeedback": true,
+    "doesNotStopForFullBag": true,
+    "extractionCountedOnceBeforeAnyLaterPickup": true
+  },
+  "crafting": {
+    "preflight": "Per unit/step, check actual post-input-consumption output capacity before spending. Only input consumption in the relevant inventory frees its slots.",
+    "playerActionsPrecedeAutomation": true,
+    "exclusiveAutomationBagReservation": false,
+    "miniFabMidCraftFull": "Finish current work, hold finished output, pause before inserting/starting the next unit, inform the player, resume automatically once space returns.",
+    "miniFabOutputSpills": false,
+    "laterInventoryDrivenInputUpgradeUnchanged": true
+  },
+  "updatedItem": {
+    "sourceId": "item.scrap",
+    "id": "ae509f7b-89bd-4a6b-bcb7-7cccf08360b9",
+    "stackLimit": 100,
+    "stackPolicy": "Stack limit"
+  },
+  "catalogueCountsUnchanged": {
+    "Item": 9,
+    "Recipe": 8,
+    "Ingredient": 15,
+    "Technology": 21,
+    "Research Cost": 11
+  },
+  "prerequisiteLinksUnchanged": 32,
+  "remainingQuestions": [
+    "Salvage controls and rates",
+    "Tool equip/progression and wear",
+    "Generous deposit quantities",
+    "Ground merging/pickup interaction",
+    "Cancellation-refund overflow routing"
+  ],
+  "projectTask": {
+    "id": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+    "state": "In Progress"
+  },
+  "whiteboardsModified": false,
+  "implementationAdded": false
+}

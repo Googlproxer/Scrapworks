@@ -16,9 +16,9 @@ flowchart TB
         Loop[GameSession independent 20 Hz scheduler]
         Hooks[Ordered optional script tick handlers]
         Sim[Plain Simulation and PlayerMotor]
-        State[(Private WorldState)]
+        State[(Private simulation data)]
         Content[Planned recipe and technology definitions]
-        Factory[Planned factory ECS systems]
+        ECS[Planned opening and factory ECS systems]
     end
 
     subgraph Persistence[Planned gameplay persistence]
@@ -41,8 +41,8 @@ flowchart TB
     Loop -->|before each fixed step| Hooks
     Hooks -->|submit typed intents and commands| Sim
     Loop -->|fixed simulation steps after hooks| Sim
-    Loop -->|future session schedule| Factory
-    Factory <-->|plain factory data| State
+    Sim -->|ordered systems within fixed step| ECS
+    ECS <-->|authoritative component data| State
     Content -->|rules and costs| Sim
     Sim <-->|read and update| State
     Sim -->|publish completed state| Views

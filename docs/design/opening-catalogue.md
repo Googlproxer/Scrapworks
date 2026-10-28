@@ -1,133 +1,114 @@
 # Opening crafting and research catalogue
 
-Draft for discussion, 27 October 2026. The [progression specification](player-progression.md) records agreed direction. This catalogue proposes recipe boundaries, technology groups and initial balance numbers; they are not yet approved balance or implemented content. No gameplay implementation is authorized by this draft.
+Revised 28 October 2026. The research order, safe-handcrafting boundary and initial inventory/salvage settings below are agreed. Recipe quantities/work durations and later complex-item stack limits remain provisional playtest values, not final balance or implemented content. The [progression specification](player-progression.md) owns the agreed rules.
 
-The [Fibery catalogue and trees](balance/README.md) contain the initial catalogue as editable linked records and whiteboards. Keep later approved changes reconciled with this document; importing the catalogue does not approve its balance values.
+The [Fibery catalogue](balance/README.md) stores the linked records. Whiteboard layouts and annotations were deliberately left unchanged for this revision; consult the database relationships and this document for the current tree.
 
-## Proposed opening boundary
+## Agreed opening boundary
 
-Start with gathering and timed field research available, but no unlocked recipes or equipment. Research every crafting capability. Recommend keeping active hand assembly to the scrap prybar and the base MiniFab; let the MiniFab perform material/component production while the player does other work. Both hand recipes remain available after their unlocks as a recovery route.
+Start with gathering and timed field research, empty possessions and no unlocked recipes. Research every crafting capability. Every researched assembly recipe using safe components remains handcraftable throughout progression; item tier and ingredient count do not impose an artificial machine-only restriction. Processing liquids, hazardous substances or dangerous outputs requires suitable machinery. A safe finished component can be assembled by hand even when manufacturing that component required specialist equipment. Assembling an empty pump from safe parts is different from processing liquids through it.
 
-The prybar and MiniFab are separate root technologies paid for with collected scrap. The tool is recommended first, but is not a prerequisite for MiniFab research. The MiniFab is assembled from scrap alone and retains its agreed power-free baseline and optional winding boost. Material recovery follows MiniFab research; neither collecting raw scrap nor constructing the MiniFab requires plates or wire.
+Handcrafting uses prepared ingredients rather than automatically crafting missing intermediates. The player learns plates/wire, then parts, before building the MiniFab as the first complex four-ingredient device. Its background production and automatic eligible precursors are the reward for those lessons. Personal recovery stays deterministic; industrial recycling still produces a mixed stream for logistics to sort.
 
-This handcrafting boundary is a proposal, not a reversal of the already-agreed scrap-only MiniFab bootstrap. Exact opening order relative to the first tool remains a playtest choice.
+Handcrafting is active work confined to its visible UI. Simple recipes must be quick. A selected batch requires no repeated click per unit, but leaving/closing/hiding the UI or starting conflicting work cancels the job. Warn before an intentional exit; keep the UI/work suspended while the player chooses whether to stay or cancel and leave. The active batch protects result/refund capacity; other additions/transfers and MiniFab deliveries wait. Enabled background Field Research may consume uncommitted bag stock, but never the current unit's ingredients or occupy its protected space. On cancellation, keep every completed item and refund the original ingredients of the unfinished item before releasing that ownership, releasing any unstarted reservations. No outside event can consume result/refund capacity, so handcraft cancellation never needs ground overflow. Do not dismantle completed output, produce a partial item, award cancelled production or silently resume the batch later. If ten plates are finished and plate eleven is in progress, keep any of the ten completed plates not already consumed by enabled research and refund plate eleven's scrap. Exact interruption/refund invariants are in [handcrafting](player-progression.md#handcrafting-and-interruption).
 
-## Proposed core research tree
+## Core research tree
 
-All times below are baseline field-research work in active simulation seconds. Each listed material quantity is both the initial cumulative eligibility requirement and the stock paid into that technology; raw scrap uses extraction history, crafted inputs use production history. Contributions preserve those histories. Costs do not include crafting the unlocked item afterward.
+Technology topology, unlocks and payment material families are agreed. Amounts and field-work times below are retained/updated playtest values. Each material quantity is initially both cumulative eligibility and the stock contribution; scrap uses extraction history and crafted inputs use production history. Research preserves those histories and never pays for construction automatically. Enabled Field Research draws materials directly from uncommitted inventory over time while the player performs other work; shortages wait/resume automatically. Pausing or changing the active technology retains all work/contributions, with no cancellation or reclamation of consumed items. Turning Field Research off prevents bag withdrawals even when labs run; enabling it allows inventory contributions alongside labs. Each timed cycle consumes one of each still-required resource together; if any is missing, the whole cycle waits. Finished material costs are not charged again. Partial work is retained, costs/work intervals remain provisional, and no catch-up work accrues during shortages.
 
-| Technology | Technology prerequisites | Research payment | Field work | Unlocks |
+| Technology | Prerequisites | Research payment | Field work | Unlocks |
 | --- | --- | --- | --- | --- |
 | Improvised tools | None | 4 scrap | 6 s | Scrap prybar hand-assembly recipe |
-| Mini fabrication | None | 8 scrap | 12 s | Scrap-only MiniFab hand assembly, its panel and optional winding capability |
-| Material recovery | Mini fabrication | 8 scrap | 12 s | Deterministic personal recovery recipes for plates and wire |
-| Mechanical assembly | Material recovery | 4 plates | 15 s | Mechanical parts |
-| Electrical assembly | Material recovery | 4 plates + 6 wire | 20 s | Electrical parts |
+| Material recovery | Improvised tools | 8 scrap | 12 s | Plates and recovered wire, handcraftable before a MiniFab exists |
+| Mechanical assembly | Material recovery | 4 plates | 15 s | Handcrafted mechanical parts |
+| Electrical assembly | Material recovery | 4 plates + 6 wire | 20 s | Handcrafted electrical parts |
+| Mini fabrication | Mechanical assembly + Electrical assembly | 1 mechanical part + 1 electrical part | 12 s | Four-ingredient MiniFab hand assembly, panel and optional winding |
 
-Research unlocks capabilities and recipes, not free objects. Mini fabrication does not grant a built MiniFab. Material/component recipes cannot run until their own research is complete. The initial winding interaction belongs to the constructed base MiniFab; it has no separate electricity prerequisite.
-
-Dependency outline:
+Mechanical and electrical assembly are sibling branches. Tutorial guidance introduces mechanics first, then electrics; either can be researched first once Material recovery is complete. The MiniFab requires both. Researching Improvised tools is the dependency; tutorial guidance also teaches crafting/equipping the prybar, without consuming the tool as research payment.
 
 ```text
 Collected scrap
-  +-- Improvised tools --> craft prybar
-  +-- Mini fabrication --> assemble MiniFab from scrap
-        +-- Material recovery --> plates and wire
-              +-- Mechanical assembly --> mechanical parts
-              |     +-- MiniFab crank gearing I (optional later branch)
-              +-- Electrical assembly --> electrical parts
-                    +-- MiniFab charge storage I (optional later branch)
-
-Mechanical + electrical branches support the later placed-factory tree.
+  +-- Improvised tools --> craft and use prybar
+        +-- Material recovery --> handcraft plates and wire
+              +-- Mechanical assembly --> handcraft mechanical parts --+
+              +-- Electrical assembly --> handcraft electrical parts --+--> Mini fabrication
+                                                                            +-- hand-assemble MiniFab
+                                                                            +-- later MiniFab upgrades
 ```
 
-The two optional MiniFab branches below are candidates for later progression, not added Milestone 3 delivery requirements.
+This replaces the earlier scrap-only, independent-root MiniFab proposal. Factory electricity, power generation and an existing fabricator are not bootstrap requirements. The built MiniFab retains its power-free baseline and optional winding boost.
 
-| Technology | Prerequisite general technology | Research payment | Field work | Separately crafted result |
+The two optional upgrade branches remain later candidates, not additional Milestone 3 delivery requirements:
+
+| Technology | Prerequisites | Research payment | Field work | Separately crafted result |
 | --- | --- | --- | --- | --- |
-| MiniFab crank gearing I | Mechanical assembly | 2 mechanical parts + 2 wire | 20 s | Upgrade improves charge earned per deliberate winding turn; exact effect open |
-| MiniFab charge storage I | Electrical assembly | 2 electrical parts + 2 wire | 20 s | Upgrade increases local battery capacity; exact effect open |
+| MiniFab crank gearing I | Mini fabrication + Mechanical assembly | 2 mechanical parts + 2 wire | 20 s | Reduces recharge turns from five toward a one-turn cap; tier spacing/costs later |
+| MiniFab charge storage I | Mini fabrication + Electrical assembly | 2 electrical parts + 2 wire | 20 s | First repeatable +50% capacity level; costs double each level, no level cap |
 
-These follow the agreed general technology → MiniFab-specific research → craft actual upgrade sequence. They neither add an energy requirement to baseline crafting nor depend on the factory electricity system. Their place relative to factory battery research and future power upgrades is still a content decision.
+All MiniFab upgrade branches require Mini fabrication and their related technology. General research, MiniFab-specific research, crafting and applying the actual upgrade remain separate steps. Later power-source coexistence and stacking remain open. The initial battery gives 60 active seconds at 2x speed, needs five turn-equivalents to fill and drains only during actual crafting. Fractional/reversed handle travel earns proportional charge via pointer, selected right stick or directional keys. Capacity level n lasts 60 * 1.5^n active seconds; physical level-n upgrade cost is B * 2^(n-1). Gearing reaches one turn per full recharge and turns-to-full stays independent of capacity. Initial upgrade recipes B remain provisional; unlimited capacity levels do not become free or implemented.
 
-## Proposed first recipes
+## First recipes
 
-Quantities and unboosted work times are starting values for playtesting. Each recipe produces one result. MiniFab time is serial work at baseline speed; missing prerequisites add their own crafting time. Winding and later upgrades can improve it.
+Each recipe produces one result per completed unit. Work times are unboosted playtest values. Handcrafting consumes the player's active work while its UI remains open; the MiniFab can run while the player performs other work. The MiniFab's precursor jobs add their own work time. Missing intermediates are not automatically made by handcrafting.
 
-| Result | Ingredients | Initial executor | Work time | Proposed stack limit |
+| Result | Ingredients | Executors after recipe research | Work time | Proposed stack limit |
 | --- | --- | --- | --- | --- |
-| Scrap prybar | 4 scrap | Hand assembly after Improvised tools | 4 s | 1 |
-| Base MiniFab | 16 scrap | Hand assembly after Mini fabrication | 12 s | Personal subsystem; no inventory stack |
-| Metal plate | 2 scrap | MiniFab after Material recovery | 2 s | 100 |
-| Recovered wire | 1 scrap | MiniFab after Material recovery | 1 s | 100 |
-| Mechanical part | 2 plates | MiniFab after Mechanical assembly | 4 s | 100 |
-| Electrical part | 1 plate + 2 wire | MiniFab after Electrical assembly | 6 s | 100 |
-| MiniFab crank gearing I | 2 mechanical parts + 2 wire | MiniFab after its specific research | 20 s | One crafted module; apply once |
-| MiniFab charge storage I | 1 mechanical part + 2 electrical parts + 2 wire | MiniFab after its specific research | 30 s | One crafted module; apply once |
+| Scrap prybar | 4 scrap | Handcraft; MiniFab once built | 4 s | 1 |
+| Metal plate | 2 scrap | Handcraft; MiniFab once built | 2 s | 100 |
+| Recovered wire | 1 scrap | Handcraft; MiniFab once built | 1 s | 100 |
+| Mechanical part | 2 plates | Handcraft; MiniFab once built | 4 s | 100 |
+| Electrical part | 1 plate + 2 wire | Handcraft; MiniFab once built | 6 s | 100 |
+| Base MiniFab | 2 plates + 2 wire + 1 mechanical part + 1 electrical part | Hand assembly after Mini fabrication | 12 s | Personal subsystem; no inventory stack |
+| MiniFab crank gearing I | 2 mechanical parts + 2 wire | Handcraft or MiniFab after its specific research | 20 s | One crafted module; apply once |
+| MiniFab charge storage I | 1 mechanical part + 2 electrical parts + 2 wire | Handcraft or MiniFab after its specific research | 30 s | One crafted module; apply once |
 
-The proposed prybar doubles collection rate and has no wear in the opening. Trial collection rates are one scrap per two seconds by hand and one scrap per second with the equipped prybar. Use a sustained gathering action rather than a required click per unit. These tool and interaction details are proposals requiring review.
-
-Component stack limits cap the requested final-item batch; they are ceilings, not recommended opening batch sizes. They do not settle player inventory capacity, intermediate storage capacity or automatic inventory-driven policies. Upgrade-module representation/application and duplicate-upgrade handling need a rule before implementation; research alone never applies the module.
+The initial inventory/reach rules are now agreed: 24 bag slots plus a separate equipped-tool slot, no weight, configurable 100-item stacks for simple materials, and a 2 m radial interaction range with later upgrades. Salvage overflow goes to the ground with feedback. Craft starts check capacity after actual input consumption; MiniFab draws one operation's inputs just before starting and commits results into its own buffer (initially one complete recipe result). It pauses when that buffer is full and inventory cannot accept output; direct precursor use or validated next-input ingestion may make room, without hidden storage. Automation cannot claim slots against the player. Initial salvage settings are agreed: hold-to-repeat with a toggle alternative, one scrap per 3 seconds by hand and one per second with the prybar. The first handcrafted prybar auto-equips into an empty tool slot; later replacements are explicit. Merge nearby ground drops and use deliberate pickup. Durability is only a potential later mechanic, unused in the opening. Module fitting/removal and duplicate-upgrade handling remain open.
 
 ## Recipe families and factory compatibility
 
-Recommend distinguishing recovery processes from general fabrication. The MiniFab has a small personal recovery capability for the bootstrap, while the recycler provides industrial mixed-output recovery. This prevents a deterministic factory recipe from making the agreed sorting challenge optional by accident.
-
-| Process or recipe | Personal capability | Later industrial capability |
+| Process or recipe | Personal capability | Industrial capability |
 | --- | --- | --- |
-| Select scrap → plate or wire | MiniFab personal recovery | Recycler produces a random mixture; no selected Basic Fabricator recovery recipe in this proposal |
-| Plates → mechanical parts | MiniFab | Basic Fabricator: exactly one distinct ingredient type |
-| Plate + wire → electrical parts | MiniFab | Medium Fabricator: exactly two distinct ingredient types |
-| Researched equipment and modules | MiniFab where tagged as personal fabrication; complexity affects work time | Appropriate general fabricator for a fabrication recipe's exact arity |
-| Mixed scrap recycling | Not a MiniFab precursor job | Recycler; sort mixed outputs through logistics |
-| Extraction, purification and other dedicated processes | Not automatic MiniFab precursor jobs | Their dedicated machinery |
-| Dedicated engineering research craftables | Proposed factory-only transition | Medium Fabricator for a two-input research-kit recipe; exact kit recipe/cost remains open |
+| Select scrap to plate or wire | Researched safe hand recovery; MiniFab personal recovery | Recycler produces a random mixture; no deterministic general-fabricator recovery bypass |
+| Plates to mechanical parts | Handcraft or MiniFab | Basic Fabricator: exactly one distinct ingredient type |
+| Plate and wire to electrical parts | Handcraft or MiniFab | Medium Fabricator: exactly two distinct ingredient types |
+| Safe equipment, modules and research craftables | Handcraft after research; compatible MiniFab recipes | General fabricator for the recipe's exact arity; throughput incentivises automation |
+| Mixed industrial recycling | Not an automatic personal precursor recipe | Recycler with output sorting |
+| Liquids, hazardous production and specialist treatment | Not handcraftable or available to initial MiniFab; later researched/crafted handling upgrades may enable suitable MiniFab processes | Appropriate dedicated machinery |
 
-Arity is still exactly one input type for Basic, two for Medium, and three or four for Advanced; input unit counts do not affect it. These arity rules apply to general fabrication recipes. Personal recovery and recycler processes are a separate family. This proposed family boundary needs agreement before it becomes an authoritative restriction.
-
-Initially the MiniFab should handle all unlocked recipes explicitly tagged for personal recovery/fabrication, including equipment needed to establish the first factory. It must not invent precursor work for a factory-only recipe. No required machine may need its own output or dedicated research kits to unlock or build it for the first time.
+Basic accepts exactly one input type, Medium exactly two, and Advanced three or four; quantities do not change arity. These restrictions apply to general fabrication machines, not handcrafting or the personal MiniFab. Safe research craftables are not factory-only merely to force automation. Assess their actual ingredients/process; unsafe processes require suitable machinery or later specifically upgraded MiniFab capability.
 
 ## Bridge into the first factory
 
-This is a proposed continuation to check the opening's usefulness, not additional Milestone 3 scope. Exact factory research payments, equipment recipes and durations remain to be designed.
+This continuation checks reachability and is not extra Milestone 3 scope. Payments, equipment recipes and durations remain unspecified.
 
 | Branch | Proposed prerequisite path | Capability gained |
 | --- | --- | --- |
-| Electrical engineering | Mechanical + Electrical assembly | Power connections and access to renewable-generation research |
-| Solar power / Wind power | Electrical engineering, as separate sibling technologies | First generation choices; either supports a coal-free route |
-| Mixed recycling | Mechanical + Electrical assembly | Recycler and its mixed-output process; building it and supplying electricity are separate requirements |
-| Basic fabrication | Mechanical assembly | General single-input fabrication, initially mechanical parts from plates |
-| Medium fabrication | Basic fabrication + Electrical assembly | General two-input fabrication, initially electrical parts from plates/wire |
-| Extraction | Mechanical assembly | Powered extraction; operation needs a working power supply |
-| Sorting and conveyors | Mixed recycling + Mechanical assembly | Direct transport, output sorting and filters |
-| Laboratory research | Medium fabrication + Electrical assembly | Lab and first dedicated engineering-research-craftable recipe |
+| Electrical engineering | Mechanical + Electrical assembly | Connections and renewable-generation research |
+| Solar power / Wind power | Electrical engineering; separate siblings | First generation choices, supporting a coal-free route |
+| Mixed recycling | Mechanical + Electrical assembly | Mixed-output recycler; construction and operating electricity are separate |
+| Basic fabrication | Mechanical assembly | Single-input fabrication |
+| Medium fabrication | Basic fabrication + Electrical assembly | Two-input fabrication |
+| Extraction | Mechanical assembly | Powered extraction |
+| Sorting and conveyors | Mixed recycling + Mechanical assembly | Direct transport, sorting and filters |
+| Laboratory research | Medium fabrication + Electrical assembly | Scalable lab work and first dedicated research-craftable recipe |
 
-The first lab, first Medium Fabricator and Laboratory research itself must be paid for with existing basic components, not the research craftable they unlock. Later research can then consume those dedicated craftables. Labs perform work on them faster than field research and scale through additional supplied buildings; exact field compatibility remains open.
+The first lab, first Medium Fabricator and laboratory research must be paid for with existing components rather than their own research craftables. Safe kit assembly can remain manual; labs provide scalable research throughput. Exact field/lab compatibility remains open. No required machine may need its own output to be unlocked/built. Advanced fabrication and trains remain later content.
 
-Related solar/wind/coal/grid research opens the corresponding MiniFab-specific upgrade research, followed by separate module crafting. Coal remains optional. No early power source, recycler, lab or first fabrication machine may require advanced materials that only that same machine can produce. Advanced Fabricator and three/four-input recipes belong in later content design; they do not replace Basic/Medium machines.
+## Material-value and pacing checks
 
-## Material-value check
+For the draft ledger, scrap is one value unit, plate two, wire one, and each mechanical/electrical part four. Dismantling returns 4 scrap for the prybar, **14 for the revised MiniFab**, 10 for crank gearing and 14 for charge storage. Every recipe's output value equals its input value. Cancellation returns the unfinished unit's original ingredients; dismantling an already crafted item returns its scrap value. Research-consumed materials are permanently invested and cannot be reclaimed. Every completed re-craft counts as production; refunds/transfers/dismantling do not. Later non-scrap solids recover as their source ores for full reprocessing, while liquids are lost; those detailed equivalences are future content.
 
-For this draft, one scrap is one material-value unit. A plate embodies 2 units, wire 1, and each mechanical/electrical part 4. Full dismantling refunds are 4 scrap for the prybar, 16 for the MiniFab, 10 for the crank module and 14 for the battery module. Each result's value equals its ingredients' value, so these craft/dismantle recipes cannot create scrap.
+Using the trial collection rates, no overlap/boost, and serial uninterrupted jobs (excluding UI, movement and tutorial time):
 
-This is an arithmetic consistency check for the draft, not final whole-game accounting. Research-consumed materials, process consumables, random recycler distributions, partial work and repeated-production eligibility still need their separate policies in the [progression specification](player-progression.md#resources-and-dismantling). Refunds themselves never create production/extraction history.
+- Research and craft the prybar: **8 scrap, 34 seconds**.
+- Research all five technologies and build the MiniFab: **60 scrap, 221 seconds** (76 gathering + 65 field research + 80 crafting).
+- Complete the first MiniFab-produced plate: **62 scrap, 225 seconds**.
+- Finish with the prybar, built MiniFab and one retained mechanical/electrical part each: **68 scrap, 247 seconds**.
 
-## Opening budget check
+These serial, no-overlap arithmetic checks establish reachability, not measured playthroughs. Background research now permits overlap with gathering/crafting; they are not minimum elapsed times, with synchronized one-of-each remaining-input consumption cycles and whole-cycle waiting for shortages. Keep the relaxed 15–20 minute and experienced under-five-minute first-automatic-craft targets as playtest goals; do not turn them into mandatory waits. These totals use the agreed initial 3 s / 1 s collection rates. Recipe/research quantities and work times remain provisional, and the complete route still needs playtesting.
 
-Using the trial collection rates and doing all work sequentially, with no winding bonus, overlapping work or interface/travel time:
+## Implementation readiness
 
-- First researched and crafted prybar: 8 collected scrap, 26 seconds of gathering/research/assembly.
-- First MiniFab-produced plate, taking the prybar first: 42 total collected scrap, 98 seconds of gathering/research/assembly/production.
-- Complete all five core technologies and retain one mechanical part and one electrical part, with the prybar and MiniFab built: 70 total collected scrap, 199 seconds (3 min 19 s) of serial work.
-- That complete core route contains 78 seconds gathering, 65 seconds field research and 56 seconds crafting; research and construction are both paid.
+The opening order, safe handcrafting boundary and UI-exit cancellation rule are agreed. Inventory capacity, stack policy, initial reach, salvage overflow and player-first crafting-capacity behavior are settled; salvage controls/rates, first-tool behavior and the handcraft refund-capacity invariant are also agreed. Inventory/salvage/tool design is complete with a configurable starter-area budget of 250,000 scrap; distribution and later tuning belong to Milestone 3 authoring. Field Research behavior design is complete: background work, gradual direct bag consumption, enabled-only inventory contribution alongside labs, synchronized one-of-each remaining-input cycles, whole-cycle shortage waiting and permanent progress on pause/switch are agreed. Durability is potential later work only. MiniFab queue/buffers/recovery are agreed: per-operation inventory intake, one-operation input/output capacity, direct precursor use, retained cancellation buffers and same-input-type replacement rules. Winding/charge behavior and all five opening design tasks are complete; Milestone 3 gameplay implementation remains pending. Buffer upgrades, advanced portable recipes and detailed ore/liquid recovery remain later design work. Later factory costs, research-kit recipes and upgrade fitting follow their own milestones. Numerical values in this catalogue remain visibly provisional.
 
-These calculations establish reachable dependencies and leave room for an experienced under-five-minute first-automatic-craft route. They do not measure an actual playthrough or prove the relaxed 15–20 minute target; movement, tutorial, interface use, exploration, simultaneous work and gathering feedback require playtesting. Those targets are upper pacing goals, not compulsory timers.
-
-## Review decisions
-
-1. Adopt the proposed hand-assembly boundary: prybar and MiniFab by hand; ordinary material/component work through MiniFab afterward?
-2. Keep selected scrap recovery personal and industrial recycling mixed, rather than allowing general fabricators to bypass sorting?
-3. Review the five core technology groups, recipe quantities/times and 100-unit component stacks as first playtest values.
-4. Choose the first factory-only research-craftable recipe and the later module/factory research costs after the opening is agreed.
-
-This catalogue must remain visibly marked as a draft until its proposals are adopted. Do not treat its balance values or new capability boundaries as completed or settled implementation.
+The final readiness review settles stock contention as manual actions/current handcraft commitment, requested MiniFab, then Field Research. Disassembly requires room for the entire body return and intact buffers; a capacity block leaves item/device/job/contents intact with no partial recovery or spill. See the [Milestone 3 scope checklist](../plans/milestone-03-character-and-manual-opening.md#implementation-readiness-and-scope): five core technologies/six opening recipes now; optional upgrades and advanced systems later.

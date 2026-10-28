@@ -3,7 +3,10 @@
   "space": "Scrapworks",
   "importedOn": "2026-10-28",
   "source": "Initial catalogue snapshot imported on 2026-10-28; retired trial snapshot retained in the cleanup recovery archive, not maintained as a second database.",
-  "designSources": ["docs/design/opening-catalogue.md", "docs/design/player-progression.md"],
+  "designSources": [
+    "docs/design/opening-catalogue.md",
+    "docs/design/player-progression.md"
+  ],
   "records": {
     "Item": [
       {
@@ -451,5 +454,99 @@
     "recipesConserveMaterialValue": true,
     "allChecksPassed": true,
     "errors": []
-  }
+  },
+  "revisions": [
+    {
+      "recordedOn": "2026-10-28",
+      "receipt": "docs/design/balance/opening-revision-2026-10-28.json",
+      "reason": "Agreed component-led MiniFab opening and safe UI-bound handcrafting. Current catalogue is 64 records / 32 prerequisite links; initial records above remain the original import snapshot.",
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "receipt": "docs/design/balance/inventory-capacity-revision-2026-10-28.json",
+      "reason": "24 slots, equipped-tool slot, no weight, simple stacks 100, 2 m range, salvage ground overflow and player-priority crafting capacity agreed. Entity counts/topology unchanged.",
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "receipt": "docs/design/balance/salvage-handcraft-revision-2026-10-28.json",
+      "reason": "Salvage/tool settings accepted; active handcrafting exclusively owns player inventory and refunds before release, excluding refund overflow. Durability is potential later only.",
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Inventory/salvage/tools behavior design complete; configurable starter-area default 250,000 scrap recorded. Layout/tuning belongs to M03 authoring; Field Research is active next.",
+      "receipt": "docs/design/balance/salvage-handcraft-revision-2026-10-28.json",
+      "completedTask": {
+        "id": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+        "state": "Done"
+      },
+      "nextTask": {
+        "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+        "state": "In Progress"
+      },
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Background Field Research and gradual irreversible inventory consumption agreed; mixed-input work granularity remains open.",
+      "receipt": "docs/design/balance/field-research-revision-2026-10-28.json",
+      "task": {
+        "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+        "state": "In Progress"
+      },
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Synchronized one-of-each remaining-input research cycles and whole-cycle shortage waits agreed; Field Research behavior design complete.",
+      "receipt": "docs/design/balance/field-research-revision-2026-10-28.json",
+      "completedTask": {
+        "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+        "state": "Done"
+      },
+      "nextTask": {
+        "id": "a0420262-df0c-4e2d-ab73-d15285d87f49",
+        "state": "In Progress"
+      },
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "MiniFab queue/buffers/cancellation and solid material recovery agreed, including four answered edge cases.",
+      "receipt": "docs/design/balance/minifab-buffer-recovery-revision-2026-10-28.json",
+      "completedTask": {
+        "id": "a0420262-df0c-4e2d-ab73-d15285d87f49",
+        "state": "Done"
+      },
+      "nextTask": {
+        "id": "e993d612-8caf-485c-9d38-71e3035b4b97",
+        "state": "In Progress"
+      },
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Winding/charge decisions and follow-up balance values agreed; all five opening design tasks complete.",
+      "receipt": "docs/design/balance/winding-charge-revision-2026-10-28.json",
+      "completedTask": {
+        "id": "e993d612-8caf-485c-9d38-71e3035b4b97",
+        "state": "Done"
+      },
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Final Milestone 3 readiness review; stock contention and whole-return disassembly settled, stale next-task notes reconciled.",
+      "receipt": "docs/design/balance/milestone-03-readiness-2026-10-28.json",
+      "designBlockers": [],
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    }
+  ]
 }

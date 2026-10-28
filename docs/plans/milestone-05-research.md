@@ -15,7 +15,7 @@ There is no technology catalog, research contribution/work system, material-paym
 - [ ] Build on the Milestone 3 bootstrap rather than introducing research for the first time here.
 - [ ] Define stable technology IDs, prerequisites, extraction/production eligibility, contribution costs, work requirements and unlocked recipes/equipment.
 - [ ] Gate every crafting capability, including starting material recipes. Gathering and field research remain starting abilities.
-- [ ] Preserve the scrap-only MiniFab research/assembly path. Its power-free baseline and optional local winding do not depend on electricity or refined components.
+- [ ] Preserve the component-led MiniFab path after both assembly branches: handcraft safe materials/parts, research Mini fabrication, then separately hand-assemble the device. Baseline work and optional winding do not require factory electricity.
 - [ ] Retain scrap, plates, wire, mechanical parts and electrical parts as useful inputs to later branches.
 - [ ] Start research costs with extracted resources, then basic crafted items; introduce dedicated manufactured research craftables later in the tree.
 - [ ] Include renewable power, recycling, extraction, sorting/logistics, fabrication, laboratories, storage, water treatment and greenhouse research groups. Keep coal and pollution mitigation optional branches.
@@ -26,10 +26,10 @@ There is no technology catalog, research contribution/work system, material-paym
 
 - [ ] Preserve completed crafting/production totals and separate newly extracted-resource history. Transfers, output collection and refunds never increment either history.
 - [ ] Keep historical eligibility, current stock, contributed/reserved materials, research work and unlock completion separate.
-- [ ] Settle contribution granularity, reservation/payment timing, cancellation and handling of already-funded work before implementing the shared rule.
-- [ ] Field research takes ingredients from player inventory and advances with simulation time; it is slower than a lab.
+- [ ] Apply permanent per-technology consumed-material investment: no cancellation/reset/refund; pause/disable/switch preserves completed and partial work. Use paced one-of-each still-required item cycles; wait for every required input, consume/credit atomically, exclude paid-in-full item totals and retain partial work without unpaid catch-up.
+- [ ] Field Research draws uncommitted player inventory over time in the background while other work runs. Missing next inputs wait/resume automatically; disabled field work never draws from the bag. Labs are faster, scalable and support later speed upgrades.
 - [ ] Define a shared progress model for field work and multiple laboratories, with scalable lab throughput and no duplicated payment or overshoot on the final work unit.
-- [ ] Decide field-work concurrency and whether field research remains available for all later technologies or has explicit capability limits.
+- [ ] Allow enabled Field Research inventory contributions alongside lab research on shared remaining demand; turning field work off leaves lab buffers independent. Define later field capability limits if needed, without revisiting agreed background concurrency.
 - [ ] Define lab input buffers and dedicated research-craftable consumption without inventing global remote inventory access.
 - [ ] Research payment preserves lifetime histories; crafting the unlocked equipment remains a separate material cost.
 
@@ -47,7 +47,7 @@ There is no technology catalog, research contribution/work system, material-paym
 
 - [ ] Display prerequisite technologies, historical extraction/production, available stock, contributions, remaining work and unlocks.
 - [ ] Explain when eligibility is met but payment stock is missing, and when paid research still needs time.
-- [ ] Show field and lab work rates and explain the benefit of additional labs.
+- [ ] Show active field target, enable/pause and missing-material states, ongoing bag consumption, irreversible invested materials, field/lab work rates and the benefit of extra labs/speed upgrades. Closing the UI does not stop field work.
 - [ ] Show equipment crafting costs separately and explain recipe/machine arity restrictions.
 - [ ] Make locked/available/in-progress/completed states keyboard accessible and understandable without color alone.
 

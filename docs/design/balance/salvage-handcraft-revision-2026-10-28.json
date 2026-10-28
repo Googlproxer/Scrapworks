@@ -1,0 +1,78 @@
+{
+  "recordedOn": "2026-10-28",
+  "source": "User accepted salvage/tool proposals and clarified exclusive inventory use during handcrafting.",
+  "sources": [
+    "docs/design/player-progression.md#salvage-interaction-and-tool-progression",
+    "docs/design/player-progression.md#handcrafting-and-interruption"
+  ],
+  "handcrafting": {
+    "requiresVisibleUi": true,
+    "exclusivePlayerInventoryMutationsWhileBatchActive": true,
+    "holdsOwnershipBetweenUnitsAndDuringExitWarning": true,
+    "idleUiLocksInventory": false,
+    "perUnitProjectedPostInputCapacityCheck": true,
+    "spendOnlyAfterSuccessfulPreflight": true,
+    "partialStackConsumptionDoesNotFreeWholeSlot": true,
+    "deferOtherInventoryTransfersIncludingMiniFabDeliveryAndAutomaticInputPulls": true,
+    "cancelOnlyUnfinishedUnitAndRemainingRequest": true,
+    "keepCompletedOutputAndHistory": true,
+    "refundOriginalInputsBeforeReleasingOwnership": true,
+    "refundGroundOverflowPossible": false,
+    "worldMayContinueWithSuppliedMiniFabWorkHeldBeforeDelivery": true
+  },
+  "initialSalvage": {
+    "control": "Hold Interact, accessibility toggle alternative",
+    "bareHandsSecondsPerScrap": 3,
+    "prybarSecondsPerScrap": 1,
+    "stopOn": [
+      "Release or toggle off",
+      "Out of range",
+      "Depletion",
+      "UI input ownership change"
+    ],
+    "fullBag": "Continue salvage with ground overflow and a persistent non-modal notice",
+    "groundDrops": "Merge nearby same-item drops and use deliberate pickup",
+    "firstHandcraftedPrybar": "Auto-equip only if the tool slot is empty; later replacements explicit",
+    "reachUpgradesIndependentOfSpeed": true
+  },
+  "toolProgression": {
+    "openingRequired": [
+      "Bare hands",
+      "Scrap prybar"
+    ],
+    "mechanical": "Later post-MiniFab tool; approximately 2 scrap/sec is provisional and tougher deposits are future content.",
+    "powered": "Later electrical progression; costs/rates not designed. Stationary extractors supply continuous automation."
+  },
+  "durability": {
+    "classification": "Potential later mechanic",
+    "usedInCurrentOpening": false,
+    "committedFutureFeature": false,
+    "currentWearOrRepairSystem": false
+  },
+  "catalogueCountsUnchanged": {
+    "Item": 9,
+    "Recipe": 8,
+    "Ingredient": 15,
+    "Technology": 21,
+    "Research Cost": 11
+  },
+  "prerequisiteLinksUnchanged": 32,
+  "whiteboardsModified": false,
+  "implementationAdded": false,
+  "supersedes": "Tentative handcraft refund-overflow routing in prior capacity notes; salvage overflow and MiniFab blocked-output rules are retained.",
+  "remainingWhenRecorded": [
+    "Exact generous starter deposit quantities",
+    "Later upgrade/tool costs and tuned values"
+  ],
+  "remainingThisDesignGroup": [],
+  "completion": {
+    "recordedOn": "2026-10-28",
+    "taskId": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+    "state": "Done",
+    "starterAreaScrapTotal": 250000,
+    "quantityStatus": "Configurable initial playtest default, not final balance",
+    "authoringFollowUp": "Distribute/tune this total during M03 salvage authoring; later tool/upgrade costs belong to their later content slices.",
+    "nextTaskId": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+    "nextTaskState": "In Progress"
+  }
+}

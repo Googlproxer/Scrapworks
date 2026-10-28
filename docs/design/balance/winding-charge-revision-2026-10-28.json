@@ -1,0 +1,72 @@
+{
+  "recordedOn": "2026-10-28",
+  "source": "User specified winding and upgrades, then chose 60 active seconds, capacity-independent recharge turns and +50% capacity with doubling cost.",
+  "sourcePath": "docs/design/player-progression.md#optional-winding-and-local-charge",
+  "task": {
+    "id": "e993d612-8caf-485c-9d38-71e3035b4b97",
+    "state": "Done"
+  },
+  "agreed": {
+    "initialTurnsToFull": 5,
+    "initialBoostedActiveSeconds": 60,
+    "chargedSpeedMultiplier": 2,
+    "emptySpeedMultiplier": 1,
+    "drainOnlyDuringActualMiniFabProcessing": true,
+    "zeroDrainStates": [
+      "Idle",
+      "Paused",
+      "Missing inputs",
+      "Blocked output",
+      "Inventory access wait"
+    ],
+    "chargeFromContinuousAbsoluteAngularTravel": true,
+    "fullRevolutionRequiredForCharge": false,
+    "clockwiseCounterclockwiseAndReversalsCount": true,
+    "pointer": "Grab handle and rotate around pivot; stationary clicks/holds do not charge",
+    "controller": "Select handle; it matches right-stick direction outside centre deadzone",
+    "keyboard": "Up, Right, Down, Left, Up = one turn-equivalent; fractional/reversed paths count actual handle travel",
+    "gearingMinimumTurnsToFull": 1,
+    "turnsToFullIndependentOfCapacity": true,
+    "capacityLevelLimit": null,
+    "capacityPerLevelMultiplier": 1.5,
+    "physicalUpgradeCostPerLevelMultiplier": 2,
+    "capacitySecondsFormula": "60 * 1.5^n for capacity level n>=0",
+    "physicalUpgradeCostFormula": "First-level recipe B * 2^(n-1) for level n>=1; B remains provisional",
+    "chargeGainFormula": "capacitySeconds * abs(acceptedAngularTravelDegrees) / (360 * gearingTurnsToFull), capped at capacity",
+    "capacityUpgradeGrantsFreeCharge": false,
+    "stepsSplitAtChargeExpiryAndOperationCompletion": true
+  },
+  "remainingOpeningDesignQuestions": [],
+  "laterContent": [
+    "Intermediate gearing tiers/material costs",
+    "Repeatable-upgrade research staging",
+    "Factory power-source stacking",
+    "Optional accelerometer experiments"
+  ],
+  "implementationTuning": [
+    "Pointer/stick centre deadzones and sensitivity",
+    "Equivalent maximum angular charging rate across input adapters"
+  ],
+  "catalogueRecordCountsUnchanged": 64,
+  "prerequisiteLinksUnchanged": 32,
+  "whiteboardsModified": false,
+  "implementationAdded": false,
+  "verification": {
+    "fiberyReadback": "Passed",
+    "taskRecordsCompared": 5,
+    "catalogueRecordsCompared": 6,
+    "allFiveOpeningDesignTasksDone": true,
+    "milestone3CompletedTasks": 10,
+    "milestone3OpenGameplayTasks": 5,
+    "milestone3State": "In Progress",
+    "technologyRecords": 21,
+    "prerequisiteLinks": 32,
+    "technologyWorkflow": "All Draft",
+    "documentsChecked": 38,
+    "localLinksChecked": 418,
+    "diagramSourcesChecked": 8,
+    "docsFailures": 0,
+    "jsonParsing": "Passed",
+    "diffWhitespaceFailures": 0
+  }
+}

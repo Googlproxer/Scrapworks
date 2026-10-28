@@ -1443,6 +1443,136 @@
         "state": "Completed"
       },
       "note": "Initial import records/counts above remain the original snapshot; this entry records the later completion."
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Opening tree and safe handcrafting rules agreed, including UI-exit warning, preservation of completed units and original-input refund for the unfinished unit.",
+      "catalogueRevision": "docs/design/balance/opening-revision-2026-10-28.json",
+      "task": {
+        "id": "81647a13-0cc5-431c-814a-8bb18a442052",
+        "sourceId": "design.opening-catalogue",
+        "name": "Approve opening tree and safe handcrafting rules",
+        "state": "Done",
+        "currentFocus": false
+      },
+      "nextTask": {
+        "id": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+        "name": "Set inventory, salvage and tool interaction rules",
+        "state": "In Progress"
+      },
+      "note": "Implementation task checklists were revised, not marked done. Original import records and counts remain historical."
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Inventory/reach/overflow/capacity rules partly settle the inventory-salvage-tools design task; controls/rates/tools remain In Progress.",
+      "receipt": "docs/design/balance/inventory-capacity-revision-2026-10-28.json",
+      "task": {
+        "id": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+        "state": "In Progress"
+      },
+      "note": "Pending gameplay/save task acceptance criteria updated; no implementation marked done."
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "receipt": "docs/design/balance/salvage-handcraft-revision-2026-10-28.json",
+      "reason": "Accepted initial salvage/tool settings and handcraft inventory/refund ordering. Durability remains potential later; exact generous starter quantities remain to choose.",
+      "task": {
+        "id": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+        "state": "In Progress"
+      },
+      "note": "Pending implementation criteria reconciled; no runtime work marked complete."
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Inventory/salvage/tools behavior design complete; configurable starter-area default 250,000 scrap recorded. Layout/tuning belongs to M03 authoring; Field Research is active next.",
+      "receipt": "docs/design/balance/salvage-handcraft-revision-2026-10-28.json",
+      "completedTask": {
+        "id": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+        "state": "Done"
+      },
+      "nextTask": {
+        "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+        "state": "In Progress"
+      },
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Background Field Research and gradual irreversible inventory consumption agreed; mixed-input work granularity remains open.",
+      "receipt": "docs/design/balance/field-research-revision-2026-10-28.json",
+      "task": {
+        "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+        "state": "In Progress"
+      },
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Synchronized one-of-each remaining-input research cycles and whole-cycle shortage waits agreed; Field Research behavior design complete.",
+      "receipt": "docs/design/balance/field-research-revision-2026-10-28.json",
+      "completedTask": {
+        "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+        "state": "Done"
+      },
+      "nextTask": {
+        "id": "a0420262-df0c-4e2d-ab73-d15285d87f49",
+        "state": "In Progress"
+      },
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "MiniFab queue/buffers/cancellation and solid material recovery agreed, including four answered edge cases.",
+      "receipt": "docs/design/balance/minifab-buffer-recovery-revision-2026-10-28.json",
+      "completedTask": {
+        "id": "a0420262-df0c-4e2d-ab73-d15285d87f49",
+        "state": "Done"
+      },
+      "nextTask": {
+        "id": "e993d612-8caf-485c-9d38-71e3035b4b97",
+        "state": "In Progress"
+      },
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Winding/charge decisions and follow-up balance values agreed; all five opening design tasks complete.",
+      "receipt": "docs/design/balance/winding-charge-revision-2026-10-28.json",
+      "completedTask": {
+        "id": "e993d612-8caf-485c-9d38-71e3035b4b97",
+        "state": "Done"
+      },
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Final Milestone 3 readiness review; stock contention and whole-return disassembly settled, stale next-task notes reconciled.",
+      "receipt": "docs/design/balance/milestone-03-readiness-2026-10-28.json",
+      "designBlockers": [],
+      "implementationAdded": false,
+      "whiteboardsModified": false
+    },
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "Actual ECS runtime selection/foundation moved from Milestone 6 to a first Milestone 3 task, before new core-loop feature code.",
+      "receipt": "docs/plans/ecs-foundation-revision-2026-10-28.json",
+      "task": {
+        "sourceId": "milestone.03.step.00.ecs-foundation",
+        "name": "M03.0 — Establish and prove the ECS foundation",
+        "state": "Open",
+        "id": "7aa1d483-0362-436c-a2f6-cd75ba42796a",
+        "url": "https://scrapworks.fibery.io/Project_Tracking/Task/85"
+      },
+      "newProjectTaskCount": 78,
+      "milestone3CompletedTasks": 10,
+      "milestone3UnfinishedTasks": 6,
+      "implementationAdded": false,
+      "dependencyInstalled": false,
+      "whiteboardsModified": false
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Milestone 6 First working machines
 
-Updated 27 October 2026. Status: not started; ECS direction retained and machine/power requirements revised. Prerequisite: [Milestone 5](milestone-05-research.md).
+Updated 28 October 2026. Status: not started; ECS selection/foundation moved to Milestone 3, with factory content extending it here. Prerequisite: [Milestone 5](milestone-05-research.md).
 
 Establish manually supplied renewable-powered recycling, fabrication and laboratory operation, then provide extraction for later continuous supply. The Mini Fabricator's first automatic crafting belongs in Milestone 3; this milestone builds the placed factory. See [player progression](../design/player-progression.md).
 
@@ -10,11 +10,12 @@ Establish manually supplied renewable-powered recycling, fabrication and laborat
 
 Recycler artwork is source/reference material. There are no simulation factory entities, construction/resource commands, power allocation, production buffers or machine/lab work. No new gameplay is implemented by this plan update.
 
-Follow the [factory ECS decision](../design/TDD.md#future-factory-ecs): evaluate Miniplex first for factory entities and shared processing. Keep authoritative state and scheduling independent of Babylon objects; integrate at the application session rather than scene-script subscriptions.
+Extend the [ECS foundation established in Milestone 3](../design/TDD.md#ecs-foundation-from-milestone-3). Library/storage selection, stable IDs, component/resource authority, domain-rule reuse and capture/rebuild boundaries must already be proven before this milestone. Add factory components/systems inside the same simulation step; do not introduce a second world, parallel inventory/recipe engine or a late migration from the opening loop. Babylon remains presentation.
 
 ## Step 1 Define machine content and state
 
-- [ ] Evaluate ECS against deterministic processing, lifetime, plain save data and representative workloads before selecting a dependency.
+- [ ] Reuse the selected Milestone 3 ECS runtime, stable IDs, inventory/recipe/work domain rules and Milestone 4 snapshot adapter. Extend components/queries/systems for factories; do not defer initial ECS selection or rebuild the opening systems here.
+- [ ] Profile representative factory-scale active/idle machines and projection costs, comparing with the Milestone 3 baseline. Optimize measured storage/query/work scheduling bottlenecks without assuming ECS alone guarantees throughput.
 - [ ] Define researched equipment items, footprints, orientations, direct input/output ports, capacities, power requirements and stable machine IDs.
 - [ ] Define initial solar/wind generation, recycler, the first required factory fabrication tiers, lab and extraction content. Scope the delivered tiers explicitly.
 - [ ] Basic Fabricator accepts exactly one distinct input type; Medium exactly two; Advanced three or four. Advanced cannot execute lower-arity recipes. Mini Fabricator and recycler rules are separate.
@@ -28,7 +29,7 @@ Follow the [factory ECS decision](../design/TDD.md#future-factory-ecs): evaluate
 - [ ] Consume the crafted equipment item once on successful placement and claim the footprint atomically.
 - [ ] Support manually loading/unloading compatible machine buffers; transfers do not create production history.
 - [ ] Define the material-value ledger, active-job/buffer treatment and safe recovery destination before dismantling is enabled.
-- [ ] Dismantle buildings and crafted equipment into their full embodied scrap value. Recover reservations, contents and pending output exactly once; no silent loss when inventory is full.
+- [ ] Dismantle buildings/equipment into full embodied solid value: scrap-origin material as scrap, other material as source ore for full reprocessing. Liquids are lost. Define later origin/equivalence details; recover contents/pending output once without inventing solid value or silently discarding blocked recovery.
 - [ ] Verify crafting, random recycling and dismantling cannot mint extra scrap through a recovery loop. Keep the open consumed-resource policy explicit.
 
 ## Step 3 Implement renewable-first power
@@ -51,6 +52,7 @@ Follow the [factory ECS decision](../design/TDD.md#future-factory-ecs): evaluate
 - [ ] Commit new output and lifetime production once. Extraction increases extraction history, not crafted output history; finite deposits decrease atomically.
 - [ ] Integrate dedicated research-craftable production and faster labs with Milestone 5's shared progress/payment rules; multiple labs scale useful throughput.
 - [ ] Leave the Mini Fabricator inventory-driven upgrade out unless its separate unlock, min/max semantics and implementation scope have been agreed.
+- [ ] Design a useful advanced portable MiniFab role/consumable and relevant hazardous/liquid handling upgrades when advanced crafting is scoped; no concrete recipe or cost is approved yet.
 - [ ] Integrate any scoped MiniFab power upgrades only after their general technology, separate MiniFab research and actual crafting/application. Onboard solar/wind, polluting coal and grid boost never remove power-free baseline work; keep the Milestone 3 local charge mechanic independent until this integration exists.
 - [ ] Make current-tick output available to transport on the next transport phase.
 
