@@ -1424,5 +1424,25 @@
         }
       ]
     }
-  }
+  },
+  "updates": [
+    {
+      "recordedOn": "2026-10-28",
+      "reason": "User confirmed the reviewed changes were committed; full CI verifies clean setup.",
+      "reviewedSourceCommit": "50cdc89b16b5d1751a7032fc8118146ac404bf3e",
+      "validatedCommit": "e93210d2a4f6641435439209e8290f5788bfc34a",
+      "ciRun": "https://github.com/Googlproxer/Scrapworks/actions/runs/40632360002",
+      "ciConclusion": "success",
+      "task": {
+        "id": "fdb57c35-7337-401c-921f-f665f2da254f",
+        "state": "Done",
+        "currentFocus": false
+      },
+      "milestone": {
+        "id": "e427e580-1b49-42ce-8042-f8c3b1f3045e",
+        "state": "Completed"
+      },
+      "note": "Initial import records/counts above remain the original snapshot; this entry records the later completion."
+    }
+  ]
 }

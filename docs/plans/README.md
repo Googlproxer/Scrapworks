@@ -1,6 +1,6 @@
 # Scrapworks Implementation Plan
 
-Updated 27 October 2026 for agreed progression, Mini Fabricator and renewable-first peaceful terraforming. Milestone 3 retains its migration credits and now includes bootstrap field research. These are planning changes; later gameplay implementation has not resumed. The 23 October migration acceptance remains a dated checkpoint.
+Updated 27 October 2026 for agreed progression, Mini Fabricator and renewable-first peaceful terraforming. Milestone 3 retains its migration credits and now includes bootstrap field research. These are planning changes; later gameplay implementation has not resumed. The 23 October migration acceptance remains a dated checkpoint; [28 October full CI](../reports/ci/2026-10-28/README.md) closes Milestone 1 reproducibility.
 
 Build a browser-first 3D game with Angular UI, Babylon presentation, Editor-authored layout, a plain TypeScript simulation, and local Dexie/IndexedDB snapshots. The [GDD](../design/GDD.md), [player progression decisions](../design/player-progression.md), [TDD](../design/TDD.md), and [Art Document](../art/README.md) own their respective requirements.
 
@@ -22,7 +22,7 @@ The [Fibery project tracker](fibery-tracking.md) provides the live task board, m
 
 | Milestone                                                                           | Playable result                                | Current state                                                                                                                                               |
 | ----------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [1. Project and integration](milestone-01-project-and-integration.md)               | One reliable canvas and authored fixture       | Runtime, fixture, lifecycle, cutover and packaging verified. Clean install/pinned Yarn and commit review remain pending.                                    |
+| [1. Project and integration](milestone-01-project-and-integration.md)               | One reliable canvas and authored fixture       | Complete for integration: reviewed changes committed; clean pinned-Yarn install and full CI pass. See [CI evidence](../reports/ci/2026-10-28/README.md).                                    |
 | [2. Simulation foundation](milestone-02-simulation-foundation.md)                   | A world advances and pauses predictably        | Plain world/session, typed fixture command, detached views, 20 Hz clock and pause implemented and tested.                                                   |
 | [3. Character and manual opening](milestone-03-character-and-manual-opening.md)     | Find scrap, field-research tools/recipes and use the Mini Fabricator | Movement, collision, picking and deposit data implemented. Onboarding, salvage, timed field research, recipe/device jobs and inventory pending. |
 | [4. First local save](milestone-04-first-local-save.md)                             | Restore Mini Fabricator and field research in progress | Gameplay snapshots and restore unimplemented. Controls IndexedDB reload verified separately; old save dialog remains test data. |

@@ -1,6 +1,6 @@
 # Milestone 1 Project and integration
 
-Updated 23 October 2026 at migration Phase 7. Status: runtime integration and authored fixture verified; clean-install/package-manager reproducibility and commit review remain pending.
+Updated 28 October 2026. Status: complete for project integration. The reviewed project changes are committed and the full clean-checkout CI workflow passes with pinned Yarn. Gameplay snapshots remain owned by Milestone 4.
 
 Angular owns UI; Babylon is the sole world renderer and the Editor owns authored scenes. The shared runtime, viewport, plain client contract and asynchronous cleanup guarantees remain. `/3d` redirects to `/`; the [cleanup cutover](3d-cleanup.md#phase-4-make-babylon-the-default-and-remove-the-2d-runtime) is implemented and verified.
 
@@ -18,8 +18,8 @@ The [23 October migration evidence](../reports/migration/2026-10-23/README.md) r
 - [x] Record current routes, stack, ownership, and remaining implementation limits.
 - [x] Use one active ESLint configuration, with passing rule/format integration checks.
 - [x] Record runtime asset/request inventories and deployment measurements in the [migration production evidence](../reports/migration/2026-10-23/README.md).
-- [ ] Complete the clean-install/export reproducibility check with the pinned package manager; see [the preflight checklist](3d-implementation-checklist.md#0-review-the-preserved-repository).
-- [ ] Finish the dependency/authoring commit after reviewing the preserved work; a file checkpoint does not mark untracked files as committed.
+- [x] Complete clean-install/export reproducibility with pinned Yarn 4.18.1 on the clean GitHub Actions runner; see [full CI evidence](../reports/ci/2026-10-28/README.md).
+- [x] Finish the reviewed dependency/authoring commit. The user confirmed review/commit completion; `50cdc89` contains those changes and `e93210d` repairs stale art references exposed by CI.
 
 ## Step 2 Retain the shared lifecycle boundary
 
@@ -45,12 +45,12 @@ The [23 October migration evidence](../reports/migration/2026-10-23/README.md) r
 - [x] Keep the implemented simulation free of renderer and storage dependencies.
 - [x] Demonstrate a real IndexedDB controls-settings reload independently of gameplay saves. This does not validate world persistence.
 - [x] Implement plain `WorldState`, typed placement commands, and fixed-step behavior in Milestone 2.
-- [ ] Implement versioned gameplay snapshots in Milestone 4; test records and a save dialog do not establish world persistence.
+Versioned gameplay snapshots remain an unfinished requirement of [Milestone 4](milestone-04-first-local-save.md). Test records and a save dialog do not establish world persistence or block this integration milestone.
 
 ## Completion checks
 
 - [x] One default 3D runtime and an authored fixture survive interaction, resize, failure/retry, suspension, and teardown.
-- [x] Scene generation succeeds from saved authoring inputs with installed dependencies; generated outputs remain ignored. A clean install with pinned Yarn remains unchecked above.
+- [x] Scene generation and the complete CI workflow succeed from a clean checkout using pinned Yarn; generated outputs remain ignored.
 - [x] Runtime packaging excludes unused source-library/2D contents after the asset audit and cutover.
 - [x] Active docs and diagrams describe the implemented direction and distinguish unfinished gameplay.
 

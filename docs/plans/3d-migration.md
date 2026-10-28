@@ -109,7 +109,7 @@ The [asset record](../../art/characters/protagonist-runtime-v2/README.md) contai
 
 | Milestone | Verified credit from this migration | Still pending |
 | --- | --- | --- |
-| 1 Project and integration | Babylon routing, authored fixture, export, lifecycle/input, Controls persistence, production packaging | Clean install and working-tree commit/review; target hardware checks |
+| 1 Project and integration | Babylon routing, authored fixture, export, lifecycle/input, Controls persistence, production packaging | Integration complete after [28 October full CI](../reports/ci/2026-10-28/README.md). Target-hardware benchmarking remains in Milestone 10. |
 | 2 Simulation foundation | Plain state/views/commands, empty initialization, deterministic 20 Hz session, bounded catch-up and pause | Expansion when actual gameplay systems arrive; gameplay-save codec |
 | 3 Character/manual opening | Coordinates, movement, picking, collisions, locomotion and deposit data | Salvage, manual crafting, inventory gameplay and their UI/interaction animations |
 | 4 First local save | Existing test-data scaffold retained; separate Controls DB verified | Gameplay snapshots, reload/continuation and restore |

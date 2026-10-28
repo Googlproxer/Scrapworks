@@ -31,3 +31,7 @@ yarn docs:check
 ```
 
 After these pass, update README/TDD/art/setup/cleanup records and the affected milestone checkboxes from demonstrated behavior. Keep historical reports intact. Do not continue into the former checklist's gameplay/save slice during this migration request.
+
+## Clean setup completion — 28 October 2026
+
+The reviewed source changes are committed. The [full GitHub CI workflow](../reports/ci/2026-10-28/README.md) passed from a clean runner with pinned Yarn 4.18.1, immutable dependency install, generated scene exports, all test groups, production build, asset checks and development reload/recovery. This closes Milestone 1 reproducibility; it adds no gameplay implementation.
