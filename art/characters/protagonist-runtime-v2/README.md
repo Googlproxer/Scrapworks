@@ -5,7 +5,7 @@ Runtime derivative prepared on 23 October 2026 from the user's existing `Protag-
 ## Deliverables and runtime contract
 
 - [Editable derivative](protagonist-runtime-v2.blend), with packed textures and named `Idle`, `Walk`, `Run`, `TurnLeft` and `TurnRight` actions.
-- [Runtime GLB](../../../../public/assets/models/protagonist-v2.glb), served at `/assets/models/protagonist-v2.glb`.
+- [Runtime GLB](../../../public/assets/models/protagonist-v2.glb), served at `/assets/models/protagonist-v2.glb`.
 - [Export and source hashes](export-report.json), [reimport validation](validation-report.json), and [animation contact sheet](animation-contact-sheet.png). The [individual previews](previews/index.json) are renders of the exported GLB after reimport.
 - Current disabled-turn playback: [smooth-turning video](browser-smooth-turning/turning.webm), [247 frame samples and assertions](browser-smooth-turning/report.json), and screenshots of [standing right](browser-smooth-turning/standing-right.png), [standing left](browser-smooth-turning/standing-left.png), and a [moving reversal](browser-smooth-turning/moving-reversal.png).
 - Earlier turn-enabled checkpoint: [browser turning video](browser-turning/turning.webm), [frame samples and assertions](browser-turning/report.json), and screenshots of [standing right](browser-turning/standing-right.png), [standing left](browser-turning/standing-left.png), and a [moving reversal](browser-turning/moving-reversal.png). These predate the user's request to disable turn playback.
@@ -46,7 +46,7 @@ Animated knees exposed concealed skin through the trousers. The derivative omits
 
 The validator reimports the actual GLB and checks budgets, embedded images and dimensions, UVs, skin bindings, clip names/durations, deformation, loop rotations, horizontal stationarity, root transform, and ground contact across every sampled frame. Walk soles stay within 5.3 mm of ground; run retains up to 98.9 mm of flight. Tiny negative floor values below one micrometre are floating-point error. The contact sheet covers four idle viewing angles and four phases each of walking, running, and left/right turning.
 
-These are asset checks. At the earlier turn-enabled checkpoint, the focused renderer suites passed 32 cases, and the browser turning probe recorded actual keyboard input with unchanged stationary simulation positions. Those results and videos remain dated evidence of enabled pivot playback, not current playback behavior. The earlier [migration production evidence](../../../../docs/reports/migration/2026-10-23/performance.json) records the three-clip checkpoint before turn clips were added, including its earlier asset hash. That sample uses Chromium's SwiftShader software renderer; physical target-device performance remains unqualified.
+These are asset checks. At the earlier turn-enabled checkpoint, the focused renderer suites passed 32 cases, and the browser turning probe recorded actual keyboard input with unchanged stationary simulation positions. Those results and videos remain dated evidence of enabled pivot playback, not current playback behavior. The earlier [migration production evidence](../../../docs/reports/migration/2026-10-23/performance.json) records the three-clip checkpoint before turn clips were added, including its earlier asset hash. That sample uses Chromium's SwiftShader software renderer; physical target-device performance remains unqualified.
 
 The current disabled-turn checkpoint passes 33 focused renderer tests. Its [browser report](browser-smooth-turning/report.json) records 247 samples with no errors: both turn groups stay stopped with zero contribution, stationary heading settles during Idle without changing simulation position, and moving reversals retain Walk. The source lint/type checks and production build also pass.
 
@@ -67,6 +67,6 @@ The contact sheet step requires Pillow. Add `-- --no-render` to the validation c
 
 - [User-authored model source](../Protag-v1.blend) and [retained model export](../Protag-v1.glb).
 - Existing [Female Locomotion Pack archive](../Female%20Locomotion%20Pack.zip): `idle.fbx`, `walking.fbx`, `running.fbx`, `left turn.fbx`, and `right turn.fbx`. Embedded FBX animation stacks identify `mixamo.com`.
-- The [older MPFB source and license records](../../../README.md#recovering-retired-mpfb-sources) remain a separate asset history recoverable from Git.
+- The [older MPFB source and license records](../../README.md#recovering-retired-mpfb-sources) remain a separate asset history recoverable from Git.
 
 The animation archive is an existing user-supplied source. No acquisition receipt, download URL or standalone license file accompanies it. This derivative records that evidence and the input hashes without inventing provenance or applying the separate MPFB asset license to the animation pack. Keep the existing source and authorship records with any future asset distribution.

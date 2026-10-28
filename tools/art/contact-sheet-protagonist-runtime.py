@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'art/characters/3d/protagonist-runtime-v2'
+OUT = ROOT / 'art/characters/protagonist-runtime-v2'
 shots = json.loads((OUT / 'previews/index.json').read_text(encoding='utf-8'))
 sheet = Image.new('RGB', (1440, 102 + ((len(shots) + 3) // 4) * 518), '#17202b')
 draw = ImageDraw.Draw(sheet)

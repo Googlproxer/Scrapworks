@@ -32,7 +32,7 @@ Preservation update, 24 October 2026: the duplicate local scene archive was remo
 | Runtime/asset cutover audit | No Phaser markers in 740 emitted JavaScript files; no retired runtime assets; sole runtime GLB is protagonist v2 |
 | Documentation and repository checks | 48 documents, 588 local links and 8 diagram sources pass; repository audit verifies 571 source files and 12 generated-ignore rules |
 
-See [browser results](browser/results.json), [production/performance report](performance.json), [build-input audit](build-input-audit.json), [authoring workflow results](../../workflow/2026-10-23/README.md), and the [character validation](../../../../art/characters/3d/protagonist-runtime-v2/validation-report.json). The build-input audit checked all 3,777 inputs in Angular's emitted `browser-stats.json` and found no Phaser dependencies; it supplements the profiler's optional lookup for the older `stats.json` filename.
+See [browser results](browser/results.json), [production/performance report](performance.json), [build-input audit](build-input-audit.json), [authoring workflow results](../../workflow/2026-10-23/README.md), and the [character validation](../../../../art/characters/protagonist-runtime-v2/validation-report.json). The build-input audit checked all 3,777 inputs in Angular's emitted `browser-stats.json` and found no Phaser dependencies; it supplements the profiler's optional lookup for the older `stats.json` filename.
 
 The application suite covers controller mappings and disconnection, quick taps/simultaneous actions, binding validation, held suppression, stale frames/callbacks, native UI input, focus restoration, real IndexedDB settings reload/failure/isolation, lifecycle failures/late completions, independent hosts, pause/zero size/visibility, graphics loss and disposal. Plain tests cover transforms, units, bounds, deterministic stepping, movement rates, collision and rejection without placement mutation. Renderer tests load the actual exported model and verify heading, blending, picking at multiple camera/display configurations and obstruction fade/restore.
 
@@ -44,11 +44,11 @@ During validation, actual browser interaction exposed and resolved right-drag ma
 
 The current-character derivative is **4,102,120 bytes (3.91 MiB), 37,655 triangles, 10 materials and 52 joints**, with 13 embedded WebP images at 512–2048 pixels. It meets the requested runtime budgets. Its SHA-256 is `6707f196afc943e97af9fcb726bd18efe884f5b0a2af731fd787f4a8cf308396`.
 
-Original source and animation-archive hashes, retargeting details and provenance limits are in the [asset README](../../../../art/characters/3d/protagonist-runtime-v2/README.md). The original source files remain unchanged. No acquisition URL/license was invented for the existing animation archive.
+Original source and animation-archive hashes, retargeting details and provenance limits are in the [asset README](../../../../art/characters/protagonist-runtime-v2/README.md). The original source files remain unchanged. No acquisition URL/license was invented for the existing animation archive.
 
 - [Production title](production-screenshots/babylon-canonical-menu.png) and [production Game](production-screenshots/babylon-canonical-game.png).
 - [Runtime sprint](browser/run-dpr1.png), [perspective placement fixture](browser/perspective-dpr1.png), [orthographic comparison](browser/orthographic-comparison-dpr1.png), and [640 × 480 resize](browser/resize-dpr1.png).
-- Equivalent DPR 2 screenshots are alongside these files. The [asset contact sheet](../../../../art/characters/3d/protagonist-runtime-v2/animation-contact-sheet.png) covers front/back/side idle and sampled walk/run phases.
+- Equivalent DPR 2 screenshots are alongside these files. The [asset contact sheet](../../../../art/characters/protagonist-runtime-v2/animation-contact-sheet.png) covers front/back/side idle and sampled walk/run phases.
 
 Perspective preserves a larger, more readable character in the default elevated composition; orthographic makes cell proportions more uniform but reduces character prominence at the comparison extent. Perspective remains the authored default. The fixture's capsule deposit and box blocker are intentional test geometry, not finished salvage/machine artwork.
 

@@ -8,7 +8,7 @@ import { projectRoot } from '../scenes/inventory.mjs';
 const origin = process.argv[2] ?? 'http://localhost:4200';
 const output = path.resolve(
   projectRoot,
-  process.argv[3] ?? 'art/characters/3d/protagonist-runtime-v2/browser-smooth-turning',
+  process.argv[3] ?? 'art/characters/protagonist-runtime-v2/browser-smooth-turning',
 );
 await fs.mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true });

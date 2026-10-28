@@ -19,9 +19,9 @@ import bmesh
 from mathutils import Quaternion, Vector
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / 'art/characters/3d/Protag-v1.glb'
-ARCHIVE = ROOT / 'art/characters/3d/Female Locomotion Pack.zip'
-OUT = ROOT / 'art/characters/3d/protagonist-runtime-v2'
+SOURCE = ROOT / 'art/characters/Protag-v1.glb'
+ARCHIVE = ROOT / 'art/characters/Female Locomotion Pack.zip'
+OUT = ROOT / 'art/characters/protagonist-runtime-v2'
 RUNTIME = ROOT / 'public/assets/models/protagonist-v2.glb'
 CLIPS = [('Idle', 'idle.fbx'), ('Walk', 'walking.fbx'), ('Run', 'running.fbx'),
          ('TurnLeft', 'left turn.fbx'), ('TurnRight', 'right turn.fbx')]
@@ -281,8 +281,8 @@ def build():
     bpy.context.preferences.filepaths.file_preview_type = 'NONE'
     bpy.ops.wm.save_as_mainfile(filepath=str(OUT / 'protagonist-runtime-v2.blend'), compress=True)
     report = {'source_glb': str(SOURCE.relative_to(ROOT)), 'source_glb_sha256': digest(SOURCE),
-              'source_blend': 'art/characters/3d/Protag-v1.blend',
-              'source_blend_sha256': digest(ROOT / 'art/characters/3d/Protag-v1.blend'),
+              'source_blend': 'art/characters/Protag-v1.blend',
+              'source_blend_sha256': digest(ROOT / 'art/characters/Protag-v1.blend'),
               'animation_archive': str(ARCHIVE.relative_to(ROOT)), 'animation_archive_sha256': digest(ARCHIVE),
               'animation_provenance': 'Existing user-supplied archive; FBX stacks identify mixamo.com. No download receipt or license file accompanies the archive.',
               'blender_version': bpy.app.version_string, 'source_bounds_blender_m': source_bounds,

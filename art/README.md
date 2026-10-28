@@ -4,7 +4,7 @@ Editable art projects, source assets, references, exact prompts and provenance l
 
 | Directory or record | Contents |
 | --- | --- |
-| [characters/](characters/) | Character identity/finish references, editable model sources and the [animated runtime derivative](characters/3d/protagonist-runtime-v2/README.md). |
+| [characters/](characters/) | Character identity/finish references, editable model sources and the [animated runtime derivative](characters/protagonist-runtime-v2/README.md). |
 | [world/](world/) | Environmental progression concepts. |
 | [machinery/](machinery/) | Machine and production progression concepts. |
 | [branding/](branding/) | Logo source, exact prompt and preparation record. |
@@ -13,11 +13,11 @@ Editable art projects, source assets, references, exact prompts and provenance l
 
 Keep project files, source textures, previews, available licensing and provenance together. Preserve original sources when making runtime derivatives and document their preparation. Current automation lives in [tools/art/](../tools/art/). Active Editor scenes/imports remain in `assets/`, live runtime derivatives in `public/assets/`, and generated scene exports in ignored `public/scene/`.
 
-The world/machinery images and south-idle illustrations still guide the 3D design. Sprite sheets and terrain atlases were retired in the [28 October cleanup](../docs/plans/3d-cleanup.md). Their original prompts remain only where they explain the generation chain of retained concepts; `generation.json` identifies the retired inputs and their Git recovery commit.
+The world/machinery images and retained modelling references guide the 3D design; the Art Document describes the approved flat finish. The south-idle illustrations have been retired. Sprite sheets and terrain atlases were retired in the [28 October cleanup](../docs/plans/3d-cleanup.md). Their original prompts remain only where they explain the generation chain of retained concepts; `generation.json` identifies the retired inputs and their Git recovery commit.
 
 ## Opening the Blender protagonist
 
-Open [Protag-v1.blend](characters/3d/Protag-v1.blend). The [runtime derivative guide](characters/3d/protagonist-runtime-v2/README.md) documents its source model, animation archive, validation and reproduction. Preserve the source FBXs, modelling references, animation sources and current validation alongside it. The unused static Editor import copy has been removed; [Protag-v1.glb](characters/3d/Protag-v1.glb) remains the canonical source export.
+Open [Protag-v1.blend](characters/Protag-v1.blend). The [runtime derivative guide](characters/protagonist-runtime-v2/README.md) documents its source model, animation archive, validation and reproduction. Preserve the source FBXs, modelling references, animation sources and current validation alongside it. The unused static Editor import copy has been removed; [Protag-v1.glb](characters/Protag-v1.glb) remains the canonical source export.
 
 ## Recovering retired MPFB sources
 

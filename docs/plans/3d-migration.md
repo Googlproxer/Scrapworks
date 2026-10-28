@@ -83,7 +83,7 @@ See the reconciled [Phase 2 walkthrough](3d-phase-2-walkthrough.md) for implemen
 - [x] Meet runtime budgets after the turn-clip refinement: 4,236,032 bytes (4.04 MiB), 37,655 triangles, 10 materials, 52 joints and textures at most 2048 pixels.
 - [x] Remove redundant texture encodings before targeted concealed-geometry removal; verify skin/clothing deformation, feet, root stationarity, transparency, heading, blending and obstruction visibility.
 
-The [asset record](../../art/characters/3d/protagonist-runtime-v2/README.md) contains the editable derivative, reproducible scripts, original hashes, numeric validation and contact sheet. This completes migration locomotion; future interaction animations remain tied to their unimplemented gameplay.
+The [asset record](../../art/characters/protagonist-runtime-v2/README.md) contains the editable derivative, reproducible scripts, original hashes, numeric validation and contact sheet. This completes migration locomotion; future interaction animations remain tied to their unimplemented gameplay.
 
 ## Phase 5 Picking and development placement
 

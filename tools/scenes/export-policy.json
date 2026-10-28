@@ -22,8 +22,8 @@
   ],
   "provenance": [
     {
-      "source": "art/characters/3d/Protag-v1.glb",
-      "record": "Canonical source export for the animated runtime derivative. Preserve its editable Blender project, source animation archive and runtime validation records together under art/characters/3d/."
+      "source": "art/characters/Protag-v1.glb",
+      "record": "Canonical source export for the animated runtime derivative. Preserve its editable Blender project, source animation archive and runtime validation records together under art/characters/."
     },
     {
       "source": "assets/README.md",

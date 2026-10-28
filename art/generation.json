@@ -91,7 +91,15 @@
     {
       "path": "characters/protagonist-sprites-v2.png",
       "recoveryCommit": "dc8afc71d07ea6fd3af06f560ad8c46a184895fc"
+    },
+    {
+      "path": "characters/protagonist-south-idle-v1.png",
+      "recoveryCommit": "dc8afc71d07ea6fd3af06f560ad8c46a184895fc"
+    },
+    {
+      "path": "characters/protagonist-south-idle-v2.png",
+      "recoveryCommit": "dc8afc71d07ea6fd3af06f560ad8c46a184895fc"
     }
   ],
-  "provenanceNote": "Original prompts and input paths below record the generation chain for retained character, world and machinery concepts. The two retired sprite-sheet inputs are recoverable from art/ at the recorded Git commit; their runs are historical provenance, not current production instructions."
+  "provenanceNote": "Original prompts and input paths record the generation chain for retained world/machinery concepts and retired character illustrations. Retired image inputs/outputs are recoverable from art/ at their recorded Git commit; those runs are historical provenance, not current production instructions."
 }

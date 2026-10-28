@@ -8,9 +8,9 @@ Art projects, source assets, references and provenance are organised under the r
 
 ## Current repository assets
 
-- The [south-idle illustration](../../art/characters/protagonist-south-idle-v2.png) defines the preferred finish and character identity. Its obsolete runtime sprite duplicate has been removed; the original remains source artwork.
+- The retained [modelling references](../../art/characters/References/) and model sources preserve character identity. The approved flat finish is described below; the earlier south-idle illustration has been retired, with its exact edit prompt retained in the [generation log](../../art/generation.json).
 - The retired [MPFB character experiment](../../art/README.md#recovering-retired-mpfb-sources) is recoverable from Git with its editable Blender/rigged GLB sources, licensing and original validation. Its source mesh statistics are distinct from the separately authored runtime model.
-- The [retained model source](../../art/characters/3d/Protag-v1.glb) and editable Blender project are canonical character sources. The active Game scene supplies a neutral binding for the [runtime derivative](../../art/characters/3d/protagonist-runtime-v2/README.md); obsolete static import copies have been removed.
+- The [retained model source](../../art/characters/Protag-v1.glb) and editable Blender project are canonical character sources. The active Game scene supplies a neutral binding for the [runtime derivative](../../art/characters/protagonist-runtime-v2/README.md); obsolete static import copies have been removed.
 - World and machinery comparisons remain useful visual concepts. The [generation log](../../art/generation.json) and individual branding/UI records preserve exact provenance; historical reference inputs are identified by their recovery commit.
 
 
@@ -33,7 +33,7 @@ Translate the preferred flat finish into 3D geometry, material response, texture
 
 ## Preferred finish across all artwork
 
-The approved style reference is the [flat-shaded protagonist south idle](../../art/characters/protagonist-south-idle-v2.png). Its flatter colour treatment is the preferred finish for the whole game, including characters, machines, terrain, vegetation, water, effects, and interface artwork.
+The approved flatter colour treatment is the preferred finish for the whole game, including characters, machines, terrain, vegetation, water, effects, and interface artwork.
 
 Use broad base-colour areas, a small number of clearly separated shadow shapes, and restrained highlights. A base tone and a shadow tone per material are a useful starting point, with another tone where readability needs it. Simplify surface texture and small details while preserving silhouettes, major folds, construction features, and facial identity. Keep painted contours restrained and consistent.
 
@@ -81,7 +81,7 @@ The outfit begins as worn but functional clothing. Her hands are empty, and she 
 
 The south-facing idle image is a visual reference. Preserve identity, clothing silhouette and the flat finish when preparing the 3D model; model fitting and animation remain separate work.
 
-Her current flat-shading sample establishes the preferred finish for the whole game. Preserve its major folds, facial identity, and perspective while following the shared finish rules above. Its exact [edit prompt](../../art/characters/protagonist-south-idle-flat-prompt.txt) is retained as a generation record.
+Preserve the protagonist's major folds and facial identity while applying the shared finish rules above. The original south-idle edit prompt remains in the [generation log](../../art/generation.json); the retired illustration is no longer a required working-tree asset.
 
 ## Character readability
 

@@ -18,7 +18,7 @@ Editor Play previews authored geometry; use `/` to test the complete Angular/run
 Scene coordinates are centimetres: the ground is 2,000 units wide and its grid
 cells are 200 units. Marker compilation converts once to gameplay metres.
 The neutral character anchor has unit scale; the model adapter owns the one-time
-glTF scale conversion. Original model sources remain under `art/characters/3d/`.
+glTF scale conversion. Original model sources remain under `art/characters/`.
 The retired serialized rig and complete prior scenes are recoverable from Git commit
 `6cd9f6f` using the [recovery instructions](../../assets/README.md#recovering-retired-scene-sources).
 The obsolete public GLB duplicate is removed. Keep licences and source/export records with each derivative.
@@ -88,7 +88,7 @@ Normal export/build uses the repository's Node/Yarn dependencies and official CL
 | Playwright Chromium                         | Application/browser workflow tests. Use `yarn test:setup` ; set `PLAYWRIGHT_BROWSERS_PATH` when using a different existing browser cache.                                                                           |
 | Babylon.js Editor 5.5.2                     | Interactive scene authoring and live desktop MCP. `run-server.mjs` discovers the Windows installation or uses `SCRAPWORKS_BABYLON_EDITOR_PATH` . The desktop bundle is a workstation dependency.                    |
 | Python 3 standard library                   | Optional file/history checkpoint and source-verification tools; not required to run the game.                                                                                                                      |
-| Blender (MPFB for historical sources)                           | Optional editable protagonist work and `tools/art/*.py` scripts run inside Blender. See the [runtime derivative guide](../../art/characters/3d/protagonist-runtime-v2/README.md); older MPFB tooling requires [source recovery from Git](../../art/README.md#recovering-retired-mpfb-sources). |
+| Blender (MPFB for historical sources)                           | Optional editable protagonist work and `tools/art/*.py` scripts run inside Blender. See the [runtime derivative guide](../../art/characters/protagonist-runtime-v2/README.md); older MPFB tooling requires [source recovery from Git](../../art/README.md#recovering-retired-mpfb-sources). |
 | `L:/Angular/tools/mpfb-assets` | Historical downloaded asset-pack cache used by `tools/art/install-mpfb-packs.py` ; only needed to reinstall/recreate packs. Selected MPFB source meshes, textures and licences are recoverable from the documented Git commit.                         |
 | `@viz-js/viz` and `sharp` | Optional diagram renderer; pass an absolute module directory as described in the [diagram guide](../diagrams/README.md). These are not app dependencies.                                                           |
 | Texture compression tools                   | Optional when enabling compression in the Editor project. The current project has compressed textures disabled, so normal exports do not require PVRTexTool/Khronos tools.                                         |

@@ -8,7 +8,7 @@ The visual character follows the shortest angular path instead of snapping to a 
 
 The existing animation archive supplies both turn clips, which remain in the asset alongside Idle, Walk and Run. Original character sources remain unchanged. The derivative remains **4,236,032 bytes (4.04 MiB), 37,655 triangles and 10 materials**, with SHA-256 `b4503d89ff5a3e108da1ee3e8da0a081b2bca79803a5f3d1c379b702efbbe663`.
 
-[Turning video](../../../../art/characters/3d/protagonist-runtime-v2/browser-turning/turning.webm) · [Frame samples and assertions](../../../../art/characters/3d/protagonist-runtime-v2/browser-turning/report.json) · [Asset derivation and checks](../../../../art/characters/3d/protagonist-runtime-v2/README.md)
+[Turning video](../../../../art/characters/protagonist-runtime-v2/browser-turning/turning.webm) · [Frame samples and assertions](../../../../art/characters/protagonist-runtime-v2/browser-turning/report.json) · [Asset derivation and checks](../../../../art/characters/protagonist-runtime-v2/README.md)
 
 The linked video and frame assertions preserve the earlier turn-enabled checkpoint, when stationary turns and sharp reversals used pivot footwork. They do not show the current disabled-turn playback policy.
 
@@ -43,7 +43,7 @@ The current runtime leaves both turn groups stopped and uses smooth heading inte
 
 - **33 focused Chromium renderer tests passed**: 19 world-presentation cases and 14 Babylon-client cases.
 - Spec TypeScript, full-source ESLint and the production Angular build passed; the initial bundle totals 237.59 kB.
-- The [current browser report](../../../../art/characters/3d/protagonist-runtime-v2/browser-smooth-turning/report.json) records **247 samples and no browser errors**. Both turn groups remain stopped with zero contribution, stationary heading settles during Idle without moving simulation position, and moving reversals retain Walk. The [current video](../../../../art/characters/3d/protagonist-runtime-v2/browser-smooth-turning/turning.webm) is stored separately from the earlier enabled-turn footage.
+- The [current browser report](../../../../art/characters/protagonist-runtime-v2/browser-smooth-turning/report.json) records **247 samples and no browser errors**. Both turn groups remain stopped with zero contribution, stationary heading settles during Idle without moving simulation position, and moving reversals retain Walk. The [current video](../../../../art/characters/protagonist-runtime-v2/browser-smooth-turning/turning.webm) is stored separately from the earlier enabled-turn footage.
 - The earlier full 212-test result and enabled-turn footage above remain their original checkpoint, rather than a rerun of the current playback policy.
 
 Physical gamepads and target-GPU qualification remain unexecuted. Controller navigation/mappings have automated coverage. Earlier migration performance data and its three-clip hash remain dated evidence in [the original report](README.md); those measurements have not been relabelled as measurements of this five-clip revision.

@@ -14,7 +14,7 @@ import bpy
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'art/characters/3d/protagonist-runtime-v2'
+OUT = ROOT / 'art/characters/protagonist-runtime-v2'
 GLB = ROOT / 'public/assets/models/protagonist-v2.glb'
 
 
