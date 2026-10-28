@@ -1,8 +1,8 @@
 # Milestone 7 Transport
 
-Updated 17 October 2026. Status: not started. Prerequisite: [Milestone 6](milestone-06-first-working-machines.md).
+Updated 27 October 2026. Status: not started. Prerequisite: [Milestone 6](milestone-06-first-working-machines.md).
 
-Automate supply and collection for the recycler with a small conveyor route. Transfers must preserve item quantities, survive blocked destinations, and resume from a save without changing where items are. Begin with direct routes rather than a general routing system.
+Automate extraction/recycler supply and sort the recycler's mixed random output into useful destinations. Use direct machine connections and a small conveyor/filter network. Preserve quantities and blocked contents through saves. [Trains and loading/unloading stations](../design/player-progression.md#logistics-and-later-transport) are later-game work, outside this milestone.
 
 [High-level plan](README.md) · [Next milestone](milestone-08-restoration-and-energy-choices.md)
 
@@ -17,7 +17,8 @@ There are no conveyor entities, port connections, saved items in transit, or tra
 - [ ] Define compatible machine input/output ports and allowed connection directions.
 - [ ] Add persistent segment IDs, connections, stored items, and any travel/progress values needed for continuation.
 - [ ] Specify whether capacity counts items or stacks and use that rule consistently in inventory and transport queries.
-- [ ] Begin with an authored or player-built direct network; defer splitters, underground belts, and advanced routing.
+- [ ] Begin with direct machine ports and conveyors, plus the first sorting/filter capability needed for mixed recycler output. Defer underground belts, general routing and trains; do not defer all sorting.
+- [ ] Choose filter rules, default/overflow destinations, blocked-output behavior and whether the first sorter is a filtered split connection or dedicated equipment before implementing it.
 
 ## Step 2 Extend placement and connections
 
@@ -25,7 +26,7 @@ There are no conveyor entities, port connections, saved items in transit, or tra
 - [ ] Validate port compatibility and direction before establishing a connection.
 - [ ] Show connection direction and invalid endpoints in the placement preview.
 - [ ] Define behavior for a disconnected segment: its contents remain in a valid container or transit state.
-- [ ] Keep removal unavailable until its content recovery rule is defined; do not delete a segment containing items silently.
+- [ ] Implement removal only with the agreed full scrap-recovery rule and a safe destination for contents; a full inventory cannot silently delete a segment's items.
 
 ## Step 3 Implement one transport phase
 
@@ -43,6 +44,7 @@ There are no conveyor entities, port connections, saved items in transit, or tra
 - [ ] Allow movement to resume when capacity becomes available without rebuilding the network.
 - [ ] Respect machine item/recipe compatibility when transferring into its input.
 - [ ] Preserve the recycler's completed-but-blocked job behavior while output transport frees capacity.
+- [ ] Sort mixed outputs without changing their types, quantities or already-rolled recycler result. Specify backpressure when one destination is full and fairness between supported outputs.
 - [ ] Keep all transport and manual collection out of cumulative production increments.
 - [ ] Define a conservation ledger covering inventories, machine buffers, job reservations, and conveyor contents for focused tests.
 
@@ -62,10 +64,11 @@ There are no conveyor entities, port connections, saved items in transit, or tra
 - [ ] Account for all quantities before and after transport; disable new production in the transport-only fixture.
 - [ ] Save with items partway along the route and verify restored continuation matches the original branch.
 - [ ] Automate recycler input and output, then collect the result without increasing history a second time.
+- [ ] Feed the recycler from extraction and route at least two random output types into their correct destinations, including full-destination/overflow and save/reload cases.
 
 ## Completion checks
 
-- [ ] A small conveyor route feeds and drains the recycler.
+- [ ] A directly connected conveyor/sorting route supplies the recycler and separates its mixed output into useful destinations.
 - [ ] Every logical item has one authoritative location or reservation.
 - [ ] Blockage preserves resources and movement resumes when space returns.
 - [ ] Transfer results are independent of incidental array iteration order.

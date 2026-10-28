@@ -1,6 +1,6 @@
 # Scrapworks diagrams
 
-Updated 24 October 2026. The core class diagram shows `WorldScene`, Toolkit scripts, the plain session bridge and `PlayerMotor`. The frame diagram makes shared input, independent 20 Hz tick dispatch and presentation order explicit. Editor-marker compilation and plain WorldDefinition/WorldState remain the movement fixture's state boundary. The application diagram labels planned factory ECS and gameplay persistence; GameState remains a separate renderer lifecycle contract.
+Updated 27 October 2026. The gameplay/research diagrams now describe planned Mini Fabricator production, extraction, sorting, full scrap recovery, renewable-first power and timed field/lab research. The core class/frame diagrams retain implemented `WorldScene`, Toolkit, session and `PlayerMotor` ownership. Editor-marker compilation and plain WorldDefinition/WorldState remain the movement fixture's state boundary; GameState is a separate renderer lifecycle contract.
 
 The [technical design](../design/TDD.md) and [implementation roadmap](../plans/README.md) contain the editable Mermaid blocks. Standalone sources are under [src/](src/), and matching SVG and PNG files are stored in this folder for GitHub preview and export.
 

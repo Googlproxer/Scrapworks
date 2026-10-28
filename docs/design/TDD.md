@@ -1,8 +1,8 @@
 # Scrapworks Technical Design Document
 
-Updated 24 October 2026. Core objects use Toolkit scripts while the application retains its independent gameplay scheduler. Migration evidence remains dated separately from this refactor and future gameplay requirements.
+Updated 27 October 2026. Core-object/session implementation is unchanged. Planned state, research, random recycling, renewable power and recovery requirements now follow the agreed progression design; migration evidence remains dated separately.
 
-Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step movement session now connect scene presentation to authoritative state. Manual/factory rules and versioned world saves remain planned. The [GDD](GDD.md) owns gameplay rules and the [roadmap](../plans/README.md) orders implementation.
+Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step movement session now connect scene presentation to authoritative state. Manual/factory rules and versioned world saves remain planned. The [GDD](GDD.md) and [player progression design](player-progression.md) own gameplay rules; the [roadmap](../plans/README.md) orders implementation.
 
 ## Agreed technical requirements
 
@@ -23,7 +23,7 @@ Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D 
 | Gameplay            | Plain TypeScript               | Private plain WorldState, typed placement command, deterministic 20 Hz movement, collision and detached views. Manual/factory progression remains planned. |
 | Persistence         | Dexie / IndexedDB              | Test-data service/dialog only; no playable-world snapshot or round trip.                                  |
 
-The [cleanup plan](../plans/3d-cleanup.md) defines the staged transition and the [baseline](../plans/3d-cleanup-baseline.md) records dated validation. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements. Historical 2D instructions remain in [history](../history/README.md).
+The [cleanup record](../plans/3d-cleanup.md) defines current asset boundaries and retired-source recovery. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements.
 
 ## Technical structure diagrams
 
@@ -226,29 +226,40 @@ This closer view shows the dependencies between gameplay systems. Arrows describ
 ```mermaid
 flowchart TB
     Player[Player movement and manual salvage]
-    Production[Crafting and machine production]
-    Research[Research: check milestones and spend stock]
+    Production[Power-free MiniFab and factory production]
+    Research[Timed field and scalable lab research]
     Construction[Construction]
-    Transport[Item and water transport]
-    Power[Power generation and storage]
-    Environment[Pollution and restoration]
+    Transport[Direct transport and output sorting]
+    Power[Solar and wind first; optional coal and storage]
+    Environment[Greenhouse terraforming and pollution]
+    Extraction[Resource extraction and history]
+    Recovery[Full dismantling recovery to scrap]
+    Winding[Optional winding and local MiniFab charge]
 
     Player -->|collected scrap in inventory| Production
+    Player -->|inventory contributions and field work| Research
+    Extraction -->|raw materials and extraction history| Production
+    Extraction -->|raw-resource eligibility| Research
     Production -->|completed output and cumulative totals| Research
     Research -->|unlocked recipes| Production
     Research -->|unlocked equipment| Construction
     Production -->|crafted equipment in inventory| Construction
     Construction -->|placed production machines| Production
+    Construction -->|extraction equipment| Extraction
     Construction -->|transport connections| Transport
     Construction -->|power machines and connections| Power
     Transport -->|machine input buffers| Production
     Production -->|machine output buffers| Transport
-    Power -->|available energy| Production
-    Power -->|coal emissions| Environment
+    Power -->|factory power and later MiniFab boosts| Production
+    Winding -->|bonus speed with power-free baseline| Production
+    Power -->|green contribution and optional emissions| Environment
+    Research -->|greenhouse and mitigation unlocks| Environment
     Transport -->|purified water supply| Environment
+    Construction -->|dismantled equipment and contents| Recovery
+    Recovery -->|recovered scrap without new history| Production
 ```
 
-Production increases cumulative totals only when a craft or machine output completes. Transport and collection move existing items without increasing those totals. Research checks production milestones, current stock, and prerequisites, then consumes the stock and grants the unlock together. Production and construction both enforce the resulting unlocks. Pollution and restoration combine industrial emissions, supplied water, and simulation time to update pollution, vegetation, and greenhouse health.
+Production increases cumulative totals only when craft/machine output completes. Newly extracted resources have separate history; transfers, existing-output collection and refunds add neither history. Timed field and lab research validate prerequisites/eligibility and contribute materials exactly once, then grant the unlock when funded work completes. The detailed contribution/reservation model remains to be settled. Production, Mini Fabricator precursor planning and construction enforce unlocks. Greenhouses initiate restoration; green technology and optional pollution influence greening without a fail state or research lockout.
 
 The dependency arrows do not prescribe tick order. Commands are processed in a consistent order, then systems advance using an explicit schedule that resolves transport, power allocation, production, and environmental updates. Exact ordering and rules for newly produced items or power are implementation decisions to settle before the first playable prototype.
 
@@ -301,7 +312,21 @@ Use ECS for factory entities and shared processing, including machines, producti
 
 This is the intended architecture for [Milestone 6: First working machines](../plans/milestone-06-first-working-machines.md), not an installed ECS dependency or an implemented factory. Miniplex remains the leading candidate to evaluate against deterministic queries, entity lifetime, persistence and workload measurements. Factory systems will join the session's explicit simulation schedule, independently of scene-script subscriptions; player and camera continue to use the simpler Toolkit object lifecycle.
 
-Production history and research unlocks belong to the saved world. A research action checks cumulative eligibility, current stock and prerequisites, then spends stock and grants the unlock atomically. It preserves production totals and cannot charge again for completed research. Crafting and placement enforce unlocks. The GDD defines these rules.
+Production/extraction histories, research contributions, timed work and unlocks belong to the saved world. Each material reservation/contribution must validate and commit atomically; later fixed-step work grants an unlock once at completion. Multiple labs coordinate against shared remaining requirements. Do not implement the former immediate pay-and-unlock rule. The [progression design](player-progression.md#research-progression) records the remaining policy choices.
+
+### Planned progression state and invariants
+
+These requirements are not implemented. Keep all records plain and simulation-owned; Editor scripts and Angular views only submit requests and consume projections.
+
+* MiniFab is a personal subsystem with a separate Angular panel beside inventory, not an inventory-slot item or placed factory entity. Its field research and manual assembly require only scrap, with no refined-output or electricity prerequisite. State includes one final target, stack-bounded batch, eligible precursor plan, reservations, remaining work and blocked output. Planning rejects cycles/locked or unsupported recipes, reuses intermediates and avoids duplicating shared ingredients.
+* Baseline MiniFab work always progresses without power when ingredients/capacity allow. Local battery charge adds speed and depletion removes only that bonus. Recipe work/complexity sets useful basic speed and slow advanced work; precise rates and boost combination remain open. This local charge model needs no factory network, weather or generators in Milestone 3.
+* Input adapters recognize genuine crank/pointer rotations and right-stick turns only while the panel control owns input, then submit plain bounded winding intents. Simulation steps own charge and crafting work. Apply deadzones/turn continuity and rate/capacity bounds; clicks, holds, jitter, renderer frames and stale callbacks cannot manufacture rotations. Release, focus loss, cancellation and context changes end winding without replay. Provide a keyboard/remappable equivalent; accelerometer input is an optional future capability/permission-gated adapter.
+* MiniFab upgrade state distinguishes related general technology, MiniFab-specific research, crafted upgrade ownership and applied effects. Solar/wind/coal/grid upgrades improve speed and coal incurs pollution; no research-complete callback grants the physical upgrade. Grid integration waits for electricity. Inventory-driven min/max automation is a separate later upgrade with unresolved trigger semantics. Persist local charge/capacity and applied upgrades, not current gesture paths or device permission handles.
+* Content distinguishes a recipe's distinct ingredient count from quantities: Basic Fabricator accepts one type, Medium two, Advanced three or four. Higher tiers cannot execute lower-arity recipes; recycler and Mini Fabricator capabilities are separate.
+* Recycler output comes from a specified random output catalog rather than a selected deterministic recipe. Use a simulation-owned seeded PRNG, save its state and persist any rolled pending output. Blocked output, load and repeated commands cannot reroll a batch.
+* Dismantling buildings and crafted items recovers full embodied material value as scrap. Define a material-equivalent ledger across recipes, random yields, reservations and refunds before implementation. Capacity failure cannot discard contents or create duplicate refunds. Treatment of consumed research/fuel/water remains an open design question.
+* Daylight, fluctuating wind, the non-event wind minimum and Dunkelflaute events derive from saved simulation time/weather state. Save any random state; do not read wall-clock time or use presentation randomness for gameplay decisions. Coal-free progression is required, and weather/pollution cannot create a permanent progression lockout.
+* Finite resource quantities are deliberately generous. Future resource configuration and train/loading-station systems remain outside the first prototype.
 
 ## Simulation timing and save boundaries
 
@@ -319,11 +344,12 @@ Pause/suspension clears movement, pending commands and accumulated time while UI
 
 Keep active gameplay state in memory. Save a versioned data snapshot containing:
 
-* Player position, inventory, and crafting queues.
+* Player position, inventory, tools and MiniFab subsystem ownership, target/batch, precursor plan, local charge/capacity, crafted/applied upgrades, reservations, remaining work and blocked outputs; later power-source/automatic policies only when implemented. Active winding gestures and device permission handles are session state, not save data.
 * Remaining deposits, placed machines, and connections.
 * Machine buffers, work progress, and items in transit.
 * Stored energy and water.
-* Cumulative production totals and research unlocks.
+* Cumulative production/extraction histories, research contributions/reservations, remaining work, lab/field targets and research unlocks.
+* Seeded random-stream state, already-selected recycler outputs, daylight/wind/weather/event state and any deterministic coordination state.
 * Pollution, vegetation, and simulation time.
 
 Store identifiers and data rather than Angular services, Babylon meshes/materials, scene handles, or Editor components. Recipe and technology definitions belong to the game content; saves reference their identifiers and record a compatible content version.

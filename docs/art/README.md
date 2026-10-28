@@ -2,7 +2,7 @@
 
 Updated 23 October 2026. Active production direction: fully 3D world and character with the established flat painted finish.
 
-This document owns visual identity, camera/readability, and 3D asset preparation. The [GDD](../design/GDD.md) owns gameplay; the [TDD](../design/TDD.md) owns architecture. Earlier sprite/tile production specifications remain in [the historical art brief](../history/2d/art-direction-2026-10-04.md).
+This document owns visual identity, camera/readability, and 3D asset preparation. The [GDD](../design/GDD.md) owns gameplay; the [TDD](../design/TDD.md) owns architecture.
 
 Art projects, source assets, references and provenance are organised under the root [art/ directory](../../art/README.md). This document contains visual guidance.
 
@@ -10,9 +10,9 @@ Art projects, source assets, references and provenance are organised under the r
 
 - The [south-idle illustration](../../art/characters/protagonist-south-idle-v2.png) defines the preferred finish and character identity. Its obsolete runtime sprite duplicate has been removed; the original remains source artwork.
 - The retired [MPFB character experiment](../../art/README.md#recovering-retired-mpfb-sources) is recoverable from Git with its editable Blender/rigged GLB sources, licensing and original validation. Its source mesh statistics are distinct from the separately authored runtime model.
-- The [retained model source](../../art/characters/3d/Protag-v1.glb) and `assets/models/Protag-v1.glb` preserve the earlier import identity. The unused public duplicate has been removed. The former serialized static rig is [recoverable from Git commit `6cd9f6f`](../../assets/README.md#recovering-retired-scene-sources); the active Game scene supplies a neutral binding for the [runtime derivative](../../art/characters/3d/protagonist-runtime-v2/README.md).
-- World and machinery comparisons are concepts, not runtime meshes. The [generation log](../../art/generation.json), [historical prompts](../../art/prompts.md), branding/UI records, [tileset record](../../art/world/tilesets/README.md), and Tiled sources retain exact provenance.
-- References to an earlier smooth character study existed in older prose, but its deliverable folder is absent from this checkout. Do not treat that study as an available runtime asset.
+- The [retained model source](../../art/characters/3d/Protag-v1.glb) and editable Blender project are canonical character sources. The active Game scene supplies a neutral binding for the [runtime derivative](../../art/characters/3d/protagonist-runtime-v2/README.md); obsolete static import copies have been removed.
+- World and machinery comparisons remain useful visual concepts. The [generation log](../../art/generation.json) and individual branding/UI records preserve exact provenance; historical reference inputs are identified by their recovery commit.
+
 
 ## Agreed visual direction
 
@@ -25,11 +25,11 @@ Art projects, source assets, references and provenance are organised under the r
 
 ## Camera and painted finish
 
-The authored perspective camera starts at 45 degrees and a 12 metre radius with field of view 0.8 radians. Pitch is bounded to 20–75 degrees, radius to 6–24 metres; right dragging rotates and free panning is disabled. Compare orthographic projection in the same fixture when assessing placement/readability; it remains a 3D option. The two-metre construction grid uses a subdued soil palette, independent of historical pixel-tile dimensions.
+The authored perspective camera starts at 45 degrees and a 12 metre radius with field of view 0.8 radians. Pitch is bounded to 20–75 degrees, radius to 6–24 metres; right dragging rotates and free panning is disabled. Compare orthographic projection in the same fixture when assessing placement/readability; it remains a 3D option. The two-metre construction grid uses a subdued soil palette.
 
 Gameplay dimensions are metres; Editor scene coordinates are centimetres. Logical footprints and ground-plane positions remain independent of rendered mesh bounds. Character scale, pivots, occlusion, and selection must be checked in the browser, including at different camera rotations and viewport sizes.
 
-Translate the preferred flat finish into 3D geometry, material response, textures, and controlled lighting. Do not bake a fixed 2D viewing direction into requirements for a rotatable camera. Original upper-left lighting and sprite direction sheets are historical reference. UI images and bitmap textures remain valid assets.
+Translate the preferred flat finish into 3D geometry, material response, textures, and controlled lighting. Check the finish across camera rotations. UI images and bitmap textures remain valid assets.
 
 ## Preferred finish across all artwork
 
@@ -50,7 +50,7 @@ Volume should remain clear through perspective, overlapping forms, and deliberat
 
 Smooth environmental recovery should still come from gradual changes to ground coverage, colour, plant density, water condition, and air clarity. Runtime blending and opacity changes can preserve those transitions while individual assets retain the preferred flatter finish.
 
-Future generation briefs should use the approved protagonist as a finish reference. Earlier world, machinery, and sprite samples remain useful for composition and design, but their more heavily shaded treatment should be brought into the preferred style when those assets are next revised.
+Future generation briefs should use the approved protagonist as a finish reference. Earlier world and machinery concepts remain useful for composition and design, but their more heavily shaded treatment should be brought into the preferred style when those assets are next revised.
 
 ## Machinery progression
 
@@ -96,7 +96,3 @@ Review the same character against dusty soil, dark machinery, dense greenery, an
 - Prepare readable idle and walk animation when the movement milestone needs it. A rigged static import does not establish finished animation; a simple placeholder is sufficient for earlier fixture checks.
 - Choose texture resolution and material complexity from the expected camera and measured target-device behavior. Source-library textures, preview images, alternate normal formats, and authoring project files do not automatically belong in browser output.
 - Match machine footprints, connection ports and orientation across visual generations. Animation and effect lifetimes follow simulation views without changing rules.
-
-## Historical 2D deliverables
-
-The [earlier art brief](../history/2d/art-direction-2026-10-04.md) retains sprite-sheet dimensions, anchors, pose order, and sample review results. The [prompt brief](../../art/prompts.md), exact prompt files/JSON, terrain atlas and [Tiled verification record](../../art/world/tilesets/README.md) stay beside their organised sources. These records preserve the earlier production route; they are not prerequisites for 3D implementation.

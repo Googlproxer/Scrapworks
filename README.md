@@ -2,9 +2,11 @@
 
 Scrapworks is a browser-first 3D factory-restoration game built with Angular and TypeScript. The player starts empty-handed, salvages and crafts materials, researches machinery, automates production, and restores a damaged planet.
 
+The [player progression design](docs/design/player-progression.md) records the planned research-led opening, Mini Fabricator, renewable-first industry and peaceful terraforming. These are design requirements; the implementation status remains in the [roadmap](docs/plans/README.md).
+
 Babylon.js is the sole world renderer and Babylon.js Editor owns scene/world-layout authoring. The migration adds an authored world definition, authoritative fixed-step movement and construction-preview validation. Manual salvage, crafting, research, factory systems and gameplay saving remain future milestones.
 
-Start with the [documentation index](docs/README.md), [3D cleanup plan](docs/plans/3d-cleanup.md), and [implementation roadmap](docs/plans/README.md). Earlier 2D work is indexed under [history](docs/history/README.md). Editable Blender projects, artwork, references and provenance are indexed in [art/](art/README.md); visual guidance remains in the [Art Document](docs/art/README.md).
+Start with the [documentation index](docs/README.md), [3D cleanup record](docs/plans/3d-cleanup.md), and [implementation roadmap](docs/plans/README.md). Editable Blender projects, artwork, references and provenance are indexed in [art/](art/README.md); visual guidance remains in the [Art Document](docs/art/README.md).
 
 ## Technology and ownership
 
@@ -35,7 +37,7 @@ yarn dev
 
 Visit [localhost:4200](http://localhost:4200) and select Play Game; `/3d` is a compatibility redirect. Open `scrapworks.bjseditor` in Babylon.js Editor 5.5.2 to edit `assets/main-menu.scene` or `assets/game.scene` . Follow the [Editor/MCP setup guide](docs/plans/babylon-editor-setup.md) for authoring and workstation setup.
 
-The development command exports scenes before starting Angular, then watches saved Editor inputs and attached presentation scripts. Save in the Editor to export and reload automatically. On Linux, Angular polls for changes every 500 ms so atomically replaced scene assets trigger a browser reload; an explicit `--poll` option overrides that interval. The authoring watcher still uses native filesystem events. Failed exports leave the last working scenes available and report the error in the terminal; correcting the save retries. See the [workflow validation](docs/reports/workflow/2026-10-17/README.md).
+The development command exports scenes before starting Angular, then watches saved Editor inputs and attached presentation scripts. Save in the Editor to export and reload automatically. On Linux, Angular polls for changes every 500 ms so atomically replaced scene assets trigger a browser reload; an explicit `--poll` option overrides that interval. The authoring watcher still uses native filesystem events. Failed exports leave the last working scenes available and report the error in the terminal; correcting the save retries. See the [workflow validation](docs/reports/workflow/2026-10-23/README.md).
 
 In a development build, select **Inspector** to load the [Babylon.js Inspector](https://doc.babylonjs.com/toolsAndResources/inspectorv2) for the current scene. Select **Close Inspector** at the top of the viewport to restore the game interface and focus; click the viewport to resume movement. Gameplay and application menu input pause while the Inspector owns input, and changing scenes or unmounting closes it. Scene edits are temporary runtime diagnostics; save authored changes through the Editor workflow. The Inspector and its UI/editor dependencies are excluded from production builds through a development-only loader replacement. Restart an already-running dev server after installing these dependencies or changing `angular.json`.
 
@@ -93,15 +95,14 @@ The local Editor MCP package uses Yarn's `portal:` protocol so Windows and Linux
 | `public/scene/` , `src/scripts.ts` | Generated Editor exports and script map; ignored by Git.                        |
 | `public/assets/` | Browser-served assets, including existing runtime copies still in use.          |
 | `art/` | Blender projects, source artwork, references, prompts and provenance.           |
-| `docs/` | Design, plans, visual guidance, diagrams and historical documentation.          |
-| `map/` | Historical Tiled sources.                                                       |
+| `docs/` | Design, plans, visual guidance, diagrams and current validation.          |
 | `tools/` | Scene export, Editor connection, art, diagram, and cleanup utilities.           |
 
 Gameplay coordinates use metres on an X/Z ground plane; Editor coordinates use centimetres. Saved marker metadata compiles to `public/scene/worlds/game.json` in the same staged export as the scenes. The simulation creates an empty-handed world from that definition; scene serialization is not a gameplay save. See [marker authoring](tools/world/README.md).
 
 ## Validation and current limits
 
-The [17 October baseline](docs/plans/3d-cleanup-baseline.md) records the passing build/lint, 33 Chromium tests, 30 lint-tooling tests, and verified pre-cleanup checkpoint. Tests cover renderer lifecycle, actual Play Game/Retry actions, loading failures, resizing, late-load disposal, and shell accessibility. They do not establish complete gameplay, storage resilience, or finished character animation.
+The [migration validation](docs/reports/migration/2026-10-23/README.md) and its refinements record the implemented lifecycle, input, world and character checks. The [28 October cleanup record](docs/plans/3d-cleanup.md) covers retirement of superseded tools and source assets. These checks do not establish factory progression, gameplay saves or target-device performance.
 
 Browser tests require real canvas/WebGL APIs. Reinstall the headless browser after Playwright upgrades. Failure screenshots are ignored under `.vitest/` .
 
@@ -113,7 +114,7 @@ Use `eslint.config.mjs` for application lint, Angular template accessibility, th
 yarn build
 ```
 
-The static browser application is written to `dist/scrapworks/browser/` . Configure the host to serve `index.html` for application routes. The [17 October asset/export audit](docs/reports/assets/2026-10-17/README.md) preserves the earlier packaging measurements. The current runtime retains only live public assets and scene-declared dependencies. Historical maps, the final terrain atlas and original character sources remain outside deployment. Retired authored scenes are [recoverable from Git commit `6cd9f6f`](assets/README.md#recovering-retired-scene-sources). Record fresh measurements after the final migration build rather than reusing the earlier totals.
+The static browser application is written to `dist/scrapworks/browser/`. Configure the host to serve `index.html` for application routes. The [export policy](tools/scenes/export-policy.json) retains live public assets and scene-declared dependencies; original character projects remain outside deployment. See [migration production evidence](docs/reports/migration/2026-10-23/README.md) and [retired-source recovery](docs/plans/3d-cleanup.md#recovery). Record fresh measurements when changing production assets.
 
 ## License
 

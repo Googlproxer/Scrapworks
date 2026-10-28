@@ -1,6 +1,6 @@
 # Milestone 9 Save resilience
 
-Updated 4 October 2026. Status: file-transfer scaffold only. Prerequisite: [Milestone 8](milestone-08-restoration-and-energy-choices.md), building on [Milestone 4](milestone-04-first-local-save.md).
+Updated 27 October 2026 for the agreed progression state. Status: file-transfer scaffold only. Prerequisite: [Milestone 8](milestone-08-restoration-and-energy-choices.md), building on [Milestone 4](milestone-04-first-local-save.md).
 
 Add autosaves, recoverable revisions, schema migrations, and downloadable backups. A failed write or invalid import must leave both the active world and the last good save usable. Accounts and cloud synchronization remain outside this prototype.
 
@@ -13,7 +13,7 @@ The current save/load dialog can download test records and read a JSON file, and
 ## Step 1 Audit the complete saved state
 
 - [ ] Revisit the snapshot checklist for every field introduced through restoration.
-- [ ] Include research, machine and fuel jobs, reserved inputs, conveyor progress, energy, water, pollution, health, and objective counters.
+- [ ] Include MiniFab subsystem/upgrade ownership, target/precursors, local charge/capacity, power-source state and automation policies where implemented, research contributions/work and lab coordination, extraction/production histories, machine/fuel jobs, reservations, pending random output and PRNG state, sorting/conveyor progress, energy, water, weather/events, pollution, restoration and objective counters. Exclude active winding gestures and device permission/handle state.
 - [ ] Validate entity/content references, capacities, finite ranges, stable IDs, and next-ID state.
 - [ ] Confirm load reconstructs runtime indexes and renderer mappings rather than saving those objects.
 - [ ] Repeat continuation comparisons with a representative operating factory before adding recovery features.

@@ -41,10 +41,10 @@ const index = path.resolve(root, git('rev-parse', '--git-path', 'index').trim())
 const before = { head: git('rev-parse', 'HEAD').trim(), index: hash(await fs.readFile(index)) };
 const tracked = new Set(names(git('ls-files', '--cached', '-z')));
 const sourceFiles = [];
-for (const directory of ['art', 'assets', 'map', 'src', 'tools', 'docs'])
+for (const directory of ['art', 'assets', 'src', 'tools', 'docs'])
   for (const file of await walk(path.join(root, directory))) {
     const name = relative(file);
-    if (!isGenerated(name) && !name.endsWith('.tiled-session') && !name.endsWith('.pyc') && !name.includes('/__pycache__/')) sourceFiles.push(name);
+    if (!isGenerated(name) && !name.endsWith('.pyc') && !name.includes('/__pycache__/')) sourceFiles.push(name);
   }
 const rootFiles = ['scrapworks.bjseditor', 'package.json', 'yarn.lock', 'angular.json', '.gitignore', 'README.md', 'AGENTS.md', '.codex/config.toml'];
 for (const name of rootFiles) {
@@ -69,7 +69,7 @@ const untrackedSources = sourceFiles.filter((name) => !tracked.has(name));
 const trackedGenerated = [...tracked].filter(isGenerated);
 const missingIgnoreRules = ignoreProbes.filter((name) => !ignoredNames.has(name));
 const groups = Object.fromEntries(
-  ['art', 'assets', 'map', 'src', 'tools', 'docs'].map((directory) => [
+  ['art', 'assets', 'src', 'tools', 'docs'].map((directory) => [
     directory,
     {
       files: sourceFiles.filter((name) => name.startsWith(directory + '/')).length,

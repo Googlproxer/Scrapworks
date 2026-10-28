@@ -1,13 +1,17 @@
 flowchart TB
-    Command[Research command executes]
+    Command[Research contribution command executes]
     Known{Technology ID is valid?}
     Unlocked{Already unlocked?}
     Prerequisites{Prerequisite technologies unlocked?}
-    Totals{Cumulative production milestones met?}
-    Stock{Player inventory can pay every cost?}
-    Commit[Deduct costs and grant unlock together; preserve totals]
-    Publish[Publish new availability and unlock feedback]
-    Reject[Reject with reason; leave stock and unlocks unchanged]
+    Totals{Extraction or production eligibility met?}
+    Demand{Unfunded requirement remains?}
+    Stock{Authoritative source can pay contribution?}
+    Commit[Commit contribution once; preserve histories]
+    Work[Advance funded field and lab work on fixed steps]
+    Complete{Funded work complete?}
+    Unlock[Grant unlock once]
+    Publish[Publish contribution and progress or unlock feedback]
+    Reject[Reject with reason; leave stock and research unchanged]
 
     Command -->|validate| Known
     Known -->|yes| Unlocked
@@ -16,8 +20,14 @@ flowchart TB
     Unlocked -->|no| Prerequisites
     Prerequisites -->|yes| Totals
     Prerequisites -->|no| Reject
-    Totals -->|yes| Stock
+    Totals -->|yes| Demand
     Totals -->|no| Reject
+    Demand -->|yes| Stock
+    Demand -->|no| Reject
     Stock -->|yes| Commit
     Stock -->|no| Reject
-    Commit -->|completed command| Publish
+    Commit -->|subsequent simulation steps| Work
+    Work -->|check progress| Complete
+    Complete -->|yes| Unlock
+    Complete -->|no| Publish
+    Unlock -->|completed technology| Publish

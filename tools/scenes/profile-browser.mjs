@@ -15,6 +15,7 @@ if (!output)
     'Usage: node tools/scenes/profile-browser.mjs --output <report.json> [--screenshots <directory>]',
   );
 const directory = path.resolve(projectRoot, 'dist/scrapworks/browser');
+const resourceTimingCapacity = 5000;
 const screenshotDirectory = argument('--screenshots', 'tmp/asset-audit/screenshots');
 await fs.mkdir(screenshotDirectory, { recursive: true });
 
@@ -201,6 +202,9 @@ try {
       serviceWorkers: 'block',
     });
     const page = await context.newPage();
+    // Babylon's module chunks exceed Chromium's default 250-entry buffer before
+    // Play Game. Reserve enough entries to observe the later scene/model loads.
+    await page.addInitScript((capacity) => performance.setResourceTimingBufferSize(capacity), resourceTimingCapacity);
     const errors = [],
       failures = [];
     page.on('pageerror', (error) => errors.push(error.message));
@@ -292,6 +296,8 @@ try {
     productionUi.controls = await assertProductionUi(page);
     await page.getByRole('button', { name: 'Close controls', exact: true }).click();
     const complete = await readEntries();
+    if (complete.length >= resourceTimingCapacity)
+      throw new Error('Resource timing buffer exhausted; increase capacity before interpreting the asset audit');
     for (const required of [
       '/scene/game.babylon',
       '/scene/worlds/game.json',

@@ -1,0 +1,1428 @@
+{
+  "importedOn": "2026-10-28",
+  "workspace": "https://scrapworks.fibery.io",
+  "space": "Project Tracking",
+  "sourcePolicy": "Repository roadmap and checklists were imported once. Checked groundwork and remaining work are separate records. Fibery changes do not automatically synchronize with repository documents.",
+  "project": {
+    "id": "1a4ff2c1-aa69-4a5d-b3ac-c819ab41c3ee",
+    "sourceId": "project.scrapworks",
+    "name": "Scrapworks",
+    "url": "https://scrapworks.fibery.io/Project_Tracking/Project/2",
+    "state": "In Progress"
+  },
+  "milestones": [
+    {
+      "sourceId": "milestone.01",
+      "id": "e427e580-1b49-42ce-8042-f8c3b1f3045e",
+      "name": "M01 — Project and integration",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/1",
+      "source": "docs/plans/milestone-01-project-and-integration.md",
+      "state": "In Progress",
+      "completedTasks": 4,
+      "openTasks": 1,
+      "prerequisites": []
+    },
+    {
+      "sourceId": "milestone.02",
+      "id": "b8d4462f-6b96-4170-951a-9101a2fa0cc4",
+      "name": "M02 — Simulation foundation",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/2",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "state": "Completed",
+      "completedTasks": 6,
+      "openTasks": 0,
+      "prerequisites": [
+        "milestone.01"
+      ]
+    },
+    {
+      "sourceId": "milestone.03",
+      "id": "0b80dc39-29e9-4efb-9796-1ef44564dbff",
+      "name": "M03 — Character and manual opening",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/3",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "state": "In Progress",
+      "completedTasks": 5,
+      "openTasks": 10,
+      "prerequisites": [
+        "milestone.02"
+      ]
+    },
+    {
+      "sourceId": "milestone.04",
+      "id": "9f3ada0b-ebaa-4e16-ba06-b42abcaa0f44",
+      "name": "M04 — First local save",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/4",
+      "source": "docs/plans/milestone-04-first-local-save.md",
+      "state": "Planned",
+      "completedTasks": 0,
+      "openTasks": 6,
+      "prerequisites": [
+        "milestone.03"
+      ]
+    },
+    {
+      "sourceId": "milestone.05",
+      "id": "bee3dab8-7ef6-4f41-8ac5-fcd5e4c1ab08",
+      "name": "M05 — Research",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/5",
+      "source": "docs/plans/milestone-05-research.md",
+      "state": "Planned",
+      "completedTasks": 0,
+      "openTasks": 6,
+      "prerequisites": [
+        "milestone.04"
+      ]
+    },
+    {
+      "sourceId": "milestone.06",
+      "id": "334dd1bd-46e9-46b0-8d41-a736bd176f96",
+      "name": "M06 — First working machines",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/6",
+      "source": "docs/plans/milestone-06-first-working-machines.md",
+      "state": "Planned",
+      "completedTasks": 0,
+      "openTasks": 6,
+      "prerequisites": [
+        "milestone.05"
+      ]
+    },
+    {
+      "sourceId": "milestone.07",
+      "id": "13eaecad-53ff-4942-924a-a677024d480d",
+      "name": "M07 — Transport",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/7",
+      "source": "docs/plans/milestone-07-transport.md",
+      "state": "Planned",
+      "completedTasks": 0,
+      "openTasks": 6,
+      "prerequisites": [
+        "milestone.06"
+      ]
+    },
+    {
+      "sourceId": "milestone.08",
+      "id": "1b8f08f9-0daa-4299-b263-b2884f516ee1",
+      "name": "M08 — Restoration and energy choices",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/8",
+      "source": "docs/plans/milestone-08-restoration-and-energy-choices.md",
+      "state": "Planned",
+      "completedTasks": 0,
+      "openTasks": 7,
+      "prerequisites": [
+        "milestone.07"
+      ]
+    },
+    {
+      "sourceId": "milestone.09",
+      "id": "15940c07-3cf0-4d77-94f8-832a332763c0",
+      "name": "M09 — Save resilience",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/9",
+      "source": "docs/plans/milestone-09-save-resilience.md",
+      "state": "Planned",
+      "completedTasks": 0,
+      "openTasks": 7,
+      "prerequisites": [
+        "milestone.08",
+        "milestone.04"
+      ]
+    },
+    {
+      "sourceId": "milestone.10",
+      "id": "44409e1d-55ec-41b7-b845-cdedae47dce0",
+      "name": "M10 — Portfolio prototype",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/10",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "state": "Planned",
+      "completedTasks": 5,
+      "openTasks": 7,
+      "prerequisites": [
+        "milestone.09"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "sourceId": "milestone.01.step.01.done",
+      "id": "98409cbf-c0d5-4485-b013-60653adebf18",
+      "name": "M01.1 — Preserve a reproducible project (completed groundwork)",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/8",
+      "milestone": "milestone.01",
+      "state": "Done",
+      "workType": "Tooling",
+      "source": "docs/plans/milestone-01-project-and-integration.md",
+      "sourceSection": "Step 1 Preserve a reproducible project",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.01.step.01.open",
+      "id": "fdb57c35-7337-401c-921f-f665f2da254f",
+      "name": "Finish pinned-package-manager clean install and reviewed commit",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/9",
+      "milestone": "milestone.01",
+      "state": "Open",
+      "workType": "Tooling",
+      "source": "docs/plans/milestone-01-project-and-integration.md",
+      "sourceSection": "Step 1 Preserve a reproducible project",
+      "currentFocus": true
+    },
+    {
+      "sourceId": "milestone.01.step.02.done",
+      "id": "edd73f30-8667-4567-9fb2-c0d40ff07b31",
+      "name": "M01.2 — Retain the shared lifecycle boundary",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/10",
+      "milestone": "milestone.01",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-01-project-and-integration.md",
+      "sourceSection": "Step 2 Retain the shared lifecycle boundary",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.01.step.03.done",
+      "id": "ca76be00-5635-4e2e-a778-a16c84927256",
+      "name": "M01.3 — Establish the authored fixture",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/11",
+      "milestone": "milestone.01",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-01-project-and-integration.md",
+      "sourceSection": "Step 3 Establish the authored fixture",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.01.step.04.done",
+      "id": "8907366c-2d6a-44a8-8d2e-5406730fa3c5",
+      "name": "Separate controls-settings persistence from future gameplay saves",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/12",
+      "milestone": "milestone.01",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-01-project-and-integration.md",
+      "sourceSection": "Step 4 Keep storage and gameplay evidence separate",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.02.step.01.done",
+      "id": "22ff12ab-5171-425a-ac6d-595f90878fa6",
+      "name": "M02.1 — Define the initial world data (completed groundwork)",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/13",
+      "milestone": "milestone.02",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 1 Define the initial world data",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.02.step.02.done",
+      "id": "c7e5bda8-f801-423b-b795-ce2e90fe78b0",
+      "name": "M02.2 — Separate state from session data",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/14",
+      "milestone": "milestone.02",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 2 Separate state from session data",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.02.step.03.done",
+      "id": "65e343fc-c8fb-4452-bb29-e3c8cfe63d29",
+      "name": "M02.3 — Define the command boundary (completed groundwork)",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/15",
+      "milestone": "milestone.02",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 3 Define the command boundary",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.02.step.04.done",
+      "id": "fbced3a7-bb5e-489f-a40a-4625eab80c4d",
+      "name": "M02.4 — Implement fixed simulation steps",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/16",
+      "milestone": "milestone.02",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 4 Implement fixed simulation steps",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.02.step.05.done",
+      "id": "65e4d81c-3fd2-4d7d-a162-6ed06446da47",
+      "name": "M02.5 — Handle pause and visibility (completed groundwork)",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/17",
+      "milestone": "milestone.02",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 5 Handle pause and visibility",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.02.step.06.done",
+      "id": "105b1b14-1232-4ae7-8b1a-01b450dd1136",
+      "name": "M02.6 — Verify the foundation (completed groundwork)",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/18",
+      "milestone": "milestone.02",
+      "state": "Done",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 6 Verify the foundation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.01.done",
+      "id": "78fe465f-8e36-42ec-8798-73133ca6a25b",
+      "name": "M03.1 — Define coordinates and picking",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/19",
+      "milestone": "milestone.03",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 1 Define coordinates and picking",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.02.done",
+      "id": "fdfa598b-41a0-416d-9f52-a563ed2573bd",
+      "name": "M03.2 — Add player movement (completed groundwork)",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/20",
+      "milestone": "milestone.03",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 2 Add player movement",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.03.done",
+      "id": "a36a9e1d-193c-4a4d-b648-32f100e90284",
+      "name": "Define scrap deposit state without salvage mutation",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/21",
+      "milestone": "milestone.03",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 3 Add manual salvage",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.03.open",
+      "id": "5cbd1037-b923-4ede-bb2f-cd84cb27b034",
+      "name": "M03.3 — Add manual salvage",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/22",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 3 Add manual salvage",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.04.open",
+      "id": "089964c1-30cd-4a3c-a4ef-67e36833d920",
+      "name": "M03.4 — Add timed field research and the bootstrap catalog",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/23",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 4 Add timed field research and the bootstrap catalog",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.05.open",
+      "id": "8b0570dd-7ce3-496a-99bc-f92ec4ca1eae",
+      "name": "M03.5 — Add bootstrap jobs and the Mini Fabricator",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/24",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 5 Add bootstrap jobs and the Mini Fabricator",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.06.done",
+      "id": "cdf6bd45-b5ca-427d-9fa3-e82110ca69e6",
+      "name": "Publish detached views and enforce UI input ownership",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/25",
+      "milestone": "milestone.03",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 6 Add inventory, research and crafting presentation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.06.open",
+      "id": "8aa6facf-5a12-4521-aaa4-9e7807027e17",
+      "name": "M03.6 — Add inventory, research and crafting presentation",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/26",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 6 Add inventory, research and crafting presentation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.07.done",
+      "id": "c5e36785-f3f4-4a7b-8051-c1061b678fde",
+      "name": "Verify movement, collision and picking",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/27",
+      "milestone": "milestone.03",
+      "state": "Done",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 7 Verify the research-led opening",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.03.step.07.open",
+      "id": "ea9baf7e-b1fe-4519-a164-eda239cc0ca2",
+      "name": "M03.7 — Verify the research-led opening",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/28",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 7 Verify the research-led opening",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.04.step.01.open",
+      "id": "e67f825f-fd61-4630-9c8e-bcd28f76fcb4",
+      "name": "M04.1 — Define the snapshot contract",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/29",
+      "milestone": "milestone.04",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-04-first-local-save.md",
+      "sourceSection": "Step 1 Define the snapshot contract",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.04.step.02.open",
+      "id": "5138f0f0-5899-4979-b92e-7de2f41762c6",
+      "name": "M04.2 — Create the persistence boundary",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/30",
+      "milestone": "milestone.04",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-04-first-local-save.md",
+      "sourceSection": "Step 2 Create the persistence boundary",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.04.step.03.open",
+      "id": "918b6734-3379-45e7-b77f-edd544215258",
+      "name": "M04.3 — Capture and queue save operations",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/31",
+      "milestone": "milestone.04",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-04-first-local-save.md",
+      "sourceSection": "Step 3 Capture and queue save operations",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.04.step.04.open",
+      "id": "ab49ebbd-2cd9-4fc8-8b37-9e0b6986687f",
+      "name": "M04.4 — Validate a candidate before loading",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/32",
+      "milestone": "milestone.04",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-04-first-local-save.md",
+      "sourceSection": "Step 4 Validate a candidate before loading",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.04.step.05.open",
+      "id": "e5ed7332-6ccb-4105-bfd4-0f61b641b6e7",
+      "name": "M04.5 — Add the manual save interface",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/33",
+      "milestone": "milestone.04",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-04-first-local-save.md",
+      "sourceSection": "Step 5 Add the manual save interface",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.04.step.06.open",
+      "id": "477dd997-736a-4b75-8af7-9de44153b314",
+      "name": "M04.6 — Verify round trips and failure handling",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/34",
+      "milestone": "milestone.04",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-04-first-local-save.md",
+      "sourceSection": "Step 6 Verify round trips and failure handling",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.05.step.01.open",
+      "id": "a4a3ffbd-58fb-44d5-b5c6-0dcfb2039033",
+      "name": "M05.1 — Define the technology catalog and reachability",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/35",
+      "milestone": "milestone.05",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-05-research.md",
+      "sourceSection": "Step 1 Define the technology catalog and reachability",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.05.step.02.open",
+      "id": "81dbf24e-b119-47d1-8290-b3b9aaf00b12",
+      "name": "M05.2 — Specify contributions and timed progress",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/36",
+      "milestone": "milestone.05",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-05-research.md",
+      "sourceSection": "Step 2 Specify contributions and timed progress",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.05.step.03.open",
+      "id": "a9baf1a8-028d-4cdb-8aa3-687e6006c739",
+      "name": "M05.3 — Implement authoritative work and unlocks",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/37",
+      "milestone": "milestone.05",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-05-research.md",
+      "sourceSection": "Step 3 Implement authoritative work and unlocks",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.05.step.04.open",
+      "id": "3dc2ebab-fbba-403e-848b-8e0c00664e05",
+      "name": "M05.4 — Present research clearly",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/38",
+      "milestone": "milestone.05",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-05-research.md",
+      "sourceSection": "Step 4 Present research clearly",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.05.step.05.open",
+      "id": "9e239949-fbe2-4d06-8271-5575c70364f6",
+      "name": "M05.5 — Extend snapshots and verify progression",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/39",
+      "milestone": "milestone.05",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-05-research.md",
+      "sourceSection": "Step 5 Extend snapshots and verify progression",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.06.step.01.open",
+      "id": "cd8200aa-5754-4697-8954-f1da4fa3126c",
+      "name": "M06.1 — Define machine content and state",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/40",
+      "milestone": "milestone.06",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-06-first-working-machines.md",
+      "sourceSection": "Step 1 Define machine content and state",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.06.step.02.open",
+      "id": "97ef8ed1-9956-4f69-a938-6897e93f4f6d",
+      "name": "M06.2 — Implement construction, transfer and full recovery",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/41",
+      "milestone": "milestone.06",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-06-first-working-machines.md",
+      "sourceSection": "Step 2 Implement construction, transfer and full recovery",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.06.step.03.open",
+      "id": "88b689d0-b672-4163-81d7-4d9cfdc4c49b",
+      "name": "M06.3 — Implement renewable-first power",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/42",
+      "milestone": "milestone.06",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-06-first-working-machines.md",
+      "sourceSection": "Step 3 Implement renewable-first power",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.06.step.04.open",
+      "id": "3182ff0d-5bc0-4f7c-9f61-235b1eb915b3",
+      "name": "M06.4 — Implement recycling, fabrication, extraction and lab work",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/43",
+      "milestone": "milestone.06",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-06-first-working-machines.md",
+      "sourceSection": "Step 4 Implement recycling, fabrication, extraction and lab work",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.06.step.05.open",
+      "id": "86930d5b-0b72-41c9-89c2-577994293e30",
+      "name": "M06.5 — Render, inspect and verify continuation",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/44",
+      "milestone": "milestone.06",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-06-first-working-machines.md",
+      "sourceSection": "Step 5 Render, inspect and verify continuation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.07.step.01.open",
+      "id": "040fa889-4b4e-4299-939a-addd26492fb2",
+      "name": "M07.1 — Define transport content and topology",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/45",
+      "milestone": "milestone.07",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-07-transport.md",
+      "sourceSection": "Step 1 Define transport content and topology",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.07.step.02.open",
+      "id": "79467712-525d-419f-a415-58845bfcf8a6",
+      "name": "M07.2 — Extend placement and connections",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/46",
+      "milestone": "milestone.07",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-07-transport.md",
+      "sourceSection": "Step 2 Extend placement and connections",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.07.step.03.open",
+      "id": "18066482-aa50-4baf-894b-524d4bfa7392",
+      "name": "M07.3 — Implement one transport phase",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/47",
+      "milestone": "milestone.07",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-07-transport.md",
+      "sourceSection": "Step 3 Implement one transport phase",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.07.step.04.open",
+      "id": "f7c88635-9d3c-47bb-8492-c95b8299038c",
+      "name": "M07.4 — Handle blockage and machine interfaces",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/48",
+      "milestone": "milestone.07",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-07-transport.md",
+      "sourceSection": "Step 4 Handle blockage and machine interfaces",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.07.step.05.open",
+      "id": "e41e1fa2-ccc2-45bf-9e7f-21862bc97a1d",
+      "name": "M07.5 — Render and inspect transport",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/49",
+      "milestone": "milestone.07",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-07-transport.md",
+      "sourceSection": "Step 5 Render and inspect transport",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.07.step.06.open",
+      "id": "ed994235-2dc8-4698-b85f-77eedda27009",
+      "name": "M07.6 — Verify conservation and continuation",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/50",
+      "milestone": "milestone.07",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-07-transport.md",
+      "sourceSection": "Step 6 Verify conservation and continuation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.08.step.01.open",
+      "id": "46f0b4fa-f9dc-4b03-898d-6c3d32edeef7",
+      "name": "M08.1 — Define content and the peaceful objective",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/51",
+      "milestone": "milestone.08",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-08-restoration-and-energy-choices.md",
+      "sourceSection": "Step 1 Define content and the peaceful objective",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.08.step.02.open",
+      "id": "53f27c7d-b7a1-4e22-9146-fa1448cabe94",
+      "name": "M08.2 — Expand weather, day/night and storage",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/52",
+      "milestone": "milestone.08",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-08-restoration-and-energy-choices.md",
+      "sourceSection": "Step 2 Expand weather, day/night and storage",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.08.step.03.open",
+      "id": "a1c6cef7-9806-4b40-b1e0-d11b8c7fb151",
+      "name": "M08.3 — Implement water and greenhouse supply",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/53",
+      "milestone": "milestone.08",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-08-restoration-and-energy-choices.md",
+      "sourceSection": "Step 3 Implement water and greenhouse supply",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.08.step.04.open",
+      "id": "e9b551cc-f002-4ef2-9d1b-2f5275f7df1e",
+      "name": "M08.4 — Implement greening, pollution and mitigation",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/54",
+      "milestone": "milestone.08",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-08-restoration-and-energy-choices.md",
+      "sourceSection": "Step 4 Implement greening, pollution and mitigation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.08.step.05.open",
+      "id": "19beeb60-4687-4a1f-9382-7eac2126ae59",
+      "name": "M08.5 — Verify the small-map terraforming checkpoint",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/55",
+      "milestone": "milestone.08",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-08-restoration-and-energy-choices.md",
+      "sourceSection": "Step 5 Verify the small-map terraforming checkpoint",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.09.step.01.open",
+      "id": "85d18ba4-ec03-4188-be77-62955c583ae0",
+      "name": "M09.1 — Audit the complete saved state",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/56",
+      "milestone": "milestone.09",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-09-save-resilience.md",
+      "sourceSection": "Step 1 Audit the complete saved state",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.09.step.02.open",
+      "id": "4b0c4ddd-8835-4a9b-afbb-4389cd728d15",
+      "name": "M09.2 — Retain committed revisions",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/57",
+      "milestone": "milestone.09",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-09-save-resilience.md",
+      "sourceSection": "Step 2 Retain committed revisions",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.09.step.03.open",
+      "id": "cbfcdaed-2e15-419c-aa30-fe7714fe0642",
+      "name": "M09.3 — Add autosave scheduling and operation safety",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/58",
+      "milestone": "milestone.09",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-09-save-resilience.md",
+      "sourceSection": "Step 3 Add autosave scheduling and operation safety",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.09.step.04.open",
+      "id": "4f5300de-d3dc-4bc6-885b-b135d5595a55",
+      "name": "M09.4 — Implement schema migrations",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/59",
+      "milestone": "milestone.09",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-09-save-resilience.md",
+      "sourceSection": "Step 4 Implement schema migrations",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.09.step.05.open",
+      "id": "fe8c9fb5-f045-4e97-b149-c94e228de2c3",
+      "name": "M09.5 — Add JSON export and import",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/60",
+      "milestone": "milestone.09",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-09-save-resilience.md",
+      "sourceSection": "Step 5 Add JSON export and import",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.09.step.06.open",
+      "id": "87f25af1-4335-4cc5-8281-77af7e0c342e",
+      "name": "M09.6 — Handle browser storage limits",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/61",
+      "milestone": "milestone.09",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-09-save-resilience.md",
+      "sourceSection": "Step 6 Handle browser storage limits",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.09.step.07.open",
+      "id": "3e016b90-b87a-4142-a649-0ea0da7f76bf",
+      "name": "M09.7 — Verify recovery and races",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/62",
+      "milestone": "milestone.09",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-09-save-resilience.md",
+      "sourceSection": "Step 7 Verify recovery and races",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.01.done",
+      "id": "4eca8449-b927-48dc-9c68-b098d74d4fdb",
+      "name": "Deliver migration character and fixture presentation",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/63",
+      "milestone": "milestone.10",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 1 Prepare a consistent presentation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.01.open",
+      "id": "f26eaa56-54a0-4322-959a-b866966b5457",
+      "name": "M10.1 — Prepare a consistent presentation",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/64",
+      "milestone": "milestone.10",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 1 Prepare a consistent presentation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.02.done",
+      "id": "c3510a01-23ef-4ea1-89ed-d952227a7ebd",
+      "name": "Deliver migration controls and menu feedback",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/65",
+      "milestone": "milestone.10",
+      "state": "Done",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 2 Finish feedback and onboarding",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.02.open",
+      "id": "e1c30417-a6ed-4007-be33-66117de84b58",
+      "name": "M10.2 — Finish feedback and onboarding",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/66",
+      "milestone": "milestone.10",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 2 Finish feedback and onboarding",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.03.open",
+      "id": "1fb610a1-2161-4eef-a70c-8914a917c475",
+      "name": "M10.3 — Balance the complete opening and objective",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/67",
+      "milestone": "milestone.10",
+      "state": "Open",
+      "workType": "Implementation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 3 Balance the complete opening and objective",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.04.done",
+      "id": "1151fe37-f0b6-4dd0-b5da-66ad6babe358",
+      "name": "Profile the small migration fixture",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/68",
+      "milestone": "milestone.10",
+      "state": "Done",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 4 Measure and address performance",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.04.open",
+      "id": "8c289ea3-30e1-400a-9ae6-4af757f45f7b",
+      "name": "M10.4 — Measure and address performance",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/69",
+      "milestone": "milestone.10",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 4 Measure and address performance",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.05.done",
+      "id": "d0824bfe-8427-4612-abc9-3e88b6c5d7d6",
+      "name": "Verify migration production cutover",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/70",
+      "milestone": "milestone.10",
+      "state": "Done",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 5 Verify the production build",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.05.open",
+      "id": "e83d55c5-0b57-4a87-8e9d-bf95b4dbe59e",
+      "name": "M10.5 — Verify the production build",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/71",
+      "milestone": "milestone.10",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 5 Verify the production build",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.06.open",
+      "id": "7093f28d-5a4e-464c-ab86-dcb2020f49c8",
+      "name": "M10.6 — Run the complete acceptance route",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/72",
+      "milestone": "milestone.10",
+      "state": "Open",
+      "workType": "Validation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 6 Run the complete acceptance route",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.07.done",
+      "id": "92dd438b-79d3-4abd-8de4-e8d45c74a202",
+      "name": "Document migration controls, ownership and limitations",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/73",
+      "milestone": "milestone.10",
+      "state": "Done",
+      "workType": "Documentation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 7 Prepare portfolio material",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "milestone.10.step.07.open",
+      "id": "f42d416e-8061-4f5c-a40b-667c02404867",
+      "name": "M10.7 — Prepare portfolio material",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/74",
+      "milestone": "milestone.10",
+      "state": "Open",
+      "workType": "Documentation",
+      "source": "docs/plans/milestone-10-portfolio-prototype.md",
+      "sourceSection": "Step 7 Prepare portfolio material",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "design.opening-catalogue",
+      "id": "81647a13-0cc5-431c-814a-8bb18a442052",
+      "name": "Approve opening catalogue and scrap-only bootstrap order",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/75",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": true
+    },
+    {
+      "sourceId": "design.inventory-salvage",
+      "id": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+      "name": "Set inventory, salvage and tool interaction rules",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/76",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": true
+    },
+    {
+      "sourceId": "design.field-research",
+      "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+      "name": "Specify field-research contributions and concurrent work",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/77",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": true
+    },
+    {
+      "sourceId": "design.minifab-queue-recovery",
+      "id": "a0420262-df0c-4e2d-ab73-d15285d87f49",
+      "name": "Specify MiniFab precursor queue and full recovery accounting",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/78",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": true
+    },
+    {
+      "sourceId": "design.minifab-charge",
+      "id": "e993d612-8caf-485c-9d38-71e3035b4b97",
+      "name": "Balance physical winding, local charge and baseline speed",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/79",
+      "milestone": "milestone.03",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": true
+    },
+    {
+      "sourceId": "design.factory-research",
+      "id": "66ce3fe2-8260-4032-aa52-c5b77fcc965b",
+      "name": "Design the first research kit and scalable laboratory rules",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/80",
+      "milestone": "milestone.05",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "design.recycler-sorting",
+      "id": "41751206-56ff-4560-a8f6-314ab6645df6",
+      "name": "Design recycler distribution and material availability guarantees",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/81",
+      "milestone": "milestone.06",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "design.weather-storage",
+      "id": "8d1df153-b8b9-4479-9c26-f853615753f7",
+      "name": "Set renewable curves, storage and Dunkelflaute rules",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/82",
+      "milestone": "milestone.08",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "design.restoration-goal",
+      "id": "42c4b4a5-5b47-4d01-8cd8-3940c064e263",
+      "name": "Define greenhouse restoration and the small-map objective",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/83",
+      "milestone": "milestone.08",
+      "state": "Open",
+      "workType": "Design",
+      "source": "docs/design/player-progression.md",
+      "sourceSection": "Decisions to settle before implementation",
+      "currentFocus": false
+    },
+    {
+      "sourceId": "authoring.fibery",
+      "id": "5d362ade-062b-46eb-a48d-de69204a3e68",
+      "name": "Configure Fibery catalogue, trees and project tracking",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/84",
+      "milestone": null,
+      "state": "Done",
+      "workType": "Tooling",
+      "source": "docs/design/balance/README.md",
+      "sourceSection": "Fibery authoring setup",
+      "currentFocus": false
+    }
+  ],
+  "reassignedForwardRequirements": [
+    {
+      "sourceId": "milestone.01.step.04.open",
+      "source": "docs/plans/milestone-01-project-and-integration.md",
+      "sourceSection": "Step 4 Keep storage and gameplay evidence separate",
+      "target": "milestone.04.step.01.open",
+      "reason": "Gameplay snapshots belong to Milestone 4.",
+      "criteria": "- [ ] Implement versioned gameplay snapshots in Milestone 4; test records and a save dialog do not establish world persistence."
+    },
+    {
+      "sourceId": "milestone.02.step.01.open",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 1 Define the initial world data",
+      "target": "milestone.03.step.03.open",
+      "reason": "Generous opening resources are designed with manual salvage; the broader factory map belongs to Milestone 8.",
+      "criteria": "- [ ] Design generous finite resource distribution and objective space for renewable-first industry, water, researched greenhouses and optional coal, following the 27 October progression direction (repository reference: ../design/player-progression.md)."
+    },
+    {
+      "sourceId": "milestone.02.step.03.open",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 3 Define the command boundary",
+      "target": "milestone.03.step.07.open",
+      "reason": "Atomic resource-spending commands are part of the researched opening and its tests.",
+      "criteria": "- [ ] Make future resource-spending commands atomic within the synchronous step and verify conservation."
+    },
+    {
+      "sourceId": "milestone.02.step.05.open",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 5 Handle pause and visibility",
+      "target": "milestone.04.step.01.open",
+      "reason": "Gameplay capture remains Milestone 4 work.",
+      "criteria": "- [ ] Add gameplay snapshot capture of that completed state in Milestone 4."
+    },
+    {
+      "sourceId": "milestone.02.step.06.open",
+      "source": "docs/plans/milestone-02-simulation-foundation.md",
+      "sourceSection": "Step 6 Verify the foundation",
+      "target": "milestone.03.step.07.open",
+      "reason": "Resource transfer and spending invariants are tested when those commands exist.",
+      "criteria": "- [ ] Verify future resource transfers/spending cannot produce negative quantities or duplicate output."
+    },
+    {
+      "sourceId": "milestone.03.step.02.open",
+      "source": "docs/plans/milestone-03-character-and-manual-opening.md",
+      "sourceSection": "Step 2 Add player movement",
+      "target": "milestone.04.step.04.open",
+      "reason": "Held input and queued commands must clear at gameplay world replacement in Milestone 4.",
+      "criteria": "- [ ] Clear movement/queued commands at the future gameplay world-replacement boundary."
+    }
+  ],
+  "taskDependencies": {
+    "milestone.03.step.03.open": [
+      "design.inventory-salvage",
+      "design.minifab-queue-recovery"
+    ],
+    "milestone.03.step.04.open": [
+      "design.opening-catalogue",
+      "design.field-research"
+    ],
+    "milestone.03.step.05.open": [
+      "design.opening-catalogue",
+      "design.minifab-queue-recovery",
+      "design.minifab-charge"
+    ],
+    "milestone.03.step.06.open": [
+      "design.inventory-salvage",
+      "design.minifab-charge",
+      "design.field-research",
+      "design.minifab-queue-recovery"
+    ],
+    "milestone.03.step.07.open": [
+      "milestone.03.step.03.open",
+      "milestone.03.step.04.open",
+      "milestone.03.step.05.open",
+      "milestone.03.step.06.open"
+    ],
+    "milestone.05.step.01.open": [
+      "design.factory-research"
+    ],
+    "milestone.05.step.02.open": [
+      "design.factory-research"
+    ],
+    "milestone.06.step.01.open": [
+      "design.recycler-sorting"
+    ],
+    "milestone.06.step.04.open": [
+      "design.recycler-sorting"
+    ],
+    "milestone.08.step.02.open": [
+      "design.weather-storage"
+    ],
+    "milestone.08.step.01.open": [
+      "design.restoration-goal"
+    ],
+    "milestone.08.step.04.open": [
+      "design.restoration-goal"
+    ]
+  },
+  "taskCatalogueLinks": [
+    {
+      "task": "design.opening-catalogue",
+      "field": "Technologies",
+      "targets": [
+        "tech.electrical_assembly",
+        "tech.material_recovery",
+        "tech.minifab_crank_gearing_i",
+        "tech.mini_fabrication",
+        "tech.minifab_charge_storage_i",
+        "tech.mechanical_assembly",
+        "tech.improvised_tools"
+      ]
+    },
+    {
+      "task": "design.opening-catalogue",
+      "field": "Recipes",
+      "targets": [
+        "recipe.prybar",
+        "recipe.mechanical",
+        "recipe.wire",
+        "recipe.charge_storage",
+        "recipe.electrical",
+        "recipe.plate",
+        "recipe.crank_gearing",
+        "recipe.minifab"
+      ]
+    },
+    {
+      "task": "design.opening-catalogue",
+      "field": "Items",
+      "targets": [
+        "item.prybar",
+        "item.charge_storage",
+        "item.wire",
+        "item.crank_gearing",
+        "item.scrap",
+        "item.minifab",
+        "item.mechanical",
+        "item.plate",
+        "item.electrical"
+      ]
+    },
+    {
+      "task": "design.minifab-queue-recovery",
+      "field": "Recipes",
+      "targets": [
+        "recipe.prybar",
+        "recipe.mechanical",
+        "recipe.wire",
+        "recipe.charge_storage",
+        "recipe.electrical",
+        "recipe.plate",
+        "recipe.crank_gearing",
+        "recipe.minifab"
+      ]
+    },
+    {
+      "task": "design.minifab-charge",
+      "field": "Technologies",
+      "targets": [
+        "tech.mini_fabrication",
+        "tech.minifab_crank_gearing_i",
+        "tech.minifab_charge_storage_i"
+      ]
+    },
+    {
+      "task": "design.minifab-charge",
+      "field": "Items",
+      "targets": [
+        "item.minifab",
+        "item.crank_gearing",
+        "item.charge_storage"
+      ]
+    },
+    {
+      "task": "design.factory-research",
+      "field": "Technologies",
+      "targets": [
+        "future.minifab_wind",
+        "future.solar",
+        "future.minifab_coal",
+        "future.laboratory",
+        "future.wind",
+        "future.medium_fabrication",
+        "future.electrical_engineering",
+        "future.coal",
+        "future.logistics",
+        "future.recycling",
+        "future.extraction",
+        "future.minifab_solar",
+        "future.basic_fabrication",
+        "future.minifab_grid"
+      ]
+    },
+    {
+      "task": "design.recycler-sorting",
+      "field": "Technologies",
+      "targets": [
+        "future.recycling",
+        "future.basic_fabrication",
+        "future.logistics"
+      ]
+    },
+    {
+      "task": "design.weather-storage",
+      "field": "Technologies",
+      "targets": [
+        "future.solar",
+        "future.wind",
+        "future.coal"
+      ]
+    },
+    {
+      "task": "milestone.03.step.05.open",
+      "field": "Items",
+      "targets": [
+        "item.minifab"
+      ]
+    },
+    {
+      "task": "milestone.03.step.05.open",
+      "field": "Recipes",
+      "targets": [
+        "recipe.minifab",
+        "recipe.plate",
+        "recipe.wire",
+        "recipe.mechanical",
+        "recipe.electrical"
+      ]
+    }
+  ],
+  "views": [
+    {
+      "id": "2370db2e-620b-44d9-86e6-d6a84ff64669",
+      "publicId": "7",
+      "name": "All tasks",
+      "type": "grid",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/7"
+    },
+    {
+      "id": "31431c3b-1e05-4f12-9dcd-0860cee3a202",
+      "publicId": "54",
+      "name": "Current work",
+      "type": "grid",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/54"
+    },
+    {
+      "id": "4ae5b408-4679-4b2a-8ddb-7e56f6c236a3",
+      "publicId": "9",
+      "name": "Milestones and tasks",
+      "type": "list",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/9"
+    },
+    {
+      "id": "59a09c62-f411-4b61-b414-40393bf814b2",
+      "publicId": "55",
+      "name": "Milestone 3 opening",
+      "type": "grid",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/55"
+    },
+    {
+      "id": "8a84ce53-4b6d-4f27-90ac-186c9adf06fe",
+      "publicId": "53",
+      "name": "Milestones",
+      "type": "grid",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/53"
+    },
+    {
+      "id": "8dba6438-fcc4-41dd-8355-1f4993d09e37",
+      "publicId": "52",
+      "name": "Projects",
+      "type": "grid",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/52"
+    },
+    {
+      "id": "eb8e7577-f360-4155-88c0-ad26e1d32c29",
+      "publicId": "15",
+      "name": "Task board",
+      "type": "board",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/15"
+    }
+  ],
+  "verification": {
+    "validatedOn": "2026-10-28",
+    "errors": [],
+    "counts": {
+      "projects": 1,
+      "milestones": 10,
+      "tasks": 77
+    },
+    "milestonePrerequisiteLinks": 10,
+    "taskDependencyLinks": 22,
+    "taskCatalogueLinks": 64,
+    "currentFocusTasks": 6,
+    "currentDesignDecisions": 5,
+    "allAcceptanceCriteriaMatched": true,
+    "sampleRecordsRemoved": true,
+    "allChecksPassed": true,
+    "workflowCounts": {
+      "Open": 56,
+      "Done": 21
+    },
+    "viewRows": {
+      "All tasks": [
+        {
+          "database": "Project Tracking/Task",
+          "rows": 77,
+          "hasNext": false
+        }
+      ],
+      "Current work": [
+        {
+          "database": "Project Tracking/Task",
+          "rows": 6,
+          "hasNext": false
+        }
+      ],
+      "Milestones and tasks": [
+        {
+          "database": "Project Tracking/Milestone",
+          "rows": 10,
+          "hasNext": false
+        },
+        {
+          "database": "Project Tracking/Task",
+          "rows": 77,
+          "hasNext": false
+        }
+      ],
+      "Milestone 3 opening": [
+        {
+          "database": "Project Tracking/Task",
+          "rows": 15,
+          "hasNext": false
+        }
+      ],
+      "Milestones": [
+        {
+          "database": "Project Tracking/Milestone",
+          "rows": 10,
+          "hasNext": false
+        }
+      ],
+      "Projects": [
+        {
+          "database": "Project Tracking/Project",
+          "rows": 1,
+          "hasNext": false
+        }
+      ],
+      "Task board": [
+        {
+          "database": "Project Tracking/Task",
+          "rows": 77,
+          "hasNext": false
+        }
+      ]
+    }
+  }
+}

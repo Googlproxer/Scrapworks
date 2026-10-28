@@ -8,7 +8,7 @@ Angular owns UI; Babylon is the sole world renderer and the Editor owns authored
 
 ## Starting point and current evidence
 
-The [17 October baseline](3d-cleanup-baseline.md) records passing production build, application lint, 33 Chromium tests, and all 30 lint-tooling checks. The original [4 October integration checklist](../history/2d/milestone-01-integration-2026-10-04.md) preserves its 24-test result and two then-failing lint-tooling fixtures with their original date. Those older failures are not the current tooling status.
+Superseded integration checklists and packaging audits are recoverable through the [cleanup record](3d-cleanup.md#recovery). Use the migration evidence below for the implemented 3D fixture.
 
 The [23 October migration evidence](../reports/migration/2026-10-23/README.md) records 181 Chromium tests across 19 suites, 27 Node world/export tests, 30 lint-tooling checks, source lint/type checks, a production build and real browser/authoring probes. These validate the migration fixture, not future factory progression or gameplay saves.
 
@@ -17,7 +17,7 @@ The [23 October migration evidence](../reports/migration/2026-10-23/README.md) r
 - [x] Preserve the existing tracked/untracked authoring work in a checksum-verified checkpoint and Git history bundle.
 - [x] Record current routes, stack, ownership, and remaining implementation limits.
 - [x] Use one active ESLint configuration, with passing rule/format integration checks.
-- [x] Record runtime asset/request inventories and before/after deployment measurements in the [asset audit](../reports/assets/2026-10-17/README.md).
+- [x] Record runtime asset/request inventories and deployment measurements in the [migration production evidence](../reports/migration/2026-10-23/README.md).
 - [ ] Complete the clean-install/export reproducibility check with the pinned package manager; see [the preflight checklist](3d-implementation-checklist.md#0-review-the-preserved-repository).
 - [ ] Finish the dependency/authoring commit after reviewing the preserved work; a file checkpoint does not mark untracked files as committed.
 

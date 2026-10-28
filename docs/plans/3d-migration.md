@@ -25,7 +25,7 @@ The [TDD diagrams](../diagrams/README.md) and [roadmap diagrams](README.md#addit
 
 The original pre-migration Phase 0 was skipped. Preserve dated evidence rather than implying a baseline was measured retroactively. Fresh migration-scene measurements now exist, with explicit SwiftShader/headless limitations.
 
-- [x] Preserve original character/Blender files, older MPFB artwork, authored scene history, Tiled sources, concept art and dated evidence.
+- [x] Preserve original character/Blender sources, active concepts and provenance. Retired experiments, 2D sources and superseded reports were subsequently removed from the checkout on 28 October; see [cleanup recovery](3d-cleanup.md#recovery).
 - [x] Record fresh build/test/export results, deployment bytes, browser/viewport/display-scale information and runtime character budgets.
 - [ ] Qualify physical Xbox, DualShock and DualSense controllers and the intended physical GPU/browser combination.
 - [ ] Establish a target-hardware 60 FPS budget and representative growing-factory benchmark. These are not proved by software-rendered RAF samples.
@@ -33,7 +33,7 @@ The original pre-migration Phase 0 was skipped. Preserve dated evidence rather t
 
 ## Phase 1 Babylon foundation
 
-The earlier engine/client and basic Editor integration are preserved. The temporary dual-renderer state is retired; its historical walkthrough remains at [Phase 1 history](../history/3d/phase-1-walkthrough-2026-10-11.md).
+The engine/client and Editor integration remain implemented. The superseded code-built scene walkthrough is recoverable from Git through the [cleanup record](3d-cleanup.md#recovery).
 
 - [x] One owned engine/canvas per host, asynchronous scene loading, replayable lifecycle, first-render readiness, late-completion disposal and idempotent teardown.
 - [x] Real Play Game and Retry flows, independent hosts, failed construction/load, repeated mounting and resize coverage.
@@ -99,7 +99,7 @@ The [asset record](../../art/characters/3d/protagonist-runtime-v2/README.md) con
 - [x] Move title imagery to Angular and retain loading/error/Retry. Add Controls and in-game menu access; hide diagnostic state, focus indicator and test-save UI in production.
 - [x] Keep all production Angular templates in separate HTML files; inline templates are confined to tests.
 - [x] Remove obsolete public sprites, duplicate static character, generated Tiled export, star/template files and unused event/title runtime code after reference checks.
-- [x] Preserve original source art and retain complete retired scene sources in Git commit `6cd9f6f`, with [recovery instructions](../../assets/README.md#recovering-retired-scene-sources). Move the unique terrain atlas to [the art archive](../../art/world/tilesets/README.md) and repair historical Tiled paths before removing its public copy.
+- [x] Preserve active source art and retain retired scene sources in Git commit `6cd9f6f`, with [recovery instructions](../../assets/README.md#recovering-retired-scene-sources). The historical terrain atlas and old production tooling were subsequently retired in the [28 October cleanup](3d-cleanup.md).
 - [x] Repair export/packaging policy, documentation links, outdated input examples, TDD/art/ownership guidance and matching diagram exports.
 - [x] Verify production has no Phaser runtime, obsolete asset copies, authoring libraries or development UI. Record current test/build/export results and migration-scene measurements.
 

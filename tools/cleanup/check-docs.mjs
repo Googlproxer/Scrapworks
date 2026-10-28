@@ -9,6 +9,7 @@ let links = 0;
 function walk(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const target = path.join(directory, entry.name);
+    if (entry.name === 'node_modules' || entry.name === '__pycache__') return [];
     return entry.isDirectory() ? walk(target) : [target];
   });
 }
@@ -61,8 +62,7 @@ const files = [
   path.join(root, 'assets/README.md'),
   ...walk(path.join(root, 'docs')).filter((file) => file.endsWith('.md')),
   ...walk(path.join(root, 'art')).filter((file) => file.endsWith('.md')),
-  ...walk(path.join(root, 'tools/cleanup')).filter((file) => file.endsWith('.md')),
-  ...walk(path.join(root, 'tools/scenes')).filter((file) => file.endsWith('.md')),
+  ...walk(path.join(root, 'tools')).filter((file) => file.endsWith('.md')),
 ];
 for (const file of files) {
   const text = prose(fs.readFileSync(file, 'utf8'));
@@ -88,14 +88,5 @@ for (const [document, names] of diagramSets) {
   }
 }
 
-if (process.argv.includes('--audit-2d')) {
-  for (const file of files.filter((file) => !file.includes(`${path.sep}history${path.sep}`))) {
-    fs.readFileSync(file, 'utf8')
-      .split(/\r?\n/)
-      .forEach((line, index) => {
-        if (/phaser|tiled|sprite|pixel projection/i.test(line)) console.log(`${path.relative(root, file)}:${index + 1}: ${line.trim()}`);
-      });
-  }
-}
 console.log(JSON.stringify({ documents: files.length, localLinks: links, diagramSources: 8, failures }, null, 2));
 if (failures.length) process.exitCode = 1;

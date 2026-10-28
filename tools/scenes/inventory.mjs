@@ -25,7 +25,7 @@ export async function inventory() {
   const usedPath = path.join(projectRoot, 'public/scene/scenes-used-files.json');
   const used = JSON.parse(await fs.readFile(usedPath, 'utf8'));
   const sections = {};
-  for (const directory of ['assets', 'public/assets', 'public/scene', 'dist/scrapworks/browser', 'src', 'art', 'map']) {
+  for (const directory of ['assets', 'public/assets', 'public/scene', 'dist/scrapworks/browser', 'src', 'art']) {
     const entries = [];
     for (const file of await filesUnder(path.join(projectRoot, directory))) {
       const bytes = await fs.readFile(file);

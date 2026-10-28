@@ -5,7 +5,7 @@ are editable scene sources, including serialized geometry, materials, cameras,
 lights, world-marker metadata and a neutral Game character anchor. Keep each complete active scene directory together.
 
 Use [the setup guide](../docs/plans/babylon-editor-setup.md) for editing, scene
-export and the official desktop MCP connection. Scene units are centimetres. Gameplay uses metres on X/Z; [marker compilation](../tools/world/README.md) converts at that boundary. `public/scene/`, its `worlds/game.json`, and `src/scripts.ts` are generated outputs, not authoring sources or gameplay saves. The [asset/export audit](../docs/reports/assets/2026-10-17/README.md) preserves library packs here while excluding unused generated copies. The [export tools and policy](../tools/scenes/README.md) retain scene-declared dependencies and explicit dynamic assets; adding a library file alone does not make it a runtime asset. The former static rig and menu title are [recoverable from Git](#recovering-retired-scene-sources).
+export and the official desktop MCP connection. Scene units are centimetres. Gameplay uses metres on X/Z; [marker compilation](../tools/world/README.md) converts at that boundary. `public/scene/`, its `worlds/game.json`, and `src/scripts.ts` are generated outputs, not authoring sources or gameplay saves. The [export tools and policy](../tools/scenes/README.md) retain scene-declared dependencies and explicit dynamic assets; adding a library file alone does not make it a runtime asset. Unused grass-library and static-model imports were removed in the [28 October cleanup](../docs/plans/3d-cleanup.md). The former static rig and menu title are [recoverable from Git](#recovering-retired-scene-sources).
 
 ## Recovering retired scene sources
 

@@ -1,6 +1,6 @@
 # Milestone 10 Portfolio prototype
 
-Updated 23 October 2026 at migration Phase 7. Status: migration presentation, UI and production checks verified; complete factory demo, persistence and representative performance pending. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
+Updated 27 October 2026 for agreed progression and pacing. Status: migration presentation, UI and production checks remain verified; complete factory demo, persistence and representative performance pending. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
 
 Turn the working systems into an understandable small-map demo that can be shown in your portfolio. Prioritize a complete playable route, readable feedback, and reliable persistence before expanding the map or technology tree.
 
@@ -25,10 +25,11 @@ The [production profile](../reports/migration/2026-10-23/performance.json) measu
 
 ## Step 2 Finish feedback and onboarding
 
-- [ ] Add a short opening objective that leads an empty-handed player toward scrap and manual recipes.
-- [ ] Explain research's Produced and Available requirements before the first payment.
+- [ ] Teach movement and promptly guide the player to scrap, first field research, improved tools and the Mini Fabricator.
+- [ ] Explain the scrap-only MiniFab bootstrap and separate inventory-side panel. Demonstrate optional pointer/controller winding with accessible alternatives; depletion must not stop baseline crafting, and research alone must not grant upgrades.
+- [ ] Explain research's historical eligibility, available stock, contributed materials and timed work before the first payment.
 - [ ] Show machine input, output, no-power, disconnected, and blocked states in the inspector.
-- [ ] Show coal emissions, restoration health, daylight, water shortage, and storage status in understandable terms.
+- [ ] Explain renewable daylight/wind limitations, weather, storage, optional coal emissions, water supply and greenhouse-led restoration without implying a fail state.
 - [ ] Provide pause, save status, recovery, and backup/import controls with useful failure messages.
 - [x] Keep fixture diagnostics, IDs, construction test controls and test-data saving outside the production game UI.
 - [x] Check implemented menu/controls keyboard focus, input ownership and accessibility; tested migration UI states pass axe.
@@ -38,9 +39,11 @@ The [production profile](../reports/migration/2026-10-23/performance.json) measu
 
 - [ ] Play from a genuinely empty new world without debug grants or pre-unlocked research.
 - [ ] Record the time and materials needed for salvage, basic crafts, research payments, equipment crafting, and first automation.
+- [ ] Target improved tools in about a minute, first manually fed automatic crafting within 15–20 minutes for relaxed new players, and under five minutes for experienced players; never enforce minimum waits.
 - [ ] Tune their combined cost so research does not accidentally leave the player unable to build what they unlocked.
 - [ ] Confirm the authored map supplies enough resources for a viable objective route.
-- [ ] Compare coal-heavy and cleaner layouts, including a night interval and recoverable environmental damage.
+- [ ] Compare a viable coal-free route and optional coal-heavy choices through day/night and weather, with continued research and eventual greening recovery in either case.
+- [ ] Verify generous finite resources, durable usefulness of base components, full scrap recovery and mixed recycler sorting support progression without duplication or depletion pressure.
 - [ ] Remove unexplained waiting and unclear failure states before adding more content.
 
 ## Step 4 Measure and address performance
@@ -66,13 +69,13 @@ The [production profile](../reports/migration/2026-10-23/performance.json) measu
 
 ## Step 6 Run the complete acceptance route
 
-- [ ] Start empty, walk to scrap, and craft basic materials.
-- [ ] Save mid-craft, restore, and finish once.
-- [ ] Meet a production milestone, spend stock elsewhere, observe research rejection, replenish, and unlock once.
-- [ ] Craft and place the generator and recycler; automate input and output through conveyors.
+- [ ] Start empty, complete movement onboarding, gather scrap, field-research basic crafting/tools and obtain the Mini Fabricator through the agreed bootstrap.
+- [ ] Request one final-item batch with missing precursors, save mid-work, restore and finish each output once while other player activity remains possible.
+- [ ] Meet extraction/production eligibility, contribute stock and complete timed research once; reject overspending and locked recipes.
+- [ ] Build a solar/wind-powered recycler/fabricator/lab, then automate extraction, supply and sorting through direct connections and conveyors.
 - [ ] Save with a running job, transit items, stored energy/water, and unfinished restoration.
 - [ ] Step original and restored branches with the same commands and compare results.
-- [ ] Sustain the greenhouse through the required day/night interval with a viable layout.
+- [ ] Research greenhouses and demonstrate the agreed peaceful small-map restoration goal; shortages/pollution cannot cause game over or lock the research tree.
 - [ ] Reject an invalid load/import and inject a failed save write while preserving the current world and last good revision.
 - [ ] Export the run, import into a new slot, and repeat the continuation comparison.
 - [ ] Complete the route without console errors or broken input after pause, resize, or host recreation.
@@ -112,6 +115,7 @@ Record implementation notes here:
 | --------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 4 October 2026  | Foundation only; current source inspected.                                          | See Current implementation above; unchecked gameplay requirements remain open.                                                                                     |
 | 23 October 2026 | Migration presentation/UI, production packaging and small-scene profiling verified. | Credits above apply to the migration fixture only. Full acceptance route, representative factory/target-hardware performance and portfolio release remain pending. |
+| 27 October 2026 | Progression, Mini Fabricator pacing, renewable-first industry and peaceful terraforming agreed. | Acceptance route updated as future work; existing migration checkmarks preserved. |
 
 ## References and diagrams
 

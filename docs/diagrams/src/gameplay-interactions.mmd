@@ -1,22 +1,33 @@
 flowchart TB
     Player[Player movement and manual salvage]
-    Production[Crafting and machine production]
-    Research[Research: check milestones and spend stock]
+    Production[Power-free MiniFab and factory production]
+    Research[Timed field and scalable lab research]
     Construction[Construction]
-    Transport[Item and water transport]
-    Power[Power generation and storage]
-    Environment[Pollution and restoration]
+    Transport[Direct transport and output sorting]
+    Power[Solar and wind first; optional coal and storage]
+    Environment[Greenhouse terraforming and pollution]
+    Extraction[Resource extraction and history]
+    Recovery[Full dismantling recovery to scrap]
+    Winding[Optional winding and local MiniFab charge]
 
     Player -->|collected scrap in inventory| Production
+    Player -->|inventory contributions and field work| Research
+    Extraction -->|raw materials and extraction history| Production
+    Extraction -->|raw-resource eligibility| Research
     Production -->|completed output and cumulative totals| Research
     Research -->|unlocked recipes| Production
     Research -->|unlocked equipment| Construction
     Production -->|crafted equipment in inventory| Construction
     Construction -->|placed production machines| Production
+    Construction -->|extraction equipment| Extraction
     Construction -->|transport connections| Transport
     Construction -->|power machines and connections| Power
     Transport -->|machine input buffers| Production
     Production -->|machine output buffers| Transport
-    Power -->|available energy| Production
-    Power -->|coal emissions| Environment
+    Power -->|factory power and later MiniFab boosts| Production
+    Winding -->|bonus speed with power-free baseline| Production
+    Power -->|green contribution and optional emissions| Environment
+    Research -->|greenhouse and mitigation unlocks| Environment
     Transport -->|purified water supply| Environment
+    Construction -->|dismantled equipment and contents| Recovery
+    Recovery -->|recovered scrap without new history| Production

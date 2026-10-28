@@ -1,8 +1,8 @@
 # Scrapworks Game Design Document
 
-Updated 17 October 2026. Gameplay rules retained; 3D presentation direction confirmed.
+Updated 27 October 2026. Research-led crafting, Mini Fabricator progression, renewable-first industry and peaceful world terraforming are agreed direction. Gameplay remains unimplemented beyond the migration foundation.
 
-Scrapworks is a web game about building an automated factory to restore a dead planet. The player balances industrial progress with the environmental impact of the machinery that enables it. This document records the agreed gameplay direction and proposed first playable milestone. Architecture, technology choices, state management, and persistence are covered in the [Technical Design Document](TDD.md). Visual direction and character asset specifications are covered in the [Art Document](../art/README.md).
+Scrapworks is a web game about building an automated factory to terraform a damaged planet. The player balances industrial progress with the environmental impact of the machinery that enables it, in a peaceful experience without a fail state. This document records the overall gameplay direction; [Player progression and crafting](player-progression.md) records the detailed 27 October decisions and unresolved balance questions. Architecture and persistence are covered in the [Technical Design Document](TDD.md). Visual direction is covered in the [Art Document](../art/README.md).
 
 ## Agreed gameplay direction
 
@@ -10,53 +10,59 @@ Scrapworks is a web game about building an automated factory to restore a dead p
 
 - Factory building and automation are the main appeal, drawing on the player's enjoyment of Factorio and Satisfactory.
 - The setting is a damaged planet that the player gradually restores.
-- Energy choices affect restoration. Coal offers substantial power, but its environmental impact makes restoration harder.
+- Energy choices affect restoration. Solar and wind come first. Optional coal offers massive power at an environmental cost; later research can mitigate pollution.
 - The early prototype uses direct character control for exploration and construction.
-- The player starts with an empty inventory and no supplied tools, equipment, buildings, or researched technologies. Manual mining or salvaging and crafting basic materials from scrap are starting abilities.
-- Early progress requires collecting scrap by hand and manually crafting it into basic materials.
-- Technologies must be researched before their equipment can be crafted or built. The starting manual abilities provide the recipes needed to begin this progression.
-- Research eligibility requires producing specified quantities of the inputs for a technology, counted cumulatively within the saved world. Research also consumes those quantities from available materials. Production totals remain intact after spending. There are no science packs.
+- The baseline is an empty-handed start with no researched technologies. Gathering loose scrap and field research are starting abilities; crafting capabilities require research. MiniFab research uses collected scrap only, followed by separate scrap-only manual assembly.
+- Mixed scrap, plates, wire, mechanical parts and electrical parts underpin the opening and remain useful throughout later branches.
+- The MiniFab has its own panel beside player inventory rather than occupying an inventory slot. It produces a selected item batch while the player does other work, making missing craftable prerequisites first. Its power-free baseline is comfortable for basic items but slow for complex ones.
+- Optional physical winding of a UI crank, or controller right-stick rotations, charges a small upgradable battery for a speed boost. Empty charge never blocks baseline crafting. Novel device inputs are exploratory; accessible equivalents are required.
+- Later MiniFab solar/wind/coal/grid upgrades improve speed, with pollution from coal. Each requires the related general technology, separate MiniFab research and crafting the actual upgrade. A later upgrade also adds inventory-driven production with configurable input/output limits. Nothing is granted for free by research alone.
+- Research uses basic extracted items, then crafted components, then dedicated manufactured research craftables. Field research takes time and is slower than scalable laboratories.
+- Research retains cumulative production eligibility and consumes material contributions while preserving history. Raw-resource eligibility uses separate extraction history. Payment and unlock/progress changes must occur exactly once.
+- Deposits are finite but very generous. Dismantling buildings and crafted items recovers their full material value as scrap; exact accounting and treatment of consumed resources remain to be designed.
+- Recycler output is a random mix that logistics must sort. General fabrication tiers accept exactly one, exactly two, or three/four ingredient types respectively; higher tiers cannot replace lower-arity machines.
+- Research unlocks greenhouses as the source of restoration. Green technology supports greening and pollution pushes back, without ending the run or locking out research and recovery.
 - The prototype saves and loads progress locally in the browser. Accounts and cloud saves are future possibilities.
 - Remote control is a future possibility as the factory expands. It is outside the early prototype scope.
 
 ## Proposed first playable milestone
 
-Use a small map containing scrap deposits, a coal supply, water, and a ruined greenhouse. These are features of the world, not starting possessions. The player first collects scrap and crafts materials manually, then earns access to machinery through research.
+Use a small map containing generous scrap deposits, water, renewable-energy conditions and space for researched greenhouses and industry. Coal can support the optional polluting branch. These are world features, not starting possessions.
 
-The proposed loop is: collect scrap, handcraft basic materials, meet production requirements, research equipment, craft and place it, automate supply, restore the greenhouse, and improve the factory so it can sustain that restoration.
+The loop is: collect scrap, conduct field research, unlock basic crafting and tools, use a Mini Fabricator, establish renewable-powered recycling/fabrication, sort and automate supply, scale laboratory research, and build greenhouses to spread restoration.
 
-The first milestone should introduce a coal generator, recycler, conveyors, solar panels, water purifier, and greenhouse restoration through a small research tree. The player must earn and craft the equipment. Simple power connections can keep the focus on production and environmental decisions. Include a basic way to store solar energy or water so the player can plan for nighttime operation. Exact recipes, capacities, and timings remain to be designed.
+The prototype introduces the Mini Fabricator, solar/wind, recycler, extraction, basic factory fabrication, sorting/conveyors, laboratories, storage, water treatment and researched greenhouse restoration. Coal is optional. Direct machine connections keep early logistics understandable. Exact recipes, capacities, weather parameters and timings remain to be designed; factory tiers and later upgrades are staged rather than all delivered in the opening.
 
-The proposed goal is to keep the greenhouse healthy through a complete day and night while the factory continues producing. The player should be able to compare a fast coal-powered approach with a cleaner approach that takes more planning and infrastructure.
+The overall goal is world terraforming. The prototype demonstrates recoverable greening on one small map; its measurable completion threshold remains open. The former mandatory coal opening and greenhouse-survival interval are superseded. Night and variable wind affect operations, but shortages do not create a fail state.
 
 ## Proposed opening progression
 
-1. Manually salvage scrap from a nearby deposit.
-2. Handcraft metal plates and wire using the starting recipes.
-3. Produce enough of those materials to qualify for basic power research.
-4. Research and craft a coal generator, then manually collect its fuel.
-5. Research and build a recycler, then conveyors, to automate the work previously done by hand.
-6. Unlock water treatment, cleaner power, and greenhouse restoration as production develops.
+1. Complete a basic movement tutorial and find nearby loose scrap promptly.
+2. Use scrap in field research; unlock improved tools in about a minute of early play.
+3. Field-research the MiniFab from collected scrap and manually build its base version from scrap, independently of refined components or electricity; research material/component recipes separately.
+4. Feed a single selected item batch in the inventory-side MiniFab panel, including automatic crafting of missing eligible intermediates, while doing other work. Optionally wind its crank for bonus speed; uncharged crafting remains available.
+5. Establish solar/wind-powered recycling and fabrication, then automate extraction, sorting and transport.
+6. Scale research through laboratories and dedicated craftables; unlock storage, water treatment and greenhouse restoration. Optional coal and pollution mitigation form branches.
 
-Every technology's requirements must be obtainable using starting abilities or previously unlocked recipes. Basic power must be reachable before progress depends on the powered recycler. Handcrafting should establish the value of automation without requiring a long opening grind.
+Every technology must be reachable through earlier abilities and unlocks. Avoid circular Mini Fabricator, power, machine and research-kit requirements. Target first manually fed automatic crafting within 15–20 minutes for relaxed new players and under five minutes for experienced players. Keep mandatory manual work brief and preserve useful basic crafting after automation. See the [detailed opening](player-progression.md#opening-and-pacing).
 
 ## Energy and environmental restoration
 
-Coal should provide useful early progress. Its pollution should have visible, understandable consequences for the greenhouse, such as slower growth or greater water purification demand. Solar power should offer a cleaner alternative with space and nighttime constraints. The player should be able to recover damaged land and improve an inefficient layout.
+Solar produces only during daylight. Wind fluctuates throughout the day but maintains a minimum output outside a Dunkelflaute event. Event behavior and storage balance remain open. A coal-free progression path must work. Coal offers much greater power as an optional trade-off; emissions slow or oppose greening, and later mitigation research reduces their impact.
 
-Use one understandable pollution model for the prototype. Show its relationship to industrial activity and greenhouse health through an overlay and visible changes to vegetation. More detailed soil, air, and water systems can follow only if the core interaction proves enjoyable.
+Greenhouses require research and act as the source of restoration. Green technologies support greening while pollution pushes back. Show the relationship between industry, environment and restoration clearly. The player's choices determine the difficulty and pace; there are no planned antagonists or fail state, and pollution cannot block research or eventual recovery. Spatial spread, rates, possible regression and objective thresholds remain design work.
 
 ## Research progression
 
-Each technology lists the inputs the player must have produced and the required quantity of each. Research requires both meeting the cumulative production milestones and having those quantities available to spend. Research consumes the materials and unlocks the associated crafting and construction recipes. Inventory possession alone does not establish that the player has produced an item.
+Every crafting capability is technology-gated, with related recipes grouped into meaningful unlocks. Early research accepts extracted resources, then crafted basics; later technologies use dedicated manufactured research craftables. This explicitly replaces the earlier no-science-pack rule. Inventory possession alone does not establish production history.
 
-Count cumulative production within the saved world. The proposed counting details include both completed manual crafts and machine output, with production before a technology becomes visible still counting. Moving items between inventories, collecting existing machine output, or receiving dismantling refunds must not count the same production again. Completed research and production totals survive saving and loading.
+Count cumulative production within the saved world from completed player/Mini Fabricator and factory output, including work before a technology becomes visible. Keep raw extraction history separate. Transfers, collection of existing output and dismantling refunds do not add new extraction or production. Research progress, unlocks and both histories survive saving and loading.
 
-Research consumes its listed input quantities. Crafting equipment then consumes that equipment's recipe ingredients separately. Several technologies can refer to the same cumulative production history, but each research unlock needs its own material payment. Researching one technology does not reset production totals. If a production milestone has been met but the materials have already been spent elsewhere, the player must replenish the required stock before researching.
+Research consumes its material contributions exactly once and preserves cumulative eligibility. Crafting unlocked equipment has a separate cost. Several technologies can refer to the same production history, but each requires its own contribution. Show historical eligibility, current stock, contributed materials and work progress separately.
 
-For illustration only, basic power might require producing and spending 20 metal plates and 10 wire. Crafting a generator could then cost another 8 plates and 4 wire. If the player handcrafts 28 plates and 14 wire, research leaves 8 plates and 4 wire for the generator. Crafting it uses the remaining materials; production history still records 28 plates and 14 wire. These quantities and recipe names are examples, not agreed balance values. Balance the opening around the combined research and construction cost so the player reaches their first useful machine without a long manual grind.
+Field research uses player inventory and takes simulation time. Dedicated labs are faster and scale through additional buildings, taking over the bulk of later work. Exact contribution, reservation, concurrency and cancellation rules remain open; neither path may duplicate payment or overshoot completed research.
 
-The proposed prototype uses an immediate Research action once production requirements, material costs, and any prerequisite technologies are met. Separate research stations and research timers are outside this initial proposal. For each required input, the interface should show cumulative production and stock available to spend separately, alongside the unlocks and any unmet prerequisite. For example, Produced 28/20 plates and Available 8/20 plates means the milestone is complete but the research cannot yet be paid for. Equipment crafting costs should appear separately from research costs.
+The [progression specification](player-progression.md#research-progression) owns the detailed direction and open questions. Balance combined research, ingredient and equipment costs against opening pacing. Do not implement the former instantaneous research transaction or free starting recipes as current requirements.
 
 ## Character interaction proposal
 
@@ -70,19 +76,21 @@ The proposed prototype pauses when the game is hidden or closed and resumes from
 
 ## Prototype scope and later possibilities
 
-Keep the prototype focused on movement, manual collection and crafting, a small research tree, construction, resource transport, power, and restoration. Combat, character survival, multiplayer, and a large research tree are outside the proposed first milestone.
+Keep the prototype focused on the research-led opening, Mini Fabricator, a small factory/research tree, direct transport with sorting, renewable power and peaceful restoration. Combat, character survival, antagonists and multiplayer are outside the current direction. The three fabrication tiers describe the broader tree; exact prototype tier coverage remains to be scoped.
 
 Remote construction or control could become an earned capability once the factory grows beyond comfortable walking distance. Possible forms include drones or a control terminal; no implementation is selected yet.
 
-Other expansion ideas include filtration, efficiency upgrades, pollution spreading between regions, and restored ecosystems supplying new resources. These are future design options rather than prototype requirements. Accounts and cloud saves are also deferred.
+Later directions include pure ore chains, trains with loading/unloading stations, player-configurable resource settings, the Mini Fabricator's inventory-driven upgrade, and research that reduces pollution. Exact placement in the larger tree remains open. Accounts, cloud saves and remote control remain deferred.
 
 ## Prototype success criteria
 
 - Building a working production line feels satisfying.
-- The player can progress from an empty inventory to the first working machines using only the starting manual abilities.
+- The player can progress from the empty-handed bootstrap to tools, Mini Fabricator and a renewable-powered factory without debug grants or coal requirements.
 - Production milestones and material costs clearly explain how to unlock a technology, and locked equipment cannot be crafted or built.
-- Research consumes the required stock exactly once while preserving cumulative production totals.
+- Timed field and laboratory research consume contributions exactly once while preserving cumulative histories.
 - The player understands why pollution changes restoration progress.
-- Coal and cleaner energy create meaningful decisions with visible consequences.
-- The player can improve the system and see the landscape recover.
+- Variable solar/wind, storage and optional coal create meaningful decisions with visible consequences.
+- Sorting mixed recycler output and the restricted fabrication tiers create useful logistics choices.
+- Dismantling recovers full embodied material as scrap without duplication.
+- The player can improve the system and see researched greenhouses spread restoration without a fail state or irreversible research lockout.
 - Character movement makes exploring and building enjoyable on the small map.

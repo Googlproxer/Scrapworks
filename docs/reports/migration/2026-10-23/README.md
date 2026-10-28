@@ -10,7 +10,7 @@ The canonical `/` route loads Babylon; `/3d` redirects to it. Angular owns the t
 
 An Editor-authored 10 × 10 world with 2-metre cells compiles to validated plain data. The application owns 20 Hz simulation with at most five catch-up steps, camera-relative movement, collision and empty starting possessions. Terrain/entity picking and development-only placement use plain grid rules. The current protagonist has in-place Idle/Walk/Run animation and is loaded once at an authored anchor.
 
-Source art, original Blender files, older MPFB artwork, historical Tiled sources and dated evidence remain preserved. Public duplicate/obsolete files, the unused event contract, old title adapter and unused favicon template are removed. Retired active-scene content and the title adapter are recoverable from Git commit `6cd9f6f` using the [scene source recovery instructions](../../../../assets/README.md#recovering-retired-scene-sources).
+At this checkpoint, source art, original Blender files, earlier character experiments, historical 2D sources and dated evidence were preserved. Superseded sources/tools/reports were subsequently retired by the [28 October cleanup](../../../plans/3d-cleanup.md); the numerical evidence below remains dated 23 October. Retired static character/title scene sources remain recoverable from Git commit `6cd9f6f` using the [scene source recovery instructions](../../../../assets/README.md#recovering-retired-scene-sources).
 
 Preservation update, 24 October 2026: the duplicate local scene archive was removed after confirming that its scene and script sources match Git history; its four additional world-marker files duplicate the active Game sources. The measurements below retain their original 23 October scope.
 

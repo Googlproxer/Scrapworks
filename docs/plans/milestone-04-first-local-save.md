@@ -1,8 +1,8 @@
 # Milestone 4 First local save
 
-Updated 23 October 2026 at migration Phase 7. Status: gameplay persistence unimplemented; controls-settings persistence verified separately. Prerequisite: [Milestone 3](milestone-03-character-and-manual-opening.md).
+Updated 27 October 2026 for the expanded Milestone 3. Status: gameplay persistence unimplemented; controls-settings persistence verified separately. Prerequisite: [Milestone 3](milestone-03-character-and-manual-opening.md).
 
-Implement one manual local save slot that restores the complete manual opening, including a craft in progress. Keep persistence behind an interface so a future cloud adapter can be introduced without changing game rules. Autosaves, revisions, and file transfer arrive in Milestone 9.
+Implement one manual local save slot that restores the research-led opening, including Mini Fabricator precursors and field research in progress. Keep persistence behind an interface so a future cloud adapter can be introduced without changing game rules. Autosaves, revisions, and file transfer arrive in Milestone 9. See the [progression requirements](../design/player-progression.md).
 
 [High-level plan](README.md) · [Next milestone](milestone-05-research.md)
 
@@ -16,7 +16,7 @@ Migration added plain authoritative `WorldState`, detached presentation views an
 
 - [ ] Define a `SaveSnapshot` envelope with schema version, content version, world ID, saved timestamp, and detached gameplay state.
 - [ ] Keep slot identity and revision metadata explicit; a slot is a storage location, while a world ID identifies the run.
-- [ ] Include position, deposits, inventories, active crafting work, production totals, tick, fixed-step version or duration, and the next entity-ID counter.
+- [ ] Include position, deposits, inventories, MiniFab subsystem/tool ownership, selected target/batch, precursor plan, local charge/capacity, crafted/applied upgrade state, reservations, blocked outputs, active crafting work, production/extraction histories, field-research contributions/work, unlocked technologies, tick, fixed-step version or duration, and the next entity-ID counter.
 - [ ] Exclude browser timestamps used by the loop, command queues, held keys, selected panels, services, meshes, materials, scene handles, and attached presentation components.
 - [ ] Write a field checklist for capture and validation. Extend it whenever later milestones add persistent state.
 - [ ] Use wall-clock time only for save metadata, not to advance gameplay after loading.
@@ -44,6 +44,8 @@ Migration added plain authoritative `WorldState`, detached presentation views an
 - [ ] Treat repository data as untrusted input and validate its envelope and supported schema/content versions.
 - [ ] Validate finite numbers, nonnegative quantities, valid positions, unique entity IDs, content IDs, and all referenced entities.
 - [ ] Validate crafting reservations and remaining work so a restored job cannot consume ingredients again or finish twice.
+- [ ] Validate Mini Fabricator dependency/stack limits and field-research contributions/progress; restoring cannot replan already-paid inputs, grant locked recipes or pay twice.
+- [ ] Validate local MiniFab charge/capacity and upgrade ownership separately from research. Do not save active pointer/stick winding gestures or restore them as charge input; depleted charge must still allow baseline crafting.
 - [ ] Construct a complete candidate world separately from the active one.
 - [ ] Pause gameplay and command input during replacement, preserving the prior pause state and browser visibility rules.
 - [ ] Replace the world only after validation and construction succeed. Then clear old commands and held input, reset the loop clock, and rebuild views and renderer mappings.
@@ -61,6 +63,7 @@ Migration added plain authoritative `WorldState`, detached presentation views an
 
 - [ ] Capture a snapshot, continue playing, and prove the captured data remains unchanged.
 - [ ] Save mid-craft, reload, and finish with exactly one output commit and no second ingredient charge.
+- [ ] Save mid-precursor and mid-field-research, then compare continued inventory, histories, job completion and unlocks against the original branch.
 - [ ] Compare original and restored copies after the same commands and ticks.
 - [ ] Test missing slots, malformed snapshots, unsupported versions, and failed writes with an in-memory adapter.
 - [ ] Queue save/load requests around world replacement and verify no stale request writes the wrong world to a slot.

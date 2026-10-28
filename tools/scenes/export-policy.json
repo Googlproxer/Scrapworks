@@ -3,23 +3,27 @@
   "additionalSceneAssets": [],
   "excludedPublicAssets": [],
   "retainedPublicAssets": [
-    { "path": "assets/bg.png", "consumer": "src/app/features/game/game-page/game-page.component.scss" },
-    { "path": "assets/logo.png", "consumer": "src/app/features/game/game-page/game-page.component.html" },
-    { "path": "assets/models/protagonist-v2.glb", "consumer": "src/game/views/world-scene.ts" },
-    { "path": "assets/ui/cursor.png", "consumer": "src/styles.scss" }
+    {
+      "path": "assets/bg.png",
+      "consumer": "src/app/features/game/game-page/game-page.component.scss"
+    },
+    {
+      "path": "assets/logo.png",
+      "consumer": "src/app/features/game/game-page/game-page.component.html"
+    },
+    {
+      "path": "assets/models/protagonist-v2.glb",
+      "consumer": "src/game/views/world-scene.ts"
+    },
+    {
+      "path": "assets/ui/cursor.png",
+      "consumer": "src/styles.scss"
+    }
   ],
   "provenance": [
     {
-      "source": "assets/ambientcg/Grass001/",
-      "record": "Original source pack retained byte-for-byte, with existing material/source documents and names. No current scene references its material or textures. No local license/attribution file was found; review provenance before using it in a future shipped scene."
-    },
-    {
-      "source": "assets/models/Protag-v1.glb",
-      "record": "Byte-identical to art/characters/3d/Protag-v1.glb. The unused public duplicate was removed on 23 October 2026. Preserve this identity separately from the MPFB source export and its original validation reports."
-    },
-    {
-      "source": "art/world/tilesets/terrain-atlas-v2.png",
-      "record": "The unique 48-tile atlas moved from public/assets/tilesets/terrain.png on 23 October 2026 without changing bytes (SHA256 95c6d20a4040e7ab5ac7319a72f1ff5c8e411875b33afcd0af0c86d2e1afda00). Historical Tiled sources now reference this source-art path."
+      "source": "art/characters/3d/Protag-v1.glb",
+      "record": "Canonical source export for the animated runtime derivative. Preserve its editable Blender project, source animation archive and runtime validation records together under art/characters/3d/."
     },
     {
       "source": "assets/README.md",
@@ -27,7 +31,7 @@
     },
     {
       "source": "art/",
-      "record": "Exact prompts, generation/validation records, original art, Blender sources and individual source-asset license comments are organised under art/. The relocation record preserves former paths and hashes; original source/validation content is retained."
+      "record": "Active art, exact prompts, generation/validation records, Blender sources and available source-asset licensing are organised under art/. Retired reference inputs and removed sources are recoverable as documented in docs/plans/3d-cleanup.md."
     }
   ]
 }

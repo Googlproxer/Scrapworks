@@ -1,6 +1,6 @@
 # Babylon Phase 2 lifecycle and input reference
 
-Updated 24 October 2026. The [22 October walkthrough](../history/3d/phase-2-walkthrough-2026-10-22.md) preserves the earlier step-by-step implementation and dated test results. This page describes current source boundaries, including the subsequent Toolkit refactor; final migration acceptance is recorded in the [migration plan](3d-migration.md#phase-2-input-controls-and-lifecycle).
+Updated 28 October 2026 for documentation cleanup. This page describes current source boundaries, including the Toolkit refactor; migration acceptance is recorded in the [migration plan](3d-migration.md#phase-2-input-controls-and-lifecycle).
 
 ## Current ownership
 

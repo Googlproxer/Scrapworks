@@ -4,4 +4,4 @@ The [verification record](verification.json) was produced by `node tools/scenes/
 
 The initial MainMenu loaded. A valid saved scene change exported and reloaded; malformed saved JSON did not reload or change any published scene/world/script hashes; correcting the save recovered and reloaded automatically. Play Game then loaded the world with one canvas, no alert and no browser errors.
 
-This verifies the authoring/recovery workflow after marker compilation and asset cleanup. It does not claim gameplay persistence or completion of later gameplay milestones. The earlier [17 October workflow record](../2026-10-17/README.md) remains unchanged.
+This verifies the authoring/recovery workflow after marker compilation and asset cleanup. It does not claim gameplay persistence or completion of later gameplay milestones. Superseded workflow reports are recoverable from Git through the [cleanup record](../../../plans/3d-cleanup.md#recovery).

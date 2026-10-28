@@ -1,96 +1,83 @@
 # Milestone 5 Research
 
-Updated 4 October 2026. Status: not started. Prerequisite: [Milestone 4](milestone-04-first-local-save.md).
+Updated 27 October 2026. Status: not started. Prerequisite: [Milestone 4](milestone-04-first-local-save.md); the first timed field-research and recipe-unlock slice now belongs in [Milestone 3](milestone-03-character-and-manual-opening.md).
 
-Implement research that requires cumulative production milestones and consumes available materials. The player keeps their production history after paying. The first playable result is researching basic power and crafting a generator through the manual opening, without science packs.
+Expand the research-led opening into a reachable industrial tree with dedicated research craftables, faster laboratories and scalable research work. The [progression specification](../design/player-progression.md) owns the decisions; this checklist does not establish implementation.
 
 [High-level plan](README.md) · [Next milestone](milestone-06-first-working-machines.md)
 
 ## Current implementation
 
-No technology catalog, cumulative production history, research command, material payment, or research interface exists. Renderer readiness is complete, but research still depends on the authoritative simulation and manual opening. Retain cumulative production after spending, and consume current stock exactly once.
+There is no technology catalog, research contribution/work system, material-payment command or research interface. Migration left empty research and production data fields; it did not implement progression. Milestone 3's newly planned bootstrap research is also unimplemented. Lab rules can be developed with plain fixtures here; physical power, fabrication and laboratory integration arrive in Milestone 6.
 
-## Step 1 Define a small technology catalog
+## Step 1 Define the technology catalog and reachability
 
-- [ ] Define stable technology IDs, names, prerequisite IDs, cumulative production requirements, payment costs, and unlocked recipe/equipment IDs.
-- [ ] Initially use the required material quantities for both the production milestone and the payment, matching the current GDD.
-- [ ] Add only the technologies needed for the first generator and recycler. Extend toward solar, water, and storage in Milestone 8.
-- [ ] Keep the starting manual recipes available with no unlock.
-- [ ] Check that every required material can be made with starting abilities or an earlier technology.
-- [ ] Check that the prerequisite graph is acyclic and that basic power does not depend on an already powered recycler.
+- [ ] Build on the Milestone 3 bootstrap rather than introducing research for the first time here.
+- [ ] Define stable technology IDs, prerequisites, extraction/production eligibility, contribution costs, work requirements and unlocked recipes/equipment.
+- [ ] Gate every crafting capability, including starting material recipes. Gathering and field research remain starting abilities.
+- [ ] Preserve the scrap-only MiniFab research/assembly path. Its power-free baseline and optional local winding do not depend on electricity or refined components.
+- [ ] Retain scrap, plates, wire, mechanical parts and electrical parts as useful inputs to later branches.
+- [ ] Start research costs with extracted resources, then basic crafted items; introduce dedicated manufactured research craftables later in the tree.
+- [ ] Include renewable power, recycling, extraction, sorting/logistics, fabrication, laboratories, storage, water treatment and greenhouse research groups. Keep coal and pollution mitigation optional branches.
+- [ ] Audit an acyclic, coal-free route from empty-handed gathering through every required material, machine and unlock. First labs and kit-making equipment cannot require research kits to unlock themselves.
+- [ ] Specify Basic/Medium/Advanced fabrication recipe eligibility as exactly one, exactly two, and three/four distinct ingredient types. Scope which tiers the prototype will actually deliver.
 
-## Step 2 Establish production and payment rules
+## Step 2 Specify contributions and timed progress
 
-- [ ] Preserve cumulative totals from completed manual recipe output; later machine output will use the same accounting rule.
-- [ ] Exclude salvage, transfers, picking up items, refunds, and spending from production-history increments.
-- [ ] Use player inventory as the initial payment source. This is the recommended prototype rule; connected factory stock access remains a later design choice.
-- [ ] Represent unlocked technology IDs in persistent state and distinguish them from derived recipe availability.
-- [ ] Keep production milestones, current stock, research payment, and equipment crafting costs as separate concepts.
+- [ ] Preserve completed crafting/production totals and separate newly extracted-resource history. Transfers, output collection and refunds never increment either history.
+- [ ] Keep historical eligibility, current stock, contributed/reserved materials, research work and unlock completion separate.
+- [ ] Settle contribution granularity, reservation/payment timing, cancellation and handling of already-funded work before implementing the shared rule.
+- [ ] Field research takes ingredients from player inventory and advances with simulation time; it is slower than a lab.
+- [ ] Define a shared progress model for field work and multiple laboratories, with scalable lab throughput and no duplicated payment or overshoot on the final work unit.
+- [ ] Decide field-work concurrency and whether field research remains available for all later technologies or has explicit capability limits.
+- [ ] Define lab input buffers and dedicated research-craftable consumption without inventing global remote inventory access.
+- [ ] Research payment preserves lifetime histories; crafting the unlocked equipment remains a separate material cost.
 
-## Step 3 Implement one synchronous research transaction
+## Step 3 Implement authoritative work and unlocks
 
-- [ ] Accept a research command by technology ID through the facade and command queue.
-- [ ] Reject unknown IDs and already completed technologies.
-- [ ] Check prerequisites, cumulative milestones, and all current payment quantities against authoritative state.
-- [ ] Complete every check before changing inventory.
-- [ ] Deduct all costs and grant the unlock in one synchronous operation with no asynchronous gap.
-- [ ] Preserve cumulative production totals on payment and return a useful result/rejection reason.
-- [ ] Ensure a second queued request observes the first unlock and cannot pay again.
+- [ ] Accept technology/contribution/work-control commands through the session. Revalidate IDs, prerequisites, eligibility, source stock and remaining research demand at execution.
+- [ ] Commit each accepted reservation/contribution atomically; duplicate requests cannot spend the same stock or fund completed research again.
+- [ ] Advance field/lab work only on simulation steps. Pause/suspension cannot produce hidden-time progress.
+- [ ] Grant each unlock once when its funded work completes; do not use the former immediate pay-and-unlock transaction.
+- [ ] Enforce recipe unlocks in craft-start, Mini Fabricator precursor planning, factory recipe selection and eventual construction.
+- [ ] Specify research for the later inventory-driven Mini Fabricator upgrade and its configurable min/max input/output controls; explicitly schedule its implementation slice before claiming that capability.
+- [ ] Gate solar/wind/coal/grid MiniFab upgrades behind their related general technology and separate MiniFab-specific research, then require crafting the physical upgrade before applying its effect. Plan battery upgrades similarly; exact prerequisite placement remains a content decision.
 
-## Step 4 Enforce unlocks beyond the research panel
+## Step 4 Present research clearly
 
-- [ ] Add unlock validation to the authoritative craft-start rule for technology-gated equipment.
-- [ ] Provide the same availability query for presentation without trusting a UI-disabled button as enforcement.
-- [ ] Define the unlock check that construction will use in Milestone 6. Complete the placement integration when that system exists.
-- [ ] Keep research payment separate from equipment crafting. A player still needs to craft the physical item after research succeeds.
-- [ ] Recompute recipe availability after unlock and after world restoration.
+- [ ] Display prerequisite technologies, historical extraction/production, available stock, contributions, remaining work and unlocks.
+- [ ] Explain when eligibility is met but payment stock is missing, and when paid research still needs time.
+- [ ] Show field and lab work rates and explain the benefit of additional labs.
+- [ ] Show equipment crafting costs separately and explain recipe/machine arity restrictions.
+- [ ] Make locked/available/in-progress/completed states keyboard accessible and understandable without color alone.
 
-## Step 5 Present research progress clearly
+## Step 5 Extend snapshots and verify progression
 
-- [ ] Display prerequisites, Produced, and Available for every required material.
-- [ ] Show the material payment and whether the player can pay now.
-- [ ] Explain when historical production is sufficient but current stock is insufficient.
-- [ ] Show locked, available, and completed technology states without relying on color alone.
-- [ ] Show the equipment's separate crafting cost and the recipes it unlocks.
-- [ ] Publish research views through Angular signals rather than reading mutable core records directly.
-
-## Step 6 Extend snapshots and verify the rules
-
-- [ ] Capture and validate unlocked technology IDs alongside the existing production totals.
-- [ ] Verify totals and unlocks survive save/load and continued crafting.
-- [ ] Test totals sufficient but inventory insufficient, unmet prerequisites, unknown IDs, and already unlocked technologies.
-- [ ] Test duplicate commands and multi-material payment with no partial deduction on rejection.
-- [ ] Test locked crafting at the command boundary, even if the UI action is invoked directly.
-- [ ] Use the GDD's illustrative 28 plates and 14 wire as a fixture if useful; do not treat those values as finalized balance.
-- [ ] Play from an empty world to research and craft the first generator.
+- [ ] Capture and validate research contributions/reservations, remaining work, active targets, histories and unlocks; extend for lab instances in Milestone 6.
+- [ ] Test duplicate contributions, simultaneous workers, insufficient stock, unmet prerequisites, unknown IDs and already-completed technologies with no partial mutation.
+- [ ] Test saving/loading midway through funded work, with the same continued stock, history, progress and unlock result.
+- [ ] Verify more supplied labs increase useful throughput without creating free research.
+- [ ] Play the opening into renewable-powered industry without coal or pre-unlocked crafting; keep combined research/construction costs within the opening pacing targets.
 
 ## Completion checks
 
-- [ ] Research requires both lifetime output and an affordable current payment.
-- [ ] Successful research pays once and retains lifetime totals.
-- [ ] Locked equipment cannot be crafted through either the UI or a direct command.
-- [ ] The initial technology path is reachable entirely from manual abilities.
-- [ ] Save/load preserves production history and research progression.
+- [ ] Bootstrap field research expands into a reachable industrial tree.
+- [ ] Timed research pays once, preserves history and grants each unlock once.
+- [ ] Dedicated research craftables and scalable lab rules are defined and verified; physical integration is tracked in Milestone 6.
+- [ ] Locked recipes cannot be executed through direct commands, precursor planning or factory selection.
+- [ ] Save/load preserves research progress and continued behavior.
+- [ ] Optional pollution cannot block continued research or access to green technologies.
 
 ## Notes and implementation issues
 
-| Possible issue                                         | Implementation guidance                                                                                                         |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| Research becomes available but cannot be afforded      | Show Produced and Available separately; this difference is part of the agreed design.                                           |
-| A technology creates a progression deadlock            | Audit the materials and power needs of every prerequisite recipe before adding it to the small tree.                            |
-| UI and simulation disagree about availability          | Derive both from the same rule query, then revalidate when executing the command.                                               |
-| Stored machines seem unable to pay research            | The initial payment rule uses player inventory. Explain it and let players collect stock; do not silently invent remote access. |
-| Research and crafting together require excessive grind | Balance their combined cost from an empty playthrough, while keeping their accounting separate.                                 |
-
-Record implementation notes here:
-
-| Date           | Observation or decision                | Follow-up and status                                                           |
-| -------------- | -------------------------------------- | ------------------------------------------------------------------------------ |
-| 4 October 2026 | Not started; current source inspected. | See Current implementation above; unchecked gameplay requirements remain open. |
+| Date | Observation or decision | Follow-up and status |
+| --- | --- | --- |
+| 4 October 2026 | Not started; current source inspected. | Earlier checklist described immediate material-paid research without science packs. |
+| 27 October 2026 | Research every crafting capability; field work is slower than scalable labs; later inputs include dedicated research craftables. | Supersedes immediate unlocks/free starting recipes/no-science-pack requirements. Bootstrap moved to Milestone 3; all new tasks remain unchecked. |
 
 ## References and diagrams
 
 - [Research transaction diagram](README.md#research-transaction-diagram)
-- [Research progression](../design/GDD.md#research-progression)
+- [Research progression](../design/player-progression.md#research-progression)
 - [Gameplay interaction diagram](../design/TDD.md#gameplay-system-interactions)
 - [Save flow diagram](README.md#save-flow-diagram)

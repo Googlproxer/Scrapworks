@@ -1,100 +1,88 @@
 # Milestone 6 First working machines
 
-Updated 24 October 2026. Status: not started; ECS direction recorded. Prerequisite: [Milestone 5](milestone-05-research.md).
+Updated 27 October 2026. Status: not started; ECS direction retained and machine/power requirements revised. Prerequisite: [Milestone 5](milestone-05-research.md).
 
-Let the player craft and place a coal generator and recycler, supply them manually, and collect useful output. Establish inspectable construction, power, and production rules before automating transport.
+Establish manually supplied renewable-powered recycling, fabrication and laboratory operation, then provide extraction for later continuous supply. The Mini Fabricator's first automatic crafting belongs in Milestone 3; this milestone builds the placed factory. See [player progression](../design/player-progression.md).
 
 [High-level plan](README.md) · [Next milestone](milestone-07-transport.md)
 
 ## Current implementation
 
-Recycler generation concepts exist in `art/machinery/`, but they are source artwork. There are no simulation machine records, construction commands, footprints, fuel, power allocation, buffers, or machine jobs. Start these systems after research and gameplay saves have the required state boundaries.
+Recycler artwork is source/reference material. There are no simulation factory entities, construction/resource commands, power allocation, production buffers or machine/lab work. No new gameplay is implemented by this plan update.
 
-Follow the [factory ECS decision](../design/TDD.md#future-factory-ecs): use ECS for factory entities and shared processing, including machines, production, power, and transport. Evaluate Miniplex first when implementation begins. Keep factory state and scheduling independent of Babylon scene objects. The Toolkit refactor adds no ECS dependency or factory systems; these systems will join the application session's simulation schedule rather than scene-script subscriptions.
+Follow the [factory ECS decision](../design/TDD.md#future-factory-ecs): evaluate Miniplex first for factory entities and shared processing. Keep authoritative state and scheduling independent of Babylon objects; integrate at the application session rather than scene-script subscriptions.
 
 ## Step 1 Define machine content and state
 
-- [ ] Evaluate Miniplex first against deterministic processing order, entity lifetime, plain save data and representative factory workloads before selecting an ECS dependency.
-- [ ] Define machine IDs, crafted equipment items, research gates, square-grid footprints, allowed orientations, and connection ports.
-- [ ] Define input/output capacities, allowed recipes, fuel capacity, and power requirements.
-- [ ] Add persistent machine instances with stable IDs, position, orientation, inventories, job state, and fuel/energy state.
-- [ ] Represent runtime status such as missing input, no power, and blocked output as derived views where possible.
-- [ ] Extend content validation so recipe, item, machine, and technology references are valid.
+- [ ] Evaluate ECS against deterministic processing, lifetime, plain save data and representative workloads before selecting a dependency.
+- [ ] Define researched equipment items, footprints, orientations, direct input/output ports, capacities, power requirements and stable machine IDs.
+- [ ] Define initial solar/wind generation, recycler, the first required factory fabrication tiers, lab and extraction content. Scope the delivered tiers explicitly.
+- [ ] Basic Fabricator accepts exactly one distinct input type; Medium exactly two; Advanced three or four. Advanced cannot execute lower-arity recipes. Mini Fabricator and recycler rules are separate.
+- [ ] Preserve base components as inputs to advanced branches; later pure ore processing must feed those branches rather than obsolete them.
+- [ ] Add persistent buffers, work, reservations, pending outputs and machine connections; derive missing-input/no-power/blocked status.
+- [ ] Validate all recipe/item/machine/technology references and ensure the first machine in each required chain has an obtainable bootstrap route.
 
-## Step 2 Implement construction and manual transfer
+## Step 2 Implement construction, transfer and full recovery
 
-- [ ] Add a placement query checking unlock, crafted item ownership, player reach, terrain, footprint occupancy, and any supplied connection endpoints.
-- [ ] Use that query for preview feedback and repeat validation when the placement command executes.
-- [ ] Consume one crafted equipment item on successful placement; do not charge its recipe ingredients again.
-- [ ] Allocate a stable machine ID and claim all footprint tiles atomically.
-- [ ] Add manual loading/unloading commands with range, item compatibility, source quantity, and destination capacity checks.
-- [ ] Transfer existing items without increasing production history. Defer dismantling until its refunds and active-job behavior are defined.
+- [ ] Validate unlock, crafted equipment ownership, reach, terrain, footprint and connections in preview and again at command execution.
+- [ ] Consume the crafted equipment item once on successful placement and claim the footprint atomically.
+- [ ] Support manually loading/unloading compatible machine buffers; transfers do not create production history.
+- [ ] Define the material-value ledger, active-job/buffer treatment and safe recovery destination before dismantling is enabled.
+- [ ] Dismantle buildings and crafted equipment into their full embodied scrap value. Recover reservations, contents and pending output exactly once; no silent loss when inventory is full.
+- [ ] Verify crafting, random recycling and dismantling cannot mint extra scrap through a recovery loop. Keep the open consumed-resource policy explicit.
 
-## Step 3 Specify fuel and power accounting
+## Step 3 Implement renewable-first power
 
-- [ ] Choose and document consistent energy, power, and time units. Convert rates to per-step amounts in one place.
-- [ ] Decide whether coal is consumed as a whole item into energy or through a timed fuel job; save all intermediate work.
-- [ ] Record emissions from actual fuel use, even before Milestone 8 adds environmental effects.
-- [ ] Start with a simple connection graph and validate power endpoints.
-- [ ] Define deterministic consumer allocation, initially by stable machine ID, with capacity limits and no negative stored energy.
-- [ ] Specify idle, unconnected, and blocked behavior so fuel and energy do not disappear through ambiguous rules.
-- [ ] Adopt and document the relevant command, preparation, power, and production phases from the high-level tick schedule.
+- [ ] Choose consistent energy/power/time units, direct power connections and deterministic allocation.
+- [ ] Derive daylight and fluctuating wind from simulation time/state. Solar produces only during daylight; wind keeps a defined floor outside Dunkelflaute events.
+- [ ] Settle the initial weather model and event staging with Milestone 8. Do not accidentally promise a wind floor during an event.
+- [ ] Provide a complete solar/wind bootstrap without requiring coal technology or fuel; define sufficient starting generation and demand behavior.
+- [ ] Specify supply, consumer allocation, storage and partial-power behavior without negative energy or double use.
+- [ ] If optional coal is included in this slice, require its research, provide substantially higher output and record emissions from actual fuel use. Otherwise track it in Milestone 8.
+- [ ] Persist cycle/weather state and generation-related work; use no wall-clock or renderer-driven gameplay randomness.
 
-## Step 4 Implement machine jobs
+## Step 4 Implement recycling, fabrication, extraction and lab work
 
-- [ ] Start a job only when its recipe is unlocked, inputs are available, and the machine accepts that recipe.
-- [ ] Reserve ingredients once at job start and persist the recipe ID and remaining work.
-- [ ] Calculate job energy demand during production preparation, then advance work only from allocated power.
-- [ ] Define how partial power changes work and ensure a job cannot over-consume energy or complete more work than remains.
-- [ ] Keep completed-but-blocked work in state until the full output can be committed to the buffer.
-- [ ] Commit output and cumulative production history together, exactly once.
-- [ ] Make newly produced output wait for the next tick's transport phase when conveyors are introduced.
+- [ ] The recycler produces a random mixture across its output catalog, rather than one player-selected deterministic recipe.
+- [ ] Specify distribution, yields, availability expectations and material conservation before assigning balance values.
+- [ ] Use a simulation-owned seeded random stream. Preserve pending results and random state across blocking and saves; no output rerolls.
+- [ ] General fabricators execute a selected unlocked recipe of their supported arity and reserve ingredients once.
+- [ ] Advance jobs using allocated power; preserve partial work and finished-but-blocked output until a full commit is possible.
+- [ ] Commit new output and lifetime production once. Extraction increases extraction history, not crafted output history; finite deposits decrease atomically.
+- [ ] Integrate dedicated research-craftable production and faster labs with Milestone 5's shared progress/payment rules; multiple labs scale useful throughput.
+- [ ] Leave the Mini Fabricator inventory-driven upgrade out unless its separate unlock, min/max semantics and implementation scope have been agreed.
+- [ ] Integrate any scoped MiniFab power upgrades only after their general technology, separate MiniFab research and actual crafting/application. Onboard solar/wind, polluting coal and grid boost never remove power-free baseline work; keep the Milestone 3 local charge mechanic independent until this integration exists.
+- [ ] Make current-tick output available to transport on the next transport phase.
 
-## Step 5 Add construction and machine feedback
+## Step 5 Render, inspect and verify continuation
 
-- [ ] Show the machine footprint, rotation, and placement rejection reason before confirming placement.
-- [ ] Add an inspector showing buffers, selected recipe, work progress, fuel, power supply/demand, and blocking reason.
-- [ ] Keep inspection and selection in presentation/session state, referencing machines by ID.
-- [ ] Provide keyboard-accessible loading and collection actions alongside world interaction.
-- [ ] Render machine models from state without allowing animation or scene updates to advance production.
-
-## Step 6 Extend saving and verify behavior
-
-- [ ] Add all machine inventories, reserved inputs, work, fuel progress, connections, and energy quantities to capture and validation.
-- [ ] Test locked, out-of-range, and overlapping placement with no item cost on rejection.
-- [ ] Test powered progress, zero-power waiting, partial allocation, and output-capacity blocking.
-- [ ] Test material and energy conservation through manual supply and collection; history only counts new output.
-- [ ] Restore a machine mid-job and a generator mid-fuel use, then compare continuation against the original branch.
-- [ ] Play the manual opening, research, craft equipment, place it, and produce useful recycler output without conveyors.
+- [ ] Provide accessible construction/inspection, buffer transfer, recipe/arity, power, random-output and lab-progress feedback.
+- [ ] Render world state without allowing animation callbacks to advance production or research.
+- [ ] Extend snapshots for factory work, pending random output, PRNG state, extraction, lab contributions, connections, cycle/weather and energy.
+- [ ] Test rejected placement/transfers, arity exclusions, partial power, blocked output, recovery and resource conservation.
+- [ ] Save mid-recycler/fabricator/lab job and restore identical continued output, random sequence, research progress and material values.
+- [ ] Play from empty-handed research into a manually supplied solar/wind factory, without mandatory coal or conveyors.
 
 ## Completion checks
 
-- [ ] A placed, supplied generator powers a connected recycler.
-- [ ] Construction consumes equipment once and rejected actions consume nothing.
-- [ ] Power and blocked-output states are understandable in the inspector.
-- [ ] Job completion updates inventory and history once, including after loading.
-- [ ] The factory works with manual supply and collection before transport is added.
+- [ ] Researched renewables power a supplied recycler, initial fabrication and laboratory work.
+- [ ] Recycler mixtures and fabrication arity match the agreed rules; higher tiers retain distinct roles.
+- [ ] Lab scaling, manual transfers and extraction behave through authoritative saved state.
+- [ ] Full dismantling recovery preserves material value without duplication.
+- [ ] Power, blocked output and progress are understandable; shortages do not create a fail state.
+- [ ] The placed factory works with manual supply before transport is added.
 
 ## Notes and implementation issues
 
-| Possible issue                                  | Implementation guidance                                                                                          |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Machine placement charges materials twice       | Crafting creates an equipment item; placement consumes that item only.                                           |
-| Fuel burns when no useful demand exists         | Define generator idle/storage behavior explicitly. Emissions must follow actual burn, not merely a powered flag. |
-| Job completion repeats while the buffer is full | Persist the completed job without committing output; clear it only after a successful output transaction.        |
-| Power allocation changes after load             | Keep stable IDs, connection data, fuel progress, and allocation order consistent.                                |
-| A removed machine loses reserved materials      | Keep dismantling outside this milestone until refund and connection cleanup rules are written.                   |
-
-Record implementation notes here:
-
-| Date           | Observation or decision                | Follow-up and status                                                           |
-| -------------- | -------------------------------------- | ------------------------------------------------------------------------------ |
-| 4 October 2026 | Not started; current source inspected. | See Current implementation above; unchecked gameplay requirements remain open. |
-| 24 October 2026 | ECS selected as factory architecture; Miniplex leads the evaluation. | Integrate factory systems at session level. No ECS package or factory implementation added by the core-object refactor. |
+| Date | Observation or decision | Follow-up and status |
+| --- | --- | --- |
+| 4 October 2026 | Not started; current source inspected. | Earlier coal-first deterministic-recipe checklist superseded by the 27 October direction. |
+| 24 October 2026 | ECS selected as factory architecture; Miniplex leads evaluation. | Integrate at session level; no ECS package or factory implementation added by the core-object refactor. |
+| 27 October 2026 | Renewable-first power, mixed recycler output, restricted fabrication tiers, labs and full scrap recovery agreed. | All implementation remains pending; sorting follows in Milestone 7 and expanded weather/restoration in Milestone 8. |
 
 ## References and diagrams
 
 - [Suggested simulation schedule](README.md#suggested-simulation-schedule)
 - [Fixed step loop diagram](README.md#fixed-step-loop-diagram)
 - [Gameplay interaction diagram](../design/TDD.md#gameplay-system-interactions)
-- [Energy and restoration design](../design/GDD.md#energy-and-environmental-restoration)
+- [Recycler and factory fabrication](../design/player-progression.md#recycler-and-factory-fabrication)

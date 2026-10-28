@@ -13,7 +13,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 * Keep authoritative movement, inventory, production, research, pollution, and time in plain TypeScript. Keep simulation/contracts/core free of Angular, renderer, storage, DOM, and wall-clock dependencies.
 * Distinguish renderer lifecycle `GameState`, mutable simulation-owned `WorldState`, and authored initial `WorldDefinition`. Convert Editor centimetres to gameplay metres at the boundary. Scene serialization is not a gameplay save.
 * Keep source Blender projects, artwork, references and provenance together under root `art/`;  `docs/art/README.md` owns visual guidance. Editor-authored scenes/imports remain in `assets/`. Preserve complete active authored scene directories and exact art provenance. Retired scene sources are recovered from documented Git commits; see [scene recovery](assets/README.md#recovering-retired-scene-sources) rather than retaining duplicate archive folders. Generated exports, caches, and `src/scripts.ts` stay ignored. Update authoritative Mermaid blocks and regenerate matching `.mmd`, SVG, and PNG files together.
-* Keep older 2D instructions under clearly labelled history, with forwarding links and unchanged dated evidence. See `docs/plans/3d-cleanup.md` and `docs/plans/3d-cleanup-baseline.md`.
+* Keep current documentation focused on the active 3D project and Fibery authoring workflow. Retired tools, 2D production assets and superseded guides belong in documented Git history or a verified recovery archive, not duplicate working-tree archives. See `docs/plans/3d-cleanup.md`.
 
 ## Angular Best Practices
 

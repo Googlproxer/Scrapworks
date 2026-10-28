@@ -1,10 +1,10 @@
 # Scrapworks migration validation checklist
 
-Updated 23 October 2026. The earlier [17 October implementation checklist](../history/3d/implementation-checklist-2026-10-17.md) is preserved as history. The active [migration plan](3d-migration.md) governs implementation and final acceptance. Its Phase 7 is documentation-only: reconcile milestone progress, then stop.
+Updated 28 October 2026 for repository cleanup. The active [migration plan](3d-migration.md) governs implementation and final acceptance. Its Phase 7 is documentation-only: reconcile milestone progress, then stop.
 
 ## 0 Review the preserved repository
 
-Preserve the existing authoring, source art and provenance. The [cleanup baseline](3d-cleanup-baseline.md) records earlier preservation work; retired scene sources are recoverable from Git commit `6cd9f6f` using the [recovery instructions](../../assets/README.md#recovering-retired-scene-sources). Generated exports and caches remain ignored. A successful local build does not establish a clean dependency install or a Git commit; report those separately.
+Preserve active authoring, source art and provenance. The [cleanup record](3d-cleanup.md) documents retired assets/tools and recovery; retired scene sources are recoverable from Git commit `6cd9f6f` using the [scene recovery instructions](../../assets/README.md#recovering-retired-scene-sources). Generated exports and caches remain ignored. A successful local build does not establish a clean dependency install or a Git commit; report those separately.
 
 ## Integration checks
 

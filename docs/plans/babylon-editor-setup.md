@@ -1,6 +1,6 @@
 # Babylon.js Editor setup
 
-Updated 23 October 2026. Saved Editor scenes and world markers export/reload automatically during development. The [cleanup baseline](3d-cleanup-baseline.md) preserves earlier evidence; the [migration plan](3d-migration.md) owns current implementation and final acceptance.
+Updated 28 October 2026 for documentation cleanup. Saved Editor scenes and world markers export/reload automatically during development. The [cleanup record](3d-cleanup.md) documents current asset boundaries and recovery; the [migration plan](3d-migration.md) owns implementation and final acceptance.
 
 Scrapworks is an Editor 5.5.2 project and an Angular browser app. Open
 `scrapworks/scrapworks.bjseditor` in Babylon.js Editor. Install dependencies with
@@ -35,7 +35,7 @@ Save in the Editor to export and reload. Failed saves report a terminal error an
 retain the last working export; correcting the save retries automatically.
 `build`, `test` and `test:watch` export once before starting. World-marker
 compilation publishes `public/scene/worlds/game.json` in the same generation; invalid metadata retains previous output. See [marker authoring](../../tools/world/README.md), the [tool guide](../../tools/scenes/README.md)
-and [workflow validation](../reports/workflow/2026-10-17/README.md).
+and [workflow validation](../reports/workflow/2026-10-23/README.md).
 
 `assets/**/*.scene` and the project file are authored inputs. `public/scene/` , 
 `src/scripts.ts` , `.bjseditor/` and export caches are generated and ignored.

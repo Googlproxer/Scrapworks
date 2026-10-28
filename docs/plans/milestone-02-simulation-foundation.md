@@ -17,7 +17,7 @@ The typed command currently places an isolated development test building. Normal
 - [x] Define plain types for the world, player position, inventories, resource deposits, and simulation tick.
 - [x] Define stable world/entity IDs and the current fixture building ID; keep the next entity-ID counter in world state.
 - [x] Compile a small authored 10 by 10 map with a scrap deposit and blocker.
-- [ ] Design resource distribution and objective space for later coal, water and greenhouse systems.
+- [ ] Design generous finite resource distribution and objective space for renewable-first industry, water, researched greenhouses and optional coal, following the [27 October progression direction](../design/player-progression.md).
 - [x] Initialize a new world with empty inventory, no equipment or machines, zero production totals, and no research unlocks.
 - [x] Distinguish map resources from possessions. Deposits exist without giving the player starting items.
 - [x] Store the 0.05-second step duration in world state. Future snapshot validation/migration must enforce that timing assumption.
@@ -28,7 +28,7 @@ The typed command currently places an isolated development test building. Normal
 - [x] Keep the frozen authored definition and fixture rule constants outside mutable state; identify entities/content by stable IDs.
 - [x] Keep meshes, materials, scene handles, services, listeners, frame timestamps, held keys, queued commands and selected panels outside authoritative world records.
 - [x] Give the simulation one owner of mutable state and provide detached read views for other layers.
-- [x] Keep simulation independent of Angular, Babylon, Phaser, Dexie, browser APIs and wall-clock time.
+- [x] Keep simulation independent of frameworks, renderers, storage, browser APIs and wall-clock time.
 
 ## Step 3 Define the command boundary
 

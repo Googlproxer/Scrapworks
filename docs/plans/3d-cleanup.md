@@ -1,28 +1,61 @@
 # Scrapworks 3D cleanup record
 
-Updated 23 October 2026. The user authorized the full migration and cleanup. Source changes now use one Babylon runtime and one Editor authoring path; final browser/production acceptance is tracked in the [migration plan](3d-migration.md). At its Phase 7, update milestone progress and stop.
+Updated 28 October 2026. The full 3D migration is complete through its documentation handoff. This cleanup follows the user's request to remove rejected design tools, obsolete 2D production material and other superseded project content. [Migration acceptance](3d-migration.md) remains the implementation checkpoint; later gameplay milestones remain pending.
 
-The [17 October cleanup plan](../history/3d/cleanup-plan-2026-10-17.md), [baseline/progress record](3d-cleanup-baseline.md), and dated asset/workflow reports preserve earlier decisions and measurements. Their original user-only implementation boundary and dual-renderer descriptions are historical.
+## Removed from the working tree
 
-## Current cleanup
+| Category | Retired content |
+| --- | --- |
+| Rejected design tools | Articy importer/build helpers and generated catalogue; Game Balance Editor validator, guide and native snapshot. Fibery remains the active catalogue and tracker. |
+| 2D production | Sprite sheets, Tiled terrain atlases/transitions, terrain verification script and obsolete sprite/tile production brief. |
+| Superseded documentation | 2D history, early 3D walkthroughs/checklists, forwarding pages, 17 October baseline and old asset/cleanup/workflow reports. Current 23 October migration/refinement/workflow evidence remains. |
+| Retired experiments | MPFB/smooth-character build/export/inspection scripts whose source experiments are already retired. |
+| Unused imports | Unreferenced Grass001 source pack and duplicate static `assets/models/Protag-v1.glb`. Canonical model sources remain under `art/`. |
+| Obsolete checks | Historical relocation comparator/manifest, removed-map audit requirement and Tiled editor ignore rule. |
 
-- Babylon is the sole renderer at `/`; `/3d` redirects to it. Phaser code and dependency are removed; plain lifecycle keys are MainMenu and Game.
-- The unused former event-bus contract is removed. The retired Babylon title-fitting script and its complete authored MainMenu remain in Git commit `6cd9f6f`; Angular now owns the live title layout.
-- Angular owns title imagery, menu/loading/error presentation and controls. Complete old Game/MainMenu scenes, including the former static character and Babylon title, are recoverable from that commit using the [retired scene source recovery instructions](../../assets/README.md#recovering-retired-scene-sources).
-- Public sprite/old-GLB duplicates, generated Tiled JSON and unused template star/placeholder are removed. The unique final atlas moved byte-for-byte to `art/world/tilesets/terrain-atlas-v2.png`; historical Tiled sources and useful art/provenance remain discoverable.
-- Game markers compile to a plain versioned definition in the same staged publication as scene exports. [Marker authoring](../../tools/world/README.md) defines hierarchy/unit validation and fixture coordinates.
-- A private plain WorldState and fixed-step session own movement, occupancy and test placement. Normal worlds receive no inventory, equipment, research or machinery. Test-building availability is confined to an explicit developer fixture.
+The retirement set contains **151 files, 413,629,168 bytes (394.5 MiB)**, including ignored importer build products. Git records deletions only for tracked files; uncommitted trial files were backed up separately. No package removal was needed: Phaser and the other rejected tools have no current package dependency.
+
+## Preserved active sources
+
+Complete Game/MainMenu authoring directories and the Editor project remain intact. Canonical Blender/model/animation sources, modelling and approved finish references, environmental/machinery concepts, logo/cursor sources, exact relevant prompts and available licence/provenance records remain in [art/](../../art/README.md). The four live public assets, all runtime source, dependencies and authoritative diagrams are preserved.
+
+[Fibery authoring](../design/balance/README.md), its entity/board IDs and [project tracking receipt](fibery-tracking.md) remain intact. The opening catalogue and agreed progression are the repository design reference; the retired database snapshot is no longer presented as a maintained second source.
+
+## Recovery
+
+Pre-cleanup commit **`dc8afc71d07ea6fd3af06f560ad8c46a184895fc`** contains the tracked retired files. Export selected paths to a ZIP and inspect in a separate directory:
+
+```sh
+git archive --format=zip --output=retired-project-sources.zip dc8afc71d07ea6fd3af06f560ad8c46a184895fc docs/history docs/plans/3d-cleanup-baseline.md docs/reports/assets docs/reports/cleanup/2026-10-17 docs/reports/workflow/2026-10-17 art/world/tilesets art/characters/protagonist-sprites-v1.png art/characters/protagonist-sprites-v2.png art/prompts.md art/relocation-2026-10-17.json tools/art tools/scenes/compare-audit.mjs assets/ambientcg/Grass001 assets/models/Protag-v1.glb
+```
+
+The rejected-tool trials were uncommitted. A **complete local recovery archive of all 151 removed files**, including those trials and their build products, was ZIP/CRC-checked and every member compared with its pre-removal SHA-256. Its directory is:
+
+```text
+C:\Users\googl\.codex\visualizations\2026\10\27\01a17b8e-cfe4-79d0-99a7-bfcf728f3c51\scrapworks-retired-tools-20261028T035426Z
+```
+
+`retired-files.zip` contains the full retirement set; `manifest.json` records every original path, size and hash plus the protected-source baseline. This is a persistent local recovery copy outside the repository; Git recovery covers the tracked files. External installed applications and external design projects were not changed.
+
+Retired static scene/MPFB sources from the earlier cutover remain at commit `6cd9f6f`; see [scene recovery](../../assets/README.md#recovering-retired-scene-sources) and [MPFB provenance recovery](../../art/README.md#recovering-retired-mpfb-sources).
 
 ## Phase 4 Make Babylon the default and remove the 2D runtime
 
-This retained anchor links the former cutover gate to its current implementation. Final acceptance requires direct and redirected navigation, real Play Game/Retry, one canvas/engine per client, input/modal ownership, suspension, camera/picking, scene/world failure retention and no Phaser in the emitted production dependency graph.
+This retained anchor links the former cutover gate to its implemented result. Babylon is the sole renderer at `/`; `/3d` redirects to it. Angular owns title imagery, menus, Controls and loading/error/Retry. Production checks continue to reject retired renderer dependencies/assets. World markers compile to a plain definition; scene serialization is not a gameplay save.
 
-The saved camera uses 20–75 degree pitch, 6–24 metre zoom and right-button rotation. The 20 metre ground uses a two-metre construction grid. Character source and animation provenance remain separate from runtime derivatives.
+## Validation
 
-## Validation handoff
+Verified after removal on 28 October 2026:
 
-Run production export/build, Chromium application tests, lint and lint-tooling tests, `test:world`, export/watcher tests, the isolated dev workflow, asset checks and docs checks. Record new packaging and scene-request results separately from the 17 October baseline. Generated scenes, script registry, caches and test output remain ignored; current authored source files must remain trackable, and retired scenes remain recoverable from Git history.
+| Check | Result |
+| --- | --- |
+| Documentation | 37 documents, 402 local links and eight matching diagram sources; no failures. |
+| Repository audit | 325 source/configuration files and 12 generated-ignore probes; no failures. Six existing design/tracking files remain untracked for review. |
+| Export tests | All 13 pass, including dependency retention, staged publication/rollback and watcher behavior. |
+| Production export/build | Both scenes export and the Angular production build passes; built scene/world/public assets match current exports. |
+| Browser smoke check | `/` and `/3d` load Play Game, the world and animated character, pause/resume and Controls; no page errors or failed requests. Development UI remains excluded. |
+| Source preservation | 197 protected files remain byte-identical. The logo provenance record changes only its usage description; all eight original generation runs remain unchanged. All 151 retirement candidates are absent and recoverable. |
 
-## First gameplay checkpoint after cleanup
+The existing profiler now reserves a larger Resource Timing buffer before navigation and fails explicitly if it fills. Babylon's chunks exhausted Chromium's default 250-entry buffer, previously making the audit falsely report missing gameplay assets. The corrected probe observes all three required runtime loads on both routes. Browser timings are local software-renderer observations, not target-device qualification.
 
-This is a future handoff, not authorization to continue implementation during migration Phase 7. Review Milestones 2 and 3 for the foundation/movement work already delivered, then leave manual salvage/crafting, real local saves and subsequent systems unchecked until separately implemented and verified. Preserve cumulative production and exactly-once research payment semantics in the gameplay design.
+Pinned Yarn could not download through Corepack in this environment. Validation used installed tooling: `node tools/scenes/export.mjs`, then `node node_modules/@angular/cli/bin/ng.js build`, followed by `node tools/scenes/check-export.mjs --build`. The first build comparison detected newer export-manifest timestamps; rebuilding after export activity settled passed the strict comparison. Browser checks used the installed Playwright cache and loopback access outside the network sandbox. These results do not complete a clean dependency install, commit review or later gameplay milestone.

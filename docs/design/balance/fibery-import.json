@@ -1,0 +1,455 @@
+{
+  "workspace": "https://scrapworks.fibery.io",
+  "space": "Scrapworks",
+  "importedOn": "2026-10-28",
+  "source": "Initial catalogue snapshot imported on 2026-10-28; retired trial snapshot retained in the cleanup recovery archive, not maintained as a second database.",
+  "designSources": ["docs/design/opening-catalogue.md", "docs/design/player-progression.md"],
+  "records": {
+    "Item": [
+      {
+        "sourceId": "item.prybar",
+        "id": "1606ceb7-4bef-4625-aa5b-d027b5eca4d2",
+        "name": "Scrap prybar",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/6"
+      },
+      {
+        "sourceId": "item.charge_storage",
+        "id": "45295749-1586-4b4e-a15a-d69d944bff2d",
+        "name": "MiniFab charge storage I",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/9"
+      },
+      {
+        "sourceId": "item.wire",
+        "id": "459dea1e-3864-4b9e-93b4-16bfbc6acc4b",
+        "name": "Recovered wire",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/3"
+      },
+      {
+        "sourceId": "item.crank_gearing",
+        "id": "4a02f713-0408-4ec6-ae1d-671119339315",
+        "name": "MiniFab crank gearing I",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/8"
+      },
+      {
+        "sourceId": "item.scrap",
+        "id": "ae509f7b-89bd-4a6b-bcb7-7cccf08360b9",
+        "name": "Mixed scrap",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/1"
+      },
+      {
+        "sourceId": "item.minifab",
+        "id": "aecb089a-6fb6-461e-aff3-804c54bcbc2f",
+        "name": "Base MiniFab",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/7"
+      },
+      {
+        "sourceId": "item.mechanical",
+        "id": "b7d8ec74-a2a3-4311-b37e-5ac91024673a",
+        "name": "Mechanical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/4"
+      },
+      {
+        "sourceId": "item.plate",
+        "id": "ba8b1809-1192-4765-bc9c-b29e650ac518",
+        "name": "Metal plate",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/2"
+      },
+      {
+        "sourceId": "item.electrical",
+        "id": "ff18bb35-4282-46a4-a887-a896baf6a79a",
+        "name": "Electrical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/5"
+      }
+    ],
+    "Recipe": [
+      {
+        "sourceId": "recipe.prybar",
+        "id": "018b39d7-5c8b-4e9e-ae67-d158d004bee3",
+        "name": "Scrap prybar",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/1"
+      },
+      {
+        "sourceId": "recipe.mechanical",
+        "id": "276e7197-2ad1-43e2-abe9-aa9886147a8c",
+        "name": "Mechanical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/5"
+      },
+      {
+        "sourceId": "recipe.wire",
+        "id": "450778df-d54f-427f-9857-758a9cda72f2",
+        "name": "Recovered wire",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/4"
+      },
+      {
+        "sourceId": "recipe.charge_storage",
+        "id": "4fc55d37-4ab9-4de4-bc01-7ebe79a34a36",
+        "name": "MiniFab charge storage I",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/8"
+      },
+      {
+        "sourceId": "recipe.electrical",
+        "id": "67e7be53-ada5-4426-9403-80629e4c7ed9",
+        "name": "Electrical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/6"
+      },
+      {
+        "sourceId": "recipe.plate",
+        "id": "76f61a00-cf81-4dfc-b51b-a7bb1ce955bf",
+        "name": "Metal plate",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/3"
+      },
+      {
+        "sourceId": "recipe.crank_gearing",
+        "id": "bd37689b-d388-4910-9b70-7d2925cf4e21",
+        "name": "MiniFab crank gearing I",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/7"
+      },
+      {
+        "sourceId": "recipe.minifab",
+        "id": "e9ec0932-e2eb-4c71-b2d3-b510a89d674f",
+        "name": "Base MiniFab",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/2"
+      }
+    ],
+    "Ingredient": [
+      {
+        "sourceId": "ingredient.recipe.mechanical.item.plate",
+        "id": "01727837-5e34-4ef5-8ad9-07f70a27b46f",
+        "name": "Mechanical part / Metal plate",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/5"
+      },
+      {
+        "sourceId": "ingredient.recipe.prybar.item.scrap",
+        "id": "07630d92-997e-44b5-ac9c-29b149b5e7a6",
+        "name": "Scrap prybar / Mixed scrap",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/1"
+      },
+      {
+        "sourceId": "ingredient.recipe.plate.item.scrap",
+        "id": "30e6d835-6680-47ab-a2c2-40074e0918d1",
+        "name": "Metal plate / Mixed scrap",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/3"
+      },
+      {
+        "sourceId": "ingredient.recipe.charge_storage.item.electrical",
+        "id": "330a1681-ac26-4d2a-bbd4-181b677f31a0",
+        "name": "MiniFab charge storage I / Electrical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/11"
+      },
+      {
+        "sourceId": "ingredient.recipe.electrical.item.wire",
+        "id": "6b4248ef-a626-44ff-8868-dd2a76f548cf",
+        "name": "Electrical part / Recovered wire",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/7"
+      },
+      {
+        "sourceId": "ingredient.recipe.electrical.item.plate",
+        "id": "6cf11e16-2df2-47de-a40d-fc32b50a92fa",
+        "name": "Electrical part / Metal plate",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/6"
+      },
+      {
+        "sourceId": "ingredient.recipe.charge_storage.item.wire",
+        "id": "8babc165-2d2b-4ae3-98a3-b57573ef3289",
+        "name": "MiniFab charge storage I / Recovered wire",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/12"
+      },
+      {
+        "sourceId": "ingredient.recipe.charge_storage.item.mechanical",
+        "id": "c5aaf873-8390-41c7-a7fa-532044c5352c",
+        "name": "MiniFab charge storage I / Mechanical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/10"
+      },
+      {
+        "sourceId": "ingredient.recipe.crank_gearing.item.mechanical",
+        "id": "c5e34c6f-6f86-4fe0-b8b3-5e861a02646e",
+        "name": "MiniFab crank gearing I / Mechanical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/8"
+      },
+      {
+        "sourceId": "ingredient.recipe.crank_gearing.item.wire",
+        "id": "e1fee3ff-ac4f-43fb-a40c-8ed52ee7b9c6",
+        "name": "MiniFab crank gearing I / Recovered wire",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/9"
+      },
+      {
+        "sourceId": "ingredient.recipe.minifab.item.scrap",
+        "id": "ffc4cd40-3b0e-419d-bcd3-9d456ff82002",
+        "name": "Base MiniFab / Mixed scrap",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/2"
+      },
+      {
+        "sourceId": "ingredient.recipe.wire.item.scrap",
+        "id": "fff0f430-ddfa-4ef0-a52c-8d49b6179582",
+        "name": "Recovered wire / Mixed scrap",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/4"
+      }
+    ],
+    "Technology": [
+      {
+        "sourceId": "future.minifab_wind",
+        "id": "0558d854-2606-485b-b0cf-81cbab6669bd",
+        "name": "MiniFab onboard wind",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/18"
+      },
+      {
+        "sourceId": "future.solar",
+        "id": "129e0a1b-0367-491c-8c08-0f12f3f9ef3a",
+        "name": "Solar power",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/9"
+      },
+      {
+        "sourceId": "future.minifab_coal",
+        "id": "2c62d4b1-7e0f-4f5f-85a6-829352e3d58e",
+        "name": "MiniFab coal boost - optional",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/20"
+      },
+      {
+        "sourceId": "tech.electrical_assembly",
+        "id": "313b4331-9c67-4f45-9df4-c0bd5bc0864c",
+        "name": "Electrical assembly",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/5"
+      },
+      {
+        "sourceId": "future.laboratory",
+        "id": "35ae82d5-2016-47d1-98d9-9c01ed76e87e",
+        "name": "Laboratory research",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/16"
+      },
+      {
+        "sourceId": "future.wind",
+        "id": "37083479-87e4-4ede-b529-6d659eb709df",
+        "name": "Wind power",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/10"
+      },
+      {
+        "sourceId": "future.medium_fabrication",
+        "id": "3e03ac68-db34-413e-bfdf-3c5b9b21c950",
+        "name": "Medium fabrication",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/13"
+      },
+      {
+        "sourceId": "future.electrical_engineering",
+        "id": "4dc973fb-20fc-49ae-a910-6de8619fca8a",
+        "name": "Electrical engineering",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/8"
+      },
+      {
+        "sourceId": "future.coal",
+        "id": "5891c1c2-4324-4b59-856e-b0d1246530c6",
+        "name": "Coal power - optional",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/19"
+      },
+      {
+        "sourceId": "tech.material_recovery",
+        "id": "618fcca3-1995-456d-a64d-ffa77ed63751",
+        "name": "Material recovery",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/3"
+      },
+      {
+        "sourceId": "future.logistics",
+        "id": "62912dc3-7e96-4262-83fc-ee87d9514810",
+        "name": "Sorting and conveyors",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/15"
+      },
+      {
+        "sourceId": "future.recycling",
+        "id": "681a5f75-fe4f-4e06-9d27-224f6a8106ca",
+        "name": "Mixed recycling",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/11"
+      },
+      {
+        "sourceId": "tech.minifab_crank_gearing_i",
+        "id": "6fdf5f2e-7ca4-479d-820b-d1bde0ac2549",
+        "name": "MiniFab crank gearing I",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/6"
+      },
+      {
+        "sourceId": "future.extraction",
+        "id": "8303b4d1-11a8-413a-a603-8654ed4d025a",
+        "name": "Extraction",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/14"
+      },
+      {
+        "sourceId": "tech.mini_fabrication",
+        "id": "b8765391-8562-47a1-b3ad-09558f574efd",
+        "name": "Mini fabrication",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/2"
+      },
+      {
+        "sourceId": "tech.minifab_charge_storage_i",
+        "id": "c6a64588-f8bb-4644-8ce2-c0cd9ce8d988",
+        "name": "MiniFab charge storage I",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/7"
+      },
+      {
+        "sourceId": "future.minifab_solar",
+        "id": "c8120a34-0fbc-4ce7-863b-0c0002fc79b0",
+        "name": "MiniFab onboard solar",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/17"
+      },
+      {
+        "sourceId": "tech.mechanical_assembly",
+        "id": "d4311b16-e2ab-4601-9e84-023273d78312",
+        "name": "Mechanical assembly",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/4"
+      },
+      {
+        "sourceId": "future.basic_fabrication",
+        "id": "e29cf260-4f4e-4292-b0bf-8df21714149f",
+        "name": "Basic fabrication",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/12"
+      },
+      {
+        "sourceId": "future.minifab_grid",
+        "id": "e8393596-8fcc-419a-b069-8005d430e9c3",
+        "name": "MiniFab grid connection",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/21"
+      },
+      {
+        "sourceId": "tech.improvised_tools",
+        "id": "f9dab752-1da2-4b6f-89c8-bc2e2e512926",
+        "name": "Improvised tools",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/1"
+      }
+    ],
+    "Research Cost": [
+      {
+        "sourceId": "cost.tech.minifab_charge_storage_i.item.wire",
+        "id": "19356320-898d-4d9f-94f5-b821b6868a5b",
+        "name": "MiniFab charge storage I / Recovered wire",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/10"
+      },
+      {
+        "sourceId": "cost.tech.minifab_crank_gearing_i.item.mechanical",
+        "id": "1a2dfc22-d8df-441e-b1d1-f9ba9b9b1757",
+        "name": "MiniFab crank gearing I / Mechanical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/7"
+      },
+      {
+        "sourceId": "cost.tech.minifab_charge_storage_i.item.electrical",
+        "id": "2245ebd4-ca90-432a-a876-d363603ba9bc",
+        "name": "MiniFab charge storage I / Electrical part",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/9"
+      },
+      {
+        "sourceId": "cost.tech.improvised_tools.item.scrap",
+        "id": "39548510-6901-4a74-970c-de4003cd5cc4",
+        "name": "Improvised tools / Mixed scrap",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/1"
+      },
+      {
+        "sourceId": "cost.tech.material_recovery.item.scrap",
+        "id": "4f6353f6-c809-4c75-8999-2bbe71b29b01",
+        "name": "Material recovery / Mixed scrap",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/3"
+      },
+      {
+        "sourceId": "cost.tech.mini_fabrication.item.scrap",
+        "id": "63597ec7-bbc9-44a8-b247-ad2f87ddd1fc",
+        "name": "Mini fabrication / Mixed scrap",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/2"
+      },
+      {
+        "sourceId": "cost.tech.electrical_assembly.item.plate",
+        "id": "b0b2b1bf-e645-4fb1-b4e3-6648adf09be4",
+        "name": "Electrical assembly / Metal plate",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/5"
+      },
+      {
+        "sourceId": "cost.tech.electrical_assembly.item.wire",
+        "id": "c003f01e-d09b-4a13-a0c0-8439bb526002",
+        "name": "Electrical assembly / Recovered wire",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/6"
+      },
+      {
+        "sourceId": "cost.tech.minifab_crank_gearing_i.item.wire",
+        "id": "d0cf6f76-cac1-4c28-ad4d-9fdd6bcdbda1",
+        "name": "MiniFab crank gearing I / Recovered wire",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/8"
+      },
+      {
+        "sourceId": "cost.tech.mechanical_assembly.item.plate",
+        "id": "da7a509e-fa69-4f15-83bb-8d394f11d907",
+        "name": "Mechanical assembly / Metal plate",
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/4"
+      }
+    ]
+  },
+  "views": {
+    "Items": {
+      "id": "bfde8ea6-1546-430c-9f1d-8560cd071471",
+      "url": "https://scrapworks.fibery.io/Scrapworks/38",
+      "fixLogs": []
+    },
+    "Recipes": {
+      "id": "2e3c16c3-b11d-4f0c-ba2d-907b3d25f499",
+      "url": "https://scrapworks.fibery.io/Scrapworks/39",
+      "fixLogs": []
+    },
+    "Recipe ingredients": {
+      "id": "cc392c96-4a36-4847-b81a-0d56330870a1",
+      "url": "https://scrapworks.fibery.io/Scrapworks/40",
+      "fixLogs": []
+    },
+    "Research": {
+      "id": "d4a63ed2-66b8-4a2e-951d-2d6d59739995",
+      "url": "https://scrapworks.fibery.io/Scrapworks/41",
+      "fixLogs": []
+    },
+    "Research costs": {
+      "id": "b5d114d5-fb25-438b-9896-9da5e611d33a",
+      "url": "https://scrapworks.fibery.io/Scrapworks/42",
+      "fixLogs": []
+    },
+    "Crafting tree": {
+      "id": "c1152e49-f975-4757-a511-067522a5ee2d",
+      "url": "https://scrapworks.fibery.io/Scrapworks/43",
+      "fixLogs": []
+    },
+    "Research tree": {
+      "id": "aa37edae-678c-4dc7-ab38-c22508bf5407",
+      "url": "https://scrapworks.fibery.io/Scrapworks/44",
+      "fixLogs": []
+    }
+  },
+  "whiteboards": {
+    "crafting": {
+      "id": "c1152e49-f975-4757-a511-067522a5ee2d",
+      "liveCards": 17,
+      "nativeOutputLinks": 8,
+      "materialInputAnnotationLinks": 12,
+      "sectionIds": [
+        22,
+        23,
+        24
+      ]
+    },
+    "research": {
+      "id": "aa37edae-678c-4dc7-ab38-c22508bf5407",
+      "liveCards": 21,
+      "nativePrerequisiteLinks": 24,
+      "sectionIds": [
+        26,
+        27,
+        28
+      ]
+    },
+    "verification": "Every known card ID was read back and its FreeCard.cardData.id matched the intended database entity UUID."
+  },
+  "verification": {
+    "verifiedOn": "2026-10-28",
+    "counts": {
+      "Item": 9,
+      "Recipe": 8,
+      "Ingredient": 12,
+      "Technology": 21,
+      "Research Cost": 10
+    },
+    "prerequisiteLinks": 24,
+    "allSourceIdsUnique": true,
+    "recipesConserveMaterialValue": true,
+    "allChecksPassed": true,
+    "errors": []
+  }
+}
