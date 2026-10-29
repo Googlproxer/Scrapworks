@@ -1,0 +1,2 @@
+"file","candidate","execution","workload","pressureMs","clock","hz","repetition","diagnostic","frames","ticks","frameP95","frameP99","frameMax","inputP95","inputP99","longTasks","maxLongTask","droppedMs","maxQueue","pendingInputProbes","maxBacklogMs","publications","receiverP95","receiverP99","frameReceiverP99","appliedNotPresented"
+"0144-paced-miniplex-inline-100000-mixed.json","miniplex","inline","mixed",0,"host",60,0,false,1801,599,16.700000000000728,16.80000000000109,16.80000000000291,50.59999990463257,66.19999992847443,0,0,0,0,0,66.70000000000073,599,,,,0
