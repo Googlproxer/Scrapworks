@@ -16,7 +16,7 @@ const option = (name, fallback) => {
 };
 if (args.includes('--help')) {
   console.log(
-    'Simulation worker bench: check | smoke | calibrate | browser | report; --output path --resume --candidates miniplex,bitecs --executions inline,worker --phase all|primary|diagnostics|profiles|paced|followup --repetitions 5 --duration-ms 30000 --destination path --label reference-desktop|hosted-ci',
+    'Simulation worker bench: check | smoke | calibrate | browser | report; --output path --resume --candidates miniplex,bitecs --executions inline,worker --phase all|primary|diagnostics|profiles|paced|followup --repetitions 5 --duration-ms 30000 --destination path --paced-input path --label reference-desktop|hosted-ci',
   );
   process.exit(0);
 }
@@ -25,6 +25,7 @@ if (command === 'report') {
   await report(
     path.resolve(option('input', 'tmp/simulation-worker-bench/latest')),
     option('destination', undefined),
+    option('paced-input', undefined),
   );
   process.exit(0);
 }
@@ -89,6 +90,8 @@ async function fingerprint() {
   };
 }
 const source = await fingerprint();
+const browserSource = await fs.readFile(path.join(directory, 'browser.ts'), 'utf8');
+const primaryHotPath = browserSource.split('// Pacing-only helpers.')[0].trimEnd();
 const manifest = {
   schema: 1,
   command,
@@ -98,6 +101,7 @@ const manifest = {
   revision: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
   dirty: execFileSync('git', ['status', '--porcelain=v1'], { encoding: 'utf8' }).trim(),
   source,
+  primaryHotPathHash: crypto.createHash('sha256').update(primaryHotPath).digest('hex'),
   node: process.versions,
   hardware: {
     cpu: os.cpus()[0]?.model,

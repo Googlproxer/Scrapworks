@@ -2,6 +2,7 @@
   "recordedDate": "2026-10-29",
   "status": "Frozen after calibration, before reference qualification",
   "warmupContext": "retained",
+  "frameMetric": "callback-arrival",
   "targetEntities": 100000,
   "requiredFrameRate": 60,
   "diagnosticFrameRate": 120,
@@ -17,6 +18,7 @@
   },
   "notes": [
     "The proposed numerical budgets from the plan are retained without relaxation.",
+    "Cohort B primary timings are retained. Its paced RAF timeline intervals can hide delayed callback arrival. Cohort C repeats all paced cases using actual performance.now callback arrival gaps, with RAF timeline intervals and lateness retained separately. A 45 ms injected-stall check guards the frame metric.",
     "Primary cohort A receiver callback cost is explicit JavaScript decode/cache application. Follow-up cohort B separately times MessageEvent.data access and the whole receiver callback, including request bookkeeping and explicit decode/application; this observed receiver timer may still exclude earlier browser-internal work. Host round trips and frame intervals include delivery.",
     "Input-to-visible is sampled synthetic intent through applied-tick acknowledgement and the next presentation callback; physical input-to-photon and full-game rendering remain unqualified.",
     "120 Hz is timer-emulated diagnostic pacing, not physical-display qualification.",

@@ -54,3 +54,16 @@ yarn bench:worker:browser --phase followup --output tmp/simulation-worker-bench/
 This repeats the complete primary timing and paced matrix after all four correctness checks, adds four untimed payload size probes, and compares paired host/worker clocks at 8 ms host pressure. It skips the separate ancillary, transport and memory runs, which retain their own cohort A evidence. Warm-up and fresh measurement state reuse the same worker, retaining its warmed JIT while replacing the disposable world. Both clocks retain one outstanding request; worker polling uses elapsed time since the prior dispatch. The original cohort A scheduler polls elapsed time since the prior reply, which would confound publication cadence with clock ownership; those planned cases were not executed. Preserve both source manifests, and use cohort B alone for corrected timing/qualification, with cohort A retained as exploratory and separate diagnostic evidence. Cohort A warmed a disposable worker that was then replaced; do not describe its worker timings as warm-context qualification.
 
 Payload bytes are UTF-8 JSON estimates of detached frames, calculated outside timing. The browser does not expose actual structured-clone wire bytes here. The follow-up also verifies explicit cancellation acknowledgements, continuation with new commands after restoring a capture, and restoration of accepted commands still awaiting a tick. Numerical gates remain unchanged.
+
+## Callback-arrival qualification
+
+Frame qualification uses actual `performance.now()` gaps between callback arrivals. RAF's supplied timeline timestamps and callback lateness are retained separately: a regular RAF timeline can hide late JavaScript callbacks. Every correctness job includes an injected 45 ms stall that the same recorder must detect.
+
+The corrected paced stage can be run separately and joined to a compatible primary cohort:
+
+```text
+yarn bench:worker:browser --phase paced --output tmp/simulation-worker-bench/<paced>
+yarn bench:worker:report --input tmp/simulation-worker-bench/<primary> --paced-input tmp/simulation-worker-bench/<paced> --destination docs/reports/simulation-worker/<date>
+```
+
+The report excludes the primary cohort's superseded paced samples, verifies unchanged primary timing code and core/domain/adapter sources, and checks packages, gates, hardware and environment labels before combining stages. Original cohort B primary source is archived as `frozen-browser.ts` and checked against its manifest; subsequent manifests record the primary hot-path hash directly. Cohort C repeats all paced cases; qualification never uses the legacy RAF timeline distributions. Full current-source runs need no supplemental cohort.

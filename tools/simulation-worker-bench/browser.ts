@@ -184,6 +184,42 @@ async function trial(options: TrialOptions) {
     disposalMs: performance.now() - disposalStart,
   };
 }
+// Pacing-only helpers. Keep primary timing code above this boundary unchanged.
+function frameRecorder(start: number) {
+  let previousCallback = start;
+  let previousTimeline: number | undefined;
+  return (timeline: number) => {
+    const now = performance.now();
+    const interval = now - previousCallback;
+    const timelineInterval =
+      previousTimeline === undefined ? undefined : timeline - previousTimeline;
+    previousCallback = now;
+    previousTimeline = timeline;
+    return { now, interval, timelineInterval, lateness: Math.max(0, now - timeline) };
+  };
+}
+async function frameTimingProbe(): Promise<string> {
+  const capture = frameRecorder(performance.now());
+  const intervals: number[] = [];
+  await new Promise<void>((resolve) => {
+    let count = 0;
+    const frame = (timeline: number): void => {
+      intervals.push(capture(timeline).interval);
+      if (++count === 3) {
+        const until = performance.now() + 45;
+        while (performance.now() < until) {
+          /* A known stall must appear in the next callback arrival interval. */
+        }
+      }
+      if (count >= 8) resolve();
+      else requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  });
+  const maximum = Math.max(...intervals);
+  assert(maximum >= 40, 'Frame measurement missed injected 45 ms main-thread stall');
+  return `Actual callback intervals detect injected 45 ms stall (${maximum.toFixed(1)} ms observed)`;
+}
 async function paced(
   options: TrialOptions & { durationMs: number; pressureMs: number; hz?: number },
 ) {
@@ -193,6 +229,8 @@ async function paced(
   const credits = new Credits();
   const samples: Samples = {
     frames: [],
+    rafTimelineIntervals: [],
+    callbackLateness: [],
     acknowledgement: [],
     inputToApplied: [],
     inputToVisible: [],
@@ -216,8 +254,9 @@ async function paced(
   let error: unknown;
   let frames = 0;
   let ticks = 0;
-  let prior = performance.now();
+  const prior = performance.now();
   const start = prior;
+  const captureFrame = frameRecorder(start);
   let lastFrame = prior;
   let latestAt = prior;
   let lastDispatch = prior;
@@ -276,13 +315,17 @@ async function paced(
     maxQueue = Math.max(maxQueue, client.pendingCount);
   };
   await new Promise<void>((resolve) => {
-    const frame = (now: number): void => {
+    const frame = (timeline: number): void => {
+      const timing = captureFrame(timeline);
+      const now = timing.now;
       if (error || now - start >= options.durationMs) {
         resolve();
         return;
       }
-      samples['frames'].push(now - prior);
-      prior = now;
+      samples['frames'].push(timing.interval);
+      if (timing.timelineInterval !== undefined)
+        samples['rafTimelineIntervals'].push(timing.timelineInterval);
+      samples['callbackLateness'].push(timing.lateness);
       frames++;
       samples['frameReceiver'].push(receiverSinceFrame);
       receiverSinceFrame = 0;
@@ -426,6 +469,7 @@ async function payloadSizes(options: Options) {
 
 const api = {
   correctness,
+  frameTimingProbe,
   trial,
   paced,
   ancillary,

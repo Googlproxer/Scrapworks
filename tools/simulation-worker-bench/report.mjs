@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import os from 'node:os';
+import crypto from 'node:crypto';
 
 const median = (values) => {
   const a = [...values].sort((a, b) => a - b);
@@ -19,13 +20,83 @@ const spread = (values) => ({
 });
 const number = (value) =>
   value === null || value === undefined ? 'unavailable' : value.toFixed(3);
-export async function report(input, destination) {
+export async function report(input, destination, pacedInput) {
   const manifest = JSON.parse(await fs.readFile(path.join(input, 'manifest.json'), 'utf8'));
   const jobs = [];
   for (const name of (await fs.readdir(input)).filter(
     (name) => /^\d{4}-.+\.json$/.test(name) && !name.includes('.json.'),
   ))
     jobs.push({ file: name, ...JSON.parse(await fs.readFile(path.join(input, name), 'utf8')) });
+  let pacedManifest;
+  let compatibility;
+  if (pacedInput) {
+    const supplement = path.resolve(pacedInput);
+    pacedManifest = JSON.parse(await fs.readFile(path.join(supplement, 'manifest.json'), 'utf8'));
+    const allowedChanges = new Set([
+      'tools/simulation-worker-bench/browser.ts',
+      'tools/simulation-worker-bench/runner.mjs',
+      'tools/simulation-worker-bench/cli.mjs',
+      'tools/simulation-worker-bench/report.mjs',
+      'tools/simulation-worker-bench/qualification.json',
+      'tools/simulation-worker-bench/plot.py',
+    ]);
+    const changed = Object.keys({ ...manifest.source.files, ...pacedManifest.source.files }).filter(
+      (file) => manifest.source.files[file] !== pacedManifest.source.files[file],
+    );
+    const unexpected = changed.filter((file) => !allowedChanges.has(file));
+    let primaryHash = manifest.primaryHotPathHash;
+    if (!primaryHash) {
+      const frozen = await fs.readFile(path.join(input, 'frozen-browser.ts'), 'utf8');
+      if (
+        crypto.createHash('sha256').update(frozen).digest('hex') !==
+        manifest.source.files['tools/simulation-worker-bench/browser.ts']
+      )
+        throw new Error('Frozen primary browser source does not match its manifest');
+      primaryHash = crypto
+        .createHash('sha256')
+        .update(frozen.split('\nasync function paced(')[0].trimEnd())
+        .digest('hex');
+    }
+    compatibility = {
+      changedSources: changed,
+      unchangedPrimaryHotPath: primaryHash === pacedManifest.primaryHotPathHash,
+      primaryHotPathHash: primaryHash,
+      unchangedCoreSources: unexpected.length === 0,
+      unchangedPackages:
+        JSON.stringify(manifest.packages) === JSON.stringify(pacedManifest.packages),
+      unchangedGates:
+        JSON.stringify(manifest.protocol.gates) === JSON.stringify(pacedManifest.protocol.gates),
+      sameEnvironmentLabel: manifest.label === pacedManifest.label,
+      sameHardware: JSON.stringify(manifest.hardware) === JSON.stringify(pacedManifest.hardware),
+      sameNode:
+        manifest.node.node === pacedManifest.node.node &&
+        manifest.node.v8 === pacedManifest.node.v8,
+    };
+    if (
+      !compatibility.unchangedPrimaryHotPath ||
+      !compatibility.unchangedCoreSources ||
+      !compatibility.unchangedPackages ||
+      !compatibility.unchangedGates ||
+      !compatibility.sameEnvironmentLabel ||
+      !compatibility.sameHardware ||
+      !compatibility.sameNode ||
+      pacedManifest.qualification?.warmupContext !== 'retained' ||
+      pacedManifest.qualification?.frameMetric !== 'callback-arrival'
+    )
+      throw new Error(
+        'Cohorts cannot be combined: primary code, packages, gates or frame metric differ',
+      );
+    for (let index = jobs.length - 1; index >= 0; index--)
+      if (jobs[index].mode === 'paced') jobs.splice(index, 1);
+    for (const job of jobs) job.file = 'primary/' + job.file;
+    for (const name of (await fs.readdir(supplement)).filter(
+      (name) => /^\d{4}-.+\.json$/.test(name) && !name.includes('.json.'),
+    )) {
+      const job = JSON.parse(await fs.readFile(path.join(supplement, name), 'utf8'));
+      if (job.mode === 'paced' || job.mode === 'check')
+        jobs.push({ file: 'paced/' + name, ...job });
+    }
+  }
   const compact = jobs.map((job) => {
     const { samples: _samples, ...result } = job.result ?? {};
     return {
@@ -99,6 +170,8 @@ export async function report(input, destination) {
   const hashes = primary.filter((j) => j.result?.status === 'ok').map((j) => j.result.hash);
   const stateEquivalent = hashes.length > 0 && new Set(hashes).size === 1;
   const warmContextRetained = manifest.qualification?.warmupContext === 'retained';
+  const frameMetricVerified =
+    (pacedManifest ?? manifest).qualification?.frameMetric === 'callback-arrival';
   const receiverMetric = warmContextRetained ? 'observedReceiver' : 'hostApply';
   const qualifications = [];
   for (const candidate of ['miniplex', 'bitecs']) {
@@ -148,7 +221,10 @@ export async function report(input, destination) {
           j.result.statistics.inputToVisible.p99 <= gate.inputP99,
       );
     const correct =
-      correctness.length === 2 && correctness.every((j) => j.status === 'ok') && stateEquivalent;
+      correctness.length >= 2 &&
+      new Set(correctness.map((j) => j.options.execution)).size === 2 &&
+      correctness.every((j) => j.status === 'ok') &&
+      stateEquivalent;
     qualifications.push({
       candidate,
       complete,
@@ -158,15 +234,27 @@ export async function report(input, destination) {
       frames,
       input,
       warmContextRetained,
+      frameMetricVerified,
       receiverMetric,
-      qualifies: warmContextRetained && complete && correct && cpu && apply && frames && input,
+      qualifies:
+        warmContextRetained &&
+        frameMetricVerified &&
+        complete &&
+        correct &&
+        cpu &&
+        apply &&
+        frames &&
+        input,
     });
   }
   const summary = {
     schema: 1,
     manifest,
+    pacedManifest,
+    compatibility,
     stateEquivalent,
     warmContextRetained,
+    frameMetricVerified,
     receiverMetric,
     qualifications,
     counts: {
@@ -195,6 +283,8 @@ export async function report(input, destination) {
       'workPublicationP95Median',
       'workPublicationP99Median',
       'hostApplyP95Median',
+      'observedReceiverP95Median',
+      'observedReceiverP99Median',
     ],
   ];
   for (const row of rows)
@@ -212,6 +302,8 @@ export async function report(input, destination) {
       row.metrics.workAndPublication.p95.median,
       row.metrics.workAndPublication.p99.median,
       row.metrics.hostApply.p95.median,
+      row.metrics.observedReceiver.p95.median,
+      row.metrics.observedReceiver.p99.median,
     ]);
   await fs.writeFile(
     path.join(target, 'summary.csv'),
@@ -221,6 +313,12 @@ export async function report(input, destination) {
     '# Generated worker evidence',
     '',
     `Source: ${manifest.source.hash}. Jobs: ${jobs.length}; failures: ${summary.counts.failures}; timeouts: ${summary.counts.timeouts}.`,
+    ...(pacedManifest
+      ? [
+          `Paced source: ${pacedManifest.source.hash}; unchanged primary hot path and core source verified.`,
+          '',
+        ]
+      : []),
     '',
     `Target state hashes equivalent across complete primary runs: ${stateEquivalent}.`,
     '',

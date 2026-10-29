@@ -69,10 +69,11 @@ try {
   const loadedMs = performance.now() - begin;
   let result;
   if (job.mode === 'check')
-    result = await page.evaluate(
-      (options) => window.simulationWorkerBench.correctness(options),
-      job.options,
-    );
+    result = await page.evaluate(async (options) => {
+      const checked = await window.simulationWorkerBench.correctness(options);
+      checked.assertions.push(await window.simulationWorkerBench.frameTimingProbe());
+      return checked;
+    }, job.options);
   else if (job.mode === 'trial')
     result = await page.evaluate(
       (options) => window.simulationWorkerBench.trial(options),

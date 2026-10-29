@@ -20,6 +20,9 @@ for candidate, color in colors.items():
         for ax, metric in zip(axes, ['roundTrip', 'workAndPublication']):
             if scaling:
                 ax.plot([row['options']['size'] for row in rows], [row['metrics'][metric]['p95']['median'] for row in rows], style, marker='o', color=color, label=f'{candidate}: {mode}')
+                incomplete = [row for row in rows if row['complete'] < row['runs']]
+                if incomplete:
+                    ax.scatter([row['options']['size'] for row in incomplete], [row['metrics'][metric]['p95']['median'] for row in incomplete], marker='x', color='black', s=65, zorder=4)
                 ax.set_xscale('log')
                 ax.set_xlabel('Meaningful entities')
             elif rows:
@@ -33,6 +36,9 @@ for candidate, color in colors.items():
             ax.set_yscale('symlog', linthresh=.1)
             ax.grid(axis='y', alpha=.2)
             ax.set_ylabel('Median per-run p95 (ms)')
+if any(row['complete'] < row['runs'] for row in normal):
+    for ax in axes:
+        ax.plot([], [], marker='x', linestyle='none', color='black', label='Partial timeout trials')
 axes[0].set_title('Host request through applied detached view')
 axes[1].set_title('Simulation + detached publication, before transport')
 axes[1].axhline(5, color='black', linestyle=':', label='5 ms simulation budget')
@@ -52,8 +58,8 @@ for candidate, color in colors.items():
             continue
         ax.scatter([job['options']['pressureMs'] + (-.15 if mode == 'inline' else .15) for job in jobs], [job['result']['statistics']['frames']['p99'] for job in jobs], color=color, marker=marker, label=f'{candidate}: {mode}', alpha=.7)
 ax.axhline(33.4, color='black', linestyle=':', label='Frozen frame p99 budget')
-ax.set_xlabel('Controlled main-thread work per frame (ms)'); ax.set_ylabel('Per-run frame interval p99 (ms)')
-ax.set_title('60 Hz RAF responsiveness — every normal-work repetition')
+ax.set_xlabel('Controlled main-thread work per frame (ms)'); ax.set_ylabel('Per-run callback arrival interval p99 (ms)')
+ax.set_title('60 Hz callback arrival responsiveness — every normal-work repetition')
 ax.grid(alpha=.2); ax.legend(fontsize=8); fig.tight_layout()
 for extension in ['svg', 'png']:
     fig.savefig(target / f'responsiveness.{extension}', dpi=160)
