@@ -10,13 +10,24 @@ import { GameplayScript, type GameplayScriptOptions } from './gameplay-script';
 
 class TickSource {
   public readonly handlers = new Set<GameTickHandler>();
-  public readonly registerTickHandler = vi.fn((handler: GameTickHandler, order?: number) => {
-    void order;
-    this.handlers.add(handler);
-    return () => this.handlers.delete(handler);
-  });
+  public readonly registerCompletedTickHandler = vi.fn(
+    (handler: GameTickHandler, order?: number) => {
+      void order;
+      this.handlers.add(handler);
+      return () => this.handlers.delete(handler);
+    },
+  );
 
-  public emit(context: GameTickContext = { tick: 1, deltaSeconds: 0.05 }): void {
+  public emit(
+    context: GameTickContext = {
+      tick: 1,
+      deltaSeconds: 0.05,
+      phase: 'completed',
+      generation: 1,
+      publishedTick: 1,
+      publication: 1,
+    },
+  ): void {
     for (const handler of [...this.handlers]) handler(context);
   }
 }
@@ -123,12 +134,29 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
     const player = script('player', { tickOrder: -10 });
     player.attach();
     initialize();
-    expect(ticks.registerTickHandler).toHaveBeenCalledExactlyOnceWith(expect.any(Function), -10);
+    expect(ticks.registerCompletedTickHandler).toHaveBeenCalledExactlyOnceWith(
+      expect.any(Function),
+      -10,
+    );
     events.length = 0;
     scene.render();
     expect(events).toEqual(['player:update', 'player:late']);
-    ticks.emit({ tick: 7, deltaSeconds: 0.05 });
-    ticks.emit({ tick: 8, deltaSeconds: 0.05 });
+    ticks.emit({
+      tick: 7,
+      deltaSeconds: 0.05,
+      phase: 'completed',
+      generation: 1,
+      publishedTick: 7,
+      publication: 7,
+    });
+    ticks.emit({
+      tick: 8,
+      deltaSeconds: 0.05,
+      phase: 'completed',
+      generation: 1,
+      publishedTick: 8,
+      publication: 8,
+    });
     expect(events.slice(-2)).toEqual(['player:tick:7', 'player:tick:8']);
   });
 
@@ -143,7 +171,7 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
     initialize();
     scene.render();
     expect(events).toEqual(['render']);
-    expect(ticks.registerTickHandler).not.toHaveBeenCalled();
+    expect(ticks.registerCompletedTickHandler).not.toHaveBeenCalled();
   });
 
   it('gates disabled components and ancestors while keeping tick subscriptions unique', () => {
@@ -169,7 +197,7 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
     scene.render();
     ticks.emit();
     expect(events).toEqual(['player:update', 'player:late', 'player:tick:1']);
-    expect(ticks.registerTickHandler).toHaveBeenCalledTimes(1);
+    expect(ticks.registerCompletedTickHandler).toHaveBeenCalledTimes(1);
   });
 
   it('keeps presentation updating when gameplay is suspended and rejects obsolete frame work', () => {
@@ -239,7 +267,7 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
     initialize();
     ticks.emit();
     expect(events).toEqual(['player:destroy']);
-    expect(ticks.registerTickHandler).not.toHaveBeenCalled();
+    expect(ticks.registerCompletedTickHandler).not.toHaveBeenCalled();
   });
 
   it('stops a later tick callback when an earlier callback invalidates the world', () => {

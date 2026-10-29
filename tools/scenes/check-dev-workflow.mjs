@@ -48,6 +48,7 @@ try {
     'angular.json',
     'tsconfig.json',
     'tsconfig.app.json',
+    'tsconfig.worker.json',
     '.prettierrc',
   ])
     await fs.copyFile(path.join(projectRoot, name), path.join(fixture, name));

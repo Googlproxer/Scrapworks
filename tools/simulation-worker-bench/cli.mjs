@@ -10,6 +10,7 @@ const directory = import.meta.dirname;
 const root = path.resolve(directory, '../..');
 const args = process.argv.slice(2);
 const command = args[0] ?? 'smoke';
+const production = args.includes('--production');
 const option = (name, fallback) => {
   const i = args.indexOf('--' + name);
   return i < 0 ? fallback : args[i + 1];
@@ -68,6 +69,8 @@ async function fingerprint() {
     'src/simulation',
     'src/core',
     'src/contracts',
+    'src/session',
+    'src/workers',
   ]) {
     const walk = async (directory) => {
       for (const entry of (await fs.readdir(directory, { withFileTypes: true })).sort((a, b) =>
@@ -95,10 +98,14 @@ async function fingerprint() {
   };
 }
 const source = await fingerprint();
-const browserSource = await fs.readFile(path.join(directory, 'browser.ts'), 'utf8');
+const browserSource = await fs.readFile(
+  path.join(directory, production ? 'production-browser.ts' : 'browser.ts'),
+  'utf8',
+);
 const primaryHotPath = browserSource.split('// Pacing-only helpers.')[0].trimEnd();
 const manifest = {
   schema: 1,
+  runtime: production ? 'production' : 'laboratory',
   command,
   arguments: args,
   label: option('label', 'reference-desktop'),
@@ -187,7 +194,7 @@ await build({
     target: 'es2022',
     minify: true,
     sourcemap: true,
-    rollupOptions: { input: path.join(directory, 'browser.html') },
+    rollupOptions: { input: path.join(directory, production ? 'production.html' : 'browser.html') },
   },
 });
 const server = http.createServer(async (request, response) => {
@@ -221,8 +228,10 @@ const server = http.createServer(async (request, response) => {
   }
 });
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-const url = `http://127.0.0.1:${server.address().port}/lab/browser.html`;
-const candidates = option('candidates', 'miniplex,bitecs').split(',');
+const url = `http://127.0.0.1:${server.address().port}/lab/${production ? 'production' : 'browser'}.html`;
+const candidates = option('candidates', production ? 'miniplex' : 'miniplex,bitecs').split(',');
+if (production && candidates.join() !== 'miniplex')
+  throw new Error('Production qualification compares Miniplex execution modes only');
 const executions = option('executions', 'inline,worker').split(',');
 for (const c of candidates)
   if (!['miniplex', 'bitecs'].includes(c)) throw new Error('Unknown candidate');
@@ -254,13 +263,25 @@ for (const config of configurations)
 if (command !== 'check') {
   const reps = Number(option('repetitions', smoke || calibration ? 1 : 5));
   if (phase === 'all' || phase === 'primary' || phase === 'followup' || leanFollowup) {
-    const cases = smoke
+    let cases = smoke
       ? [{ size: 1000, workload: 'mixed' }]
       : calibration
         ? [1000, 10000, 100000].map((size) => ({ size, workload: 'mixed' }))
         : [100000, 50000, 250000]
             .map((size) => ({ size, workload: 'mixed' }))
             .concat(['idle', 'active', 'churn'].map((workload) => ({ size: 100000, workload })));
+    if (option('primary-cases', ''))
+      cases = option('primary-cases', '')
+        .split(',')
+        .map((value) => {
+          const [workload, size] = value.split(':');
+          if (
+            !['mixed', 'idle', 'active', 'churn'].includes(workload) ||
+            ![1000, 10000, 50000, 100000, 250000].includes(Number(size))
+          )
+            throw new Error('Invalid primary case');
+          return { workload, size: Number(size) };
+        });
     for (let repetition = 0; repetition < reps; repetition++)
       for (const fixture of cases) {
         const offset = (1729 + repetition) % configurations.length;
@@ -301,7 +322,13 @@ if (command !== 'check') {
       jobs.push({ mode: 'payloads', diagnostic: true, options: { ...base, ...config } });
   if (!smoke && !calibration && (['all', 'profiles'].includes(phase) || leanFollowup))
     for (const config of configurations)
-      jobs.push({ mode: 'profile', options: { ...base, ...config, workload: 'churn' } });
+      jobs.push({
+        mode: 'profile',
+        soakTicks: Number(option('soak-ticks', 10000)),
+        cycles: Number(option('cycles', 20)),
+        cpuTicks: Number(option('cpu-ticks', 200)),
+        options: { ...base, ...config, workload: option('profile-workload', 'churn') },
+      });
   if (smoke && args.includes('--profiles'))
     for (const config of configurations)
       jobs.push({

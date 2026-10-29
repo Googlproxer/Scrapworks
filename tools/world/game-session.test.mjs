@@ -1,214 +1,101 @@
 import './register-typescript.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-const { GameSession } = await import('../../src/app/features/game/session/game-session.ts');
+const { GameSession } = await import('../../src/session/inline-game-session.ts');
 const { PlayerMotor } = await import('../../src/simulation/player-motor.ts');
+const { SimulationRuntime } = await import('../../src/session/runtime.ts');
 import { compileMarkers } from './compile.mjs';
 import { fixtureMarkers } from './test-fixture.mjs';
-
 const definition = () => compileMarkers(fixtureMarkers());
-const placement = {
-  type: 'place',
-  buildingId: 'test-building',
-  cell: { column: 4, row: 6 },
-  rotation: 0,
-};
+const placement = { type: 'place', buildingId: 'test-building', cell: { column: 4, row: 6 }, rotation: 0 };
 
-test('ticks report upcoming fixed time and agree across 30, 60 and 144 Hz render schedules', () => {
+test('completed presentation ticks agree across render schedules and observe completed authority', () => {
   const results = [30, 60, 144].map((rate) => {
-    const session = new GameSession(definition());
+    const session = new GameSession(definition()); session.setMovement({ x: 0, z: 1 });
     const ticks = [];
-    session.registerTickHandler((context) => {
-      ticks.push({ ...context });
-      assert.equal(session.view.tick, context.tick - 1);
-      session.setMovement({ x: 0, z: 1 });
+    session.registerCompletedTickHandler((context) => {
+      ticks.push(context.tick); assert.equal(context.phase, 'completed');
+      assert.equal(context.deltaSeconds, 0.05); assert.ok(context.publishedTick >= context.tick);
+      assert.equal(session.view.tick, context.publishedTick);
     });
     for (let frame = 0; frame < rate; frame++) session.advance(1 / rate);
-    assert.deepEqual(
-      ticks,
-      Array.from({ length: 20 }, (_, index) => ({ tick: index + 1, deltaSeconds: 0.05 })),
-    );
-    return session.view;
+    assert.deepEqual(ticks, Array.from({ length: 20 }, (_, i) => i + 1));
+    const view = session.view; session.dispose(); return view;
   });
-  assert.deepEqual(results[0], results[1]);
-  assert.deepEqual(results[0], results[2]);
+  assert.deepEqual(results[0], results[1]); assert.deepEqual(results[0], results[2]);
   assert.ok(Math.abs(results[0].player.position.z - 2.5) < 1e-10);
 });
-
-test('zero-step frames preserve a discrete command and a long frame consumes it once in five ticks', () => {
-  const session = new GameSession(definition(), { developerFixture: true });
-  const ticks = [];
-  session.registerTickHandler(({ tick }) => ticks.push(tick));
-  session.enqueue(placement);
+test('zero-step frames retain commands; catch-up commits at most five steps and applies a command once', () => {
+  const session = new GameSession(definition(), { developerFixture: true }); const ticks = [];
+  session.registerCompletedTickHandler(({ tick }) => ticks.push(tick)); session.enqueue(placement);
   for (const delta of [0, -1, NaN, Infinity, 0.01, 0.01]) session.advance(delta);
-  assert.deepEqual(ticks, []);
-  assert.equal(session.view.buildings.length, 0);
-  session.advance(60);
-  assert.deepEqual(ticks, [1, 2, 3, 4, 5]);
-  assert.equal(session.view.buildings.length, 1);
-  assert.deepEqual(session.view.lastCommandResult, { accepted: true, reason: null });
-  session.advance(0.01);
-  assert.equal(session.view.tick, 5);
+  assert.deepEqual(ticks, []); session.advance(60);
+  assert.deepEqual(ticks, [1, 2, 3, 4, 5]); assert.equal(session.view.buildings.length, 1);
+  assert.equal(session.acknowledgements.length, 1); session.advance(0.01); assert.equal(session.view.tick, 5); session.dispose();
 });
-
-test('handlers run by numeric order then attachment order; newly added handlers wait for the next tick', () => {
-  const session = new GameSession(definition());
-  const calls = [];
-  session.registerTickHandler(({ tick }) => calls.push(`later:${tick}`), 10);
-  session.registerTickHandler(({ tick }) => {
-    calls.push(`first:${tick}`);
-    if (tick === 1)
-      session.registerTickHandler(({ tick: next }) => calls.push(`added:${next}`), -20);
-  }, -10);
-  session.registerTickHandler(({ tick }) => calls.push(`second:${tick}`), -10);
-  session.advance(0.1);
-  assert.deepEqual(calls, [
-    'first:1',
-    'second:1',
-    'later:1',
-    'added:2',
-    'first:2',
-    'second:2',
-    'later:2',
-  ]);
+test('ordered callbacks unsubscribe immediately; new registrations do not replay already committed catch-up', () => {
+  const session = new GameSession(definition()); const calls = [];
+  const removeLater = session.registerCompletedTickHandler(({ tick }) => calls.push(`later:${tick}`), 10);
+  session.registerCompletedTickHandler(({ tick }) => { calls.push(`first:${tick}`); if (tick === 1) {
+    session.registerCompletedTickHandler(({ tick: n }) => calls.push(`new:${n}`), -20); removeLater(); removeLater();
+  } }, -10);
+  session.registerCompletedTickHandler(({ tick }) => calls.push(`second:${tick}`), -10);
+  session.advance(0.1); assert.deepEqual(calls, ['first:1', 'second:1', 'first:2', 'second:2']);
+  session.advance(0.05); assert.deepEqual(calls.slice(-3), ['new:3', 'first:3', 'second:3']); session.dispose();
 });
-
-test('removing a handler skips it immediately and unsubscribe is idempotent', () => {
-  const session = new GameSession(definition());
-  const calls = [];
-  const stopFirst = session.registerTickHandler(() => {
-    calls.push('first');
-    stopFirst();
-    stopLater();
-  }, -1);
-  const stopLater = session.registerTickHandler(() => calls.push('removed'));
-  session.registerTickHandler(() => calls.push('last'));
-  session.advance(0.1);
-  stopFirst();
-  stopLater();
-  assert.deepEqual(calls, ['first', 'last', 'last']);
-});
-
-test('a handler can queue a command for this tick before movement is applied', () => {
+test('presentation commands and movement affect a future tick', () => {
   const session = new GameSession(definition(), { developerFixture: true });
-  session.registerTickHandler(({ tick }) => {
-    if (tick === 1) session.enqueue(placement);
-    session.setMovement({ x: 1, z: 0 });
-    assert.equal(session.view.buildings.length, 0);
-  });
-  session.advance(0.05);
-  assert.equal(session.view.tick, 1);
-  assert.equal(session.view.buildings.length, 1);
-  assert.ok(Math.abs(session.view.player.position.x - 1.075) < 1e-10);
+  session.registerCompletedTickHandler(({ tick }) => { if (tick === 1) { session.enqueue(placement); session.setMovement({ x: 1, z: 0 }); } });
+  session.advance(0.05); assert.equal(session.view.buildings.length, 0); assert.equal(session.view.player.position.x, 1);
+  session.advance(0.05); assert.equal(session.view.buildings.length, 1); assert.ok(Math.abs(session.view.player.position.x - 1.075) < 1e-10); session.dispose();
 });
-
-test('pause inside a handler aborts that tick and catch-up even if immediately resumed', () => {
-  for (const resumeInHandler of [false, true]) {
-    const session = new GameSession(definition(), { developerFixture: true });
-    const later = [];
+test('pause in a completed hook stops notifications and future input without rolling back completed work', () => {
+  for (const resume of [false, true]) {
+    const session = new GameSession(definition(), { developerFixture: true }); const later = [];
     session.setMovement({ x: 0, z: 1 }, true);
-    session.enqueue(placement);
-    const stop = session.registerTickHandler(() => {
-      session.pause();
-      if (resumeInHandler) session.pause(false);
-    });
-    session.registerTickHandler(({ tick }) => later.push(tick));
-    session.advance(0.25);
-    assert.equal(session.view.tick, 0);
-    assert.deepEqual(later, []);
-    assert.deepEqual(session.view.player.position, definition().spawn);
-    assert.equal(session.view.buildings.length, 0);
-    assert.equal(session.failed, false);
-    stop();
-    session.pause(false);
-    session.advance(0.025);
-    assert.equal(session.view.tick, 0);
-    session.advance(0.025);
-    assert.equal(session.view.tick, 1);
-    assert.deepEqual(later, [1]);
-    assert.deepEqual(session.view.player.position, definition().spawn);
+    const stop = session.registerCompletedTickHandler(() => { session.enqueue(placement); session.pause(); if (resume) session.pause(false); });
+    session.registerCompletedTickHandler(({ tick }) => later.push(tick)); session.advance(0.25);
+    assert.equal(session.view.tick, 5); assert.deepEqual(later, []); assert.equal(session.view.buildings.length, 0);
+    const position = session.view.player.position; stop(); session.pause(false); session.advance(0.025); assert.equal(session.view.tick, 5);
+    session.advance(0.025); assert.equal(session.view.tick, 6); assert.deepEqual(session.view.player.position, position);
+    assert.equal(session.view.buildings.length, 0); assert.deepEqual(later, [6]); session.dispose();
   }
 });
-
-test('handler failure retains the last completed view and permanently stops advancing', () => {
-  const session = new GameSession(definition(), { developerFixture: true });
-  session.setMovement({ x: 0, z: 1 });
-  session.advance(0.05);
-  const completed = session.view;
-  const failure = new Error('Tick script failed');
-  const later = [];
-  const stop = session.registerTickHandler(() => {
-    session.enqueue(placement);
-    throw failure;
-  });
-  session.registerTickHandler(({ tick }) => later.push(tick));
-  assert.throws(
-    () => session.advance(0.25),
-    (error) => error === failure,
-  );
-  assert.equal(session.failed, true);
-  assert.deepEqual(later, []);
-  assert.deepEqual(session.view, completed);
-  stop();
-  session.pause();
-  session.advance(60);
-  session.clearInput();
-  session.resetTiming();
-  assert.deepEqual(session.current, completed);
-  session.pause(false);
-  session.advance(0);
-  assert.throws(
-    () => session.advance(0.05),
-    (error) => error === failure,
-  );
-  assert.deepEqual(session.view, completed);
+test('presentation failure retains the newly completed view, terminates dispatch and requires a fresh session', () => {
+  const session = new GameSession(definition()); session.setMovement({ x: 0, z: 1 }); session.advance(0.05);
+  const failure = new Error('Presentation failed'); session.registerCompletedTickHandler(() => { throw failure; });
+  assert.throws(() => session.advance(0.25), (error) => error === failure);
+  const completed = session.view; assert.equal(completed.tick, 6); assert.equal(session.failed, true);
+  assert.throws(() => session.advance(0.05), /Presentation failed/); session.pause(); session.clearInput();
+  session.view.player.position.x = -200; assert.deepEqual(session.current, completed); session.dispose();
+  const fresh = new GameSession(definition()); assert.equal(fresh.view.tick, 0); assert.deepEqual(fresh.view.player.position, definition().spawn); fresh.dispose();
 });
-
-test('a motor exception after mutation cannot publish commands or partial movement', (t) => {
-  const session = new GameSession(definition(), { developerFixture: true });
-  session.setMovement({ x: 1, z: 0 });
-  session.advance(0.05);
-  const completed = session.view;
-  const originalStep = PlayerMotor.prototype.step;
-  const failure = new Error('Motor failed after moving');
-  t.mock.method(PlayerMotor.prototype, 'step', function (movement) {
-    originalStep.call(this, movement);
-    throw failure;
-  });
-  session.enqueue(placement);
-  assert.throws(
-    () => session.advance(0.1),
-    (error) => error === failure,
-  );
-  assert.equal(session.failed, true);
-  assert.deepEqual(session.view, completed);
-  session.pause();
-  assert.deepEqual(session.view, completed);
+test('a motor exception after mutation cannot expose partial state across the serialized boundary', (t) => {
+  const session = new GameSession(definition(), { developerFixture: true }); session.setMovement({ x: 1, z: 0 }); session.advance(0.05);
+  const completed = session.view; const step = PlayerMotor.prototype.step;
+  t.mock.method(PlayerMotor.prototype, 'step', function (input) { step.call(this, input); throw new Error('Motor failed after mutation'); });
+  session.enqueue(placement); assert.throws(() => session.advance(0.1), /Motor failed after mutation/);
+  assert.equal(session.failed, true); assert.deepEqual(session.view, completed); session.dispose();
 });
-
-test('session views are detached from the cached completed state, including after failure', () => {
-  const session = new GameSession(definition());
-  const failure = new Error('failure');
-  const expected = session.view;
-  const exposed = session.view;
-  exposed.player.position.x = 200;
-  exposed.deposits[0].quantity = 0;
-  assert.deepEqual(session.view, expected);
-  session.registerTickHandler(() => {
-    throw failure;
-  });
-  assert.throws(
-    () => session.advance(0.05),
-    (error) => error === failure,
-  );
-  session.view.player.position.x = -200;
-  assert.deepEqual(session.view, expected);
+test('recursive advancement from a presentation hook fails after the reported tick is completed', () => {
+  const session = new GameSession(definition()); session.registerCompletedTickHandler(() => session.advance(0.05));
+  assert.throws(() => session.advance(0.05), /recursively advance/); assert.equal(session.view.tick, 1); assert.equal(session.failed, true); session.dispose();
 });
-
-test('recursive advancement fails instead of dispatching the same tick again', () => {
-  const session = new GameSession(definition());
-  session.registerTickHandler(() => session.advance(0.05));
-  assert.throws(() => session.advance(0.05), /recursively advance/);
-  assert.equal(session.failed, true);
-  assert.equal(session.view.tick, 0);
+test('in-flight work and elapsed time share five credits; pause acknowledgement stops further advancement', async () => {
+  const runtime = new SimulationRuntime(); let queue = Promise.resolve();
+  const port = { send(request) { const reply = queue.then(() => new Promise((resolve) => setTimeout(() => resolve(runtime.handle(request)), 2))); queue = reply.then(() => undefined); return reply; }, dispose() { runtime.dispose(); } };
+  const session = new GameSession(definition(), { portFactory: () => port }); await session.ready;
+  session.advance(60); for (let i = 0; i < 20; i++) session.advance(1);
+  assert.ok(session.maxPendingSteps <= 5); session.pause(); await session.settled(); const tick = session.view.tick;
+  assert.equal(tick, 5); await new Promise((resolve) => setTimeout(resolve, 10)); assert.equal(session.view.tick, tick);
+  session.pause(false); await session.settled(); session.advance(0.025); await session.settled(); assert.equal(session.view.tick, tick);
+  session.advance(0.025); await session.settled(); assert.equal(session.view.tick, tick + 1); session.dispose();
+});
+test('capture retains accepted pending commands and continuation sequence, without retaining continuous input', async () => {
+  const a = new GameSession(definition(), { developerFixture: true }); a.enqueue(placement);
+  const captured = await a.capture(); assert.equal(captured.pending.length, 1); assert.equal(captured.world.resources.tick, 0);
+  const b = new GameSession(definition(), { developerFixture: true, capture: captured });
+  a.advance(0.05); b.advance(0.05); assert.deepEqual((await a.capture()).world, (await b.capture()).world);
+  assert.equal(a.view.buildings.length, 1); a.enqueue(placement); b.enqueue(placement); a.advance(0.05); b.advance(0.05);
+  assert.deepEqual(await a.capture(), await b.capture()); a.dispose(); b.dispose();
 });

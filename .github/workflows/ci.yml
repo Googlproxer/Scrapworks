@@ -83,12 +83,16 @@ jobs:
         run: |
           yarn bench:worker:smoke --label hosted-ci
           yarn bench:worker:smoke --presentation lean --paced --label hosted-ci
+          yarn bench:worker:smoke --production --presentation lean --phase lean --paced --label hosted-ci
 
       - name: Build production application
         run: yarn build --stats-json
 
       - name: Keep investigation packages out of production
         run: node tools/ecs-bench/verify-production.mjs
+
+      - name: Exercise the built simulation worker and failure Retry
+        run: node tools/world/production-browser.mjs
 
       - name: Verify exported and built assets
         run: yarn assets:check --build

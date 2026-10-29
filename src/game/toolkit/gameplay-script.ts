@@ -5,13 +5,13 @@ import type { WorldSessionBridge } from '@contracts/game-client';
 import type { GameTickContext } from '@contracts/game-tick';
 
 export interface GameplayScriptOptions {
-  readonly ticks?: Pick<WorldSessionBridge, 'registerTickHandler'>;
+  readonly ticks?: Pick<WorldSessionBridge, 'registerCompletedTickHandler'>;
   readonly isCurrent?: () => boolean;
   readonly isGameplayActive?: () => boolean;
   readonly tickOrder?: number;
 }
 
-/** Toolkit owns frame callbacks; the application session owns optional gameplay ticks. */
+/** Toolkit owns frames; optional tick hooks present already completed simulation work. */
 export abstract class GameplayScript extends ScriptComponent {
   public enabled = true;
   private attached = false;
@@ -59,7 +59,7 @@ export abstract class GameplayScript extends ScriptComponent {
   protected start(): void {
     if (this.disposed || this.started) return;
     if (this.onGameTick && this.options.ticks) {
-      this.unregisterTick = this.options.ticks.registerTickHandler((context) => {
+      this.unregisterTick = this.options.ticks.registerCompletedTickHandler((context) => {
         if (
           this.canRun() &&
           SceneManager.ScenePlaying &&
@@ -94,6 +94,7 @@ export abstract class GameplayScript extends ScriptComponent {
   protected onStart?(): void;
   protected onUpdate?(): void;
   protected onLateUpdate?(): void;
+  /** Main-thread presentation only; the reported authoritative step has already completed. */
   protected onGameTick?(context: GameTickContext): void;
   protected onDestroy?(): void;
 

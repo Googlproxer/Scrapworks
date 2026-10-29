@@ -1,4 +1,4 @@
-import type { BuildingView, WorldDefinition, WorldPosition } from '@contracts/world';
+import type { BuildingView, GridCell, WorldDefinition, WorldPosition } from '@contracts/world';
 import { circleOverlapsCell } from '@core/world-grid';
 import {
   FIXED_STEP_SECONDS,
@@ -19,12 +19,12 @@ export interface MovementIntent {
 export class PlayerMotor {
   private readonly definition: WorldDefinition;
   private readonly player: PlayerState;
-  private readonly buildings: readonly BuildingView[];
+  private readonly buildings: readonly BuildingView[] | (() => readonly GridCell[]);
 
   constructor(
     definition: WorldDefinition,
     player: PlayerState,
-    buildings: readonly BuildingView[],
+    buildings: readonly BuildingView[] | (() => readonly GridCell[]),
   ) {
     this.definition = definition;
     this.player = player;
@@ -69,15 +69,22 @@ export class PlayerMotor {
       position.z + PLAYER_RADIUS > origin.z + rows * metresPerCell
     )
       return false;
-    const cells = occupiedCells(this.definition, this.buildings);
+    const cells =
+      typeof this.buildings === 'function' ? this.buildings() : this.legacyCells(this.buildings);
+    return !cells.some((cell) =>
+      circleOverlapsCell(this.definition.grid, position, PLAYER_RADIUS, cell),
+    );
+  }
+
+  private legacyCells(buildings: readonly BuildingView[]): GridCell[] {
+    const { columns, rows } = this.definition.grid;
+    const cells = occupiedCells(this.definition, buildings);
     for (let row = 0; row < rows; row++) {
       for (let column = 0; column < columns; column++) {
         if (this.definition.terrain[row * columns + column] === 'water')
           cells.push({ row, column });
       }
     }
-    return !cells.some((cell) =>
-      circleOverlapsCell(this.definition.grid, position, PLAYER_RADIUS, cell),
-    );
+    return cells;
   }
 }

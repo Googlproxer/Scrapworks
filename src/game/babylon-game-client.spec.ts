@@ -146,7 +146,8 @@ describe('BabylonGameClient in the browser', () => {
       initialize: vi.fn((definition) => {
         session = new GameSession(definition, { developerFixture: true });
       }),
-      registerTickHandler: (handler, order) => currentSession().registerTickHandler(handler, order),
+      registerCompletedTickHandler: (handler, order) =>
+        currentSession().registerCompletedTickHandler(handler, order),
       frame: vi.fn((seconds, movement, sprint, active) => {
         const current = currentSession();
         current.setPaused(!active);
@@ -210,8 +211,8 @@ describe('BabylonGameClient in the browser', () => {
     const { scene, render, session } = await createPlayableWorld();
     const before = session.view;
     const later = vi.fn();
-    session.registerTickHandler(() => client.setInputEnabled(false), -1);
-    session.registerTickHandler(later);
+    session.registerCompletedTickHandler(() => client.setInputEnabled(false), -1);
+    session.registerCompletedTickHandler(later);
     const present = vi.spyOn(PlayerView.prototype, 'present');
     const follow = vi.spyOn(CameraController.prototype, 'follow');
     const select = vi.spyOn(SelectionController.prototype, 'pick');
@@ -220,7 +221,7 @@ describe('BabylonGameClient in the browser', () => {
     vi.spyOn(FrameClock.prototype, 'sample').mockReturnValue(0.1);
     render();
     expect(later).not.toHaveBeenCalled();
-    expect(session.view.tick).toBe(before.tick);
+    expect(session.view.tick).toBe(before.tick + 2);
     expect(present).not.toHaveBeenCalled();
     expect(follow).not.toHaveBeenCalled();
     expect(select).not.toHaveBeenCalled();
@@ -328,8 +329,8 @@ describe('BabylonGameClient in the browser', () => {
   it('reports tick errors and disposes the scene while retaining the last completed view for suspension', async () => {
     const { scene, render, session } = await createPlayableWorld();
     const before = session.view;
-    session.registerTickHandler(() => {
-      throw new Error('Authoritative script failed');
+    session.registerCompletedTickHandler(() => {
+      throw new Error('Presentation script failed');
     });
     const present = vi.spyOn(PlayerView.prototype, 'present');
     vi.spyOn(FrameClock.prototype, 'sample').mockReturnValue(0.1);
@@ -337,10 +338,11 @@ describe('BabylonGameClient in the browser', () => {
     expect(states.at(-1)).toEqual({
       phase: 'error',
       sceneKey: 'Game',
-      errorMessage: 'Authoritative script failed',
+      errorMessage: 'Presentation script failed',
     });
     expect(session.failed).toBe(true);
-    expect(session.view).toEqual(before);
+    expect(session.view.tick).toBe(before.tick + 2);
+    expect(session.view.player.position).toEqual(before.player.position);
     expect(scene.isDisposed).toBe(true);
     expect(present).not.toHaveBeenCalled();
   }, 45000);

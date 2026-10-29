@@ -7,6 +7,8 @@ import type { GameClientOptions } from '@contracts/game-client';
 import axe from 'axe-core';
 import { GAME_CLIENT_FACTORY } from '../game-client-factory';
 import { GamePageComponent } from './game-page.component';
+import { SIMULATION_PORT_FACTORY } from '../simulation-port-factory';
+import { InlineSimulationPort } from '../../../../session/inline-port';
 
 describe('Babylon game page integration', () => {
   let fixture: ComponentFixture<GamePageComponent>;
@@ -17,6 +19,9 @@ describe('Babylon game page integration', () => {
     await TestBed.configureTestingModule({
       imports: [GamePageComponent],
       providers: [
+        // Angular's unit-test bundler does not compile module worker URL entries.
+        // The built application/worker is exercised by tools/world/production-browser.mjs.
+        { provide: SIMULATION_PORT_FACTORY, useValue: () => new InlineSimulationPort() },
         {
           provide: GAME_CLIENT_FACTORY,
           useValue: (host: HTMLElement, options: GameClientOptions) =>
@@ -60,7 +65,9 @@ describe('Babylon game page integration', () => {
     await expectAccessible();
     button('Play Game!')!.click();
     expect(runtime.isLoading()).toBe(true);
-    await expect.poll(() => runtime.isReady(), { timeout: 30000 }).toBe(true);
+    await expect.poll(() => runtime.state().phase, { timeout: 30000 }).not.toBe('loading');
+    expect(runtime.errorMessage()).toBeNull();
+    expect(runtime.isReady()).toBe(true);
     expect(runtime.currentSceneKey()).toBe('Game');
     fixture.detectChanges();
     expect(button('Play Game!')).toBeUndefined();
@@ -71,7 +78,7 @@ describe('Babylon game page integration', () => {
     expect(engine.isDisposed).toBe(true);
     expect(engine.activeRenderLoops).toHaveLength(0);
     expect((fixture.nativeElement as HTMLElement).querySelector('canvas')).toBeNull();
-  });
+  }, 45000);
 
   it('shows a load error and remounts through Retry before allowing Play Game again', async () => {
     const runtime = fixture.componentInstance.gameRuntimeService;

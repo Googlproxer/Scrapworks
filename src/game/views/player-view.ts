@@ -16,6 +16,7 @@ export class PlayerView extends GameplayScript {
   private targetPosition?: Vector3;
   private interpolation = 1;
   private lastTick = -1;
+  private generation = -1;
   public constructor(
     public readonly root: TransformNode,
     private readonly character: AssetContainer,
@@ -45,6 +46,10 @@ export class PlayerView extends GameplayScript {
     if (this.frame.view) this.present(this.frame.view, this.frame.seconds, this.frame.active);
   }
   public present(view: WorldView, seconds: number, active: boolean): void {
+    if (this.generation !== (view.worldGeneration ?? 0)) {
+      this.generation = view.worldGeneration ?? 0;
+      this.lastTick = -1;
+    }
     const position = new Vector3(
       view.player.position.x * 100,
       view.player.position.y * 100,
@@ -53,6 +58,9 @@ export class PlayerView extends GameplayScript {
     if (view.tick !== this.lastTick) {
       if (this.lastTick < 0) this.root.rotation.y = view.player.facing;
       this.previousPosition = this.root.position.clone();
+      const previous = view.endpoints?.at(-2)?.transform.position;
+      if (previous && this.lastTick >= 0)
+        this.previousPosition.set(previous.x * 100, previous.y * 100, previous.z * 100);
       this.targetPosition = position;
       this.interpolation = this.lastTick < 0 ? 1 : 0;
       this.lastTick = view.tick;

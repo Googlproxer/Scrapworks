@@ -1,5 +1,13 @@
 import { JsonPipe, NgOptimizedImage } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, OnDestroy, viewChild } from '@angular/core';
+import {
+  afterRenderEffect,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  viewChild,
+} from '@angular/core';
 import { ControlsComponent } from '@app/features/controls/controls/controls.component';
 import { SaveLoadComponent } from '@app/features/save/save-load/save-load.component';
 import { UiInputAdapterService } from '@app/features/ui/ui-input-adapter.service';
@@ -21,6 +29,12 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
   public readonly inputAdapter = inject(UiInputAdapterService);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   public readonly developer = !!environment.dev;
+  public constructor() {
+    afterRenderEffect(() => {
+      if (this.gameRuntimeService.errorMessage())
+        this.element.nativeElement.querySelector<HTMLButtonElement>('[data-retry]')?.focus();
+    });
+  }
 
   public ngAfterViewInit() {
     this.gameRuntimeService.mount(this.rendererHost().nativeElement);

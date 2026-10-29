@@ -222,6 +222,25 @@ describe('GamePageComponent integration', () => {
     expect(runtime.isReady()).toBe(false);
   });
 
+  it('closes page dialogs on a runtime error and focuses the accessible Retry action', async () => {
+    states.next({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    await fixture.whenStable();
+    fixture.componentInstance.inputAdapter.openMenu();
+    await fixture.whenStable();
+    expect(TestBed.inject(Dialog).openDialogs.length).toBe(1);
+    states.next({
+      phase: 'error',
+      sceneKey: 'Game',
+      errorMessage: 'Worker failed. Retry restarts this world.',
+    });
+    await fixture.whenStable();
+    expect(TestBed.inject(Dialog).openDialogs.length).toBe(0);
+    expect(document.activeElement).toBe(
+      (fixture.nativeElement as HTMLElement).querySelector('[data-retry]'),
+    );
+    expect((await axe.run(fixture.nativeElement as HTMLElement)).violations).toEqual([]);
+  });
+
   it('shows the development focus indicator only while the viewport contains focus', () => {
     const page = fixture.nativeElement as HTMLElement;
     const host = page.querySelector<HTMLElement>('.game-container')!;

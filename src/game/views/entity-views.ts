@@ -6,6 +6,8 @@ import type { WorldFrame } from './world-frame';
 
 export class EntityViews extends GameplayScript {
   private readonly entities = new Map<string, EntityView>();
+  private publication = -1;
+  private generation = -1;
   public constructor(
     node: TransformNode,
     private readonly definition: WorldDefinition,
@@ -22,7 +24,33 @@ export class EntityViews extends GameplayScript {
   }
 
   protected override onUpdate(): void {
-    if (this.frame.view) this.sync(this.frame.view);
+    const view = this.frame.view;
+    if (!view) return;
+    if (
+      view.publication !== undefined &&
+      view.publication === this.publication &&
+      view.worldGeneration === this.generation
+    )
+      return;
+    this.publication = view.publication ?? -1;
+    this.generation = view.worldGeneration ?? -1;
+    if (!view.changes || view.changes.full) {
+      this.sync(view);
+      return;
+    }
+    for (const id of view.changes.removedIds) {
+      this.entities.get(id)?.dispose();
+      this.entities.delete(id);
+    }
+    for (const [items, template, building] of [
+      [view.changes.deposits ?? [], this.scene.getMeshByName('player-placeholder'), false],
+      [view.changes.buildings ?? [], null, true],
+    ] as const)
+      for (const item of items) {
+        const entity = this.entities.get(item.id);
+        if (entity) entity.sync(item, building);
+        else this.entities.set(item.id, new EntityView(this.scene, item, building, template));
+      }
   }
 
   public sync(view: Pick<WorldView, 'deposits' | 'buildings'>): void {

@@ -1,6 +1,6 @@
 # Simulation worker laboratory
 
-Isolated Miniplex **2.0.0** / bitECS **0.4.0** comparison, inline and in one dedicated browser worker. Production source and authored assets are unchanged. See the [investigation plan](../../docs/plans/simulation-worker-investigation.md).
+The original isolated Miniplex **2.0.0** / bitECS **0.4.0** comparison runs inline and in one dedicated browser worker. Its historical evidence is separate from the production-runtime composition below. See the [investigation plan](../../docs/plans/simulation-worker-investigation.md).
 
 ## Reproduction
 
@@ -86,3 +86,21 @@ yarn bench:worker:report --input tmp/simulation-worker-bench/<primary> --paced-i
 ```
 
 The report excludes the primary cohort's superseded paced samples, verifies unchanged primary timing code and core/domain/adapter sources, and checks packages, gates, hardware and environment labels before combining stages. Original cohort B primary source is archived as `frozen-browser.ts` and checked against its manifest; subsequent manifests record the primary hot-path hash directly. Cohort C repeats all paced cases; qualification never uses the legacy RAF timeline distributions. Full current-source runs need no supplemental cohort.
+
+## Production implementation qualification
+
+Use `--production --presentation lean --phase lean` to qualify the actual `src/session` coordinator, Miniplex authority, domain primitives, publisher and host cache, comparing only Miniplex inline and worker. Synthetic fixture/activity composition stays in `production-fixture.ts` and is absent from the application graph. No competing runtime or future gameplay executors enter production.
+
+```text
+yarn bench:worker:smoke --production --presentation lean --phase lean --paced --profiles
+yarn bench:worker:browser --production --presentation lean --phase lean --output tmp/simulation-worker-bench/production-reference
+yarn bench:worker:report --input tmp/simulation-worker-bench/production-reference
+```
+
+The focused production matrix has 60 primary trials, 18 required normal paced trials, six worker idle/active paced diagnostics, two refresh-rate diagnostics, two profiles, two capture/rebuild diagnostics, two payload checks and two correctness runs. It retains all five primary repetitions and all 2,000 steps, with disposable-world warm-up of at least two seconds and 200 ticks in the retained execution context. Every repetition uses a fresh Chromium process. `--primary-cases mixed:100000` and profile count overrides are development probes; they cannot qualify adoption.
+
+Production rows contain 14 Float64 fields (112 bytes): slot/generation, transform, facing/flags, visible quantity, remaining work, charge, reserved/held totals, status and completed work. Inventory-only changes publish subscribed details without a redundant unchanged numeric row. Normal gameplay has one implicit player subscription and at most one selected entity consumer; qualification uses both, under the 16-ID infrastructure cap. Full capture remains separate. Numeric and inspection data are independently checked against captures outside timed regions. Churn preserves the persistent player and replaces the other 1% population, repairing owner links before commit.
+
+Benchmark-only wrappers time the production step and publisher without putting clocks in pure simulation. `systems` includes domain work and dirty marking; the historical `structural` metric is the residual step time including movement, command handling and structural commits. `publication` includes direct row packing; `packing` is zero because there is no separate codec pass. `observedReceiver` covers MessageEvent.data access, Promise delivery through cache application; browser-internal delivery before that remains in round-trip/callback metrics. These boundaries must be retained when interpreting generated tables.
+
+The real built Angular/Babylon application has a separate acceptance probe: `node tools/world/production-browser.mjs` after `yarn build --stats-json`. It verifies the worker URL under a non-root base path, same-origin worker CSP, keyboard movement, menu pause, idle crash/Retry and teardown. Angular's unit-test builder does not compile worker URL entries, so its page fixture explicitly uses the inline port; it does not substitute for built-worker acceptance. Neither harness qualifies 100,000 rendered meshes, physical input-to-photon, additional devices or multiple ECS workers.

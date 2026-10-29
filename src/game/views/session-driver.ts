@@ -19,5 +19,7 @@ export class SessionDriver extends GameplayScript {
     this.frame.view = view;
     this.frame.options.onWorldView?.(view);
     this.frame.validateOwnership();
+    session.completeFrame?.();
+    this.frame.validateOwnership();
   }
 }

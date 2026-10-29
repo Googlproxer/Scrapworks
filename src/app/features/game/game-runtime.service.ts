@@ -17,11 +17,13 @@ import type {
 import type { GameState, SceneKey } from '@contracts/game-state';
 import type { ActionFrame, ButtonControl, ControllerInfo } from '@contracts/input';
 import type { WorldDefinition, WorldView } from '@contracts/world';
+import type { Inspection } from '@contracts/simulation';
 import { environment } from '@environments/environment';
 import { validatePlacement } from '@simulation/placement';
 import { ControlSettingsService } from '../controls/control-settings.service';
 import { GAME_CLIENT_FACTORY } from './game-client-factory';
-import { GameSession } from './session/game-session';
+import { GameSession } from '../../../session/game-session';
+import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 
 @Service({ autoProvided: false })
 export class GameRuntimeService {
@@ -32,6 +34,7 @@ export class GameRuntimeService {
   });
 
   private readonly createClient = inject(GAME_CLIENT_FACTORY);
+  private readonly createSimulationPort = inject(SIMULATION_PORT_FACTORY);
   private readonly injector = inject(Injector);
   private client?: GameClient;
   private host?: HTMLElement;
@@ -48,6 +51,8 @@ export class GameRuntimeService {
   public readonly errorMessage = computed(() => this.state().errorMessage);
   public readonly world = signal<WorldView | null>(null);
   public readonly selection = signal<string | null>(null);
+  public readonly inspection = signal<Inspection | null>(null);
+  private unsubscribeInspection?: () => void;
   public readonly controllers = signal<readonly ControllerInfo[]>([]);
   private readonly requestedController = signal<string | null>(null);
   public readonly selectedController = this.requestedController.asReadonly();
@@ -68,6 +73,9 @@ export class GameRuntimeService {
   private inspectorReturnFocus?: HTMLElement;
 
   private currentInputRequest = true;
+  private frameSeconds = 0;
+  private worldGeneration = 0;
+  private retainingRendererSession = false;
 
   constructor() {
     effect(() => {
@@ -106,7 +114,16 @@ export class GameRuntimeService {
           if (generation === this.generation) this.world.set(view);
         },
         onSelection: (selection) => {
-          if (generation === this.generation) this.selection.set(selection);
+          if (generation !== this.generation) return;
+          this.unsubscribeInspection?.();
+          this.unsubscribeInspection = undefined;
+          this.selection.set(selection);
+          this.inspection.set(null);
+          if (selection && this.session)
+            this.unsubscribeInspection = this.session.subscribeDetails(selection, (value) => {
+              if (generation === this.generation && this.selection() === selection)
+                this.inspection.set(value);
+            });
         },
         onInspectorState: (state) => {
           if (generation !== this.generation) return;
@@ -131,16 +148,36 @@ export class GameRuntimeService {
           initialize: (definition) => {
             if (generation !== this.generation) return;
             if (!this.session || this.session.failed || this.definition?.id !== definition.id) {
+              this.unsubscribeInspection?.();
+              this.unsubscribeInspection = undefined;
+              this.inspection.set(null);
+              this.selection.set(null);
               this.definition = definition;
-              this.session = new GameSession(definition, { developerFixture: !!environment.dev });
+              this.session?.dispose();
+              const worldGeneration = ++this.worldGeneration;
+              this.session = new GameSession(definition, {
+                developerFixture: !!environment.dev,
+                portFactory: this.createSimulationPort,
+                onFailure: (error) => {
+                  if (worldGeneration !== this.worldGeneration || this.disposed) return;
+                  this.stateValue.set({
+                    phase: 'error',
+                    sceneKey: 'Game',
+                    errorMessage: `${error.message} Retry restarts this world from its authored beginning.`,
+                  });
+                  this.client?.setInputEnabled(false);
+                  this.updateInputContext();
+                },
+              });
             }
             this.session.clearInput();
             this.session.resetTiming();
+            return this.session.ready;
           },
-          registerTickHandler: (handler, order) => {
+          registerCompletedTickHandler: (handler, order) => {
             const session = this.session;
             if (generation !== this.generation || !session) return () => undefined;
-            const remove = session.registerTickHandler((context) => {
+            const remove = session.registerCompletedTickHandler((context) => {
               if (
                 generation === this.generation &&
                 this.session === session &&
@@ -157,12 +194,32 @@ export class GameRuntimeService {
           },
           frame: (seconds, movement, sprint, active) => {
             if (!this.session) throw new Error('The world is not initialized.');
-            if (generation !== this.generation) return this.session.view;
+            if (generation !== this.generation) return this.session.readView();
+            if (this.session.failed) {
+              if (active) throw this.session.error;
+              return this.session.readView();
+            }
             const canAdvance = active && this.gameplayAllowed();
             this.session.setPaused(!canAdvance);
             this.session.setMovement(canAdvance ? movement : { x: 0, z: 0 }, sprint);
-            this.session.advance(seconds);
-            return this.session.view;
+            this.frameSeconds = seconds;
+            return this.session.readView();
+          },
+          completeFrame: () => {
+            const session = this.session;
+            if (!session || generation !== this.generation) return;
+            const revision = this.dispatchRevision;
+            const activityRevision = session.activityRevision;
+            session.flushCompleted();
+            if (
+              generation === this.generation &&
+              this.session === session &&
+              revision === this.dispatchRevision &&
+              activityRevision === session.activityRevision &&
+              this.gameplayAllowed()
+            )
+              session.advance(this.frameSeconds);
+            this.frameSeconds = 0;
           },
           place: (cell, rotation) => {
             if (generation === this.generation && this.gameplayAllowed()) {
@@ -174,7 +231,7 @@ export class GameRuntimeService {
               return { valid: false, reason: 'World not ready', cells: [] };
             return validatePlacement(
               this.definition,
-              this.session.view,
+              this.session.readView(),
               cell,
               rotation,
               !!environment.dev,
@@ -191,7 +248,15 @@ export class GameRuntimeService {
       const unsubscribe = client.subscribe((state) => {
         if (generation === this.generation && this.client === client) {
           ++this.dispatchRevision;
-          this.stateValue.set(state);
+          this.stateValue.set(
+            this.session?.failed && state.sceneKey === 'Game'
+              ? {
+                  phase: 'error',
+                  sceneKey: 'Game',
+                  errorMessage: `${this.session.error?.message} Retry restarts this world from its authored beginning.`,
+                }
+              : state,
+          );
           if (state.phase !== 'ready' || state.sceneKey !== 'Game') this.session?.setPaused(true);
           this.updateInputContext();
         }
@@ -239,6 +304,10 @@ export class GameRuntimeService {
     ++this.generation;
     ++this.dispatchRevision;
     for (const unsubscribe of this.tickSubscriptions) unsubscribe();
+    this.unsubscribeInspection?.();
+    this.unsubscribeInspection = undefined;
+    this.inspection.set(null);
+    this.selection.set(null);
     const client = this.client;
     const unsubscribe = this.unsubscribe;
     this.client = undefined;
@@ -258,6 +327,12 @@ export class GameRuntimeService {
     try {
       client?.destroy();
     } finally {
+      if (!this.retainingRendererSession) {
+        this.session?.dispose();
+        this.session = undefined;
+        this.definition = undefined;
+        ++this.worldGeneration;
+      }
       this.stateValue.set({ phase: 'stopped', sceneKey: null, errorMessage: null });
     }
   }
@@ -297,8 +372,13 @@ export class GameRuntimeService {
   public retry(): void {
     const host = this.host;
     if (!host || this.state().phase !== 'error' || this.disposed) return;
-    this.unmount();
-    this.mount(host);
+    this.retainingRendererSession = !!this.session && !this.session.failed;
+    try {
+      this.unmount();
+      this.mount(host);
+    } finally {
+      this.retainingRendererSession = false;
+    }
   }
 
   public async toggleInspector(): Promise<void> {

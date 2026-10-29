@@ -1,7 +1,7 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { expectConsoleMessage } from '../../../testing/console-policy';
-import type { GameClient, GameClientOptions } from '@contracts/game-client';
+import type { GameClient, GameClientOptions, WorldSessionBridge } from '@contracts/game-client';
 import {
   defaultProfile,
   type ActionFrame,
@@ -11,7 +11,9 @@ import {
 } from '@contracts/input';
 import type { WorldDefinition } from '@contracts/world';
 import { ControlSettingsService } from '../controls/control-settings.service';
-import { GameSession } from './session/game-session';
+import { GameSession } from '../../../session/game-session';
+import { InlineSimulationPort } from '../../../session/inline-port';
+import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 import type { GameState } from '@contracts/game-state';
 import { GAME_CLIENT_FACTORY } from './game-client-factory';
 import { GameRuntimeService } from './game-runtime.service';
@@ -83,6 +85,7 @@ describe('GameRuntimeService', () => {
     TestBed.configureTestingModule({
       providers: [
         GameRuntimeService,
+        { provide: SIMULATION_PORT_FACTORY, useValue: () => new InlineSimulationPort() },
         { provide: GAME_CLIENT_FACTORY, useValue: factory },
         { provide: ControlSettingsService, useValue: settings },
       ],
@@ -382,6 +385,26 @@ describe('GameRuntimeService', () => {
     game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     return { game, options: currentOptions(), bridge: currentOptions().session! };
   }
+  // Explicitly run submission and the next owned presentation frame for this inline control.
+  function render(bridge: WorldSessionBridge, ...args: Parameters<WorldSessionBridge['frame']>) {
+    bridge.frame(...args);
+    bridge.completeFrame!();
+    const view = bridge.frame(0, args[1], args[2], args[3]);
+    bridge.completeFrame!();
+    return view;
+  }
+
+  it('pins the completed view before submitting the next authoritative batch', () => {
+    const { bridge } = mountWorld();
+    const callback = vi.fn();
+    bridge.registerCompletedTickHandler(callback);
+    expect(bridge.frame(0.05, { x: 1, z: 0 }, false, true).tick).toBe(0);
+    bridge.completeFrame!();
+    expect(callback).not.toHaveBeenCalled();
+    expect(bridge.frame(0, { x: 0, z: 0 }, false, true).tick).toBe(1);
+    bridge.completeFrame!();
+    expect(callback).toHaveBeenCalledOnce();
+  });
 
   it('observes preference changes even if its initial effect ran before mounting', () => {
     TestBed.tick();
@@ -417,7 +440,7 @@ describe('GameRuntimeService', () => {
     const action = vi.fn();
     service.subscribeActions(action);
     const next = mountWorld();
-    const view = next.bridge.frame(0, { x: 0, z: 0 }, false, true);
+    const view = render(next.bridge, 0, { x: 0, z: 0 }, false, true);
     next.options.onWorldView!(view);
     next.options.onSelection!('new');
     previous.options.onActionFrame!(actionFrame);
@@ -439,7 +462,7 @@ describe('GameRuntimeService', () => {
     const { game, options, bridge } = mountWorld();
     const listener = vi.fn();
     service.subscribeActions(listener);
-    bridge.frame(0.025, { x: 1, z: 0 }, false, true);
+    render(bridge, 0.025, { x: 1, z: 0 }, false, true);
     options.onInspectorState!({ phase: 'loading', errorMessage: null });
     expect(service.inspectorActive()).toBe(true);
     expect(game.input.setContext).toHaveBeenLastCalledWith(null);
@@ -450,14 +473,14 @@ describe('GameRuntimeService', () => {
     options.onInspectorState!({ phase: 'open', errorMessage: null });
     options.onActionFrame!(actionFrame);
     expect(listener).not.toHaveBeenCalled();
-    expect(bridge.frame(60, { x: 1, z: 0 }, false, true).tick).toBe(0);
+    expect(render(bridge, 60, { x: 1, z: 0 }, false, true).tick).toBe(0);
     service.setInputEnabled(false);
     options.onInspectorState!({ phase: 'closed', errorMessage: null });
     expect(game.input.setContext).toHaveBeenLastCalledWith('ui');
     service.setInputEnabled(true);
     expect(game.input.setContext).toHaveBeenLastCalledWith('gameplay');
-    expect(bridge.frame(0.025, { x: 1, z: 0 }, false, true).tick).toBe(0);
-    expect(bridge.frame(0.025, { x: 1, z: 0 }, false, true).tick).toBe(1);
+    expect(render(bridge, 0.025, { x: 1, z: 0 }, false, true).tick).toBe(0);
+    expect(render(bridge, 0.025, { x: 1, z: 0 }, false, true).tick).toBe(1);
   });
 
   it('keeps Inspector load failures separate from game errors and clears diagnostics on unmount', () => {
@@ -475,14 +498,14 @@ describe('GameRuntimeService', () => {
   it('prevents old renderer session callbacks from advancing or changing the current world', () => {
     const previous = mountWorld();
     const next = mountWorld();
-    const before = next.bridge.frame(0, { x: 0, z: 0 }, false, true);
+    const before = render(next.bridge, 0, { x: 0, z: 0 }, false, true);
     previous.bridge.initialize({ ...definition, id: 'superseded' });
-    expect(previous.bridge.frame(2, { x: 1, z: 1 }, true, true)).toEqual(before);
+    expect(render(previous.bridge, 2, { x: 1, z: 1 }, true, true)).toEqual(before);
     const enqueue = vi.spyOn(GameSession.prototype, 'enqueue');
     previous.bridge.place({ column: 4, row: 6 }, 0);
     expect(enqueue).not.toHaveBeenCalled();
     expect(previous.bridge.preview({ column: 4, row: 6 }, 0).valid).toBe(false);
-    expect(next.bridge.frame(0, { x: 0, z: 0 }, false, true)).toEqual(before);
+    expect(render(next.bridge, 0, { x: 0, z: 0 }, false, true)).toEqual(before);
   });
 
   it('registers ordered tick callbacks only after the current world is initialized', () => {
@@ -491,24 +514,24 @@ describe('GameRuntimeService', () => {
     service.mount(document.createElement('div'));
     const bridge = currentOptions().session!;
     const premature = vi.fn();
-    bridge.registerTickHandler(premature)();
+    bridge.registerCompletedTickHandler(premature)();
     bridge.initialize(definition);
     game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     const calls: string[] = [];
-    bridge.registerTickHandler(({ tick }) => calls.push(`later:${tick}`), 1);
-    bridge.registerTickHandler(({ tick, deltaSeconds }) => {
+    bridge.registerCompletedTickHandler(({ tick }) => calls.push(`later:${tick}`), 1);
+    bridge.registerCompletedTickHandler(({ tick, deltaSeconds }) => {
       expect(deltaSeconds).toBe(0.05);
       calls.push(`first:${tick}`);
     }, -1);
-    bridge.frame(0.1, { x: 0, z: 0 }, false, true);
+    render(bridge, 0.1, { x: 0, z: 0 }, false, true);
     expect(premature).not.toHaveBeenCalled();
     expect(calls).toEqual(['first:1', 'later:1', 'first:2', 'later:2']);
   });
 
   it('removes old tick handlers before renderer teardown and ignores delayed old cleanup after remount', () => {
-    const register = GameSession.prototype.registerTickHandler;
+    const register = GameSession.prototype.registerCompletedTickHandler;
     const removals: ReturnType<typeof vi.fn<() => void>>[] = [];
-    vi.spyOn(GameSession.prototype, 'registerTickHandler').mockImplementation(function (
+    vi.spyOn(GameSession.prototype, 'registerCompletedTickHandler').mockImplementation(function (
       this: GameSession,
       handler,
       order,
@@ -519,8 +542,8 @@ describe('GameRuntimeService', () => {
     });
     const previous = mountWorld();
     const oldHandler = vi.fn();
-    const stopOld = previous.bridge.registerTickHandler(oldHandler);
-    const completed = previous.bridge.frame(0.1, { x: 1, z: 0 }, false, true);
+    const stopOld = previous.bridge.registerCompletedTickHandler(oldHandler);
+    render(previous.bridge, 0.1, { x: 1, z: 0 }, false, true);
     let cleanupAfterInspector: (() => void) | undefined;
     previous.game.destroy.mockImplementation(() => {
       expect(removals[0]).toHaveBeenCalledOnce();
@@ -529,24 +552,24 @@ describe('GameRuntimeService', () => {
     });
     const next = mountWorld();
     const newHandler = vi.fn();
-    next.bridge.registerTickHandler(newHandler);
+    next.bridge.registerCompletedTickHandler(newHandler);
     const staleRegistration = vi.fn();
-    previous.bridge.registerTickHandler(staleRegistration)();
-    const first = next.bridge.frame(0.05, { x: 0, z: 0 }, false, true);
-    expect(first.tick).toBe(completed.tick + 1);
-    expect(first.player.position).toEqual(completed.player.position);
+    previous.bridge.registerCompletedTickHandler(staleRegistration)();
+    const first = render(next.bridge, 0.05, { x: 0, z: 0 }, false, true);
+    expect(first.tick).toBe(1);
+    expect(first.player.position).toEqual(definition.spawn);
     expect(oldHandler).toHaveBeenCalledTimes(2);
     expect(staleRegistration).not.toHaveBeenCalled();
     cleanupAfterInspector?.();
     stopOld();
-    next.bridge.frame(0.05, { x: 0, z: 0 }, false, true);
+    render(next.bridge, 0.05, { x: 0, z: 0 }, false, true);
     expect(oldHandler).toHaveBeenCalledTimes(2);
     expect(newHandler).toHaveBeenCalledTimes(2);
   });
 
   it('preserves a healthy session through renderer Retry and clears partial elapsed time', () => {
     const previous = mountWorld();
-    const before = previous.bridge.frame(0.125, { x: 1, z: 0 }, false, true);
+    const before = render(previous.bridge, 0.125, { x: 1, z: 0 }, false, true);
     previous.game.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Graphics failed' });
     const replacement = createClient();
     factory.mockReturnValueOnce(replacement.client);
@@ -554,22 +577,22 @@ describe('GameRuntimeService', () => {
     const bridge = currentOptions().session!;
     bridge.initialize(definition);
     replacement.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
-    const retained = bridge.frame(0.025, { x: 0, z: 0 }, false, true);
+    const retained = render(bridge, 0.025, { x: 0, z: 0 }, false, true);
     expect(retained.tick).toBe(before.tick);
     expect(retained.player.position).toEqual(before.player.position);
-    expect(bridge.frame(0.025, { x: 0, z: 0 }, false, true).tick).toBe(before.tick + 1);
+    expect(render(bridge, 0.025, { x: 0, z: 0 }, false, true).tick).toBe(before.tick + 1);
   });
 
-  it('replaces a failed session on Retry without publishing a partially completed tick', () => {
+  it('restarts from the authored world after a completed presentation hook fails', () => {
     const previous = mountWorld();
-    const before = previous.bridge.frame(0.05, { x: 1, z: 0 }, false, true);
+    render(previous.bridge, 0.05, { x: 1, z: 0 }, false, true);
     const failure = new Error('Player tick failed');
     const handler = vi.fn(() => {
       throw failure;
     });
-    previous.bridge.registerTickHandler(handler);
-    expect(() => previous.bridge.frame(0.25, { x: 1, z: 0 }, false, true)).toThrow(failure);
-    expect(previous.bridge.frame(0, { x: 0, z: 0 }, false, false)).toEqual(before);
+    previous.bridge.registerCompletedTickHandler(handler);
+    expect(() => render(previous.bridge, 0.25, { x: 1, z: 0 }, false, true)).toThrow(failure);
+    expect(service.errorMessage()).toContain('Retry restarts this world');
     previous.game.emit({ phase: 'error', sceneKey: 'Game', errorMessage: failure.message });
     const replacement = createClient();
     factory.mockReturnValueOnce(replacement.client);
@@ -577,10 +600,10 @@ describe('GameRuntimeService', () => {
     const bridge = currentOptions().session!;
     bridge.initialize(definition);
     replacement.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
-    const fresh = bridge.frame(0, { x: 0, z: 0 }, false, true);
+    const fresh = render(bridge, 0, { x: 0, z: 0 }, false, true);
     expect(fresh.tick).toBe(0);
     expect(fresh.player.position).toEqual(definition.spawn);
-    expect(bridge.frame(0.05, { x: 0, z: 0 }, false, true).tick).toBe(1);
+    expect(render(bridge, 0.05, { x: 0, z: 0 }, false, true).tick).toBe(1);
     expect(handler).toHaveBeenCalledOnce();
   });
 
@@ -597,7 +620,7 @@ describe('GameRuntimeService', () => {
     (change) => {
       const { options, bridge } = mountWorld();
       const next = vi.fn();
-      bridge.registerTickHandler(() => {
+      bridge.registerCompletedTickHandler(() => {
         if (change === 'permission') service.setInputEnabled(false);
         if (change === 'focus') service.setUiFocused(true);
         if (change === 'capture') service.captureBinding(() => undefined);
@@ -607,11 +630,11 @@ describe('GameRuntimeService', () => {
           options.onInspectorState!({ phase: 'loading', errorMessage: null });
         if (change === 'unmount') service.unmount();
       }, -1);
-      bridge.registerTickHandler(next);
-      const view = bridge.frame(0.25, { x: 1, z: 0 }, true, true);
+      bridge.registerCompletedTickHandler(next);
+      const view = render(bridge, 0.25, { x: 1, z: 0 }, true, true);
       expect(next).not.toHaveBeenCalled();
-      expect(view.tick).toBe(0);
-      expect(view.player.position).toEqual(definition.spawn);
+      expect(view.tick).toBe(5);
+      expect(view.player.position.x).toBeGreaterThan(definition.spawn.x);
     },
   );
 
@@ -619,19 +642,19 @@ describe('GameRuntimeService', () => {
     'owns the session pause while %s blocks gameplay and resets partial elapsed time',
     (reason) => {
       const { bridge } = mountWorld();
-      bridge.frame(0.025, { x: 1, z: 0 }, false, true);
+      render(bridge, 0.025, { x: 1, z: 0 }, false, true);
       let stop: (() => void) | undefined;
       if (reason === 'permission') service.setInputEnabled(false);
       if (reason === 'focus') service.setUiFocused(true);
       if (reason === 'capture') stop = service.captureBinding(() => undefined);
-      const paused = bridge.frame(60, { x: 1, z: 0 }, false, true);
+      const paused = render(bridge, 60, { x: 1, z: 0 }, false, true);
       expect(paused.tick).toBe(0);
       expect(paused.player.position).toEqual(definition.spawn);
       service.setInputEnabled(true);
       service.setUiFocused(false);
       stop?.();
-      expect(bridge.frame(0.025, { x: 1, z: 0 }, false, true).tick).toBe(0);
-      expect(bridge.frame(0.025, { x: 1, z: 0 }, false, true).tick).toBe(1);
+      expect(render(bridge, 0.025, { x: 1, z: 0 }, false, true).tick).toBe(0);
+      expect(render(bridge, 0.025, { x: 1, z: 0 }, false, true).tick).toBe(1);
     },
   );
 

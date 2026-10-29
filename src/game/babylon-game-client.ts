@@ -259,7 +259,8 @@ export class BabylonGameClient implements GameClient {
         const definition: unknown = await response.json();
         assertWorldDefinition(definition);
         if (!this.isCurrentTransition(transition)) return;
-        this.options.session?.initialize(definition);
+        await this.options.session?.initialize(definition);
+        if (!this.isCurrentTransition(transition)) return;
         const world = await WorldScene.create(
           scene,
           definition,

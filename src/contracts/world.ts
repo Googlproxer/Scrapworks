@@ -81,6 +81,24 @@ export interface CommandResult {
 
 /** A detached presentation view; renderer handles never enter world data. */
 export interface WorldView {
+  readonly publication?: number;
+  readonly worldGeneration?: number;
+  readonly changes?: {
+    readonly full: boolean;
+    readonly upsertedIds: readonly string[];
+    readonly removedIds: readonly string[];
+    readonly deposits?: readonly DepositDefinition[];
+    readonly buildings?: readonly BuildingView[];
+  };
+  readonly endpoints?: readonly {
+    readonly tick: number;
+    readonly transform: {
+      readonly position: WorldPosition;
+      readonly facing: number;
+      readonly moving: boolean;
+      readonly sprinting: boolean;
+    };
+  }[];
   readonly worldId: string;
   readonly tick: number;
   readonly stepSeconds: number;
