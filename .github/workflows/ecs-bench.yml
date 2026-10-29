@@ -1,0 +1,95 @@
+name: ECS benchmark investigation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ecs-bench-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  primary:
+    name: Primary ${{ matrix.environment }} / repetition ${{ matrix.order.index }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      # Separate runner fragments keep each job bounded. Only one measures at a time.
+      max-parallel: 1
+      matrix:
+        environment: [node, browser]
+        order:
+          - { index: 0, candidates: 'miniplex,bitecs,koota,becsy,reference' }
+          - { index: 1, candidates: 'bitecs,koota,becsy,reference,miniplex' }
+          - { index: 2, candidates: 'koota,becsy,reference,miniplex,bitecs' }
+          - { index: 3, candidates: 'becsy,reference,miniplex,bitecs,koota' }
+          - { index: 4, candidates: 'reference,miniplex,bitecs,koota,becsy' }
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - run: corepack enable
+      - uses: actions/setup-node@v7
+        with:
+          cache: yarn
+          cache-dependency-path: yarn.lock
+      - run: yarn install --immutable
+      - if: ${{ matrix.environment == 'browser' }}
+        run: yarn playwright install --with-deps chromium --only-shell
+      - name: Install report plotting tools outside application dependencies
+        run: python3 -m pip install --target tmp/ecs-bench/plotting -r tools/ecs-bench/plot-requirements.txt
+      - name: Run one independent balanced repetition
+        run: yarn bench:ecs:${{ matrix.environment }} --repetitions 1 --candidates ${{ matrix.order.candidates }} --label hosted-ci --output tmp/ecs-bench/primary-${{ matrix.environment }}-${{ matrix.order.index }}
+      - name: Summarize completed and partial evidence
+        if: ${{ always() }}
+        run: yarn bench:ecs:report --input tmp/ecs-bench/primary-${{ matrix.environment }}-${{ matrix.order.index }}
+      - uses: actions/upload-artifact@v7
+        if: ${{ always() }}
+        with:
+          name: ecs-primary-${{ matrix.environment }}-${{ matrix.order.index }}-${{ github.run_id }}
+          path: tmp/ecs-bench/primary-${{ matrix.environment }}-${{ matrix.order.index }}/
+          retention-days: 7
+          if-no-files-found: error
+  diagnostics:
+    name: Variants, memory, lifecycle and responsiveness
+    needs: primary
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - run: corepack enable
+      - uses: actions/setup-node@v7
+        with:
+          cache: yarn
+          cache-dependency-path: yarn.lock
+      - run: yarn install --immutable
+      - run: yarn playwright install --with-deps chromium --only-shell
+      - name: Install report plotting tools outside application dependencies
+        run: python3 -m pip install --target tmp/ecs-bench/plotting -r tools/ecs-bench/plot-requirements.txt
+      # Zero primary repetitions retains all full-mode diagnostics and their own five repeats.
+      - name: Run the full diagnostic portion once
+        run: yarn bench:ecs:full --repetitions 0 --label hosted-ci --output tmp/ecs-bench/diagnostics
+      - name: Summarize completed and partial evidence
+        if: ${{ always() }}
+        run: yarn bench:ecs:report --input tmp/ecs-bench/diagnostics
+      - uses: actions/upload-artifact@v7
+        if: ${{ always() }}
+        with:
+          name: ecs-diagnostics-${{ github.run_id }}
+          path: tmp/ecs-bench/diagnostics/
+          retention-days: 7
+          if-no-files-found: error
