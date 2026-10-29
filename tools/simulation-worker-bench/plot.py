@@ -43,7 +43,8 @@ axes[0].set_title('Host request through applied detached view')
 axes[1].set_title('Simulation + detached publication, before transport')
 axes[1].axhline(5, color='black', linestyle=':', label='5 ms simulation budget')
 axes[0].legend(fontsize=8); axes[1].legend(fontsize=8)
-fig.suptitle('Single-worker comparison — object messages, normal mixed work')
+contract = 'lean transferred numeric views' if summary['manifest']['protocol'].get('presentation') == 'lean' else 'rich object messages'
+fig.suptitle(f'Single-worker comparison — {contract}, normal mixed work')
 fig.tight_layout()
 for extension in ['svg', 'png']:
     fig.savefig(target / f'latency.{extension}', dpi=160)

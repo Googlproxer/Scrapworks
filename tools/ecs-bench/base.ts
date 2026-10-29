@@ -149,6 +149,36 @@ export abstract class Base implements Instance {
   public project(full = false): Projection | Promise<Projection> {
     return this.projectNow(full);
   }
+  /** Alternate detached publishers visit authoritative rows only at a tick boundary. */
+  public publishTo(
+    begin: (count: number) => void,
+    write: (record: RecordData) => void,
+    full = false,
+  ): Omit<Projection, 'records'> {
+    begin(full ? this.count : this.dirty.length);
+    if (full) for (let i = 0; i < this.count; i++) write(this.read(i));
+    else for (const ordinal of this.dirty) write(this.read(ordinal));
+    const result = {
+      tick: this.resources.tick,
+      completed: this.resources.completed,
+      removed: this.removed,
+    };
+    for (const ordinal of this.dirty) this.flags[ordinal] = 0;
+    this.dirty = [];
+    this.removed = [];
+    return result;
+  }
+  /** Bounded, detached inspection; stale game-owned IDs never resolve to recycled entities. */
+  public inspect(ids: readonly string[]): RecordData[] {
+    const result: RecordData[] = [];
+    for (const id of ids) {
+      const ordinal = Number(id.split('-')[1]);
+      if (!Number.isInteger(ordinal) || ordinal < 0 || ordinal >= this.count) continue;
+      const record = this.read(ordinal);
+      if (record.payload.id === id) result.push(copyRecord(record));
+    }
+    return result;
+  }
   protected captureNow(): Snapshot {
     return {
       version: 1,

@@ -2,6 +2,8 @@ import { Runtime } from './runtime.ts';
 import { assert, epoch } from './protocol.ts';
 import type { Capture, Frame, Options, Reply, Request } from './protocol.ts';
 import type { RecordData } from '../ecs-bench/model.ts';
+import { defaultDetails, PresentationCache } from './presentation.ts';
+import type { LeanFrame } from './presentation.ts';
 
 let generation = 0;
 export class Client {
@@ -11,6 +13,8 @@ export class Client {
   public tick = 0;
   public completed = 0;
   public records: (RecordData | undefined)[] = [];
+  public presentation?: PresentationCache;
+  public detailIds: string[] = [];
   public latest?: Reply;
   public pendingCount = 0;
   public maxPending = 0;
@@ -82,6 +86,24 @@ export class Client {
     this.tick = frame.view.tick;
     this.completed = frame.view.completed;
   }
+  public applyLean(frame: LeanFrame): void {
+    if (frame.version <= this.version) return;
+    assert(frame.base === this.version, 'Publication gap: full resynchronization required');
+    assert(this.presentation, 'Missing presentation cache');
+    this.presentation.apply(frame);
+    this.version = frame.version;
+    this.tick = frame.tick;
+    this.completed = frame.completed;
+  }
+  /** Untimed oracle check for either publication contract. */
+  public verify(records: RecordData[]): void {
+    if (this.presentation) this.presentation.verify(records, this.detailIds);
+    else
+      assert(
+        JSON.stringify(this.records) === JSON.stringify(records),
+        'Detached receiver cache mismatch',
+      );
+  }
   private consume(reply: Reply): Reply {
     this.receiveEpoch = epoch();
     assert(reply.protocol === 1 && reply.generation === this.generation, 'Invalid reply envelope');
@@ -96,6 +118,13 @@ export class Client {
     // A completed pre-pause publication remains valid world state. Discarding its
     // version would create a gap; input invalidation is enforced by the coordinator.
     if (reply.frame) this.apply(reply.frame);
+    if (reply.lean) this.applyLean(reply.lean);
+    if (reply.detailIds) {
+      this.detailIds = reply.detailIds;
+      this.presentation!.details.clear();
+      for (const detail of reply.details ?? [])
+        this.presentation!.details.set(detail.payload.id, detail);
+    }
     this.hostApplyMs = performance.now() - start + this.decodeMs;
     this.latest = reply;
     return reply;
@@ -149,6 +178,9 @@ export class Client {
     this.generation = ++generation;
     this.version = 0;
     this.records = [];
+    this.presentation =
+      this.options.presentation === 'lean' ? new PresentationCache(this.options.size) : undefined;
+    this.detailIds = [...(this.options.detailIds ?? defaultDetails)];
     this.tick = 0;
     this.latest = undefined;
     return this.request('initialize', { options: this.options, capture });
@@ -167,6 +199,7 @@ export class Client {
   public async disposeWorldForProfile(): Promise<void> {
     await this.request('dispose');
     this.records = [];
+    this.presentation = undefined;
     this.latest = undefined;
   }
   public async dispose(): Promise<void> {
@@ -180,6 +213,7 @@ export class Client {
       this.runtime = undefined;
       this.fail(new Error('Disposed client'));
       this.records = [];
+      this.presentation = undefined;
       this.latest = undefined;
     }
   }

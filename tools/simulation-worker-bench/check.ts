@@ -35,7 +35,7 @@ export async function correctness(options: Options): Promise<{ assertions: strin
     }
     let captured = await capture(client);
     same(captured.world, reference.capture(), 'Worker/inline world diverged from plain reference');
-    same(client.records, captured.world.records, 'Applied changed/removal cache diverged');
+    client.verify(captured.world.records);
     assert(captured.ledger.applied === 120, 'Command applied count');
     await client.request('advance', { steps: 0, commands: [{ sequence: 120, value: 119 }] });
     same((await capture(client)).ledger, captured.ledger, 'Duplicate command was accepted');
@@ -135,10 +135,41 @@ export async function correctness(options: Options): Promise<{ assertions: strin
       }
       assert(gap, 'Publication gap was ignored');
     }
+    const lean = client.latest?.lean;
+    if (lean) {
+      client.applyLean(lean);
+      let gap = false;
+      try {
+        client.applyLean({ ...lean, version: client.version + 2, base: client.version + 1 });
+      } catch {
+        gap = true;
+      }
+      assert(gap, 'Lean publication gap was ignored');
+      const current = await capture(client);
+      const ids = [current.world.records[6].payload.id, current.world.records[0].payload.id];
+      await client.request('watch', { detailIds: ids });
+      client.verify(current.world.records);
+      const detail = client.presentation!.details.get(ids[0])!;
+      detail.payload.slots[0]!.quantity = -1234;
+      same((await capture(client)).world, current.world, 'Detail aliases authoritative inventory');
+      await client.request('advance', { steps: 1 });
+      client.verify((await capture(client)).world.records);
+      const oldId = ids[0];
+      for (let i = 0; i < 100; i++) await client.request('advance', { steps: 1 });
+      await client.request('watch', { detailIds: [oldId] });
+      assert(
+        client.presentation!.details.size === 0,
+        'Stale detail handle resolved to replacement',
+      );
+      await client.request('watch', { detailIds: [] });
+      assertions.push(
+        'Lean numeric view equals authority; bounded on-demand details, nested updates, stale IDs and detached inventories',
+      );
+    }
     // Explicit transport-level resynchronization uses a new full initialization from a plain capture.
     const resync = await capture(client);
     await client.initialize(resync);
-    same(client.records, resync.world.records, 'Full resynchronization mismatch');
+    client.verify(resync.world.records);
     await client.request('fail');
     const completeTick = client.tick;
     let failed = false;
@@ -157,7 +188,7 @@ export async function correctness(options: Options): Promise<{ assertions: strin
     }
     assert(!resumed, 'Failed world resumed without replacement');
     await client.initialize(resync);
-    same(client.records, resync.world.records, 'Repeated initialize contaminated data');
+    client.verify(resync.world.records);
     const retired = client.request('advance', { steps: 5, delayMs: 30, yieldSteps: true });
     const retiredSettled =
       retired instanceof Promise

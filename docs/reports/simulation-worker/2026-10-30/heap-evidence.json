@@ -1,0 +1,410 @@
+[
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0132-profile-miniplex-inline-100000-churn.json.main.disposed.heapsnapshot",
+    "nodes": 46976,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 741303,
+      "string": 416929,
+      "object shape": 151332,
+      "code": 492380,
+      "array": 171900,
+      "number": 360,
+      "symbol": 288,
+      "object": 17020,
+      "closure": 92544,
+      "concatenated string": 2040
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0132-profile-miniplex-inline-100000-churn.json.main.steady.heapsnapshot",
+    "nodes": 1720650,
+    "retainedSyntheticPayloads": 100000,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 10781131,
+      "string": 7649117,
+      "object shape": 155712,
+      "code": 575860,
+      "array": 9277480,
+      "number": 480,
+      "symbol": 288,
+      "object": 24018416,
+      "closure": 92768,
+      "concatenated string": 2040
+    },
+    "largestNodes": [
+      [
+        9600000,
+        9677010,
+        "system / JSArrayBufferData"
+      ],
+      [
+        3670036,
+        9932088,
+        ""
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0132-profile-miniplex-inline-100000-churn.json.main.world-disposed.heapsnapshot",
+    "nodes": 46596,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 736083,
+      "string": 416905,
+      "object shape": 152452,
+      "code": 457836,
+      "array": 172036,
+      "number": 384,
+      "symbol": 288,
+      "object": 17060,
+      "closure": 92544,
+      "concatenated string": 2040
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0133-profile-miniplex-worker-100000-churn.json.main.disposed.heapsnapshot",
+    "nodes": 44994,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 782701,
+      "string": 414685,
+      "object shape": 145684,
+      "code": 319036,
+      "array": 173532,
+      "number": 264,
+      "symbol": 304,
+      "object": 16192,
+      "closure": 92964,
+      "concatenated string": 1900
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0133-profile-miniplex-worker-100000-churn.json.main.steady.heapsnapshot",
+    "nodes": 44748,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 10466925,
+      "string": 414773,
+      "object shape": 147160,
+      "code": 300672,
+      "array": 173684,
+      "number": 324,
+      "symbol": 304,
+      "object": 16660,
+      "closure": 93048,
+      "concatenated string": 1900
+    },
+    "largestNodes": [
+      [
+        9600000,
+        140718,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0133-profile-miniplex-worker-100000-churn.json.main.world-disposed.heapsnapshot",
+    "nodes": 44768,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 767473,
+      "string": 414797,
+      "object shape": 146920,
+      "code": 301824,
+      "array": 173608,
+      "number": 324,
+      "symbol": 304,
+      "object": 16360,
+      "closure": 93048,
+      "concatenated string": 1900
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0133-profile-miniplex-worker-100000-churn.json.worker.steady.heapsnapshot",
+    "nodes": 1696666,
+    "retainedSyntheticPayloads": 100000,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 612114,
+      "string": 7215685,
+      "object shape": 60284,
+      "code": 331496,
+      "array": 9231700,
+      "number": 384,
+      "symbol": 240,
+      "object": 24007012,
+      "closure": 31640
+    },
+    "largestNodes": [
+      [
+        3670036,
+        8010042,
+        ""
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0133-profile-miniplex-worker-100000-churn.json.worker.world-disposed.heapsnapshot",
+    "nodes": 24516,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 265370,
+      "string": 15625,
+      "object shape": 56820,
+      "code": 222552,
+      "array": 91004,
+      "number": 288,
+      "symbol": 240,
+      "object": 5928,
+      "closure": 31416
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0134-profile-bitecs-inline-100000-churn.json.main.disposed.heapsnapshot",
+    "nodes": 47106,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 751359,
+      "string": 417709,
+      "object shape": 153476,
+      "code": 524116,
+      "array": 172968,
+      "number": 480,
+      "symbol": 288,
+      "object": 17408,
+      "closure": 92560,
+      "concatenated string": 2040
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0134-profile-bitecs-inline-100000-churn.json.main.steady.heapsnapshot",
+    "nodes": 1810454,
+    "retainedSyntheticPayloads": 100000,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 15347583,
+      "string": 7674361,
+      "object shape": 156292,
+      "code": 626304,
+      "array": 16754632,
+      "number": 648,
+      "symbol": 288,
+      "object": 22819468,
+      "closure": 93288,
+      "concatenated string": 2040
+    },
+    "largestNodes": [
+      [
+        9600000,
+        9480180,
+        "system / JSArrayBufferData"
+      ],
+      [
+        3670036,
+        9480684,
+        ""
+      ],
+      [
+        1600000,
+        9629736,
+        "system / JSArrayBufferData"
+      ],
+      [
+        1600000,
+        9629724,
+        "system / JSArrayBufferData"
+      ],
+      [
+        1600000,
+        9629712,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0134-profile-bitecs-inline-100000-churn.json.main.world-disposed.heapsnapshot",
+    "nodes": 46551,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 736359,
+      "string": 417685,
+      "object shape": 151448,
+      "code": 485992,
+      "array": 173092,
+      "number": 504,
+      "symbol": 288,
+      "object": 17064,
+      "closure": 92560,
+      "concatenated string": 2040
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0135-profile-bitecs-worker-100000-churn.json.main.disposed.heapsnapshot",
+    "nodes": 44994,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 782833,
+      "string": 414685,
+      "object shape": 145684,
+      "code": 319036,
+      "array": 173532,
+      "number": 264,
+      "symbol": 304,
+      "object": 16192,
+      "closure": 92964,
+      "concatenated string": 1900
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0135-profile-bitecs-worker-100000-churn.json.main.steady.heapsnapshot",
+    "nodes": 44748,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 10466997,
+      "string": 414773,
+      "object shape": 147172,
+      "code": 300672,
+      "array": 173684,
+      "number": 324,
+      "symbol": 304,
+      "object": 16660,
+      "closure": 93048,
+      "concatenated string": 1900
+    },
+    "largestNodes": [
+      [
+        9600000,
+        186318,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0135-profile-bitecs-worker-100000-churn.json.main.world-disposed.heapsnapshot",
+    "nodes": 44768,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 767545,
+      "string": 414797,
+      "object shape": 146920,
+      "code": 301824,
+      "array": 173608,
+      "number": 324,
+      "symbol": 304,
+      "object": 16360,
+      "closure": 93048,
+      "concatenated string": 1900
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0135-profile-bitecs-worker-100000-churn.json.worker.steady.heapsnapshot",
+    "nodes": 1785928,
+    "retainedSyntheticPayloads": 100000,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 5186038,
+      "string": 7232453,
+      "object shape": 60880,
+      "code": 382688,
+      "array": 16708852,
+      "number": 540,
+      "symbol": 240,
+      "object": 22808064,
+      "closure": 32160
+    },
+    "largestNodes": [
+      [
+        3670036,
+        7703310,
+        ""
+      ],
+      [
+        1600000,
+        7703256,
+        "system / JSArrayBufferData"
+      ],
+      [
+        1600000,
+        7703250,
+        "system / JSArrayBufferData"
+      ],
+      [
+        1600000,
+        7703244,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\2026-10-30-lean-qualification-01\\0135-profile-bitecs-worker-100000-churn.json.worker.world-disposed.heapsnapshot",
+    "nodes": 24493,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 271754,
+      "string": 16393,
+      "object shape": 55816,
+      "code": 252692,
+      "array": 92060,
+      "number": 408,
+      "symbol": 240,
+      "object": 5932,
+      "closure": 31432
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  }
+]

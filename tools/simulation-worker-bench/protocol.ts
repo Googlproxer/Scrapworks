@@ -1,5 +1,7 @@
 import type { Fixture, Projection, Snapshot } from '../ecs-bench/model.ts';
 import type { WorldView } from '../../src/contracts/world.ts';
+import type { LeanFrame } from './presentation.ts';
+import type { RecordData } from '../ecs-bench/model.ts';
 
 export type Candidate = 'miniplex' | 'bitecs';
 export type Execution = 'inline' | 'worker';
@@ -10,6 +12,8 @@ export interface Options extends Fixture {
   execution: Execution;
   wire?: Wire;
   clock?: Clock;
+  presentation?: 'rich' | 'lean';
+  detailIds?: string[];
 }
 export interface Input {
   x: number;
@@ -47,7 +51,8 @@ export type Operation =
   | 'movement'
   | 'clock-start'
   | 'clock-stop'
-  | 'clock-poll';
+  | 'clock-poll'
+  | 'watch';
 export interface Request {
   protocol: 1;
   generation: number;
@@ -64,6 +69,7 @@ export interface Request {
   full?: boolean;
   yieldSteps?: boolean;
   delayMs?: number;
+  detailIds?: string[];
 }
 export interface Times {
   systems: number;
@@ -90,6 +96,9 @@ export interface Reply {
   tick: number;
   steps: number;
   frame?: Frame;
+  lean?: LeanFrame;
+  details?: RecordData[];
+  detailIds?: string[];
   packed?: ArrayBuffer;
   capture?: Capture;
   ledger?: Ledger;
@@ -130,6 +139,7 @@ export function validRequest(value: unknown): asserts value is Request {
       'clock-start',
       'clock-stop',
       'clock-poll',
+      'watch',
     ].includes(r.operation),
     'Unknown operation',
   );
@@ -157,6 +167,18 @@ export function validRequest(value: unknown): asserts value is Request {
     );
   if (r.delayMs !== undefined)
     assert(Number.isFinite(r.delayMs) && r.delayMs >= 0 && r.delayMs <= 5000, 'Invalid delay');
+  if (r.detailIds !== undefined) validDetails(r.detailIds);
+}
+export function validDetails(ids: unknown): asserts ids is string[] {
+  assert(
+    Array.isArray(ids) && ids.length <= 16 && new Set(ids).size === ids.length,
+    'Detail subscriptions must be unique and bounded to 16',
+  );
+  for (const id of ids)
+    assert(
+      typeof id === 'string' && /^entity-\d+-\d+$/.test(id) && id.length <= 64,
+      'Invalid detail identity',
+    );
 }
 /** One accumulator; already dispatched steps consume the same five-step allowance. */
 export class Credits {

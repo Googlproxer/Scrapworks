@@ -1,0 +1,842 @@
+[
+  {
+    "file": "0004-trial-miniplex-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0005-trial-bitecs-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0006-trial-bitecs-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0007-trial-miniplex-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0008-trial-miniplex-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0009-trial-bitecs-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0010-trial-bitecs-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0011-trial-miniplex-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0012-trial-miniplex-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0013-trial-bitecs-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0014-trial-bitecs-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0015-trial-miniplex-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0016-trial-miniplex-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0017-trial-bitecs-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0018-trial-bitecs-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0019-trial-miniplex-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0020-trial-miniplex-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0021-trial-bitecs-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0022-trial-bitecs-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0023-trial-miniplex-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0024-trial-miniplex-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0025-trial-bitecs-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0026-trial-bitecs-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0027-trial-miniplex-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0028-trial-bitecs-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0029-trial-bitecs-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0030-trial-miniplex-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0031-trial-miniplex-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0032-trial-bitecs-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0033-trial-bitecs-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0034-trial-miniplex-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0035-trial-miniplex-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0036-trial-bitecs-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0037-trial-bitecs-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0038-trial-miniplex-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0039-trial-miniplex-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0040-trial-bitecs-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0041-trial-bitecs-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0042-trial-miniplex-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0043-trial-miniplex-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0044-trial-bitecs-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0045-trial-bitecs-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0046-trial-miniplex-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0047-trial-miniplex-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0048-trial-bitecs-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0049-trial-bitecs-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0050-trial-miniplex-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0051-trial-miniplex-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0052-trial-bitecs-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0053-trial-miniplex-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0054-trial-miniplex-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0055-trial-bitecs-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0056-trial-bitecs-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0057-trial-miniplex-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0058-trial-miniplex-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0059-trial-bitecs-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0060-trial-bitecs-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0061-trial-miniplex-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0062-trial-miniplex-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0063-trial-bitecs-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0064-trial-bitecs-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0065-trial-miniplex-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0066-trial-miniplex-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0067-trial-bitecs-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0068-trial-bitecs-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0069-trial-miniplex-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0070-trial-miniplex-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0071-trial-bitecs-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0072-trial-bitecs-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0073-trial-miniplex-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0074-trial-miniplex-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0075-trial-bitecs-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0076-trial-miniplex-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0077-trial-miniplex-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0078-trial-bitecs-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0079-trial-bitecs-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0080-trial-miniplex-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0081-trial-miniplex-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0082-trial-bitecs-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0083-trial-bitecs-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0084-trial-miniplex-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0085-trial-miniplex-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0086-trial-bitecs-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0087-trial-bitecs-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0088-trial-miniplex-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0089-trial-miniplex-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0090-trial-bitecs-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0091-trial-bitecs-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0092-trial-miniplex-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0093-trial-miniplex-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0094-trial-bitecs-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0095-trial-bitecs-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0096-trial-miniplex-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0097-trial-miniplex-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0098-trial-bitecs-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0099-trial-bitecs-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0100-trial-miniplex-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0101-trial-bitecs-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0102-trial-bitecs-worker-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0103-trial-miniplex-inline-100000-mixed.json",
+    "ticks": 2001,
+    "expected": 1047363,
+    "actual": 1047363,
+    "match": true
+  },
+  {
+    "file": "0104-trial-miniplex-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0105-trial-bitecs-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0106-trial-bitecs-worker-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0107-trial-miniplex-inline-50000-mixed.json",
+    "ticks": 2001,
+    "expected": 523681,
+    "actual": 523681,
+    "match": true
+  },
+  {
+    "file": "0108-trial-miniplex-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0109-trial-bitecs-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0110-trial-bitecs-worker-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0111-trial-miniplex-inline-250000-mixed.json",
+    "ticks": 2001,
+    "expected": 2618540,
+    "actual": 2618540,
+    "match": true
+  },
+  {
+    "file": "0112-trial-miniplex-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0113-trial-bitecs-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0114-trial-bitecs-worker-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0115-trial-miniplex-inline-100000-idle.json",
+    "ticks": 2001,
+    "expected": 52343,
+    "actual": 52343,
+    "match": true
+  },
+  {
+    "file": "0116-trial-miniplex-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0117-trial-bitecs-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0118-trial-bitecs-worker-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0119-trial-miniplex-inline-100000-active.json",
+    "ticks": 2001,
+    "expected": 5237151,
+    "actual": 5237151,
+    "match": true
+  },
+  {
+    "file": "0120-trial-miniplex-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0121-trial-bitecs-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0122-trial-bitecs-worker-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  },
+  {
+    "file": "0123-trial-miniplex-inline-100000-churn.json",
+    "ticks": 2001,
+    "expected": 953834,
+    "actual": 953834,
+    "match": true
+  }
+]

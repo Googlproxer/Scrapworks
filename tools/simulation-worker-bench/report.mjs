@@ -121,6 +121,7 @@ export async function report(input, destination, pacedInput) {
       j.options.size,
       j.options.workload,
       j.options.wire,
+      j.options.presentation ?? 'rich',
       j.options.batch ?? 1,
       !!j.options.yielding,
     ].join('/');

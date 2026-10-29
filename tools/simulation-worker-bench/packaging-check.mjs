@@ -86,35 +86,41 @@ try {
   await page.waitForFunction(() => !!window.simulationWorkerBench);
   const results = [];
   for (const candidate of ['miniplex', 'bitecs'])
-    results.push(
-      await page.evaluate(async (candidate) => {
-        const options = {
-          candidate,
-          execution: 'worker',
-          size: 1000,
-          seed: 1729,
-          workload: 'mixed',
-          wire: 'object',
-          ticks: 20,
-          warmupMs: 0,
-          warmupTicks: 2,
-        };
-        const result = await window.simulationWorkerBench.trial(options);
-        const paced = await window.simulationWorkerBench.paced({
-          ...options,
-          durationMs: 1000,
-          pressureMs: 0,
-        });
-        return {
-          candidate,
-          status: result.status,
-          ticks: result.measuredTicks,
-          hash: result.hash,
-          frames: paced.frames,
-          inputAcknowledgements: paced.statistics.inputToVisible?.count ?? 0,
-        };
-      }, candidate),
-    );
+    for (const presentation of ['rich', 'lean'])
+      results.push(
+        await page.evaluate(
+          async ({ candidate, presentation }) => {
+            const options = {
+              candidate,
+              execution: 'worker',
+              size: 1000,
+              seed: 1729,
+              workload: 'mixed',
+              wire: 'object',
+              presentation,
+              ticks: 20,
+              warmupMs: 0,
+              warmupTicks: 2,
+            };
+            const result = await window.simulationWorkerBench.trial(options);
+            const paced = await window.simulationWorkerBench.paced({
+              ...options,
+              durationMs: 1000,
+              pressureMs: 0,
+            });
+            return {
+              candidate,
+              presentation,
+              status: result.status,
+              ticks: result.measuredTicks,
+              hash: result.hash,
+              frames: paced.frames,
+              inputAcknowledgements: paced.statistics.inputToVisible?.count ?? 0,
+            };
+          },
+          { candidate, presentation },
+        ),
+      );
   await page.evaluate(
     await fs.readFile(path.join(root, 'node_modules/axe-core/axe.min.js'), 'utf8'),
   );

@@ -1,0 +1,104 @@
+[
+  {
+    "file": "0000-check-miniplex-inline-1000-mixed.json",
+    "options": {
+      "size": 1000,
+      "seed": 1729,
+      "workload": "mixed",
+      "clock": "host",
+      "wire": "object",
+      "presentation": "lean",
+      "candidate": "miniplex",
+      "execution": "inline"
+    },
+    "status": "ok",
+    "result": {
+      "assertions": [
+        "Existing candidate oracle, ownership, detachment, growth, mutation, contention, restored continuation and independent-world checks",
+        "Tick-assigned reference equivalence, full/delta cache, nested edits/removals, 120 exactly-once commands, explicit cancellation acknowledgement, pause/resume, five-step catch-up and interrupted batch",
+        "Fresh worker/runtime restoration followed by 1000 matching steps and a new command; actual production Simulation/PlayerMotor 1000-step movement/placement probe",
+        "Lean numeric view equals authority; bounded on-demand details, nested updates, stale IDs and detached inventories",
+        "Failure retains last complete view, failed session is terminal, replacement, resynchronization and repeated initialization",
+        "Malformed messages, stale generation, bounded credits/commands, duplicate/gapped publication and idempotent teardown",
+        "Actual callback intervals detect injected 45 ms stall (45.0 ms observed)"
+      ]
+    }
+  },
+  {
+    "file": "0001-check-miniplex-worker-1000-mixed.json",
+    "options": {
+      "size": 1000,
+      "seed": 1729,
+      "workload": "mixed",
+      "clock": "host",
+      "wire": "object",
+      "presentation": "lean",
+      "candidate": "miniplex",
+      "execution": "worker"
+    },
+    "status": "ok",
+    "result": {
+      "assertions": [
+        "Existing candidate oracle, ownership, detachment, growth, mutation, contention, restored continuation and independent-world checks",
+        "Tick-assigned reference equivalence, full/delta cache, nested edits/removals, 120 exactly-once commands, explicit cancellation acknowledgement, pause/resume, five-step catch-up and interrupted batch",
+        "Fresh worker/runtime restoration followed by 1000 matching steps and a new command; actual production Simulation/PlayerMotor 1000-step movement/placement probe",
+        "Lean numeric view equals authority; bounded on-demand details, nested updates, stale IDs and detached inventories",
+        "Failure retains last complete view, failed session is terminal, replacement, resynchronization and repeated initialization",
+        "Unexpected termination and timeout settle pending requests and permit disposal",
+        "Malformed messages, stale generation, bounded credits/commands, duplicate/gapped publication and idempotent teardown",
+        "Actual callback intervals detect injected 45 ms stall (45.1 ms observed)"
+      ]
+    }
+  },
+  {
+    "file": "0002-check-bitecs-inline-1000-mixed.json",
+    "options": {
+      "size": 1000,
+      "seed": 1729,
+      "workload": "mixed",
+      "clock": "host",
+      "wire": "object",
+      "presentation": "lean",
+      "candidate": "bitecs",
+      "execution": "inline"
+    },
+    "status": "ok",
+    "result": {
+      "assertions": [
+        "Existing candidate oracle, ownership, detachment, growth, mutation, contention, restored continuation and independent-world checks",
+        "Tick-assigned reference equivalence, full/delta cache, nested edits/removals, 120 exactly-once commands, explicit cancellation acknowledgement, pause/resume, five-step catch-up and interrupted batch",
+        "Fresh worker/runtime restoration followed by 1000 matching steps and a new command; actual production Simulation/PlayerMotor 1000-step movement/placement probe",
+        "Lean numeric view equals authority; bounded on-demand details, nested updates, stale IDs and detached inventories",
+        "Failure retains last complete view, failed session is terminal, replacement, resynchronization and repeated initialization",
+        "Malformed messages, stale generation, bounded credits/commands, duplicate/gapped publication and idempotent teardown",
+        "Actual callback intervals detect injected 45 ms stall (45.0 ms observed)"
+      ]
+    }
+  },
+  {
+    "file": "0003-check-bitecs-worker-1000-mixed.json",
+    "options": {
+      "size": 1000,
+      "seed": 1729,
+      "workload": "mixed",
+      "clock": "host",
+      "wire": "object",
+      "presentation": "lean",
+      "candidate": "bitecs",
+      "execution": "worker"
+    },
+    "status": "ok",
+    "result": {
+      "assertions": [
+        "Existing candidate oracle, ownership, detachment, growth, mutation, contention, restored continuation and independent-world checks",
+        "Tick-assigned reference equivalence, full/delta cache, nested edits/removals, 120 exactly-once commands, explicit cancellation acknowledgement, pause/resume, five-step catch-up and interrupted batch",
+        "Fresh worker/runtime restoration followed by 1000 matching steps and a new command; actual production Simulation/PlayerMotor 1000-step movement/placement probe",
+        "Lean numeric view equals authority; bounded on-demand details, nested updates, stale IDs and detached inventories",
+        "Failure retains last complete view, failed session is terminal, replacement, resynchronization and repeated initialization",
+        "Unexpected termination and timeout settle pending requests and permit disposal",
+        "Malformed messages, stale generation, bounded credits/commands, duplicate/gapped publication and idempotent teardown",
+        "Actual callback intervals detect injected 45 ms stall (45.1 ms observed)"
+      ]
+    }
+  }
+]

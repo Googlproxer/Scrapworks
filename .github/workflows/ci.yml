@@ -80,7 +80,9 @@ jobs:
         run: yarn test
 
       - name: Verify single-worker protocols and small comparison workloads
-        run: yarn bench:worker:smoke --label hosted-ci
+        run: |
+          yarn bench:worker:smoke --label hosted-ci
+          yarn bench:worker:smoke --presentation lean --paced --label hosted-ci
 
       - name: Build production application
         run: yarn build --stats-json

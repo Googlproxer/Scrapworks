@@ -23,7 +23,7 @@ jobs:
       - run: yarn playwright install --with-deps chromium --only-shell
       - run: python3 -m pip install --target tmp/ecs-bench/plotting -r tools/ecs-bench/plot-requirements.txt
       - name: Run sequential single-worker comparison
-        run: yarn bench:worker:browser --label hosted-ci --output tmp/simulation-worker-bench/hosted
+        run: yarn bench:worker:browser --presentation lean --phase lean --label hosted-ci --output tmp/simulation-worker-bench/hosted
       - name: Summarize complete and partial evidence
         if: ${{ always() }}
         run: yarn bench:worker:report --input tmp/simulation-worker-bench/hosted

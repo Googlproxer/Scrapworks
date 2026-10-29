@@ -1,10 +1,12 @@
 import { Miniplex } from '../ecs-bench/adapters/miniplex.ts';
 import { BitECS } from '../ecs-bench/adapters/bitecs.ts';
-import type { Instance, Projection } from '../ecs-bench/model.ts';
+import type { Projection } from '../ecs-bench/model.ts';
+import type { Base } from '../ecs-bench/base.ts';
 import { Simulation } from '../../src/simulation/simulation.ts';
 import type { WorldDefinition, WorldView } from '../../src/contracts/world.ts';
-import { assert, Credits, epoch, validRequest } from './protocol.ts';
+import { assert, Credits, epoch, validDetails, validRequest } from './protocol.ts';
 import type { Command, Ledger, Options, Reply, Request, Times } from './protocol.ts';
+import { defaultDetails, publishLean } from './presentation.ts';
 
 const zero = (): Times => ({
   systems: 0,
@@ -59,7 +61,8 @@ export function movementProbe(): WorldView[] {
 
 /** Isolated coordinator. Workers never share a mutable ECS world. */
 export class Runtime {
-  private world?: Instance;
+  private world?: Base;
+  private watched = new Set<string>();
   private options?: Options;
   private generation = -1;
   private revision = 0;
@@ -144,6 +147,13 @@ export class Runtime {
     reply.times.publication += performance.now() - start;
     return projection;
   }
+  private publish(reply: Reply, full = false): Reply {
+    if (this.options?.presentation !== 'lean') return this.finish(reply, this.project(reply, full));
+    const start = performance.now();
+    reply.lean = publishLean(this.world!, this.watched, ++this.version, full);
+    reply.times.publication += performance.now() - start;
+    return this.finish(reply);
+  }
   private accept(r: Request): void {
     if (r.input) this.ledger.input = { ...r.input };
     for (const c of r.commands ?? []) {
@@ -203,6 +213,12 @@ export class Runtime {
           'Invalid candidate',
         );
         assert(Number.isSafeInteger(r.options.seed), 'Invalid seed');
+        assert(['rich', 'lean'].includes(r.options.presentation ?? 'rich'), 'Invalid presentation');
+        if (r.options.detailIds) validDetails(r.options.detailIds);
+        assert(
+          r.options.presentation !== 'lean' || (r.options.wire ?? 'object') === 'object',
+          'Lean presentation uses native transferable buffers',
+        );
         assert(
           Number.isInteger(r.options.size) &&
             r.options.size >= 1000 &&
@@ -221,6 +237,7 @@ export class Runtime {
             : new BitECS(r.options, r.capture?.world);
         this.world?.dispose();
         this.options = r.options;
+        this.watched = new Set(r.options.detailIds ?? defaultDetails);
         this.world = replacement;
         this.busy = false;
         this.clockCredits = new Credits();
@@ -244,7 +261,7 @@ export class Runtime {
         this.failed = false;
         this.failNext = false;
         this.posts = [];
-        return this.finish(reply, this.project(reply, true));
+        return this.publish(reply, true);
       }
       if (r.operation === 'dispose' && !this.world && r.generation === this.generation)
         return this.finish(reply);
@@ -259,6 +276,7 @@ export class Runtime {
         this.cancelCommands(reply);
         this.unpublished = undefined;
         this.posts = [];
+        this.watched.clear();
         return this.finish(reply);
       }
       if (r.operation === 'stats') {
@@ -292,6 +310,16 @@ export class Runtime {
         };
         return this.finish(reply);
       }
+      if (r.operation === 'watch') {
+        assert(
+          this.options?.presentation === 'lean' && !this.busy,
+          'Inspection requires a completed lean batch',
+        );
+        this.watched = new Set(r.detailIds ?? []);
+        reply.details = this.world.inspect([...this.watched]);
+        reply.detailIds = [...this.watched];
+        return this.finish(reply);
+      }
       if (r.operation === 'movement') {
         reply.movement = movementProbe();
         return this.finish(reply);
@@ -302,7 +330,7 @@ export class Runtime {
       }
       if (r.operation === 'dirty') {
         this.world.setDirty(r.fraction ?? 0);
-        return this.finish(reply, this.project(reply, r.full));
+        return this.publish(reply, r.full);
       }
       if (r.operation === 'clock-stop') {
         this.stopClock();
@@ -319,7 +347,7 @@ export class Runtime {
       if (r.operation === 'clock-poll') {
         if (this.paused) return this.finish(reply);
         this.accept(r);
-        return this.finish(reply, this.project(reply));
+        return this.publish(reply);
       }
       assert(r.operation === 'advance' && !this.clockRunning, 'Cannot mix clocks');
       if (this.paused) return this.finish(reply);
@@ -334,7 +362,7 @@ export class Runtime {
           return { ...reply, ok: false, error: 'World replaced', producedEpoch: epoch() };
         reply.times.execution = performance.now() - start;
         this.busy = false;
-        return this.finish(reply, reply.steps ? this.project(reply) : undefined);
+        return reply.steps ? this.publish(reply) : this.finish(reply);
       };
       if (r.yieldSteps || r.delayMs) {
         return (async () => {

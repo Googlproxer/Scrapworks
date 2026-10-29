@@ -9,7 +9,10 @@ const runtime = new Runtime();
 scope.onmessage = (event) => {
   const send = (reply: Reply): void => {
     const start = performance.now();
-    scope.postMessage(reply, reply.packed ? [reply.packed] : []);
+    scope.postMessage(
+      reply,
+      reply.lean ? [reply.lean.rows, reply.lean.removed] : reply.packed ? [reply.packed] : [],
+    );
     runtime.recordPost(performance.now() - start);
   };
   try {

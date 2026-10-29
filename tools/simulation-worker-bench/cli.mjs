@@ -16,7 +16,7 @@ const option = (name, fallback) => {
 };
 if (args.includes('--help')) {
   console.log(
-    'Simulation worker bench: check | smoke | calibrate | browser | report; --output path --resume --candidates miniplex,bitecs --executions inline,worker --phase all|primary|diagnostics|profiles|paced|followup --repetitions 5 --duration-ms 30000 --destination path --paced-input path --label reference-desktop|hosted-ci',
+    'Simulation worker bench: check | smoke | calibrate | browser | report; --output path --resume --candidates miniplex,bitecs --executions inline,worker --presentation rich|lean --phase all|primary|diagnostics|profiles|paced|followup|lean --repetitions 5 --duration-ms 30000 --destination path --paced-input path --label reference-desktop|hosted-ci',
   );
   process.exit(0);
 }
@@ -44,7 +44,12 @@ if (command === 'check' || command === 'smoke') {
   );
   execFileSync(
     process.execPath,
-    ['--experimental-transform-types', '--test', path.join(directory, 'protocol.test.mjs')],
+    [
+      '--experimental-transform-types',
+      '--test',
+      path.join(directory, 'protocol.test.mjs'),
+      path.join(directory, 'presentation.test.mjs'),
+    ],
     { cwd: root, stdio: 'inherit', windowsHide: true },
   );
 }
@@ -137,6 +142,7 @@ const manifest = {
     simulationWorkersPerWorld: 1,
     outstandingBatches: 1,
     primaryWire: 'object',
+    presentation: option('presentation', 'rich'),
   },
 };
 manifest.qualification = JSON.parse(
@@ -228,15 +234,26 @@ const configurations = candidates.flatMap((candidate) =>
 const smoke = command === 'smoke';
 const calibration = command === 'calibrate';
 const phase = option('phase', 'all');
-if (!['all', 'primary', 'diagnostics', 'profiles', 'paced', 'followup'].includes(phase))
+if (!['all', 'primary', 'diagnostics', 'profiles', 'paced', 'followup', 'lean'].includes(phase))
   throw new Error('Unknown phase');
+const leanFollowup = phase === 'lean';
+const presentation = option('presentation', 'rich');
+if (!['rich', 'lean'].includes(presentation) || (leanFollowup && presentation !== 'lean'))
+  throw new Error('Use --presentation rich|lean; --phase lean requires --presentation lean');
 const jobs = [];
-const base = { size: 100000, seed: 1729, workload: 'mixed', clock: 'host', wire: 'object' };
+const base = {
+  size: 100000,
+  seed: 1729,
+  workload: 'mixed',
+  clock: 'host',
+  wire: 'object',
+  presentation,
+};
 for (const config of configurations)
   jobs.push({ mode: 'check', options: { ...base, ...config, size: 1000 } });
 if (command !== 'check') {
   const reps = Number(option('repetitions', smoke || calibration ? 1 : 5));
-  if (phase === 'all' || phase === 'primary' || phase === 'followup') {
+  if (phase === 'all' || phase === 'primary' || phase === 'followup' || leanFollowup) {
     const cases = smoke
       ? [{ size: 1000, workload: 'mixed' }]
       : calibration
@@ -263,16 +280,26 @@ if (command !== 'check') {
           });
       }
   }
-  if (!smoke && !calibration && ['all', 'diagnostics'].includes(phase))
+  if (!smoke && !calibration && (['all', 'diagnostics'].includes(phase) || leanFollowup))
     for (const config of configurations) {
       jobs.push({ mode: 'ancillary', options: { ...base, ...config } });
-      for (const variant of [{ batch: 5 }, { batch: 5, yielding: true }, { wire: 'json-buffer' }])
+      for (const variant of leanFollowup
+        ? []
+        : [
+            { batch: 5 },
+            { batch: 5, yielding: true },
+            ...(presentation === 'rich' ? [{ wire: 'json-buffer' }] : []),
+          ])
         jobs.push({ mode: 'trial', diagnostic: true, options: { ...base, ...config, ...variant } });
     }
-  if (!smoke && !calibration && ['all', 'diagnostics', 'followup'].includes(phase))
+  if (
+    !smoke &&
+    !calibration &&
+    (['all', 'diagnostics', 'followup'].includes(phase) || leanFollowup)
+  )
     for (const config of configurations)
       jobs.push({ mode: 'payloads', diagnostic: true, options: { ...base, ...config } });
-  if (!smoke && !calibration && ['all', 'profiles'].includes(phase))
+  if (!smoke && !calibration && (['all', 'profiles'].includes(phase) || leanFollowup))
     for (const config of configurations)
       jobs.push({ mode: 'profile', options: { ...base, ...config, workload: 'churn' } });
   if (smoke && args.includes('--profiles'))
@@ -314,10 +341,10 @@ if (command !== 'check') {
         },
       });
   }
-  if (!smoke && !calibration && ['all', 'paced', 'followup'].includes(phase)) {
+  if (!smoke && !calibration && (['all', 'paced', 'followup'].includes(phase) || leanFollowup)) {
     const durationMs = Number(option('duration-ms', 30000));
     for (const config of configurations)
-      for (const workload of ['mixed', 'idle', 'active'])
+      for (const workload of leanFollowup ? ['mixed'] : ['mixed', 'idle', 'active'])
         for (const pressureMs of [0, 4, 8])
           for (let repetition = 0; repetition < 3; repetition++)
             jobs.push({
@@ -331,7 +358,17 @@ if (command !== 'check') {
         diagnostic: true,
         options: { ...base, ...config, hz: 120, pressureMs: 4, durationMs },
       });
-    const clockCases = configurations
+    if (leanFollowup)
+      for (const config of configurations.filter((c) => c.execution === 'worker'))
+        for (const workload of ['idle', 'active'])
+          for (let repetition = 0; repetition < 3; repetition++)
+            jobs.push({
+              mode: 'paced',
+              diagnostic: true,
+              repetition,
+              options: { ...base, ...config, workload, pressureMs: 8, durationMs },
+            });
+    const clockCases = (leanFollowup ? [] : configurations)
       .filter((c) => c.execution === 'worker')
       .flatMap((config) => ['host', 'worker'].map((clock) => ({ ...config, clock })));
     for (let repetition = 0; repetition < 3; repetition++) {

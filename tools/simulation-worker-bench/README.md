@@ -29,6 +29,25 @@ The current production Simulation/PlayerMotor movement and placement code is exe
 
 Object messages are the primary transport. JSON encoded into a transferred ArrayBuffer is a diagnostic available to both candidates, including packing/decoding cost. SharedArrayBuffer, Atomics, additional simulation workers and parallel system scheduling are not implemented. Future threading suitability is a source-backed architectural assessment.
 
+## Lean publication follow-up
+
+The 30 October follow-up adds `--presentation lean`. The default remains `rich` for historical reproduction. Both libraries use the same publisher, authoritative fixture, precision and native systems. The normal lean benchmark subscribes to the player inventory and one processor inspector.
+
+```text
+yarn bench:worker:check --presentation lean
+yarn bench:worker:smoke --presentation lean --paced --profiles
+yarn bench:worker:browser --presentation lean --phase lean --output tmp/simulation-worker-bench/<lean-run>
+yarn bench:worker:report --input tmp/simulation-worker-bench/<lean-run> --destination docs/reports/simulation-worker/<date>
+```
+
+Routine views transfer two newly allocated, presentation-owned ArrayBuffers: Float64 rows and removed identity pairs. Every dirty entity still publishes a row, including the same stable ordinal/generation identity, kind, position, status, work, charge, quantity, reservations, held output and publication tick. A row is 96 bytes; precision is unchanged. The worker neither constructs rich records first nor transfers authoritative stores. The host applies rows to its own typed cache. Frames retain generation/revision/version checks and require explicit full resynchronization on a gap. Full publications can resize host storage.
+
+Inventories, recipes and ownership remain in authority and full plain captures. A `watch` request accepts at most 16 unique game-owned IDs and immediately returns detached details for valid IDs at a completed batch boundary. Watched dirty entities publish fresh nested details with the next frame. Recycled IDs invalidate old subscriptions; selecting a replacement requires its new identity. Unwatched inventories are deliberately absent from routine views and must be inspected before displaying their details. This cap limits simultaneously subscribed inspectors, not authoritative inventories or entity population. More subscriptions or a different actual UI workload need separate qualification.
+
+There is no field-level diff, visibility culling, compression, shared memory or buffer pool. Rows intentionally repeat their small numeric presentation fields. Captures retain complete rich data and their separate serialization/rebuild costs. Contract correctness checks compare every published field and watched nested record with full authority, alongside the original full-state oracle checks. Pure tests cover transfer detachment, precision, stale removals, malformed full frames and cache growth. Neither publication contract changes production `WorldView`.
+
+`--phase lean` saves time by retaining all 120 primary trials (five repetitions, 2,000 steps, original warm-up/timeout), all 36 required normal-world paced runs (all configurations, three pressures, three 30-second repetitions), four 120 Hz diagnostics, and separate target memory/CPU, payload and capture diagnostics. Idle/active paced diagnostics use the two workers at 8 ms pressure, three repetitions each. It omits the superseded JSON/batch variants and alternate clock trials; it does not repeat the full non-qualifying idle/active pressure matrix. Jobs remain sequential in fresh browsers. The normal numerical gates are unchanged. CI covers both rich smoke and lean smoke/pacing; the manual workflow uses the focused lean phase. No hosted workflow is dispatched by running these commands locally.
+
 The 5/8 ms p95/p99 budget applies to per-tick simulation plus detached publication inside its execution context, before messaging. Host round trips include delivery and cache application. Primary cohort A receiver timing covers explicit JavaScript decoding/application. Follow-up cohort B additionally times `MessageEvent.data` access, reporting it separately from the whole message-handler duration as observed receiver cost. Browser-internal work before that access can remain unattributed; round trips, frame intervals and CPU profiles include delivery. Neither timer alone proves total main-thread transport cost. Epoch-aligned delivery estimates are diagnostic; round trips use one host monotonic clock. Initial full-view/import costs and first tick are separate from steady state.
 
 Paced 60 Hz results use observed RAF cadence. The 120 Hz timer scheduler is an **emulated diagnostic**, not physical-display qualification. Input-to-visible samples track synthetic marker submission, applied-tick acknowledgement and the next presentation callback, not physical input-to-photon delay. Interpolation metrics describe completed-tick buffering; real movement/camera feel requires the later integration/playtest. End-of-window pending probes are reported explicitly.

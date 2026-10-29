@@ -16,7 +16,7 @@ Updated 29 October 2026. Scrapworks is a browser-first 3D factory-restoration ga
 ## Implementation and authoring
 
 - [Technical Design Document](design/TDD.md): ownership, current implementation and planned systems.
-- [Simulation worker investigation](plans/simulation-worker-investigation.md) and [results](reports/simulation-worker/2026-10-29/README.md): retain Miniplex as the ECS baseline; rich-record transport fails worker browser qualification. Includes the asynchronous handoff and future multithreading assessment; production/multi-worker implementation remains pending.
+- [Simulation worker investigation](plans/simulation-worker-investigation.md) and [lean results](reports/simulation-worker/2026-10-30/README.md): Miniplex and bitECS qualify with compact transferred views and bounded detail subscriptions; retain Miniplex. The [rich transport study](reports/simulation-worker/2026-10-29/README.md) remains historical. Includes the asynchronous handoff and future multithreading assessment; production/multi-worker implementation remains pending.
 - [3D migration](plans/3d-migration.md) and [acceptance checklist](plans/3d-implementation-checklist.md): completed migration scope and evidence.
 - [Runtime walkthrough](plans/3d-phase-2-walkthrough.md): lifecycle, input, Toolkit scripts and session ownership.
 - [Editor/MCP setup](plans/babylon-editor-setup.md): authoring, export and desktop tools.

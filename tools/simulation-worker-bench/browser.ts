@@ -103,6 +103,8 @@ async function trial(options: TrialOptions) {
     requestDeliveryEstimate: [],
     responseDeliveryEstimate: [],
     records: [],
+    bufferBytes: [],
+    detailRecords: [],
   };
   const expected = expectedDirtyCounts(options);
   const start = performance.now();
@@ -138,8 +140,12 @@ async function trial(options: TrialOptions) {
     samples['responseDeliveryEstimate'].push(
       Math.max(0, client.receiveEpoch - reply.producedEpoch),
     );
-    const records = reply.frame?.view.records.length ?? 0;
+    const records = reply.lean?.count ?? reply.frame?.view.records.length ?? 0;
     samples['records'].push(records);
+    samples['bufferBytes'].push(
+      reply.lean ? reply.lean.rows.byteLength + reply.lean.removed.byteLength : 0,
+    );
+    samples['detailRecords'].push(reply.lean?.details.length ?? 0);
     if (count === 1)
       assert(records === expected[client.tick % 100], 'Changed-record count mismatch');
     i += count - 1;
@@ -156,10 +162,7 @@ async function trial(options: TrialOptions) {
       measuredTicks * options.size * (options.workload === 'idle' ? 0.00001 : 0.0001),
     'Meaningful work stopped',
   );
-  assert(
-    JSON.stringify(client.records) === JSON.stringify(captured.world.records),
-    'Detached receiver cache mismatch',
-  );
+  client.verify(captured.world.records);
   const fingerprint = await hash(captured);
   const resources = captured.world.resources;
   const disposalStart = performance.now();
@@ -416,7 +419,7 @@ async function ancillary(options: Options) {
           hostApply: client.hostApplyMs,
           publication: result.times.publication,
           packing: result.times.packing,
-          records: result.frame?.view.records.length,
+          records: result.lean?.count ?? result.frame?.view.records.length,
         });
       }
       publication.push({ full, fraction, samples });
@@ -441,8 +444,26 @@ async function ancillary(options: Options) {
 async function payloadSizes(options: Options) {
   await initialize(options);
   const client = active!;
-  const rows: { name: string; records: number; removed: number; jsonBytes: number }[] = [];
+  const rows: {
+    name: string;
+    records: number;
+    removed: number;
+    jsonBytes?: number;
+    bufferBytes?: number;
+    envelopeJsonBytes?: number;
+  }[] = [];
   const record = (name: string, reply: Reply): void => {
+    if (reply.lean) {
+      const { rows: data, removed, ...envelope } = reply.lean;
+      rows.push({
+        name,
+        records: reply.lean.count,
+        removed: removed.byteLength / 16,
+        bufferBytes: data.byteLength + removed.byteLength,
+        envelopeJsonBytes: new TextEncoder().encode(JSON.stringify(envelope)).length,
+      });
+      return;
+    }
     assert(reply.frame, 'Payload size diagnostic requires decoded frame');
     rows.push({
       name,
@@ -458,7 +479,7 @@ async function payloadSizes(options: Options) {
       record(`dirty-${fraction}`, await client.request('dirty', { fraction }));
     return {
       measurement:
-        'UTF-8 JSON size estimate outside timing; structured-clone wire bytes unavailable',
+        'Lean: exact transferred buffer bytes plus JSON envelope estimate; rich: UTF-8 JSON estimate; browser message overhead unavailable',
       rows,
     };
   } finally {

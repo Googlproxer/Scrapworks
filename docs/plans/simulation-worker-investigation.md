@@ -1,6 +1,6 @@
 # Simulation worker investigation
 
-Decision and plan recorded 29 October 2026. Status: **investigation complete; current worker publication fails qualification**. See the [29 October report](../reports/simulation-worker/2026-10-29/README.md). Compare **Miniplex 2.0.0 and bitECS 0.4.0** in the agreed single simulation-worker architecture, including their suitability for possible future multithreading. The results retain Miniplex as the preferred baseline. Both candidates pass correctness and simulation/copy latency, but rich-record transport misses host-work, callback and input budgets. Production worker integration requires a revised publication contract; production ECS/gameplay implementation remains pending.
+Decision and plan recorded 29 October 2026; lean follow-up completed 30 October. Status: **both lean worker configurations qualify in the standalone laboratory; production integration remains pending**. The [30 October report](../reports/simulation-worker/2026-10-30/README.md) retains **Miniplex 2.0.0** over **bitECS 0.4.0**. The [29 October rich-record report](../reports/simulation-worker/2026-10-29/README.md) remains historical: both passed correctness and simulation/copy latency, but rich transport failed browser budgets. Compact transferred presentation rows and bounded on-demand details now pass the unchanged normal-workload gates. Production ECS/gameplay implementation and multi-worker ECS remain out of scope.
 
 [Roadmap](README.md) · [Milestone 3 Step 0](milestone-03-character-and-manual-opening.md#step-0-establish-and-prove-the-ecs-foundation) · [ECS evidence](../reports/ecs/2026-10-29/README.md) · [Technical design](../design/TDD.md#ecs-foundation-from-milestone-3)
 
@@ -32,6 +32,14 @@ The existing ECS report retains its original dual-runtime selection protocol and
 7. Does either candidate offer a measured advantage in single-worker cost or maintainability, and what additional work would each require for future multi-worker simulation?
 
 The user confirmed 60 FPS qualification, 120 FPS diagnostics and interpolation first. Numerical budgets below were frozen after calibration and retained without relaxation. The report documents warm-context and callback-arrival corrections, complete primary/paced evidence and excluded superseded samples.
+
+## 30 October lean follow-up
+
+The user authorized implementing a leaner contract and repeating necessary qualifications, while avoiding excessive test-speed optimization. Both candidates now share 96-byte Float64 presentation rows, transferred presentation-owned buffers, versioned removals and detached inventory/selection subscriptions bounded to 16 IDs. Qualification watches the player inventory and one processor. Unwatched details are fetched on demand; full capture/restoration retains all authoritative fields. This explicitly revises routine view requirements while preserving the full world, native systems, commands, precision, dirty counts and compute/receiving/frame/input budgets.
+
+The focused `--presentation lean --phase lean` run retains all 120 primary trials and 36 required normal paced runs, full target memory soaks/lifecycle cycles, capture and payload diagnostics, plus idle/active worker pacing at 8 ms and attempted 120 Hz diagnostics. It skips superseded JSON/batch/alternate-clock trials and the full non-qualifying idle/active pressure matrix. All 188 jobs finish in 54 minutes 25 seconds with no harness failures or primary timeouts. Both candidates qualify; the fully active stress case still exceeds the normal compute p95 budget. The timer diagnostic observes about 65 Hz, so 120 Hz remains unqualified.
+
+Use the [lean method](../reports/simulation-worker/2026-10-30/methodology.md) and [updated handoff](../reports/simulation-worker/2026-10-30/handoff.md) for the new field/subscription contract, production ID adaptation and integrated-scene checks. Host credits, interpolation first, single authority, pause/failure/replacement and deferred parallelism remain unchanged. A laboratory pass does not implement the production worker or establish Babylon/target-device performance. Historical sections below describe the original investigation; this follow-up supersedes its rich routine publication for the recommended integration direction.
 
 ## 1. Audit the current boundary
 
@@ -175,9 +183,9 @@ Revisit the original five equally weighted maintainability criteria (domain reus
 - [x] Small correctness/smoke CI checks and a manual performance workflow with uploaded artifacts. Hosted-runner timings remain separate from reference-desktop qualification.
 - [x] A production implementation plan listing exact affected contracts/files, migration order, rollback path and focused regression checks. Reconcile only investigation evidence; leave production worker and remaining Milestone 3 foundation/gameplay checklists open until implemented and verified.
 
-The investigation is complete, with failed worker publication qualification and no production migration. Target-device qualification, other browser engines, offline production, gameplay persistence, multiple authoritative simulation workers and shared-memory parallel ECS implementation remain later work. Only the suitability assessment for that future parallelism is included now.
+The investigation and lean requalification are complete, with successful normal-workload qualification and no production migration. Target-device qualification, real Babylon scenes, other browser engines, offline production, gameplay persistence, multiple authoritative simulation workers and shared-memory parallel ECS implementation remain later work. Only the suitability assessment for that future parallelism is included now.
 
-Evidence: [results](../reports/simulation-worker/2026-10-29/README.md), [compatibility/handoff](../reports/simulation-worker/2026-10-29/compatibility.md), and [threading assessment](../reports/simulation-worker/2026-10-29/future-threading.md). The common laboratory host bundle includes both APIs for its inline controls; the production input audit excludes all candidates. Investigation completion grants no production runtime/worker credit. Neither current worker bridge qualifies; publication rework and the remaining Milestone 3 foundation stay open.
+Evidence: [lean results](../reports/simulation-worker/2026-10-30/README.md), [updated handoff](../reports/simulation-worker/2026-10-30/handoff.md), [original compatibility audit](../reports/simulation-worker/2026-10-29/compatibility.md), and [threading assessment](../reports/simulation-worker/2026-10-29/future-threading.md). The common laboratory host bundle includes both APIs for its inline controls; the production input audit excludes all candidates. Investigation completion grants no production runtime/worker credit. Both lean bridges qualify on the reference desktop; production integration and the remaining Milestone 3 foundation stay open.
 
 ## Technical sources
 
