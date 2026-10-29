@@ -30,7 +30,11 @@
     "bench:ecs:node": "node tools/ecs-bench/cli.mjs node",
     "bench:ecs:browser": "node tools/ecs-bench/cli.mjs browser",
     "bench:ecs:full": "node tools/ecs-bench/cli.mjs full",
-    "bench:ecs:report": "node tools/ecs-bench/cli.mjs report"
+    "bench:ecs:report": "node tools/ecs-bench/cli.mjs report",
+    "bench:worker:check": "node tools/simulation-worker-bench/cli.mjs check",
+    "bench:worker:smoke": "node tools/simulation-worker-bench/cli.mjs smoke",
+    "bench:worker:browser": "node tools/simulation-worker-bench/cli.mjs browser",
+    "bench:worker:report": "node tools/simulation-worker-bench/cli.mjs report"
   },
   "repository": {
     "type": "git",

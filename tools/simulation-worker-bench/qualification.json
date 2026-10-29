@@ -1,0 +1,24 @@
+{
+  "recordedDate": "2026-10-29",
+  "status": "Frozen after calibration, before reference qualification",
+  "targetEntities": 100000,
+  "requiredFrameRate": 60,
+  "diagnosticFrameRate": 120,
+  "gates": {
+    "workerP95": 5,
+    "workerP99": 8,
+    "hostApplyP95": 2,
+    "hostApplyP99": 4,
+    "frameP95": 18.5,
+    "frameP99": 33.4,
+    "inputP95": 100,
+    "inputP99": 150
+  },
+  "notes": [
+    "The proposed numerical budgets from the plan are retained without relaxation.",
+    "Receiver callback cost is explicit JavaScript decode/cache application. Browser-internal deserialization is accounted for in host round trips, frame intervals and separate profiles, not that callback timer.",
+    "Input-to-visible is sampled synthetic intent through applied-tick acknowledgement and the next presentation callback; physical input-to-photon and full-game rendering remain unqualified.",
+    "120 Hz is timer-emulated diagnostic pacing, not physical-display qualification.",
+    "Calibration-01 and all development smoke cohorts are excluded from reference ranking."
+  ]
+}

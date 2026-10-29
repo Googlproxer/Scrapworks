@@ -22,7 +22,7 @@ for (const file of stats) {
   const inputs = Object.keys(metadata.inputs ?? {});
   count += inputs.length;
   const forbidden = inputs.filter((input) =>
-    /(?:^|[\\/])(?:miniplex|bitecs|koota|@lastolivegames[\\/]becsy|tools[\\/]ecs-bench)(?:[\\/]|$)/.test(
+    /(?:^|[\\/])(?:miniplex|bitecs|koota|@lastolivegames[\\/]becsy|tools[\\/](?:ecs-bench|simulation-worker-bench))(?:[\\/]|$)/.test(
       input,
     ),
   );

@@ -1,0 +1,36 @@
+name: Simulation worker investigation
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: simulation-worker-bench-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn playwright install --with-deps chromium --only-shell
+      - run: python3 -m pip install --target tmp/ecs-bench/plotting -r tools/ecs-bench/plot-requirements.txt
+      - name: Run sequential single-worker comparison
+        run: yarn bench:worker:browser --label hosted-ci --output tmp/simulation-worker-bench/hosted
+      - name: Summarize complete and partial evidence
+        if: ${{ always() }}
+        run: yarn bench:worker:report --input tmp/simulation-worker-bench/hosted
+      - uses: actions/upload-artifact@v7
+        if: ${{ always() }}
+        with:
+          name: simulation-worker-${{ github.run_id }}
+          path: tmp/simulation-worker-bench/hosted/
+          retention-days: 7
+          if-no-files-found: error

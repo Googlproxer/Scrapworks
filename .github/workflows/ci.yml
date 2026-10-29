@@ -79,6 +79,9 @@ jobs:
       - name: Run Chromium application and accessibility tests
         run: yarn test
 
+      - name: Verify single-worker protocols and small comparison workloads
+        run: yarn bench:worker:smoke --label hosted-ci
+
       - name: Build production application
         run: yarn build --stats-json
 
@@ -100,6 +103,7 @@ jobs:
             tmp/workflow-browser/
             .vitest/
             tmp/ecs-bench/
+            tmp/simulation-worker-bench/
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
