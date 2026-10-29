@@ -11,7 +11,7 @@ const median = (values) => {
 };
 const primary = ['miniplex', 'bitecs', 'koota', 'becsy'];
 export const isJobResultFile = (name) => /^\d{4}-.+\.json$/.test(name) && !name.includes('.json.');
-export async function report(input, destination) {
+export async function report(input, destination, profilesFrom) {
   const maintainability = JSON.parse(
     await fs.readFile(path.join(import.meta.dirname, 'maintainability.json'), 'utf8'),
   );
@@ -19,6 +19,42 @@ export async function report(input, destination) {
   const jobs = [];
   for (const name of (await fs.readdir(input)).filter(isJobResultFile))
     jobs.push(JSON.parse(await fs.readFile(path.join(input, name), 'utf8')));
+  let diagnosticManifest;
+  if (profilesFrom) {
+    profilesFrom = path.resolve(profilesFrom);
+    diagnosticManifest = JSON.parse(
+      await fs.readFile(path.join(profilesFrom, 'manifest.json'), 'utf8'),
+    );
+    if (
+      diagnosticManifest.lockHash !== manifest.lockHash ||
+      diagnosticManifest.runtime.node !== manifest.runtime.node ||
+      JSON.stringify(diagnosticManifest.hardware) !== JSON.stringify(manifest.hardware)
+    )
+      throw new Error('Diagnostic replacement must use the same lock, Node version and hardware');
+    const additional = [];
+    for (const name of (await fs.readdir(profilesFrom)).filter(isJobResultFile))
+      additional.push(JSON.parse(await fs.readFile(path.join(profilesFrom, name), 'utf8')));
+    for (const environment of ['node', 'browser'])
+      for (const candidate of primary) {
+        const replacement = additional.find(
+          (job) =>
+            job.mode === 'profile' &&
+            job.environment === environment &&
+            job.candidate === candidate,
+        );
+        if (!replacement || replacement.soakTicks !== 10000 || replacement.cycles !== 20)
+          throw new Error(`Missing full diagnostic replacement for ${environment}/${candidate}`);
+        const index = jobs.findIndex(
+          (job) =>
+            job.mode === 'profile' &&
+            job.environment === environment &&
+            job.candidate === candidate,
+        );
+        if (index < 0) throw new Error('Original cohort lacks the corresponding profile');
+        jobs[index] = { ...replacement, rawDirectory: profilesFrom };
+      }
+    jobs.push(...additional.filter((job) => job.mode === 'check'));
+  }
   const groups = new Map();
   for (const job of jobs.filter((j) => j.mode === 'trial' && j.status === 'ok')) {
     const key = `${job.environment},${job.candidate},${job.size},${job.workload}`;
@@ -107,6 +143,7 @@ export async function report(input, destination) {
     );
     const correct =
       !rows.some((r) => r.candidate === candidate && r.equivalentToReference === false) &&
+      !correctness.some((c) => c.candidate === candidate && c.status !== 'ok') &&
       ['node', 'browser'].every((environment) =>
         correctness.some(
           (c) => c.candidate === candidate && c.environment === environment && c.status === 'ok',
@@ -205,6 +242,7 @@ export async function report(input, destination) {
       candidate: j.candidate,
       size: j.size,
       status: j.status,
+      sourceDirectory: j.rawDirectory ?? input,
       result: j.result,
       error: j.error,
     }));
@@ -213,7 +251,7 @@ export async function report(input, destination) {
     if (result.gcTrace) {
       try {
         const events = JSON.parse(
-          await fs.readFile(path.join(input, result.gcTrace), 'utf8'),
+          await fs.readFile(path.join(profile.sourceDirectory, result.gcTrace), 'utf8'),
         ).traceEvents;
         const gc = events.filter(
           (event) => event.ph === 'X' && /GC|Scavenge|MarkCompact/.test(event.name),
@@ -244,7 +282,9 @@ export async function report(input, destination) {
       note: 'All-phase totals include checkpoint/profile GC. Soak totals use event timestamps within the unforced workload interval.',
     };
     try {
-      const cpu = JSON.parse(await fs.readFile(path.join(input, result.cpuProfile), 'utf8'));
+      const cpu = JSON.parse(
+        await fs.readFile(path.join(profile.sourceDirectory, result.cpuProfile), 'utf8'),
+      );
       const durations = new Map();
       for (let i = 0; i < (cpu.samples ?? []).length; i++)
         durations.set(
@@ -264,7 +304,7 @@ export async function report(input, destination) {
     }
     try {
       const allocations = JSON.parse(
-        await fs.readFile(path.join(input, result.allocationProfile), 'utf8'),
+        await fs.readFile(path.join(profile.sourceDirectory, result.allocationProfile), 'utf8'),
       );
       const nodes = [];
       const walk = (node) => {
@@ -326,6 +366,7 @@ export async function report(input, destination) {
   const summary = {
     schema: 1,
     manifest,
+    diagnosticManifest,
     rows,
     correctness,
     qualification,
@@ -483,7 +524,7 @@ export async function report(input, destination) {
       ),
       '',
     );
-  await fs.writeFile(path.join(targetDirectory, 'README.md'), lines.join('\n'));
+  await fs.writeFile(path.join(targetDirectory, 'evidence.md'), lines.join('\n'));
   if (rows.length) {
     const bundled = path.join(
       os.homedir(),
@@ -503,13 +544,13 @@ export async function report(input, destination) {
         stdio: 'pipe',
       });
       await fs.appendFile(
-        path.join(targetDirectory, 'README.md'),
+        path.join(targetDirectory, 'evidence.md'),
         '\n## Scaling and memory charts\n\n![Scaling](scaling.svg)\n\n![Memory](memory.svg)\n',
       );
     } catch (error) {
       await fs.writeFile(path.join(targetDirectory, 'plot-error.txt'), String(error));
       await fs.appendFile(
-        path.join(targetDirectory, 'README.md'),
+        path.join(targetDirectory, 'evidence.md'),
         '\nCharts unavailable: install tools/ecs-bench/plot-requirements.txt into tmp/ecs-bench/plotting with Python 3.12+ and regenerate the report.\n',
       );
     }

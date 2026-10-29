@@ -1,0 +1,6725 @@
+{
+  "method": "Independent period/replacement arithmetic from the seeded fixture; outside timing.",
+  "checks": [
+    {
+      "file": "0016-node-trial-reference-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0017-node-trial-miniplex-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0018-node-trial-bitecs-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0019-node-trial-koota-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0020-node-trial-becsy-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0021-node-trial-reference-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0022-node-trial-miniplex-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0023-node-trial-bitecs-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0024-node-trial-koota-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0025-node-trial-becsy-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0026-node-trial-reference-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0027-node-trial-miniplex-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0028-node-trial-bitecs-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0029-node-trial-koota-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0030-node-trial-becsy-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0031-node-trial-reference-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0032-node-trial-miniplex-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0033-node-trial-bitecs-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0034-node-trial-koota-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0035-node-trial-becsy-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0036-node-trial-reference-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0037-node-trial-miniplex-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0038-node-trial-bitecs-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0039-node-trial-koota-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0040-node-trial-becsy-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0041-node-trial-reference-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0042-node-trial-miniplex-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0043-node-trial-bitecs-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0044-node-trial-koota-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0045-node-trial-becsy-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0046-node-trial-reference-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0047-node-trial-miniplex-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0048-node-trial-bitecs-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0049-node-trial-koota-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0050-node-trial-becsy-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0051-node-trial-reference-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0052-node-trial-miniplex-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0053-node-trial-bitecs-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0054-node-trial-koota-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0055-node-trial-becsy-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0056-node-trial-reference-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0057-node-trial-miniplex-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0058-node-trial-bitecs-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0059-node-trial-koota-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0060-node-trial-becsy-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0061-node-trial-reference-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0062-node-trial-miniplex-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0063-node-trial-bitecs-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0064-node-trial-koota-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0065-node-trial-becsy-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0066-node-trial-reference-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0067-node-trial-miniplex-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0068-node-trial-bitecs-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0069-node-trial-koota-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0070-node-trial-becsy-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0071-node-trial-reference-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0072-node-trial-miniplex-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0073-node-trial-bitecs-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0074-node-trial-koota-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0075-node-trial-becsy-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0076-node-trial-reference-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0077-node-trial-miniplex-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0078-node-trial-bitecs-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0079-node-trial-koota-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0080-node-trial-becsy-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0081-node-trial-reference-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0082-node-trial-miniplex-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0083-node-trial-bitecs-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0084-node-trial-koota-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0085-node-trial-becsy-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0086-node-trial-reference-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0087-node-trial-miniplex-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0088-node-trial-bitecs-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0089-node-trial-koota-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0090-node-trial-becsy-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0091-node-trial-reference-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0092-node-trial-miniplex-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0093-node-trial-bitecs-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0094-node-trial-koota-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0095-node-trial-becsy-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0096-node-trial-reference-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0097-node-trial-miniplex-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0098-node-trial-bitecs-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0099-node-trial-koota-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0100-node-trial-becsy-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0101-node-trial-reference-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0102-node-trial-miniplex-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0103-node-trial-bitecs-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0104-node-trial-koota-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0105-node-trial-becsy-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0106-node-trial-reference-250000-active-0.json",
+      "ticks": 1567,
+      "completed": 10242869,
+      "expected": 10242869
+    },
+    {
+      "file": "0107-node-trial-miniplex-250000-active-0.json",
+      "ticks": 1591,
+      "completed": 10392869,
+      "expected": 10392869
+    },
+    {
+      "file": "0108-node-trial-bitecs-250000-active-0.json",
+      "ticks": 1737,
+      "completed": 11314299,
+      "expected": 11314299
+    },
+    {
+      "file": "0109-node-trial-koota-250000-active-0.json",
+      "ticks": 1214,
+      "completed": 7885723,
+      "expected": 7885723
+    },
+    {
+      "file": "0110-node-trial-becsy-250000-active-0.json",
+      "ticks": 1313,
+      "completed": 8550010,
+      "expected": 8550010
+    },
+    {
+      "file": "0111-node-trial-reference-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0112-node-trial-miniplex-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0113-node-trial-bitecs-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0114-node-trial-koota-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0115-node-trial-becsy-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0116-browser-trial-reference-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0117-browser-trial-miniplex-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0118-browser-trial-bitecs-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0119-browser-trial-koota-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0120-browser-trial-becsy-1000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0121-browser-trial-reference-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0122-browser-trial-miniplex-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0123-browser-trial-bitecs-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0124-browser-trial-koota-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0125-browser-trial-becsy-1000-idle-0.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0126-browser-trial-reference-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0127-browser-trial-miniplex-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0128-browser-trial-bitecs-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0129-browser-trial-koota-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0130-browser-trial-becsy-1000-active-0.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0131-browser-trial-reference-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0132-browser-trial-miniplex-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0133-browser-trial-bitecs-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0134-browser-trial-koota-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0135-browser-trial-becsy-1000-churn-0.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0136-browser-trial-reference-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0137-browser-trial-miniplex-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0138-browser-trial-bitecs-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0139-browser-trial-koota-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0140-browser-trial-becsy-10000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0141-browser-trial-reference-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0142-browser-trial-miniplex-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0143-browser-trial-bitecs-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0144-browser-trial-koota-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0145-browser-trial-becsy-10000-idle-0.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0146-browser-trial-reference-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0147-browser-trial-miniplex-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0148-browser-trial-bitecs-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0149-browser-trial-koota-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0150-browser-trial-becsy-10000-active-0.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0151-browser-trial-reference-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0152-browser-trial-miniplex-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0153-browser-trial-bitecs-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0154-browser-trial-koota-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0155-browser-trial-becsy-10000-churn-0.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0156-browser-trial-reference-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0157-browser-trial-miniplex-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0158-browser-trial-bitecs-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0159-browser-trial-koota-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0160-browser-trial-becsy-50000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0161-browser-trial-reference-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0162-browser-trial-miniplex-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0163-browser-trial-bitecs-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0164-browser-trial-koota-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0165-browser-trial-becsy-50000-idle-0.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0166-browser-trial-reference-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0167-browser-trial-miniplex-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0168-browser-trial-bitecs-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0169-browser-trial-koota-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0170-browser-trial-becsy-50000-active-0.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0171-browser-trial-reference-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0172-browser-trial-miniplex-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0173-browser-trial-bitecs-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0174-browser-trial-koota-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0175-browser-trial-becsy-50000-churn-0.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0176-browser-trial-reference-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0177-browser-trial-miniplex-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0178-browser-trial-bitecs-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0179-browser-trial-koota-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0180-browser-trial-becsy-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0181-browser-trial-reference-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0182-browser-trial-miniplex-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0183-browser-trial-bitecs-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0184-browser-trial-koota-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0185-browser-trial-becsy-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0186-browser-trial-reference-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0187-browser-trial-miniplex-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0188-browser-trial-bitecs-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0189-browser-trial-koota-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0190-browser-trial-becsy-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0191-browser-trial-reference-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0192-browser-trial-miniplex-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0193-browser-trial-bitecs-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0194-browser-trial-koota-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0195-browser-trial-becsy-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0196-browser-trial-reference-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0197-browser-trial-miniplex-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0198-browser-trial-bitecs-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0199-browser-trial-koota-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0200-browser-trial-becsy-250000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0201-browser-trial-reference-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0202-browser-trial-miniplex-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0203-browser-trial-bitecs-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0204-browser-trial-koota-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0205-browser-trial-becsy-250000-idle-0.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0206-browser-trial-reference-250000-active-0.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0207-browser-trial-miniplex-250000-active-0.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0208-browser-trial-bitecs-250000-active-0.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0209-browser-trial-koota-250000-active-0.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0210-browser-trial-becsy-250000-active-0.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0211-browser-trial-reference-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0212-browser-trial-miniplex-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0213-browser-trial-bitecs-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0214-browser-trial-koota-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0215-browser-trial-becsy-250000-churn-0.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0216-node-trial-miniplex-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0217-node-trial-bitecs-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0218-node-trial-koota-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0219-node-trial-becsy-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0220-node-trial-reference-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0221-node-trial-miniplex-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0222-node-trial-bitecs-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0223-node-trial-koota-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0224-node-trial-becsy-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0225-node-trial-reference-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0226-node-trial-miniplex-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0227-node-trial-bitecs-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0228-node-trial-koota-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0229-node-trial-becsy-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0230-node-trial-reference-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0231-node-trial-miniplex-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0232-node-trial-bitecs-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0233-node-trial-koota-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0234-node-trial-becsy-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0235-node-trial-reference-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0236-node-trial-miniplex-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0237-node-trial-bitecs-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0238-node-trial-koota-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0239-node-trial-becsy-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0240-node-trial-reference-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0241-node-trial-miniplex-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0242-node-trial-bitecs-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0243-node-trial-koota-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0244-node-trial-becsy-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0245-node-trial-reference-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0246-node-trial-miniplex-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0247-node-trial-bitecs-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0248-node-trial-koota-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0249-node-trial-becsy-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0250-node-trial-reference-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0251-node-trial-miniplex-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0252-node-trial-bitecs-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0253-node-trial-koota-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0254-node-trial-becsy-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0255-node-trial-reference-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0256-node-trial-miniplex-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0257-node-trial-bitecs-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0258-node-trial-koota-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0259-node-trial-becsy-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0260-node-trial-reference-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0261-node-trial-miniplex-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0262-node-trial-bitecs-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0263-node-trial-koota-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0264-node-trial-becsy-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0265-node-trial-reference-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0266-node-trial-miniplex-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0267-node-trial-bitecs-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0268-node-trial-koota-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0269-node-trial-becsy-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0270-node-trial-reference-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0271-node-trial-miniplex-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0272-node-trial-bitecs-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0273-node-trial-koota-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0274-node-trial-becsy-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0275-node-trial-reference-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0276-node-trial-miniplex-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0277-node-trial-bitecs-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0278-node-trial-koota-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0279-node-trial-becsy-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0280-node-trial-reference-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0281-node-trial-miniplex-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0282-node-trial-bitecs-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0283-node-trial-koota-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0284-node-trial-becsy-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0285-node-trial-reference-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0286-node-trial-miniplex-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0287-node-trial-bitecs-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0288-node-trial-koota-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0289-node-trial-becsy-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0290-node-trial-reference-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0291-node-trial-miniplex-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0292-node-trial-bitecs-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0293-node-trial-koota-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0294-node-trial-becsy-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0295-node-trial-reference-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0296-node-trial-miniplex-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0297-node-trial-bitecs-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0298-node-trial-koota-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0299-node-trial-becsy-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0300-node-trial-reference-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0301-node-trial-miniplex-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0302-node-trial-bitecs-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0303-node-trial-koota-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0304-node-trial-becsy-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0305-node-trial-reference-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0306-node-trial-miniplex-250000-active-1.json",
+      "ticks": 1792,
+      "completed": 11678585,
+      "expected": 11678585
+    },
+    {
+      "file": "0307-node-trial-bitecs-250000-active-1.json",
+      "ticks": 1769,
+      "completed": 11550013,
+      "expected": 11550013
+    },
+    {
+      "file": "0308-node-trial-koota-250000-active-1.json",
+      "ticks": 1205,
+      "completed": 7864295,
+      "expected": 7864295
+    },
+    {
+      "file": "0309-node-trial-becsy-250000-active-1.json",
+      "ticks": 1391,
+      "completed": 9064296,
+      "expected": 9064296
+    },
+    {
+      "file": "0310-node-trial-reference-250000-active-1.json",
+      "ticks": 1680,
+      "completed": 11014299,
+      "expected": 11014299
+    },
+    {
+      "file": "0311-node-trial-miniplex-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0312-node-trial-bitecs-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0313-node-trial-koota-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0314-node-trial-becsy-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0315-node-trial-reference-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0316-browser-trial-miniplex-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0317-browser-trial-bitecs-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0318-browser-trial-koota-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0319-browser-trial-becsy-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0320-browser-trial-reference-1000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0321-browser-trial-miniplex-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0322-browser-trial-bitecs-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0323-browser-trial-koota-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0324-browser-trial-becsy-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0325-browser-trial-reference-1000-idle-1.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0326-browser-trial-miniplex-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0327-browser-trial-bitecs-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0328-browser-trial-koota-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0329-browser-trial-becsy-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0330-browser-trial-reference-1000-active-1.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0331-browser-trial-miniplex-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0332-browser-trial-bitecs-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0333-browser-trial-koota-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0334-browser-trial-becsy-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0335-browser-trial-reference-1000-churn-1.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0336-browser-trial-miniplex-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0337-browser-trial-bitecs-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0338-browser-trial-koota-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0339-browser-trial-becsy-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0340-browser-trial-reference-10000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0341-browser-trial-miniplex-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0342-browser-trial-bitecs-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0343-browser-trial-koota-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0344-browser-trial-becsy-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0345-browser-trial-reference-10000-idle-1.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0346-browser-trial-miniplex-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0347-browser-trial-bitecs-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0348-browser-trial-koota-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0349-browser-trial-becsy-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0350-browser-trial-reference-10000-active-1.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0351-browser-trial-miniplex-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0352-browser-trial-bitecs-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0353-browser-trial-koota-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0354-browser-trial-becsy-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0355-browser-trial-reference-10000-churn-1.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0356-browser-trial-miniplex-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0357-browser-trial-bitecs-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0358-browser-trial-koota-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0359-browser-trial-becsy-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0360-browser-trial-reference-50000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0361-browser-trial-miniplex-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0362-browser-trial-bitecs-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0363-browser-trial-koota-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0364-browser-trial-becsy-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0365-browser-trial-reference-50000-idle-1.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0366-browser-trial-miniplex-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0367-browser-trial-bitecs-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0368-browser-trial-koota-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0369-browser-trial-becsy-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0370-browser-trial-reference-50000-active-1.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0371-browser-trial-miniplex-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0372-browser-trial-bitecs-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0373-browser-trial-koota-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0374-browser-trial-becsy-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0375-browser-trial-reference-50000-churn-1.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0376-browser-trial-miniplex-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0377-browser-trial-bitecs-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0378-browser-trial-koota-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0379-browser-trial-becsy-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0380-browser-trial-reference-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0381-browser-trial-miniplex-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0382-browser-trial-bitecs-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0383-browser-trial-koota-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0384-browser-trial-becsy-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0385-browser-trial-reference-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0386-browser-trial-miniplex-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0387-browser-trial-bitecs-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0388-browser-trial-koota-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0389-browser-trial-becsy-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0390-browser-trial-reference-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0391-browser-trial-miniplex-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0392-browser-trial-bitecs-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0393-browser-trial-koota-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0394-browser-trial-becsy-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0395-browser-trial-reference-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0396-browser-trial-miniplex-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0397-browser-trial-bitecs-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0398-browser-trial-koota-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0399-browser-trial-becsy-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0400-browser-trial-reference-250000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0401-browser-trial-miniplex-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0402-browser-trial-bitecs-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0403-browser-trial-koota-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0404-browser-trial-becsy-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0405-browser-trial-reference-250000-idle-1.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0406-browser-trial-miniplex-250000-active-1.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0407-browser-trial-bitecs-250000-active-1.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0408-browser-trial-koota-250000-active-1.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0409-browser-trial-becsy-250000-active-1.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0410-browser-trial-reference-250000-active-1.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0411-browser-trial-miniplex-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0412-browser-trial-bitecs-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0413-browser-trial-koota-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0414-browser-trial-becsy-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0415-browser-trial-reference-250000-churn-1.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0416-node-trial-bitecs-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0417-node-trial-koota-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0418-node-trial-becsy-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0419-node-trial-reference-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0420-node-trial-miniplex-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0421-node-trial-bitecs-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0422-node-trial-koota-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0423-node-trial-becsy-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0424-node-trial-reference-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0425-node-trial-miniplex-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0426-node-trial-bitecs-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0427-node-trial-koota-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0428-node-trial-becsy-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0429-node-trial-reference-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0430-node-trial-miniplex-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0431-node-trial-bitecs-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0432-node-trial-koota-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0433-node-trial-becsy-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0434-node-trial-reference-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0435-node-trial-miniplex-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0436-node-trial-bitecs-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0437-node-trial-koota-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0438-node-trial-becsy-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0439-node-trial-reference-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0440-node-trial-miniplex-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0441-node-trial-bitecs-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0442-node-trial-koota-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0443-node-trial-becsy-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0444-node-trial-reference-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0445-node-trial-miniplex-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0446-node-trial-bitecs-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0447-node-trial-koota-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0448-node-trial-becsy-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0449-node-trial-reference-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0450-node-trial-miniplex-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0451-node-trial-bitecs-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0452-node-trial-koota-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0453-node-trial-becsy-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0454-node-trial-reference-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0455-node-trial-miniplex-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0456-node-trial-bitecs-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0457-node-trial-koota-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0458-node-trial-becsy-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0459-node-trial-reference-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0460-node-trial-miniplex-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0461-node-trial-bitecs-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0462-node-trial-koota-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0463-node-trial-becsy-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0464-node-trial-reference-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0465-node-trial-miniplex-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0466-node-trial-bitecs-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0467-node-trial-koota-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0468-node-trial-becsy-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0469-node-trial-reference-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0470-node-trial-miniplex-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0471-node-trial-bitecs-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0472-node-trial-koota-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0473-node-trial-becsy-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0474-node-trial-reference-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0475-node-trial-miniplex-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0476-node-trial-bitecs-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0477-node-trial-koota-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0478-node-trial-becsy-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0479-node-trial-reference-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0480-node-trial-miniplex-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0481-node-trial-bitecs-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0482-node-trial-koota-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0483-node-trial-becsy-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0484-node-trial-reference-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0485-node-trial-miniplex-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0486-node-trial-bitecs-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0487-node-trial-koota-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0488-node-trial-becsy-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0489-node-trial-reference-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0490-node-trial-miniplex-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0491-node-trial-bitecs-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0492-node-trial-koota-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0493-node-trial-becsy-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0494-node-trial-reference-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0495-node-trial-miniplex-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0496-node-trial-bitecs-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0497-node-trial-koota-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0498-node-trial-becsy-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0499-node-trial-reference-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0500-node-trial-miniplex-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0501-node-trial-bitecs-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0502-node-trial-koota-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0503-node-trial-becsy-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0504-node-trial-reference-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0505-node-trial-miniplex-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0506-node-trial-bitecs-250000-active-2.json",
+      "ticks": 1761,
+      "completed": 11507156,
+      "expected": 11507156
+    },
+    {
+      "file": "0507-node-trial-koota-250000-active-2.json",
+      "ticks": 1189,
+      "completed": 7735723,
+      "expected": 7735723
+    },
+    {
+      "file": "0508-node-trial-becsy-250000-active-2.json",
+      "ticks": 1316,
+      "completed": 8550010,
+      "expected": 8550010
+    },
+    {
+      "file": "0509-node-trial-reference-250000-active-2.json",
+      "ticks": 1661,
+      "completed": 10864299,
+      "expected": 10864299
+    },
+    {
+      "file": "0510-node-trial-miniplex-250000-active-2.json",
+      "ticks": 1758,
+      "completed": 11464299,
+      "expected": 11464299
+    },
+    {
+      "file": "0511-node-trial-bitecs-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0512-node-trial-koota-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0513-node-trial-becsy-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0514-node-trial-reference-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0515-node-trial-miniplex-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0516-browser-trial-bitecs-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0517-browser-trial-koota-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0518-browser-trial-becsy-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0519-browser-trial-reference-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0520-browser-trial-miniplex-1000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0521-browser-trial-bitecs-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0522-browser-trial-koota-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0523-browser-trial-becsy-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0524-browser-trial-reference-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0525-browser-trial-miniplex-1000-idle-2.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0526-browser-trial-bitecs-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0527-browser-trial-koota-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0528-browser-trial-becsy-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0529-browser-trial-reference-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0530-browser-trial-miniplex-1000-active-2.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0531-browser-trial-bitecs-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0532-browser-trial-koota-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0533-browser-trial-becsy-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0534-browser-trial-reference-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0535-browser-trial-miniplex-1000-churn-2.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0536-browser-trial-bitecs-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0537-browser-trial-koota-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0538-browser-trial-becsy-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0539-browser-trial-reference-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0540-browser-trial-miniplex-10000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0541-browser-trial-bitecs-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0542-browser-trial-koota-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0543-browser-trial-becsy-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0544-browser-trial-reference-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0545-browser-trial-miniplex-10000-idle-2.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0546-browser-trial-bitecs-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0547-browser-trial-koota-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0548-browser-trial-becsy-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0549-browser-trial-reference-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0550-browser-trial-miniplex-10000-active-2.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0551-browser-trial-bitecs-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0552-browser-trial-koota-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0553-browser-trial-becsy-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0554-browser-trial-reference-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0555-browser-trial-miniplex-10000-churn-2.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0556-browser-trial-bitecs-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0557-browser-trial-koota-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0558-browser-trial-becsy-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0559-browser-trial-reference-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0560-browser-trial-miniplex-50000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0561-browser-trial-bitecs-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0562-browser-trial-koota-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0563-browser-trial-becsy-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0564-browser-trial-reference-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0565-browser-trial-miniplex-50000-idle-2.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0566-browser-trial-bitecs-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0567-browser-trial-koota-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0568-browser-trial-becsy-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0569-browser-trial-reference-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0570-browser-trial-miniplex-50000-active-2.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0571-browser-trial-bitecs-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0572-browser-trial-koota-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0573-browser-trial-becsy-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0574-browser-trial-reference-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0575-browser-trial-miniplex-50000-churn-2.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0576-browser-trial-bitecs-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0577-browser-trial-koota-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0578-browser-trial-becsy-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0579-browser-trial-reference-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0580-browser-trial-miniplex-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0581-browser-trial-bitecs-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0582-browser-trial-koota-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0583-browser-trial-becsy-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0584-browser-trial-reference-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0585-browser-trial-miniplex-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0586-browser-trial-bitecs-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0587-browser-trial-koota-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0588-browser-trial-becsy-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0589-browser-trial-reference-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0590-browser-trial-miniplex-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0591-browser-trial-bitecs-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0592-browser-trial-koota-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0593-browser-trial-becsy-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0594-browser-trial-reference-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0595-browser-trial-miniplex-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0596-browser-trial-bitecs-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0597-browser-trial-koota-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0598-browser-trial-becsy-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0599-browser-trial-reference-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0600-browser-trial-miniplex-250000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0601-browser-trial-bitecs-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0602-browser-trial-koota-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0603-browser-trial-becsy-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0604-browser-trial-reference-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0605-browser-trial-miniplex-250000-idle-2.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0606-browser-trial-bitecs-250000-active-2.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0607-browser-trial-koota-250000-active-2.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0608-browser-trial-becsy-250000-active-2.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0609-browser-trial-reference-250000-active-2.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0610-browser-trial-miniplex-250000-active-2.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0611-browser-trial-bitecs-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0612-browser-trial-koota-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0613-browser-trial-becsy-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0614-browser-trial-reference-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0615-browser-trial-miniplex-250000-churn-2.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0616-node-trial-koota-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0617-node-trial-becsy-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0618-node-trial-reference-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0619-node-trial-miniplex-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0620-node-trial-bitecs-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0621-node-trial-koota-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0622-node-trial-becsy-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0623-node-trial-reference-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0624-node-trial-miniplex-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0625-node-trial-bitecs-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0626-node-trial-koota-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0627-node-trial-becsy-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0628-node-trial-reference-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0629-node-trial-miniplex-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0630-node-trial-bitecs-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0631-node-trial-koota-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0632-node-trial-becsy-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0633-node-trial-reference-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0634-node-trial-miniplex-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0635-node-trial-bitecs-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0636-node-trial-koota-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0637-node-trial-becsy-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0638-node-trial-reference-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0639-node-trial-miniplex-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0640-node-trial-bitecs-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0641-node-trial-koota-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0642-node-trial-becsy-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0643-node-trial-reference-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0644-node-trial-miniplex-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0645-node-trial-bitecs-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0646-node-trial-koota-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0647-node-trial-becsy-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0648-node-trial-reference-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0649-node-trial-miniplex-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0650-node-trial-bitecs-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0651-node-trial-koota-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0652-node-trial-becsy-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0653-node-trial-reference-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0654-node-trial-miniplex-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0655-node-trial-bitecs-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0656-node-trial-koota-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0657-node-trial-becsy-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0658-node-trial-reference-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0659-node-trial-miniplex-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0660-node-trial-bitecs-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0661-node-trial-koota-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0662-node-trial-becsy-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0663-node-trial-reference-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0664-node-trial-miniplex-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0665-node-trial-bitecs-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0666-node-trial-koota-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0667-node-trial-becsy-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0668-node-trial-reference-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0669-node-trial-miniplex-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0670-node-trial-bitecs-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0671-node-trial-koota-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0672-node-trial-becsy-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0673-node-trial-reference-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0674-node-trial-miniplex-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0675-node-trial-bitecs-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0676-node-trial-koota-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0677-node-trial-becsy-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0678-node-trial-reference-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0679-node-trial-miniplex-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0680-node-trial-bitecs-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0681-node-trial-koota-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0682-node-trial-becsy-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0683-node-trial-reference-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0684-node-trial-miniplex-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0685-node-trial-bitecs-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0686-node-trial-koota-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0687-node-trial-becsy-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0688-node-trial-reference-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0689-node-trial-miniplex-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0690-node-trial-bitecs-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0691-node-trial-koota-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0692-node-trial-becsy-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0693-node-trial-reference-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0694-node-trial-miniplex-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0695-node-trial-bitecs-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0696-node-trial-koota-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0697-node-trial-becsy-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0698-node-trial-reference-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0699-node-trial-miniplex-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0700-node-trial-bitecs-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0701-node-trial-koota-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0702-node-trial-becsy-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0703-node-trial-reference-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0704-node-trial-miniplex-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0705-node-trial-bitecs-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0706-node-trial-koota-250000-active-3.json",
+      "ticks": 1227,
+      "completed": 8014295,
+      "expected": 8014295
+    },
+    {
+      "file": "0707-node-trial-becsy-250000-active-3.json",
+      "ticks": 1276,
+      "completed": 8335723,
+      "expected": 8335723
+    },
+    {
+      "file": "0708-node-trial-reference-250000-active-3.json",
+      "ticks": 1682,
+      "completed": 11014299,
+      "expected": 11014299
+    },
+    {
+      "file": "0709-node-trial-miniplex-250000-active-3.json",
+      "ticks": 1794,
+      "completed": 11721442,
+      "expected": 11721442
+    },
+    {
+      "file": "0710-node-trial-bitecs-250000-active-3.json",
+      "ticks": 1740,
+      "completed": 11357156,
+      "expected": 11357156
+    },
+    {
+      "file": "0711-node-trial-koota-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0712-node-trial-becsy-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0713-node-trial-reference-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0714-node-trial-miniplex-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0715-node-trial-bitecs-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0716-browser-trial-koota-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0717-browser-trial-becsy-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0718-browser-trial-reference-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0719-browser-trial-miniplex-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0720-browser-trial-bitecs-1000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0721-browser-trial-koota-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0722-browser-trial-becsy-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0723-browser-trial-reference-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0724-browser-trial-miniplex-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0725-browser-trial-bitecs-1000-idle-3.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0726-browser-trial-koota-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0727-browser-trial-becsy-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0728-browser-trial-reference-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0729-browser-trial-miniplex-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0730-browser-trial-bitecs-1000-active-3.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0731-browser-trial-koota-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0732-browser-trial-becsy-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0733-browser-trial-reference-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0734-browser-trial-miniplex-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0735-browser-trial-bitecs-1000-churn-3.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0736-browser-trial-koota-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0737-browser-trial-becsy-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0738-browser-trial-reference-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0739-browser-trial-miniplex-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0740-browser-trial-bitecs-10000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0741-browser-trial-koota-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0742-browser-trial-becsy-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0743-browser-trial-reference-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0744-browser-trial-miniplex-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0745-browser-trial-bitecs-10000-idle-3.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0746-browser-trial-koota-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0747-browser-trial-becsy-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0748-browser-trial-reference-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0749-browser-trial-miniplex-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0750-browser-trial-bitecs-10000-active-3.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0751-browser-trial-koota-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0752-browser-trial-becsy-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0753-browser-trial-reference-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0754-browser-trial-miniplex-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0755-browser-trial-bitecs-10000-churn-3.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0756-browser-trial-koota-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0757-browser-trial-becsy-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0758-browser-trial-reference-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0759-browser-trial-miniplex-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0760-browser-trial-bitecs-50000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0761-browser-trial-koota-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0762-browser-trial-becsy-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0763-browser-trial-reference-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0764-browser-trial-miniplex-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0765-browser-trial-bitecs-50000-idle-3.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0766-browser-trial-koota-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0767-browser-trial-becsy-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0768-browser-trial-reference-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0769-browser-trial-miniplex-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0770-browser-trial-bitecs-50000-active-3.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0771-browser-trial-koota-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0772-browser-trial-becsy-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0773-browser-trial-reference-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0774-browser-trial-miniplex-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0775-browser-trial-bitecs-50000-churn-3.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0776-browser-trial-koota-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0777-browser-trial-becsy-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0778-browser-trial-reference-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0779-browser-trial-miniplex-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0780-browser-trial-bitecs-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0781-browser-trial-koota-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0782-browser-trial-becsy-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0783-browser-trial-reference-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0784-browser-trial-miniplex-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0785-browser-trial-bitecs-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0786-browser-trial-koota-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0787-browser-trial-becsy-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0788-browser-trial-reference-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0789-browser-trial-miniplex-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0790-browser-trial-bitecs-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0791-browser-trial-koota-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0792-browser-trial-becsy-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0793-browser-trial-reference-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0794-browser-trial-miniplex-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0795-browser-trial-bitecs-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0796-browser-trial-koota-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0797-browser-trial-becsy-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0798-browser-trial-reference-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0799-browser-trial-miniplex-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0800-browser-trial-bitecs-250000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0801-browser-trial-koota-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0802-browser-trial-becsy-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0803-browser-trial-reference-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0804-browser-trial-miniplex-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0805-browser-trial-bitecs-250000-idle-3.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0806-browser-trial-koota-250000-active-3.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0807-browser-trial-becsy-250000-active-3.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0808-browser-trial-reference-250000-active-3.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0809-browser-trial-miniplex-250000-active-3.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0810-browser-trial-bitecs-250000-active-3.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "0811-browser-trial-koota-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0812-browser-trial-becsy-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0813-browser-trial-reference-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0814-browser-trial-miniplex-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0815-browser-trial-bitecs-250000-churn-3.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0816-node-trial-becsy-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0817-node-trial-reference-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0818-node-trial-miniplex-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0819-node-trial-bitecs-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0820-node-trial-koota-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0821-node-trial-becsy-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0822-node-trial-reference-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0823-node-trial-miniplex-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0824-node-trial-bitecs-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0825-node-trial-koota-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0826-node-trial-becsy-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0827-node-trial-reference-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0828-node-trial-miniplex-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0829-node-trial-bitecs-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0830-node-trial-koota-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0831-node-trial-becsy-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0832-node-trial-reference-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0833-node-trial-miniplex-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0834-node-trial-bitecs-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0835-node-trial-koota-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0836-node-trial-becsy-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0837-node-trial-reference-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0838-node-trial-miniplex-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0839-node-trial-bitecs-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0840-node-trial-koota-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0841-node-trial-becsy-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0842-node-trial-reference-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0843-node-trial-miniplex-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0844-node-trial-bitecs-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0845-node-trial-koota-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0846-node-trial-becsy-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0847-node-trial-reference-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0848-node-trial-miniplex-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0849-node-trial-bitecs-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0850-node-trial-koota-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0851-node-trial-becsy-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0852-node-trial-reference-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0853-node-trial-miniplex-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0854-node-trial-bitecs-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0855-node-trial-koota-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0856-node-trial-becsy-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0857-node-trial-reference-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0858-node-trial-miniplex-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0859-node-trial-bitecs-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0860-node-trial-koota-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0861-node-trial-becsy-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0862-node-trial-reference-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0863-node-trial-miniplex-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0864-node-trial-bitecs-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0865-node-trial-koota-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0866-node-trial-becsy-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0867-node-trial-reference-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0868-node-trial-miniplex-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0869-node-trial-bitecs-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0870-node-trial-koota-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0871-node-trial-becsy-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0872-node-trial-reference-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0873-node-trial-miniplex-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0874-node-trial-bitecs-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0875-node-trial-koota-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0876-node-trial-becsy-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0877-node-trial-reference-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0878-node-trial-miniplex-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0879-node-trial-bitecs-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0880-node-trial-koota-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0881-node-trial-becsy-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0882-node-trial-reference-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0883-node-trial-miniplex-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0884-node-trial-bitecs-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0885-node-trial-koota-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0886-node-trial-becsy-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0887-node-trial-reference-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0888-node-trial-miniplex-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0889-node-trial-bitecs-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0890-node-trial-koota-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0891-node-trial-becsy-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0892-node-trial-reference-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0893-node-trial-miniplex-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0894-node-trial-bitecs-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0895-node-trial-koota-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0896-node-trial-becsy-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0897-node-trial-reference-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0898-node-trial-miniplex-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0899-node-trial-bitecs-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0900-node-trial-koota-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0901-node-trial-becsy-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0902-node-trial-reference-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0903-node-trial-miniplex-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0904-node-trial-bitecs-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0905-node-trial-koota-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "0906-node-trial-becsy-250000-active-4.json",
+      "ticks": 1300,
+      "completed": 8507152,
+      "expected": 8507152
+    },
+    {
+      "file": "0907-node-trial-reference-250000-active-4.json",
+      "ticks": 1722,
+      "completed": 11250013,
+      "expected": 11250013
+    },
+    {
+      "file": "0908-node-trial-miniplex-250000-active-4.json",
+      "ticks": 1818,
+      "completed": 11850014,
+      "expected": 11850014
+    },
+    {
+      "file": "0909-node-trial-bitecs-250000-active-4.json",
+      "ticks": 1746,
+      "completed": 11400013,
+      "expected": 11400013
+    },
+    {
+      "file": "0910-node-trial-koota-250000-active-4.json",
+      "ticks": 1235,
+      "completed": 8035723,
+      "expected": 8035723
+    },
+    {
+      "file": "0911-node-trial-becsy-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0912-node-trial-reference-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0913-node-trial-miniplex-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0914-node-trial-bitecs-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0915-node-trial-koota-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "0916-browser-trial-becsy-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0917-browser-trial-reference-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0918-browser-trial-miniplex-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0919-browser-trial-bitecs-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0920-browser-trial-koota-1000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 10441,
+      "expected": 10441
+    },
+    {
+      "file": "0921-browser-trial-becsy-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0922-browser-trial-reference-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0923-browser-trial-miniplex-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0924-browser-trial-bitecs-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0925-browser-trial-koota-1000-idle-4.json",
+      "ticks": 2001,
+      "completed": 513,
+      "expected": 513
+    },
+    {
+      "file": "0926-browser-trial-becsy-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0927-browser-trial-reference-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0928-browser-trial-miniplex-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0929-browser-trial-bitecs-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0930-browser-trial-koota-1000-active-4.json",
+      "ticks": 2001,
+      "completed": 52380,
+      "expected": 52380
+    },
+    {
+      "file": "0931-browser-trial-becsy-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0932-browser-trial-reference-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0933-browser-trial-miniplex-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0934-browser-trial-bitecs-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0935-browser-trial-koota-1000-churn-4.json",
+      "ticks": 2001,
+      "completed": 9498,
+      "expected": 9498
+    },
+    {
+      "file": "0936-browser-trial-becsy-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0937-browser-trial-reference-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0938-browser-trial-miniplex-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0939-browser-trial-bitecs-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0940-browser-trial-koota-10000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 104675,
+      "expected": 104675
+    },
+    {
+      "file": "0941-browser-trial-becsy-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0942-browser-trial-reference-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0943-browser-trial-miniplex-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0944-browser-trial-bitecs-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0945-browser-trial-koota-10000-idle-4.json",
+      "ticks": 2001,
+      "completed": 5216,
+      "expected": 5216
+    },
+    {
+      "file": "0946-browser-trial-becsy-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0947-browser-trial-reference-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0948-browser-trial-miniplex-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0949-browser-trial-bitecs-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0950-browser-trial-koota-10000-active-4.json",
+      "ticks": 2001,
+      "completed": 523714,
+      "expected": 523714
+    },
+    {
+      "file": "0951-browser-trial-becsy-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0952-browser-trial-reference-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0953-browser-trial-miniplex-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0954-browser-trial-bitecs-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0955-browser-trial-koota-10000-churn-4.json",
+      "ticks": 2001,
+      "completed": 95349,
+      "expected": 95349
+    },
+    {
+      "file": "0956-browser-trial-becsy-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0957-browser-trial-reference-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0958-browser-trial-miniplex-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0959-browser-trial-bitecs-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0960-browser-trial-koota-50000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 523681,
+      "expected": 523681
+    },
+    {
+      "file": "0961-browser-trial-becsy-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0962-browser-trial-reference-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0963-browser-trial-miniplex-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0964-browser-trial-bitecs-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0965-browser-trial-koota-50000-idle-4.json",
+      "ticks": 2001,
+      "completed": 26175,
+      "expected": 26175
+    },
+    {
+      "file": "0966-browser-trial-becsy-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0967-browser-trial-reference-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0968-browser-trial-miniplex-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0969-browser-trial-bitecs-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0970-browser-trial-koota-50000-active-4.json",
+      "ticks": 2001,
+      "completed": 2618580,
+      "expected": 2618580
+    },
+    {
+      "file": "0971-browser-trial-becsy-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0972-browser-trial-reference-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0973-browser-trial-miniplex-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0974-browser-trial-bitecs-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0975-browser-trial-koota-50000-churn-4.json",
+      "ticks": 2001,
+      "completed": 476901,
+      "expected": 476901
+    },
+    {
+      "file": "0976-browser-trial-becsy-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0977-browser-trial-reference-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0978-browser-trial-miniplex-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0979-browser-trial-bitecs-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0980-browser-trial-koota-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "0981-browser-trial-becsy-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0982-browser-trial-reference-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0983-browser-trial-miniplex-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0984-browser-trial-bitecs-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0985-browser-trial-koota-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "0986-browser-trial-becsy-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0987-browser-trial-reference-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0988-browser-trial-miniplex-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0989-browser-trial-bitecs-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0990-browser-trial-koota-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "0991-browser-trial-becsy-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0992-browser-trial-reference-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0993-browser-trial-miniplex-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0994-browser-trial-bitecs-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0995-browser-trial-koota-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "0996-browser-trial-becsy-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0997-browser-trial-reference-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0998-browser-trial-miniplex-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "0999-browser-trial-bitecs-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "1000-browser-trial-koota-250000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 2618540,
+      "expected": 2618540
+    },
+    {
+      "file": "1001-browser-trial-becsy-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "1002-browser-trial-reference-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "1003-browser-trial-miniplex-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "1004-browser-trial-bitecs-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "1005-browser-trial-koota-250000-idle-4.json",
+      "ticks": 2001,
+      "completed": 130912,
+      "expected": 130912
+    },
+    {
+      "file": "1006-browser-trial-becsy-250000-active-4.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "1007-browser-trial-reference-250000-active-4.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "1008-browser-trial-miniplex-250000-active-4.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "1009-browser-trial-bitecs-250000-active-4.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "1010-browser-trial-koota-250000-active-4.json",
+      "ticks": 2001,
+      "completed": 13092873,
+      "expected": 13092873
+    },
+    {
+      "file": "1011-browser-trial-becsy-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "1012-browser-trial-reference-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "1013-browser-trial-miniplex-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "1014-browser-trial-bitecs-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "1015-browser-trial-koota-250000-churn-4.json",
+      "ticks": 2001,
+      "completed": 2384695,
+      "expected": 2384695
+    },
+    {
+      "file": "1016-node-trial-bitecs-arrays-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1017-node-trial-bitecs-arrays-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1018-node-trial-bitecs-arrays-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1019-node-trial-bitecs-arrays-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1020-node-trial-bitecs-arrays-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1021-node-trial-bitecs-arrays-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1022-node-trial-bitecs-arrays-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1023-node-trial-bitecs-arrays-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1024-node-trial-bitecs-arrays-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1025-node-trial-bitecs-arrays-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1026-node-trial-bitecs-arrays-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1027-node-trial-bitecs-arrays-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1028-node-trial-bitecs-arrays-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1029-node-trial-bitecs-arrays-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1030-node-trial-bitecs-arrays-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1031-node-trial-bitecs-arrays-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1032-node-trial-bitecs-arrays-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1033-node-trial-bitecs-arrays-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1034-node-trial-bitecs-arrays-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1035-node-trial-bitecs-arrays-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1036-node-trial-koota-update-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1037-node-trial-koota-update-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1038-node-trial-koota-update-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1039-node-trial-koota-update-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1040-node-trial-koota-update-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1041-node-trial-koota-update-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1042-node-trial-koota-update-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1043-node-trial-koota-update-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1044-node-trial-koota-update-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1045-node-trial-koota-update-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1046-node-trial-koota-update-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1047-node-trial-koota-update-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1048-node-trial-koota-update-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1049-node-trial-koota-update-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1050-node-trial-koota-update-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1051-node-trial-koota-update-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1052-node-trial-koota-update-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1053-node-trial-koota-update-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1054-node-trial-koota-update-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1055-node-trial-koota-update-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1056-node-trial-becsy-checked-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1057-node-trial-becsy-checked-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1058-node-trial-becsy-checked-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1059-node-trial-becsy-checked-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1060-node-trial-becsy-checked-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1061-node-trial-becsy-checked-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1062-node-trial-becsy-checked-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1063-node-trial-becsy-checked-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1064-node-trial-becsy-checked-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1065-node-trial-becsy-checked-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1066-node-trial-becsy-checked-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1067-node-trial-becsy-checked-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1068-node-trial-becsy-checked-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1069-node-trial-becsy-checked-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1070-node-trial-becsy-checked-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1071-node-trial-becsy-checked-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1072-node-trial-becsy-checked-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1073-node-trial-becsy-checked-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1074-node-trial-becsy-checked-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1075-node-trial-becsy-checked-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1084-browser-trial-bitecs-arrays-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1085-browser-trial-bitecs-arrays-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1086-browser-trial-bitecs-arrays-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1087-browser-trial-bitecs-arrays-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1088-browser-trial-bitecs-arrays-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1089-browser-trial-bitecs-arrays-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1090-browser-trial-bitecs-arrays-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1091-browser-trial-bitecs-arrays-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1092-browser-trial-bitecs-arrays-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1093-browser-trial-bitecs-arrays-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1094-browser-trial-bitecs-arrays-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1095-browser-trial-bitecs-arrays-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1096-browser-trial-bitecs-arrays-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1097-browser-trial-bitecs-arrays-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1098-browser-trial-bitecs-arrays-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1099-browser-trial-bitecs-arrays-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1100-browser-trial-bitecs-arrays-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1101-browser-trial-bitecs-arrays-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1102-browser-trial-bitecs-arrays-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1103-browser-trial-bitecs-arrays-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1104-browser-trial-koota-update-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1105-browser-trial-koota-update-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1106-browser-trial-koota-update-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1107-browser-trial-koota-update-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1108-browser-trial-koota-update-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1109-browser-trial-koota-update-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1110-browser-trial-koota-update-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1111-browser-trial-koota-update-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1112-browser-trial-koota-update-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1113-browser-trial-koota-update-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1114-browser-trial-koota-update-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1115-browser-trial-koota-update-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1116-browser-trial-koota-update-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1117-browser-trial-koota-update-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1118-browser-trial-koota-update-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1119-browser-trial-koota-update-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1120-browser-trial-koota-update-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1121-browser-trial-koota-update-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1122-browser-trial-koota-update-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1123-browser-trial-koota-update-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1124-browser-trial-becsy-checked-100000-mixed-0.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1125-browser-trial-becsy-checked-100000-idle-0.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1126-browser-trial-becsy-checked-100000-active-0.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1127-browser-trial-becsy-checked-100000-churn-0.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1128-browser-trial-becsy-checked-100000-mixed-1.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1129-browser-trial-becsy-checked-100000-idle-1.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1130-browser-trial-becsy-checked-100000-active-1.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1131-browser-trial-becsy-checked-100000-churn-1.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1132-browser-trial-becsy-checked-100000-mixed-2.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1133-browser-trial-becsy-checked-100000-idle-2.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1134-browser-trial-becsy-checked-100000-active-2.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1135-browser-trial-becsy-checked-100000-churn-2.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1136-browser-trial-becsy-checked-100000-mixed-3.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1137-browser-trial-becsy-checked-100000-idle-3.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1138-browser-trial-becsy-checked-100000-active-3.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1139-browser-trial-becsy-checked-100000-churn-3.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    },
+    {
+      "file": "1140-browser-trial-becsy-checked-100000-mixed-4.json",
+      "ticks": 2001,
+      "completed": 1047363,
+      "expected": 1047363
+    },
+    {
+      "file": "1141-browser-trial-becsy-checked-100000-idle-4.json",
+      "ticks": 2001,
+      "completed": 52343,
+      "expected": 52343
+    },
+    {
+      "file": "1142-browser-trial-becsy-checked-100000-active-4.json",
+      "ticks": 2001,
+      "completed": 5237151,
+      "expected": 5237151
+    },
+    {
+      "file": "1143-browser-trial-becsy-checked-100000-churn-4.json",
+      "ticks": 2001,
+      "completed": 953834,
+      "expected": 953834
+    }
+  ]
+}

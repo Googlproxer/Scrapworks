@@ -18,9 +18,11 @@ if (process.platform === 'win32' && !process.env.PLAYWRIGHT_BROWSERS_PATH) {
 }
 const args = process.argv.slice(2);
 const command = args[0] ?? 'smoke';
+const profilesOnly = args.includes('--profiles-only');
+if (profilesOnly && command !== 'full') throw new Error('--profiles-only requires full');
 if (args.includes('--help')) {
   console.log(
-    'Usage: node tools/ecs-bench/cli.mjs <check|smoke|node|browser|full|report> [--output directory] [--resume]\nDiagnostic filters: --candidates names --scales counts --workloads names --ticks count --repetitions count --profiles\nReport: --input run-directory --destination report-directory; CI: --label hosted-ci',
+    'Usage: node tools/ecs-bench/cli.mjs <check|smoke|node|browser|full|report> [--output directory] [--resume]\nDiagnostic filters: --candidates names --scales counts --workloads names --ticks count --repetitions count --profiles; full --profiles-only reruns correctness and target profiles\nReport: --input run-directory --profiles-from diagnostic-directory --destination report-directory; CI: --label hosted-ci',
   );
   process.exit(0);
 }
@@ -123,7 +125,11 @@ for (const [name, expected] of Object.entries({
 
 if (command === 'report') {
   const { report } = await import('./report.mjs');
-  await report(path.resolve(root, option('input', output)), option('destination', undefined));
+  await report(
+    path.resolve(root, option('input', output)),
+    option('destination', undefined),
+    option('profiles-from', undefined),
+  );
   process.exit(0);
 }
 if (process.versions.node !== '24.21.0' && !args.includes('--allow-node-version'))
@@ -342,7 +348,7 @@ try {
     const smoke = command === 'smoke';
     const scales =
       option('scales', null)?.split(',').map(Number) ?? (smoke ? [1000] : manifest.protocol.scales);
-    const repetitions = Number(option('repetitions', smoke ? 1 : 5));
+    const repetitions = profilesOnly ? 0 : Number(option('repetitions', smoke ? 1 : 5));
     const workloads = option('workloads', smoke ? 'mixed' : 'mixed,idle,active,churn').split(',');
     for (let repetition = 0; repetition < repetitions; repetition++)
       for (const environment of environments)
@@ -387,7 +393,7 @@ try {
     }
     if (command === 'full') {
       for (const environment of environments) {
-        for (const candidate of variants)
+        for (const candidate of profilesOnly ? [] : variants)
           for (let repetition = 0; repetition < 5; repetition++)
             for (const workload of ['mixed', 'idle', 'active', 'churn'])
               await job(environment, {
@@ -402,7 +408,8 @@ try {
                 warmupTicks: 200,
               });
         for (const candidate of primary) {
-          await job(environment, { mode: 'ancillary', candidate, size: 100000, count: 10 });
+          if (!profilesOnly)
+            await job(environment, { mode: 'ancillary', candidate, size: 100000, count: 10 });
           await job(environment, {
             mode: 'profile',
             candidate,
@@ -412,7 +419,7 @@ try {
           });
         }
       }
-      for (const candidate of primary)
+      for (const candidate of profilesOnly ? [] : primary)
         for (const workload of ['mixed', 'idle', 'active'])
           for (let repetition = 0; repetition < 3; repetition++)
             await job('browser', {

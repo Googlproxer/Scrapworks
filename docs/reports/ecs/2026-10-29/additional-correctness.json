@@ -1,0 +1,338 @@
+[
+  {
+    "mode": "check",
+    "candidate": "reference",
+    "environment": "node",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0000-node-check-reference-1000-all-0.json",
+    "status": "ok",
+    "result": {
+      "candidate": "reference",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3425.8509000000004
+  },
+  {
+    "mode": "check",
+    "candidate": "miniplex",
+    "environment": "node",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0001-node-check-miniplex-1000-all-0.json",
+    "status": "ok",
+    "result": {
+      "candidate": "miniplex",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3307.9556
+  },
+  {
+    "mode": "check",
+    "candidate": "bitecs",
+    "environment": "node",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0002-node-check-bitecs-1000-all-0.json",
+    "status": "ok",
+    "result": {
+      "candidate": "bitecs",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3348.8675000000003
+  },
+  {
+    "mode": "check",
+    "candidate": "koota",
+    "environment": "node",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0003-node-check-koota-1000-all-0.json",
+    "status": "ok",
+    "result": {
+      "candidate": "koota",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3594.8649
+  },
+  {
+    "mode": "check",
+    "candidate": "becsy",
+    "environment": "node",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0004-node-check-becsy-1000-all-0.json",
+    "status": "ok",
+    "result": {
+      "candidate": "becsy",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3635.7684
+  },
+  {
+    "mode": "check",
+    "candidate": "bitecs-arrays",
+    "environment": "node",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0005-node-check-bitecs-arrays-1000-all-0.json",
+    "status": "ok",
+    "result": {
+      "candidate": "bitecs-arrays",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3256.2769
+  },
+  {
+    "mode": "check",
+    "candidate": "koota-update",
+    "environment": "node",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0006-node-check-koota-update-1000-all-0.json",
+    "status": "ok",
+    "result": {
+      "candidate": "koota-update",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3699.5434
+  },
+  {
+    "mode": "check",
+    "candidate": "becsy-checked",
+    "environment": "node",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0007-node-check-becsy-checked-1000-all-0.json",
+    "status": "ok",
+    "result": {
+      "candidate": "becsy-checked",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 4148.9405
+  },
+  {
+    "mode": "check",
+    "candidate": "reference",
+    "environment": "browser",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0008-browser-check-reference-1000-all-0.json",
+    "url": "http://127.0.0.1:64382/browser.html",
+    "status": "ok",
+    "browserVersion": "156.0.8078.4",
+    "result": {
+      "candidate": "reference",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 2678.0095
+  },
+  {
+    "mode": "check",
+    "candidate": "miniplex",
+    "environment": "browser",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0009-browser-check-miniplex-1000-all-0.json",
+    "url": "http://127.0.0.1:64382/browser.html",
+    "status": "ok",
+    "browserVersion": "156.0.8078.4",
+    "result": {
+      "candidate": "miniplex",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 2849.0755
+  },
+  {
+    "mode": "check",
+    "candidate": "bitecs",
+    "environment": "browser",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0010-browser-check-bitecs-1000-all-0.json",
+    "url": "http://127.0.0.1:64382/browser.html",
+    "status": "ok",
+    "browserVersion": "156.0.8078.4",
+    "result": {
+      "candidate": "bitecs",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 2688.5873
+  },
+  {
+    "mode": "check",
+    "candidate": "koota",
+    "environment": "browser",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0011-browser-check-koota-1000-all-0.json",
+    "url": "http://127.0.0.1:64382/browser.html",
+    "status": "ok",
+    "browserVersion": "156.0.8078.4",
+    "result": {
+      "candidate": "koota",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 2785.9542
+  },
+  {
+    "mode": "check",
+    "candidate": "becsy",
+    "environment": "browser",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0012-browser-check-becsy-1000-all-0.json",
+    "url": "http://127.0.0.1:64382/browser.html",
+    "status": "ok",
+    "browserVersion": "156.0.8078.4",
+    "result": {
+      "candidate": "becsy",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3002.0625
+  },
+  {
+    "mode": "check",
+    "candidate": "bitecs-arrays",
+    "environment": "browser",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0013-browser-check-bitecs-arrays-1000-all-0.json",
+    "url": "http://127.0.0.1:64382/browser.html",
+    "status": "ok",
+    "browserVersion": "156.0.8078.4",
+    "result": {
+      "candidate": "bitecs-arrays",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 2636.5301000000004
+  },
+  {
+    "mode": "check",
+    "candidate": "koota-update",
+    "environment": "browser",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0014-browser-check-koota-update-1000-all-0.json",
+    "url": "http://127.0.0.1:64382/browser.html",
+    "status": "ok",
+    "browserVersion": "156.0.8078.4",
+    "result": {
+      "candidate": "koota-update",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 2857.044
+  },
+  {
+    "mode": "check",
+    "candidate": "becsy-checked",
+    "environment": "browser",
+    "output": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0015-browser-check-becsy-checked-1000-all-0.json",
+    "url": "http://127.0.0.1:64382/browser.html",
+    "status": "ok",
+    "browserVersion": "156.0.8078.4",
+    "result": {
+      "candidate": "becsy-checked",
+      "assertions": [
+        "manual/processor/research stock contention",
+        "mixed: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "idle: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "active: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "churn: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots",
+        "independent simultaneous worlds, pause, five-step catch-up, failure publication, growth",
+        "idempotent disposal and rejected stale world"
+      ]
+    },
+    "elapsedMs": 3380.853
+  }
+]

@@ -1,0 +1,390 @@
+{
+  "manifest": {
+    "schema": 1,
+    "command": "full",
+    "label": "reference-desktop",
+    "createdAt": "2026-10-28T13:05:29.738Z",
+    "revision": "6eaa13344d1f9640058050f86471d98c9888fccd",
+    "dirty": "M .github/workflows/ci.yml\n M docs/README.md\n M docs/design/TDD.md\n M docs/plans/milestone-03-character-and-manual-opening.md\n M package.json\n M tools/README.md\n M yarn.lock\n?? .github/workflows/ecs-bench.yml\n?? tools/ecs-bench/",
+    "sourceHash": "4d9a7a96f573040d79348712f28d98b68c3f5255e722f61591560361b8dbf3ee",
+    "lockHash": "80bc0e7239149d238f0dd36b8b13b673e5a3b28ab078b2c31bbb49d831c76889",
+    "runtime": {
+      "node": "24.21.0",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.8",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.8",
+      "simdjson": "4.6.7",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026c",
+      "undici": "7.29.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.53",
+      "zlib": "1.3.2.1-motley-8002e91",
+      "zstd": "1.5.7"
+    },
+    "driverPid": 29540,
+    "hardware": {
+      "cpu": "AMD Ryzen 9 7900X3D 12-Core Processor          ",
+      "logicalCpus": 24,
+      "memoryBytes": 68274266112,
+      "os": "win32 10.0.26300",
+      "architecture": "x64"
+    },
+    "packages": {
+      "miniplex": "2.0.0",
+      "bitecs": "0.4.0",
+      "koota": "0.6.6",
+      "@lastolivegames/becsy": "0.16.1",
+      "playwright": "1.64.1",
+      "vite": "8.3.5",
+      "typescript": "6.0.3"
+    },
+    "protocol": {
+      "target": 100000,
+      "scales": [
+        1000,
+        10000,
+        50000,
+        100000,
+        250000
+      ],
+      "seed": 1729,
+      "ticks": 2000,
+      "repetitions": 5,
+      "warmupMs": 2000,
+      "warmupTicks": 200,
+      "p95GateMs": 5,
+      "p99GateMs": 8,
+      "measuredTimeoutMs": 120000,
+      "forceGcDuringTimings": false,
+      "observableProjectionConsumer": true,
+      "exactPublicationCounts": true,
+      "candidateImportPreloaded": true,
+      "emptyRuntimeCapacityFactor": 2,
+      "launchFlags": [
+        "--experimental-transform-types",
+        "--expose-gc"
+      ]
+    },
+    "arguments": [
+      "full",
+      "--output",
+      "tmp/ecs-bench/reference-2026-10-29"
+    ]
+  },
+  "completion": {
+    "finishedAt": "2026-10-28T19:36:17.72Z",
+    "jobs": 1188,
+    "failures": 0,
+    "sourceHash": "4d9a7a96f573040d79348712f28d98b68c3f5255e722f61591560361b8dbf3ee"
+  },
+  "packageMetadata": {
+    "miniplex": {
+      "name": "miniplex",
+      "version": "2.0.0",
+      "license": "MIT",
+      "main": "dist/miniplex.cjs.js",
+      "module": "dist/miniplex.esm.js",
+      "types": "dist/miniplex.cjs.d.ts",
+      "dependencies": {
+        "@hmans/id": "^0.0.1",
+        "@hmans/queue": "^0.0.1",
+        "@miniplex/bucket": "2.0.0"
+      }
+    },
+    "bitecs": {
+      "name": "bitecs",
+      "version": "0.4.0",
+      "license": "MPL-2.0",
+      "main": "./dist/core/index.min.cjs",
+      "module": "./dist/core/index.min.mjs",
+      "types": "./dist/core/index.d.ts",
+      "exports": {
+        ".": {
+          "types": "./dist/core/index.d.ts",
+          "import": "./dist/core/index.min.mjs",
+          "require": "./dist/core/index.min.cjs"
+        },
+        "./serialization": {
+          "types": "./dist/serialization/index.d.ts",
+          "import": "./dist/serialization/index.min.mjs",
+          "require": "./dist/serialization/index.min.cjs"
+        },
+        "./legacy": {
+          "types": "./dist/legacy/index.d.ts",
+          "import": "./dist/legacy/index.min.mjs",
+          "require": "./dist/legacy/index.min.cjs"
+        }
+      }
+    },
+    "koota": {
+      "name": "koota",
+      "version": "0.6.6",
+      "license": "ISC",
+      "type": "module",
+      "main": "./dist/index.cjs",
+      "module": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "exports": {
+        ".": {
+          "types": {
+            "import": "./dist/index.d.ts",
+            "require": "./dist/index.d.cts"
+          },
+          "import": "./dist/index.js",
+          "require": "./dist/index.cjs"
+        },
+        "./react": {
+          "types": {
+            "import": "./dist/react.d.ts",
+            "require": "./dist/react.d.cts"
+          },
+          "import": "./dist/react.js",
+          "require": "./dist/react.cjs"
+        }
+      }
+    },
+    "@lastolivegames/becsy": {
+      "name": "@lastolivegames/becsy",
+      "version": "0.16.1",
+      "license": "MIT",
+      "type": "module",
+      "main": "lib/index.umd.js",
+      "module": "lib/index.js",
+      "types": "lib/index.d.ts"
+    }
+  },
+  "measuredHarnessCommit": "0079ac2aa70afe4a6a33acae1de39759dc7fef91",
+  "diagnosticManifest": {
+    "schema": 1,
+    "command": "full",
+    "label": "reference-desktop",
+    "createdAt": "2026-10-29T03:13:13.281Z",
+    "revision": "0079ac2aa70afe4a6a33acae1de39759dc7fef91",
+    "dirty": "M tools/ecs-bench/browser-worker.mjs\n M tools/ecs-bench/browser.html\n M tools/ecs-bench/check.ts\n M tools/ecs-bench/cli.mjs\n M tools/ecs-bench/node-worker.mjs\n M tools/ecs-bench/report.mjs",
+    "sourceHash": "8569e3059efea171a01393a674ff2f27f54ba148fa8c44166e38e516c5ef9166",
+    "lockHash": "80bc0e7239149d238f0dd36b8b13b673e5a3b28ab078b2c31bbb49d831c76889",
+    "runtime": {
+      "node": "24.21.0",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.8",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.8",
+      "simdjson": "4.6.7",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026c",
+      "undici": "7.29.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.53",
+      "zlib": "1.3.2.1-motley-8002e91",
+      "zstd": "1.5.7"
+    },
+    "driverPid": 80360,
+    "hardware": {
+      "cpu": "AMD Ryzen 9 7900X3D 12-Core Processor          ",
+      "logicalCpus": 24,
+      "memoryBytes": 68274266112,
+      "os": "win32 10.0.26300",
+      "architecture": "x64"
+    },
+    "packages": {
+      "miniplex": "2.0.0",
+      "bitecs": "0.4.0",
+      "koota": "0.6.6",
+      "@lastolivegames/becsy": "0.16.1",
+      "playwright": "1.64.1",
+      "vite": "8.3.5",
+      "typescript": "6.0.3"
+    },
+    "protocol": {
+      "target": 100000,
+      "scales": [
+        1000,
+        10000,
+        50000,
+        100000,
+        250000
+      ],
+      "seed": 1729,
+      "ticks": 2000,
+      "repetitions": 5,
+      "warmupMs": 2000,
+      "warmupTicks": 200,
+      "p95GateMs": 5,
+      "p99GateMs": 8,
+      "measuredTimeoutMs": 120000,
+      "forceGcDuringTimings": false,
+      "observableProjectionConsumer": true,
+      "exactPublicationCounts": true,
+      "candidateImportPreloaded": true,
+      "emptyRuntimeCapacityFactor": 2,
+      "launchFlags": [
+        "--experimental-transform-types",
+        "--expose-gc"
+      ]
+    },
+    "arguments": [
+      "full",
+      "--profiles-only",
+      "--output",
+      "tmp/ecs-bench/reference-2026-10-29-corrected-diagnostics"
+    ]
+  },
+  "diagnosticCompletion": {
+    "finishedAt": "2026-10-29T03:35:50.412Z",
+    "jobs": 24,
+    "failures": 0,
+    "sourceHash": "8569e3059efea171a01393a674ff2f27f54ba148fa8c44166e38e516c5ef9166"
+  },
+  "packageManager": "yarn@4.18.1",
+  "yarnLockFormat": 10,
+  "yarnLockLineEnding": "CRLF",
+  "chromiumVersions": [
+    "156.0.8078.4"
+  ],
+  "browserLaunchEvidence": {
+    "observedAt": "2026-10-29T00:42:20.0402461+11:00",
+    "method": "Win32_Process on the verified benchmark driver child tree",
+    "driverPid": 29540,
+    "browserPid": 65292,
+    "parentProcessId": 78956,
+    "executable": "C:\\Users\\googl\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1248\\chrome-headless-shell-win64\\chrome-headless-shell.exe",
+    "commandLine": "C:\\Users\\googl\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1248\\chrome-headless-shell-win64\\chrome-headless-shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=<fresh-profile> --remote-debugging-pipe --no-startup-window",
+    "launchOptions": {
+      "viewport": {
+        "height": 900,
+        "width": 1440
+      },
+      "deviceScaleFactor": 1,
+      "headless": true
+    }
+  },
+  "ignoredRawDirectory": "tmp/ecs-bench/reference-2026-10-29",
+  "validation": {
+    "recordedAt": "2026-10-28T11:21:00Z",
+    "dependencyInstall": "yarn install --immutable passed",
+    "benchmarkStrictTypes": "passed",
+    "benchmarkLint": "passed",
+    "benchmarkProtocolTests": 6,
+    "applicationLint": "passed",
+    "lintToolTests": 30,
+    "worldSimulationTests": 26,
+    "exportToolTests": 13,
+    "applicationTests": {
+      "files": 22,
+      "passed": 284,
+      "initialAttempt": "261 passed; one renderer file failed to fetch its module",
+      "focusedRetry": "86 renderer tests passed",
+      "finalAttempt": "all 284 passed"
+    },
+    "productionBuild": "yarn build --stats-json passed",
+    "productionInputAudit": {
+      "inputs": 3950,
+      "benchmarkPackagesPresent": false
+    },
+    "assets": "passed for exported and built output",
+    "authoringWorkflow": {
+      "initialMenuReady": true,
+      "validSaveReloaded": true,
+      "invalidSaveReloaded": false,
+      "failedExportPreservedAllPublishedHashes": true,
+      "correctedSaveRecoveredAndReloaded": true,
+      "gameReadyAfterRecovery": true,
+      "browserErrors": []
+    },
+    "documentation": {
+      "documents": 41,
+      "localLinks": 450,
+      "diagramSources": 8,
+      "failures": []
+    },
+    "productionSourceModified": false,
+    "finalRecordedAt": "2026-10-29T03:50:34.778Z",
+    "finalSmoke": {
+      "finishedAt": "2026-10-29T03:49:14.127Z",
+      "jobs": 20,
+      "failures": 0,
+      "sourceHash": "d26a0ba9bf5ab686949e6e5c876d4ad93269e9da12d709195d94c842bb336a6d",
+      "directory": "tmp/ecs-bench/final-smoke",
+      "correctnessJobs": 10,
+      "timingJobs": 10,
+      "protocolTestsPassed": 6,
+      "purpose": "Final correctness and small smoke verification; excluded from selection timing cohort"
+    },
+    "finalStrictTypes": "passed",
+    "finalBenchmarkLint": "passed",
+    "finalBenchmarkFormatting": "passed",
+    "workflowConfiguration": "Parsed YAML; verified ten sequential balanced fragments, diagnostic dependency, artifacts, pinned Node and normal-CI smoke/production audit",
+    "chartVisualReview": "scaling.png and memory.png reviewed; matching SVG/PNG artifacts retained",
+    "postDisposalHeapAnalysis": "Zero concrete entity-* payload records in all eight post-disposal snapshots; two Koota live-world snapshots contain exactly 100000 payload records each"
+  },
+  "browserEngine": {
+    "collectedAt": "2026-10-29T03:38:27.518Z",
+    "engine": {
+      "protocolVersion": "1.3",
+      "product": "HeadlessChrome/156.0.8078.4",
+      "revision": "@f842f52ef39fd97b449eb27cff414bf05a98ddce",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+      "jsVersion": "15.6.75"
+    },
+    "commandLineUnavailable": "Error: cdpSession.send: Protocol error (Browser.getBrowserCommandLine): Command line not returned because --enable-automation not set.",
+    "nodeOptions": null,
+    "nodeCompileCache": null,
+    "nodeHeapSizeLimit": 4496293888,
+    "nodePointerCompression": 0,
+    "playwrightBuilds": [
+      {
+        "name": "chromium",
+        "revision": "1248",
+        "installByDefault": true,
+        "browserVersion": "156.0.8078.4",
+        "title": "Chrome for Testing"
+      },
+      {
+        "name": "chromium-headless-shell",
+        "revision": "1248",
+        "installByDefault": true,
+        "browserVersion": "156.0.8078.4",
+        "title": "Chrome Headless Shell"
+      }
+    ],
+    "a11y": {
+      "violations": [],
+      "passes": 13,
+      "incomplete": []
+    }
+  }
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "path": "tools/ecs-bench/base.ts",
+    "sha256": "482ca5211cda2d4dab4bc8a4fe26b4c8a8b414dce55f280a114ae5dfef0d8f04"
+  },
+  {
+    "path": "tools/ecs-bench/becsy.d.ts",
+    "sha256": "06ec43bedc13e2b7f7c4237de4874387fc4e1be4f7367f4fa07b40b4a7001f49"
+  },
+  {
+    "path": "tools/ecs-bench/browser-worker.mjs",
+    "sha256": "0257a44fda8a79034739589a0d8fdf9ec8ad35e6a72690080604fec67bfe5e31"
+  },
+  {
+    "path": "tools/ecs-bench/browser.html",
+    "sha256": "6b66113349544b69dd859400759418a610e68d42cd29cb6ae87506364f95ddcb"
+  },
+  {
+    "path": "tools/ecs-bench/browser.ts",
+    "sha256": "7b285d30f408c3915d75325fd72bab7f4081f07bf4e74ccadbfc33f354b7b4bc"
+  },
+  {
+    "path": "tools/ecs-bench/check.ts",
+    "sha256": "7d80cabafcdf75d81f1bab60f9d94fd93200327e68dc7aa0538df726a90d68d2"
+  },
+  {
+    "path": "tools/ecs-bench/cli.mjs",
+    "sha256": "b049e981d90fda4b771434ce59a3c709297c5458d4565e9450318b4cee257704"
+  },
+  {
+    "path": "tools/ecs-bench/consumer.ts",
+    "sha256": "9c98fadc6ac553e67c6d69649b47207b5b4b3e03ec4debeca37915519cb53955"
+  },
+  {
+    "path": "tools/ecs-bench/experiment.ts",
+    "sha256": "bc6fce4ee2d988f9b90d299c6f80137484c565f5c8a8b0d2ec8f2e3d83676190"
+  },
+  {
+    "path": "tools/ecs-bench/load.ts",
+    "sha256": "5c81efb573708844f2a9dc18daeb0cb878b66a19cfd5c6d3343b142e57732bca"
+  },
+  {
+    "path": "tools/ecs-bench/maintainability.json",
+    "sha256": "bc85686569f29043dedb59a292a30f8dec2ef2ee31f57c2d52d15db6139a5d3c"
+  },
+  {
+    "path": "tools/ecs-bench/model.ts",
+    "sha256": "deab82ed034ed4d2b49c19cf480d9250e9e6646c2280eb7bf89bc7460b9ec802"
+  },
+  {
+    "path": "tools/ecs-bench/node-worker.mjs",
+    "sha256": "a5461b003ff0b93d82265dfc001309dad5537e98eff4266cc70f9fd4115a6c69"
+  },
+  {
+    "path": "tools/ecs-bench/options.mjs",
+    "sha256": "be6267e9a068406b766c3123fb97e181ad62ac46eb91dea27b187ca147b3ec21"
+  },
+  {
+    "path": "tools/ecs-bench/plot-requirements.txt",
+    "sha256": "5ac19f72885e39e87481de0d3cdb12f0d341e36ea4a218a8d2ac76bcb38f970f"
+  },
+  {
+    "path": "tools/ecs-bench/plot.py",
+    "sha256": "d336b24c528d35eac96ff8e83631ae6f3d3ff92a778cf8b2307ca318500cb3df"
+  },
+  {
+    "path": "tools/ecs-bench/protocol.test.mjs",
+    "sha256": "f97a308b0fb49c0af62ad45b5d7aa1b1700a96f2ed8c2f78c340c7794512fab6"
+  },
+  {
+    "path": "tools/ecs-bench/report.mjs",
+    "sha256": "a4beaab27da329dd49734fdc1f3f21056a2c8e6565ef3f35e05896d8a81e4fa6"
+  },
+  {
+    "path": "tools/ecs-bench/tsconfig.json",
+    "sha256": "a72d1905dc7b1020c22bec346358bd095690700e4a62a07470125a98cdf3d99d"
+  },
+  {
+    "path": "tools/ecs-bench/verify-production.mjs",
+    "sha256": "9de1398fa2acb86d867f1e69dfdf9755f6b03e30c61cbff941c7dcd05cc839d1"
+  },
+  {
+    "path": "tools/ecs-bench/adapters/becsy.ts",
+    "sha256": "8ac9d9b17003320e5231ff23e2d149b9b8cefd99b14012b2b0c57893afbc0762"
+  },
+  {
+    "path": "tools/ecs-bench/adapters/bitecs.ts",
+    "sha256": "cb4e9b7c3893d0684857a9683d8005284c3eaab0f17b56a85d4bf5ba05e1f5d4"
+  },
+  {
+    "path": "tools/ecs-bench/adapters/koota.ts",
+    "sha256": "b321a5917e7a102520f8a3288ad9a5a2330220ef814bdffcde3129d7bf31e66c"
+  },
+  {
+    "path": "tools/ecs-bench/adapters/miniplex.ts",
+    "sha256": "033a144a637dd65908e0f5eb0219858ad80face5052d00d8a40fc77ef8ec259a"
+  },
+  {
+    "path": "tools/ecs-bench/adapters/reference.ts",
+    "sha256": "550e56d6cbd44a7a140b2e368f4ad15f4bab26fb52d101590320b49660596773"
+  }
+]

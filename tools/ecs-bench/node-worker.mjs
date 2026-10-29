@@ -13,6 +13,8 @@ const post = (session, method, params = {}) =>
   );
 const memory = () => {
   global.gc?.();
+  // The second checkpoint collection updates external-memory accounting after released buffers.
+  global.gc?.();
   return process.memoryUsage();
 };
 const checkpoint = async (name, value) => {
@@ -72,10 +74,11 @@ try {
       if (pending) await pending;
       consumeProjection(await world.project());
     }
-    const cpu = await post(session, 'Profiler.stop');
+    let cpu = await post(session, 'Profiler.stop');
     const cpuPath = job.output + '.cpuprofile';
     await fs.writeFile(cpuPath, JSON.stringify(cpu.profile));
     result.cpuProfile = path.basename(cpuPath);
+    cpu = null;
     await post(session, 'HeapProfiler.enable');
     await post(session, 'HeapProfiler.startSampling', {
       samplingInterval: 32768,
@@ -94,10 +97,14 @@ try {
       }
     }
     result.soakRange.end = performance.now();
-    const allocations = await post(session, 'HeapProfiler.stopSampling');
+    let allocations = await post(session, 'HeapProfiler.stopSampling');
     const allocationPath = job.output + '.heapprofile';
     await fs.writeFile(allocationPath, JSON.stringify(allocations.profile));
     result.allocationProfile = path.basename(allocationPath);
+    // Sampling includes collected allocations: its sample list can be hundreds of MiB.
+    // Persist it, then release it before attributing retained memory to the world.
+    allocations = null;
+    await new Promise((resolve) => setImmediate(resolve));
     releaseProjection();
     result.checkpoints.steady = memory();
     result.dirtyTracking = world.dirtyDiagnostics();
@@ -125,6 +132,9 @@ try {
       await checkpoint('lifecycle', cycle);
     }
     result.checkpoints.disposed = memory();
+    result.disposedHeapSnapshot = path.basename(
+      v8.writeHeapSnapshot(job.output + '.disposed.heapsnapshot'),
+    );
     observer.disconnect();
     session.disconnect();
   } else throw new Error(`Unknown job mode: ${job.mode}`);

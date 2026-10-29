@@ -20,6 +20,18 @@ try {
     await cdp.send('HeapProfiler.collectGarbage');
     return cdp.send('Runtime.getHeapUsage');
   };
+  const snapshot = async (file) => {
+    const handle = await fs.open(file, 'w');
+    let writes = Promise.resolve();
+    const chunk = ({ chunk }) => {
+      writes = writes.then(() => handle.write(chunk));
+    };
+    cdp.on('HeapProfiler.addHeapSnapshotChunk', chunk);
+    await cdp.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false });
+    await writes;
+    await handle.close();
+    cdp.off('HeapProfiler.addHeapSnapshotChunk', chunk);
+  };
   let result;
   if (job.mode === 'check')
     result = await page.evaluate(
@@ -55,9 +67,10 @@ try {
     await cdp.send('Profiler.enable');
     await cdp.send('Profiler.start');
     await page.evaluate((n) => window.ecsLaboratory.ticks(n), job.cpuTicks ?? 200);
-    const cpu = await cdp.send('Profiler.stop');
+    let cpu = await cdp.send('Profiler.stop');
     await fs.writeFile(job.output + '.cpuprofile', JSON.stringify(cpu.profile));
     result.cpuProfile = path.basename(job.output + '.cpuprofile');
+    cpu = null;
     await cdp.send('HeapProfiler.enable');
     let sampling = true;
     try {
@@ -84,9 +97,10 @@ try {
       await fs.writeFile(job.output + '.progress.json', JSON.stringify({ phase: 'soak', tick }));
     }
     if (sampling) {
-      const allocations = await cdp.send('HeapProfiler.stopSampling');
+      let allocations = await cdp.send('HeapProfiler.stopSampling');
       await fs.writeFile(job.output + '.heapprofile', JSON.stringify(allocations.profile));
       result.allocationProfile = path.basename(job.output + '.heapprofile');
+      allocations = null;
     }
     if (tracing) {
       const complete = new Promise((resolve) => cdp.once('Tracing.tracingComplete', resolve));
@@ -110,16 +124,7 @@ try {
     await page.evaluate(() => window.ecsLaboratory.releaseProjection());
     result.checkpoints.steady = await collect();
     result.dirtyTracking = await page.evaluate(() => window.ecsLaboratory.dirtyDiagnostics());
-    const handle = await fs.open(job.output + '.heapsnapshot', 'w');
-    let writes = Promise.resolve();
-    const chunk = ({ chunk }) => {
-      writes = writes.then(() => handle.write(chunk));
-    };
-    cdp.on('HeapProfiler.addHeapSnapshotChunk', chunk);
-    await cdp.send('HeapProfiler.takeHeapSnapshot', { reportProgress: false });
-    await writes;
-    await handle.close();
-    cdp.off('HeapProfiler.addHeapSnapshotChunk', chunk);
+    await snapshot(job.output + '.heapsnapshot');
     result.heapSnapshot = path.basename(job.output + '.heapsnapshot');
     await page.evaluate(() => window.ecsLaboratory.capture());
     result.checkpoints.captureHeld = await collect();
@@ -137,6 +142,8 @@ try {
       );
     }
     result.checkpoints.disposed = await collect();
+    await snapshot(job.output + '.disposed.heapsnapshot');
+    result.disposedHeapSnapshot = path.basename(job.output + '.disposed.heapsnapshot');
   } else throw new Error(`Unknown browser mode ${job.mode}`);
   if (errors.length) throw new Error(errors.join('\n'));
   await fs.writeFile(

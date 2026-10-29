@@ -1,0 +1,390 @@
+[
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0016-node-profile-miniplex-100000-all-0.json.disposed.heapsnapshot",
+    "nodes": 81257,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 3016,
+      "hidden": 414784,
+      "string": 6818421,
+      "code": 2513976,
+      "array": 1241504,
+      "object shape": 645984,
+      "number": 80480,
+      "symbol": 8424,
+      "object": 521240,
+      "closure": 492208,
+      "concatenated string": 44768,
+      "native": 3107628,
+      "sliced string": 1440,
+      "regexp": 3136,
+      "bigint": 104
+    },
+    "largestNodes": [
+      [
+        3801980,
+        117654,
+        "\"use strict\";\r\nvar __create = Object.create;\r\nvar __defProp = Object.defineProperty;\r\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\r\nvar __getOwnPropNames = Object.getOwnPropertyNames;\r\nvar __getProtoOf = Object.getPrototypeOf;\r\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\r\nvar __commonJS = (cb, mod) => function __require() {\r\n  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;\r\n};\r\nvar __export = (target, all) => {\r\n  for (var name in all)\r\n    __defProp(target, name, { get: all[name], enumerable: true });\r\n};\r\nvar __copyProps = (to, from, except, desc) => {\r\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\r\n    for (let key of __getOwnPropNames(from))\r\n      if (!__hasOwnProp.call(to, key) && key !== except)\r\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\r\n  }\r\n  return to;\r\n};\r\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null "
+      ],
+      [
+        2949120,
+        200340,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0017-node-profile-bitecs-100000-all-0.json.disposed.heapsnapshot",
+    "nodes": 81611,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 3016,
+      "hidden": 456912,
+      "string": 6882317,
+      "code": 2418888,
+      "array": 1251680,
+      "object shape": 642056,
+      "number": 87920,
+      "symbol": 8760,
+      "object": 543056,
+      "closure": 491288,
+      "concatenated string": 41408,
+      "native": 3107625,
+      "regexp": 3136,
+      "sliced string": 224,
+      "bigint": 104
+    },
+    "largestNodes": [
+      [
+        3801980,
+        118578,
+        "\"use strict\";\r\nvar __create = Object.create;\r\nvar __defProp = Object.defineProperty;\r\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\r\nvar __getOwnPropNames = Object.getOwnPropertyNames;\r\nvar __getProtoOf = Object.getPrototypeOf;\r\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\r\nvar __commonJS = (cb, mod) => function __require() {\r\n  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;\r\n};\r\nvar __export = (target, all) => {\r\n  for (var name in all)\r\n    __defProp(target, name, { get: all[name], enumerable: true });\r\n};\r\nvar __copyProps = (to, from, except, desc) => {\r\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\r\n    for (let key of __getOwnPropNames(from))\r\n      if (!__hasOwnProp.call(to, key) && key !== except)\r\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\r\n  }\r\n  return to;\r\n};\r\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null "
+      ],
+      [
+        2949120,
+        435714,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0018-node-profile-koota-100000-all-0.json.disposed.heapsnapshot",
+    "nodes": 81668,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 3016,
+      "hidden": 481856,
+      "string": 6858413,
+      "code": 2691640,
+      "array": 1250328,
+      "object shape": 646648,
+      "number": 80544,
+      "symbol": 8592,
+      "object": 519808,
+      "closure": 495136,
+      "concatenated string": 42336,
+      "native": 3115984,
+      "regexp": 3136,
+      "bigint": 104,
+      "sliced string": 224
+    },
+    "largestNodes": [
+      [
+        3801980,
+        118470,
+        "\"use strict\";\r\nvar __create = Object.create;\r\nvar __defProp = Object.defineProperty;\r\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\r\nvar __getOwnPropNames = Object.getOwnPropertyNames;\r\nvar __getProtoOf = Object.getPrototypeOf;\r\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\r\nvar __commonJS = (cb, mod) => function __require() {\r\n  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;\r\n};\r\nvar __export = (target, all) => {\r\n  for (var name in all)\r\n    __defProp(target, name, { get: all[name], enumerable: true });\r\n};\r\nvar __copyProps = (to, from, except, desc) => {\r\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\r\n    for (let key of __getOwnPropNames(from))\r\n      if (!__hasOwnProp.call(to, key) && key !== except)\r\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\r\n  }\r\n  return to;\r\n};\r\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null "
+      ],
+      [
+        2949120,
+        412992,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0019-node-profile-becsy-100000-all-0.json.disposed.heapsnapshot",
+    "nodes": 87028,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 3016,
+      "hidden": 447496,
+      "string": 7380989,
+      "code": 2969416,
+      "array": 1300880,
+      "object shape": 702536,
+      "number": 80880,
+      "symbol": 8424,
+      "closure": 514488,
+      "object": 521864,
+      "concatenated string": 42400,
+      "native": 3107624,
+      "regexp": 3136,
+      "bigint": 104,
+      "sliced string": 224
+    },
+    "largestNodes": [
+      [
+        3801980,
+        120546,
+        "\"use strict\";\r\nvar __create = Object.create;\r\nvar __defProp = Object.defineProperty;\r\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\r\nvar __getOwnPropNames = Object.getOwnPropertyNames;\r\nvar __getProtoOf = Object.getPrototypeOf;\r\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\r\nvar __commonJS = (cb, mod) => function __require() {\r\n  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;\r\n};\r\nvar __export = (target, all) => {\r\n  for (var name in all)\r\n    __defProp(target, name, { get: all[name], enumerable: true });\r\n};\r\nvar __copyProps = (to, from, except, desc) => {\r\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\r\n    for (let key of __getOwnPropNames(from))\r\n      if (!__hasOwnProp.call(to, key) && key !== except)\r\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\r\n  }\r\n  return to;\r\n};\r\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null "
+      ],
+      [
+        2949120,
+        367866,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0020-browser-profile-miniplex-100000-all-0.json.disposed.heapsnapshot",
+    "nodes": 44780,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 705522,
+      "string": 407208,
+      "object shape": 147040,
+      "code": 393604,
+      "array": 163952,
+      "number": 216,
+      "symbol": 64,
+      "object": 15876,
+      "closure": 87556,
+      "concatenated string": 1680
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0021-browser-profile-bitecs-100000-all-0.json.disposed.heapsnapshot",
+    "nodes": 44196,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 705707,
+      "string": 407712,
+      "object shape": 148060,
+      "code": 398440,
+      "array": 163988,
+      "number": 348,
+      "symbol": 288,
+      "object": 16048,
+      "closure": 86328,
+      "concatenated string": 1680
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0022-browser-profile-koota-100000-all-0.json.disposed.heapsnapshot",
+    "nodes": 45897,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 751524,
+      "string": 411592,
+      "object shape": 150828,
+      "code": 545244,
+      "array": 165100,
+      "number": 240,
+      "symbol": 160,
+      "object": 16940,
+      "closure": 88680,
+      "concatenated string": 2400
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0023-browser-profile-becsy-100000-all-0.json.disposed.heapsnapshot",
+    "nodes": 52982,
+    "retainedSyntheticPayloads": 0,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 883513,
+      "string": 420844,
+      "object shape": 180864,
+      "code": 775528,
+      "array": 166444,
+      "number": 516,
+      "symbol": 64,
+      "object": 18048,
+      "closure": 98856,
+      "concatenated string": 2080
+    },
+    "largestNodes": [],
+    "sparseSets": [],
+    "sparseSetIncoming": []
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0018-node-profile-koota-100000-all-0.json.heapsnapshot",
+    "nodes": 1926028,
+    "retainedSyntheticPayloads": 100000,
+    "selfBytesByType": {
+      "synthetic": 3016,
+      "hidden": 446464,
+      "string": 15118304,
+      "code": 2724784,
+      "array": 142558648,
+      "object shape": 615384,
+      "number": 68848,
+      "symbol": 8520,
+      "object": 49259136,
+      "concatenated string": 6114752,
+      "closure": 461912,
+      "native": 3208733,
+      "sliced string": 192,
+      "regexp": 3136,
+      "bigint": 104
+    },
+    "largestNodes": [
+      [
+        50331696,
+        5145408,
+        "(object elements)"
+      ],
+      [
+        50331696,
+        5145384,
+        "(object elements)"
+      ],
+      [
+        7340072,
+        9530700,
+        ""
+      ],
+      [
+        3801980,
+        114738,
+        "\"use strict\";\r\nvar __create = Object.create;\r\nvar __defProp = Object.defineProperty;\r\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\r\nvar __getOwnPropNames = Object.getOwnPropertyNames;\r\nvar __getProtoOf = Object.getPrototypeOf;\r\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\r\nvar __commonJS = (cb, mod) => function __require() {\r\n  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;\r\n};\r\nvar __export = (target, all) => {\r\n  for (var name in all)\r\n    __defProp(target, name, { get: all[name], enumerable: true });\r\n};\r\nvar __copyProps = (to, from, except, desc) => {\r\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\r\n    for (let key of __getOwnPropNames(from))\r\n      if (!__hasOwnProp.call(to, key) && key !== except)\r\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\r\n  }\r\n  return to;\r\n};\r\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null "
+      ],
+      [
+        2949120,
+        9539802,
+        "system / JSArrayBufferData"
+      ]
+    ],
+    "sparseSets": [
+      {
+        "owner": "SparseSet",
+        "ownerOffset": 5145210,
+        "arrayOffset": 5145222,
+        "backing": [
+          {
+            "name": "(object elements)",
+            "bytes": 50331696,
+            "nodeOffset": 5145408
+          }
+        ]
+      },
+      {
+        "owner": "SparseSet",
+        "ownerOffset": 5145390,
+        "arrayOffset": 5145378,
+        "backing": [
+          {
+            "name": "(object elements)",
+            "bytes": 50331696,
+            "nodeOffset": 5145384
+          }
+        ]
+      }
+    ],
+    "sparseSetIncoming": [
+      {
+        "owner": "Object",
+        "property": "entities",
+        "targetOffset": 5145210
+      },
+      {
+        "owner": "Object",
+        "property": "toRemove",
+        "targetOffset": 5145390
+      }
+    ]
+  },
+  {
+    "file": "L:\\Angular\\scrapworks\\tmp\\ecs-bench\\reference-2026-10-29-corrected-diagnostics\\0022-browser-profile-koota-100000-all-0.json.heapsnapshot",
+    "nodes": 2095571,
+    "retainedSyntheticPayloads": 100000,
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 820485,
+      "string": 7211292,
+      "object shape": 151128,
+      "code": 665128,
+      "array": 70861972,
+      "number": 288,
+      "symbol": 160,
+      "object": 24418800,
+      "closure": 88704,
+      "concatenated string": 3802200
+    },
+    "largestNodes": [
+      [
+        25165848,
+        7768878,
+        "(object elements)"
+      ],
+      [
+        25165848,
+        7711476,
+        "(object elements)"
+      ],
+      [
+        3670036,
+        7929948,
+        ""
+      ]
+    ],
+    "sparseSets": [
+      {
+        "owner": "V",
+        "ownerOffset": 7725168,
+        "arrayOffset": 7711470,
+        "backing": [
+          {
+            "name": "(object elements)",
+            "bytes": 25165848,
+            "nodeOffset": 7711476
+          }
+        ]
+      },
+      {
+        "owner": "V",
+        "ownerOffset": 7768968,
+        "arrayOffset": 7725180,
+        "backing": [
+          {
+            "name": "(object elements)",
+            "bytes": 25165848,
+            "nodeOffset": 7768878
+          }
+        ]
+      }
+    ],
+    "sparseSetIncoming": [
+      {
+        "owner": "Object",
+        "property": "entities",
+        "targetOffset": 7768968
+      },
+      {
+        "owner": "Object",
+        "property": "toRemove",
+        "targetOffset": 7725168
+      }
+    ]
+  }
+]

@@ -1,4 +1,4 @@
-import { canonical, spendInOrder } from './model.ts';
+import { canonical, spendInOrder, statusFor } from './model.ts';
 import type { Candidate, Instance, Projection } from './model.ts';
 import { load } from './load.ts';
 
@@ -74,10 +74,23 @@ export async function check(
     try {
       await actual.probe();
       await expected.probe();
+      let activeProcessors = 0;
+      for (let ordinal = 0; ordinal < fixture.size; ordinal++)
+        if (ordinal % 10 < 6 && statusFor(ordinal, workload) === 0) activeProcessors++;
+      let previousCompleted = 0;
       for (let i = 0; i < 1100; i++) {
         const a = actual.step();
         if (a) await a;
         expected.step();
+        if (i % 100 === 99) {
+          // Periods are at most 26 ticks. Even a churn replacement splits a
+          // 100-tick window into segments completing at least two operations.
+          assert(
+            actual.resources.completed - previousCompleted >= activeProcessors * 2,
+            `${workload}: replenishment stopped meaningful work`,
+          );
+          previousCompleted = actual.resources.completed;
+        }
         if (i === 0 || i === 99 || i === 1099) {
           const phases = { ...actual.phases };
           assert(
@@ -135,7 +148,7 @@ export async function check(
         await restored.dispose();
       }
       assertions.push(
-        `${workload}: native membership, projections, 1100-step oracle, owners, 1000-step restored continuation, detached slots`,
+        `${workload}: native membership, projections, sustained completions, 1100-step oracle, owners, 1000-step restored continuation, detached slots`,
       );
     } finally {
       await actual.dispose();
@@ -175,10 +188,18 @@ export async function check(
       'Failure published partial state',
     );
     b.step = originalStep;
-    await a.grow(100000);
-    await step(a, 3);
-    const expected = await oracle({ ...fixture, size: 100000 }, await a.capture());
+    // Start the oracle from the pre-expansion state so lost old values cannot
+    // become the oracle's new initial values and hide an adapter growth bug.
+    const expected = await oracle(fixture, await a.capture());
     try {
+      await a.grow(100000);
+      await expected.grow(100000);
+      await step(a, 3);
+      await step(expected, 3);
+      assert(
+        canonical(await a.capture()) === canonical(await expected.capture()),
+        'Growth changed existing numeric values or new fixture records',
+      );
       await step(a, 10);
       await step(expected, 10);
       assert(
