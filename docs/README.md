@@ -1,6 +1,6 @@
 # Scrapworks documentation
 
-Updated 29 October 2026. Scrapworks is a browser-first 3D factory-restoration game. Angular owns the interface, Babylon.js owns presentation, Babylon.js Editor owns authored scenes/layout, and plain TypeScript owns world state, movement and placement rules. Factory progression and gameplay saves remain planned.
+Updated 30 October 2026. Scrapworks is a browser-first 3D factory-restoration game. Angular owns the interface, Babylon.js owns presentation, Babylon.js Editor owns authored scenes/layout, and plain TypeScript owns world state, movement and placement rules. Factory progression and gameplay saves remain planned.
 
 ## Design and planning
 
@@ -17,6 +17,7 @@ Updated 29 October 2026. Scrapworks is a browser-first 3D factory-restoration ga
 
 - [Technical Design Document](design/TDD.md): ownership, current implementation and planned systems.
 - [Simulation worker investigation](plans/simulation-worker-investigation.md) and [lean results](reports/simulation-worker/2026-10-30/README.md): Miniplex and bitECS qualify with compact transferred views and bounded detail subscriptions; retain Miniplex. The [rich transport study](reports/simulation-worker/2026-10-29/README.md) remains historical. Includes the asynchronous handoff and future multithreading assessment; production/multi-worker implementation remains pending.
+- [Production ECS/worker implementation plan](plans/ecs-worker-implementation.md): staged Step 0 migration, production data/contracts, completed-tick presentation hooks, authored-world Retry and integrated acceptance checks; implementation remains pending.
 - [3D migration](plans/3d-migration.md) and [acceptance checklist](plans/3d-implementation-checklist.md): completed migration scope and evidence.
 - [Runtime walkthrough](plans/3d-phase-2-walkthrough.md): lifecycle, input, Toolkit scripts and session ownership.
 - [Editor/MCP setup](plans/babylon-editor-setup.md): authoring, export and desktop tools.

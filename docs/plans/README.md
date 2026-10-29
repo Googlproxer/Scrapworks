@@ -14,6 +14,8 @@ Core objects now use Toolkit scripts composed by `WorldScene`, with plain `Playe
 
 The [cleanup record](3d-cleanup.md) describes retired tools/assets and their recovery sources. Fresh [authoring workflow validation](../reports/workflow/2026-10-23/README.md) verifies export/reload, failed-save retention and recovery.
 
+The next foundation work is defined in the [production ECS/worker implementation plan](ecs-worker-implementation.md). It migrates the existing fixture first, then completes Step 0 schemas/rules and capture/continuation evidence. The user confirmed completed-tick presentation hooks and authored-world restart on failure Retry. This is a recorded plan; production implementation and later gameplay remain pending.
+
 Manual salvage, recipe jobs, inventory interaction, research, machines, transport, restoration and gameplay saves remain unimplemented. Controls settings persisting through IndexedDB do not establish world saving.
 
 ## Milestones at a glance
