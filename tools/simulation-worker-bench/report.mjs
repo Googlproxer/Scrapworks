@@ -67,6 +67,8 @@ export async function report(input, destination) {
       'structural',
       'publication',
       'hostApply',
+      'receiveData',
+      'observedReceiver',
       'packing',
     ]) {
       metrics[name] = {};
@@ -96,6 +98,8 @@ export async function report(input, destination) {
   );
   const hashes = primary.filter((j) => j.result?.status === 'ok').map((j) => j.result.hash);
   const stateEquivalent = hashes.length > 0 && new Set(hashes).size === 1;
+  const warmContextRetained = manifest.qualification?.warmupContext === 'retained';
+  const receiverMetric = warmContextRetained ? 'observedReceiver' : 'hostApply';
   const qualifications = [];
   for (const candidate of ['miniplex', 'bitecs']) {
     const row = rows.find(
@@ -127,8 +131,8 @@ export async function report(input, destination) {
       row.metrics.workAndPublication.p99.median <= gate.workerP99;
     const apply =
       !!row &&
-      row.metrics.hostApply.p95.median <= gate.hostApplyP95 &&
-      row.metrics.hostApply.p99.median <= gate.hostApplyP99;
+      row.metrics[receiverMetric].p95.median <= gate.hostApplyP95 &&
+      row.metrics[receiverMetric].p99.median <= gate.hostApplyP99;
     const frames =
       paced.length === 9 &&
       paced.every(
@@ -153,13 +157,17 @@ export async function report(input, destination) {
       hostApplication: apply,
       frames,
       input,
-      qualifies: complete && correct && cpu && apply && frames && input,
+      warmContextRetained,
+      receiverMetric,
+      qualifies: warmContextRetained && complete && correct && cpu && apply && frames && input,
     });
   }
   const summary = {
     schema: 1,
     manifest,
     stateEquivalent,
+    warmContextRetained,
+    receiverMetric,
     qualifications,
     counts: {
       jobs: jobs.length,
@@ -231,7 +239,9 @@ export async function report(input, destination) {
     );
   lines.push(
     '',
-    'Receiver application measures explicit JavaScript decoding/cache application. Browser-internal structured-clone deserialization is included in round trips and frame responsiveness, but cannot be attributed to that callback timer. Epoch-aligned phase estimates are diagnostic only. Profiling runs do not contribute to ranking.',
+    `Warm execution context verified by manifest: ${warmContextRetained}. Receiver gate metric: ${receiverMetric}.`,
+    '',
+    'hostApply measures explicit JavaScript decoding/cache application. Where present, observedReceiver measures the whole message handler, including MessageEvent.data access and request bookkeeping; browser-internal work before that access can remain unattributed. Round trips and frame intervals include delivery. Epoch-aligned estimates are diagnostic only. Profiling runs do not contribute to ranking.',
     '',
   );
   await fs.writeFile(path.join(target, 'evidence.md'), lines.join('\n'));

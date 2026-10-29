@@ -73,6 +73,7 @@ export class Runtime {
   private ledger: Ledger = {
     accepted: 0,
     applied: 0,
+    cancelled: 0,
     checksum: 0,
     lastSequence: 0,
     appliedSequence: 0,
@@ -154,6 +155,11 @@ export class Runtime {
       this.ledger.accepted++;
     }
   }
+  private cancelCommands(reply: Reply): void {
+    reply.cancelledCommands = this.commands.map((command) => command.sequence);
+    this.ledger.cancelled += this.commands.length;
+    this.commands = [];
+  }
   private stopClock(): void {
     this.clockRunning = false;
     if (this.timer) clearTimeout(this.timer);
@@ -222,12 +228,13 @@ export class Runtime {
         this.revision = r.revision;
         this.lastRequest = r.id;
         this.version = 0;
-        this.commands = [];
+        this.commands = structuredClone(r.capture?.pendingCommands ?? []);
         this.ledger = r.capture
-          ? structuredClone(r.capture.ledger)
+          ? { ...structuredClone(r.capture.ledger), cancelled: r.capture.ledger.cancelled ?? 0 }
           : {
               accepted: 0,
               applied: 0,
+              cancelled: 0,
               checksum: 0,
               lastSequence: 0,
               appliedSequence: 0,
@@ -249,7 +256,7 @@ export class Runtime {
         this.world.dispose();
         this.world = undefined;
         this.options = undefined;
-        this.commands = [];
+        this.cancelCommands(reply);
         this.unpublished = undefined;
         this.posts = [];
         return this.finish(reply);
@@ -268,7 +275,7 @@ export class Runtime {
         this.stopClock();
         this.revision = r.revision;
         this.paused = r.operation === 'pause';
-        this.commands = [];
+        this.cancelCommands(reply);
         this.ledger.input = { x: 0, z: 0, sprint: false };
         return this.finish(reply);
       }
@@ -278,7 +285,11 @@ export class Runtime {
         assert(!this.busy, 'Capture requires completed batch');
         const snapshot = this.world.capture();
         assert(!(snapshot instanceof Promise), 'Unexpected asynchronous capture');
-        reply.capture = { world: snapshot, ledger: structuredClone(this.ledger) };
+        reply.capture = {
+          world: snapshot,
+          ledger: structuredClone(this.ledger),
+          pendingCommands: structuredClone(this.commands),
+        };
         return this.finish(reply);
       }
       if (r.operation === 'movement') {

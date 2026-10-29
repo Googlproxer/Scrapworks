@@ -23,6 +23,7 @@ export interface Command {
 export interface Ledger {
   accepted: number;
   applied: number;
+  cancelled: number;
   checksum: number;
   lastSequence: number;
   appliedSequence: number;
@@ -31,6 +32,7 @@ export interface Ledger {
 export interface Capture {
   world: Snapshot;
   ledger: Ledger;
+  pendingCommands: Command[];
 }
 export type Operation =
   | 'initialize'
@@ -91,6 +93,7 @@ export interface Reply {
   packed?: ArrayBuffer;
   capture?: Capture;
   ledger?: Ledger;
+  cancelledCommands?: number[];
   times: Times;
   posts?: number[];
   clock?: { droppedMs: number; maxBacklog: number; busy: boolean };

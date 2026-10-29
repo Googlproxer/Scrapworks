@@ -52,16 +52,21 @@ async function hash(capture: Capture): Promise<string> {
   return Array.from(new Uint8Array(value), (v) => v.toString(16).padStart(2, '0')).join('');
 }
 let active: Client | undefined;
-async function initialize(options: Options): Promise<{ initializationMs: number }> {
-  if (active) await active.dispose();
-  active = new Client(options);
+async function initialize(
+  options: Options,
+  existing?: Client,
+): Promise<{ initializationMs: number }> {
+  if (active && active !== existing) await active.dispose();
+  active = existing ?? new Client(options);
   const start = performance.now();
   await active.initialize();
   return { initializationMs: performance.now() - start };
 }
-async function warm(options: TrialOptions): Promise<number> {
+async function warm(options: TrialOptions) {
   const temporary = new Client(options);
+  const coldStart = performance.now();
   await temporary.initialize();
+  const coldInitializationMs = performance.now() - coldStart;
   const start = performance.now();
   let ticks = 0;
   while (
@@ -72,12 +77,14 @@ async function warm(options: TrialOptions): Promise<number> {
     if (reply instanceof Promise) await reply;
     ticks++;
   }
-  await temporary.dispose();
-  return ticks;
+  // Retain the execution context: a new worker would discard the warmed JIT.
+  // initialize() replaces only the disposable world, including the host cache.
+  return { ticks, client: temporary, coldInitializationMs };
 }
 async function trial(options: TrialOptions) {
-  const warmupTicks = await warm(options);
-  const { initializationMs } = await initialize(options);
+  const warmed = await warm(options);
+  const warmupTicks = warmed.ticks;
+  const { initializationMs } = await initialize(options, warmed.client);
   const client = active!;
   const firstStart = performance.now();
   await client.request('advance', commands(1));
@@ -91,6 +98,8 @@ async function trial(options: TrialOptions) {
     packing: [],
     execution: [],
     hostApply: [],
+    receiveData: [],
+    observedReceiver: [],
     requestDeliveryEstimate: [],
     responseDeliveryEstimate: [],
     records: [],
@@ -118,6 +127,8 @@ async function trial(options: TrialOptions) {
     measuredTicks += reply.steps;
     samples['roundTrip'].push(elapsed);
     samples['hostApply'].push(client.hostApplyMs);
+    samples['receiveData'].push(client.receiveDataMs);
+    samples['observedReceiver'].push(client.receiverMs);
     samples['workAndPublication'].push(
       reply.times.execution + reply.times.publication + reply.times.packing,
     );
@@ -158,6 +169,7 @@ async function trial(options: TrialOptions) {
     status: timedOut ? 'timeout' : 'ok',
     options,
     warmupTicks,
+    coldInitializationMs: warmed.coldInitializationMs,
     initializationMs,
     firstTickMs,
     samples,
@@ -175,8 +187,8 @@ async function trial(options: TrialOptions) {
 async function paced(
   options: TrialOptions & { durationMs: number; pressureMs: number; hz?: number },
 ) {
-  await warm(options);
-  await initialize(options);
+  const warmed = await warm(options);
+  await initialize(options, warmed.client);
   const client = active!;
   const credits = new Credits();
   const samples: Samples = {
@@ -185,7 +197,10 @@ async function paced(
     inputToApplied: [],
     inputToVisible: [],
     hostApply: [],
+    receiveData: [],
+    observedReceiver: [],
     workerPublication: [],
+    frameReceiver: [],
     viewAge: [],
     authorityAgeEstimate: [],
     interpolatedAge: [],
@@ -205,6 +220,9 @@ async function paced(
   const start = prior;
   let lastFrame = prior;
   let latestAt = prior;
+  let lastDispatch = prior;
+  let publications = 0;
+  let receiverSinceFrame = 0;
   let maxQueue = 0;
   let visualTick = 0;
   let inputSequence = 0;
@@ -217,10 +235,15 @@ async function paced(
   if (workerClock) await client.request('clock-start');
   const dispatch = (steps: number): void => {
     const begin = performance.now();
+    lastDispatch = begin;
     const beforeTick = client.tick;
     const complete = (reply: Reply): void => {
       samples['acknowledgement'].push(performance.now() - begin);
       samples['hostApply'].push(client.hostApplyMs);
+      samples['receiveData'].push(client.receiveDataMs);
+      samples['observedReceiver'].push(client.receiverMs);
+      receiverSinceFrame += client.receiverMs;
+      publications++;
       samples['workerPublication'].push(reply.times.execution + reply.times.publication);
       for (const [sequence, sampledAt] of inputAt)
         if (sequence <= (reply.ledger?.appliedSequence ?? 0)) {
@@ -261,6 +284,8 @@ async function paced(
       samples['frames'].push(now - prior);
       prior = now;
       frames++;
+      samples['frameReceiver'].push(receiverSinceFrame);
+      receiverSinceFrame = 0;
       const present = performance.now();
       for (const sampledAt of visible) samples['inputToVisible'].push(present - sampledAt);
       visible.length = 0;
@@ -275,7 +300,9 @@ async function paced(
       lastFrame = now;
       if (!workerClock) credits.add(delta, outstanding);
       if (!pending) {
-        const steps = workerClock ? Number(now - latestAt >= 49) : credits.take(options.batch ?? 1);
+        const steps = workerClock
+          ? Number(now - lastDispatch >= 49)
+          : credits.take(options.batch ?? 1);
         if (steps) dispatch(steps);
       }
       samples['viewAge'].push(Math.max(0, now - latestAt));
@@ -307,9 +334,13 @@ async function paced(
   const final = (await client.request('capture')).capture!;
   const result = {
     options,
+    warmupTicks: warmed.ticks,
+    coldInitializationMs: warmed.coldInitializationMs,
     durationMs: performance.now() - start,
     frames,
     ticks,
+    publications,
+    unpresentedReceiverMs: receiverSinceFrame,
     statistics: stats(samples),
     samples,
     longTasks: tasks.filter(
@@ -364,12 +395,41 @@ async function ancillary(options: Options) {
   active = undefined;
   return { publication, captureMs, encodeMs, decodeMs, bytes, rebuildMs };
 }
+async function payloadSizes(options: Options) {
+  await initialize(options);
+  const client = active!;
+  const rows: { name: string; records: number; removed: number; jsonBytes: number }[] = [];
+  const record = (name: string, reply: Reply): void => {
+    assert(reply.frame, 'Payload size diagnostic requires decoded frame');
+    rows.push({
+      name,
+      records: reply.frame.view.records.length,
+      removed: reply.frame.view.removed.length,
+      jsonBytes: new TextEncoder().encode(JSON.stringify(reply.frame)).length,
+    });
+  };
+  try {
+    record('initial-full', client.latest!);
+    record('normal-tick', await client.request('advance', commands(1)));
+    for (const fraction of [0, 0.01, 0.1, 1])
+      record(`dirty-${fraction}`, await client.request('dirty', { fraction }));
+    return {
+      measurement:
+        'UTF-8 JSON size estimate outside timing; structured-clone wire bytes unavailable',
+      rows,
+    };
+  } finally {
+    await client.dispose();
+    active = undefined;
+  }
+}
 
 const api = {
   correctness,
   trial,
   paced,
   ancillary,
+  payloadSizes,
   initialize,
   async ticks(count: number) {
     const client = active!;

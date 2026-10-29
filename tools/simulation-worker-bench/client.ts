@@ -15,6 +15,8 @@ export class Client {
   public pendingCount = 0;
   public maxPending = 0;
   public hostApplyMs = 0;
+  public receiveDataMs = 0;
+  public receiverMs = 0;
   public decodeMs = 0;
   public receiveEpoch = 0;
   public timeoutMs = 15000;
@@ -38,7 +40,9 @@ export class Client {
         name: `simulation-${options.candidate}`,
       });
       this.worker.onmessage = (event: MessageEvent<Reply>) => {
+        const receiveStart = performance.now();
         const reply = event.data;
+        this.receiveDataMs = performance.now() - receiveStart;
         if (reply.generation !== this.generation || this.disposed) return;
         const request = this.pending.get(reply.id);
         if (!request) return;
@@ -49,6 +53,8 @@ export class Client {
           request.resolve(this.consume(reply));
         } catch (error) {
           request.reject(error instanceof Error ? error : new Error(String(error)));
+        } finally {
+          this.receiverMs = performance.now() - receiveStart;
         }
       };
       this.worker.onerror = (event) => this.fail(new Error(event.message || 'Worker error'));
@@ -109,10 +115,17 @@ export class Client {
       sentEpoch: epoch(),
     };
     if (this.runtime) {
+      this.receiveDataMs = 0;
       const reply = this.runtime.handle(request);
-      return reply instanceof Promise
-        ? reply.then((result) => this.consume(result))
-        : this.consume(reply);
+      if (reply instanceof Promise)
+        return reply.then((result) => {
+          const consumed = this.consume(result);
+          this.receiverMs = this.hostApplyMs;
+          return consumed;
+        });
+      const consumed = this.consume(reply);
+      this.receiverMs = this.hostApplyMs;
+      return consumed;
     }
     assert(this.pending.size < 8, 'Host request backpressure');
     return new Promise((resolve, reject) => {

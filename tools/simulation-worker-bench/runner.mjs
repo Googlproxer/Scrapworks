@@ -88,6 +88,11 @@ try {
       (options) => window.simulationWorkerBench.ancillary(options),
       job.options,
     );
+  else if (job.mode === 'payloads')
+    result = await page.evaluate(
+      (options) => window.simulationWorkerBench.payloadSizes(options),
+      job.options,
+    );
   else if (job.mode === 'profile') {
     const main = await page.context().newCDPSession(page);
     const contexts = [

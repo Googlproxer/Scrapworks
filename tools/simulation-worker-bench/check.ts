@@ -50,9 +50,21 @@ export async function correctness(options: Options): Promise<{ assertions: strin
     assert(backlog.take(5) === 5 && backlog.elapsed === 0, 'Catch-up was not bounded');
     await client.request('advance', { steps: 5 });
     assert(client.tick === before + 5, 'Five-step catch-up failed');
-    const slow = client.request('advance', { steps: 5, yieldSteps: true, delayMs: 30 });
+    const slow = client.request('advance', {
+      steps: 5,
+      yieldSteps: true,
+      delayMs: 30,
+      commands: [{ sequence: 121, value: 121 }],
+    });
     const stopped = client.pause();
-    await Promise.all([slow, stopped]);
+    const [, pauseReply] = await Promise.all([slow, stopped]);
+    same(pauseReply.cancelledCommands, [121], 'Suspension did not acknowledge cancelled command');
+    const cancelled = (await capture(client)).ledger;
+    assert(cancelled.cancelled === 1 && cancelled.applied === 120, 'Cancelled command was applied');
+    assert(
+      cancelled.accepted === cancelled.applied + cancelled.cancelled,
+      'Command accounting gap',
+    );
     const afterPause = (await capture(client)).world.resources.tick;
     await new Promise((resolve) => setTimeout(resolve, 40));
     assert(
@@ -83,6 +95,22 @@ export async function correctness(options: Options): Promise<{ assertions: strin
       if (b instanceof Promise) await b;
     }
     same(await capture(client), await capture(restored), 'Fresh runtime 1000-step continuation');
+    const nextCommand = { sequence: captured.ledger.lastSequence + 1, value: 65537 };
+    await client.request('advance', { steps: 1, commands: [nextCommand] });
+    await restored.request('advance', { steps: 1, commands: [nextCommand] });
+    same(await capture(client), await capture(restored), 'Restored command stream continuation');
+    const pendingCommand = { sequence: nextCommand.sequence + 1, value: 65539 };
+    await client.request('advance', { steps: 0, commands: [pendingCommand] });
+    const pendingCapture = await capture(client);
+    same(pendingCapture.pendingCommands, [pendingCommand], 'Accepted pending command not captured');
+    await restored.initialize(pendingCapture);
+    await client.request('advance', { steps: 1 });
+    await restored.request('advance', { steps: 1 });
+    same(
+      await capture(client),
+      await capture(restored),
+      'Restored pending command was lost or repeated',
+    );
     const movement = (await client.request('movement')).movement;
     same(
       movement,
@@ -90,10 +118,10 @@ export async function correctness(options: Options): Promise<{ assertions: strin
       'Actual Simulation/PlayerMotor movement and placement mismatch',
     );
     assertions.push(
-      'Tick-assigned reference equivalence, full/delta cache, nested edits/removals, 120 exactly-once commands, pause/resume, five-step catch-up and interrupted batch',
+      'Tick-assigned reference equivalence, full/delta cache, nested edits/removals, 120 exactly-once commands, explicit cancellation acknowledgement, pause/resume, five-step catch-up and interrupted batch',
     );
     assertions.push(
-      'Fresh worker/runtime restoration followed by 1000 matching steps; actual production Simulation/PlayerMotor 1000-step movement/placement probe',
+      'Fresh worker/runtime restoration followed by 1000 matching steps and a new command; actual production Simulation/PlayerMotor 1000-step movement/placement probe',
     );
     await client.request('dirty', { fraction: 0 });
     const frame = client.latest?.frame;

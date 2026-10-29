@@ -16,7 +16,7 @@ const option = (name, fallback) => {
 };
 if (args.includes('--help')) {
   console.log(
-    'Simulation worker bench: check | smoke | calibrate | browser | report; --output path --resume --candidates miniplex,bitecs --executions inline,worker --phase all|primary|diagnostics|profiles|paced --repetitions 5 --duration-ms 30000 --destination path --label reference-desktop|hosted-ci',
+    'Simulation worker bench: check | smoke | calibrate | browser | report; --output path --resume --candidates miniplex,bitecs --executions inline,worker --phase all|primary|diagnostics|profiles|paced|followup --repetitions 5 --duration-ms 30000 --destination path --label reference-desktop|hosted-ci',
   );
   process.exit(0);
 }
@@ -224,13 +224,15 @@ const configurations = candidates.flatMap((candidate) =>
 const smoke = command === 'smoke';
 const calibration = command === 'calibrate';
 const phase = option('phase', 'all');
+if (!['all', 'primary', 'diagnostics', 'profiles', 'paced', 'followup'].includes(phase))
+  throw new Error('Unknown phase');
 const jobs = [];
 const base = { size: 100000, seed: 1729, workload: 'mixed', clock: 'host', wire: 'object' };
 for (const config of configurations)
   jobs.push({ mode: 'check', options: { ...base, ...config, size: 1000 } });
 if (command !== 'check') {
   const reps = Number(option('repetitions', smoke || calibration ? 1 : 5));
-  if (phase === 'all' || phase === 'primary') {
+  if (phase === 'all' || phase === 'primary' || phase === 'followup') {
     const cases = smoke
       ? [{ size: 1000, workload: 'mixed' }]
       : calibration
@@ -263,6 +265,9 @@ if (command !== 'check') {
       for (const variant of [{ batch: 5 }, { batch: 5, yielding: true }, { wire: 'json-buffer' }])
         jobs.push({ mode: 'trial', diagnostic: true, options: { ...base, ...config, ...variant } });
     }
+  if (!smoke && !calibration && ['all', 'diagnostics', 'followup'].includes(phase))
+    for (const config of configurations)
+      jobs.push({ mode: 'payloads', diagnostic: true, options: { ...base, ...config } });
   if (!smoke && !calibration && ['all', 'profiles'].includes(phase))
     for (const config of configurations)
       jobs.push({ mode: 'profile', options: { ...base, ...config, workload: 'churn' } });
@@ -305,7 +310,7 @@ if (command !== 'check') {
         },
       });
   }
-  if (!smoke && !calibration && ['all', 'paced'].includes(phase)) {
+  if (!smoke && !calibration && ['all', 'paced', 'followup'].includes(phase)) {
     const durationMs = Number(option('duration-ms', 30000));
     for (const config of configurations)
       for (const workload of ['mixed', 'idle', 'active'])
@@ -322,14 +327,20 @@ if (command !== 'check') {
         diagnostic: true,
         options: { ...base, ...config, hz: 120, pressureMs: 4, durationMs },
       });
-    for (const config of configurations.filter((c) => c.execution === 'worker'))
-      for (let repetition = 0; repetition < 3; repetition++)
+    const clockCases = configurations
+      .filter((c) => c.execution === 'worker')
+      .flatMap((config) => ['host', 'worker'].map((clock) => ({ ...config, clock })));
+    for (let repetition = 0; repetition < 3; repetition++) {
+      const offset = (1729 + repetition) % clockCases.length;
+      const order = [...clockCases.slice(offset), ...clockCases.slice(0, offset)];
+      for (const config of order)
         jobs.push({
           mode: 'paced',
           diagnostic: true,
           repetition,
-          options: { ...base, ...config, clock: 'worker', pressureMs: 8, durationMs },
+          options: { ...base, ...config, pressureMs: 8, durationMs },
         });
+    }
   }
 }
 await fs.writeFile(path.join(output, 'matrix.json'), JSON.stringify(jobs, null, 2));
