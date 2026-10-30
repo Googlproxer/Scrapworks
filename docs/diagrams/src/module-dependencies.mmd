@@ -17,7 +17,9 @@ flowchart LR
     Angular -->|uses| Application
     Babylon -->|uses| Application
     Babylon -->|script lifecycle| Toolkit
-    Application -->|runs| Simulation
+    Worker[One dedicated module worker and private Miniplex]
+    Application -->|credits and commands| Worker
+    Worker -->|sequential fixed steps| Simulation
     Angular -->|controls settings only| Settings
     Simulation -->|uses| Grid
     Simulation -->|uses| Model

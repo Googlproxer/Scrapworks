@@ -69,7 +69,9 @@ jobs:
         run: yarn test:export
 
       - name: Test world compilation and simulation
-        run: yarn test:world
+        run: |
+          yarn tsc -p tools/world/tsconfig.reference.json
+          yarn test:world
 
       - name: Verify ECS adapters and isolated smoke workloads
         run: |
@@ -88,7 +90,7 @@ jobs:
       - name: Build production application
         run: yarn build --stats-json
 
-      - name: Keep investigation packages out of production
+      - name: Enforce production worker/main dependency separation
         run: node tools/ecs-bench/verify-production.mjs
 
       - name: Exercise the built simulation worker and failure Retry

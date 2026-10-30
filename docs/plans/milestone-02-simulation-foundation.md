@@ -1,6 +1,6 @@
 # Milestone 2 Simulation foundation
 
-Updated 23 October 2026 at migration Phase 7. Status: simulation/session foundation implemented for the migration fixture; factory systems and gameplay snapshots remain pending. Prerequisite: [Milestone 1](milestone-01-project-and-integration.md).
+Updated 30 October 2026 after production ECS/worker integration. Status: simulation/session foundation implemented for the migration fixture; plain capture/rebuild is verified, while factory systems and gameplay save delivery remain pending. Prerequisite: [Milestone 1](milestone-01-project-and-integration.md).
 
 The authoritative world advances, pauses and resumes independently of rendering. Inspectable plain data, a stable clock and movement/collision are implemented. Manual salvage, crafting and factory rules remain later work.
 
@@ -8,9 +8,9 @@ The authoritative world advances, pauses and resumes independently of rendering.
 
 ## Current implementation
 
-[`Simulation`](../../src/simulation/simulation.ts) owns one private mutable [`WorldState`](../../src/simulation/world-state.ts) and emits detached [`WorldView`](../../src/contracts/world.ts) records. Plain `PlayerMotor` owns authoritative movement, collision and facing. [`GameSession`](../../src/app/features/game/session/game-session.ts) owns the 20 Hz accumulator, sampled movement and five-step catch-up limit; the existing renderer frame callback advances it through `GameRuntimeService`. Optional ordered script tick hooks run before each authoritative step through the plain session bridge; they do not depend on physics. `GameState` remains renderer lifecycle state. World definition compilation, initialization, movement, collision, placement validation and pause are covered by [migration evidence](../reports/migration/2026-10-23/README.md); the [current timing contract](../design/TDD.md#simulation-timing-and-save-boundaries) describes the later Toolkit integration.
+[`Simulation`](../../src/simulation/ecs-runtime.ts) owns private Miniplex components and world resources in one dedicated worker. Plain `PlayerMotor` owns authoritative movement, collision and facing. [`GameSession`](../../src/session/game-session.ts) owns the host 20 Hz accumulator, sampled movement, one in-flight advance and a shared five-step catch-up limit. The existing renderer frame supplies credits through `GameRuntimeService`. Completed-tick script notifications run on the main thread after pinning the latest detached view and before dispatching future credits. `GameState` remains renderer lifecycle state. The [production report](../reports/ecs-worker-implementation/2026-10-30/README.md) verifies the asynchronous boundary and real scene; the [timing contract](../design/TDD.md#simulation-timing-and-save-boundaries) describes hook and capture ordering.
 
-The typed command currently places an isolated development test building. Normal worlds cannot place it and receive no stock or technology grants. There are no resource-spending commands, crafting systems, gameplay capture/restore codec or world-replacement operation yet.
+The typed command currently places an isolated development test building. Normal worlds cannot place it and receive no stock or technology grants. Shared slot/reservation/work primitives and plain capture/rebuild are verified with populated synthetic fixtures. Resource-spending gameplay commands, crafting systems and player-facing save/load remain later work. Worker failure Retry starts again from the authored world; healthy renderer-only Retry retains the session.
 
 ## Step 1 Define the initial world data
 
@@ -43,7 +43,7 @@ The typed command currently places an isolated development test building. Normal
 ## Step 4 Implement fixed simulation steps
 
 - [x] Use 20 ticks per second and a 50 ms step as the current baseline.
-- [x] Implement synchronous `Simulation.step(movement)` over its privately owned state and ordered command queue. This is a deterministic class boundary, not a pure function receiving external mutable state.
+- [x] Implement synchronous `Simulation.step(movement)` inside the worker over privately owned ECS records and ordered commands. The host communicates asynchronously through serializable requests.
 - [x] Accumulate elapsed time from the existing renderer frame source and run only complete steps.
 - [x] Bound catch-up to five steps per frame and discard excess elapsed time after long stalls.
 - [x] Expose detached views after completed work independently of renderer frame rate.

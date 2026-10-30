@@ -32,9 +32,10 @@ export class EntityViews extends GameplayScript {
       view.worldGeneration === this.generation
     )
       return;
+    const reset = this.publication < 0 || this.generation !== (view.worldGeneration ?? -1);
     this.publication = view.publication ?? -1;
     this.generation = view.worldGeneration ?? -1;
-    if (!view.changes || view.changes.full) {
+    if (reset || !view.changes || view.changes.full) {
       this.sync(view);
       return;
     }

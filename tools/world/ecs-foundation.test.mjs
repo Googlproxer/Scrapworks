@@ -285,6 +285,27 @@ test('growth from 1000 to 100000 exercises ECS and host cache storage expansion'
   cache.dispose();
 });
 
+test('numeric decoding preserves asymmetric coordinates, facing, flags and nested authority detachment', () => {
+  const world = new Simulation(definition, {
+    system: (ctx) => {
+      ctx.get('player').transform.position = { x: 1.234567890123, y: 0, z: 3.987654321098 };
+    },
+  });
+  const cache = new PresentationCache();
+  cache.apply(world.publish(new Set(['player']), true), 1);
+  world.step({ x: 1, z: -0.5, sprint: true });
+  const packet = world.publish(new Set(['player']));
+  cache.apply(packet, 1);
+  cache.verify(world.capture().entities);
+  assert.deepEqual(cache.read().player, world.view.player);
+  assert.equal(cache.read().player.moving, true);
+  assert.equal(cache.read().player.sprinting, true);
+  new Float64Array(packet.rows).fill(0);
+  assert.notEqual(world.view.player.position.x, 0);
+  world.dispose();
+  cache.dispose();
+});
+
 test('one missing delta triggers a bounded full resynchronization without replaying tick notifications', async () => {
   const runtime = new SimulationRuntime();
   let advances = 0,

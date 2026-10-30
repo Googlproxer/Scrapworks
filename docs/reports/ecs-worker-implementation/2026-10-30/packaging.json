@@ -1,0 +1,111 @@
+{
+  "worker": "worker-XCQEWFTX.js",
+  "minifiedBytes": 42941,
+  "gzipBytes": 12405,
+  "sha256": "12756be740cbbd829d842e94497be265346c146dd7569b63052fa99f3bfbf9c8",
+  "sceneAcceptance": {
+    "status": "ok",
+    "renderer": {
+      "meshes": 18,
+      "visibleMeshes": 15,
+      "activeMeshes": 15,
+      "drawCalls": 14,
+      "canvasWidth": 1280,
+      "canvasHeight": 800,
+      "player": [
+        1,
+        0,
+        1
+      ]
+    },
+    "renderedMoved": {
+      "meshes": 18,
+      "visibleMeshes": 15,
+      "activeMeshes": 15,
+      "drawCalls": 14,
+      "canvasWidth": 1280,
+      "canvasHeight": 800,
+      "player": [
+        1,
+        0,
+        1.4499999999999997
+      ]
+    },
+    "healthyRetry": {
+      "tick": 33,
+      "first": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      },
+      "position": {
+        "x": 1,
+        "y": 0,
+        "z": 1.4499999999999997
+      },
+      "mappingUpdates": 0
+    },
+    "initial": {
+      "tick": 2,
+      "first": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      },
+      "position": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      },
+      "mappingUpdates": 0
+    },
+    "moved": {
+      "tick": 23,
+      "first": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      },
+      "position": {
+        "x": 1,
+        "y": 0,
+        "z": 1.4499999999999997
+      },
+      "mappingUpdates": 0
+    },
+    "paused": {
+      "tick": 31,
+      "first": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      },
+      "position": {
+        "x": 1,
+        "y": 0,
+        "z": 1.4499999999999997
+      },
+      "mappingUpdates": 0
+    },
+    "restarted": {
+      "tick": 2,
+      "first": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      },
+      "position": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      },
+      "mappingUpdates": 0
+    },
+    "error": "Uncaught Error: Production worker crash probe Retry restarts this world from its authored beginning.",
+    "targetsBefore": 1,
+    "workerURL": "http://127.0.0.1:55313/worker-test/worker-XCQEWFTX.js",
+    "csp": "worker-src 'self'",
+    "errors": [],
+    "requests": []
+  }
+}

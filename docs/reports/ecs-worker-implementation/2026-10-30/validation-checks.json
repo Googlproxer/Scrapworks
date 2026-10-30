@@ -1,0 +1,144 @@
+{
+  "checkedAt": "2026-10-30T02:12:50.656Z",
+  "worldTests": 41,
+  "browserTests": 288,
+  "hostedWorkflowDispatched": false,
+  "checks": [
+    {
+      "name": "immutable locked dependency installation",
+      "command": "yarn install --immutable",
+      "status": "passed",
+      "log": "tmp/step0-install.log",
+      "logBytes": 1975,
+      "logSha256": "419d0089cfa158a8fe3726dd4987e5a09c37d53da32616a1d26495e9e5a4168a"
+    },
+    {
+      "name": "application/template lint",
+      "command": "yarn lint",
+      "status": "passed",
+      "log": "tmp/step0-lint-final.log",
+      "logBytes": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint rules",
+      "command": "yarn test:lint",
+      "status": "passed",
+      "log": "tmp/step0-rules.log",
+      "logBytes": 3087,
+      "logSha256": "f9b9c89cb5175ba50c260e4e25d5159a92a4dcab6d3f2c7737633ad0651e68cd"
+    },
+    {
+      "name": "scene export tooling",
+      "command": "yarn test:export",
+      "status": "passed",
+      "log": "tmp/step0-export.log",
+      "logBytes": 1512,
+      "logSha256": "554d37e4ca76cdf9ec2bd6de51c8ccc8ccd4da7b09e116d7ffcf681602d01482"
+    },
+    {
+      "name": "world/compiler/domain/session/reference",
+      "command": "yarn test:world",
+      "status": "passed",
+      "log": "tmp/step0-world-complete.log",
+      "logBytes": 4249,
+      "logSha256": "b73a0d331dfc9778307225e261468cf6aa9b393dc47e0ce2a87c131a97b962b3"
+    },
+    {
+      "name": "all candidate correctness",
+      "command": "yarn bench:ecs:check",
+      "status": "passed",
+      "log": "tmp/step0-ecs-check.log",
+      "logBytes": 2489,
+      "logSha256": "c38df9fd44acd32b457b6a32f2ee287cf5087039cc9104139b4e3a38696feec7"
+    },
+    {
+      "name": "all candidate smoke",
+      "command": "yarn bench:ecs:smoke",
+      "status": "passed",
+      "log": "tmp/step0-ecs-smoke.log",
+      "logBytes": 3009,
+      "logSha256": "b06834a5f4623462f48763e850ed480d34e723a210e3806c50eb857f7e4db263"
+    },
+    {
+      "name": "original worker smoke/pacing",
+      "command": "yarn bench:worker:smoke --presentation lean --paced",
+      "status": "passed",
+      "log": "tmp/step0-worker-smoke.log",
+      "logBytes": 2653,
+      "logSha256": "7d4dc71f99751d7c34206e30d7fb37f8805c89dd44258cb355fdcf69a8f1ac7f"
+    },
+    {
+      "name": "production smoke/pacing",
+      "command": "yarn bench:worker:smoke --production --presentation lean --phase lean --paced",
+      "status": "passed",
+      "log": "tmp/step0-production-final3-smoke.log",
+      "logBytes": 1867,
+      "logSha256": "fe40fbb28bde84a56af547b5908f88868cbe67cd7c92da1d426d26044c4c42a8"
+    },
+    {
+      "name": "application/browser/renderer/axe",
+      "command": "yarn test",
+      "status": "passed",
+      "log": "tmp/step0-browser-complete.log",
+      "logBytes": 734,
+      "logSha256": "67be89bfa80e5f507543d974c105585a06b92729e7cc09fa2e107a58dad6f9d2"
+    },
+    {
+      "name": "strict app/spec/worker/reference types",
+      "command": "tsc -p <app/spec/worker/reference tsconfig> --noEmit",
+      "status": "passed",
+      "log": "tmp/step0-types-final.log",
+      "logBytes": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production build",
+      "command": "yarn build --stats-json",
+      "status": "passed",
+      "log": "tmp/step0-build-complete.log",
+      "logBytes": 2623,
+      "logSha256": "8ce762db798e5d939a34e9d8e84c33794c7d22d4f9b92f2fc6ecfe698b443185"
+    },
+    {
+      "name": "production graph separation",
+      "command": "node tools/ecs-bench/verify-production.mjs",
+      "status": "passed",
+      "log": "tmp/step0-audit-complete.log",
+      "logBytes": 114,
+      "logSha256": "df081595ae07f389b4f76af7d7a79084b66420481e864ad076d289491b113fd8"
+    },
+    {
+      "name": "actual built worker/CSP/base path/movement/healthy and failure Retry/teardown",
+      "command": "node tools/world/production-browser.mjs",
+      "status": "passed",
+      "log": "tmp/step0-production-complete.log",
+      "logBytes": 98,
+      "logSha256": "0b824179d98094ead993ba11880a0653b36d4d5471e1465e9e770bfe9aea59ea"
+    },
+    {
+      "name": "exported and built assets",
+      "command": "yarn assets:check --build",
+      "status": "passed",
+      "log": "tmp/step0-assets-final.log",
+      "logBytes": 143,
+      "logSha256": "842b66b09e26818b09ec18e9438ae97d36e4e894cfbce52122b8705c0f747ad2"
+    },
+    {
+      "name": "development export/reload/recovery",
+      "command": "yarn test:workflow",
+      "status": "passed",
+      "log": "tmp/step0-workflow.log",
+      "logBytes": 549,
+      "logSha256": "0cd0b2aa2901f7d102ffa2f82eca2bbafbdbe18a035dec6f4f41150c809d9ee1"
+    },
+    {
+      "name": "documentation and Mermaid/SVG/PNG",
+      "command": "yarn docs:check",
+      "status": "passed",
+      "log": "tmp/step0-docs-final.log",
+      "logBytes": 90,
+      "logSha256": "bd0f7eba88ed860dc7c1c767c025bb33daa55ec23e95845762eff6032b025634"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Scrapworks Implementation Plan
 
-Updated 30 October 2026 with Miniplex selection and successful lean single-worker requalification, retaining the progression, Mini Fabricator and renewable-first peaceful terraforming decisions. Milestone 3 retains its migration credits and includes bootstrap field research. Production worker integration and later gameplay implementation have not resumed. The 23 October migration acceptance remains a dated checkpoint; [28 October full CI](../reports/ci/2026-10-28/README.md) closes Milestone 1 reproducibility.
+Updated 30 October 2026 with Miniplex selection and successful lean single-worker requalification, retaining the progression, Mini Fabricator and renewable-first peaceful terraforming decisions. Milestone 3 retains its migration credits and includes bootstrap field research. The production Miniplex worker migration is implemented; qualification is recorded separately from later gameplay. The 23 October migration acceptance remains a dated checkpoint; [28 October full CI](../reports/ci/2026-10-28/README.md) closes Milestone 1 reproducibility.
 
 Build a browser-first 3D game with Angular UI, Babylon presentation, Editor-authored layout, a plain TypeScript simulation, and local Dexie/IndexedDB snapshots. The [GDD](../design/GDD.md), [player progression decisions](../design/player-progression.md), [TDD](../design/TDD.md), and [Art Document](../art/README.md) own their respective requirements.
 
@@ -10,11 +10,11 @@ The [migration plan](3d-migration.md) and [acceptance record](../reports/migrati
 
 Babylon is the sole world renderer at `/`; `/3d` redirects to it. Saved Editor markers compile into a versioned plain world definition, and one session advances authoritative movement/collision at 20 Hz. The fixture includes an animated protagonist, orbit/follow camera, picking, controls, pause/suspension and isolated development placement checks. Normal worlds start with no inventory, equipment, machines or research unlocks.
 
-Core objects now use Toolkit scripts composed by `WorldScene`, with plain `PlayerMotor` retaining authoritative movement. The existing session clock also dispatches optional ordered script tick hooks independently of physics. See the [core object design](../design/TDD.md#core-object-scripts) and [timing contract](../design/TDD.md#simulation-timing-and-save-boundaries). The [ECS foundation starts in Milestone 3](../design/TDD.md#ecs-foundation-from-milestone-3), before new inventory/salvage/research/crafting runtime work. The [comparison](../reports/ecs/2026-10-29/README.md) selected Miniplex 2.0.0; the user confirmed a single worker for Simulation/ECS as the starting architecture. The [lean requalification](../reports/simulation-worker/2026-10-30/README.md) now qualifies both candidates with transferred numeric views and bounded inventory/selection details, retaining Miniplex. The rich bridge's failed budgets remain historical. Production integration and actual scene qualification remain pending. Keep 60 FPS required, 120 FPS diagnostic and interpolation before visual prediction. The report also assesses future multithreading suitability; multi-worker ECS implementation remains deferred unless simulation profiles warrant a later investigation. Milestone 6 extends the established ECS world with factories.
+Core objects now use Toolkit scripts composed by `WorldScene`, with plain `PlayerMotor` retaining authoritative movement. The host session delivers ordered completed-tick presentation hooks during its owned render frame, independently of physics. See the [core object design](../design/TDD.md#core-object-scripts) and [timing contract](../design/TDD.md#simulation-timing-and-save-boundaries). The [ECS foundation starts in Milestone 3](../design/TDD.md#ecs-foundation-from-milestone-3), before new inventory/salvage/research/crafting runtime work. The [comparison](../reports/ecs/2026-10-29/README.md) selected Miniplex 2.0.0; the user confirmed a single worker for Simulation/ECS as the starting architecture. The [lean requalification](../reports/simulation-worker/2026-10-30/README.md) now qualifies both candidates with transferred numeric views and bounded inventory/selection details, retaining Miniplex. The rich bridge's failed budgets remain historical. The actual Angular/Babylon worker path has production integration acceptance; see the [implementation report](../reports/ecs-worker-implementation/2026-10-30/README.md) for performance qualification. Keep 60 FPS required, 120 FPS diagnostic and interpolation before visual prediction. The report also assesses future multithreading suitability; multi-worker ECS implementation remains deferred unless simulation profiles warrant a later investigation. Milestone 6 extends the established ECS world with factories.
 
 The [cleanup record](3d-cleanup.md) describes retired tools/assets and their recovery sources. Fresh [authoring workflow validation](../reports/workflow/2026-10-23/README.md) verifies export/reload, failed-save retention and recovery.
 
-The next foundation work is defined in the [production ECS/worker implementation plan](ecs-worker-implementation.md). It migrates the existing fixture first, then completes Step 0 schemas/rules and capture/continuation evidence. The user confirmed completed-tick presentation hooks and authored-world restart on failure Retry. This is a recorded plan; production implementation and later gameplay remain pending.
+The [production ECS/worker implementation plan](ecs-worker-implementation.md) is complete through Step 0: the existing fixture, opening schemas/shared rules, lean production views and capture/continuation are implemented and qualified. Completed-tick presentation hooks and authored-world restart on worker/presentation failure Retry follow the user-confirmed policies. Later salvage, research, crafting and MiniFab gameplay remain pending; implementation stops at the foundation.
 
 Manual salvage, recipe jobs, inventory interaction, research, machines, transport, restoration and gameplay saves remain unimplemented. Controls settings persisting through IndexedDB do not establish world saving.
 
@@ -26,7 +26,7 @@ The [Fibery project tracker](fibery-tracking.md) provides the live task board, m
 | ----------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [1. Project and integration](milestone-01-project-and-integration.md)               | One reliable canvas and authored fixture       | Complete for integration: reviewed changes committed; clean pinned-Yarn install and full CI pass. See [CI evidence](../reports/ci/2026-10-28/README.md).                                    |
 | [2. Simulation foundation](milestone-02-simulation-foundation.md)                   | A world advances and pauses predictably        | Plain world/session, typed fixture command, detached views, 20 Hz clock and pause implemented and tested.                                                   |
-| [3. Character and manual opening](milestone-03-character-and-manual-opening.md)     | Find scrap, field-research tools/recipes and use the Mini Fabricator | Movement, collision, picking and deposit data implemented. Onboarding, salvage, timed field research, recipe/device jobs and inventory pending. |
+| [3. Character and manual opening](milestone-03-character-and-manual-opening.md)     | Find scrap, field-research tools/recipes and use the Mini Fabricator | Step 0 ECS/worker foundation, movement, collision, picking and deposit data implemented. Onboarding, salvage, timed research, recipe/device jobs and inventory UI pending. |
 | [4. First local save](milestone-04-first-local-save.md)                             | Restore Mini Fabricator and field research in progress | Gameplay snapshots and restore unimplemented. Controls IndexedDB reload verified separately; old save dialog remains test data. |
 | [5. Research](milestone-05-research.md)                                             | Expand the tree toward dedicated craftables and scalable labs | Not started. Bootstrap research is planned in Milestone 3; physical factory/lab integration follows in Milestone 6. |
 | [6. First working machines](milestone-06-first-working-machines.md)                 | Manually supply renewable-powered recycling, fabrication and labs | Not started. Random recycler outputs, fabrication arity, extraction and full recovery are planned. |
@@ -53,7 +53,9 @@ scrapworks/
   public/scene/          Generated browser scenes and worlds/game.json (ignored)
   public/assets/         Existing browser-served runtime assets
   src/
-    app/features/        Angular UI, controls, GameRuntimeService and plain GameSession
+    app/features/        Angular UI, controls and GameRuntimeService
+    session/             Host coordinator, ports and lean presentation cache
+    workers/             Dedicated simulation worker entry
     contracts/           Lifecycle, input, WorldDefinition and detached WorldView
     game/                Babylon client, WorldScene, Toolkit scripts and entity views
     simulation/          Authoritative rules, PlayerMotor and plain world data
@@ -71,11 +73,11 @@ scrapworks/
 
 Add simulation model/content/system modules as the next milestone needs them. Keep simulation, contracts, and core free of frameworks, renderers, storage, the DOM, and wall-clock reads. UI and scene adapters send commands and consume views; they do not own a second world.
 
-Editor markers compile into a versioned plain `WorldDefinition` for initial layout. `Simulation` owns private mutable `WorldState`; `GameState` describes renderer lifecycle. `GameSession` owns the accumulator and sampled movement. Gameplay coordinates use metres on X/Z, with centimetres converted at the Editor/presentation boundary. No gameplay snapshot codec or SaveRepository exists yet.
+Editor markers compile into a versioned plain `WorldDefinition` for initial layout. `Simulation` owns private Miniplex component records and world resources; `GameState` describes renderer lifecycle. `GameSession` owns the accumulator and sampled movement. Gameplay coordinates use metres on X/Z, with centimetres converted at the Editor/presentation boundary. Plain validated captures and fresh-runtime rebuild are foundation infrastructure; no gameplay SaveRepository or save UI exists yet.
 
 ## Suggested simulation schedule
 
-The session dispatches ordered, active script tick handlers before each authoritative step. That step executes queued placement commands in order, advances sampled movement/collision through `PlayerMotor`, increments the tick and exposes a detached completed view. It uses 50 ms steps with at most five steps per frame; excess elapsed time is discarded, and pause/suspension clears the accumulator and input. From Milestone 3, ECS systems will execute inside Simulation's authoritative step under this existing clock, not through scene-script subscriptions or a second ticker. The longer factory schedule below remains a future recommendation to settle before Milestone 6 and verify with eventual saved-state continuation tests.
+The host pins the latest completed view, drains bounded completed-tick presentation notifications, then submits future credits. One dedicated worker executes commands, sequential domain work, PlayerMotor, structural commits and tick increment before lean publication. There is one 20 Hz accumulator, one in-flight advance and one shared five-step allowance; suspension cancels pending commands/input and discards hidden time. Scripts cannot change the tick they report. Stock spending is explicit manual/current handcraft, requested MiniFab, then Field Research policy; these executors remain later work. The factory schedule below remains a future recommendation.
 
 | Phase within one tick     | Responsibility                                                                                                                                        |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -137,7 +139,9 @@ flowchart LR
     Angular -->|uses| Application
     Babylon -->|uses| Application
     Babylon -->|script lifecycle| Toolkit
-    Application -->|runs| Simulation
+    Worker[One dedicated module worker and private Miniplex]
+    Application -->|credits and commands| Worker
+    Worker -->|sequential fixed steps| Simulation
     Angular -->|controls settings only| Settings
     Simulation -->|uses| Grid
     Simulation -->|uses| Model
@@ -146,54 +150,54 @@ flowchart LR
 
 ### Fixed step loop diagram
 
-Only complete simulation steps publish authoritative world data. The session runs at 20 Hz with five-step catch-up using the existing browser frame source, independently of physics. Ordered script tick hooks run before simulation commands and movement. Presentation consumes detached completed views; placement confirmation queues work for a subsequent tick. Paused/suspended frames clear timing and input. Gameplay snapshot capture and factory jobs remain future work.
+Only completed steps publish lean presentation. The host uses the existing browser frame source, independently of physics. Completed-tick hooks run after pinning the latest publication and before submitting future credits. Worker execution is asynchronous; a render frame never waits for the new batch. Pause clears pending time/input and acknowledges bounded in-flight work. Plain capture/rebuild is infrastructure; gameplay saves and factory jobs remain future work.
 
 [SVG image](../diagrams/fixed-step-loop.svg) / [PNG image](../diagrams/fixed-step-loop.png) / [Mermaid source](../diagrams/src/fixed-step-loop.mmd)
 
 ```mermaid
 flowchart TB
     Frame[Browser frame callback]
-    Input[Sample one ActionFrame and dispatch UI actions]
-    Controls[Validate ownership and interpret camera and player input]
-    Paused{Session paused or runtime inactive?}
-    Reset[Clear accumulator and held or queued input]
-    Accumulate[Accumulate seconds capped at 0.25]
-    Enough{At least 0.05 seconds and fewer than five steps?}
-    Hooks[Dispatch ordered active gameplay tick handlers]
-    Commands[Revalidate and execute typed placement commands in order]
-    Movement[Advance movement and collision by 0.05 seconds]
-    Time[Increment simulation tick]
-    Deduct[Subtract 0.05 seconds and consume step budget]
-    Publish[Expose detached completed WorldView]
-    Present[Update player and entity views]
-    Feedback[Camera follow, occlusion, picking and placement feedback]
-    Render[Draw scene]
-    Next[Request next browser frame]
-
+    Input[Sample ActionFrame and validate input ownership]
+    Pin[Pin latest completed view]
+    Hooks[Drain bounded completed presentation notifications]
+    Active{Still owned and active?}
+    Pause[Clear pending time and intent and request suspension]
+    Credits[Accumulate credits with in-flight steps capped at five]
+    Available{Step available and no batch in flight?}
+    Send[Submit one advance batch without waiting]
+    Commands[Worker revalidates sequenced commands]
+    Systems[Sequential plain systems and PlayerMotor]
+    Commit[Commit structural changes and increment tick]
+    Publish[Transfer lean deltas and bounded details]
+    Cache[Apply ordered versions and queue completed summaries]
+    Present[Interpolate player and apply entity changes from pinned view]
+    Feedback[Camera follow and selection and placement feedback]
+    Draw[Draw scene and await next browser callback]
     Frame -->|begin| Input
-    Input -->|shared frame| Controls
-    Controls -->|advance session once| Paused
-    Paused -->|yes| Reset
-    Reset -->|latest state| Publish
-    Paused -->|no| Accumulate
-    Accumulate -->|check| Enough
-    Enough -->|yes| Hooks
-    Hooks -->|before authoritative step| Commands
-    Commands -->|then| Movement
-    Movement -->|then| Time
-    Time -->|then| Deduct
-    Deduct -->|check again| Enough
-    Enough -->|no| Publish
-    Publish -->|completed state| Present
+    Input -->|owned frame| Pin
+    Pin -->|completed tick context| Hooks
+    Hooks -->|check revision| Active
+    Active -->|no| Pause
+    Active -->|yes| Credits
+    Credits -->|check| Available
+    Available -->|yes| Send
+    Send -->|worker message| Commands
+    Commands -->|then| Systems
+    Systems -->|then| Commit
+    Commit -->|after bounded batch| Publish
+    Publish -->|message handler without scene callbacks| Cache
+    Cache -->|next owned frame| Pin
+    Available -->|no| Present
+    Send -->|host continues immediately| Present
+    Pause -->|last completed view| Present
     Present -->|then| Feedback
-    Feedback -->|queue confirmation for subsequent tick| Render
-    Render -->|finish frame| Next
-    Next -->|next callback| Frame
+    Feedback -->|then| Draw
+    Draw -->|next callback| Frame
 ```
 
 ### Save flow diagram
 
-Future design, not implemented. Capture will be synchronous at a safe boundary. The detached snapshot will be written asynchronously while gameplay may continue. An unsuccessful transaction must leave the last committed revision available.
+Future design, not implemented. The worker capture request resolves with detached data at a completed boundary. Gameplay persistence remains future work. The detached snapshot will be written asynchronously while gameplay may continue. An unsuccessful transaction must leave the last committed revision available.
 
 [SVG image](../diagrams/save-flow.svg) / [PNG image](../diagrams/save-flow.png) / [Mermaid source](../diagrams/src/save-flow.mmd)
 

@@ -19,7 +19,7 @@ classDiagram
     }
     class GameSession {
         +advance(deltaSeconds)
-        +registerTickHandler(handler, order)
+        +registerCompletedTickHandler(handler, order)
         +setMovement(direction, sprint)
         +setPaused(paused)
         +enqueue(command)
@@ -34,16 +34,19 @@ classDiagram
         movement and collision
         authoritative facing
     }
-    class WorldState {
+    class MiniplexWorld {
+        private native queries
+        owned EntityData components
+        stable ID and collision indexes
+    }
+    class WorldResources {
         <<data>>
-        player
         tick
         stepSeconds
-        inventory
+        nextEntityId
         research
         productionTotals
-        deposits
-        buildings
+        extractionTotals
     }
     class WorldDefinition {
         <<data>>
@@ -56,7 +59,7 @@ classDiagram
     }
     class WorldView {
         <<data>>
-        detached world data
+        lean numeric cache and bounded details
         movement presentation
         command result
     }
@@ -72,8 +75,10 @@ classDiagram
     }
     class WorldSessionBridge {
         <<interface>>
+        +initialize()
         +frame(seconds, movement, sprint, active)
-        +registerTickHandler(handler, order)
+        +completeFrame()
+        +registerCompletedTickHandler(handler, order)
         +place(cell, rotation)
         +preview(cell, rotation)
     }
@@ -93,12 +98,33 @@ classDiagram
     BabylonGameClient "1" *-- "1" WorldScene : owns scene composition
     BabylonGameClient "1" *-- "1" InputManager : owns input
     BabylonGameClient "1" *-- "1" FrameClock : owns frame timing
-    GameSession "1" *-- "1" Simulation : advances fixed steps
+    class WorkerSimulationPort {
+        bounded requests and failure notifications
+    }
+    class SimulationRuntime {
+        serial protocol and command ledger
+    }
+    class PresentationCache {
+        dense numeric rows and bounded details
+    }
+    class PresentationPacket {
+        version and base version
+        transferred numeric rows
+        mappings and removals
+        bounded detached details
+    }
+    GameSession "1" *-- "1" WorkerSimulationPort : owns worker
+    WorkerSimulationPort --> SimulationRuntime : serial messages
+    SimulationRuntime "1" *-- "1" Simulation : owns authority
+    GameSession "1" *-- "1" PresentationCache : completed publication
     Simulation "1" *-- "1" PlayerMotor : owns movement rules
-    Simulation "1" *-- "1" WorldState : owns mutable data
+    Simulation "1" *-- "1" MiniplexWorld : owns component records
+    Simulation "1" *-- "1" WorldResources : owns global records
     Simulation ..> WorldDefinition : initializes world
     WorldScene ..> WorldDefinition : binds authored layout
-    Simulation ..> WorldView : publishes detached views
+    Simulation ..> PresentationPacket : publishes detached data
+    PresentationCache ..> PresentationPacket : applies ordered versions
+    PresentationCache ..> WorldView : exposes completed data
     WorldScene ..> WorldView : displays completed state
     GameSession ..> WorldView : exposes current view
     WorldScene "1" *-- "many" GameplayScript : composes core objects

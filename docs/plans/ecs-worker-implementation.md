@@ -1,6 +1,6 @@
 # Miniplex and simulation worker implementation
 
-Recorded 30 October 2026. Status: **planned; production implementation has not started**. This plan completes the remaining [Milestone 3 Step 0 foundation](milestone-03-character-and-manual-opening.md#step-0-establish-and-prove-the-ecs-foundation), beginning with a working migration of the existing movement/world fixture. Stop after verified foundation completion. New salvage, crafting, research and MiniFab gameplay follow in their own milestone steps.
+Recorded 30 October 2026. Status: **implemented and qualified through Milestone 3 Step 0**. The [dated production report](../reports/ecs-worker-implementation/2026-10-30/README.md) records all 94 qualification jobs, actual-scene acceptance and required repository checks. The existing movement/world fixture now runs with one private Miniplex authority in one dedicated worker. Work stops at this foundation; new salvage, crafting, research and MiniFab gameplay follow in their own milestone steps.
 
 [Roadmap](README.md) · [Technical design](../design/TDD.md#ecs-foundation-from-milestone-3) · [Worker investigation](simulation-worker-investigation.md) · [Qualified lean contract](../reports/simulation-worker/2026-10-30/README.md) · [Production handoff](../reports/simulation-worker/2026-10-30/handoff.md)
 
@@ -15,7 +15,7 @@ The library comparison, worker investigation and lean requalification are comple
 | Timing | Host frame-driven credits, fixed 50 ms steps, one advance batch in flight, and one shared five-step allowance for dispatched plus pending elapsed time. No independent worker ticker or offline catch-up. |
 | Presentation | Compact transferred numeric views and bounded detached inspection details; full capture is a separate operation. Interpolation first; prediction remains deferred. |
 | Script hooks — user confirmed | Retain the main-thread `onGameTick` authoring hook as **completed-tick presentation notifications**. It no longer prepares or participates in an authoritative step. |
-| Failure/Retry — user confirmed | Retain the last completed view for the error state. Explicit Retry creates a fresh session from the authored initial world. **No automatic in-memory checkpoints or recovery** in Step 0. Make the restart consequence clear in error/Retry feedback. |
+| Failure/Retry — user confirmed | Retain the last completed view for the error state. Worker/presentation failure Retry creates a fresh session from the authored initial world. Healthy renderer-only Retry retains its live session. **No automatic in-memory checkpoints or recovery** in Step 0. The failure feedback explains the restart consequence. |
 | Qualification | Reference desktop and Chromium, 60 Hz required; 120 Hz diagnostic. Existing compute/receiving/frame/input budgets remain. Actual scene integration must pass before adoption. |
 | Future work | Multiple ECS workers, shared component memory, Atomics, parallel systems, target-device qualification and gameplay persistence remain separate. |
 
@@ -152,15 +152,15 @@ New names are proposed; keep modules focused and avoid umbrella abstractions tha
 
 ## Completion and rollback
 
-- [ ] Production contracts and approved hook/Retry policies are implemented and tested.
-- [ ] Existing fixture runs with one private Miniplex authority in one worker; no old state mirror remains.
-- [ ] Opening schemas/shared primitives are real, populated and verified without implementing later gameplay systems.
-- [ ] Lean views, production IDs and bounded subscriptions match actual consumers and pass qualification.
-- [ ] Movement/presentation, lifecycle, input, completed hooks and authored-world Retry pass integrated tests.
-- [ ] Plain capture/rebuild and 1,000-step continuation satisfy Step 0 without delivering gameplay saves.
-- [ ] Production worker/main dependency separation, required CI and current diagrams/docs are verified.
-- [ ] Dated results reconcile only proven Step 0 work; later gameplay remains pending.
+- [x] Production contracts and approved hook/Retry policies are implemented and tested.
+- [x] Existing fixture runs with one private Miniplex authority in one worker; no old state mirror remains.
+- [x] Opening schemas/shared primitives are real, populated and verified without implementing later gameplay systems.
+- [x] Lean views, production IDs and bounded subscriptions match actual consumers and pass qualification.
+- [x] Movement/presentation, lifecycle, input, completed hooks and authored-world Retry pass integrated tests.
+- [x] Plain capture/rebuild and 1,000-step continuation satisfy Step 0 without delivering gameplay saves.
+- [x] Production worker/main dependency separation, required CI and current diagrams/docs are verified.
+- [x] Dated results reconcile only proven Step 0 work; later gameplay remains pending.
 
-Select one backend at session construction for controlled tests/development. Do not automatically switch a failed worker to inline or run both authoritative worlds together. During development, rollback can use the compatible inline adapter at a fresh session boundary; shipping rollback is a reviewed build/revision change. Moving a live world between backends would require a validated complete capture at a completed-tick barrier and remains outside the automatic recovery policy. Miniplex does not enter production until its runtime phase, and no production code, packages, assets or diagrams are changed by creating this plan.
+Select one backend at session construction for controlled tests/development. Do not automatically switch a failed worker to inline or run both authoritative worlds together. During development, rollback can use the compatible inline adapter at a fresh session boundary; shipping rollback is a reviewed build/revision change. Moving a live world between backends would require a validated complete capture at a completed-tick barrier and remains outside the automatic recovery policy. Miniplex is now an exact production dependency reachable only through the worker graph. Authored assets are unchanged; runtime diagrams are reconciled with the implementation.
 
 Both user questions are answered above. Remaining schema/layout/module details are implementation choices within the agreed scope; they do not require another library/threading investigation or a new gameplay-design round before phase 1.

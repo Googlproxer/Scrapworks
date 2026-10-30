@@ -13,12 +13,12 @@ flowchart TB
     end
 
     subgraph Gameplay[Gameplay]
-        Loop[GameSession independent 20 Hz scheduler]
-        Hooks[Ordered optional script tick handlers]
-        Sim[Plain Simulation and PlayerMotor]
-        State[(Private simulation data)]
+        Loop[Host GameSession 20 Hz credits]
+        Hooks[Main-thread completed presentation hooks]
+        Sim[Worker Simulation and PlayerMotor]
+        State[(Private Miniplex components and resources)]
         Content[Planned recipe and technology definitions]
-        ECS[Planned opening and factory ECS systems]
+        ECS[Sequential foundation systems and planned gameplay executors]
     end
 
     subgraph Persistence[Planned gameplay persistence]
@@ -34,13 +34,13 @@ flowchart TB
     Definition -->|initialise world| Sim
     UI -->|player commands| Facade
     Scene -->|movement and world commands| Facade
-    Facade -->|queue commands| Sim
+    Facade -->|sequenced commands and activity revisions| Sim
     Scene -->|advance once per browser frame| Loop
     Facade -->|session ownership| Loop
     Scene -->|register and dispose tick hooks| Hooks
-    Loop -->|before each fixed step| Hooks
-    Hooks -->|submit typed intents and commands| Sim
-    Loop -->|fixed simulation steps after hooks| Sim
+    Views -->|queue bounded completed summaries| Hooks
+    Hooks -->|commands for a future step| Facade
+    Loop -->|one in-flight batch and five total step credits| Sim
     Sim -->|ordered systems within fixed step| ECS
     ECS <-->|authoritative component data| State
     Content -->|rules and costs| Sim

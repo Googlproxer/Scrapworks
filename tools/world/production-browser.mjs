@@ -99,37 +99,84 @@ try {
     'Production worker did not step',
   );
   const initial = await worker.evaluate(() => globalThis.productionProbe);
-  const renderer = await page.evaluate(async (file) => {
-    if (!file) return { unavailable: 'EngineStore chunk not identified' };
-    const module = await import(new URL(file, document.baseURI).href);
-    const store = Object.values(module).find(
-      (value) => value && Array.isArray(value.Instances) && 'LastCreatedEngine' in value,
-    );
-    const engine = store?.LastCreatedEngine,
-      scene = engine?.scenes.at(-1);
-    return scene
-      ? {
-          meshes: scene.meshes.length,
-          visibleMeshes: scene.meshes.filter((mesh) => mesh.isVisible && mesh.isEnabled()).length,
-          activeMeshes: scene.getActiveMeshes().length,
-          drawCalls: engine._drawCalls.current,
-          canvasWidth: engine.getRenderWidth(),
-          canvasHeight: engine.getRenderHeight(),
-        }
-      : { unavailable: 'EngineStore is not exported by the build' };
-  }, engineStoreChunk);
+  const inspectRenderer = () =>
+    page.evaluate(async (file) => {
+      if (!file) return { unavailable: 'EngineStore chunk not identified' };
+      const module = await import(new URL(file, document.baseURI).href);
+      const store = Object.values(module).find(
+        (value) => value && Array.isArray(value.Instances) && 'LastCreatedEngine' in value,
+      );
+      const engine = store?.LastCreatedEngine,
+        scene = engine?.scenes.at(-1);
+      return scene
+        ? await new Promise((resolve) =>
+            scene.onBeforeRenderObservable.addOnce(() => {
+              const drawCallsBefore = engine._drawCalls.current;
+              scene.onAfterRenderObservable.addOnce(() =>
+                resolve({
+                  meshes: scene.meshes.length,
+                  visibleMeshes: scene.meshes.filter((mesh) => mesh.isVisible && mesh.isEnabled())
+                    .length,
+                  activeMeshes: scene.getActiveMeshes().length,
+                  drawCalls: engine._drawCalls.current - drawCallsBefore,
+                  canvasWidth: engine.getRenderWidth(),
+                  canvasHeight: engine.getRenderHeight(),
+                  player: scene
+                    .getTransformNodeByName('player-visual')
+                    ?.position.asArray()
+                    .map((value) => value / 100),
+                }),
+              );
+            }),
+          )
+        : { unavailable: 'EngineStore is not exported by the build' };
+    }, engineStoreChunk);
+  const renderer = await inspectRenderer();
   await page.locator('canvas').click();
   await page.keyboard.down('KeyW');
   await page.waitForTimeout(300);
   await page.keyboard.up('KeyW');
+  await page.waitForTimeout(150);
   const moved = await worker.evaluate(() => globalThis.productionProbe);
+  const renderedMoved = await inspectRenderer();
   assert.notDeepEqual(moved.position, initial.position);
+  assert(
+    Math.hypot(
+      renderedMoved.player[0] - moved.position.x,
+      renderedMoved.player[2] - moved.position.z,
+    ) < 0.001,
+  );
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.waitForTimeout(150);
   const paused = await worker.evaluate(() => globalThis.productionProbe);
   await page.waitForTimeout(400);
   assert.equal((await worker.evaluate(() => globalThis.productionProbe)).tick, paused.tick);
   await page.screenshot({ path: path.join(output, 'paused.png') });
+  await page.getByRole('button', { name: 'Resume game', exact: true }).click();
+  await page.evaluate(() =>
+    document
+      .querySelector('canvas')
+      .getContext('webgl2')
+      .getExtension('WEBGL_lose_context')
+      .loseContext(),
+  );
+  await page.getByRole('alert').waitFor();
+  await page.getByRole('button', { name: 'Retry', exact: true }).click();
+  await until(
+    () => page.getByRole('button', { name: 'Play Game!', exact: true }).isEnabled(),
+    'Graphics Retry not ready',
+  );
+  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await until(
+    async () => (await worker.evaluate(() => globalThis.productionProbe)).tick > paused.tick,
+    'Retained worker did not resume',
+  );
+  assert.equal(page.workers().length, 1);
+  assert.equal(page.workers()[0], worker);
+  const healthyRetry = await worker.evaluate(() => globalThis.productionProbe);
+  assert.deepEqual(healthyRetry.position, moved.position);
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  await page.waitForTimeout(150);
   // Error injection only in this diagnostic process. No authority or assets are edited.
   await worker.evaluate(() =>
     setTimeout(() => {
@@ -163,6 +210,8 @@ try {
       {
         status: 'ok',
         renderer,
+        renderedMoved,
+        healthyRetry,
         initial,
         moved,
         paused,

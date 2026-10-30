@@ -20,7 +20,7 @@ Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D 
 | Core object scripts | Babylon Toolkit 9.30.0        | TypeScript-attached scripts own player input/presentation, camera, selection and placement; no physics engine is enabled. |
 | Authoring           | Babylon.js Editor 5.5.2        | Saved inputs export/reload automatically; validated marker metadata compiles into a plain world definition. |
 | Client subscription | RxJS behind plain `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                              |
-| Gameplay            | Plain TypeScript               | Private plain WorldState, typed placement command, deterministic 20 Hz movement, collision and detached views. Manual/factory progression remains planned. |
+| Gameplay            | Plain TypeScript               | Private Miniplex components/resources in one worker, typed placement command, deterministic 20 Hz movement, collision and lean detached views. Manual/factory progression remains planned. |
 | Persistence         | Dexie / IndexedDB              | Test-data service/dialog only; no playable-world snapshot or round trip.                                  |
 
 The [cleanup record](../plans/3d-cleanup.md) defines current asset boundaries and retired-source recovery. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements.
@@ -31,7 +31,7 @@ The class diagram describes the implemented migration boundary. The application 
 
 ### Core class diagram
 
-The application runtime owns one `GameSession`; its scheduler advances `Simulation` through the renderer's existing frame callback. `Simulation` exclusively owns `WorldState` and delegates authoritative player movement to plain [`PlayerMotor`](../../src/simulation/player-motor.ts). [`WorldScene`](../../src/game/views/world-scene.ts) composes Toolkit scripts and entity views that consume the initial definition and detached `WorldView` values. [`WorldSessionBridge`](../../src/contracts/game-client.ts) connects these scene objects to the application-owned session without exposing its mutable state.
+The application runtime owns one host `GameSession`; the existing render callback supplies bounded credits to one dedicated module worker. `Simulation` exclusively owns private Miniplex components and world resources and delegates authoritative player movement to plain [`PlayerMotor`](../../src/simulation/player-motor.ts). [`WorldScene`](../../src/game/views/world-scene.ts) composes Toolkit scripts and entity views that consume the initial definition and detached `WorldView` values. [`WorldSessionBridge`](../../src/contracts/game-client.ts) connects these scene objects to the application-owned session without exposing its mutable state.
 
 [SVG image](../diagrams/core-class-diagram.svg) / [PNG image](../diagrams/core-class-diagram.png) / [Mermaid source](../diagrams/src/core-class-diagram.mmd)
 
@@ -57,7 +57,7 @@ classDiagram
     }
     class GameSession {
         +advance(deltaSeconds)
-        +registerTickHandler(handler, order)
+        +registerCompletedTickHandler(handler, order)
         +setMovement(direction, sprint)
         +setPaused(paused)
         +enqueue(command)
@@ -72,16 +72,19 @@ classDiagram
         movement and collision
         authoritative facing
     }
-    class WorldState {
+    class MiniplexWorld {
+        private native queries
+        owned EntityData components
+        stable ID and collision indexes
+    }
+    class WorldResources {
         <<data>>
-        player
         tick
         stepSeconds
-        inventory
+        nextEntityId
         research
         productionTotals
-        deposits
-        buildings
+        extractionTotals
     }
     class WorldDefinition {
         <<data>>
@@ -94,7 +97,7 @@ classDiagram
     }
     class WorldView {
         <<data>>
-        detached world data
+        lean numeric cache and bounded details
         movement presentation
         command result
     }
@@ -110,8 +113,10 @@ classDiagram
     }
     class WorldSessionBridge {
         <<interface>>
+        +initialize()
         +frame(seconds, movement, sprint, active)
-        +registerTickHandler(handler, order)
+        +completeFrame()
+        +registerCompletedTickHandler(handler, order)
         +place(cell, rotation)
         +preview(cell, rotation)
     }
@@ -131,12 +136,33 @@ classDiagram
     BabylonGameClient "1" *-- "1" WorldScene : owns scene composition
     BabylonGameClient "1" *-- "1" InputManager : owns input
     BabylonGameClient "1" *-- "1" FrameClock : owns frame timing
-    GameSession "1" *-- "1" Simulation : advances fixed steps
+    class WorkerSimulationPort {
+        bounded requests and failure notifications
+    }
+    class SimulationRuntime {
+        serial protocol and command ledger
+    }
+    class PresentationCache {
+        dense numeric rows and bounded details
+    }
+    class PresentationPacket {
+        version and base version
+        transferred numeric rows
+        mappings and removals
+        bounded detached details
+    }
+    GameSession "1" *-- "1" WorkerSimulationPort : owns worker
+    WorkerSimulationPort --> SimulationRuntime : serial messages
+    SimulationRuntime "1" *-- "1" Simulation : owns authority
+    GameSession "1" *-- "1" PresentationCache : completed publication
     Simulation "1" *-- "1" PlayerMotor : owns movement rules
-    Simulation "1" *-- "1" WorldState : owns mutable data
+    Simulation "1" *-- "1" MiniplexWorld : owns component records
+    Simulation "1" *-- "1" WorldResources : owns global records
     Simulation ..> WorldDefinition : initializes world
     WorldScene ..> WorldDefinition : binds authored layout
-    Simulation ..> WorldView : publishes detached views
+    Simulation ..> PresentationPacket : publishes detached data
+    PresentationCache ..> PresentationPacket : applies ordered versions
+    PresentationCache ..> WorldView : exposes completed data
     WorldScene ..> WorldView : displays completed state
     GameSession ..> WorldView : exposes current view
     WorldScene "1" *-- "many" GameplayScript : composes core objects
@@ -170,12 +196,12 @@ flowchart TB
     end
 
     subgraph Gameplay[Gameplay]
-        Loop[GameSession independent 20 Hz scheduler]
-        Hooks[Ordered optional script tick handlers]
-        Sim[Plain Simulation and PlayerMotor]
-        State[(Private simulation data)]
+        Loop[Host GameSession 20 Hz credits]
+        Hooks[Main-thread completed presentation hooks]
+        Sim[Worker Simulation and PlayerMotor]
+        State[(Private Miniplex components and resources)]
         Content[Planned recipe and technology definitions]
-        ECS[Planned opening and factory ECS systems]
+        ECS[Sequential foundation systems and planned gameplay executors]
     end
 
     subgraph Persistence[Planned gameplay persistence]
@@ -191,13 +217,13 @@ flowchart TB
     Definition -->|initialise world| Sim
     UI -->|player commands| Facade
     Scene -->|movement and world commands| Facade
-    Facade -->|queue commands| Sim
+    Facade -->|sequenced commands and activity revisions| Sim
     Scene -->|advance once per browser frame| Loop
     Facade -->|session ownership| Loop
     Scene -->|register and dispose tick hooks| Hooks
-    Loop -->|before each fixed step| Hooks
-    Hooks -->|submit typed intents and commands| Sim
-    Loop -->|fixed simulation steps after hooks| Sim
+    Views -->|queue bounded completed summaries| Hooks
+    Hooks -->|commands for a future step| Facade
+    Loop -->|one in-flight batch and five total step credits| Sim
     Sim -->|ordered systems within fixed step| ECS
     ECS <-->|authoritative component data| State
     Content -->|rules and costs| Sim
@@ -213,7 +239,7 @@ flowchart TB
     Saves <-->|import and export| Files
 ```
 
-Commands are checked and applied inside the simulation and completed state is published as detached views. Gameplay snapshot capture/replacement and the persistence branch are planned. Their eventual implementation must await committed transactions, validate a separate candidate world and preserve the active session on failure. The existing test-data save dialog does not implement this branch.
+Commands are checked and applied inside the simulation and completed state is published as detached views. Plain capture/validated fresh-runtime rebuild are implemented as infrastructure. The gameplay persistence branch remains planned. Their eventual implementation must await committed transactions, validate a separate candidate world and preserve the active session on failure. The existing test-data save dialog does not implement this branch.
 
 A future cloud repository can implement `SaveRepository` . Accounts, synchronization, and conflict handling remain later work; they are not needed by the prototype simulation.
 
@@ -265,7 +291,7 @@ The dependency arrows do not prescribe tick order. For the Milestone 3 opening, 
 
 ### Planned opening-state expansion
 
-The current simulation foundation exposes count-map inventory and string-array equipment/research with a placement-only command. Milestone 3 will introduce real bag slots, equipped-tool capacity, recoverable ground items, extraction history, per-technology consumed-material/work records and MiniFab buffers/jobs/charge through plain commands/state/detached views. Keep authored WorldDefinition, mutable WorldState and renderer GameState distinct. Author a versioned checked-in plain content catalogue from the agreed source IDs; Fibery/import receipts are design inputs, not runtime dependencies. This is implementation scope and does not imply those systems exist.
+The Step 0 foundation owns a real empty 24-slot bag and tool slot, plus component schemas and shared domain primitives for piles, work/buffers/reservations/charge and research/history ledgers. Populated synthetic fixtures prove these records and restoration. Only movement and the development placement command execute in normal gameplay; later steps supply salvage, research, crafting and MiniFab executors. Keep authored WorldDefinition, mutable WorldState and renderer GameState distinct. Author a versioned checked-in plain content catalogue from the agreed source IDs; Fibery/import receipts are design inputs, not runtime dependencies. This is implementation scope and does not imply those systems exist.
 
 ### Planned handcrafting cancellation boundary
 
@@ -324,18 +350,18 @@ Generation, transition and input-revision checks invalidate remaining work when 
 
 Architecture revision, 28 October 2026: adopt ECS for the opening simulation before inventory, salvage, research and crafting are implemented. [Milestone 3 Step 0](../plans/milestone-03-character-and-manual-opening.md#step-0-establish-and-prove-the-ecs-foundation) selects/proves the library and establishes its actual runtime. [Milestone 6](../plans/milestone-06-first-working-machines.md) adds factory entities/power/processing to that same foundation. The [ECS laboratory](../../tools/ecs-bench/README.md) now pins four development-only candidates for synthetic Node/Chromium investigation; it does not implement an ECS in production Simulation or grant gameplay implementation credit.
 
-The [29 October ECS investigation](../reports/ecs/2026-10-29/README.md) selects **Miniplex 2.0.0**. Miniplex and bitECS meet the 100,000-entity combined simulation/publication budget in both environments; Miniplex has the simpler verified integration. Only comparison and workload evidence are complete. Production runtime ownership, components/resources, commands and view integration remain Step 0 implementation work.
+The [29 October ECS investigation](../reports/ecs/2026-10-29/README.md) selects **Miniplex 2.0.0**. Miniplex and bitECS meet the 100,000-entity combined simulation/publication budget in both environments; Miniplex has the simpler verified integration. Production adoption now uses one private worker authority and the actual component/lean-view contracts. See the [implementation evidence](../reports/ecs-worker-implementation/2026-10-30/README.md) for qualification and remaining limits.
 
-Worker decision, 29 October 2026, requalified 30 October: start with **one dedicated browser worker owning Simulation and its private ECS world**, with sequential ECS systems. The [lean investigation](../reports/simulation-worker/2026-10-30/README.md) compares **Miniplex 2.0.0 and bitECS 0.4.0**, each inline and in one worker, and retains Miniplex. Both now pass the unchanged normal-workload compute, receiving, callback and input gates using transferred numeric presentation rows and bounded on-demand inventory/selection details. The [rich bridge's failed qualification](../reports/simulation-worker/2026-10-29/README.md) remains historical. Angular/Babylon and physical input remain on the main thread, communicating through plain commands, completed views and explicit detail subscriptions; full captures remain separate. The laboratory establishes the asynchronous session/tick-hook handoff, lifecycle and measured browser costs. Its prototype is isolated under tools; production worker integration and real scene qualification remain pending. The existing class/frame diagrams continue to describe the implemented synchronous runtime.
+Worker decision, 29 October 2026, requalified 30 October: start with **one dedicated browser worker owning Simulation and its private ECS world**, with sequential ECS systems. The [lean investigation](../reports/simulation-worker/2026-10-30/README.md) compares **Miniplex 2.0.0 and bitECS 0.4.0**, each inline and in one worker, and retains Miniplex. Both now pass the unchanged normal-workload compute, receiving, callback and input gates using transferred numeric presentation rows and bounded on-demand inventory/selection details. The [rich bridge's failed qualification](../reports/simulation-worker/2026-10-29/README.md) remains historical. Angular/Babylon and physical input remain on the main thread, communicating through plain commands, completed views and explicit detail subscriptions; full captures remain separate. The laboratory establishes the asynchronous session/tick-hook handoff, lifecycle and measured browser costs. Its original prototype remains isolated under tools. Production now uses the asynchronous boundary described by the current class/frame diagrams; the implementation report keeps its measurements separate from laboratory results.
 
 Browser results govern worker qualification: 100,000 meaningful entities on the reference desktop, **60 FPS required and 120 FPS diagnostic**. Begin with authoritative movement views and interpolation; investigate local visual prediction only if latency warrants it. Preserve pause/suspension and no offline catch-up. Node remains a correctness/diagnostic environment; the historical ECS report keeps its original dual-runtime gate. Source-backed assessment of future threading is included now; implementation of multiple simulation workers, shared-memory stores and parallel ECS systems remains deferred until profiling demonstrates a need for more simulation throughput.
 
-The [production implementation plan](../plans/ecs-worker-implementation.md) records the next work and two user-confirmed policies: existing `onGameTick` hooks become main-thread completed-tick **presentation** notifications, drained during an owned render frame; failure Retry starts a fresh world from the authored initial definition, with no automatic checkpoints in Step 0. These policies are planned changes. The currently implemented synchronous session/tick behavior and its diagrams remain unchanged until the corresponding migration lands.
+The [production implementation plan](../plans/ecs-worker-implementation.md) is complete through Step 0, with [production qualification](../reports/ecs-worker-implementation/2026-10-30/README.md). Its two user-confirmed policies are implemented: existing `onGameTick` hooks are main-thread completed-tick **presentation** notifications, drained during an owned render frame; failure Retry starts a fresh world from the authored initial definition, with no automatic checkpoints. Healthy renderer-only Retry retains its live session; page teardown disposes it. A failed worker or presentation hook requires a fresh authored world.
 
-- **Single authority:** Simulation owns one ECS runtime, component stores and explicit world resources. Component values remain plain gameplay data; queries/indexes/library handles are private runtime machinery. The existing WorldState interface is the current scaffold, not a requirement to maintain a parallel mutable object graph. WorldView is a detached projection, not another writable world. WorldDefinition remains authored initialization; renderer GameState remains lifecycle state.
+- **Single authority:** Simulation owns one ECS runtime, component stores and explicit world resources. Component values remain plain gameplay data; queries/indexes/library handles are private runtime machinery. The old mutable WorldState scaffold has been removed. WorldView is a detached projection, not another writable world. WorldDefinition remains authored initialization; renderer GameState remains lifecycle state.
 - **Opening composition:** meaningful entities include the player/inventory owner, deposits, ground piles and personal processing jobs/devices. Components hold position/owner links, bag/equipment, work/reservations, buffers/capabilities and charge as needed. Keep content immutable and shared time/ID allocation, research and histories as explicit world resources where appropriate; do not invent entities for every item unit or singleton field.
 - **Shared domain logic:** slot capacity/transactions, recipe costs/eligibility, work progression, recovery/history rules and result accounting remain plain functions independent of the ECS library. Systems query relevant components and invoke those rules. Handcraft UI requirements, MiniFab charge/precursors and factory arity/power remain executor policies; later machines do not require replacing the opening's inventory or production engine.
-- **Existing clock:** retain one application-owned 20 Hz scheduler and the five-step catch-up contract. GameSession supplies the current synchronous clock; the qualified lean prototype uses host credits and defines the asynchronous boundary without adding a competing ticker. Simulation's fixed step invokes ordered ECS systems with explicit structural-mutation boundaries; manual/current-handcraft spending precedes requested MiniFab then Field Research. Do not derive priorities from incidental query iteration or run authoritative systems through Toolkit tick subscriptions. Reuse PlayerMotor's tested movement algorithms against ECS-owned data; camera and player Toolkit scripts continue as presentation/input adapters.
+- **Existing clock:** retain one application-owned 20 Hz scheduler and the five-step catch-up contract. GameSession supplies host frame credits, counts in-flight steps against the same five-step allowance, and permits one advance request at a time. The worker has no ticker. Simulation's fixed step invokes ordered ECS systems with explicit structural-mutation boundaries; manual/current-handcraft spending precedes requested MiniFab then Field Research. Do not derive priorities from incidental query iteration or run authoritative systems through Toolkit tick subscriptions. Reuse PlayerMotor's tested movement algorithms against ECS-owned data; camera and player Toolkit scripts continue as presentation/input adapters.
 - **Stable boundaries:** game-owned stable IDs identify persisted entities/references; library-recycled IDs and object identity are runtime details. Angular/Babylon consume projections and submit commands without ECS query/component handles. Preserve the useful GameClient/WorldView interface while changing its internal state representation. Profile changed/selective projections and explicit snapshots so repeated full-world cloning does not erase the ECS benefit.
 - **Snapshot groundwork:** capture plain versioned component/resource data and rebuild a fresh runtime/queries/ID mapping. Verify continued simulation is equivalent and restoring components never fabricates production/refunds/research contributions. Milestone 4 implements persistence around this boundary; never serialize the ECS world, observers, queries or renderer objects as the save schema.
 
@@ -364,7 +390,7 @@ These requirements are not implemented. Keep all records plain and simulation-ow
 
 `GameSession.advance(deltaSeconds)` retains a 50 ms accumulator (20 Hz), a five-step catch-up limit and the existing browser frame source. It adds no timer or animation loop and does not depend on physics, physics substeps or global Babylon timing. A zero-tick render frame still updates presentation; excess elapsed time beyond the bounded catch-up budget is discarded.
 
-`registerTickHandler(handler, order?)` accepts a synchronous callback and returns an idempotent unregister function. Each `GameTickContext` contains the upcoming tick number and fixed duration in seconds. Before each authoritative step, handlers run in numeric execution order, with registration order breaking ties. Additions become eligible on the next tick. Removal or disabling prevents subsequent invocation immediately. Session suspension prevents dispatch.
+`registerCompletedTickHandler(handler, order?)` registers main-thread presentation notifications. The owned render frame pins the latest completed publication, drains at most five summaries in tick/order/registration order, then submits future credits. Context includes the completed tick, fixed duration, world generation and publication tick/version; a catch-up notification may describe an earlier tick than the pinned view. New registrations never replay committed ticks. Unsubscription and ownership changes stop dispatch immediately. Hook commands affect a future step; hook failure retains the completed view and requires explicit authored-world Retry. Worker message handlers never execute scene scripts.
 
 The narrow `GameplayScript` base connects an implemented optional `onGameTick(context)` method through `WorldSessionBridge` during native `start` and disconnects it during destruction. The adapter checks script and object activation at dispatch time. Toolkit lifecycle registration and application tick registration remain distinct; this is not a second component framework or a manual invocation of Toolkit's physics hooks.
 
