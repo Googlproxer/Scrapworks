@@ -13,8 +13,17 @@ export const EMPTY_CONTENT: ContentDefinition = Object.freeze({
   recipes: Object.freeze({}),
   technologies: Object.freeze([]),
 });
-const object = (v: unknown): Record<string, unknown> => {
+const object = (v: unknown, keys?: readonly string[]): Record<string, unknown> => {
   check(!!v && typeof v === 'object' && !Array.isArray(v), 'Expected snapshot object');
+  check(
+    Object.getPrototypeOf(v) === Object.prototype || Object.getPrototypeOf(v) === null,
+    'Expected plain snapshot data',
+  );
+  if (keys)
+    check(
+      Object.keys(v).every((key) => keys.includes(key)),
+      'Unknown snapshot field',
+    );
   return v as Record<string, unknown>;
 };
 const number = (v: unknown, integer = false): number => {
@@ -59,14 +68,14 @@ export function ownContent(value: ContentDefinition): ContentDefinition {
   return Object.freeze(copy);
 }
 function stack(v: unknown, content: ContentDefinition): void {
-  const s = object(v);
+  const s = object(v, ['item', 'quantity']);
   const item = text(s['item']);
   check(Object.hasOwn(content.items, item), 'Unknown snapshot item');
   number(s['quantity'], true);
   check((s['quantity'] as number) > 0, 'Empty item stack');
 }
 function inventory(v: unknown, content: ContentDefinition): asserts v is InventoryData {
-  const bag = object(v);
+  const bag = object(v, ['slots', 'reservations']);
   check(Array.isArray(bag['slots']) && bag['slots'].length <= 4096, 'Invalid inventory capacity');
   for (const slot of bag['slots'])
     if (slot !== null) {
@@ -81,7 +90,7 @@ function inventory(v: unknown, content: ContentDefinition): asserts v is Invento
   const ids = new Set<string>();
   const held = new Map<string, number>();
   for (const value of bag['reservations']) {
-    const r = object(value);
+    const r = object(value, ['id', 'owner', 'items']);
     const id = text(r['id']);
     text(r['owner']);
     check(!ids.has(id), 'Duplicate reservation ID');
@@ -105,7 +114,14 @@ export function assertSnapshot(
   value: unknown,
   content: ContentDefinition,
 ): asserts value is SimulationSnapshot {
-  const s = object(value);
+  const s = object(value, [
+    'version',
+    'contentVersion',
+    'definition',
+    'resources',
+    'entities',
+    'lastCommandResult',
+  ]);
   check(
     s['version'] === 1 && s['contentVersion'] === content.version,
     'Unsupported snapshot/content version',
@@ -174,8 +190,8 @@ export function assertSnapshot(
     };
     check(e[required[String(e['kind'])]], 'Missing required component');
     if (e['transform']) {
-      const t = object(e['transform']);
-      const p = object(t['position']);
+      const t = object(e['transform'], ['position', 'facing', 'moving', 'sprinting']);
+      const p = object(t['position'], ['x', 'y', 'z']);
       for (const key of ['x', 'y', 'z'])
         check(typeof p[key] === 'number' && Number.isFinite(p[key]), 'Invalid transform');
       check(
@@ -189,24 +205,34 @@ export function assertSnapshot(
     }
     if (e['inventory']) inventory(e['inventory'], content);
     if (e['equipment']) {
-      const tool = object(e['equipment'])['tool'];
+      const tool = object(e['equipment'], ['tool'])['tool'];
       check(
         tool === null || (typeof tool === 'string' && Object.hasOwn(content.items, tool)),
         'Unknown tool',
       );
     }
     if (e['deposit']) {
-      const d = object(e['deposit']);
+      const d = object(e['deposit'], ['kind', 'quantity']);
       check(d['kind'] === 'scrap', 'Unknown deposit');
       number(d['quantity'], true);
     }
     if (e['pile']) stack(e['pile'], content);
     if (e['charge']) {
-      const c = object(e['charge']);
+      const c = object(e['charge'], ['value', 'capacity']);
       check(number(c['value']) <= number(c['capacity']), 'Invalid charge');
     }
     if (e['work']) {
-      const w = object(e['work']);
+      const w = object(e['work'], [
+        'recipe',
+        'status',
+        'remaining',
+        'duration',
+        'completed',
+        'input',
+        'output',
+        'reserved',
+        'held',
+      ]);
       check(
         typeof w['recipe'] === 'string' && Object.hasOwn(content.recipes, w['recipe']),
         'Unknown work recipe',
@@ -223,10 +249,17 @@ export function assertSnapshot(
       }
     }
     if (e['building']) {
-      const b = object(e['building']);
-      const p = object(b['position']);
-      const f = object(b['footprint']);
-      const cell = object(b['cell']);
+      const b = object(e['building'], [
+        'id',
+        'buildingId',
+        'position',
+        'footprint',
+        'cell',
+        'rotation',
+      ]);
+      const p = object(b['position'], ['x', 'y', 'z']);
+      const f = object(b['footprint'], ['width', 'depth']);
+      const cell = object(b['cell'], ['column', 'row']);
       check(
         b['id'] === id &&
           b['buildingId'] === 'test-building' &&

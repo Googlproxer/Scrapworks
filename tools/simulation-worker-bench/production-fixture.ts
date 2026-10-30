@@ -14,8 +14,8 @@ import type {
 import {
   emptyInventory,
   reserve,
-  commitReservation,
-  transact,
+  commitReservationAndRenew,
+  transfer,
   spendByPriority,
 } from '../../src/simulation/domain/inventory';
 import { advanceWork } from '../../src/simulation/domain/work';
@@ -147,15 +147,20 @@ export function system(workload: Workload): SimulationSystem {
     const tick = ctx.resources.tick,
       counters = ctx.resources.counters;
     const commit = (work: WorkData): boolean => {
-      const owner = work.input.reservations[0].owner;
-      if (!commitReservation(work.input, 'r', content)) throw new Error('Missing work reservation');
-      if (!transact(work.input, [], [{ item: 'ore', quantity: 1 }], content))
-        throw new Error('Replenishment failed');
-      reserve(work.input, { id: 'r', owner, items: [{ item: 'ore', quantity: 1 }] });
-      if (work.held.length) counters['shipped']++;
-      work.held = [{ item: 'plate', quantity: 1 }];
-      // Exercise output storage without depleting the active fixture.
-      work.output.slots[0] = { item: 'plate', quantity: 1 + (work.completed % 500) };
+      if (!commitReservationAndRenew(work.input, 'r', content))
+        throw new Error('Missing work reservation');
+      // Synthetic injection replaces exactly the consumed unit in its existing
+      // input stack. It is not an additional gameplay inventory transaction.
+      work.input.slots[0]!.quantity++;
+      if (work.held.length) {
+        const output = work.output.slots[0];
+        if (output) output.quantity++;
+        else work.output.slots[0] = { item: 'plate', quantity: 1 };
+        if (work.output.slots[0]!.quantity === 500) {
+          counters['shipped'] += 500;
+          work.output.slots[0] = null;
+        }
+      } else work.held.push({ item: 'plate', quantity: 1 });
       counters['injected']++;
       counters['completed']++;
       ctx.resources.productionTotals['plate']++;
@@ -168,13 +173,18 @@ export function system(workload: Workload): SimulationSystem {
       ctx.mark(e);
     }
     // Explicit nested mutations, transfers, and ordering independent of query iteration.
-    for (let n = processors + (tick % 10); n < processors + owners; n += 10) {
+    const unit = [{ item: 'ore', quantity: 1 }];
+    for (let n = processors; n < processors + owners; n += 10) {
       const e = records[n],
-        slot = e.inventory!.slots[(tick + n) % 24]!;
-      if (!slot) continue;
-      slot.quantity = (slot.quantity % 200) + 1;
+        other = records[n + 1];
+      if (e.id === 'player' || other.id === 'player') continue;
+      const from = tick % 2 ? other : e,
+        to = tick % 2 ? e : other;
+      if (!transfer(from.inventory!, to.inventory!, unit, content))
+        throw new Error('Inventory transfer stopped');
       counters['transfers']++;
       ctx.mark(e, true);
+      ctx.mark(other, true);
     }
     const player = ctx.get('player')!;
     for (let slot = 0; slot < 24; slot++)

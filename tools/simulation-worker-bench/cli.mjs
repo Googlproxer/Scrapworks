@@ -352,7 +352,7 @@ if (command !== 'check') {
           warmupMs: 100,
         },
       });
-    for (const config of configurations.filter((c) => c.execution === 'worker'))
+    for (const config of configurations.filter((c) => !production && c.execution === 'worker'))
       jobs.push({
         mode: 'paced',
         diagnostic: true,

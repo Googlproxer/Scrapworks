@@ -38,6 +38,23 @@ test('inventory preflight is atomic, capacity and reservations prevent double sp
   assert.equal(rules.eligible(source, 'toString', content), false);
 });
 
+test('reservation renewal is atomic and never spends the next operation twice', () => {
+  const bag = rules.emptyInventory(1);
+  bag.slots[0] = { item: 'ore', quantity: 2 };
+  assert(
+    rules.reserve(bag, { id: 'repeat', owner: 'processor', items: [{ item: 'ore', quantity: 1 }] }),
+  );
+  assert(rules.commitReservationAndRenew(bag, 'repeat', content));
+  assert.equal(rules.quantity(bag, 'ore'), 1);
+  assert.equal(rules.available(bag, 'ore'), 0);
+  const before = structuredClone(bag);
+  assert.equal(rules.commitReservationAndRenew(bag, 'repeat', content), false);
+  assert.deepEqual(bag, before);
+  assert(rules.commitReservation(bag, 'repeat', content));
+  assert.equal(rules.quantity(bag, 'ore'), 0);
+  assert.equal(bag.reservations.length, 0);
+});
+
 test('stock priority is invariant under request order and work blocks without duplicate credit', () => {
   const requests = ['research', 'minifab', 'manual'].map((priority) => ({
     priority,
@@ -90,6 +107,24 @@ test('actual populated schemas survive fresh-runtime JSON restoration and 1000 s
     assert(a.resources.counters.completed > 0);
     assert(a.resources.counters.transfers > 0);
     assert(a.resources.productionTotals.plate > 0);
+    if (workload !== 'churn') {
+      const final = a.capture();
+      const stored = final.entities.reduce(
+        (sum, entity) =>
+          sum +
+          (entity.work?.held.reduce((n, stack) => n + stack.quantity, 0) ?? 0) +
+          (entity.work?.output.slots.reduce((n, stack) => n + (stack?.quantity ?? 0), 0) ?? 0),
+        0,
+      );
+      assert.equal(
+        stored + final.resources.counters.shipped,
+        final.resources.productionTotals.plate,
+      );
+      assert.equal(final.resources.counters.completed, final.resources.productionTotals.plate);
+      assert.equal(final.resources.counters.injected, final.resources.counters.completed);
+      for (const entity of final.entities)
+        if (entity.work) assert.equal(entity.work.input.slots[0].quantity, 200);
+    }
     captured.entities[0].work.input.slots[0].quantity = 0;
     assert(a.inspect(['e0r0'])[0]?.entity.work?.input.slots[0]?.quantity !== 0);
     a.dispose();
@@ -197,6 +232,34 @@ test('independent sessions deduplicate live detail subscriptions, detached inspe
   assert.equal(a.cache.details.has('e0r0'), false);
   a.dispose();
   b.dispose();
+});
+
+test('suspension during a capture barrier cancels its command batch without losing sequence acknowledgements', async () => {
+  const runtime = new SimulationRuntime();
+  const port = {
+    send: (request) =>
+      new Promise((resolve) => setTimeout(() => resolve(runtime.handle(request)), 2)),
+    dispose: () => runtime.dispose(),
+  };
+  const session = new GameSession(definition, { portFactory: () => port });
+  await session.ready;
+  const sequence = session.enqueue({
+    type: 'place',
+    buildingId: 'test-building',
+    cell: { column: 52, row: 52 },
+    rotation: 0,
+  });
+  const capturing = session.capture();
+  session.setPaused(true);
+  const captured = await capturing;
+  assert.equal(captured.ledger.accepted, sequence);
+  assert.equal(captured.ledger.cancelled, 1);
+  assert.deepEqual(captured.pending, []);
+  assert.deepEqual(
+    session.acknowledgements.map((ack) => [ack.sequence, ack.result]),
+    [[sequence, 'cancelled']],
+  );
+  session.dispose();
 });
 
 test('growth from 1000 to 100000 exercises ECS and host cache storage expansion', () => {

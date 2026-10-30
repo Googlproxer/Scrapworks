@@ -74,13 +74,9 @@ async function initialize(options: Options, reuse = false, capture?: SimulationC
         },
       );
     else {
-      let runtime = measuredRuntime(workloadOf(options));
+      const runtime = measuredRuntime(workloadOf(options));
       master = {
         send: (request) => {
-          if (request.operation === 'initialize') {
-            runtime.dispose();
-            runtime = measuredRuntime(workloadOf(options));
-          }
           return runtime.handle(request);
         },
         dispose: () => runtime.dispose(),

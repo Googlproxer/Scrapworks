@@ -7,6 +7,14 @@ const root = path.resolve(import.meta.dirname, '../..');
 const output = path.join(root, 'tmp/production-worker-browser');
 await fs.mkdir(output, { recursive: true });
 const directory = path.join(root, 'dist/scrapworks/browser');
+const metadata = JSON.parse(
+  await fs.readFile(path.join(root, 'dist/scrapworks/browser-stats.json'), 'utf8'),
+);
+const engineStoreChunk = Object.entries(metadata.outputs).find(([, output]) =>
+  Object.keys(output.inputs ?? {}).some((input) =>
+    input.replaceAll('\\', '/').endsWith('/Engines/engineStore.js'),
+  ),
+)?.[0];
 const server = http.createServer(async (request, response) => {
   try {
     const name = decodeURIComponent(new URL(request.url, 'http://localhost').pathname).replace(
@@ -59,7 +67,7 @@ async function attachProbe(worker) {
           tick: packet.tick,
           first: globalThis.productionProbe.first ?? position,
           position,
-          population: packet.mappings.length,
+          mappingUpdates: packet.mappings.length,
         };
       }
       return send(message, ...rest);
@@ -91,6 +99,25 @@ try {
     'Production worker did not step',
   );
   const initial = await worker.evaluate(() => globalThis.productionProbe);
+  const renderer = await page.evaluate(async (file) => {
+    if (!file) return { unavailable: 'EngineStore chunk not identified' };
+    const module = await import(new URL(file, document.baseURI).href);
+    const store = Object.values(module).find(
+      (value) => value && Array.isArray(value.Instances) && 'LastCreatedEngine' in value,
+    );
+    const engine = store?.LastCreatedEngine,
+      scene = engine?.scenes.at(-1);
+    return scene
+      ? {
+          meshes: scene.meshes.length,
+          visibleMeshes: scene.meshes.filter((mesh) => mesh.isVisible && mesh.isEnabled()).length,
+          activeMeshes: scene.getActiveMeshes().length,
+          drawCalls: engine._drawCalls.current,
+          canvasWidth: engine.getRenderWidth(),
+          canvasHeight: engine.getRenderHeight(),
+        }
+      : { unavailable: 'EngineStore is not exported by the build' };
+  }, engineStoreChunk);
   await page.locator('canvas').click();
   await page.keyboard.down('KeyW');
   await page.waitForTimeout(300);
@@ -135,6 +162,7 @@ try {
     JSON.stringify(
       {
         status: 'ok',
+        renderer,
         initial,
         moved,
         paused,

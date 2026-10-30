@@ -22,6 +22,33 @@ export function available(inventory: InventoryData, item: string): number {
     )
   );
 }
+function canSpend(
+  inventory: InventoryData,
+  item: string,
+  count: number,
+  ignored?: Reservation,
+): boolean {
+  let needed = count;
+  for (const reservation of inventory.reservations)
+    if (reservation !== ignored)
+      for (const stack of reservation.items) if (stack.item === item) needed += stack.quantity;
+  for (const slot of inventory.slots)
+    if (slot?.item === item) {
+      needed -= slot.quantity;
+      if (needed <= 0) return true;
+    }
+  return false;
+}
+function withdraw(inventory: InventoryData, item: string, count: number): void {
+  for (let n = 0; n < inventory.slots.length && count; n++) {
+    const slot = inventory.slots[n];
+    if (slot?.item !== item) continue;
+    const take = Math.min(count, slot.quantity);
+    slot.quantity -= take;
+    count -= take;
+    if (!slot.quantity) inventory.slots[n] = null;
+  }
+}
 function totals(items: readonly ItemStack[]): Map<string, number> {
   const result = new Map<string, number>();
   for (const item of items) {
@@ -96,6 +123,35 @@ export function transfer(
   content: ContentDefinition,
 ): boolean {
   check(source !== destination, 'Transfer requires independent inventories');
+  if (items.length === 1) {
+    const { item, quantity: count } = items[0];
+    check(item.length > 0 && Number.isSafeInteger(count) && count > 0, 'Invalid item quantity');
+    if (!Object.hasOwn(content.items, item) || !canSpend(source, item, count)) return false;
+    const limit = content.items[item].stackLimit;
+    let capacity = 0;
+    for (const slot of destination.slots) {
+      capacity += slot === null ? limit : slot.item === item ? limit - slot.quantity : 0;
+      if (capacity >= count) break;
+    }
+    if (capacity < count) return false;
+    // Both sides have passed preflight. Mutate only the affected stacks.
+    withdraw(source, item, count);
+    let left = count;
+    for (const slot of destination.slots)
+      if (slot?.item === item) {
+        const put = Math.min(left, limit - slot.quantity);
+        slot.quantity += put;
+        left -= put;
+        if (!left) break;
+      }
+    for (let n = 0; n < destination.slots.length && left; n++)
+      if (!destination.slots[n]) {
+        const put = Math.min(left, limit);
+        destination.slots[n] = { item, quantity: put };
+        left -= put;
+      }
+    return true;
+  }
   const from = planTransaction(source, items, [], content);
   const to = planTransaction(destination, [], items, content);
   if (!from || !to) return false;
@@ -106,8 +162,16 @@ export function transfer(
 export function reserve(inventory: InventoryData, reservation: Reservation): boolean {
   check(reservation.id.length > 0 && reservation.owner.length > 0, 'Invalid reservation identity');
   check(!inventory.reservations.some((r) => r.id === reservation.id), 'Duplicate reservation');
-  for (const [item, count] of totals(reservation.items))
-    if (available(inventory, item) < count) return false;
+  if (reservation.items.length === 1) {
+    const stack = reservation.items[0];
+    check(
+      stack.item.length > 0 && Number.isSafeInteger(stack.quantity) && stack.quantity > 0,
+      'Invalid item quantity',
+    );
+    if (!canSpend(inventory, stack.item, stack.quantity)) return false;
+  } else
+    for (const [item, count] of totals(reservation.items))
+      if (!canSpend(inventory, item, count)) return false;
   inventory.reservations.push({
     id: reservation.id,
     owner: reservation.owner,
@@ -120,8 +184,41 @@ export function commitReservation(
   id: string,
   content: ContentDefinition,
 ): boolean {
+  return commitReserved(inventory, id, content, false);
+}
+/** Atomically pay one operation and retain the same owned reservation for the
+ * next operation. Failure pays nothing; callers explicitly choose repetition. */
+export function commitReservationAndRenew(
+  inventory: InventoryData,
+  id: string,
+  content: ContentDefinition,
+): boolean {
+  return commitReserved(inventory, id, content, true);
+}
+function commitReserved(
+  inventory: InventoryData,
+  id: string,
+  content: ContentDefinition,
+  renew: boolean,
+): boolean {
   const reservation = inventory.reservations.find((r) => r.id === id);
   if (!reservation) return false;
+  if (reservation.items.length === 1) {
+    const stack = reservation.items[0];
+    check(
+      stack.item.length > 0 && Number.isSafeInteger(stack.quantity) && stack.quantity > 0,
+      'Invalid item quantity',
+    );
+    if (
+      !Object.hasOwn(content.items, stack.item) ||
+      !Number.isSafeInteger(stack.quantity * (renew ? 2 : 1)) ||
+      !canSpend(inventory, stack.item, stack.quantity * (renew ? 2 : 1), reservation)
+    )
+      return false;
+    withdraw(inventory, stack.item, stack.quantity);
+    if (!renew) inventory.reservations.splice(inventory.reservations.indexOf(reservation), 1);
+    return true;
+  }
   const spending = totals(reservation.items);
   // Preflight every item before mutating stock. A reservation already owns these
   // quantities; committing does not require copying unrelated inventory slots.
@@ -134,7 +231,11 @@ export function commitReservation(
           : r.items.reduce((sum, stack) => sum + (stack.item === item ? stack.quantity : 0), 0)),
       0,
     );
-    if (!Object.hasOwn(content.items, item) || quantity(inventory, item) - otherHeld < count)
+    if (
+      !Object.hasOwn(content.items, item) ||
+      !Number.isSafeInteger(count * (renew ? 2 : 1)) ||
+      quantity(inventory, item) - otherHeld < count * (renew ? 2 : 1)
+    )
       return false;
   }
   for (const [item, count] of spending) {
@@ -148,7 +249,7 @@ export function commitReservation(
       if (!slot.quantity) inventory.slots[n] = null;
     }
   }
-  inventory.reservations.splice(inventory.reservations.indexOf(reservation), 1);
+  if (!renew) inventory.reservations.splice(inventory.reservations.indexOf(reservation), 1);
   return true;
 }
 export function eligible(

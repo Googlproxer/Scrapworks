@@ -78,7 +78,8 @@ export class Simulation {
   private readonly slots: (SimulationEntity | undefined)[] = [];
   private readonly generations: number[] = [];
   private readonly free: number[] = [];
-  private dirty: SimulationEntity[] = [];
+  private dirty: (SimulationEntity | undefined)[] = [];
+  private dirtyLength = 0;
   private dirtyCount = 0;
   private created: EntityMapping[] = [];
   private removed: number[] = [];
@@ -169,8 +170,8 @@ export class Simulation {
     );
     this.system = options.system;
     this.context = {
-      active: this.active,
-      entities: this.world,
+      active: this.active.entities,
+      entities: this.world.entities,
       resources: this.resources,
       get: (id) => this.ids.get(id),
       mark: (entity, detailsOnly) => this.mark(entity, detailsOnly),
@@ -197,8 +198,9 @@ export class Simulation {
       },
       membership: (entity, enabled) => {
         check(this.stepping && this.ids.get(entity.id) === entity, 'Stale membership');
-        if (enabled) this.world.addComponent(entity, 'active', true);
-        else this.world.removeComponent(entity, 'active');
+        // Undefined is Miniplex's absent-component sentinel. Native update/reindex
+        // preserves query semantics without deleting a hot object's property.
+        this.world.update(entity, 'active', enabled ? true : undefined);
         this.mark(entity);
       },
     };
@@ -228,14 +230,16 @@ export class Simulation {
     check(!this.ids.has(data.id) && this.ids.size < 250000, 'Duplicate entity/population overflow');
     const slot = this.free.pop() ?? this.slots.length;
     const generation = this.generations[slot] ?? 0;
-    // Keep hot component offsets stable across kinds. Miniplex treats undefined
-    // components as absent; active is last so native removal avoids a dictionary object.
+    // Keep hot fields adjacent and their offsets stable across kinds. Undefined
+    // is Miniplex's absent-component value; cold metadata follows numeric work.
     const entity: SimulationEntity = {
-      id: data.id,
-      kind: data.kind,
       slot,
       generation,
       dirty: 0,
+      work: data.work,
+      charge: data.charge,
+      id: data.id,
+      kind: data.kind,
       transform: data.transform,
       inventory: data.inventory,
       equipment: data.equipment,
@@ -243,8 +247,6 @@ export class Simulation {
       pile: data.pile,
       building: data.building,
       owner: data.owner,
-      work: data.work,
-      charge: data.charge,
       active: data.work?.status === 'active' ? true : undefined,
     };
     this.world.add(entity);
@@ -268,7 +270,7 @@ export class Simulation {
   private mark(entity: SimulationEntity, detailsOnly = false): void {
     check(!this.disposed && this.slots[entity.slot] === entity, 'Stale/disposed entity');
     if (!entity.dirty) {
-      this.dirty.push(entity);
+      this.dirty[this.dirtyLength++] = entity;
     }
     if (!detailsOnly && !(entity.dirty & 2)) this.dirtyCount++;
     entity.dirty |= detailsOnly ? 1 : 3;
@@ -382,34 +384,46 @@ export class Simulation {
       !this.disposed && !this.stepping && watched.size <= MAX_DETAIL_SUBSCRIPTIONS,
       'Invalid publication boundary',
     );
-    const entities = full ? this.world : this.dirty;
+    const entities = full ? this.world.entities : this.dirty;
+    const length = full ? this.ids.size : this.dirtyLength;
     const count = full ? this.ids.size : this.dirtyCount;
     const rows = new Float64Array(count * PRESENTATION_STRIDE);
     const details: Inspection[] = [];
     let at = 0;
-    for (const e of entities) {
+    for (let index = 0; index < length; index++) {
+      const e = entities[index]!;
       if (this.slots[e.slot] !== e) continue;
       const numeric = full || !!(e.dirty & 2);
       e.dirty = 0;
       if (watched.has(e.id))
         details.push({ id: e.id, tick: this.resources.tick, entity: this.detach(e) });
       if (!numeric) continue;
-      const t = e.transform;
-      const p = t?.position ?? e.building?.position;
       rows[at] = e.slot;
       rows[at + 1] = e.generation;
-      rows[at + 2] = p?.x ?? 0;
-      rows[at + 3] = p?.y ?? 0;
-      rows[at + 4] = p?.z ?? 0;
-      rows[at + 5] = t?.facing ?? 0;
-      rows[at + 6] = (t ? 1 : 0) | (t?.moving ? 2 : 0) | (t?.sprinting ? 4 : 0);
-      rows[at + 7] = e.deposit?.quantity ?? e.pile?.quantity ?? 0;
-      rows[at + 8] = e.work?.remaining ?? 0;
-      rows[at + 9] = e.charge?.value ?? 0;
-      rows[at + 10] = stackCount(e.work?.reserved);
-      rows[at + 11] = stackCount(e.work?.held);
-      rows[at + 12] = e.work?.status === 'active' ? 1 : e.work?.status === 'blocked' ? 2 : 0;
-      rows[at + 13] = e.work?.completed ?? 0;
+      // Fresh numeric buffers already contain zero. Write only present components;
+      // the fixed wire layout and precision are identical for every entity kind.
+      const t = e.transform,
+        p = t?.position ?? e.building?.position;
+      if (p) {
+        rows[at + 2] = p.x;
+        rows[at + 3] = p.y;
+        rows[at + 4] = p.z;
+      }
+      if (t) {
+        rows[at + 5] = t.facing;
+        rows[at + 6] = 1 | (t.moving ? 2 : 0) | (t.sprinting ? 4 : 0);
+      }
+      if (e.deposit) rows[at + 7] = e.deposit.quantity;
+      else if (e.pile) rows[at + 7] = e.pile.quantity;
+      if (e.charge) rows[at + 9] = e.charge.value;
+      const work = e.work;
+      if (work) {
+        rows[at + 8] = work.remaining;
+        rows[at + 10] = stackCount(work.reserved);
+        rows[at + 11] = stackCount(work.held);
+        rows[at + 12] = work.status === 'active' ? 1 : work.status === 'blocked' ? 2 : 0;
+        rows[at + 13] = work.completed;
+      }
       at += PRESENTATION_STRIDE;
     }
     const packet: PresentationPacket = {
@@ -432,15 +446,19 @@ export class Simulation {
         .map(([id]) => id),
       productionTotals: { ...this.resources.productionTotals },
     };
-    this.dirty = [];
+    // Retain bounded backing storage, release component references, and avoid
+    // growing a new JS array for every publication.
+    this.dirty.fill(undefined, 0, this.dirtyLength);
+    this.dirtyLength = 0;
     this.dirtyCount = 0;
     this.created = [];
     this.removed = [];
     return packet;
   }
   public setPublicationDirty(fraction: number): void {
-    for (const e of this.dirty) e.dirty = 0;
-    this.dirty = [];
+    for (let index = 0; index < this.dirtyLength; index++) this.dirty[index]!.dirty = 0;
+    this.dirty.fill(undefined, 0, this.dirtyLength);
+    this.dirtyLength = 0;
     this.dirtyCount = 0;
     let remaining = Math.floor(this.ids.size * fraction);
     for (const entity of this.world) {
@@ -496,6 +514,7 @@ export class Simulation {
     this.ids.clear();
     this.slots.length = this.generations.length = this.free.length = 0;
     this.dirty = [];
+    this.dirtyLength = 0;
     this.dirtyCount = 0;
     this.created = [];
     this.removed = [];

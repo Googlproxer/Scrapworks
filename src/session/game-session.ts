@@ -62,6 +62,7 @@ export class GameSession {
   private paused = false;
   private disposed = false;
   private capturing = false;
+  private captureCommands: SequencedCommand[] = [];
   private failure?: Error;
   private initialized = false;
   private resynchronizing?: Promise<void>;
@@ -205,6 +206,7 @@ export class GameSession {
     this.elapsed = 0;
     this.outstanding = 0;
     this.commands = [];
+    this.captureCommands = [];
     this.notifications = [];
     this.port.dispose();
     this.options.onFailure?.(this.failure);
@@ -316,7 +318,8 @@ export class GameSession {
     this.elapsed = 0;
     this.notifications = [];
     this.movement = { x: 0, z: 0, sprint: false };
-    const commands = this.commands;
+    const commands = [...this.captureCommands, ...this.commands];
+    this.captureCommands = [];
     this.commands = [];
     if (this.failed || this.disposed) return;
     try {
@@ -361,14 +364,19 @@ export class GameSession {
     check(!this.capturing && !this.failed, 'Capture unavailable');
     this.capturing = true;
     // Commands arriving after this boundary remain in the host queue.
-    const commands = this.commands;
+    this.captureCommands = this.commands;
     this.commands = [];
     try {
       await this.settled();
+      const commands = this.captureCommands;
+      this.captureCommands = [];
       if (commands.length) await this.request('advance', { steps: 0, commands });
       const reply = await this.request('capture');
       check(reply.capture, 'Missing capture');
       return reply.capture;
+    } catch (error) {
+      this.fail(error);
+      throw error;
     } finally {
       this.capturing = false;
     }
@@ -433,6 +441,7 @@ export class GameSession {
     this.detailListeners.clear();
     this.notifications = [];
     this.commands = [];
+    this.captureCommands = [];
     this.initialized = false;
   }
   public dispose(): void {
@@ -445,6 +454,7 @@ export class GameSession {
     this.detailListeners.clear();
     this.notifications = [];
     this.commands = [];
+    this.captureCommands = [];
     this.elapsed = this.outstanding = 0;
   }
 }
