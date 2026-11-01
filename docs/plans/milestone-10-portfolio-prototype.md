@@ -54,7 +54,7 @@ The [production profile](../reports/migration/2026-10-23/performance.json) measu
 - [ ] Avoid unnecessary full-world copying outside snapshot capture and avoid recreating meshes/materials each frame.
 - [ ] Measure the bundle and set meaningful warning/error budgets for this project.
 - [x] Verify pause/resume and five-step catch-up using controlled long frame deltas plus browser focus/modal transitions.
-- [ ] Add workers or a more complex state library only if a measured problem warrants their added complexity.
+- [ ] Qualify the [agreed single simulation worker](simulation-worker-investigation.md) against the main-thread control and verify its actual browser integration. The [initial investigation](../reports/simulation-worker/2026-10-29/README.md) fails publication/response budgets and requires a revised view contract before integration. Investigate additional simulation workers or a different state library only if profiles warrant their added complexity.
 
 ## Step 5 Verify the production build
 

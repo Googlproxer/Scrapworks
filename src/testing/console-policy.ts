@@ -1,6 +1,7 @@
 import { expect } from 'vitest';
 
 type DiagnosticMethod = 'error' | 'warn' | 'trace';
+
 interface Diagnostic {
   readonly method: DiagnosticMethod;
   readonly arguments: readonly unknown[];

@@ -1,0 +1,458 @@
+[
+  {
+    "file": "0066-profile-miniplex-inline-100000-churn.json.main.disposed.heapsnapshot",
+    "nodes": 48775,
+    "componentPayloadCopies": 0,
+    "uniquePayloadIds": 0,
+    "idMappings": 0,
+    "undecodedCandidateIds": 3,
+    "olderGenerationPayloadCopies": 0,
+    "olderGenerationRetainers": {},
+    "fixtureIndexes": [
+      {
+        "ownerOffset": 199308,
+        "arrayOffset": 426,
+        "payloadMembers": 0,
+        "olderGenerationMembers": 0
+      }
+    ],
+    "retainerExamples": [],
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 818338,
+      "string": 419677,
+      "object shape": 152500,
+      "code": 834916,
+      "array": 218960,
+      "number": 948,
+      "symbol": 64,
+      "object": 18156,
+      "closure": 90052,
+      "concatenated string": 2200
+    },
+    "largestNodes": []
+  },
+  {
+    "file": "0066-profile-miniplex-inline-100000-churn.json.main.steady.heapsnapshot",
+    "nodes": 2636360,
+    "componentPayloadCopies": 101001,
+    "uniquePayloadIds": 101000,
+    "idMappings": 100000,
+    "undecodedCandidateIds": 3,
+    "olderGenerationPayloadCopies": 1000,
+    "olderGenerationRetainers": {
+      "fixture.byOrdinal": 2000
+    },
+    "fixtureIndexes": [
+      {
+        "ownerOffset": 12119334,
+        "arrayOffset": 426,
+        "payloadMembers": 0,
+        "olderGenerationMembers": 0
+      },
+      {
+        "ownerOffset": 12120366,
+        "arrayOffset": 14813064,
+        "payloadMembers": 100000,
+        "olderGenerationMembers": 1000
+      }
+    ],
+    "retainerExamples": [
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525462,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525468,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525474,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525480,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525486,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525492,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525498,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525504,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525510,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525516,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525522,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 14813064,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 15525528,
+        "edgeType": "element"
+      }
+    ],
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 11997894,
+      "string": 3004045,
+      "object shape": 160524,
+      "code": 1020724,
+      "array": 26314832,
+      "number": 1549584,
+      "symbol": 64,
+      "object": 40665724,
+      "closure": 91028,
+      "concatenated string": 2260
+    },
+    "largestNodes": [
+      {
+        "bytes": 11200000,
+        "nodeOffset": 1395474,
+        "type": "native",
+        "name": "system / JSArrayBufferData"
+      },
+      {
+        "bytes": 3670036,
+        "nodeOffset": 15425250,
+        "type": "array",
+        "name": ""
+      },
+      {
+        "bytes": 3670036,
+        "nodeOffset": 15473748,
+        "type": "array",
+        "name": ""
+      },
+      {
+        "bytes": 3670036,
+        "nodeOffset": 15473778,
+        "type": "array",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "file": "0066-profile-miniplex-inline-100000-churn.json.main.world-disposed.heapsnapshot",
+    "nodes": 48145,
+    "componentPayloadCopies": 0,
+    "uniquePayloadIds": 0,
+    "idMappings": 0,
+    "undecodedCandidateIds": 3,
+    "olderGenerationPayloadCopies": 0,
+    "olderGenerationRetainers": {},
+    "fixtureIndexes": [
+      {
+        "ownerOffset": 228396,
+        "arrayOffset": 426,
+        "payloadMembers": 0,
+        "olderGenerationMembers": 0
+      }
+    ],
+    "retainerExamples": [],
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 775566,
+      "string": 419709,
+      "object shape": 152700,
+      "code": 750012,
+      "array": 219836,
+      "number": 852,
+      "symbol": 64,
+      "object": 18712,
+      "closure": 90436,
+      "concatenated string": 2200
+    },
+    "largestNodes": []
+  },
+  {
+    "file": "0067-profile-miniplex-worker-100000-churn.json.main.disposed.heapsnapshot",
+    "nodes": 45746,
+    "componentPayloadCopies": 0,
+    "uniquePayloadIds": 0,
+    "idMappings": 0,
+    "undecodedCandidateIds": 3,
+    "olderGenerationPayloadCopies": 0,
+    "olderGenerationRetainers": {},
+    "fixtureIndexes": [],
+    "retainerExamples": [],
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 760200,
+      "string": 415665,
+      "object shape": 146784,
+      "code": 439136,
+      "array": 220052,
+      "number": 684,
+      "symbol": 80,
+      "object": 16712,
+      "closure": 90472,
+      "concatenated string": 1980
+    },
+    "largestNodes": []
+  },
+  {
+    "file": "0067-profile-miniplex-worker-100000-churn.json.main.steady.heapsnapshot",
+    "nodes": 544936,
+    "componentPayloadCopies": 1,
+    "uniquePayloadIds": 1,
+    "idMappings": 100000,
+    "undecodedCandidateIds": 3,
+    "olderGenerationPayloadCopies": 0,
+    "olderGenerationRetainers": {},
+    "fixtureIndexes": [],
+    "retainerExamples": [],
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 11915548,
+      "string": 5015585,
+      "object shape": 148128,
+      "code": 405156,
+      "array": 4290824,
+      "number": 708,
+      "symbol": 80,
+      "object": 2818092,
+      "concatenated string": 1980,
+      "closure": 90720
+    },
+    "largestNodes": [
+      {
+        "bytes": 11200000,
+        "nodeOffset": 2251560,
+        "type": "native",
+        "name": "system / JSArrayBufferData"
+      },
+      {
+        "bytes": 3670036,
+        "nodeOffset": 784542,
+        "type": "array",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "file": "0067-profile-miniplex-worker-100000-churn.json.main.world-disposed.heapsnapshot",
+    "nodes": 45083,
+    "componentPayloadCopies": 0,
+    "uniquePayloadIds": 0,
+    "idMappings": 0,
+    "undecodedCandidateIds": 3,
+    "olderGenerationPayloadCopies": 0,
+    "olderGenerationRetainers": {},
+    "fixtureIndexes": [],
+    "retainerExamples": [],
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 715480,
+      "string": 415641,
+      "object shape": 146720,
+      "code": 385216,
+      "array": 220980,
+      "number": 612,
+      "symbol": 80,
+      "object": 17444,
+      "concatenated string": 1980,
+      "closure": 90800
+    },
+    "largestNodes": []
+  },
+  {
+    "file": "0067-profile-miniplex-worker-100000-churn.json.worker.steady.heapsnapshot",
+    "nodes": 2514207,
+    "componentPayloadCopies": 101000,
+    "uniquePayloadIds": 101000,
+    "idMappings": 0,
+    "undecodedCandidateIds": 3,
+    "olderGenerationPayloadCopies": 1000,
+    "olderGenerationRetainers": {
+      "fixture.byOrdinal": 2000
+    },
+    "fixtureIndexes": [
+      {
+        "ownerOffset": 704154,
+        "arrayOffset": 426,
+        "payloadMembers": 0,
+        "olderGenerationMembers": 0
+      },
+      {
+        "ownerOffset": 705504,
+        "arrayOffset": 705510,
+        "payloadMembers": 100000,
+        "olderGenerationMembers": 1000
+      }
+    ],
+    "retainerExamples": [
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395396,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395402,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395408,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395414,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395420,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395426,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395432,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395438,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395444,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395450,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395456,
+        "edgeType": "element"
+      },
+      {
+        "ownerOffset": 705510,
+        "owner": "fixture.byOrdinal",
+        "targetOffset": 13395462,
+        "edgeType": "element"
+      }
+    ],
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 363434,
+      "string": 2611573,
+      "object shape": 65916,
+      "code": 640896,
+      "array": 22155344,
+      "number": 1549140,
+      "symbol": 16,
+      "object": 37052984,
+      "closure": 29772,
+      "concatenated string": 120
+    },
+    "largestNodes": [
+      {
+        "bytes": 3670036,
+        "nodeOffset": 14975010,
+        "type": "array",
+        "name": ""
+      },
+      {
+        "bytes": 3670036,
+        "nodeOffset": 14975238,
+        "type": "array",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "file": "0067-profile-miniplex-worker-100000-churn.json.worker.world-disposed.heapsnapshot",
+    "nodes": 25278,
+    "componentPayloadCopies": 0,
+    "uniquePayloadIds": 0,
+    "idMappings": 0,
+    "undecodedCandidateIds": 3,
+    "olderGenerationPayloadCopies": 0,
+    "olderGenerationRetainers": {},
+    "fixtureIndexes": [
+      {
+        "ownerOffset": 142704,
+        "arrayOffset": 426,
+        "payloadMembers": 0,
+        "olderGenerationMembers": 0
+      }
+    ],
+    "retainerExamples": [],
+    "selfBytesByType": {
+      "synthetic": 0,
+      "native": 328494,
+      "string": 17329,
+      "object shape": 58460,
+      "code": 451572,
+      "array": 130192,
+      "number": 504,
+      "symbol": 16,
+      "object": 6612,
+      "closure": 29100,
+      "concatenated string": 60
+    },
+    "largestNodes": []
+  }
+]

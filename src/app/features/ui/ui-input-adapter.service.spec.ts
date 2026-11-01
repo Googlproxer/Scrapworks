@@ -79,9 +79,11 @@ describe('UiInputAdapterService', () => {
   function frame(states: Record<string, ActionState>, context: ActionFrame['context'] = 'ui') {
     dispatch({ context, revision: 1, states });
   }
+
   function press(name: string, context: ActionFrame['context'] = 'ui') {
     frame({ [name]: { kind: 'button', held: true, pressed: true, released: false } }, context);
   }
+
   function navigate(x: number, y: number) {
     frame({ navigate: { kind: 'vector2', value: { x, y } } });
   }
@@ -213,10 +215,12 @@ describe('UiInputAdapterService', () => {
     const rows = [...overlay.querySelectorAll('tbody tr')].map((row) => [
       ...row.querySelectorAll<HTMLButtonElement>('button'),
     ]);
+
     const move = (x: number, y: number) => {
       navigate(0, 0);
       navigate(x, y);
     };
+
     rows[0][0].focus();
     move(0, -1);
     expect(document.activeElement).toBe(rows[1][0]);
@@ -689,5 +693,30 @@ describe('UiInputAdapterService', () => {
       .dispatchEvent(new KeyboardEvent('keydown', { code: 'Enter', bubbles: true }));
     expect(runtime.handleUiKeyboard).not.toHaveBeenCalled();
     outside.remove();
+  });
+
+  it('replaces its attachment without duplicate document subscriptions or held pointer input', () => {
+    runtime.capturingBinding.set(true);
+    ui.activeElement = overlay;
+    overlay.querySelector('button')!.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        button: 0,
+        pointerId: 7,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    expect(runtime.handleUiPointer).toHaveBeenLastCalledWith({ button: 0, down: true });
+    adapter.attach(page);
+    expect(runtime.handleUiPointer).toHaveBeenLastCalledWith({ button: 0, down: false });
+    runtime.handleUiKeyboard.mockClear();
+    page.querySelector('button')!.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        code: 'Enter',
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    expect(runtime.handleUiKeyboard).toHaveBeenCalledOnce();
   });
 });

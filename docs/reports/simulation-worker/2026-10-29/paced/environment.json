@@ -1,0 +1,248 @@
+{
+  "manifest": {
+    "schema": 1,
+    "command": "browser",
+    "arguments": [
+      "browser",
+      "--phase",
+      "paced",
+      "--output",
+      "tmp/simulation-worker-bench/reference-2026-10-29-callback-pacing"
+    ],
+    "label": "reference-desktop",
+    "createdAt": "2026-10-29T10:41:08.852Z",
+    "revision": "1b5e7d88af7791d39e72af5ee4d791a3a53c1602",
+    "dirty": "M docs/README.md\n M docs/design/TDD.md\n M docs/design/player-progression.md\n M docs/plans/README.md\n M docs/plans/milestone-03-character-and-manual-opening.md\n M docs/plans/milestone-10-portfolio-prototype.md\n?? docs/plans/simulation-worker-investigation.md\n?? docs/reports/simulation-worker/",
+    "source": {
+      "files": {
+        "tools/simulation-worker-bench/angular-probe.html": "15d70131e0c15abfa6babb0d0fddc6ebf29c68a2c487652d8141732ac5bacd80",
+        "tools/simulation-worker-bench/angular-probe.json": "3bad9b738915059bb1cf5761fa5506ec296b5c003554e289d084a20eed1d892c",
+        "tools/simulation-worker-bench/browser.html": "e43314502ce84c5bb8dfd2fd628761c43432982e7b40caa71e68694fd2925107",
+        "tools/simulation-worker-bench/browser.ts": "0e982cb4482fb847c83580d4510cafd78885b8a0f1f9a53191aa4deb5810976a",
+        "tools/simulation-worker-bench/check.ts": "7a5e86666af722fcff7aa4c96944aca4cf86bb37acb1a5192e0025bec37c4182",
+        "tools/simulation-worker-bench/cli.mjs": "c195770a13e6e2b45c423e8acf1f380b886099b9e1bbe1958910de5199c9ba12",
+        "tools/simulation-worker-bench/client.ts": "3dd8326da92ef1dbb3554b64f8c927d9791cf9dfc6772b505547cc51f6295c51",
+        "tools/simulation-worker-bench/packaging-check.mjs": "d2796ef151bdbff4b2fb34f1c6234037e601a417c352bb25e2978a70b6a837b5",
+        "tools/simulation-worker-bench/plot.py": "9db4e9b4b81993dd2ce13443f7eabd4894a81a29492107ad4218cb6d9c5c6285",
+        "tools/simulation-worker-bench/protocol.test.mjs": "8fddccc255ecdefa782f6b568d6080c97184911d763adb30c5eb5463f81460b2",
+        "tools/simulation-worker-bench/protocol.ts": "9d06005ee630d7049c35ebca8693f3870ea9899f4c672ca1956fe20b534b53b3",
+        "tools/simulation-worker-bench/qualification.json": "b4feb92d6bd932f1072a7f309939ccf8cbb71e1dd6b5e60b745e882f39d8de91",
+        "tools/simulation-worker-bench/report.mjs": "fb068e179367fbcf20b8a5d44041d4d1572544132e59b1459ed1706d360959a1",
+        "tools/simulation-worker-bench/runner.mjs": "d876b2475103eaa16bd783c5adf9ce914b8ee89b17b12e6266d0393ee75cece1",
+        "tools/simulation-worker-bench/runtime.ts": "f0b85240fa68c9d760dd7d864144cdcfb3a2abc9b8d025b3febe087245c2d201",
+        "tools/simulation-worker-bench/tsconfig.json": "75c19f30efdc7b08336657d8d94a8095929f94b668df15ad2ffcad733e3ae020",
+        "tools/simulation-worker-bench/worker.ts": "2cb16d5c965d2081bb889645213a6290584675b15d6e5bb6ec526b528a76e219",
+        "tools/ecs-bench/adapters/becsy.ts": "8ac9d9b17003320e5231ff23e2d149b9b8cefd99b14012b2b0c57893afbc0762",
+        "tools/ecs-bench/adapters/bitecs.ts": "cb4e9b7c3893d0684857a9683d8005284c3eaab0f17b56a85d4bf5ba05e1f5d4",
+        "tools/ecs-bench/adapters/koota.ts": "b321a5917e7a102520f8a3288ad9a5a2330220ef814bdffcde3129d7bf31e66c",
+        "tools/ecs-bench/adapters/miniplex.ts": "033a144a637dd65908e0f5eb0219858ad80face5052d00d8a40fc77ef8ec259a",
+        "tools/ecs-bench/adapters/reference.ts": "550e56d6cbd44a7a140b2e368f4ad15f4bab26fb52d101590320b49660596773",
+        "tools/ecs-bench/base.ts": "482ca5211cda2d4dab4bc8a4fe26b4c8a8b414dce55f280a114ae5dfef0d8f04",
+        "tools/ecs-bench/becsy.d.ts": "06ec43bedc13e2b7f7c4237de4874387fc4e1be4f7367f4fa07b40b4a7001f49",
+        "tools/ecs-bench/browser-worker.mjs": "4d2bff3e6760ad75b6c00383d322a1a63ee1d4b740dfd220c576e48ab416f6e1",
+        "tools/ecs-bench/browser.html": "7a1d609427845eb4d72961f3616b696cb0b36190e9ef62494437655e3adcbe6a",
+        "tools/ecs-bench/browser.ts": "7b285d30f408c3915d75325fd72bab7f4081f07bf4e74ccadbfc33f354b7b4bc",
+        "tools/ecs-bench/check.ts": "cb3e39c8e1583ad90c875afacf8a1ebedeb4d86a97bb1adbff2fae558c79f571",
+        "tools/ecs-bench/cli.mjs": "082efedebf18dc4bac17c5bdb851f72f5afd57db0564bf6bf4bf6337590ce085",
+        "tools/ecs-bench/consumer.ts": "9c98fadc6ac553e67c6d69649b47207b5b4b3e03ec4debeca37915519cb53955",
+        "tools/ecs-bench/experiment.ts": "bc6fce4ee2d988f9b90d299c6f80137484c565f5c8a8b0d2ec8f2e3d83676190",
+        "tools/ecs-bench/load.ts": "5c81efb573708844f2a9dc18daeb0cb878b66a19cfd5c6d3343b142e57732bca",
+        "tools/ecs-bench/maintainability.json": "bc85686569f29043dedb59a292a30f8dec2ef2ee31f57c2d52d15db6139a5d3c",
+        "tools/ecs-bench/model.ts": "deab82ed034ed4d2b49c19cf480d9250e9e6646c2280eb7bf89bc7460b9ec802",
+        "tools/ecs-bench/node-worker.mjs": "b430b97ed8f4e10bfe3328b9e3c5385f1b654a067854d58b3f3b96a36f58c6c7",
+        "tools/ecs-bench/options.mjs": "be6267e9a068406b766c3123fb97e181ad62ac46eb91dea27b187ca147b3ec21",
+        "tools/ecs-bench/plot-requirements.txt": "5ac19f72885e39e87481de0d3cdb12f0d341e36ea4a218a8d2ac76bcb38f970f",
+        "tools/ecs-bench/plot.py": "d336b24c528d35eac96ff8e83631ae6f3d3ff92a778cf8b2307ca318500cb3df",
+        "tools/ecs-bench/protocol.test.mjs": "f97a308b0fb49c0af62ad45b5d7aa1b1700a96f2ed8c2f78c340c7794512fab6",
+        "tools/ecs-bench/report.mjs": "33970d8cc307c03e0d33159266b6eb4ccfaca723c0e2c7cfdd02d55c795df96a",
+        "tools/ecs-bench/tsconfig.json": "a72d1905dc7b1020c22bec346358bd095690700e4a62a07470125a98cdf3d99d",
+        "tools/ecs-bench/verify-production.mjs": "c6dee68cdc947984671b1213430aa19d8308763942d1adac877e3d0622aca0f4",
+        "src/simulation/placement.ts": "00375200e70a0d90ea9d524ea3eb8c3d762d80304987dd91e87cdf367f479d93",
+        "src/simulation/player-motor.ts": "88bd4fc5b9c3dccb86532fb69d265d2b80055120c23c724313ccffa7851b2953",
+        "src/simulation/simulation.spec.ts": "c0ec9a8e208371a6bdea9341d4e6d05a5267afd15d8ae5797faf520b82747e36",
+        "src/simulation/simulation.ts": "6d5a61bb82575ee1ffb92dec11a445b618b7a12cef82a39fd48606a2ef49afc9",
+        "src/simulation/world-rules.ts": "a49e415c52eae3c306b2281136814741e448775c458afe38e42fcbe9477c4c37",
+        "src/simulation/world-state.ts": "92001e80750dd4acf17d8d427998c1858e5eedfdd83e75624ca21daac41ed1ab",
+        "src/core/world-grid.ts": "6356a6989c0eb25c1f59d5299277df648d393c78d4284e95c66ffd1276e82140",
+        "src/contracts/game-client.ts": "18e9900ee7daef611c4976b61a953128b443febc2ab53b0d63006c6ddb723ce6",
+        "src/contracts/game-state.ts": "c2b91646ffe66011a517b17ab3f687d0eb1859cac6f6775b4bf25b1038f1b206",
+        "src/contracts/game-tick.ts": "4bc323de23cbe3ce15474e8a7704d987a8ec6a1b3d064bdb7239fb57a0783386",
+        "src/contracts/input.ts": "6d258e4e8e2f7d30b8568488d14112bcaea41a2aa082d025628520f2cd7d29dd",
+        "src/contracts/world.ts": "610c0789fc2de98b453bb9f5437a21bef9722d539d0fec349dcb52d759019774",
+        "yarn.lock": "80bc0e7239149d238f0dd36b8b13b673e5a3b28ab078b2c31bbb49d831c76889",
+        "package.json": "fcbe7de3acb67b721da2ce8086f4d0d530ac1ec23079b00ba960b93ac8e1e795"
+      },
+      "hash": "2906a898ac78be81e92b9aa6f4acd67dc4452db6dbaaa29ed0263aef0e4ba1b1"
+    },
+    "primaryHotPathHash": "481cb8d367f830340ce8dab44a7c1d3a5dfb9160dcb35e8beeb4fcd485dfa84a",
+    "node": {
+      "node": "24.21.0",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.8",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.8",
+      "simdjson": "4.6.7",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026c",
+      "undici": "7.29.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.53",
+      "zlib": "1.3.2.1-motley-8002e91",
+      "zstd": "1.5.7"
+    },
+    "hardware": {
+      "cpu": "AMD Ryzen 9 7900X3D 12-Core Processor          ",
+      "logicalCpus": 24,
+      "memoryBytes": 68274266112,
+      "os": "win32 10.0.26300",
+      "architecture": "x64"
+    },
+    "packages": {
+      "miniplex": "2.0.0",
+      "bitecs": "0.4.0",
+      "playwright": "1.64.1",
+      "vite": "8.3.5",
+      "typescript": "6.0.3"
+    },
+    "protocol": {
+      "target": 100000,
+      "seed": 1729,
+      "stepMs": 50,
+      "catchupSteps": 5,
+      "ticks": 2000,
+      "warmupMs": 2000,
+      "warmupTicks": 200,
+      "repetitions": 5,
+      "timeoutMs": 120000,
+      "gates": {
+        "workerP95": 5,
+        "workerP99": 8,
+        "hostApplyP95": 2,
+        "hostApplyP99": 4,
+        "frameP95": 18.5,
+        "frameP99": 33.4,
+        "inputP95": 100,
+        "inputP99": 150
+      },
+      "frameTarget": 60,
+      "hz120": "emulated diagnostic only",
+      "sharedMemoryImplemented": false,
+      "simulationWorkersPerWorld": 1,
+      "outstandingBatches": 1,
+      "primaryWire": "object"
+    },
+    "qualification": {
+      "recordedDate": "2026-10-29",
+      "status": "Frozen after calibration, before reference qualification",
+      "warmupContext": "retained",
+      "frameMetric": "callback-arrival",
+      "targetEntities": 100000,
+      "requiredFrameRate": 60,
+      "diagnosticFrameRate": 120,
+      "gates": {
+        "workerP95": 5,
+        "workerP99": 8,
+        "hostApplyP95": 2,
+        "hostApplyP99": 4,
+        "frameP95": 18.5,
+        "frameP99": 33.4,
+        "inputP95": 100,
+        "inputP99": 150
+      },
+      "notes": [
+        "The proposed numerical budgets from the plan are retained without relaxation.",
+        "Cohort B primary timings are retained. Its paced RAF timeline intervals can hide delayed callback arrival. Cohort C repeats all paced cases using actual performance.now callback arrival gaps, with RAF timeline intervals and lateness retained separately. A 45 ms injected-stall check guards the frame metric.",
+        "Primary cohort A receiver callback cost is explicit JavaScript decode/cache application. Follow-up cohort B separately times MessageEvent.data access and the whole receiver callback, including request bookkeeping and explicit decode/application; this observed receiver timer may still exclude earlier browser-internal work. Host round trips and frame intervals include delivery.",
+        "Input-to-visible is sampled synthetic intent through applied-tick acknowledgement and the next presentation callback; physical input-to-photon and full-game rendering remain unqualified.",
+        "120 Hz is timer-emulated diagnostic pacing, not physical-display qualification.",
+        "Calibration-01 and all development smoke cohorts are excluded from reference ranking.",
+        "The planned cohort A worker-clock scheduler polls 49 ms after reply completion; those cases were not executed after the cadence confound was identified. Cohort B paired clocks poll from the prior dispatch, retaining one outstanding request. Cohort B repeats target qualification without pooling A samples; its clock diagnostics remain separate.",
+        "Cohort A replaced the warmed worker before measurement. Cohort B retains the worker and replaces only the disposable world; corrected target qualification uses B only.",
+        "Follow-up protocol checks explicitly acknowledge queued command cancellation on suspension and test new commands after restoration. Numerical qualification gates remain unchanged."
+      ]
+    }
+  },
+  "completion": {
+    "finishedAt": "2026-10-29T12:12:06.149Z",
+    "jobs": 128,
+    "failures": 0,
+    "elapsedMs": 5457107.089699999,
+    "sourceHash": "2906a898ac78be81e92b9aa6f4acd67dc4452db6dbaaa29ed0263aef0e4ba1b1"
+  },
+  "engine": {
+    "protocolVersion": "1.3",
+    "product": "HeadlessChrome/156.0.8078.4",
+    "revision": "@f842f52ef39fd97b449eb27cff414bf05a98ddce",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+    "jsVersion": "15.6.75"
+  },
+  "context": {
+    "timeOrigin": 1793270469510.6,
+    "isolated": false,
+    "sharedMemoryAvailable": false,
+    "hardwareConcurrency": 24,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36"
+  },
+  "launch": {
+    "unavailable": "Error: cdpSession.send: Protocol error (Browser.getBrowserCommandLine): Command line not returned because --enable-automation not set.",
+    "configuredArgs": [
+      "--js-flags=--expose-gc",
+      "--disable-background-timer-throttling",
+      "--disable-renderer-backgrounding",
+      "--disable-backgrounding-occluded-windows"
+    ],
+    "osCommandLine": "C:\\Users\\googl\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1248\\chrome-headless-shell-win64\\chrome-headless-shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --js-flags=--expose-gc --disable-background-timer-throttling --disable-renderer-backgrounding --disable-backgrounding-occluded-windows --user-data-dir=<fresh-profile> --remote-debugging-pipe --no-startup-window"
+  },
+  "packaging": {
+    "recordedAt": "2026-10-29T12:20:15.255Z",
+    "base": "/lab/",
+    "csp": "default-src 'none'; script-src 'self' 'sha256-LMY6wYoFV9I4wWzxaq1N/dTpl4iurQktw706UCHK3vM='; worker-src 'self'; connect-src 'self'; style-src 'self' 'sha256-itoG1yWyOH8+JTW8fYj2BJIqckT0+1iqx1rRT9ef7J0='; img-src 'self' data:",
+    "results": [
+      {
+        "candidate": "miniplex",
+        "status": "ok",
+        "ticks": 20,
+        "hash": "1e579be9d6597b1af7dd2709233cf66aa7ccc4205edc42a7ae8b7904a2d3ff0b",
+        "frames": 61,
+        "inputAcknowledgements": 4
+      },
+      {
+        "candidate": "bitecs",
+        "status": "ok",
+        "ticks": 20,
+        "hash": "1e579be9d6597b1af7dd2709233cf66aa7ccc4205edc42a7ae8b7904a2d3ff0b",
+        "frames": 61,
+        "inputAcknowledgements": 4
+      }
+    ],
+    "errors": [],
+    "a11y": {
+      "violations": [],
+      "passes": 13,
+      "incomplete": []
+    }
+  },
+  "ignoredRawDirectory": "tmp/simulation-worker-bench/reference-2026-10-29-callback-pacing",
+  "validation": {
+    "report": "../validation.json",
+    "status": "passed",
+    "packagingRevision": "1b5e7d88af7791d39e72af5ee4d791a3a53c1602",
+    "note": "Subsequent C-source Angular packaging verification; primary domain/protocol code is unchanged."
+  }
+}

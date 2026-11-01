@@ -31,7 +31,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '24'
+          node-version: '24.21.0'
           package-manager-cache: false
 
       - name: Enable the project's pinned Yarn version
@@ -59,8 +59,8 @@ jobs:
       - name: Lint application and templates
         run: yarn lint
 
-      - name: Test lint rules and configuration
-        run: yarn test:lint
+      - name: Typecheck and test development tools
+        run: yarn test:tools
 
       - name: Check documentation links and diagrams
         run: yarn docs:check
@@ -68,14 +68,21 @@ jobs:
       - name: Test scene export tooling
         run: yarn test:export
 
-      - name: Test world compilation and simulation
-        run: yarn test:world
+      - name: Typecheck and test game simulation and sessions
+        run: yarn test:game
 
       - name: Run Chromium application and accessibility tests
         run: yarn test
 
       - name: Build production application
-        run: yarn build
+        run: yarn build --stats-json
+
+      # Inspect the production build graph only; this does not run benchmarks.
+      - name: Enforce production worker/main dependency separation
+        run: node tools/ecs-bench/verify-production.ts
+
+      - name: Exercise the built simulation worker and failure Retry
+        run: yarn test:acceptance
 
       - name: Verify exported and built assets
         run: yarn assets:check --build
@@ -91,6 +98,7 @@ jobs:
           path: |
             tmp/workflow-browser/
             .vitest/
+            tmp/production-worker-browser/
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7

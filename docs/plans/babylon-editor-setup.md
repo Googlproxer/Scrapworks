@@ -100,24 +100,27 @@ Project `.codex/config.toml` registers `babylon-editor` . Reload the Codex MCP
 connection/session after adding this configuration. Keep this Editor project
 open when using its scene tools.
 
-`tools/editor-mcp/run-server.mjs` launches the official stdio server bundled in
+`tools/editor-mcp/run-server.ts` launches the official stdio server bundled in
 the installed Editor. Set `SCRAPWORKS_BABYLON_EDITOR_PATH` to its installation
 directory if automatic Windows discovery fails. The project plugin enables
 the Editor's official loopback scene bridge on port 3712 without modifying its
 installation. The loopback bridge is not a Streamable HTTP MCP endpoint.
+The existing local MCP configuration enters through the minimal `run-server.mjs`
+compatibility loader. The Editor requires `index.cjs`, which uses the pinned `jiti`
+loader to expose the TypeScript plugin in `index.ts`.
 
 Check the connection from the project root:
 
 ```sh
-yarn editor:mcp:check
-node tools/editor-mcp/check.mjs --list
-node tools/editor-mcp/check.mjs get_scene_hierarchy
+node tools/editor-mcp/check.ts
+node tools/editor-mcp/check.ts --list
+node tools/editor-mcp/check.ts get_scene_hierarchy
 ```
 
 The check initializes MCP, pings it, discovers 79 tools, and calls the requested
 live tool (default `get_active_scene` ). A missing Editor or bridge makes the
 live call fail. Tool discovery alone does not establish a live scene connection.
-`check.mjs` also accepts JSON arguments or `@path/to/arguments.json` and an
+`check.ts` also accepts JSON arguments or `@path/to/arguments.json` and an
 optional image output path. The Editor's native Save confirmation needs to be
 accepted in its window. Leave the Editor visible for screenshot/Play checks; 
 stop preview before editing.

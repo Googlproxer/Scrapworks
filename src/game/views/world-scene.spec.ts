@@ -50,7 +50,8 @@ describe('WorldScene with the exported character and authored scene', () => {
     session = new GameSession(definition, { developerFixture: true });
     bridge = {
       initialize: () => undefined,
-      registerTickHandler: (handler, order) => session.registerTickHandler(handler, order),
+      registerCompletedTickHandler: (handler, order) =>
+        session.registerCompletedTickHandler(handler, order),
       frame: (seconds, movement, sprint, active) => {
         session.setPaused(!active);
         session.setMovement(movement, sprint);

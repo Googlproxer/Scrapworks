@@ -1,0 +1,17 @@
+[
+  {
+    "candidate": "reference",
+    "pass": true,
+    "checks": "Independent field order, all kinds, asymmetric fractional coordinates/values, generation, next-tick work/charge/stamp and subscribed details"
+  },
+  {
+    "candidate": "miniplex",
+    "pass": true,
+    "checks": "Independent field order, all kinds, asymmetric fractional coordinates/values, generation, next-tick work/charge/stamp and subscribed details"
+  },
+  {
+    "candidate": "bitecs",
+    "pass": true,
+    "checks": "Independent field order, all kinds, asymmetric fractional coordinates/values, generation, next-tick work/charge/stamp and subscribed details"
+  }
+]

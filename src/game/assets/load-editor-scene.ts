@@ -9,6 +9,7 @@ import type { SceneKey } from '@contracts/game-state';
 import { loadScene, scriptsMap } from '../../scripts';
 
 type AuthoredSceneKey = Extract<SceneKey, 'MainMenu' | 'Game'>;
+
 const filenames: Record<AuthoredSceneKey, string> = {
   MainMenu: 'main-menu.babylon',
   Game: 'game.babylon',

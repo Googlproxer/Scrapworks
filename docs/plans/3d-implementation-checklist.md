@@ -22,11 +22,14 @@ yarn build
 yarn test
 yarn lint
 yarn test:lint
+yarn test:tools
+yarn test:game
 yarn test:world
 yarn test:export
 yarn test:workflow
 yarn assets:check --build
-yarn cleanup:audit
+yarn test:acceptance
+node tools/cleanup/audit-repository.ts --output tmp/cleanup/repository.json
 yarn docs:check
 ```
 

@@ -49,22 +49,28 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 | `yarn build` | Export scenes, then create a production build.                                  |
 | `yarn scenes:export` | Pack saved Editor inputs into generated browser assets and the script registry. |
 | `yarn test` | Export scenes and run the Chromium application suite once.                      |
-| `yarn test:unit` | Run application, simulation, capture and Inspector ownership tests without creating Babylon engines. |
+| `yarn test:unit` | Run Chromium UI, input/capture and Inspector ownership tests without creating Babylon engines. |
 | `yarn test:renderer` | Run the real Babylon device, Toolkit, renderer and authored-world integration tests. |
 | `yarn test:export` | Check staged export, retention, physics guards and watcher behavior.            |
-| `yarn test:world` | Run authored marker, coordinate, movement, scheduler and placement checks in Node without a renderer. |
+| `yarn test:game` | Typecheck and run Node simulation, domain, session and worker-transport tests. |
+| `yarn test:tools` | Typecheck tools and run compiler/export, resolver, dependency-audit and lint-rule tests. |
+| `yarn test:world` | Run focused authored marker compilation and world-export validation tests. |
+| `yarn test:acceptance` | Exercise the built game worker, movement, pause, crash/Retry and teardown; build with `--stats-json` first. |
 | `yarn test:workflow` | Verify dev reload/failure recovery in an isolated browser fixture.              |
 | `yarn test:watch` | Export scenes once, then watch application tests.                               |
 | `yarn test:setup` | Install the matching Playwright Chromium headless shell.                        |
 | `yarn lint` | Check TypeScript and Angular templates through the shared ESLint configuration. |
 | `yarn test:lint` | Check the custom rule and combined lint configuration.                          |
 | `yarn format` | Apply ESLint fixes and Prettier to application source.                          |
-| `yarn editor:mcp:check` | Check the desktop Editor connection with the project open.                      |
-| `node tools/cleanup/check-docs.mjs` | Check documentation links, anchors, and Mermaid source consistency.             |
+| `node tools/cleanup/check-docs.ts` | Check documentation links, anchors, and Mermaid source consistency.             |
 
 Direct Angular targets need `yarn scenes:export` first. Do not rely on an old `public/scene/` export or generated `src/scripts.ts` from a previous checkout.
 
-Use `yarn test:unit` for routine logic/UI changes, or `yarn test:unit --watch` while editing. These tests use client/device/scene doubles and still run in Chromium for DOM, IndexedDB, focus and accessibility checks. They currently need scene export for the default factory's generated script imports, even though they never construct its renderer. `yarn test:renderer` covers the tests that need a real engine: browser device wiring, native Toolkit lifecycle, WebGL/context loss, authored assets, animation and picking. `yarn test` continues to run both groups and remains the CI gate. Add future engine-dependent suites to both test configurations in `angular.json`.
+Occasional asset/repository audits, Editor connection checks and ECS/worker investigations use direct Node commands documented in the [tool catalogue](tools/README.md). Their package aliases have been removed; the catalogue includes replacements for commands found in historical reports. Tests, primary development commands and commands used by main CI remain package scripts.
+
+Plain game tests live under [tests/session and tests/simulation](tests/README.md), with browser acceptance probes under `tests/acceptance`. `yarn test:game` runs without Angular, scene export or a browser. Tool tests stay beside the tools they exercise. The [test audit](tests/README.md#audit-of-tests-previously-under-tools) records the separation and all relocated entry points.
+
+Use `yarn test:game` for plain simulation/session changes and `yarn test:unit` for browser UI/input changes, or `yarn test:unit --watch` while editing. The browser unit tests use client/device/scene doubles and run in Chromium for DOM, IndexedDB, focus and accessibility checks. They currently need scene export for the default factory's generated script imports, even though they never construct its renderer. `yarn test:renderer` covers the tests that need a real engine: browser device wiring, native Toolkit lifecycle, WebGL/context loss, authored assets, animation and picking. `yarn test` continues to run both Chromium groups and remains the CI gate. Add future engine-dependent suites to both test configurations in `angular.json`.
 
 Renderer behavior suites prepare the real authored world and character once per suite using [Babylon scene serialization](https://github.com/BabylonJS/Babylon.js/blob/master/packages/dev/core/src/Misc/sceneSerializer.ts). The test-only `AuthoredWorldFixture` retains JSON strings after disposing its source engine, then restores fresh geometry, materials, skeletons, animation groups and world definitions for each test. `WorldScene` tests reuse one engine's compiled shaders, reset render state and dimensions, and dispose every test scene; client lifecycle/context-loss tests retain separate engines. Scripts and simulation sessions are always reconstructed. An isolation regression mutates and disposes one owner while another remains usable. The client authored-load check, WorldScene construction-failure check and Angular Play Game/Retry tests still use the uncached production loaders, so snapshots do not replace end-to-end import coverage. Snapshots are rebuilt from the current exported assets on each test/watch run and are never committed.
 
@@ -74,9 +80,11 @@ Application tests fail on unexpected `console.error`, `console.warn` or `console
 
 [GitHub Actions CI](.github/workflows/ci.yml) runs on pull requests, pushes to `master`, and manual dispatch. It uses GitHub's `ubuntu-latest` runner, Node 24, and the Yarn version pinned in `package.json`, with an immutable lockfile install and a Yarn download cache. Chromium and its Linux dependencies are installed before browser checks.
 
-CI exports the authored scenes, then runs lint, lint-rule tests, documentation checks, scene-export tests, world/simulation tests, Chromium application/accessibility tests, a production build, built-asset validation, and the isolated development reload/recovery check. Successful runs retain the production build for seven days; browser diagnostics are retained when available, including on failure. The workflow validates and packages the application; deployment remains a separate task.
+Normal CI validates the shipping application, production simulation/session correctness, built-worker lifecycle and dependency separation. It runs no ECS/worker benchmark or comparison commands. The separate [ECS investigation](.github/workflows/ecs-bench.yml) and [worker qualification](.github/workflows/simulation-worker-bench.yml) workflows are manual-only; run them when new performance evidence is needed. The build-graph audit under `tools/ecs-bench/verify-production.ts` is a production dependency check and launches no benchmark trials.
 
-[Dependabot](.github/dependabot.yml) checks Yarn dependencies and GitHub Actions every Monday at 09:00 Australia/Sydney. Related Angular, Babylon, navigation, React/Fluent UI, browser-test, and lint packages are grouped; other minor/patch updates share a group and other major updates get separate PRs. Angular framework, CLI/devkit, CDK, and Angular ESLint major-version updates are excluded from Dependabot version updates: perform these upgrades manually with `ng update` so package migrations run. Angular minor and patch updates remain enabled. Actions use major-version tags maintained by Dependabot. Review Babylon Editor compatibility when merging dependency updates; CI does not run upgrade migrations or automatically merge PRs. The local Editor MCP package has no external dependencies, so the root manifest covers all current package updates.
+CI exports the authored scenes, then runs lint, tooling tests (including lint rules, scene export and world compilation), documentation checks, game simulation/session tests, Chromium application/accessibility tests, a production build, built-worker acceptance, built-asset validation, and the isolated development reload/recovery check. Successful runs retain the production build for seven days; browser diagnostics are retained when available, including on failure. The workflow validates and packages the application; deployment remains a separate task.
+
+[Dependabot](.github/dependabot.yml) checks Yarn dependencies and GitHub Actions every Monday at 09:00 Australia/Sydney. Related Angular, Babylon, navigation, React/Fluent UI, browser-test, and lint packages are grouped; other minor/patch updates share a group and other major updates get separate PRs. Angular framework, CLI/devkit, CDK, and Angular ESLint major-version updates are excluded from Dependabot version updates: perform these upgrades manually with `ng update` so package migrations run. Angular minor and patch updates remain enabled. Actions use major-version tags maintained by Dependabot. Review Babylon Editor compatibility when merging dependency updates; CI does not run upgrade migrations or automatically merge PRs. Keep the local Editor MCP package's pinned `jiti` loader aligned with the root development dependency when updating it.
 
 These configurations take effect after they are committed and pushed to GitHub; Dependabot configuration must be present on the default branch. Repository branch rules and Dependabot security-update settings are managed separately in GitHub. To require CI before merging, select the `Lint, test and build` check in the branch rule for `master` after its first run.
 
@@ -90,7 +98,9 @@ The local Editor MCP package uses Yarn's `portal:` protocol so Windows and Linux
 | `src/contracts/` | Plain renderer lifecycle, client, and event contracts.                          |
 | `src/game/` | Active 3D presentation adapter and authored-scene loader.                       |
 | `src/simulation/` | Plain authoritative world, fixed movement and collision/placement rules. |
+| `src/session/` | Renderer-neutral host coordination, presentation cache and simulation ports. |
 | `src/core/` | Framework-independent utilities.                                                |
+| `tests/` | Node game tests, fixtures/reference oracle and real application acceptance probes. |
 | `scrapworks.bjseditor` , `assets/` | Authored Editor project and complete scene/asset sources.                       |
 | `public/scene/` , `src/scripts.ts` | Generated Editor exports and script map; ignored by Git.                        |
 | `public/assets/` | Browser-served assets, including existing runtime copies still in use.          |
@@ -106,7 +116,9 @@ The [migration validation](docs/reports/migration/2026-10-23/README.md) and its 
 
 Browser tests require real canvas/WebGL APIs. Reinstall the headless browser after Playwright upgrades. Failure screenshots are ignored under `.vitest/` .
 
-Use `eslint.config.mjs` for application lint, Angular template accessibility, the custom access-modifier rule, and Prettier integration. Formatting preferences are in `.prettierrc` ; recommended editor extensions are under `.vscode/` .
+Use `eslint.config.ts` for application lint, Angular template accessibility, the typed custom access-modifier rule, and Prettier integration. ESLint loads the config through the explicit `jiti` development dependency; Node 24 runs the TypeScript tooling tests directly. `yarn test:lint` strictly typechecks all repository tools and the config/rules/tests before running the lint-rule tests. See the [tooling guide](tools/README.md#typescript-tooling) for direct commands and the two Editor compatibility loaders. Formatting preferences are in `.prettierrc` ; recommended editor extensions are under `.vscode/` .
+
+ESLint Stylistic requires a blank line around functions, interfaces, multiline type aliases, enums and exported declarations, and between class methods/constructors and their neighbours. Blank lines between single-line type aliases are optional. Related class fields and imports can stay grouped. Prettier preserves this spacing; `yarn format` applies both tools, and explicit saves in VS Code also run ESLint fixes. Use `yarn lint:fix` to apply the spacing rules directly.
 
 ## Production build
 

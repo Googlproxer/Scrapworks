@@ -32,6 +32,7 @@ const xboxButtons = {
   dpadLeft: XboxInput.DPadLeft,
   dpadRight: XboxInput.DPadRight,
 } satisfies Record<PadButton, number>;
+
 const dualSenseButtons = {
   south: DualSenseInput.Cross,
   east: DualSenseInput.Circle,
@@ -50,6 +51,7 @@ const dualSenseButtons = {
   dpadLeft: DualSenseInput.DPadLeft,
   dpadRight: DualSenseInput.DPadRight,
 } satisfies Record<PadButton, number>;
+
 const dualShockButtons = { ...dualSenseButtons, select: DualShockInput.Share };
 
 const mouseButtons: Partial<Record<number, MouseButton>> = {
@@ -141,10 +143,12 @@ export class InputCapture {
       else this.down.delete(id);
     }
     const axisStart = type === DeviceType.Xbox ? XboxInput.LStickXAxis : DualSenseInput.LStickXAxis;
+
     const axis = (offset: number) => {
       const value = source?.getInput(axisStart + offset) ?? 0;
       return Number.isFinite(value) ? Math.max(-1, Math.min(1, value)) : 0;
     };
+
     const previous = this.sticks;
     this.sticks = {
       left: { x: axis(0), y: -axis(1) || 0 },

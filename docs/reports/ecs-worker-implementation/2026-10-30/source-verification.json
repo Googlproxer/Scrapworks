@@ -1,0 +1,465 @@
+{
+  "run": "tmp/simulation-worker-bench/production-reference-final-2026-10-30",
+  "verifiedAt": "2026-10-30T02:13:22.173Z",
+  "sourceRevision": "73e85e638e1d25fadb725fa3248ceb9c8c097390",
+  "sourceFingerprint": "2411993621bce59a9671b90815cf59014faebab9354a8804e5f0345b0fb55208",
+  "allMatch": true,
+  "files": [
+    {
+      "file": "tools/simulation-worker-bench/angular-probe.html",
+      "expected": "15d70131e0c15abfa6babb0d0fddc6ebf29c68a2c487652d8141732ac5bacd80",
+      "actual": "15d70131e0c15abfa6babb0d0fddc6ebf29c68a2c487652d8141732ac5bacd80",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/angular-probe.json",
+      "expected": "3bad9b738915059bb1cf5761fa5506ec296b5c003554e289d084a20eed1d892c",
+      "actual": "3bad9b738915059bb1cf5761fa5506ec296b5c003554e289d084a20eed1d892c",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/browser.html",
+      "expected": "e43314502ce84c5bb8dfd2fd628761c43432982e7b40caa71e68694fd2925107",
+      "actual": "e43314502ce84c5bb8dfd2fd628761c43432982e7b40caa71e68694fd2925107",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/browser.ts",
+      "expected": "138e211872e06bb1bbecffed82200b810cea2ff6445f4d4c1b427803e12c6934",
+      "actual": "138e211872e06bb1bbecffed82200b810cea2ff6445f4d4c1b427803e12c6934",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/check.ts",
+      "expected": "4e44027ef2dfe9b831e50d789375c024de19707decf7ac89f46f0ee80ffe7ae8",
+      "actual": "4e44027ef2dfe9b831e50d789375c024de19707decf7ac89f46f0ee80ffe7ae8",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/cli.mjs",
+      "expected": "f8e0d6e8c9d359b943bd8dd24f7c8345806fbcc9a6c0f00c8575809868090e58",
+      "actual": "f8e0d6e8c9d359b943bd8dd24f7c8345806fbcc9a6c0f00c8575809868090e58",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/client.ts",
+      "expected": "cb6833a506ac66ac92de0041d8d91b52da3a9fdbcc628569a882b1cf225370f0",
+      "actual": "cb6833a506ac66ac92de0041d8d91b52da3a9fdbcc628569a882b1cf225370f0",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/packaging-check.mjs",
+      "expected": "9067032c9aa8c7780c3d805657c9f2ef953c623503f3541ebb451f10859c562a",
+      "actual": "9067032c9aa8c7780c3d805657c9f2ef953c623503f3541ebb451f10859c562a",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/plot.py",
+      "expected": "c194cf6c853cada71c65848df34fb0d3f545b7515da18156f36145060cb1e2d4",
+      "actual": "c194cf6c853cada71c65848df34fb0d3f545b7515da18156f36145060cb1e2d4",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/presentation.test.mjs",
+      "expected": "fe7b5da6195440981ebde6ed8eee8bf4081f67a1972c99709ba8a5dfb0173c0c",
+      "actual": "fe7b5da6195440981ebde6ed8eee8bf4081f67a1972c99709ba8a5dfb0173c0c",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/presentation.ts",
+      "expected": "a8d693fe97606f4c896f1173b5a347a2dc457c26702ee0c88817e4ee0b917efb",
+      "actual": "a8d693fe97606f4c896f1173b5a347a2dc457c26702ee0c88817e4ee0b917efb",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/production-browser.ts",
+      "expected": "5355f9cd263fd30767cf23208713cc4bd7226a6177248af86654efb8ef4eb77b",
+      "actual": "5355f9cd263fd30767cf23208713cc4bd7226a6177248af86654efb8ef4eb77b",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/production-fixture.ts",
+      "expected": "52c01e010ed87fbcfd24f243eedde392fbe8bb4b36cb45c886146ee75506aa10",
+      "actual": "52c01e010ed87fbcfd24f243eedde392fbe8bb4b36cb45c886146ee75506aa10",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/production-measure.ts",
+      "expected": "c112e6f12d6aa5a1305cb6b6290625922ff9d5bea15d73ac1e8ac5db72e3653d",
+      "actual": "c112e6f12d6aa5a1305cb6b6290625922ff9d5bea15d73ac1e8ac5db72e3653d",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/production-worker.ts",
+      "expected": "c8f298433ff8501c04057f0125b8afdf5308d20869f26f0b2b202da9e074e85a",
+      "actual": "c8f298433ff8501c04057f0125b8afdf5308d20869f26f0b2b202da9e074e85a",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/production.html",
+      "expected": "9b9ab3b9cd82926a1785ac5aec6e221be7cc1ae24e8817ac0b5274384925351b",
+      "actual": "9b9ab3b9cd82926a1785ac5aec6e221be7cc1ae24e8817ac0b5274384925351b",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/protocol.test.mjs",
+      "expected": "8fddccc255ecdefa782f6b568d6080c97184911d763adb30c5eb5463f81460b2",
+      "actual": "8fddccc255ecdefa782f6b568d6080c97184911d763adb30c5eb5463f81460b2",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/protocol.ts",
+      "expected": "6fbebb4e13bc64b0b59b0e3dcff7f85256cbac18b1e0851df5da3530ce0ad14f",
+      "actual": "6fbebb4e13bc64b0b59b0e3dcff7f85256cbac18b1e0851df5da3530ce0ad14f",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/qualification.json",
+      "expected": "b4feb92d6bd932f1072a7f309939ccf8cbb71e1dd6b5e60b745e882f39d8de91",
+      "actual": "b4feb92d6bd932f1072a7f309939ccf8cbb71e1dd6b5e60b745e882f39d8de91",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/report.mjs",
+      "expected": "ef348850a94278420b8a190f21ff0443a044db38f7450f9499f3f07699c06785",
+      "actual": "ef348850a94278420b8a190f21ff0443a044db38f7450f9499f3f07699c06785",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/runner.mjs",
+      "expected": "d876b2475103eaa16bd783c5adf9ce914b8ee89b17b12e6266d0393ee75cece1",
+      "actual": "d876b2475103eaa16bd783c5adf9ce914b8ee89b17b12e6266d0393ee75cece1",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/runtime.ts",
+      "expected": "54a1dbe6c87d6208bf1267c69bd300f14dd8fdd1234298d12dfc1188ce3712e9",
+      "actual": "54a1dbe6c87d6208bf1267c69bd300f14dd8fdd1234298d12dfc1188ce3712e9",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/tsconfig.json",
+      "expected": "75c19f30efdc7b08336657d8d94a8095929f94b668df15ad2ffcad733e3ae020",
+      "actual": "75c19f30efdc7b08336657d8d94a8095929f94b668df15ad2ffcad733e3ae020",
+      "match": true
+    },
+    {
+      "file": "tools/simulation-worker-bench/worker.ts",
+      "expected": "936b3392db2e126fed4299c2c8ec3d8136a9b98b287cd333d2b398c4e9963cff",
+      "actual": "936b3392db2e126fed4299c2c8ec3d8136a9b98b287cd333d2b398c4e9963cff",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/adapters/becsy.ts",
+      "expected": "8ac9d9b17003320e5231ff23e2d149b9b8cefd99b14012b2b0c57893afbc0762",
+      "actual": "8ac9d9b17003320e5231ff23e2d149b9b8cefd99b14012b2b0c57893afbc0762",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/adapters/bitecs.ts",
+      "expected": "cb4e9b7c3893d0684857a9683d8005284c3eaab0f17b56a85d4bf5ba05e1f5d4",
+      "actual": "cb4e9b7c3893d0684857a9683d8005284c3eaab0f17b56a85d4bf5ba05e1f5d4",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/adapters/koota.ts",
+      "expected": "b321a5917e7a102520f8a3288ad9a5a2330220ef814bdffcde3129d7bf31e66c",
+      "actual": "b321a5917e7a102520f8a3288ad9a5a2330220ef814bdffcde3129d7bf31e66c",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/adapters/miniplex.ts",
+      "expected": "033a144a637dd65908e0f5eb0219858ad80face5052d00d8a40fc77ef8ec259a",
+      "actual": "033a144a637dd65908e0f5eb0219858ad80face5052d00d8a40fc77ef8ec259a",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/adapters/reference.ts",
+      "expected": "550e56d6cbd44a7a140b2e368f4ad15f4bab26fb52d101590320b49660596773",
+      "actual": "550e56d6cbd44a7a140b2e368f4ad15f4bab26fb52d101590320b49660596773",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/base.ts",
+      "expected": "b10d18b72c26dbb8a2afcae722238356037a04bd276e902b56349f3f381f7878",
+      "actual": "b10d18b72c26dbb8a2afcae722238356037a04bd276e902b56349f3f381f7878",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/becsy.d.ts",
+      "expected": "06ec43bedc13e2b7f7c4237de4874387fc4e1be4f7367f4fa07b40b4a7001f49",
+      "actual": "06ec43bedc13e2b7f7c4237de4874387fc4e1be4f7367f4fa07b40b4a7001f49",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/browser-worker.mjs",
+      "expected": "4d2bff3e6760ad75b6c00383d322a1a63ee1d4b740dfd220c576e48ab416f6e1",
+      "actual": "4d2bff3e6760ad75b6c00383d322a1a63ee1d4b740dfd220c576e48ab416f6e1",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/browser.html",
+      "expected": "7a1d609427845eb4d72961f3616b696cb0b36190e9ef62494437655e3adcbe6a",
+      "actual": "7a1d609427845eb4d72961f3616b696cb0b36190e9ef62494437655e3adcbe6a",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/browser.ts",
+      "expected": "7b285d30f408c3915d75325fd72bab7f4081f07bf4e74ccadbfc33f354b7b4bc",
+      "actual": "7b285d30f408c3915d75325fd72bab7f4081f07bf4e74ccadbfc33f354b7b4bc",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/check.ts",
+      "expected": "cb3e39c8e1583ad90c875afacf8a1ebedeb4d86a97bb1adbff2fae558c79f571",
+      "actual": "cb3e39c8e1583ad90c875afacf8a1ebedeb4d86a97bb1adbff2fae558c79f571",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/cli.mjs",
+      "expected": "082efedebf18dc4bac17c5bdb851f72f5afd57db0564bf6bf4bf6337590ce085",
+      "actual": "082efedebf18dc4bac17c5bdb851f72f5afd57db0564bf6bf4bf6337590ce085",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/consumer.ts",
+      "expected": "9c98fadc6ac553e67c6d69649b47207b5b4b3e03ec4debeca37915519cb53955",
+      "actual": "9c98fadc6ac553e67c6d69649b47207b5b4b3e03ec4debeca37915519cb53955",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/experiment.ts",
+      "expected": "bc6fce4ee2d988f9b90d299c6f80137484c565f5c8a8b0d2ec8f2e3d83676190",
+      "actual": "bc6fce4ee2d988f9b90d299c6f80137484c565f5c8a8b0d2ec8f2e3d83676190",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/load.ts",
+      "expected": "5c81efb573708844f2a9dc18daeb0cb878b66a19cfd5c6d3343b142e57732bca",
+      "actual": "5c81efb573708844f2a9dc18daeb0cb878b66a19cfd5c6d3343b142e57732bca",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/maintainability.json",
+      "expected": "bc85686569f29043dedb59a292a30f8dec2ef2ee31f57c2d52d15db6139a5d3c",
+      "actual": "bc85686569f29043dedb59a292a30f8dec2ef2ee31f57c2d52d15db6139a5d3c",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/model.ts",
+      "expected": "deab82ed034ed4d2b49c19cf480d9250e9e6646c2280eb7bf89bc7460b9ec802",
+      "actual": "deab82ed034ed4d2b49c19cf480d9250e9e6646c2280eb7bf89bc7460b9ec802",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/node-worker.mjs",
+      "expected": "b430b97ed8f4e10bfe3328b9e3c5385f1b654a067854d58b3f3b96a36f58c6c7",
+      "actual": "b430b97ed8f4e10bfe3328b9e3c5385f1b654a067854d58b3f3b96a36f58c6c7",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/options.mjs",
+      "expected": "be6267e9a068406b766c3123fb97e181ad62ac46eb91dea27b187ca147b3ec21",
+      "actual": "be6267e9a068406b766c3123fb97e181ad62ac46eb91dea27b187ca147b3ec21",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/plot-requirements.txt",
+      "expected": "5ac19f72885e39e87481de0d3cdb12f0d341e36ea4a218a8d2ac76bcb38f970f",
+      "actual": "5ac19f72885e39e87481de0d3cdb12f0d341e36ea4a218a8d2ac76bcb38f970f",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/plot.py",
+      "expected": "d336b24c528d35eac96ff8e83631ae6f3d3ff92a778cf8b2307ca318500cb3df",
+      "actual": "d336b24c528d35eac96ff8e83631ae6f3d3ff92a778cf8b2307ca318500cb3df",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/protocol.test.mjs",
+      "expected": "f97a308b0fb49c0af62ad45b5d7aa1b1700a96f2ed8c2f78c340c7794512fab6",
+      "actual": "f97a308b0fb49c0af62ad45b5d7aa1b1700a96f2ed8c2f78c340c7794512fab6",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/report.mjs",
+      "expected": "33970d8cc307c03e0d33159266b6eb4ccfaca723c0e2c7cfdd02d55c795df96a",
+      "actual": "33970d8cc307c03e0d33159266b6eb4ccfaca723c0e2c7cfdd02d55c795df96a",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/tsconfig.json",
+      "expected": "a72d1905dc7b1020c22bec346358bd095690700e4a62a07470125a98cdf3d99d",
+      "actual": "a72d1905dc7b1020c22bec346358bd095690700e4a62a07470125a98cdf3d99d",
+      "match": true
+    },
+    {
+      "file": "tools/ecs-bench/verify-production.mjs",
+      "expected": "6e3bf233d8a8bf025958d3bbe01dfdeac93b1e8654278c9f12bc8858447497b7",
+      "actual": "6e3bf233d8a8bf025958d3bbe01dfdeac93b1e8654278c9f12bc8858447497b7",
+      "match": true
+    },
+    {
+      "file": "src/simulation/capture.ts",
+      "expected": "d10b4d76f92ee07b7b28d3d8798db18b6ae36d52a3b3670097eadd7f5dea9247",
+      "actual": "d10b4d76f92ee07b7b28d3d8798db18b6ae36d52a3b3670097eadd7f5dea9247",
+      "match": true
+    },
+    {
+      "file": "src/simulation/domain/inventory.ts",
+      "expected": "52185333cab27210956e3b80804c4ccb14ea747b1e752505777903b8337e1cd9",
+      "actual": "52185333cab27210956e3b80804c4ccb14ea747b1e752505777903b8337e1cd9",
+      "match": true
+    },
+    {
+      "file": "src/simulation/domain/work.ts",
+      "expected": "af0dcd5326cbc998397082f6af6349f176636ed7cbe4578b912a8b94c70dcfdf",
+      "actual": "af0dcd5326cbc998397082f6af6349f176636ed7cbe4578b912a8b94c70dcfdf",
+      "match": true
+    },
+    {
+      "file": "src/simulation/ecs-runtime.ts",
+      "expected": "f77f3eb09e85b4f48b2855636eea5aa05b412666ffda42dc2b05a70ba5f90d8c",
+      "actual": "f77f3eb09e85b4f48b2855636eea5aa05b412666ffda42dc2b05a70ba5f90d8c",
+      "match": true
+    },
+    {
+      "file": "src/simulation/placement.ts",
+      "expected": "00375200e70a0d90ea9d524ea3eb8c3d762d80304987dd91e87cdf367f479d93",
+      "actual": "00375200e70a0d90ea9d524ea3eb8c3d762d80304987dd91e87cdf367f479d93",
+      "match": true
+    },
+    {
+      "file": "src/simulation/player-motor.ts",
+      "expected": "6bf4d628289b773d58085a7bac4ba8a5edbd6a4cd6995a995be875e7dcb946fd",
+      "actual": "6bf4d628289b773d58085a7bac4ba8a5edbd6a4cd6995a995be875e7dcb946fd",
+      "match": true
+    },
+    {
+      "file": "src/simulation/simulation.spec.ts",
+      "expected": "c0ec9a8e208371a6bdea9341d4e6d05a5267afd15d8ae5797faf520b82747e36",
+      "actual": "c0ec9a8e208371a6bdea9341d4e6d05a5267afd15d8ae5797faf520b82747e36",
+      "match": true
+    },
+    {
+      "file": "src/simulation/simulation.ts",
+      "expected": "061a6fbefa4d7ba31e9344371ae3c71aa6d9fd05291c8cf19978ef3e678c72c6",
+      "actual": "061a6fbefa4d7ba31e9344371ae3c71aa6d9fd05291c8cf19978ef3e678c72c6",
+      "match": true
+    },
+    {
+      "file": "src/simulation/world-rules.ts",
+      "expected": "a49e415c52eae3c306b2281136814741e448775c458afe38e42fcbe9477c4c37",
+      "actual": "a49e415c52eae3c306b2281136814741e448775c458afe38e42fcbe9477c4c37",
+      "match": true
+    },
+    {
+      "file": "src/simulation/world-state.ts",
+      "expected": "37360d3e35ffa474ac6f71fd90535464aeacb2ac71b571b91a0ef4a0379e718c",
+      "actual": "37360d3e35ffa474ac6f71fd90535464aeacb2ac71b571b91a0ef4a0379e718c",
+      "match": true
+    },
+    {
+      "file": "src/core/world-grid.ts",
+      "expected": "6356a6989c0eb25c1f59d5299277df648d393c78d4284e95c66ffd1276e82140",
+      "actual": "6356a6989c0eb25c1f59d5299277df648d393c78d4284e95c66ffd1276e82140",
+      "match": true
+    },
+    {
+      "file": "src/contracts/game-client.ts",
+      "expected": "a89113745a7f1535f5d85e4228ef8c1c9aa690efad205f48caf0a9d4129ffe67",
+      "actual": "a89113745a7f1535f5d85e4228ef8c1c9aa690efad205f48caf0a9d4129ffe67",
+      "match": true
+    },
+    {
+      "file": "src/contracts/game-state.ts",
+      "expected": "c2b91646ffe66011a517b17ab3f687d0eb1859cac6f6775b4bf25b1038f1b206",
+      "actual": "c2b91646ffe66011a517b17ab3f687d0eb1859cac6f6775b4bf25b1038f1b206",
+      "match": true
+    },
+    {
+      "file": "src/contracts/game-tick.ts",
+      "expected": "12835af02959acca1b9cabf2b98a191866746f616bfb4fdb0b5c20b76645704f",
+      "actual": "12835af02959acca1b9cabf2b98a191866746f616bfb4fdb0b5c20b76645704f",
+      "match": true
+    },
+    {
+      "file": "src/contracts/input.ts",
+      "expected": "6d258e4e8e2f7d30b8568488d14112bcaea41a2aa082d025628520f2cd7d29dd",
+      "actual": "6d258e4e8e2f7d30b8568488d14112bcaea41a2aa082d025628520f2cd7d29dd",
+      "match": true
+    },
+    {
+      "file": "src/contracts/simulation.ts",
+      "expected": "b5bfbdb482793366ff01cf76030b34b8a23ccda1957613690061b5a1018a6dcb",
+      "actual": "b5bfbdb482793366ff01cf76030b34b8a23ccda1957613690061b5a1018a6dcb",
+      "match": true
+    },
+    {
+      "file": "src/contracts/world.ts",
+      "expected": "bb4bd214c281f9f01192c1b2bbacb35846362d1a72a116188f006e7b85122970",
+      "actual": "bb4bd214c281f9f01192c1b2bbacb35846362d1a72a116188f006e7b85122970",
+      "match": true
+    },
+    {
+      "file": "src/session/game-session.ts",
+      "expected": "9b4575f2417a78dc0f1d335298a00f61ec23fe4ca2cb2f254b45745c60554b69",
+      "actual": "9b4575f2417a78dc0f1d335298a00f61ec23fe4ca2cb2f254b45745c60554b69",
+      "match": true
+    },
+    {
+      "file": "src/session/inline-game-session.ts",
+      "expected": "99d0c7997ab8d202537230cf7da9b230ee0740d28c1dedcec59551c742f4425d",
+      "actual": "99d0c7997ab8d202537230cf7da9b230ee0740d28c1dedcec59551c742f4425d",
+      "match": true
+    },
+    {
+      "file": "src/session/inline-port.ts",
+      "expected": "b0e1a8bfbdcd56ed2baf58b2302dba62778899be73adc4d8018a8072c43b7d37",
+      "actual": "b0e1a8bfbdcd56ed2baf58b2302dba62778899be73adc4d8018a8072c43b7d37",
+      "match": true
+    },
+    {
+      "file": "src/session/port.ts",
+      "expected": "a3d7d146c3f9d02237a92a44509ea9240bfff5aaa162bdc1c1c8afa76f9a2995",
+      "actual": "a3d7d146c3f9d02237a92a44509ea9240bfff5aaa162bdc1c1c8afa76f9a2995",
+      "match": true
+    },
+    {
+      "file": "src/session/presentation-cache.ts",
+      "expected": "5f7f8e2d9761ef35f3c7100ceea028c6dca7f664f7f3115a538223e57e684fca",
+      "actual": "5f7f8e2d9761ef35f3c7100ceea028c6dca7f664f7f3115a538223e57e684fca",
+      "match": true
+    },
+    {
+      "file": "src/session/runtime.ts",
+      "expected": "15bd1f50bc5d4803fb8973600bd594c76ddc3f74271629bab059106739d0d227",
+      "actual": "15bd1f50bc5d4803fb8973600bd594c76ddc3f74271629bab059106739d0d227",
+      "match": true
+    },
+    {
+      "file": "src/session/worker-port.ts",
+      "expected": "a0b792151ad7e684d7105285311066e903fd91bad47ad7e8587f9ee3ee4c10ff",
+      "actual": "a0b792151ad7e684d7105285311066e903fd91bad47ad7e8587f9ee3ee4c10ff",
+      "match": true
+    },
+    {
+      "file": "src/workers/simulation.worker.ts",
+      "expected": "885a6d45b80532e229d0aa0705bd0fc1fe45d3756c611586c482e448db111026",
+      "actual": "885a6d45b80532e229d0aa0705bd0fc1fe45d3756c611586c482e448db111026",
+      "match": true
+    },
+    {
+      "file": "yarn.lock",
+      "expected": "80bc0e7239149d238f0dd36b8b13b673e5a3b28ab078b2c31bbb49d831c76889",
+      "actual": "80bc0e7239149d238f0dd36b8b13b673e5a3b28ab078b2c31bbb49d831c76889",
+      "match": true
+    },
+    {
+      "file": "package.json",
+      "expected": "62de7c044958f642933519deb8d5e1c2880bc3d43bc4acead4334394f09d5860",
+      "actual": "62de7c044958f642933519deb8d5e1c2880bc3d43bc4acead4334394f09d5860",
+      "match": true
+    }
+  ]
+}

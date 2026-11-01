@@ -1,4 +1,5 @@
 import type { ButtonControl, Vector2Binding } from '@contracts/input';
+
 export type { Context, RawInput, ButtonState, ActionState, ActionFrame } from '@contracts/input';
 
 export type Rule =

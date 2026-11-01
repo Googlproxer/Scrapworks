@@ -1,5 +1,7 @@
 import type { Scene } from '@babylonjs/core/scene';
 import type { InspectorState } from '@contracts/game-client';
+import { Subscription, take } from 'rxjs';
+import { fromBabylonObservable } from '../lifecycle/from-babylon-observable';
 
 export interface InspectorHandle {
   dispose(): void | Promise<void>;
@@ -7,6 +9,7 @@ export interface InspectorHandle {
 }
 
 export type InspectorFactory = (scene: Scene, host: HTMLElement) => InspectorHandle;
+
 export type InspectorLoader = () => Promise<InspectorFactory | null>;
 
 /** Owns one Inspector instance and invalidates lazy loads when its scene or request changes. */
@@ -17,8 +20,7 @@ export class SceneInspector {
   private scene?: Scene;
   private host?: HTMLElement;
   private handle?: InspectorHandle;
-  private unsubscribeClose?: () => void;
-  private unsubscribeScene?: () => void;
+  private subscriptions = new Subscription();
   private readonly cleanupTasks = new Set<Promise<void>>();
   private pendingCleanup?: Promise<void>;
 
@@ -47,10 +49,14 @@ export class SceneInspector {
     if (!this.current(revision)) return;
     this.scene = scene;
     this.host = host;
-    const observer = scene.onDisposeObservable.addOnce(() => {
-      if (this.current(revision)) this.close();
-    });
-    this.unsubscribeScene = () => scene.onDisposeObservable.remove(observer);
+    const subscriptions = this.subscriptions;
+    subscriptions.add(
+      fromBabylonObservable(scene.onDisposeObservable)
+        .pipe(take(1))
+        .subscribe(() => {
+          if (this.current(revision)) this.close();
+        }),
+    );
     this.publish({ phase: 'loading', errorMessage: null });
     if (!this.current(revision)) return;
 
@@ -80,7 +86,7 @@ export class SceneInspector {
         unsubscribe();
         return;
       }
-      this.unsubscribeClose = unsubscribe;
+      subscriptions.add(unsubscribe);
       this.publish({ phase: 'open', errorMessage: null });
     } catch (error) {
       if (!this.current(revision)) return;
@@ -111,15 +117,12 @@ export class SceneInspector {
 
   private release(): void {
     const handle = this.handle;
-    const unsubscribeClose = this.unsubscribeClose;
-    const unsubscribeScene = this.unsubscribeScene;
+    const subscriptions = this.subscriptions;
     this.handle = undefined;
-    this.unsubscribeClose = undefined;
-    this.unsubscribeScene = undefined;
+    this.subscriptions = new Subscription();
     this.scene = undefined;
     this.host = undefined;
-    unsubscribeClose?.();
-    unsubscribeScene?.();
+    subscriptions.unsubscribe();
     if (handle) this.disposeHandle(handle);
   }
 

@@ -1,0 +1,1608 @@
+{
+  "manifest": {
+    "schema": 1,
+    "runtime": "production",
+    "command": "browser",
+    "arguments": [
+      "browser",
+      "--production",
+      "--presentation",
+      "lean",
+      "--phase",
+      "lean",
+      "--output",
+      "tmp/simulation-worker-bench/production-reference-final-2026-10-30"
+    ],
+    "label": "reference-desktop",
+    "createdAt": "2026-10-30T00:50:08.204Z",
+    "revision": "73e85e638e1d25fadb725fa3248ceb9c8c097390",
+    "dirty": "M docs/design/TDD.md\n M docs/diagrams/core-class-diagram.png\n M docs/diagrams/core-class-diagram.svg\n M docs/diagrams/fixed-step-loop.png\n M docs/diagrams/fixed-step-loop.svg\n M docs/diagrams/module-dependencies.png\n M docs/diagrams/module-dependencies.svg\n M docs/diagrams/src/core-class-diagram.mmd\n M docs/diagrams/src/fixed-step-loop.mmd\n M docs/diagrams/src/gameplay-interactions.mmd\n M docs/diagrams/src/module-dependencies.mmd\n M docs/diagrams/src/system-interactions.mmd\n M docs/diagrams/system-interactions.png\n M docs/diagrams/system-interactions.svg\n M docs/plans/3d-phase-2-walkthrough.md\n M docs/plans/README.md",
+    "source": {
+      "files": {
+        "tools/simulation-worker-bench/angular-probe.html": "15d70131e0c15abfa6babb0d0fddc6ebf29c68a2c487652d8141732ac5bacd80",
+        "tools/simulation-worker-bench/angular-probe.json": "3bad9b738915059bb1cf5761fa5506ec296b5c003554e289d084a20eed1d892c",
+        "tools/simulation-worker-bench/browser.html": "e43314502ce84c5bb8dfd2fd628761c43432982e7b40caa71e68694fd2925107",
+        "tools/simulation-worker-bench/browser.ts": "138e211872e06bb1bbecffed82200b810cea2ff6445f4d4c1b427803e12c6934",
+        "tools/simulation-worker-bench/check.ts": "4e44027ef2dfe9b831e50d789375c024de19707decf7ac89f46f0ee80ffe7ae8",
+        "tools/simulation-worker-bench/cli.mjs": "f8e0d6e8c9d359b943bd8dd24f7c8345806fbcc9a6c0f00c8575809868090e58",
+        "tools/simulation-worker-bench/client.ts": "cb6833a506ac66ac92de0041d8d91b52da3a9fdbcc628569a882b1cf225370f0",
+        "tools/simulation-worker-bench/packaging-check.mjs": "9067032c9aa8c7780c3d805657c9f2ef953c623503f3541ebb451f10859c562a",
+        "tools/simulation-worker-bench/plot.py": "c194cf6c853cada71c65848df34fb0d3f545b7515da18156f36145060cb1e2d4",
+        "tools/simulation-worker-bench/presentation.test.mjs": "fe7b5da6195440981ebde6ed8eee8bf4081f67a1972c99709ba8a5dfb0173c0c",
+        "tools/simulation-worker-bench/presentation.ts": "a8d693fe97606f4c896f1173b5a347a2dc457c26702ee0c88817e4ee0b917efb",
+        "tools/simulation-worker-bench/production-browser.ts": "5355f9cd263fd30767cf23208713cc4bd7226a6177248af86654efb8ef4eb77b",
+        "tools/simulation-worker-bench/production-fixture.ts": "52c01e010ed87fbcfd24f243eedde392fbe8bb4b36cb45c886146ee75506aa10",
+        "tools/simulation-worker-bench/production-measure.ts": "c112e6f12d6aa5a1305cb6b6290625922ff9d5bea15d73ac1e8ac5db72e3653d",
+        "tools/simulation-worker-bench/production-worker.ts": "c8f298433ff8501c04057f0125b8afdf5308d20869f26f0b2b202da9e074e85a",
+        "tools/simulation-worker-bench/production.html": "9b9ab3b9cd82926a1785ac5aec6e221be7cc1ae24e8817ac0b5274384925351b",
+        "tools/simulation-worker-bench/protocol.test.mjs": "8fddccc255ecdefa782f6b568d6080c97184911d763adb30c5eb5463f81460b2",
+        "tools/simulation-worker-bench/protocol.ts": "6fbebb4e13bc64b0b59b0e3dcff7f85256cbac18b1e0851df5da3530ce0ad14f",
+        "tools/simulation-worker-bench/qualification.json": "b4feb92d6bd932f1072a7f309939ccf8cbb71e1dd6b5e60b745e882f39d8de91",
+        "tools/simulation-worker-bench/report.mjs": "ef348850a94278420b8a190f21ff0443a044db38f7450f9499f3f07699c06785",
+        "tools/simulation-worker-bench/runner.mjs": "d876b2475103eaa16bd783c5adf9ce914b8ee89b17b12e6266d0393ee75cece1",
+        "tools/simulation-worker-bench/runtime.ts": "54a1dbe6c87d6208bf1267c69bd300f14dd8fdd1234298d12dfc1188ce3712e9",
+        "tools/simulation-worker-bench/tsconfig.json": "75c19f30efdc7b08336657d8d94a8095929f94b668df15ad2ffcad733e3ae020",
+        "tools/simulation-worker-bench/worker.ts": "936b3392db2e126fed4299c2c8ec3d8136a9b98b287cd333d2b398c4e9963cff",
+        "tools/ecs-bench/adapters/becsy.ts": "8ac9d9b17003320e5231ff23e2d149b9b8cefd99b14012b2b0c57893afbc0762",
+        "tools/ecs-bench/adapters/bitecs.ts": "cb4e9b7c3893d0684857a9683d8005284c3eaab0f17b56a85d4bf5ba05e1f5d4",
+        "tools/ecs-bench/adapters/koota.ts": "b321a5917e7a102520f8a3288ad9a5a2330220ef814bdffcde3129d7bf31e66c",
+        "tools/ecs-bench/adapters/miniplex.ts": "033a144a637dd65908e0f5eb0219858ad80face5052d00d8a40fc77ef8ec259a",
+        "tools/ecs-bench/adapters/reference.ts": "550e56d6cbd44a7a140b2e368f4ad15f4bab26fb52d101590320b49660596773",
+        "tools/ecs-bench/base.ts": "b10d18b72c26dbb8a2afcae722238356037a04bd276e902b56349f3f381f7878",
+        "tools/ecs-bench/becsy.d.ts": "06ec43bedc13e2b7f7c4237de4874387fc4e1be4f7367f4fa07b40b4a7001f49",
+        "tools/ecs-bench/browser-worker.mjs": "4d2bff3e6760ad75b6c00383d322a1a63ee1d4b740dfd220c576e48ab416f6e1",
+        "tools/ecs-bench/browser.html": "7a1d609427845eb4d72961f3616b696cb0b36190e9ef62494437655e3adcbe6a",
+        "tools/ecs-bench/browser.ts": "7b285d30f408c3915d75325fd72bab7f4081f07bf4e74ccadbfc33f354b7b4bc",
+        "tools/ecs-bench/check.ts": "cb3e39c8e1583ad90c875afacf8a1ebedeb4d86a97bb1adbff2fae558c79f571",
+        "tools/ecs-bench/cli.mjs": "082efedebf18dc4bac17c5bdb851f72f5afd57db0564bf6bf4bf6337590ce085",
+        "tools/ecs-bench/consumer.ts": "9c98fadc6ac553e67c6d69649b47207b5b4b3e03ec4debeca37915519cb53955",
+        "tools/ecs-bench/experiment.ts": "bc6fce4ee2d988f9b90d299c6f80137484c565f5c8a8b0d2ec8f2e3d83676190",
+        "tools/ecs-bench/load.ts": "5c81efb573708844f2a9dc18daeb0cb878b66a19cfd5c6d3343b142e57732bca",
+        "tools/ecs-bench/maintainability.json": "bc85686569f29043dedb59a292a30f8dec2ef2ee31f57c2d52d15db6139a5d3c",
+        "tools/ecs-bench/model.ts": "deab82ed034ed4d2b49c19cf480d9250e9e6646c2280eb7bf89bc7460b9ec802",
+        "tools/ecs-bench/node-worker.mjs": "b430b97ed8f4e10bfe3328b9e3c5385f1b654a067854d58b3f3b96a36f58c6c7",
+        "tools/ecs-bench/options.mjs": "be6267e9a068406b766c3123fb97e181ad62ac46eb91dea27b187ca147b3ec21",
+        "tools/ecs-bench/plot-requirements.txt": "5ac19f72885e39e87481de0d3cdb12f0d341e36ea4a218a8d2ac76bcb38f970f",
+        "tools/ecs-bench/plot.py": "d336b24c528d35eac96ff8e83631ae6f3d3ff92a778cf8b2307ca318500cb3df",
+        "tools/ecs-bench/protocol.test.mjs": "f97a308b0fb49c0af62ad45b5d7aa1b1700a96f2ed8c2f78c340c7794512fab6",
+        "tools/ecs-bench/report.mjs": "33970d8cc307c03e0d33159266b6eb4ccfaca723c0e2c7cfdd02d55c795df96a",
+        "tools/ecs-bench/tsconfig.json": "a72d1905dc7b1020c22bec346358bd095690700e4a62a07470125a98cdf3d99d",
+        "tools/ecs-bench/verify-production.mjs": "6e3bf233d8a8bf025958d3bbe01dfdeac93b1e8654278c9f12bc8858447497b7",
+        "src/simulation/capture.ts": "d10b4d76f92ee07b7b28d3d8798db18b6ae36d52a3b3670097eadd7f5dea9247",
+        "src/simulation/domain/inventory.ts": "52185333cab27210956e3b80804c4ccb14ea747b1e752505777903b8337e1cd9",
+        "src/simulation/domain/work.ts": "af0dcd5326cbc998397082f6af6349f176636ed7cbe4578b912a8b94c70dcfdf",
+        "src/simulation/ecs-runtime.ts": "f77f3eb09e85b4f48b2855636eea5aa05b412666ffda42dc2b05a70ba5f90d8c",
+        "src/simulation/placement.ts": "00375200e70a0d90ea9d524ea3eb8c3d762d80304987dd91e87cdf367f479d93",
+        "src/simulation/player-motor.ts": "6bf4d628289b773d58085a7bac4ba8a5edbd6a4cd6995a995be875e7dcb946fd",
+        "src/simulation/simulation.spec.ts": "c0ec9a8e208371a6bdea9341d4e6d05a5267afd15d8ae5797faf520b82747e36",
+        "src/simulation/simulation.ts": "061a6fbefa4d7ba31e9344371ae3c71aa6d9fd05291c8cf19978ef3e678c72c6",
+        "src/simulation/world-rules.ts": "a49e415c52eae3c306b2281136814741e448775c458afe38e42fcbe9477c4c37",
+        "src/simulation/world-state.ts": "37360d3e35ffa474ac6f71fd90535464aeacb2ac71b571b91a0ef4a0379e718c",
+        "src/core/world-grid.ts": "6356a6989c0eb25c1f59d5299277df648d393c78d4284e95c66ffd1276e82140",
+        "src/contracts/game-client.ts": "a89113745a7f1535f5d85e4228ef8c1c9aa690efad205f48caf0a9d4129ffe67",
+        "src/contracts/game-state.ts": "c2b91646ffe66011a517b17ab3f687d0eb1859cac6f6775b4bf25b1038f1b206",
+        "src/contracts/game-tick.ts": "12835af02959acca1b9cabf2b98a191866746f616bfb4fdb0b5c20b76645704f",
+        "src/contracts/input.ts": "6d258e4e8e2f7d30b8568488d14112bcaea41a2aa082d025628520f2cd7d29dd",
+        "src/contracts/simulation.ts": "b5bfbdb482793366ff01cf76030b34b8a23ccda1957613690061b5a1018a6dcb",
+        "src/contracts/world.ts": "bb4bd214c281f9f01192c1b2bbacb35846362d1a72a116188f006e7b85122970",
+        "src/session/game-session.ts": "9b4575f2417a78dc0f1d335298a00f61ec23fe4ca2cb2f254b45745c60554b69",
+        "src/session/inline-game-session.ts": "99d0c7997ab8d202537230cf7da9b230ee0740d28c1dedcec59551c742f4425d",
+        "src/session/inline-port.ts": "b0e1a8bfbdcd56ed2baf58b2302dba62778899be73adc4d8018a8072c43b7d37",
+        "src/session/port.ts": "a3d7d146c3f9d02237a92a44509ea9240bfff5aaa162bdc1c1c8afa76f9a2995",
+        "src/session/presentation-cache.ts": "5f7f8e2d9761ef35f3c7100ceea028c6dca7f664f7f3115a538223e57e684fca",
+        "src/session/runtime.ts": "15bd1f50bc5d4803fb8973600bd594c76ddc3f74271629bab059106739d0d227",
+        "src/session/worker-port.ts": "a0b792151ad7e684d7105285311066e903fd91bad47ad7e8587f9ee3ee4c10ff",
+        "src/workers/simulation.worker.ts": "885a6d45b80532e229d0aa0705bd0fc1fe45d3756c611586c482e448db111026",
+        "yarn.lock": "80bc0e7239149d238f0dd36b8b13b673e5a3b28ab078b2c31bbb49d831c76889",
+        "package.json": "62de7c044958f642933519deb8d5e1c2880bc3d43bc4acead4334394f09d5860"
+      },
+      "hash": "2411993621bce59a9671b90815cf59014faebab9354a8804e5f0345b0fb55208"
+    },
+    "primaryHotPathHash": "312a07c230d8799e601f9dce92a5057026d9bb1b9c9644d6cfa282923e11876b",
+    "node": {
+      "node": "24.21.0",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.8",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.8",
+      "simdjson": "4.6.7",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026c",
+      "undici": "7.29.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.53",
+      "zlib": "1.3.2.1-motley-8002e91",
+      "zstd": "1.5.7"
+    },
+    "hardware": {
+      "cpu": "AMD Ryzen 9 7900X3D 12-Core Processor          ",
+      "logicalCpus": 24,
+      "memoryBytes": 68274266112,
+      "os": "win32 10.0.26300",
+      "architecture": "x64"
+    },
+    "packages": {
+      "miniplex": "2.0.0",
+      "bitecs": "0.4.0",
+      "playwright": "1.64.1",
+      "vite": "8.3.5",
+      "typescript": "6.0.3"
+    },
+    "protocol": {
+      "target": 100000,
+      "seed": 1729,
+      "stepMs": 50,
+      "catchupSteps": 5,
+      "ticks": 2000,
+      "warmupMs": 2000,
+      "warmupTicks": 200,
+      "repetitions": 5,
+      "timeoutMs": 120000,
+      "gates": {
+        "workerP95": 5,
+        "workerP99": 8,
+        "hostApplyP95": 2,
+        "hostApplyP99": 4,
+        "frameP95": 18.5,
+        "frameP99": 33.4,
+        "inputP95": 100,
+        "inputP99": 150
+      },
+      "frameTarget": 60,
+      "hz120": "emulated diagnostic only",
+      "sharedMemoryImplemented": false,
+      "simulationWorkersPerWorld": 1,
+      "outstandingBatches": 1,
+      "primaryWire": "object",
+      "presentation": "lean"
+    },
+    "qualification": {
+      "recordedDate": "2026-10-29",
+      "status": "Frozen after calibration, before reference qualification",
+      "warmupContext": "retained",
+      "frameMetric": "callback-arrival",
+      "targetEntities": 100000,
+      "requiredFrameRate": 60,
+      "diagnosticFrameRate": 120,
+      "gates": {
+        "workerP95": 5,
+        "workerP99": 8,
+        "hostApplyP95": 2,
+        "hostApplyP99": 4,
+        "frameP95": 18.5,
+        "frameP99": 33.4,
+        "inputP95": 100,
+        "inputP99": 150
+      },
+      "notes": [
+        "The proposed numerical budgets from the plan are retained without relaxation.",
+        "Cohort B primary timings are retained. Its paced RAF timeline intervals can hide delayed callback arrival. Cohort C repeats all paced cases using actual performance.now callback arrival gaps, with RAF timeline intervals and lateness retained separately. A 45 ms injected-stall check guards the frame metric.",
+        "Primary cohort A receiver callback cost is explicit JavaScript decode/cache application. Follow-up cohort B separately times MessageEvent.data access and the whole receiver callback, including request bookkeeping and explicit decode/application; this observed receiver timer may still exclude earlier browser-internal work. Host round trips and frame intervals include delivery.",
+        "Input-to-visible is sampled synthetic intent through applied-tick acknowledgement and the next presentation callback; physical input-to-photon and full-game rendering remain unqualified.",
+        "120 Hz is timer-emulated diagnostic pacing, not physical-display qualification.",
+        "Calibration-01 and all development smoke cohorts are excluded from reference ranking.",
+        "The planned cohort A worker-clock scheduler polls 49 ms after reply completion; those cases were not executed after the cadence confound was identified. Cohort B paired clocks poll from the prior dispatch, retaining one outstanding request. Cohort B repeats target qualification without pooling A samples; its clock diagnostics remain separate.",
+        "Cohort A replaced the warmed worker before measurement. Cohort B retains the worker and replaces only the disposable world; corrected target qualification uses B only.",
+        "Follow-up protocol checks explicitly acknowledge queued command cancellation on suspension and test new commands after restoration. Numerical qualification gates remain unchanged."
+      ]
+    }
+  },
+  "engine": {
+    "protocolVersion": "1.3",
+    "product": "HeadlessChrome/156.0.8078.4",
+    "revision": "@f842f52ef39fd97b449eb27cff414bf05a98ddce",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+    "jsVersion": "15.6.75"
+  },
+  "launch": {
+    "unavailable": "Error: cdpSession.send: Protocol error (Browser.getBrowserCommandLine): Command line not returned because --enable-automation not set.",
+    "configuredArgs": [
+      "--js-flags=--expose-gc",
+      "--disable-background-timer-throttling",
+      "--disable-renderer-backgrounding",
+      "--disable-backgrounding-occluded-windows"
+    ],
+    "osCommandLine": "C:\\Users\\googl\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1248\\chrome-headless-shell-win64\\chrome-headless-shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --js-flags=--expose-gc --disable-background-timer-throttling --disable-renderer-backgrounding --disable-backgrounding-occluded-windows --user-data-dir=<fresh-profile> --remote-debugging-pipe --no-startup-window"
+  },
+  "completion": {
+    "finishedAt": "2026-10-30T01:32:36.602Z",
+    "jobs": 94,
+    "failures": 0,
+    "elapsedMs": 2547846.4981,
+    "sourceHash": "2411993621bce59a9671b90815cf59014faebab9354a8804e5f0345b0fb55208"
+  },
+  "matrix": [
+    {
+      "mode": "check",
+      "options": {
+        "size": 1000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "check",
+      "options": {
+        "size": 1000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 3,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 50000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 250000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "trial",
+      "repetition": 4,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "ancillary",
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "ancillary",
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "payloads",
+      "diagnostic": true,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "payloads",
+      "diagnostic": true,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "profile",
+      "soakTicks": 10000,
+      "cycles": 20,
+      "cpuTicks": 200,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline"
+      }
+    },
+    {
+      "mode": "profile",
+      "soakTicks": 10000,
+      "cycles": 20,
+      "cpuTicks": 200,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "churn",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker"
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 0,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 0,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 0,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 4,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 4,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 4,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 0,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 0,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 0,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 4,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 4,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 4,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "diagnostic": true,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "inline",
+        "hz": 120,
+        "pressureMs": 4,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "diagnostic": true,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "mixed",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "hz": 120,
+        "pressureMs": 4,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "diagnostic": true,
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "diagnostic": true,
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "diagnostic": true,
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "idle",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "diagnostic": true,
+      "repetition": 0,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "diagnostic": true,
+      "repetition": 1,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    },
+    {
+      "mode": "paced",
+      "diagnostic": true,
+      "repetition": 2,
+      "options": {
+        "size": 100000,
+        "seed": 1729,
+        "workload": "active",
+        "clock": "host",
+        "wire": "object",
+        "presentation": "lean",
+        "candidate": "miniplex",
+        "execution": "worker",
+        "pressureMs": 8,
+        "durationMs": 30000
+      }
+    }
+  ]
+}

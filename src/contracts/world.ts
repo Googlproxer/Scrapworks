@@ -81,6 +81,24 @@ export interface CommandResult {
 
 /** A detached presentation view; renderer handles never enter world data. */
 export interface WorldView {
+  readonly publication?: number;
+  readonly worldGeneration?: number;
+  readonly changes?: {
+    readonly full: boolean;
+    readonly upsertedIds: readonly string[];
+    readonly removedIds: readonly string[];
+    readonly deposits?: readonly DepositDefinition[];
+    readonly buildings?: readonly BuildingView[];
+  };
+  readonly endpoints?: readonly {
+    readonly tick: number;
+    readonly transform: {
+      readonly position: WorldPosition;
+      readonly facing: number;
+      readonly moving: boolean;
+      readonly sprinting: boolean;
+    };
+  }[];
   readonly worldId: string;
   readonly tick: number;
   readonly stepSeconds: number;
@@ -105,22 +123,26 @@ export function assertWorldDefinition(value: unknown): asserts value is WorldDef
   const fail = (message: string): never => {
     throw new Error(`Invalid world definition: ${message}`);
   };
+
   const object = (candidate: unknown): Record<string, unknown> => {
     if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate))
       return fail('expected an object');
     return candidate as Record<string, unknown>;
   };
+
   const finite = (candidate: unknown): number => {
     if (typeof candidate !== 'number' || !Number.isFinite(candidate))
       return fail('expected a finite number');
     return candidate;
   };
+
   const integer = (candidate: unknown, min: number, max: number): number => {
     const result = finite(candidate);
     if (!Number.isInteger(result) || result < min || result > max)
       return fail(`expected an integer from ${min} to ${max}`);
     return result;
   };
+
   const record = object(value);
   if (record['version'] !== 1) fail('unsupported version');
   if (typeof record['id'] !== 'string' || !record['id']) fail('missing world ID');
@@ -138,6 +160,7 @@ export function assertWorldDefinition(value: unknown): asserts value is WorldDef
     !record['terrain'].every((terrain) => ['soil', 'rock', 'grass', 'water'].includes(terrain))
   )
     fail('terrain must contain one supported ID per cell');
+
   const position = (candidate: unknown) => {
     const item = object(candidate);
     const px = finite(item['x']);
@@ -147,6 +170,7 @@ export function assertWorldDefinition(value: unknown): asserts value is WorldDef
       fail('position outside the flat world bounds');
     return { x: px, z: pz };
   };
+
   const spawn = position(record['spawn']);
   const ids = new Set<string>();
   const occupied = new Set<string>();

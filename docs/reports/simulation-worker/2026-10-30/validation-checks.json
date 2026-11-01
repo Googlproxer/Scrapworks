@@ -1,0 +1,186 @@
+[
+  {
+    "name": "install",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "install",
+      "--immutable"
+    ],
+    "status": 0,
+    "elapsedMs": 1725.4923,
+    "outputTail": "N0000: ┌ Post-resolution validation\n➤ YN0060: │ @babylonjs/addons is listed by your project with version 9.32.0 (p207a89), which doesn't satisfy what @babylonjs-toolkit/next and other dependencies request (9.30.0).\n➤ YN0060: │ @babylonjs/core is listed by your project with version 9.32.0 (p3afa65), which doesn't satisfy what @babylonjs-toolkit/next and other dependencies request (9.30.0).\n➤ YN0060: │ @babylonjs/gui is listed by your project with version 9.32.0 (p2326fb), which doesn't satisfy what @babylonjs-toolkit/next and other dependencies request (9.30.0).\n➤ YN0060: │ @babylonjs/inspector is listed by your project with version 9.32.0 (p5b117a), which doesn't satisfy what @babylonjs-toolkit/next requests (9.30.0).\n➤ YN0060: │ @babylonjs/loaders is listed by your project with version 9.32.0 (paca1cb), which doesn't satisfy what @babylonjs-toolkit/next and other dependencies request (9.30.0).\n➤ YN0060: │ @babylonjs/materials is listed by your project with version 9.32.0 (p1f7c24), which doesn't satisfy what @babylonjs-toolkit/next and other dependencies request (9.30.0).\n➤ YN0002: │ scrapworks@workspace:. doesn't provide @babylonjs/havok (p770f28), requested by @babylonjs-toolkit/next.\n➤ YN0002: │ scrapworks@workspace:. doesn't provide @fluentui/react-charts (pe8b80e), requested by @babylonjs/inspector.\n➤ YN0086: │ Some peer dependencies are incorrectly met by your project; run yarn explain peer-requirements <hash> for details, where <hash> is the six-letter p-prefixed code.\n➤ YN0086: │ Some peer dependencies are incorrectly met by dependencies; run yarn explain peer-requirements for details.\n➤ YN0000: └ Completed\n➤ YN0000: ┌ Fetch step\n➤ YN0000: └ Completed in 0s 940ms\n➤ YN0000: ┌ Link step\n➤ YN0000: └ Completed in 0s 242ms\n➤ YN0000: · Done with warnings in 1s 409ms\n"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "lint"
+    ],
+    "status": 0,
+    "elapsedMs": 3231.1952999999994,
+    "outputTail": ""
+  },
+  {
+    "name": "test-lint",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "test:lint"
+    ],
+    "status": 0,
+    "elapsedMs": 1343.1238000000003,
+    "outputTail": ": 1, run() {} }; (2.6633ms)\n    ✔ abstract class Example { protected abstract run(): void; public abstract value: number; } (1.0827ms)\n    ✔ class Example { constructor(name: string) {} public run(value: number) {} } (1.2124ms)\n    ✔ class Example { @Input() public value = 1; @Trace() private run() {} } (1.6264ms)\n  ✔ valid (76.2093ms)\n  ▶ invalid\n    ✔ class Example { value = 1; run() {} } (2.9915ms)\n    ✔ class Example { constructor(readonly name: string, count: number) {} } (1.5608ms)\n    ✔ class Example { constructor(@Inject(TOKEN) readonly name: string = \"test\") {} } (2.1655ms)\n    ✔ class Example { [\"constructor\"]() {} } (1.3054ms)\n    ✔ class Example { @First() @Second() /* keep */ readonly value = 1; @Trace() run() {} } (2.2447ms)\n    ✔ class Example { static readonly value = 1; async run() {} *items() {} } (1.3944ms)\n    ✔ class Example { get value() { return 1; } set value(next: number) {} } (1.4529ms)\n    ✔ abstract class Example { abstract value: number; abstract run(): void; abstract get current(): number; } (2.7554ms)\n    ✔ abstract class Example { accessor value = 1; abstract accessor other: number; } (1.4486ms)\n    ✔ class Example extends Base { override run() {} declare value: number; optional?: number; assigned!: number; } (1.8663ms)\n    ✔ class Example { [Symbol.iterator]() {} [key] = 1; \"named\"() {} } (1.8929ms)\n    ✔ class Example { run(value: string): void; run(value: number): void; run(value: string | number) {} } (1.9078ms)\n    ✔ const Example = class { value = 1; }; (1.2658ms)\n  ✔ invalid (24.6026ms)\n✔ explicit-member-accessibility (101.1029ms)\n✔ combines access modifiers with project Prettier settings and is stable on a second format (452.6119ms)\nℹ tests 30\nℹ suites 3\nℹ pass 30\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 910.3997\n"
+  },
+  {
+    "name": "test-export",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "test:export"
+    ],
+    "status": 0,
+    "elapsedMs": 1140.6724000000004,
+    "outputTail": "✔ keeps scene geometry, textures and explicitly declared dynamic assets, without shipping library copies (15.1304ms)\n✔ a missing declared dependency fails before deleting any library output (7.8218ms)\n✔ rejects paths that could address source files or escape the export (0.2707ms)\n✔ a newly authored scene dependency is retained automatically on the next export (9.661ms)\n✔ successful staging replaces obsolete output and publishes a matching registry without modifying authoring inputs (46.5799ms)\n✔ packer errors, missing dependencies and superseded saves preserve the full last working export and registry (67.2054ms)\n✔ publication rolls back all files if installing the new generation fails (15.7422ms)\n✔ malformed world markers preserve the previously published scenes and world together (51.2612ms)\n✔ concurrent exporters cannot overlap or remove the active export lock (48.2186ms)\n✔ no-body workaround rejects Editor aggregates and legacy impostors while accepting gravity-only config (35.2899ms)\n✔ attached script discovery follows enabled Editor metadata and rejects missing or escaping script paths (10.8079ms)\n✔ save bursts coalesce, saves during export supersede it, and a later save recovers from failure (11.071ms)\n✔ native watcher includes authored assets and attached scripts but excludes caches and generated outputs (328.9008ms)\nℹ tests 13\nℹ suites 0\nℹ pass 13\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 715.3022\n"
+  },
+  {
+    "name": "test-world",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "test:world"
+    ],
+    "status": 0,
+    "elapsedMs": 833.5247000000008,
+    "outputTail": "hment order; newly added handlers wait for the next tick (0.3054ms)\n✔ removing a handler skips it immediately and unsubscribe is idempotent (0.261ms)\n✔ a handler can queue a command for this tick before movement is applied (0.3026ms)\n✔ pause inside a handler aborts that tick and catch-up even if immediately resumed (0.6751ms)\n✔ handler failure retains the last completed view and permanently stops advancing (0.582ms)\n✔ a motor exception after mutation cannot publish commands or partial movement (0.675ms)\n✔ session views are detached from the cached completed state, including after failure (0.342ms)\n✔ recursive advancement fails instead of dispatching the same tick again (0.2842ms)\n✔ cell centres, negative origin, half-open edges and unit conversion round-trip (1.9548ms)\n✔ new worlds have empty possessions and independent detached views (0.666ms)\n✔ movement is deterministic across render schedules; diagonal distance is normalized (2.2769ms)\n✔ catch-up is bounded and pause clears held input, queued placement and leftover time (0.4614ms)\n✔ player circle cannot cross blockers or map boundaries (1.4702ms)\n✔ normal worlds cannot place test buildings; dev fixture validates and rechecks queued occupancy (0.8659ms)\n✔ placement validates the previous completed position before the player motor advances (0.3174ms)\n✔ placement rejects invalid rotations, occupied cells, player overlap, reach and map edges (0.2506ms)\n✔ Node source imports follow tsconfig aliases independently of cwd and preserve native resolution (279.2117ms)\n✔ requires the compiled world even when an older exporter omitted its manifest entry (13.664ms)\n✔ rejects stale, invalid or unregistered compiled worlds (10.8135ms)\nℹ tests 26\nℹ suites 0\nℹ pass 26\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 371.8814\n"
+  },
+  {
+    "name": "ecs-check",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "bench:ecs:check"
+    ],
+    "status": 0,
+    "elapsedMs": 56967.7802,
+    "outputTail": "tions (1.5918ms)\n✔ paced scheduler handles zero/invalid delta, pause and bounded catch-up (1.1093ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 579.976\nSTART 0000-node-check-reference-1000-all-0\nEND 0000-node-check-reference-1000-all-0: ok\nSTART 0001-node-check-miniplex-1000-all-0\nEND 0001-node-check-miniplex-1000-all-0: ok\nSTART 0002-node-check-bitecs-1000-all-0\nEND 0002-node-check-bitecs-1000-all-0: ok\nSTART 0003-node-check-koota-1000-all-0\nEND 0003-node-check-koota-1000-all-0: ok\nSTART 0004-node-check-becsy-1000-all-0\nEND 0004-node-check-becsy-1000-all-0: ok\nSTART 0005-node-check-bitecs-arrays-1000-all-0\nEND 0005-node-check-bitecs-arrays-1000-all-0: ok\nSTART 0006-node-check-koota-update-1000-all-0\nEND 0006-node-check-koota-update-1000-all-0: ok\nSTART 0007-node-check-becsy-checked-1000-all-0\nEND 0007-node-check-becsy-checked-1000-all-0: ok\nSTART 0008-browser-check-reference-1000-all-0\nEND 0008-browser-check-reference-1000-all-0: ok\nSTART 0009-browser-check-miniplex-1000-all-0\nEND 0009-browser-check-miniplex-1000-all-0: ok\nSTART 0010-browser-check-bitecs-1000-all-0\nEND 0010-browser-check-bitecs-1000-all-0: ok\nSTART 0011-browser-check-koota-1000-all-0\nEND 0011-browser-check-koota-1000-all-0: ok\nSTART 0012-browser-check-becsy-1000-all-0\nEND 0012-browser-check-becsy-1000-all-0: ok\nSTART 0013-browser-check-bitecs-arrays-1000-all-0\nEND 0013-browser-check-bitecs-arrays-1000-all-0: ok\nSTART 0014-browser-check-koota-update-1000-all-0\nEND 0014-browser-check-koota-update-1000-all-0: ok\nSTART 0015-browser-check-becsy-checked-1000-all-0\nEND 0015-browser-check-becsy-checked-1000-all-0: ok\nReport: L:\\Angular\\scrapworks\\tmp\\ecs-bench\\2026-10-29T14-44-00-319Z-check\nResults: L:\\Angular\\scrapworks\\tmp\\ecs-bench\\2026-10-29T14-44-00-319Z-check\n"
+  },
+  {
+    "name": "ecs-smoke",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "bench:ecs:smoke"
+    ],
+    "status": 0,
+    "elapsedMs": 39711.6143,
+    "outputTail": "00-all-0: ok\nSTART 0004-node-check-reference-1000-all-0\nEND 0004-node-check-reference-1000-all-0: ok\nSTART 0005-browser-check-miniplex-1000-all-0\nEND 0005-browser-check-miniplex-1000-all-0: ok\nSTART 0006-browser-check-bitecs-1000-all-0\nEND 0006-browser-check-bitecs-1000-all-0: ok\nSTART 0007-browser-check-koota-1000-all-0\nEND 0007-browser-check-koota-1000-all-0: ok\nSTART 0008-browser-check-becsy-1000-all-0\nEND 0008-browser-check-becsy-1000-all-0: ok\nSTART 0009-browser-check-reference-1000-all-0\nEND 0009-browser-check-reference-1000-all-0: ok\nSTART 0010-node-trial-reference-1000-mixed-0\nEND 0010-node-trial-reference-1000-mixed-0: ok p95=0.018 p99=0.217\nSTART 0011-node-trial-miniplex-1000-mixed-0\nEND 0011-node-trial-miniplex-1000-mixed-0: ok p95=0.040 p99=0.237\nSTART 0012-node-trial-bitecs-1000-mixed-0\nEND 0012-node-trial-bitecs-1000-mixed-0: ok p95=0.107 p99=0.638\nSTART 0013-node-trial-koota-1000-mixed-0\nEND 0013-node-trial-koota-1000-mixed-0: ok p95=0.097 p99=0.452\nSTART 0014-node-trial-becsy-1000-mixed-0\nEND 0014-node-trial-becsy-1000-mixed-0: ok p95=0.076 p99=0.548\nSTART 0015-browser-trial-reference-1000-mixed-0\nEND 0015-browser-trial-reference-1000-mixed-0: ok p95=0.100 p99=0.200\nSTART 0016-browser-trial-miniplex-1000-mixed-0\nEND 0016-browser-trial-miniplex-1000-mixed-0: ok p95=0.100 p99=0.300\nSTART 0017-browser-trial-bitecs-1000-mixed-0\nEND 0017-browser-trial-bitecs-1000-mixed-0: ok p95=0.100 p99=0.400\nSTART 0018-browser-trial-koota-1000-mixed-0\nEND 0018-browser-trial-koota-1000-mixed-0: ok p95=0.200 p99=0.400\nSTART 0019-browser-trial-becsy-1000-mixed-0\nEND 0019-browser-trial-becsy-1000-mixed-0: ok p95=0.100 p99=0.700\nReport: L:\\Angular\\scrapworks\\tmp\\ecs-bench\\2026-10-29T14-44-57-189Z-smoke\nResults: L:\\Angular\\scrapworks\\tmp\\ecs-bench\\2026-10-29T14-44-57-189Z-smoke\n"
+  },
+  {
+    "name": "application-tests",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "test"
+    ],
+    "status": 0,
+    "elapsedMs": 63730.67289999999,
+    "outputTail": " vitest-mock-patch                                            |   1.02 kB | \nchunk-ZQYODCOI.js                                               | -                                                            | 947 bytes | \nspec-app-features-save-save-load-save-load.component.js         | spec-app-features-save-save-load-save-load.component         | 902 bytes | \nstyles.css                                                      | styles                                                       | 868 bytes | \nsetup-testing-setup-tests.js                                    | setup-testing-setup-tests                                    | 735 bytes | \nspec-app-features-save-save.service.js                          | spec-app-features-save-save.service                          | 527 bytes | \nchunk-XUVFTZIY.js                                               | -                                                            | 511 bytes | \ninit-compiler.js                                                | init-compiler                                                | 166 bytes | \nchunk-DUFNL6NB.js                                               | -                                                            |  92 bytes | \n\n                                                                | Initial total                                                | 488.94 kB\n\nApplication bundle generation complete. [3.262 seconds] - 2026-10-29T14:45:41.629Z\n\n\n RUN  v5.0.5 L:/Angular/scrapworks\n\n\n Test Files  22 passed (22)\n      Tests  284 passed (284)\n   Start at  01:45:42\n   Duration  57.82s (tests 51%, import 41%, setup 7%, worker 1%)\n\n- Packing assets...\n√ Packed assets\n- Packing main-menu.scene...\n√ Packed main-menu.scene\n- Packing game.scene...\n√ Packed game.scene\n- Collecting scripts...\n√ Collected scripts\n"
+  },
+  {
+    "name": "worker-rich-smoke",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "bench:worker:smoke",
+      "--output",
+      "tmp/simulation-worker-bench/lean-validation-rich"
+    ],
+    "status": 0,
+    "elapsedMs": 27754.166599999997,
+    "outputTail": " presentation is detached, precise, complete and independent of ECS storage (25.512ms)\n✔ replacement identities and malformed packets preserve completed presentations (478.7639ms)\n✔ detail subscriptions are bounded and identity validated (0.2833ms)\n✔ full publication grows host storage without dropping existing or new entities (60.4283ms)\n(node:53140) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ outstanding work and accumulated time share one five-step budget (0.5446ms)\n✔ pause clears fractional elapsed time and invalid deltas add nothing (0.1374ms)\n✔ invalid envelopes, movement and unbounded command batches are rejected (0.3172ms)\n✔ uneven frames retain fractional time without repeating consumed credits (0.1068ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 678.2722\nSTART 1/8 0000-check-miniplex-inline-1000-mixed\nEND 0000-check-miniplex-inline-1000-mixed: ok\nSTART 2/8 0001-check-miniplex-worker-1000-mixed\nEND 0001-check-miniplex-worker-1000-mixed: ok\nSTART 3/8 0002-check-bitecs-inline-1000-mixed\nEND 0002-check-bitecs-inline-1000-mixed: ok\nSTART 4/8 0003-check-bitecs-worker-1000-mixed\nEND 0003-check-bitecs-worker-1000-mixed: ok\nSTART 5/8 0004-trial-miniplex-worker-1000-mixed\nEND 0004-trial-miniplex-worker-1000-mixed: ok p95=0.600\nSTART 6/8 0005-trial-bitecs-inline-1000-mixed\nEND 0005-trial-bitecs-inline-1000-mixed: ok p95=0.100\nSTART 7/8 0006-trial-bitecs-worker-1000-mixed\nEND 0006-trial-bitecs-worker-1000-mixed: ok p95=0.600\nSTART 8/8 0007-trial-miniplex-inline-1000-mixed\nEND 0007-trial-miniplex-inline-1000-mixed: ok p95=0.100\nResults: L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\lean-validation-rich\n"
+  },
+  {
+    "name": "worker-lean-smoke",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "bench:worker:smoke",
+      "--presentation",
+      "lean",
+      "--paced",
+      "--output",
+      "tmp/simulation-worker-bench/lean-validation-lean"
+    ],
+    "status": 0,
+    "elapsedMs": 37573.109599999996,
+    "outputTail": "ive-step budget (0.5778ms)\n✔ pause clears fractional elapsed time and invalid deltas add nothing (0.1143ms)\n✔ invalid envelopes, movement and unbounded command batches are rejected (0.297ms)\n✔ uneven frames retain fractional time without repeating consumed credits (0.1062ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 675.7595\nSTART 1/14 0000-check-miniplex-inline-1000-mixed\nEND 0000-check-miniplex-inline-1000-mixed: ok\nSTART 2/14 0001-check-miniplex-worker-1000-mixed\nEND 0001-check-miniplex-worker-1000-mixed: ok\nSTART 3/14 0002-check-bitecs-inline-1000-mixed\nEND 0002-check-bitecs-inline-1000-mixed: ok\nSTART 4/14 0003-check-bitecs-worker-1000-mixed\nEND 0003-check-bitecs-worker-1000-mixed: ok\nSTART 5/14 0004-trial-miniplex-worker-1000-mixed\nEND 0004-trial-miniplex-worker-1000-mixed: ok p95=0.200\nSTART 6/14 0005-trial-bitecs-inline-1000-mixed\nEND 0005-trial-bitecs-inline-1000-mixed: ok p95=0.100\nSTART 7/14 0006-trial-bitecs-worker-1000-mixed\nEND 0006-trial-bitecs-worker-1000-mixed: ok p95=0.100\nSTART 8/14 0007-trial-miniplex-inline-1000-mixed\nEND 0007-trial-miniplex-inline-1000-mixed: ok p95=0.100\nSTART 9/14 0008-paced-miniplex-inline-1000-mixed\nEND 0008-paced-miniplex-inline-1000-mixed: ok\nSTART 10/14 0009-paced-miniplex-worker-1000-mixed\nEND 0009-paced-miniplex-worker-1000-mixed: ok\nSTART 11/14 0010-paced-bitecs-inline-1000-mixed\nEND 0010-paced-bitecs-inline-1000-mixed: ok\nSTART 12/14 0011-paced-bitecs-worker-1000-mixed\nEND 0011-paced-bitecs-worker-1000-mixed: ok\nSTART 13/14 0012-paced-miniplex-worker-1000-mixed\nEND 0012-paced-miniplex-worker-1000-mixed: ok\nSTART 14/14 0013-paced-bitecs-worker-1000-mixed\nEND 0013-paced-bitecs-worker-1000-mixed: ok\nResults: L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\lean-validation-lean\n"
+  },
+  {
+    "name": "build",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "build",
+      "--stats-json"
+    ],
+    "status": 0,
+    "elapsedMs": 21176.318900000013,
+    "outputTail": "624 bytes\n\n                    | Initial total         | 237.62 kB |                65.77 kB\n\nLazy chunk files    | Names                 |  Raw size | Estimated transfer size\nchunk-DkB-ms7n.js   | game-page-component   |  11.39 MB |                 2.19 MB\nchunk-B-6rvLK3.js   | -                     | 162.46 kB |                30.14 kB\nchunk-B0DPItNq.js   | -                     |  68.53 kB |                15.02 kB\nchunk-BZ-7d_oQ.js   | -                     |  65.14 kB |                12.86 kB\nchunk-BxOVHniV.js   | -                     |  60.94 kB |                13.28 kB\nchunk-Crw7PMz5.js   | -                     |  58.70 kB |                43.30 kB\nchunk-Bp5Bb_5T.js   | -                     |  51.75 kB |                11.13 kB\nchunk-BuBwBKz_.js   | -                     |  49.80 kB |                11.04 kB\nchunk-BwisMp7g.js   | meshBlending-fragment |  42.58 kB |                 7.70 kB\nchunk-BFJqTM-v.js   | -                     |  42.23 kB |                 9.52 kB\nchunk-Ck7hFyFj.js   | meshBlending-fragment |  39.46 kB |                 7.40 kB\nchunk-c74nLDIM.js   | -                     |  36.50 kB |                 7.09 kB\nchunk-cVrQJokB.js   | -                     |  34.75 kB |                 7.70 kB\nchunk-B7-Q8jYu.js   | -                     |  33.42 kB |                 9.91 kB\nchunk-C3Y8wXIk.js   | -                     |  33.36 kB |                 7.22 kB\n...and 820 more lazy chunks files. Use \"--verbose\" to show all the files.\n\nApplication bundle generation complete. [18.858 seconds] - 2026-10-29T14:48:06.225Z\n\nOutput location: L:\\Angular\\scrapworks\\dist\\scrapworks\n\n- Packing assets...\n√ Packed assets\n- Packing main-menu.scene...\n√ Packed main-menu.scene\n- Packing game.scene...\n√ Packed game.scene\n- Collecting scripts...\n√ Collected scripts\n"
+  },
+  {
+    "name": "production-inputs",
+    "command": [
+      "node",
+      "tools/ecs-bench/verify-production.mjs"
+    ],
+    "status": 0,
+    "elapsedMs": 119.23140000001877,
+    "outputTail": "Verified 3950 production inputs: no ECS benchmark candidates or harness.\n"
+  },
+  {
+    "name": "built-assets",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "assets:check",
+      "--build"
+    ],
+    "status": 0,
+    "elapsedMs": 528.5957000000053,
+    "outputTail": "{\"sceneManifests\":2,\"sceneDependencies\":6,\"compiledWorld\":\"migration-world-v1\",\"excludedPublicFiles\":0,\"checkedBuild\":true,\"status\":\"passed\"}\n"
+  },
+  {
+    "name": "dev-workflow",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "test:workflow"
+    ],
+    "status": 0,
+    "elapsedMs": 24448.032000000036,
+    "outputTail": "Workflow probe: initial export and Angular startup passed.\nWorkflow probe: valid save reloaded; invalid save retained all output without reload.\n{\"recordedAt\":\"2026-10-29T14:48:31.385Z\",\"method\":\"Copied project; real Editor CLI, native authoring watcher, Angular/Vite and headless Chromium on loopback\",\"angularWatchMode\":\"native\",\"initialMenuReady\":true,\"validSaveReloaded\":true,\"invalidSaveReloaded\":false,\"failedExportPreservedAllPublishedHashes\":true,\"correctedSaveRecoveredAndReloaded\":true,\"gameReadyAfterRecovery\":true,\"browserErrors\":[]}\n"
+  },
+  {
+    "name": "angular-packaging",
+    "command": [
+      "node",
+      "tools/simulation-worker-bench/packaging-check.mjs"
+    ],
+    "status": 0,
+    "elapsedMs": 7240.194300000032,
+    "outputTail": "2.39 kB |               967 bytes\nchunk-DU32ay_1.js   | miniplex      |  63 bytes |                63 bytes\nchunk-BeO7ONKQ.js   | reference     |  62 bytes |                62 bytes\nchunk-COkskalT.js   | bitecs        |  61 bytes |                61 bytes\n\nApplication bundle generation complete. [1.219 seconds] - 2026-10-29T14:48:33.792Z\n\nOutput location: L:\\Angular\\scrapworks\\tmp\\simulation-worker-bench\\angular-packaging\n\n{\"recordedAt\":\"2026-10-29T14:48:38.906Z\",\"base\":\"/lab/\",\"csp\":\"default-src 'none'; script-src 'self' 'sha256-LMY6wYoFV9I4wWzxaq1N/dTpl4iurQktw706UCHK3vM='; worker-src 'self'; connect-src 'self'; style-src 'self' 'sha256-itoG1yWyOH8+JTW8fYj2BJIqckT0+1iqx1rRT9ef7J0='; img-src 'self' data:\",\"results\":[{\"candidate\":\"miniplex\",\"presentation\":\"rich\",\"status\":\"ok\",\"ticks\":20,\"hash\":\"1e579be9d6597b1af7dd2709233cf66aa7ccc4205edc42a7ae8b7904a2d3ff0b\",\"frames\":61,\"inputAcknowledgements\":4},{\"candidate\":\"miniplex\",\"presentation\":\"lean\",\"status\":\"ok\",\"ticks\":20,\"hash\":\"1e579be9d6597b1af7dd2709233cf66aa7ccc4205edc42a7ae8b7904a2d3ff0b\",\"frames\":61,\"inputAcknowledgements\":4},{\"candidate\":\"bitecs\",\"presentation\":\"rich\",\"status\":\"ok\",\"ticks\":20,\"hash\":\"1e579be9d6597b1af7dd2709233cf66aa7ccc4205edc42a7ae8b7904a2d3ff0b\",\"frames\":61,\"inputAcknowledgements\":4},{\"candidate\":\"bitecs\",\"presentation\":\"lean\",\"status\":\"ok\",\"ticks\":20,\"hash\":\"1e579be9d6597b1af7dd2709233cf66aa7ccc4205edc42a7ae8b7904a2d3ff0b\",\"frames\":60,\"inputAcknowledgements\":4}],\"errors\":[],\"a11y\":{\"violations\":[],\"passes\":13,\"incomplete\":[]}}\n▲ [WARNING] Module 'eventery' used by 'node_modules/@miniplex/bucket/dist/miniplex-bucket.esm.js' is not ESM\n\n  CommonJS or AMD dependencies can cause optimization bailouts.\n  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies\n\n\n"
+  },
+  {
+    "name": "docs",
+    "command": [
+      "node",
+      "C:/Users/googl/AppData/Local/node/corepack/v1/yarn/4.18.1/yarn.js",
+      "docs:check"
+    ],
+    "status": 0,
+    "elapsedMs": 447.80709999997634,
+    "outputTail": "{\n  \"documents\": 53,\n  \"localLinks\": 530,\n  \"diagramSources\": 8,\n  \"failures\": []\n}\n"
+  }
+]

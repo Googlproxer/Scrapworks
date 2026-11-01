@@ -12,6 +12,7 @@ import {
   PLAYER_RADIUS,
   TEST_BUILDING_FOOTPRINT,
 } from './world-rules';
+
 export { PLACEMENT_REACH, TEST_BUILDING_FOOTPRINT } from './world-rules';
 
 export function validatePlacement(
@@ -30,11 +31,13 @@ export function validatePlacement(
   )
     return { valid: false, reason: 'invalid-cell', cells: [] };
   const cells = footprintCells(cell, TEST_BUILDING_FOOTPRINT, rotation);
+
   const reject = (reason: PlacementResult['reason']): PlacementResult => ({
     valid: false,
     reason,
     cells,
   });
+
   if (cells.some((item) => !cellInBounds(definition.grid, item))) return reject('out-of-bounds');
   if (
     cells.some(
@@ -43,7 +46,9 @@ export function validatePlacement(
   )
     return reject('terrain');
   const occupied = new Set(
-    occupiedCells(definition, view.buildings).map((item) => `${item.column},${item.row}`),
+    occupiedCells(definition, view.buildings, view.deposits).map(
+      (item) => `${item.column},${item.row}`,
+    ),
   );
   if (cells.some((item) => occupied.has(`${item.column},${item.row}`))) return reject('occupied');
   if (

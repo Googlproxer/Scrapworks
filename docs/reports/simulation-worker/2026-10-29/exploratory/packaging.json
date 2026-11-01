@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-10-29T05:26:53.529Z",
+  "base": "/lab/",
+  "csp": "default-src 'none'; script-src 'self' 'sha256-LMY6wYoFV9I4wWzxaq1N/dTpl4iurQktw706UCHK3vM='; worker-src 'self'; connect-src 'self'; style-src 'self' 'sha256-itoG1yWyOH8+JTW8fYj2BJIqckT0+1iqx1rRT9ef7J0='; img-src 'self' data:",
+  "results": [
+    {
+      "candidate": "miniplex",
+      "status": "ok",
+      "ticks": 20,
+      "hash": "6934e1083364a69d9a581df317149d28ff4cfb255148dfb406270ed708ca9770",
+      "frames": 61,
+      "inputAcknowledgements": 4
+    },
+    {
+      "candidate": "bitecs",
+      "status": "ok",
+      "ticks": 20,
+      "hash": "6934e1083364a69d9a581df317149d28ff4cfb255148dfb406270ed708ca9770",
+      "frames": 61,
+      "inputAcknowledgements": 4
+    }
+  ],
+  "errors": [],
+  "a11y": {
+    "violations": [],
+    "passes": 13,
+    "incomplete": []
+  }
+}

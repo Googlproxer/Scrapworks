@@ -49,7 +49,7 @@ export class PlacementController extends GameplayScript {
     const cell = this.selection.cell;
     const feedback = cell ? session.preview(cell, this.rotation) : null;
     this.showPreview(this.building, this.rotation, feedback?.valid ?? false);
-    // This frame's session advancement has completed: confirmation is consumed by a subsequent tick.
+    // Preview uses a completed view; authority revalidates confirmation on a future tick.
     if (this.building && cell && actionPressed(input, 'confirm'))
       session.place(cell, this.rotation);
     if (this.building && this.frame.isCurrent())

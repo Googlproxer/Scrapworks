@@ -24,14 +24,16 @@ export interface GameInputPort {
 
 /** The application owns the session; the renderer supplies its single frame source. */
 export interface WorldSessionBridge {
-  initialize(definition: WorldDefinition): void;
-  registerTickHandler(handler: GameTickHandler, order?: number): () => void;
+  initialize(definition: WorldDefinition): void | Promise<void>;
+  registerCompletedTickHandler(handler: GameTickHandler, order?: number): () => void;
   frame(
     seconds: number,
     movement: { x: number; z: number },
     sprint: boolean,
     active: boolean,
   ): WorldView;
+  /** Drain presentation notifications and submit credits after this frame pins its completed view. */
+  completeFrame?(): void;
   place(cell: GridCell, rotation: 0 | 1 | 2 | 3): void;
   preview(
     cell: GridCell,

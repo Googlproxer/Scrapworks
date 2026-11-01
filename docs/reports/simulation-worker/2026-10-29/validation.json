@@ -1,0 +1,281 @@
+{
+  "recordedAt": "2026-10-29T12:35:24.807Z",
+  "install": {
+    "command": "yarn install --immutable",
+    "exitCode": 0,
+    "yarn": "4.18.1",
+    "warnings": "Existing Babylon/Toolkit peer mismatches and optional peers remain; see log."
+  },
+  "checks": [
+    {
+      "exitCode": 0,
+      "elapsedMs": 1327.486,
+      "name": "scenes-export",
+      "command": "yarn scenes:export"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 4694.4879,
+      "name": "lint",
+      "command": "yarn lint"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 1329.5799,
+      "name": "lint-tests",
+      "command": "yarn test:lint"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 1115.3464,
+      "name": "export-tests",
+      "command": "yarn test:export"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 842.1986,
+      "name": "world-tests",
+      "command": "yarn test:world"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 58920.4324,
+      "name": "ecs-correctness",
+      "command": "yarn bench:ecs:check --label local-validation --output tmp/simulation-worker-bench/validation-ecs-check"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 41504.5103,
+      "name": "ecs-smoke",
+      "command": "yarn bench:ecs:smoke --label local-validation --output tmp/simulation-worker-bench/validation-ecs-smoke"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 66083.3541,
+      "name": "application-tests",
+      "command": "yarn test"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 27889.9503,
+      "name": "worker-ci-smoke",
+      "command": "yarn bench:worker:smoke --label local-validation --output tmp/simulation-worker-bench/validation-worker-smoke"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 23230.9893,
+      "name": "production-build",
+      "command": "yarn build --stats-json"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 116.8715,
+      "name": "production-input-audit",
+      "command": "node tools/ecs-bench/verify-production.mjs"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 518.0317,
+      "name": "built-assets",
+      "command": "yarn assets:check --build"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 25644.679,
+      "name": "development-workflow",
+      "command": "yarn test:workflow"
+    },
+    {
+      "exitCode": 0,
+      "elapsedMs": 5593.9422,
+      "name": "angular-worker-packaging",
+      "command": "node tools/simulation-worker-bench/packaging-check.mjs"
+    }
+  ],
+  "application": {
+    "files": 22,
+    "tests": 284,
+    "passed": 284
+  },
+  "toolingTests": {
+    "lint": 30,
+    "sceneExport": 13,
+    "world": 26
+  },
+  "benchmark": {
+    "ecsCheckJobs": 16,
+    "ecsSmokeJobs": 20,
+    "workerCiSmokeJobs": 8,
+    "callbackSmokeJobs": 14,
+    "pureProtocolTests": 4,
+    "primaryTrials": 120,
+    "pacedJobs": 124,
+    "browserCorrectnessJobs": 8,
+    "stressTimeouts": 20,
+    "harnessFailures": 0
+  },
+  "packaging": {
+    "recordedAt": "2026-10-29T12:20:15.255Z",
+    "base": "/lab/",
+    "csp": "default-src 'none'; script-src 'self' 'sha256-LMY6wYoFV9I4wWzxaq1N/dTpl4iurQktw706UCHK3vM='; worker-src 'self'; connect-src 'self'; style-src 'self' 'sha256-itoG1yWyOH8+JTW8fYj2BJIqckT0+1iqx1rRT9ef7J0='; img-src 'self' data:",
+    "results": [
+      {
+        "candidate": "miniplex",
+        "status": "ok",
+        "ticks": 20,
+        "hash": "1e579be9d6597b1af7dd2709233cf66aa7ccc4205edc42a7ae8b7904a2d3ff0b",
+        "frames": 61,
+        "inputAcknowledgements": 4
+      },
+      {
+        "candidate": "bitecs",
+        "status": "ok",
+        "ticks": 20,
+        "hash": "1e579be9d6597b1af7dd2709233cf66aa7ccc4205edc42a7ae8b7904a2d3ff0b",
+        "frames": 61,
+        "inputAcknowledgements": 4
+      }
+    ],
+    "errors": [],
+    "a11y": {
+      "violations": [],
+      "passes": 13,
+      "incomplete": []
+    }
+  },
+  "productionInputs": {
+    "audited": 3950,
+    "candidateOrHarnessInputs": 0
+  },
+  "sourceChanges": [],
+  "sourceProofs": [
+    {
+      "phase": "exploratory",
+      "files": 56,
+      "allMatch": true,
+      "fingerprint": "39234364929a6d2a1651ad1d255c7bd70d4a43f2c9561142a6730308f6fbeaee"
+    },
+    {
+      "phase": "primary",
+      "files": 56,
+      "allMatch": true,
+      "fingerprint": "e195ced3a6605aa0cb6027f6ca917d9ee1c20790e7002bfce346360b55d97df1"
+    },
+    {
+      "phase": "paced",
+      "files": 56,
+      "allMatch": true,
+      "fingerprint": "2906a898ac78be81e92b9aa6f4acd67dc4452db6dbaaa29ed0263aef0e4ba1b1"
+    }
+  ],
+  "documentation": {
+    "documents": 49,
+    "localLinks": 515,
+    "diagramSources": 8,
+    "failures": []
+  },
+  "workflowYaml": {
+    "parser": "existing js-yaml",
+    "files": ["ci.yml", "ecs-bench.yml", "simulation-worker-bench.yml"],
+    "passed": true
+  },
+  "gitDiffCheck": true,
+  "logs": [
+    {
+      "file": "tmp/simulation-worker-bench/validation-install.log",
+      "present": true,
+      "bytes": 1974,
+      "sha256": "4478af0ff64819d56c06139a456c9e638132b66617f328ee7a8bb2d7889a3b75"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-scenes-export.log",
+      "present": true,
+      "bytes": 423,
+      "sha256": "3dccb57c0a0f9730a9c31f528a6d884184fccd8e768ec19aabad63bdc38abbcb"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-lint.log",
+      "present": false,
+      "bytes": 0,
+      "sha256": null,
+      "note": "Successful silent command; exit status is recorded in checks."
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-lint-tests.log",
+      "present": true,
+      "bytes": 3084,
+      "sha256": "bc3f13c929ce7d63a094e5160a37a50b93c4ca540d38d5c9d24ec2b1bee519b1"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-export-tests.log",
+      "present": true,
+      "bytes": 1508,
+      "sha256": "6a1156fe5b79a1c41229972bd249f8b5cf58f65190de8326846a3ca1a64de24d"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-world-tests.log",
+      "present": true,
+      "bytes": 2611,
+      "sha256": "2f9bb8f279f796d9144375a9624d6bb862ae780d98d635a1ec2fe4eb186d5ea9"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-ecs-correctness.log",
+      "present": true,
+      "bytes": 2497,
+      "sha256": "d7197f8e6fcdd1dd424277f535ed150a637803582a89f839797b8255f46d7419"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-ecs-smoke.log",
+      "present": true,
+      "bytes": 3017,
+      "sha256": "524ef3f02f64ee3a8808d9d77f101af0fb82f93035506df07a6567a645c04946"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-application-tests.log",
+      "present": true,
+      "bytes": 8313,
+      "sha256": "c5700e9fae2a2f27c5901b7c3c3c3478717e8c71d2d58d97fb10ae7878fae338"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-worker-ci-smoke.log",
+      "present": true,
+      "bytes": 1515,
+      "sha256": "b5daeeaddd879a14a0505787b3fa90339845b5193080663284e39b272975974d"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-production-build.log",
+      "present": true,
+      "bytes": 2343,
+      "sha256": "42a2f1effacb826881b225c50abe081bb81c65156bde778f68be20474968d116"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-production-input-audit.log",
+      "present": true,
+      "bytes": 74,
+      "sha256": "6fd77b7e06248c1735d707b94287a8a14835d6357784538d2a0ed1b6f2f9d1b1"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-built-assets.log",
+      "present": true,
+      "bytes": 143,
+      "sha256": "842b66b09e26818b09ec18e9438ae97d36e4e894cfbce52122b8705c0f747ad2"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-development-workflow.log",
+      "present": true,
+      "bytes": 549,
+      "sha256": "93f85b29b9a9f2bf31e5a1bd335ad4024524b79fbeecf5425a28c0468f8d2f46"
+    },
+    {
+      "file": "tmp/simulation-worker-bench/validation-angular-worker-packaging.log",
+      "present": true,
+      "bytes": 2161,
+      "sha256": "da72ed3f78f13294c9a4cf8393b94d191d6d9c6bbdd883b6667e6bb7339c8222"
+    }
+  ],
+  "notes": [
+    "No hosted performance workflow was dispatched.",
+    "Performance gate failures are reported separately from passing correctness/repository checks.",
+    "Packaging verifies the isolated lab through the production builder; production runtime integration is not implemented."
+  ]
+}

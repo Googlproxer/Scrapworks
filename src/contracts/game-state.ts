@@ -1,4 +1,5 @@
 export type SceneKey = 'MainMenu' | 'Game';
+
 export type BabylonSceneKey = Extract<SceneKey, 'MainMenu' | 'Game'>;
 
 export type GamePhase = 'idle' | 'loading' | 'ready' | 'stopped' | 'error' | 'paused';

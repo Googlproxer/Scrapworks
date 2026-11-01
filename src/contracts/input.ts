@@ -339,23 +339,29 @@ export interface InputVector {
 }
 
 export type Context = keyof typeof actions;
+
 export interface RawInput {
   readonly down: ReadonlySet<string>;
   readonly sticks: Readonly<Record<'left' | 'right', InputVector>>;
 }
+
 export type ButtonState = Readonly<{
   kind: 'button';
   held: boolean;
   pressed: boolean;
   released: boolean;
 }>;
+
 export type ActionState = ButtonState | Readonly<{ kind: 'vector2'; value: InputVector }>;
+
 export interface ActionFrame {
   readonly context: Context | null;
   readonly revision: number;
   readonly states: Readonly<Record<string, ActionState>>;
 }
+
 export type ControllerType = 'xbox' | 'dualshock' | 'dualsense';
+
 export interface ControllerInfo {
   readonly id: string;
   readonly type: ControllerType;

@@ -1,6 +1,6 @@
 import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import type { ComponentType } from '@angular/cdk/overlay';
-import { DestroyRef, inject, Injector, Service } from '@angular/core';
+import { DestroyRef, effect, inject, Injector, Service } from '@angular/core';
 import { take } from 'rxjs';
 import { GameRuntimeService } from '../game/game-runtime.service';
 
@@ -17,6 +17,11 @@ export class UiService {
   private readonly openDialogs = new Set<Pick<DialogRef, 'close'>>();
 
   constructor() {
+    effect(() => {
+      if (this.gameRuntimeService.errorMessage()) {
+        for (const dialog of [...this.openDialogs]) dialog.close();
+      }
+    });
     inject(DestroyRef).onDestroy(() => {
       for (const dialog of this.openDialogs) {
         dialog.close();
@@ -53,14 +58,17 @@ export class UiService {
       if (this.openDialogs.size === 0) this.gameRuntimeService.setInputEnabled(true);
     }
   }
+
   public closeTopDialog(): boolean {
     const top = [...this.openDialogs].at(-1);
     top?.close();
     return !!top;
   }
+
   public get hasDialogs(): boolean {
     return this.openDialogs.size > 0;
   }
+
   public get activeElement(): HTMLElement | null {
     const top = [...this.openDialogs].at(-1) as DialogRef | undefined;
     return top?.overlayRef.overlayElement ?? null;

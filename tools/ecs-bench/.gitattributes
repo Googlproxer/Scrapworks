@@ -1,0 +1,2 @@
+# Preserve byte-level source fingerprints across Windows and Linux checkouts.
+* text eol=lf

@@ -3,15 +3,17 @@ import type { Scene } from '@babylonjs/core/scene';
 import { SceneManager, ScriptComponent } from '@babylonjs-toolkit/next/scenemanager';
 import type { WorldSessionBridge } from '@contracts/game-client';
 import type { GameTickContext } from '@contracts/game-tick';
+import { Subscription, take } from 'rxjs';
+import { fromBabylonObservable } from '../lifecycle/from-babylon-observable';
 
 export interface GameplayScriptOptions {
-  readonly ticks?: Pick<WorldSessionBridge, 'registerTickHandler'>;
+  readonly ticks?: Pick<WorldSessionBridge, 'registerCompletedTickHandler'>;
   readonly isCurrent?: () => boolean;
   readonly isGameplayActive?: () => boolean;
   readonly tickOrder?: number;
 }
 
-/** Toolkit owns frame callbacks; the application session owns optional gameplay ticks. */
+/** Toolkit owns frames; optional tick hooks present already completed simulation work. */
 export abstract class GameplayScript extends ScriptComponent {
   public enabled = true;
   private attached = false;
@@ -19,7 +21,7 @@ export abstract class GameplayScript extends ScriptComponent {
   private disposed = false;
   private disposing = false;
   private unregisterTick?: () => void;
-  private readonly removeDisposalObservers: () => void;
+  private readonly disposalSubscriptions = new Subscription();
 
   constructor(
     transform: TransformNode,
@@ -29,12 +31,16 @@ export abstract class GameplayScript extends ScriptComponent {
   ) {
     // Attach after construction, in explicit order, through Toolkit's public API.
     super(transform, scene, { _registerComponentAlias: false }, alias);
-    const nodeDisposal = transform.onDisposeObservable.addOnce(() => this.dispose());
-    const sceneDisposal = scene.onDisposeObservable.addOnce(() => this.dispose());
-    this.removeDisposalObservers = () => {
-      transform.onDisposeObservable.remove(nodeDisposal);
-      scene.onDisposeObservable.remove(sceneDisposal);
-    };
+    this.disposalSubscriptions.add(
+      fromBabylonObservable(transform.onDisposeObservable)
+        .pipe(take(1))
+        .subscribe(() => this.dispose()),
+    );
+    this.disposalSubscriptions.add(
+      fromBabylonObservable(scene.onDisposeObservable)
+        .pipe(take(1))
+        .subscribe(() => this.dispose()),
+    );
   }
 
   public get initialized(): boolean {
@@ -59,7 +65,7 @@ export abstract class GameplayScript extends ScriptComponent {
   protected start(): void {
     if (this.disposed || this.started) return;
     if (this.onGameTick && this.options.ticks) {
-      this.unregisterTick = this.options.ticks.registerTickHandler((context) => {
+      this.unregisterTick = this.options.ticks.registerCompletedTickHandler((context) => {
         if (
           this.canRun() &&
           SceneManager.ScenePlaying &&
@@ -86,7 +92,7 @@ export abstract class GameplayScript extends ScriptComponent {
     this.started = false;
     this.unregisterTick?.();
     this.unregisterTick = undefined;
-    this.removeDisposalObservers();
+    this.disposalSubscriptions.unsubscribe();
     this.removeComponentMetadata();
     this.onDestroy?.();
   }
@@ -94,6 +100,7 @@ export abstract class GameplayScript extends ScriptComponent {
   protected onStart?(): void;
   protected onUpdate?(): void;
   protected onLateUpdate?(): void;
+  /** Main-thread presentation only; the reported authoritative step has already completed. */
   protected onGameTick?(context: GameTickContext): void;
   protected onDestroy?(): void;
 

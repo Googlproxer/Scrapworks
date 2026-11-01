@@ -116,8 +116,10 @@ describe('BindingLabels', () => {
       'direction.up': 'Haut',
       'binding.directions': '{left}, {right}, {up}, {down}',
     });
+
     const translate: ControlLabelTranslator = (message, parameters) =>
       (locale() === 'fr' ? french : english)(message, parameters);
+
     TestBed.configureTestingModule({
       providers: [{ provide: CONTROL_LABEL_TRANSLATOR, useValue: translate }],
     });

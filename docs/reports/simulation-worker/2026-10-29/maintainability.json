@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-29",
+  "rubric": "Five equally weighted criteria, 0-2 each. Scores select only among browser-qualified configurations; otherwise they describe the preferred baseline for further investigation.",
+  "candidates": [
+    {
+      "candidate": "miniplex",
+      "version": "2.0.0",
+      "domainReuse": {
+        "score": 2,
+        "evidence": "Native cached active query calls the shared complete(payload, resources) function; common fixture, commits, transactions and correctness oracle are reused unchanged."
+      },
+      "typeSafety": {
+        "score": 2,
+        "evidence": "World<Entity> and component-key operations retain the ordinary typed record shape. Public transport remains plain and independent of ECS handles."
+      },
+      "lifecycleMutation": {
+        "score": 2,
+        "evidence": "Explicit add/removeComponent, world.remove and world.clear suffice for the candidate layer. The shared worker coordinator handles generations, credits, cancellation and teardown."
+      },
+      "captureProjection": {
+        "score": 2,
+        "evidence": "Plain record values feed shared detached projection/capture directly; stable game IDs remain separate from object identity. Nested dirty tracking and predicate reindexing remain explicit."
+      },
+      "packageIntegration": {
+        "score": 1,
+        "evidence": "Pinned exports work through Vite and the Angular production packaging probe. The small implementation is inspectable, but sparse release cadence and transitive eventery CommonJS optimization warnings remain integration risks."
+      },
+      "total": 9
+    },
+    {
+      "candidate": "bitecs",
+      "version": "0.4.0",
+      "domainReuse": {
+        "score": 2,
+        "evidence": "Native query reads the per-world payload and Float64 stores, calls the same complete(payload, resources) function, and reuses common fixture, commits, transactions and oracle."
+      },
+      "typeSafety": {
+        "score": 1,
+        "evidence": "Strict TypeScript passes, but query membership requires payload non-null assertions and does not establish every indexed-store access to the compiler."
+      },
+      "lifecycleMutation": {
+        "score": 1,
+        "evidence": "Candidate code owns numeric capacity growth/copying, recycled-handle cleanup, payload clearing, component membership and deleteWorld. These obligations remain inside one worker."
+      },
+      "captureProjection": {
+        "score": 1,
+        "evidence": "Projection/capture reconstruct records from game ordinal to ECS handle, payload array and separate numeric stores; restoration reverses that mapping. No handles cross the transport boundary."
+      },
+      "packageIntegration": {
+        "score": 1,
+        "evidence": "Pinned 0.4.0 exports and no runtime dependencies simplify packaging, while its version-specific storage/query API and project-owned capacity policy require ongoing care. Future shared numeric facilities are assessed separately and earn no speculative bonus here."
+      },
+      "total": 6
+    }
+  ],
+  "tieBreaks": ["Retained memory", "Combined tick latency"],
+  "futureThreading": "bitECS provides the more direct shared numeric store/query-buffer starting point. Neither provides an automatic parallel scheduler; actual parallel scalability is unmeasured."
+}

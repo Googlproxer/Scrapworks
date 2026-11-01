@@ -1,4 +1,5 @@
 import { DestroyRef, inject, Service } from '@angular/core';
+import { fromEvent, merge, Subscription } from 'rxjs';
 import type { ActionFrame } from '@contracts/input';
 import { GameRuntimeService } from '../game/game-runtime.service';
 import { GameMenuComponent } from './game-menu/game-menu.component';
@@ -11,20 +12,26 @@ export class UiInputAdapterService {
   private readonly runtime = inject(GameRuntimeService);
   private readonly ui = inject(UiService);
   private page?: HTMLElement;
-  private readonly cleanup: (() => void)[] = [];
+  private readonly subscriptions = new Subscription();
+  private attachment?: Subscription;
   private lastDirection = '';
   private nextRepeat = 0;
 
   public constructor() {
-    this.cleanup.push(this.runtime.subscribeActions((frame) => this.dispatch(frame)));
-    inject(DestroyRef).onDestroy(() => this.cleanup.splice(0).forEach((cleanup) => cleanup()));
+    this.subscriptions.add(this.runtime.subscribeActions((frame) => this.dispatch(frame)));
+    inject(DestroyRef).onDestroy(() => this.subscriptions.unsubscribe());
   }
 
   public attach(page: HTMLElement): void {
+    this.attachment?.unsubscribe();
+    const attachment = new Subscription();
+    this.attachment = attachment;
+    this.subscriptions.add(attachment);
     this.page = page;
     const document = page.ownerDocument;
     const capturedPointers = new Map<number, Set<number>>();
     const capturedClicks = new Set<number>();
+
     const keyboard = (event: KeyboardEvent) => {
       if (this.runtime.inspectorActive()) {
         // Inspector can render outside this page. Releases still clear old app input,
@@ -60,6 +67,7 @@ export class UiInputAdapterService {
       )
         event.preventDefault();
     };
+
     const pointer = (event: PointerEvent) => {
       if (event.type !== 'pointerdown') {
         const buttons = capturedPointers.get(event.pointerId);
@@ -90,6 +98,7 @@ export class UiInputAdapterService {
         event.preventDefault();
       }
     };
+
     const click = (event: MouseEvent) => {
       if (this.runtime.inspectorActive()) {
         capturedClicks.delete(event.button);
@@ -100,36 +109,41 @@ export class UiInputAdapterService {
       event.preventDefault();
       event.stopImmediatePropagation();
     };
+
     const focus = (event: FocusEvent) => {
       if (this.runtime.inspectorActive()) return;
       const target = event.target as HTMLElement | null;
       if (target && (page.contains(target) || this.ui.activeElement?.contains(target)))
         this.runtime.setUiFocused(target.tagName !== 'CANVAS');
     };
-    document.addEventListener('keydown', keyboard);
-    document.addEventListener('keyup', keyboard);
-    document.addEventListener('pointerdown', pointer);
-    document.addEventListener('pointerup', pointer);
-    document.addEventListener('pointercancel', pointer);
-    document.addEventListener('click', click, true);
-    document.addEventListener('auxclick', click, true);
-    document.addEventListener('contextmenu', click, true);
-    document.addEventListener('focusin', focus);
-    this.cleanup.push(() => {
-      document.removeEventListener('keydown', keyboard);
-      document.removeEventListener('keyup', keyboard);
-      document.removeEventListener('pointerdown', pointer);
-      document.removeEventListener('pointerup', pointer);
-      document.removeEventListener('pointercancel', pointer);
-      document.removeEventListener('click', click, true);
-      document.removeEventListener('auxclick', click, true);
-      document.removeEventListener('contextmenu', click, true);
+
+    attachment.add(
+      merge(
+        fromEvent<KeyboardEvent>(document, 'keydown'),
+        fromEvent<KeyboardEvent>(document, 'keyup'),
+      ).subscribe(keyboard),
+    );
+    attachment.add(
+      merge(
+        fromEvent<PointerEvent>(document, 'pointerdown'),
+        fromEvent<PointerEvent>(document, 'pointerup'),
+        fromEvent<PointerEvent>(document, 'pointercancel'),
+      ).subscribe(pointer),
+    );
+    attachment.add(
+      merge(
+        fromEvent<MouseEvent>(document, 'click', { capture: true }),
+        fromEvent<MouseEvent>(document, 'auxclick', { capture: true }),
+        fromEvent<MouseEvent>(document, 'contextmenu', { capture: true }),
+      ).subscribe(click),
+    );
+    attachment.add(() => {
       for (const buttons of capturedPointers.values())
         for (const button of buttons) this.runtime.handleUiPointer({ button, down: false });
       capturedPointers.clear();
       capturedClicks.clear();
-      document.removeEventListener('focusin', focus);
     });
+    attachment.add(fromEvent<FocusEvent>(document, 'focusin').subscribe(focus));
   }
 
   public openMenu(): void {
@@ -144,10 +158,12 @@ export class UiInputAdapterService {
       return;
     }
     if (this.runtime.capturingBinding()) return;
+
     const pressed = (name: string) => {
       const action = frame.states[name];
       return action?.kind === 'button' && action.pressed;
     };
+
     if (frame.context === 'gameplay') {
       if (pressed('menu')) this.openMenu();
       return;

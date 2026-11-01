@@ -1,4 +1,4 @@
-import type { BuildingView, DepositDefinition, WorldPosition } from '@contracts/world';
+import type { WorldPosition } from '@contracts/world';
 
 /** Plain player data changed only by the simulation-owned motor. */
 export interface PlayerState {
@@ -8,17 +8,5 @@ export interface PlayerState {
   sprinting: boolean;
 }
 
-/** Plain mutable gameplay data, owned exclusively by Simulation. Not a persisted save schema. */
-export interface WorldState {
-  worldId: string;
-  tick: number;
-  stepSeconds: number;
-  nextEntityId: number;
-  player: PlayerState;
-  inventory: Record<string, number>;
-  equipment: string[];
-  research: string[];
-  productionTotals: Record<string, number>;
-  deposits: DepositDefinition[];
-  buildings: BuildingView[];
-}
+/** World authority is now private ECS components/resources; plain captures are separate. */
+export type { EntityData, WorldResources, SimulationSnapshot } from '@contracts/simulation';

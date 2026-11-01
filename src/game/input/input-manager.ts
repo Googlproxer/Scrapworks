@@ -15,8 +15,9 @@ import {
   type UiKeyInput,
   type UiPointerInput,
 } from '@contracts/input';
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { BrowserActivity } from '../lifecycle/browser-activity';
+import { fromBabylonObservable } from '../lifecycle/from-babylon-observable';
 import { InputCapture } from './capture';
 import { ActionEvaluator } from './evaluator/evaluator';
 import { compileRules } from './evaluator/evaluator.helpers';
@@ -35,9 +36,10 @@ export class InputManager {
   private readonly enabledSubject = new BehaviorSubject(false);
   private readonly controllersSubject = new BehaviorSubject<readonly ControllerInfo[]>([]);
   private readonly subscriptions = new Subscription();
-  private readonly deviceCleanups = new Map<string, () => void>();
+  private readonly deviceSubscriptions = new Map<string, Subscription>();
   private readonly controllers = new Map<string, DeviceSourceType>();
-  private readonly rawListeners = new Set<(control: ButtonControl) => void>();
+  private readonly rawInput = new Subject<ButtonControl>();
+  private captures = 0;
   private readonly frameOwners = new WeakMap<ActionFrame, ActionEvaluator>();
   private readonly browserActivity: BrowserActivity;
   private readonly inputCapture: InputCapture;
@@ -65,14 +67,16 @@ export class InputManager {
         (control) => this.onRawPress(control),
         (current, previous, pressed) => this.trackControllerActivity(current, previous, pressed),
       );
-      const connected = this.dsm.onDeviceConnectedObservable.add((device) =>
-        this.connectDevice(device),
+      this.subscriptions.add(
+        fromBabylonObservable(this.dsm.onDeviceConnectedObservable).subscribe((device) =>
+          this.connectDevice(device),
+        ),
       );
-      const disconnected = this.dsm.onDeviceDisconnectedObservable.add((device) =>
-        this.disconnectDevice(device),
+      this.subscriptions.add(
+        fromBabylonObservable(this.dsm.onDeviceDisconnectedObservable).subscribe((device) =>
+          this.disconnectDevice(device),
+        ),
       );
-      this.subscriptions.add(() => this.dsm.onDeviceConnectedObservable.remove(connected));
-      this.subscriptions.add(() => this.dsm.onDeviceDisconnectedObservable.remove(disconnected));
       this.subscriptions.add(
         combineLatest([
           this.requestedContextSubject,
@@ -84,7 +88,7 @@ export class InputManager {
       );
     } catch (error) {
       this.subscriptions.unsubscribe();
-      for (const cleanup of this.deviceCleanups.values()) cleanup();
+      for (const subscription of this.deviceSubscriptions.values()) subscription.unsubscribe();
       this.dsm?.dispose();
       this.browserActivity.release();
       throw error;
@@ -94,21 +98,27 @@ export class InputManager {
   public get enabled(): boolean {
     return this.enabledSubject.value;
   }
+
   public get isCapturing(): boolean {
-    return this.rawListeners.size > 0;
+    return this.captures > 0;
   }
+
   public get usingController(): boolean {
     return this.controllerTarget;
   }
+
   public markPointerActivity(): void {
     this.controllerTarget = false;
   }
+
   public setEnabled(on: boolean): void {
     if (!this.disposed) this.requestedEnabledSubject.next(on);
   }
+
   public setContext(context: Context | null): void {
     if (!this.disposed) this.requestedContextSubject.next(context);
   }
+
   public setViewportActive(active: boolean): void {
     if (!this.disposed) this.viewportActiveSubject.next(active);
   }
@@ -151,6 +161,7 @@ export class InputManager {
   public getControllers(): readonly ControllerInfo[] {
     return this.controllersSubject.value;
   }
+
   public subscribeControllers(
     listener: (controllers: readonly ControllerInfo[]) => void,
   ): () => void {
@@ -175,12 +186,14 @@ export class InputManager {
   /** Captures fresh button presses; action dispatch stays suspended until unsubscribed. */
   public subscribeRawInput(listener: (control: ButtonControl) => void): () => void {
     if (this.disposed) return () => undefined;
-    this.rawListeners.add(listener);
-    this.refreshContext();
-    return () => {
-      this.rawListeners.delete(listener);
+    const subscription = this.rawInput.subscribe(listener);
+    ++this.captures;
+    subscription.add(() => {
+      --this.captures;
       this.refreshContext();
-    };
+    });
+    this.refreshContext();
+    return () => subscription.unsubscribe();
   }
 
   public handleUiKeyboard(input: UiKeyInput): boolean {
@@ -215,9 +228,9 @@ export class InputManager {
     this.disposed = true;
     this.refreshContext();
     this.subscriptions.unsubscribe();
-    for (const cleanup of this.deviceCleanups.values()) cleanup();
-    this.deviceCleanups.clear();
-    this.rawListeners.clear();
+    for (const subscription of this.deviceSubscriptions.values()) subscription.unsubscribe();
+    this.deviceSubscriptions.clear();
+    this.rawInput.complete();
     this.clear();
     this.dsm.dispose();
     this.browserActivity.release();
@@ -261,7 +274,7 @@ export class InputManager {
 
   private onRawPress(control: ButtonControl): void {
     if (!this.browserActive()) return;
-    for (const listener of [...this.rawListeners]) listener(control);
+    this.rawInput.next(control);
   }
 
   private trackControllerActivity(
@@ -346,23 +359,27 @@ export class InputManager {
 
   private connectDevice(device: DeviceSourceType): void {
     const key = device.deviceType + ':' + device.deviceSlot;
-    this.deviceCleanups.get(key)?.();
+    this.deviceSubscriptions.get(key)?.unsubscribe();
     if (device.deviceType === DeviceType.Keyboard) {
-      const observer = device.onInputChangedObservable.add((event) =>
-        this.acceptDeviceKeyboard(event),
+      this.deviceSubscriptions.set(
+        key,
+        fromBabylonObservable(device.onInputChangedObservable).subscribe((event) =>
+          this.acceptDeviceKeyboard(event),
+        ),
       );
-      this.deviceCleanups.set(key, () => device.onInputChangedObservable.remove(observer));
     } else if (device.deviceType === DeviceType.Mouse) {
-      const observer = device.onInputChangedObservable.add((event) => {
-        this.markPointerActivity();
-        if (
-          event.type === 'pointerup' ||
-          this.inputEvaluator.currentContext === 'gameplay' ||
-          (this.isCapturing && this.browserActive())
-        )
-          this.inputCapture.onMouse(event);
-      });
-      this.deviceCleanups.set(key, () => device.onInputChangedObservable.remove(observer));
+      const subscription = fromBabylonObservable(device.onInputChangedObservable).subscribe(
+        (event) => {
+          this.markPointerActivity();
+          if (
+            event.type === 'pointerup' ||
+            this.inputEvaluator.currentContext === 'gameplay' ||
+            (this.isCapturing && this.browserActive())
+          )
+            this.inputCapture.onMouse(event);
+        },
+      );
+      this.deviceSubscriptions.set(key, subscription);
     }
     const type = controllerTypes[device.deviceType];
     if (type) {
@@ -375,8 +392,8 @@ export class InputManager {
 
   private disconnectDevice(device: DeviceSourceType): void {
     const key = device.deviceType + ':' + device.deviceSlot;
-    this.deviceCleanups.get(key)?.();
-    this.deviceCleanups.delete(key);
+    this.deviceSubscriptions.get(key)?.unsubscribe();
+    this.deviceSubscriptions.delete(key);
     if (device.deviceType === DeviceType.Keyboard) this.inputCapture.clearDevice('keyboard');
     if (device.deviceType === DeviceType.Mouse) this.inputCapture.clearDevice('mouse');
     const type = controllerTypes[device.deviceType];

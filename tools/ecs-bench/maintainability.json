@@ -1,0 +1,91 @@
+{
+  "rubric": "Each criterion: 0 material workaround, 1 manageable discipline, 2 direct verified fit. Applied only after correctness and complete performance evidence qualify a candidate.",
+  "miniplex": {
+    "domainReuse": [
+      2,
+      "Shared completion/accounting functions consume ordinary component payloads directly."
+    ],
+    "typeSafety": [
+      2,
+      "World<Entity> and component queries preserve typed records without module declaration shims."
+    ],
+    "lifecycle": [
+      2,
+      "Synchronous systems and explicit component methods fit the current session; predicate reindexing is covered by the probe."
+    ],
+    "captureProjection": [
+      2,
+      "Native object data maps directly to deep detached records and fresh-world rebuilds."
+    ],
+    "packageRisk": [
+      1,
+      "Small inspectable core and working package exports, but sparse release activity and explicit nested dirty tracking remain obligations."
+    ]
+  },
+  "bitecs": {
+    "domainReuse": [
+      2,
+      "The same plain completion/accounting functions are reused with per-world payload stores."
+    ],
+    "typeSafety": [
+      1,
+      "Typed stores compile strictly, but query membership does not prove every indexed payload access to TypeScript."
+    ],
+    "lifecycle": [
+      1,
+      "Explicit store initialization/cleanup, ID reuse and typed-array capacity growth require application discipline."
+    ],
+    "captureProjection": [
+      1,
+      "Projection and rebuild translate numeric IDs and separate stores through the adapter."
+    ],
+    "packageRisk": [
+      1,
+      "Working ESM/types and no runtime dependencies; the 0.4 rewrite and removal/mutation semantics require version-specific knowledge."
+    ]
+  },
+  "koota": {
+    "domainReuse": [
+      2,
+      "Shared plain rules work with callback payload traits and schema numeric traits."
+    ],
+    "typeSafety": [
+      1,
+      "Strong inferred trait APIs, with explicit nullable payload defaults and storage-dependent read semantics."
+    ],
+    "lifecycle": [
+      1,
+      "Native lifecycle works, but nested and direct-store writes require explicit change signalling."
+    ],
+    "captureProjection": [
+      1,
+      "SoA records and AoS payload references require consistent detachment; query results allocate snapshots."
+    ],
+    "packageRisk": [
+      0,
+      "Import installs methods on Number.prototype across the host application; the benchmark contains this with fresh processes."
+    ]
+  },
+  "becsy": {
+    "domainReuse": [
+      2,
+      "Shared completion/accounting functions consume object payloads without rewriting synthetic rules."
+    ],
+    "typeSafety": [
+      2,
+      "Declared component schemas and access entitlements pass the checked build and strict compilation."
+    ],
+    "lifecycle": [
+      0,
+      "Promise execution, queued system operations, transient handles and per-world component classes require substantial adapter machinery."
+    ],
+    "captureProjection": [
+      1,
+      "Capture and projections run as declared system operations and complete asynchronously."
+    ],
+    "packageRisk": [
+      0,
+      "0.16.1 needs explicit lib ESM paths and a declaration shim; root main and documented perf subpath do not provide the required Node ESM entry."
+    ]
+  }
+}

@@ -5,9 +5,8 @@ These tools preserve authoring work and check documentation. They use Python's s
 ## Audit source tracking and generated ignores
 
 ```sh
-yarn cleanup:audit
-node tools/cleanup/audit-repository.mjs --output tmp/cleanup/repository.json
-node tools/cleanup/audit-repository.mjs --require-tracked
+node tools/cleanup/audit-repository.ts --output tmp/cleanup/repository.json
+node tools/cleanup/audit-repository.ts --require-tracked
 ```
 
 The audit reads Git with optional index locks disabled and verifies that HEAD/index hashes stay unchanged. It checks authored art, Editor assets, application sources, tools, docs and root configuration for accidental ignores, and checks that generated outputs/caches are ignored and absent from the index. It prints counts and writes detailed source paths when `--output` is supplied.
@@ -30,7 +29,7 @@ The archive is verified after creation. `RESTORE.txt` explains restoration into 
 ## Check documentation
 
 ```sh
-node tools/cleanup/check-docs.mjs
+node tools/cleanup/check-docs.ts
 
 ```
 

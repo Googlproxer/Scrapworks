@@ -1,0 +1,86 @@
+[
+  {
+    "exitCode": 0,
+    "elapsedMs": 1327.486,
+    "name": "scenes-export",
+    "command": "yarn scenes:export"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 4694.4879,
+    "name": "lint",
+    "command": "yarn lint"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 1329.5799,
+    "name": "lint-tests",
+    "command": "yarn test:lint"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 1115.3464,
+    "name": "export-tests",
+    "command": "yarn test:export"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 842.1986,
+    "name": "world-tests",
+    "command": "yarn test:world"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 58920.4324,
+    "name": "ecs-correctness",
+    "command": "yarn bench:ecs:check --label local-validation --output tmp/simulation-worker-bench/validation-ecs-check"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 41504.5103,
+    "name": "ecs-smoke",
+    "command": "yarn bench:ecs:smoke --label local-validation --output tmp/simulation-worker-bench/validation-ecs-smoke"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 66083.3541,
+    "name": "application-tests",
+    "command": "yarn test"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 27889.9503,
+    "name": "worker-ci-smoke",
+    "command": "yarn bench:worker:smoke --label local-validation --output tmp/simulation-worker-bench/validation-worker-smoke"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 23230.9893,
+    "name": "production-build",
+    "command": "yarn build --stats-json"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 116.8715,
+    "name": "production-input-audit",
+    "command": "node tools/ecs-bench/verify-production.mjs"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 518.0317,
+    "name": "built-assets",
+    "command": "yarn assets:check --build"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 25644.679,
+    "name": "development-workflow",
+    "command": "yarn test:workflow"
+  },
+  {
+    "exitCode": 0,
+    "elapsedMs": 5593.9422,
+    "name": "angular-worker-packaging",
+    "command": "node tools/simulation-worker-bench/packaging-check.mjs"
+  }
+]

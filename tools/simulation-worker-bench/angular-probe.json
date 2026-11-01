@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "rewriteRelativeImportExtensions": true
+  },
+  "files": ["./browser.ts", "./worker.ts", "../ecs-bench/becsy.d.ts"],
+  "include": []
+}

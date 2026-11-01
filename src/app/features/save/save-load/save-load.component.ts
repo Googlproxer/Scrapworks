@@ -1,5 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { concatMap, EMPTY, from, fromEvent, merge, switchMap, take } from 'rxjs';
 import { SaveService } from '@app/features/save/save.service';
 
 interface SaveSlot {
@@ -20,6 +22,7 @@ export class SaveLoadComponent {
 
   private readonly saveService = inject(SaveService);
   private readonly dialogRef = inject(DialogRef<SaveLoadComponent>);
+  private readonly destroyRef = inject(DestroyRef);
 
   public constructor() {
     // Initialise 10 save slots
@@ -85,18 +88,17 @@ export class SaveLoadComponent {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'application/json';
-    input.onchange = async (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      if (target.files && target.files.length > 0) {
-        const file = target.files[0];
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          const jsonData = e.target?.result as string;
-          await this.importData(jsonData);
-        };
-        reader.readAsText(file);
-      }
-    };
+    merge(fromEvent(input, 'change'), fromEvent(input, 'cancel'))
+      .pipe(
+        take(1),
+        switchMap(() => {
+          const file = input.files?.[0];
+          return file ? from(file.text()) : EMPTY;
+        }),
+        concatMap((data) => this.importData(data)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
     input.click();
   }
 

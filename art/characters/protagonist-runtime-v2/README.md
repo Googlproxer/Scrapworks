@@ -58,7 +58,7 @@ Run from the repository root with Blender 5.2.2. The scripts create an isolated 
 & 'C:\Program Files\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python tools/art/build-protagonist-runtime.py
 & 'C:\Program Files\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python tools/art/validate-protagonist-runtime.py
 python tools/art/contact-sheet-protagonist-runtime.py
-node tools/art/check-turning-browser.mjs http://localhost:4200
+node tests/acceptance/check-turning-browser.ts http://localhost:4200
 ```
 
 The contact sheet step requires Pillow. Add `-- --no-render` to the validation command for numeric checks only. The browser probe checks the current disabled-turn policy and writes to `browser-smooth-turning/`, preserving the earlier `browser-turning/` checkpoint. It requires the running development app and installed Playwright Chromium and changes the inspection camera only in its own browser context. The build extracts five FBXs into a temporary directory under the repository's ignored `tmp/`, preserving both the archive and the user's separately extracted working folder. The GLB retains the source's exact WebP payloads after Blender export to avoid lossy recompression and duplicate fallback encodings.

@@ -23,7 +23,9 @@
   @if (gameRuntimeService.errorMessage(); as errorMessage) {
     <div class="centre">
       <p role="alert">{{ errorMessage }}</p>
-      <button type="button" class="button" (click)="gameRuntimeService.retry()">Retry</button>
+      <button type="button" class="button" data-retry (click)="gameRuntimeService.retry()">
+        Retry
+      </button>
     </div>
   } @else if (gameRuntimeService.currentSceneKey() !== 'Game' || gameRuntimeService.isLoading()) {
     <div class="centre">
