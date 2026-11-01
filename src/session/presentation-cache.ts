@@ -10,6 +10,7 @@ import {
   MAX_DETAIL_SUBSCRIPTIONS,
   requireInvariant as check,
 } from '@contracts/simulation';
+
 export class PublicationGapError extends Error {}
 
 /** Main-thread presentation storage. No ECS import, component aliases or per-frame population scan. */
@@ -25,13 +26,16 @@ export class PresentationCache {
   public readonly details = new Map<string, Inspection>();
   public version = 0;
   public playerId = '';
+
   public get size(): number {
     return this.ids.size;
   }
+
   public read(): WorldView {
     check(this.current, 'Simulation is not ready');
     return this.current;
   }
+
   public apply(packet: PresentationPacket, generation: number): boolean {
     if (packet.version <= this.version) return false;
     if (!(
@@ -97,8 +101,10 @@ export class PresentationCache {
       const old = packet.full ? undefined : this.mappings[removed[at]];
       if (old?.generation === removed[at + 1]) staged.set(old.slot, undefined);
     }
+
     const lookup = (slot: number): EntityMapping | undefined =>
       staged.has(slot) ? staged.get(slot) : packet.full ? undefined : this.mappings[slot];
+
     for (const m of packet.mappings) {
       const existing = lookup(m.slot);
       check(
@@ -224,12 +230,14 @@ export class PresentationCache {
     this.version = packet.version;
     return true;
   }
+
   public replaceDetails(ids: readonly string[], details: readonly Inspection[]): void {
     check(ids.length <= MAX_DETAIL_SUBSCRIPTIONS, 'Inspection overflow');
     this.details.clear();
     for (const detail of details)
       if (ids.includes(detail.id) && this.ids.has(detail.id)) this.details.set(detail.id, detail);
   }
+
   /** Independent field decoder assertion, used outside measured regions. */
   public verify(entities: readonly EntityData[]): void {
     check(
@@ -267,6 +275,7 @@ export class PresentationCache {
         );
     }
   }
+
   public dispose(): void {
     this.rows = new Float64Array(0);
     this.mappings = [];

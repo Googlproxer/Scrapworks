@@ -5,6 +5,7 @@ import { TestData } from './schema';
 interface DBSchema {
   testData: EntityTable<TestData, 'id'>;
 }
+
 type DBInstance = Dexie & DBSchema;
 
 @Service()

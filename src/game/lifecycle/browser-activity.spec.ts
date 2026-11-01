@@ -14,11 +14,13 @@ describe('BrowserActivity document ownership', () => {
     for (const owner of owners.splice(0)) owner.release();
     vi.restoreAllMocks();
   });
+
   function acquire(doc = document) {
     const owner = new BrowserActivity(doc);
     owners.push(owner);
     return owner;
   }
+
   it.each([
     { hidden: false, focused: true },
     { hidden: true, focused: false },

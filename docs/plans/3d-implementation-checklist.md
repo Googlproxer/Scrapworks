@@ -26,7 +26,7 @@ yarn test:world
 yarn test:export
 yarn test:workflow
 yarn assets:check --build
-yarn cleanup:audit
+node tools/cleanup/audit-repository.ts --output tmp/cleanup/repository.json
 yarn docs:check
 ```
 

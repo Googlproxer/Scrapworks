@@ -3,5 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "main": "index.cjs",
-  "description": "Enable the installed Babylon.js Editor's official scene MCP bridge for Scrapworks."
+  "description": "Enable the installed Babylon.js Editor's official scene MCP bridge for Scrapworks.",
+  "dependencies": {
+    "jiti": "2.7.0"
+  }
 }

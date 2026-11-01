@@ -374,9 +374,11 @@ describe('GameRuntimeService', () => {
     revision: 1,
     states: { menu: { kind: 'button', held: true, pressed: true, released: false } },
   };
+
   function currentOptions(): GameClientOptions {
     return factory.mock.calls.at(-1)![1]!;
   }
+
   function mountWorld() {
     const game = createClient();
     factory.mockReturnValueOnce(game.client);
@@ -385,6 +387,7 @@ describe('GameRuntimeService', () => {
     game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     return { game, options: currentOptions(), bridge: currentOptions().session! };
   }
+
   // Explicitly run submission and the next owned presentation frame for this inline control.
   function render(bridge: WorldSessionBridge, ...args: Parameters<WorldSessionBridge['frame']>) {
     bridge.frame(...args);

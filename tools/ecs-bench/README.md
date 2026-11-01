@@ -2,13 +2,15 @@
 
 Standalone synthetic experiments for Miniplex 2.0.0, bitECS 0.4.0, Koota 0.6.6 and Becsy 0.16.1. Production simulation, game contracts, authoring sources and gameplay are not imported or modified.
 
+CI policy, 1 November 2026: library selection is complete. These investigation checks and timings are opt-in local commands or the manual workflow; normal pull-request/master CI runs no ECS benchmark commands. Production correctness and build-graph separation remain covered by the application/world checks and metadata audit.
+
 ## Commands
 
-- `yarn bench:ecs:check`: strict type checking and isolated Node/Chromium correctness for the reference, four candidates and three diagnostic variants.
-- `yarn bench:ecs:smoke`: correctness followed by short 1,000-entity Node/Chromium trials; no performance qualification.
-- `yarn bench:ecs:node` / `yarn bench:ecs:browser`: full scaling/timing matrix in one environment.
-- `yarn bench:ecs:full`: both environments, diagnostic variants, projection/capture/rebuild trials, CPU/allocation/heap profiles, 10,000 churn ticks, 20 lifecycle cycles and three 30-second paced runs per primary candidate/workload.
-- `yarn bench:ecs:report --input tmp/ecs-bench/<run-id> --destination docs/reports/ecs/<date>`: regenerate compact evidence and Markdown.
+- `node tools/ecs-bench/cli.ts check`: strict type checking and isolated Node/Chromium correctness for the reference, four candidates and three diagnostic variants.
+- `node tools/ecs-bench/cli.ts smoke`: correctness followed by short 1,000-entity Node/Chromium trials; no performance qualification.
+- `node tools/ecs-bench/cli.ts node` / `node tools/ecs-bench/cli.ts browser`: full scaling/timing matrix in one environment.
+- `node tools/ecs-bench/cli.ts full`: both environments, diagnostic variants, projection/capture/rebuild trials, CPU/allocation/heap profiles, 10,000 churn ticks, 20 lifecycle cycles and three 30-second paced runs per primary candidate/workload.
+- `node tools/ecs-bench/cli.ts report --input tmp/ecs-bench/<run-id> --destination docs/reports/ecs/<date>`: regenerate compact evidence and Markdown.
 
 Use Node 24.21.0, the pinned Yarn version and `yarn playwright install chromium --only-shell`. Results go under ignored `tmp/ecs-bench/`. A full run can take hours and generates large heap snapshots. Run on an otherwise idle machine without concurrent builds/tests. No external service or game save is accessed.
 

@@ -29,6 +29,7 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
   public readonly inputAdapter = inject(UiInputAdapterService);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   public readonly developer = !!environment.dev;
+
   public constructor() {
     afterRenderEffect(() => {
       if (this.gameRuntimeService.errorMessage())

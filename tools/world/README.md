@@ -1,6 +1,6 @@
 # Authored world compilation
 
-`compile.mjs` reads saved Editor JSON and publishes a version 1 plain `WorldDefinition` through the staged scene exporter. It does not instantiate Babylon or execute attached scripts. A malformed definition stops export before publication; scenes, generated script registry and `worlds/game.json` retain their last working generation together.
+`compile.ts` reads saved Editor JSON and publishes a version 1 plain `WorldDefinition` through the staged scene exporter. It does not instantiate Babylon or execute attached scripts. A malformed definition stops export before publication; scenes, generated script registry and `worlds/game.json` retain their last working generation together.
 
 The active Game scene contains four named TransformNode markers. Edit their transforms and `metadata.scrapworks` fields in the Editor's saved source:
 
@@ -19,4 +19,4 @@ The migration fixture has a 10 by 10 grid, 200 cm cells and minimum corner (-100
 
 Run `yarn test:world` for pure Node marker, transform, boundary, movement, pause and placement tests. `yarn test:export` also verifies that invalid authored marker data retains the previously published scene and world files. Gameplay saves and manual/factory progression are separate milestones.
 
-The Node source tests register `register-typescript.mjs` before importing TypeScript. It reads the repository's `tsconfig.json` with the installed TypeScript compiler and resolves source aliases and extensionless imports against that configuration. Native Node still handles package imports, built-ins and explicit JavaScript modules; declaration files are never loaded as runtime source. The resolver regression runs from a temporary directory with spaces to check that configuration discovery does not depend on the working directory. Run this target after changing source import paths: passing the Angular browser suite does not validate Node's separate module resolution.
+The Node source tests register `register-typescript.ts` before importing TypeScript. It reads the repository's `tsconfig.json` with the installed TypeScript compiler and resolves source aliases and extensionless imports against that configuration. Native Node still handles package imports, built-ins and explicit JavaScript modules; declaration files are never loaded as runtime source. The resolver regression runs from a temporary directory with spaces to check that configuration discovery does not depend on the working directory. Run this target after changing source import paths: passing the Angular browser suite does not validate Node's separate module resolution.

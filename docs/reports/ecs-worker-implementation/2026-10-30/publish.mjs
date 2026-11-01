@@ -4,7 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { gzipSync } from 'node:zlib';
-import { report } from '../../../../tools/simulation-worker-bench/report.mjs';
+import { report } from '../../../../tools/simulation-worker-bench/report.ts';
 
 const [input, destination = import.meta.dirname] = process.argv.slice(2);
 if (!input) throw new Error('Usage: node publish.mjs run-directory [destination]');

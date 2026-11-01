@@ -10,9 +10,11 @@ export const emptyInventory = (capacity = 24): InventoryData => ({
   slots: Array.from({ length: capacity }, () => null),
   reservations: [],
 });
+
 export function quantity(inventory: InventoryData, item: string): number {
   return inventory.slots.reduce((n, slot) => n + (slot?.item === item ? slot.quantity : 0), 0);
 }
+
 export function available(inventory: InventoryData, item: string): number {
   return (
     quantity(inventory, item) -
@@ -22,6 +24,7 @@ export function available(inventory: InventoryData, item: string): number {
     )
   );
 }
+
 function canSpend(
   inventory: InventoryData,
   item: string,
@@ -39,6 +42,7 @@ function canSpend(
     }
   return false;
 }
+
 function withdraw(inventory: InventoryData, item: string, count: number): void {
   for (let n = 0; n < inventory.slots.length && count; n++) {
     const slot = inventory.slots[n];
@@ -49,6 +53,7 @@ function withdraw(inventory: InventoryData, item: string, count: number): void {
     if (!slot.quantity) inventory.slots[n] = null;
   }
 }
+
 function totals(items: readonly ItemStack[]): Map<string, number> {
   const result = new Map<string, number>();
   for (const item of items) {
@@ -62,6 +67,7 @@ function totals(items: readonly ItemStack[]): Map<string, number> {
   }
   return result;
 }
+
 /** Preflight on detached slots; failure never partially spends or adds stock. */
 export function planTransaction(
   inventory: InventoryData,
@@ -105,6 +111,7 @@ export function planTransaction(
   }
   return slots;
 }
+
 export function transact(
   inventory: InventoryData,
   remove: readonly ItemStack[],
@@ -116,6 +123,7 @@ export function transact(
   inventory.slots = slots;
   return true;
 }
+
 export function transfer(
   source: InventoryData,
   destination: InventoryData,
@@ -159,6 +167,7 @@ export function transfer(
   destination.slots = to;
   return true;
 }
+
 export function reserve(inventory: InventoryData, reservation: Reservation): boolean {
   check(reservation.id.length > 0 && reservation.owner.length > 0, 'Invalid reservation identity');
   check(!inventory.reservations.some((r) => r.id === reservation.id), 'Duplicate reservation');
@@ -179,6 +188,7 @@ export function reserve(inventory: InventoryData, reservation: Reservation): boo
   });
   return true;
 }
+
 export function commitReservation(
   inventory: InventoryData,
   id: string,
@@ -186,6 +196,7 @@ export function commitReservation(
 ): boolean {
   return commitReserved(inventory, id, content, false);
 }
+
 /** Atomically pay one operation and retain the same owned reservation for the
  * next operation. Failure pays nothing; callers explicitly choose repetition. */
 export function commitReservationAndRenew(
@@ -195,6 +206,7 @@ export function commitReservationAndRenew(
 ): boolean {
   return commitReserved(inventory, id, content, true);
 }
+
 function commitReserved(
   inventory: InventoryData,
   id: string,
@@ -252,6 +264,7 @@ function commitReserved(
   if (!renew) inventory.reservations.splice(inventory.reservations.indexOf(reservation), 1);
   return true;
 }
+
 export function eligible(
   inventory: InventoryData,
   recipe: string,
@@ -263,12 +276,14 @@ export function eligible(
     [...totals(definition.inputs)].every(([item, count]) => available(inventory, item) >= count)
   );
 }
+
 export function materialValue(items: readonly ItemStack[], content: ContentDefinition): number {
   return [...totals(items)].reduce((n, [item, count]) => {
     check(Object.hasOwn(content.items, item), 'Unknown material');
     return n + count * content.items[item].solidValue;
   }, 0);
 }
+
 /** Explicit policy order; native query iteration never decides stock priority. */
 export function spendByPriority(
   inventory: InventoryData,

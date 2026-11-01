@@ -16,6 +16,7 @@ Updated 30 October 2026. Scrapworks is a browser-first 3D factory-restoration ga
 ## Implementation and authoring
 
 - [Technical Design Document](design/TDD.md): ownership, current implementation and planned systems.
+- [Event-handling decision and audit](decisions/event-handling.md): RxJS event adapters, subscription ownership and native boundary exceptions.
 - [Simulation worker investigation](plans/simulation-worker-investigation.md) and [lean results](reports/simulation-worker/2026-10-30/README.md): Miniplex and bitECS qualify with compact transferred views and bounded detail subscriptions; retain Miniplex. The [rich transport study](reports/simulation-worker/2026-10-29/README.md) remains historical. Includes the asynchronous handoff and future multithreading assessment; production/multi-worker implementation remains pending.
 - [Production ECS/worker implementation plan](plans/ecs-worker-implementation.md): staged Step 0 migration, production data/contracts, completed-tick presentation hooks, authored-world Retry and integrated acceptance checks; implementation remains pending.
 - [3D migration](plans/3d-migration.md) and [acceptance checklist](plans/3d-implementation-checklist.md): completed migration scope and evidence.
@@ -23,6 +24,7 @@ Updated 30 October 2026. Scrapworks is a browser-first 3D factory-restoration ga
 - [Editor/MCP setup](plans/babylon-editor-setup.md): authoring, export and desktop tools.
 - [World markers](../tools/world/README.md): authored metadata, units and compilation.
 - [Export tools and policy](../tools/scenes/README.md): source boundaries, manifest-driven packaging and recovery.
+- [Tool catalogue](../tools/README.md): direct commands for occasional audits, Editor checks and opt-in ECS/worker investigations.
 - [Diagrams](diagrams/README.md): authoritative Mermaid sources and matching SVG/PNG exports.
 - [Cleanup record](plans/3d-cleanup.md): current retirement policy and recovery sources.
 

@@ -5,6 +5,14 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 * Use strict type checking
 * Prefer type inference when the type is obvious
 * Avoid the `any` type; use `unknown` when type is uncertain
+* Prefer TypeScript (`.ts`) over JavaScript for all new repository tools where feasible. Use strict type checking and update callers, tests and documentation with any entry-point changes. Keep required JavaScript host/compatibility loaders minimal and document why they remain; use another language when the tool depends on its runtime or libraries.
+
+## Event handling
+
+* Prefer RxJS for application-owned programmatic event handling: `fromEvent` for DOM/EventTarget events and `fromEventPattern` for SDK add/remove callbacks. Use the shared `fromBabylonObservable` adapter for Babylon observers so its extra `EventState` argument does not change the emitted value.
+* Own teardown with a `Subscription` per lifecycle, or `takeUntilDestroyed` in Angular. Preserve capture/passive options, synchronous cancellation and one-shot behaviour. Release subscriptions before disposing their event source; replace subscriptions when their scene, device or attachment changes.
+* Use a `Subject` for ordinary application-owned notifications rather than a manual listener set; use bounded replay only when the contract requires late delivery. Retain explicit dispatch where ordered callbacks must stop on invalidation or propagate failures synchronously.
+* Keep Angular template/host event bindings idiomatic. Keep ordered simulation hooks and deterministic simulation/core/contracts free of RxJS. The worker's fatal-error boundary, native frame scheduler and diagnostic/benchmark instrumentation have documented exceptions; see [event-handling decision and audit](docs/decisions/event-handling.md).
 
 ## Scrapworks 3D direction and implementation ownership
 

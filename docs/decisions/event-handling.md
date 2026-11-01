@@ -1,0 +1,50 @@
+# Event handling with RxJS
+
+Accepted 1 November 2026. Applies to application-owned programmatic event handling on the main thread, including Angular services, browser transport and Babylon presentation adapters.
+
+## Decision
+
+Use `fromEvent` for DOM and other `EventTarget` events. Use `fromEventPattern` when an SDK registers callbacks and returns an observer token or unsubscribe function. Adapt at the native API boundary and retain existing renderer-neutral callback contracts where needed.
+
+Own subscriptions through one `Subscription` per client, scene, device or attachment. Angular components can use `takeUntilDestroyed` with their `DestroyRef`. Replacing a device, scene or UI attachment must unsubscribe its predecessor; destruction and failed-worker teardown must release listeners before disposing their sources. Use `take(1)` for one-shot notifications, and end temporary operations on cancellation as well as successful completion.
+
+For application-owned notifications, use a `Subject` instead of manually dispatching a listener set. Use bounded replay only when the contract requires it: the worker failure channel replays its single terminal error to late subscribers. Public callback-and-teardown interfaces can adapt those streams without exposing RxJS to their callers.
+
+Preserve event options and ordering. UI capture listeners still run in the capture phase, and `preventDefault`, `stopImmediatePropagation`, focus changes and input sampling remain synchronous. Do not introduce scheduling, throttling or debouncing during a mechanical subscription refactor. RxJS subscriber exceptions are reported through RxJS rather than thrown back through the event source; protocol and ordered-domain failure contracts must not depend on that behaviour.
+
+Source-registration failures also arrive as Observable errors. The renderer explicitly routes resize-registration errors back through its synchronous constructor rollback, including disconnecting a partially registered observer.
+
+Babylon notifications supply `(eventData, EventState)`. Passing those callbacks directly to `fromEventPattern` would emit a two-element array. The shared [`fromBabylonObservable`](../../src/game/lifecycle/from-babylon-observable.ts) adapter forwards only event data and unregisters the exact observer token. It also supports DeviceSourceManager's synchronous replay during registration.
+
+## Audit and refactor
+
+The audit searched production source, tests and tool entry points for DOM listener pairs, `on*` properties, Babylon/Inspector observer registration, callback subscriptions and native observer APIs. Existing tests and diagnostics were reviewed for event-ordering and teardown assumptions.
+
+| Area | Result |
+| --- | --- |
+| [`BabylonGameClient`](../../src/game/babylon-game-client.ts) | Removed the custom `listen` helper and teardown array. Canvas focus/blur, pointer movement/down, context menu and wheel use `fromEvent`. ResizeObserver uses `fromEventPattern` with `disconnect` teardown; context loss uses the Babylon adapter. One subscription owns the client lifetime. |
+| [`InputManager`](../../src/game/input/input-manager.ts) | Device connection/disconnection and keyboard/mouse input use the Babylon adapter. Per-device subscriptions are replaced on reconnection and released on disconnect/disposal. Raw binding-capture notifications use a Subject with independently owned capture lifetimes. Controller polling remains frame-driven. |
+| [`UiInputAdapterService`](../../src/app/features/ui/ui-input-adapter.service.ts) | Document keyboard, pointer, click and focus events use `fromEvent`. Click suppression retains capture options. Reattachment releases prior listeners and held pointer state. Destruction owns the complete subscription tree. |
+| [`SceneInspector`](../../src/game/debug/scene-inspector.ts) | Scene disposal uses the Babylon adapter with `take(1)`. Each Inspector request owns a replaceable subscription group, including the close contract's teardown function. Existing revision guards and asynchronous disposal barriers remain. |
+| [`Inspector SDK adapter`](../../src/game/debug/inspector-loader.development.ts) | Native close notification uses `fromEventPattern`, `take(1)` and the Inspector observer's `remove` token. The internal `onClose` callback contract remains usable without exposing the Inspector SDK. |
+| [`GameplayScript`](../../src/game/toolkit/gameplay-script.ts) | Transform/scene disposal notifications use the Babylon adapter with `take(1)` and an owned subscription. Toolkit frame hooks and explicitly ordered completed-tick callbacks retain their contracts. |
+| [`WorkerSimulationPort`](../../src/session/worker-port.ts) | Worker message, error and decoding-error events use `fromEvent`. Failure/disposal unsubscribes before terminating the worker and rejects pending requests once. A bounded ReplaySubject retains the terminal failure for late owners; receipt timing and public failure notification contracts remain. |
+| [`SaveLoadComponent`](../../src/app/features/save/save-load/save-load.component.ts) | File selection/cancellation uses a one-shot, destruction-bound event stream. `File.text()` replaces nested FileReader callbacks; the stream awaits storage import before refreshing slots. This remains the existing test-data importer, not gameplay persistence. |
+| [`BrowserActivity`](../../src/game/lifecycle/browser-activity.ts) | Already uses `fromEvent` and shared, reference-counted subscription ownership; retained. |
+
+## Deliberate exceptions
+
+- Angular template bindings, host bindings, outputs and reactive form APIs retain their framework-managed lifetimes. Wrapping those again would duplicate ownership.
+- Simulation/core/contracts stay plain TypeScript. Ordered completed-tick hooks, command handling and other domain callbacks retain synchronous ordering, invalidation and failure propagation. Renderer-neutral `GameClient`, input and Inspector callback interfaces may return teardown functions; their native event adapters use RxJS internally.
+- `GameRuntimeService` action-frame dispatch checks its generation/revision after each handler and stops immediately when an earlier handler invalidates the frame. Session detail callbacks are bounded game-owned subscriptions and participate in session failure handling. These retain explicit dispatch rather than becoming generic notification Subjects.
+- The [simulation worker entry](../../src/workers/simulation.worker.ts) retains its native message listener. It is the process-lifetime protocol boundary, and exceptions must reach the worker's native error mechanism. Importing RxJS here would change failure handling and the independent worker bundle. The main-thread transport uses RxJS.
+- Babylon's render loop, requestAnimationFrame, fixed-step credits, timers and controller polling remain their native scheduling APIs. They drive work rather than register application event subscriptions.
+- Repository tools, Editor host bootstraps, Playwright/CDP probes and benchmark workers retain native process/SDK events. Their process-scoped or measured instrumentation is outside this runtime decision. Changing the laboratory transport would alter the historical comparison. Test fakes and injected failures may use native events to exercise the real boundary.
+
+## Verification
+
+The relevant checks cover synchronous Babylon data delivery and replay, independent teardown, UI capture-phase cancellation, repeated UI attachment, Inspector replacement/disposal, Toolkit destruction, file selection/cancellation/destruction, worker timeout/crash/disposal and the real renderer lifecycle. Production build and dependency inspection verify that RxJS remains outside the simulation worker graph. No new benchmark CI jobs or performance qualifications are required for this refactor.
+
+Verified on 1 November 2026: 129 targeted Chromium tests across eight relevant test files and 42 Node world/session tests passed. Strict TypeScript checks, application lint, documentation links, the production build and the built-worker browser acceptance probe passed. The worker still has 18 production inputs and the unchanged `worker-XCQEWFTX.js` output; the new RxJS subscriptions belong to the main-thread graph. Raw local check output is ignored under `tmp/rxjs-events/`.
+
+Reproduce the checks with `yarn lint`, `yarn test:world`, `yarn docs:check`, `yarn build --stats-json`, `node tools/ecs-bench/verify-production.ts` and `node tools/world/production-browser.ts`. Run Chromium tests with `yarn test` for the full application suite, or pass repeated `--include=<path relative to src>` arguments to the Angular test command for the relevant files above. The full application suite and benchmark matrix were not rerun for this focused refactor.

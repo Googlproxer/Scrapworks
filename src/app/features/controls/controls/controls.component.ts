@@ -14,8 +14,11 @@ import { BindingLabels } from '../binding-labels.service';
 import { ControlSettingsService } from '../control-settings.service';
 
 type Binding = ButtonControl | Vector2Binding;
+
 type Direction = 'up' | 'down' | 'left' | 'right';
+
 type DeviceTab = 'keyboard' | 'gamepad';
+
 interface BindingEditor {
   context: Context;
   name: string;
@@ -75,6 +78,7 @@ export class ControlsComponent {
     }
     return [...new Set(conflicts)];
   });
+
   public constructor() {
     let destroyed = false;
     inject(DestroyRef).onDestroy(() => {
@@ -88,6 +92,7 @@ export class ControlsComponent {
       }
     });
   }
+
   public rows(context: Context) {
     return Object.entries(actions[context])
       .filter(([name]) => !['jump', 'inventory'].includes(name))
@@ -99,6 +104,7 @@ export class ControlsComponent {
         ],
       }));
   }
+
   public visibleBindings(bindings: readonly Binding[]) {
     return bindings
       .map((binding, index) => ({ binding, index }))
@@ -110,6 +116,7 @@ export class ControlsComponent {
             : this.directions.some((direction) => this.matchesTab(binding[direction])),
       );
   }
+
   public columns(context: Context): readonly number[] {
     const count = Math.max(
       2,
@@ -117,15 +124,19 @@ export class ControlsComponent {
     );
     return Array.from({ length: count }, (_, index) => index);
   }
+
   public label(name: string): string {
     return this.labels.action(name);
   }
+
   public isButton(binding: Binding): binding is ButtonControl {
     return 'device' in binding;
   }
+
   public describe(control: ButtonControl): string {
     return this.labels.button(control, this.controllerType());
   }
+
   public describeBinding(binding: Binding): string {
     if (!this.isButton(binding) && binding.kind === 'buttons2d')
       return this.labels.directions({
@@ -136,14 +147,17 @@ export class ControlsComponent {
       });
     return this.labels.binding(binding, this.controllerType());
   }
+
   public matchesTab(control: ButtonControl): boolean {
     return (control.device === 'gamepad') === (this.tab() === 'gamepad');
   }
+
   public selectTab(tab: DeviceTab): void {
     this.cancelCapture();
     this.editor.set(null);
     this.tab.set(tab);
   }
+
   public tabKey(event: KeyboardEvent): void {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
@@ -160,11 +174,13 @@ export class ControlsComponent {
       ?.querySelector<HTMLElement>(`#controls-tab-${tab}`)
       ?.focus();
   }
+
   private edit(context: Context, name: string, change: (bindings: Binding[]) => void): void {
     const draft = structuredClone(this.draft());
     change((draft.contexts[context] as unknown as Record<string, Binding[]>)[name]);
     this.draft.set(draft);
   }
+
   public capture(context: Context, name: string, index?: number, direction?: Direction): void {
     this.cancelCapture();
     this.captureLabel.set(
@@ -183,6 +199,7 @@ export class ControlsComponent {
       this.cancelCapture();
     });
   }
+
   public cancelCapture(event?: Event): void {
     if (event && this.captureLabel()) {
       event.preventDefault();
@@ -192,6 +209,7 @@ export class ControlsComponent {
     this.stopCapture = undefined;
     this.captureLabel.set(null);
   }
+
   public activateBinding(context: Context, name: string, index: number, binding: Binding): void {
     if (this.isButton(binding)) this.capture(context, name, index);
     else {
@@ -204,22 +222,26 @@ export class ControlsComponent {
       );
     }
   }
+
   public editing(context: Context, name: string): Vector2Binding | null {
     const editor = this.editor();
     if (!editor || editor.context !== context || editor.name !== name) return null;
     const binding = this.rows(context).find((row) => row.name === name)?.bindings[editor.index];
     return binding && !this.isButton(binding) ? binding : null;
   }
+
   public remove(context: Context, name: string, index: number): void {
     this.cancelCapture();
     this.editor.set(null);
     this.edit(context, name, (bindings) => bindings.splice(index, 1));
   }
+
   public add(context: Context, name: string, kind: string): void {
     if (kind === 'button') this.capture(context, name);
     else if (this.tab() === 'gamepad') this.addStick(context, name);
     else this.addDirections(context, name);
   }
+
   private directionBinding(): Vector2Binding {
     return this.tab() === 'gamepad'
       ? {
@@ -237,6 +259,7 @@ export class ControlsComponent {
           right: { device: 'keyboard', code: 'KeyD' },
         };
   }
+
   public addDirections(context: Context, name: string): void {
     this.cancelCapture();
     this.edit(context, name, (bindings) => {
@@ -244,6 +267,7 @@ export class ControlsComponent {
       bindings.push(this.directionBinding());
     });
   }
+
   public addStick(context: Context, name: string): void {
     this.cancelCapture();
     const stick = name === 'orbit' ? 'right' : 'left';
@@ -253,6 +277,7 @@ export class ControlsComponent {
       bindings.push({ kind: 'stick2d', stick, deadzone });
     });
   }
+
   public changeVectorType(context: Context, name: string, index: number, event: Event): void {
     this.cancelCapture();
     const value = (event.target as HTMLSelectElement).value;
@@ -272,6 +297,7 @@ export class ControlsComponent {
           : replacement;
     });
   }
+
   private defaultDeadzone(context: Context, name: string): number {
     const bindings =
       (defaultProfile.contexts[context] as Readonly<Record<string, readonly Binding[]>>)[name] ??
@@ -279,9 +305,11 @@ export class ControlsComponent {
     const stick = bindings.find((binding) => !this.isButton(binding) && binding.kind === 'stick2d');
     return stick && !this.isButton(stick) && stick.kind === 'stick2d' ? stick.deadzone : 0.18;
   }
+
   public changeStick(context: Context, name: string, index: number, event: Event): void {
     this.changeVectorType(context, name, index, event);
   }
+
   public stickSettings() {
     return this.contexts.flatMap((context) =>
       this.rows(context).flatMap((row) =>
@@ -293,6 +321,7 @@ export class ControlsComponent {
       ),
     );
   }
+
   public changeDeadzone(context: Context, name: string, index: number, event: Event): void {
     const deadzone = Number((event.target as HTMLInputElement).value);
     if (!Number.isFinite(deadzone) || deadzone < 0 || deadzone > 0.9) return;
@@ -302,25 +331,30 @@ export class ControlsComponent {
         bindings[index] = { ...binding, deadzone };
     });
   }
+
   public selectController(event: Event): void {
     this.runtime.selectController((event.target as HTMLSelectElement).value || null);
   }
+
   public selectLabelStyle(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     this.labelStyle.set(
       value === 'xbox' || value === 'dualshock' || value === 'dualsense' ? value : 'automatic',
     );
   }
+
   public reset(): void {
     this.cancelCapture();
     this.editor.set(null);
     this.draft.set(structuredClone(defaultProfile));
   }
+
   public async save(): Promise<void> {
     this.saving.set(true);
     if (await this.settings.save(this.draft())) this.ref.close();
     this.saving.set(false);
   }
+
   public close(): void {
     this.cancelCapture();
     this.ref.close();

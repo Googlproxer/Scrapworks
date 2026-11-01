@@ -175,7 +175,7 @@ Revisit the original five equally weighted maintainability criteria (domain reus
 ## Deliverables and implementation handoff
 
 - [x] Compatibility audit and explicit asynchronous session/tick-hook contract.
-- [x] Both pinned candidates in inline and single-worker modes, shared correctness/transport suite and reproducible commands, implemented as `bench:worker:check`, `bench:worker:smoke`, `bench:worker:browser` and `bench:worker:report`. Include candidate and execution-mode filters in commands and artifacts.
+- [x] Both pinned candidates in inline and single-worker modes, shared correctness/transport suite and reproducible commands through `node tools/simulation-worker-bench/cli.ts <check|smoke|browser|report>`. Include candidate and execution-mode filters in commands and artifacts. The [tool catalogue](../../tools/README.md) documents direct replacements for the retired package aliases.
 - [x] Production-build, CSP/worker-loading and deployed-base-path smoke checks using repository build settings; prototype success under Vite alone does not prove Angular packaging. Keep worker dependencies out of the renderer bundle except intentional protocol/host code.
 - [x] Raw samples, manifests, profiles and heap evidence under ignored `tmp/simulation-worker-bench/<run-id>/`; compact JSON/CSV, scaling/latency charts and a dated report under `docs/reports/simulation-worker/<date>/`.
 - [x] Side-by-side results for all four configurations, per-candidate worker overhead relative to inline, browser qualification and the source-backed future multithreading assessment. Publish failures and all repetitions.

@@ -8,6 +8,7 @@ export class EntityViews extends GameplayScript {
   private readonly entities = new Map<string, EntityView>();
   private publication = -1;
   private generation = -1;
+
   public constructor(
     node: TransformNode,
     private readonly definition: WorldDefinition,

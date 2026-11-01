@@ -102,6 +102,26 @@ describe('InputManager coordination', () => {
     expect(input.takeFrame().states['jump']).toMatchObject({ held: false, released: true });
   });
 
+  it('owns independent raw-input captures and releases them once on unsubscribe or disposal', () => {
+    const first = vi.fn();
+    const second = vi.fn();
+    const stopFirst = input.subscribeRawInput(first);
+    const stopSecond = input.subscribeRawInput(second);
+    key('KeyA', true);
+    expect(first).toHaveBeenCalledExactlyOnceWith({ device: 'keyboard', code: 'KeyA' });
+    expect(second).toHaveBeenCalledExactlyOnceWith({ device: 'keyboard', code: 'KeyA' });
+    stopFirst();
+    stopFirst();
+    expect(input.isCapturing).toBe(true);
+    key('KeyA', false);
+    key('KeyB', true);
+    expect(first).toHaveBeenCalledOnce();
+    expect(second).toHaveBeenCalledTimes(2);
+    input.dispose();
+    stopSecond();
+    expect(input.isCapturing).toBe(false);
+  });
+
   it('does not consume unbound keys or composition', () => {
     expect(key('KeyL', true).defaultPrevented).toBe(false);
     expect(key('Space', true, { isComposing: true }).defaultPrevented).toBe(false);

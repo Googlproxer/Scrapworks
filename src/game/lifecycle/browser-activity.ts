@@ -8,7 +8,9 @@ class ActivitySource {
 
   constructor(public readonly document: Document) {
     const updateVisibility = () => this.visible.next(!document.hidden);
+
     const updateFocus = () => this.focused.next(document.hasFocus());
+
     this.subscriptions.add(fromEvent(document, 'visibilitychange').subscribe(updateVisibility));
     if (document.defaultView) {
       this.subscriptions.add(fromEvent(document.defaultView, 'focus').subscribe(updateFocus));
@@ -48,9 +50,11 @@ export class BrowserActivity {
   public get isVisible(): boolean {
     return this.source.visible.value;
   }
+
   public get hasFocus(): boolean {
     return this.source.focused.value;
   }
+
   public get activeElement(): Element | null {
     return this.source.document.activeElement;
   }

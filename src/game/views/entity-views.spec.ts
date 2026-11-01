@@ -10,6 +10,7 @@ class ProjectionViews extends EntityViews {
     super.onUpdate();
   }
 }
+
 const definition: WorldDefinition = {
   version: 1,
   id: 'projection-scene',
@@ -19,6 +20,7 @@ const definition: WorldDefinition = {
   deposits: [],
   blockers: [],
 };
+
 const building = (id: string): BuildingView => ({
   id,
   buildingId: 'test-building',
@@ -27,6 +29,7 @@ const building = (id: string): BuildingView => ({
   rotation: 0,
   position: { x: 1.234, y: 0, z: 3.456 },
 });
+
 const view = (partial: Partial<WorldView> = {}): WorldView => ({
   worldId: definition.id,
   worldGeneration: 1,

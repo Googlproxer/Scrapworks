@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "module": "ESNext",
     "noEmit": true,
@@ -7,7 +7,7 @@
     "noPropertyAccessFromIndexSignature": false,
     "types": ["node"]
   },
-  "include": ["./**/*.ts", "../ecs-bench/becsy.d.ts"],
+  "include": ["./**/*.ts", "../ecs-bench/becsy.d.ts", "../browser-types.d.ts"],
   "files": [],
   "references": []
 }

@@ -8,13 +8,13 @@ The factory, save and research diagrams remain future design; they do not imply 
 
 ## Regeneration
 
-The optional [renderer](../../tools/diagrams/render-diagrams.cjs) supports the Mermaid subset used by these documents. Provide an absolute `node_modules` directory containing `@viz-js/viz` and `sharp`; these are diagram-tool dependencies, not required application dependencies.
+The optional [renderer](../../tools/diagrams/render-diagrams.ts) supports the Mermaid subset used by these documents. Provide an absolute `node_modules` directory containing `@viz-js/viz` and `sharp`; these are diagram-tool dependencies, not required application dependencies.
 
 From the repository root:
 
 ```sh
-node tools/diagrams/render-diagrams.cjs /absolute/path/to/node_modules
-node tools/diagrams/render-diagrams.cjs /absolute/path/to/node_modules --implementation
+node tools/diagrams/render-diagrams.ts /absolute/path/to/node_modules
+node tools/diagrams/render-diagrams.ts /absolute/path/to/node_modules --implementation
 ```
 
 The first command renders the three technical-design diagrams. The second renders the five roadmap diagrams. Both update `docs/diagrams/src/*.mmd`, `docs/diagrams/*.svg`, and `docs/diagrams/*.png`. The script resolves its document and output paths from its own location, so it does not rely on documents outside the repository.

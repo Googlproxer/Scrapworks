@@ -30,8 +30,11 @@ import { PlayerMotor, type MovementIntent } from './player-motor';
 import { FIXED_STEP_SECONDS, occupiedCells } from './world-rules';
 import { assertSnapshot, EMPTY_CONTENT, ownContent } from './capture';
 import { emptyInventory } from './domain/inventory';
+
 export type { MovementIntent } from './player-motor';
+
 export { FIXED_STEP_SECONDS, PLAYER_RADIUS, SPRINT_SPEED, WALK_SPEED } from './world-rules';
+
 const stackCount = (stacks: readonly ItemStack[] | undefined): number => {
   let count = 0;
   if (stacks) for (const stack of stacks) count += stack.quantity;
@@ -46,6 +49,7 @@ export interface SimulationEntity extends EntityData {
   /** 1 = detached details changed, 2 = numeric row changed. */
   dirty: number;
 }
+
 export interface SystemContext {
   readonly active: Iterable<SimulationEntity>;
   readonly entities: Iterable<SimulationEntity>;
@@ -57,7 +61,9 @@ export interface SystemContext {
   remove(id: string): void;
   membership(entity: SimulationEntity, active: boolean): void;
 }
+
 export type SimulationSystem = (context: SystemContext) => void;
+
 export interface SimulationOptions {
   developerFixture?: boolean;
   content?: ContentDefinition;
@@ -108,11 +114,13 @@ export class Simulation {
       'Restore definition mismatch',
     );
     this.definition = structuredClone(definition);
+
     const freeze = (value: unknown): void => {
       if (!value || typeof value !== 'object' || Object.isFrozen(value)) return;
       Object.freeze(value);
       for (const child of Object.values(value)) freeze(child);
     };
+
     freeze(this.definition);
     this.developerFixture = options.developerFixture ?? false;
     let playerId = 'player';
@@ -206,6 +214,7 @@ export class Simulation {
     };
     this.rememberPlayer();
   }
+
   private mapping(e: SimulationEntity): EntityMapping {
     const authored =
       e.deposit && e.transform ? this.definition.deposits.find((d) => d.id === e.id) : undefined;
@@ -226,6 +235,7 @@ export class Simulation {
         : {}),
     };
   }
+
   private insert(data: EntityData): SimulationEntity {
     check(!this.ids.has(data.id) && this.ids.size < 250000, 'Duplicate entity/population overflow');
     const slot = this.free.pop() ?? this.slots.length;
@@ -256,6 +266,7 @@ export class Simulation {
     this.mark(entity);
     return entity;
   }
+
   private remove(id: string): void {
     const entity = this.ids.get(id);
     check(entity && id !== this.resources.playerId, 'Invalid removal');
@@ -267,6 +278,7 @@ export class Simulation {
     this.generations[entity.slot] = entity.generation + 1;
     this.free.push(entity.slot);
   }
+
   private mark(entity: SimulationEntity, detailsOnly = false): void {
     check(!this.disposed && this.slots[entity.slot] === entity, 'Stale/disposed entity');
     if (!entity.dirty) {
@@ -275,6 +287,7 @@ export class Simulation {
     if (!detailsOnly && !(entity.dirty & 2)) this.dirtyCount++;
     entity.dirty |= detailsOnly ? 1 : 3;
   }
+
   private rebuildCollision(): void {
     const buildings = Array.from(this.buildingsQuery, (e) => e.building);
     const cells = occupiedCells(this.definition, buildings);
@@ -284,6 +297,7 @@ export class Simulation {
           cells.push({ row, column });
     this.collisionCells = cells;
   }
+
   private rememberPlayer(): void {
     this.endpoints.push({
       tick: this.resources.tick,
@@ -291,15 +305,18 @@ export class Simulation {
     });
     if (this.endpoints.length > 2) this.endpoints.shift();
   }
+
   public enqueue(command: WorldCommand): void {
     check(!this.disposed && this.commands.length < 256, 'Disposed simulation/command overflow');
     this.commands.push(structuredClone(command));
   }
+
   public clearInput(): void {
     this.commands = [];
     this.playerMotor.clearInput();
     this.mark(this.ids.get(this.resources.playerId)!);
   }
+
   public step(movement: MovementIntent): void {
     check(!this.disposed && !this.stepping, 'Disposed or recursive simulation');
     this.stepping = true;
@@ -353,6 +370,7 @@ export class Simulation {
       this.stepping = false;
     }
   }
+
   public inspect(ids: readonly string[]): Inspection[] {
     check(
       ids.length <= MAX_DETAIL_SUBSCRIPTIONS && new Set(ids).size === ids.length,
@@ -363,6 +381,7 @@ export class Simulation {
       return e ? [{ id, tick: this.resources.tick, entity: this.detach(e) }] : [];
     });
   }
+
   private detach(e: SimulationEntity): EntityData {
     const data: EntityData = { id: e.id, kind: e.kind };
     for (const key of [
@@ -379,6 +398,7 @@ export class Simulation {
       if (e[key] !== undefined) Object.assign(data, { [key]: e[key] });
     return structuredClone(data);
   }
+
   public publish(watched: ReadonlySet<string>, full = false): PresentationPacket {
     check(
       !this.disposed && !this.stepping && watched.size <= MAX_DETAIL_SUBSCRIPTIONS,
@@ -455,6 +475,7 @@ export class Simulation {
     this.removed = [];
     return packet;
   }
+
   public setPublicationDirty(fraction: number): void {
     for (let index = 0; index < this.dirtyLength; index++) this.dirty[index]!.dirty = 0;
     this.dirty.fill(undefined, 0, this.dirtyLength);
@@ -466,6 +487,7 @@ export class Simulation {
       this.mark(entity);
     }
   }
+
   public capture(): SimulationSnapshot {
     check(!this.disposed && !this.stepping, 'Invalid capture boundary');
     return {
@@ -479,6 +501,7 @@ export class Simulation {
       lastCommandResult: structuredClone(this.lastCommandResult),
     };
   }
+
   public get view(): WorldView {
     const player = this.ids.get(this.resources.playerId)!;
     const inventory: Record<string, number> = {};
@@ -504,6 +527,7 @@ export class Simulation {
       lastCommandResult: structuredClone(this.lastCommandResult),
     };
   }
+
   public dispose(): void {
     if (this.disposed) return;
     this.disposed = true;

@@ -4,11 +4,12 @@ import { Scene } from '@babylonjs/core/scene';
 import type { GameClient, GameClientOptions, GameInputPort } from '@contracts/game-client';
 import { isValidSceneKey, type GameState, type SceneKey } from '@contracts/game-state';
 import { assertWorldDefinition, type WorldDefinition } from '@contracts/world';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, fromEvent, fromEventPattern, Subscription } from 'rxjs';
 import { loadEditorScene } from './assets/load-editor-scene';
 import { loadCharacter, type CharacterLoader } from './assets/load-character';
 import { InputManager } from './input/input-manager';
 import { BrowserActivity } from './lifecycle/browser-activity';
+import { fromBabylonObservable } from './lifecycle/from-babylon-observable';
 import { FrameClock } from './timing/frame-clock';
 import { loadInspector } from './debug/inspector-loader';
 import { SceneInspector, type InspectorLoader } from './debug/scene-inspector';
@@ -29,7 +30,6 @@ export class BabylonGameClient implements GameClient {
   private engine!: Engine;
   private inputManager!: InputManager;
   private browserActivity!: BrowserActivity;
-  private resizeObserver?: ResizeObserver;
   private currentScene?: Scene;
   private currentAssets?: AssetContainer;
   private world?: WorldScene;
@@ -42,8 +42,7 @@ export class BabylonGameClient implements GameClient {
   private contextLost = false;
   private suspendingWorld = false;
   private recoveryFrame?: number;
-  private readonly subscriptions: Subscription[] = [];
-  private readonly handlers: (() => void)[] = [];
+  private readonly subscriptions = new Subscription();
   private readonly pendingSceneDisposals = new Set<Promise<void>>();
   private pointer?: { x: number; y: number };
   private requestedInputContext: Context | null = 'ui';
@@ -65,6 +64,7 @@ export class BabylonGameClient implements GameClient {
   public get hasError(): boolean {
     return this.stateSubject.value.phase === 'error';
   }
+
   public get currentKey(): SceneKey | null {
     return this.stateSubject.value.sceneKey;
   }
@@ -104,57 +104,87 @@ export class BabylonGameClient implements GameClient {
         handleUiPointer: (event) => this.inputManager.handleUiPointer(event),
         focus: () => this.canvas.focus(),
       };
-      const listen = <K extends keyof HTMLElementEventMap>(
-        name: K,
-        listener: (event: HTMLElementEventMap[K]) => void,
-      ) => {
-        this.canvas.addEventListener(name, listener);
-        this.handlers.push(() => this.canvas.removeEventListener(name, listener));
-      };
-      listen('focus', () => this.reconcileActivity());
-      listen('blur', () => this.reconcileActivity());
-      listen('pointermove', (event) => {
-        this.inputManager.markPointerActivity();
-        const rect = this.canvas.getBoundingClientRect();
-        this.pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
-      });
-      listen('pointerdown', (event) => {
-        this.inputManager.markPointerActivity();
-        this.canvas.focus();
-        const rect = this.canvas.getBoundingClientRect();
-        this.pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
-      });
-      listen('contextmenu', (event) => {
-        if (this.inputManager.enabled) event.preventDefault();
-      });
-      listen('wheel', () => this.inputManager.markPointerActivity());
-      this.resizeObserver = new ResizeObserver(() => {
-        if (this.destroyed) return;
-        this.hostHasSize = host.clientWidth > 0 && host.clientHeight > 0;
-        if (this.hostHasSize && !this.contextLost) this.engine.resize();
-        this.reconcileActivity();
-      });
-      this.hostHasSize = host.clientWidth > 0 && host.clientHeight > 0;
-      this.resizeObserver.observe(host);
-      this.subscriptions.push(
-        this.browserActivity.visibleObs.subscribe(() => this.reconcileActivity()),
-        this.browserActivity.hasFocusObs.subscribe(() => this.reconcileActivity()),
-        this.inputManager.enabledObs.subscribe(() => this.attachCamera()),
+
+      this.subscriptions.add(
+        fromEvent(this.canvas, 'focus').subscribe(() => this.reconcileActivity()),
       );
-      const contextObserver = this.engine.onContextLostObservable.add(() => {
-        if (this.destroyed || this.contextLost) return;
-        this.contextLost = true;
-        ++this.transition;
-        this.suspendWorld(false);
-        this.inputManager.clear();
-        this.reportError(
-          new Error('Graphics context was lost. Choose Retry to restore the 3D viewport.'),
-        );
-        this.inputManager.setContext('ui');
-        this.engine.stopRenderLoop(this.renderFrame);
-        this.recoveryFrame = this.ownerWindow.requestAnimationFrame(this.recoveryTick);
-      });
-      this.handlers.push(() => this.engine.onContextLostObservable.remove(contextObserver));
+      this.subscriptions.add(
+        fromEvent(this.canvas, 'blur').subscribe(() => this.reconcileActivity()),
+      );
+      this.subscriptions.add(
+        fromEvent<PointerEvent>(this.canvas, 'pointermove').subscribe((event) => {
+          this.inputManager.markPointerActivity();
+          const rect = this.canvas.getBoundingClientRect();
+          this.pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+        }),
+      );
+      this.subscriptions.add(
+        fromEvent<PointerEvent>(this.canvas, 'pointerdown').subscribe((event) => {
+          this.inputManager.markPointerActivity();
+          this.canvas.focus();
+          const rect = this.canvas.getBoundingClientRect();
+          this.pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+        }),
+      );
+      this.subscriptions.add(
+        fromEvent<MouseEvent>(this.canvas, 'contextmenu').subscribe((event) => {
+          if (this.inputManager.enabled) event.preventDefault();
+        }),
+      );
+      this.subscriptions.add(
+        fromEvent(this.canvas, 'wheel').subscribe(() => this.inputManager.markPointerActivity()),
+      );
+      let resizeSetupError: Error | undefined;
+      this.subscriptions.add(
+        fromEventPattern<void>(
+          (emit) => {
+            const observer = new ResizeObserver(() => emit());
+            try {
+              observer.observe(host);
+            } catch (error) {
+              observer.disconnect();
+              throw error;
+            }
+            return observer;
+          },
+          (_emit, observer: ResizeObserver) => observer.disconnect(),
+        ).subscribe({
+          next: () => {
+            if (this.destroyed) return;
+            this.hostHasSize = host.clientWidth > 0 && host.clientHeight > 0;
+            if (this.hostHasSize && !this.contextLost) this.engine.resize();
+            this.reconcileActivity();
+          },
+          error: (error: unknown) => {
+            resizeSetupError = error instanceof Error ? error : new Error(String(error));
+          },
+        }),
+      );
+      // RxJS turns source-registration throws into errors; retain constructor rollback.
+      if (resizeSetupError) throw resizeSetupError;
+      this.hostHasSize = host.clientWidth > 0 && host.clientHeight > 0;
+      this.subscriptions.add(
+        this.browserActivity.visibleObs.subscribe(() => this.reconcileActivity()),
+      );
+      this.subscriptions.add(
+        this.browserActivity.hasFocusObs.subscribe(() => this.reconcileActivity()),
+      );
+      this.subscriptions.add(this.inputManager.enabledObs.subscribe(() => this.attachCamera()));
+      this.subscriptions.add(
+        fromBabylonObservable(this.engine.onContextLostObservable).subscribe(() => {
+          if (this.destroyed || this.contextLost) return;
+          this.contextLost = true;
+          ++this.transition;
+          this.suspendWorld(false);
+          this.inputManager.clear();
+          this.reportError(
+            new Error('Graphics context was lost. Choose Retry to restore the 3D viewport.'),
+          );
+          this.inputManager.setContext('ui');
+          this.engine.stopRenderLoop(this.renderFrame);
+          this.recoveryFrame = this.ownerWindow.requestAnimationFrame(this.recoveryTick);
+        }),
+      );
       this.engine.resize();
       this.engine.runRenderLoop(this.renderFrame);
       this.setScene('MainMenu');
@@ -187,10 +217,7 @@ export class BabylonGameClient implements GameClient {
   private cleanup(): void {
     if (this.recoveryFrame !== undefined) this.ownerWindow.cancelAnimationFrame(this.recoveryFrame);
     this.recoveryFrame = undefined;
-    this.resizeObserver?.disconnect();
-    for (const subscription of this.subscriptions) subscription.unsubscribe();
-    for (const remove of this.handlers) remove();
-    this.handlers.length = 0;
+    this.subscriptions.unsubscribe();
     this.engine?.stopRenderLoop(this.renderFrame);
     this.suspendWorld(false);
     this.disposeCurrentScene();
@@ -287,6 +314,7 @@ export class BabylonGameClient implements GameClient {
   private isCurrentTransition(transition: number): boolean {
     return !this.destroyed && this.transition === transition;
   }
+
   private canRender(): boolean {
     return (
       !!this.currentScene &&
@@ -355,11 +383,13 @@ export class BabylonGameClient implements GameClient {
     this.currentScene = undefined;
     this.world = undefined;
     this.definition = undefined;
+
     const release = () => {
       world?.dispose();
       assets?.dispose();
       scene?.dispose();
     };
+
     if (inspectorCleanup) {
       const pending = inspectorCleanup.finally(release);
       this.pendingSceneDisposals.add(pending);

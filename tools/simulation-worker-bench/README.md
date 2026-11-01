@@ -2,6 +2,8 @@
 
 The original isolated Miniplex **2.0.0** / bitECS **0.4.0** comparison runs inline and in one dedicated browser worker. Its historical evidence is separate from the production-runtime composition below. See the [investigation plan](../../docs/plans/simulation-worker-investigation.md).
 
+CI policy, 1 November 2026: benchmark comparisons and production performance qualification are opt-in local commands or the manual workflow. Normal CI uses the actual production world/session/application tests, built-worker acceptance and dependency audit; it runs no worker benchmark smoke or paced trials.
+
 ## Reproduction
 
 Use Node 24.21.0, the pinned Yarn lock and installed Playwright Chromium:
@@ -9,10 +11,10 @@ Use Node 24.21.0, the pinned Yarn lock and installed Playwright Chromium:
 ```text
 yarn install --immutable
 yarn playwright install chromium --only-shell
-yarn bench:worker:check
-yarn bench:worker:smoke
-yarn bench:worker:browser --output tmp/simulation-worker-bench/<run>
-yarn bench:worker:report --input tmp/simulation-worker-bench/<run>
+node tools/simulation-worker-bench/cli.ts check
+node tools/simulation-worker-bench/cli.ts smoke
+node tools/simulation-worker-bench/cli.ts browser --output tmp/simulation-worker-bench/<run>
+node tools/simulation-worker-bench/cli.ts report --input tmp/simulation-worker-bench/<run>
 ```
 
 `check` includes strict TypeScript, four pure protocol tests and the browser correctness suite for all four configurations. `smoke --profiles` additionally checks both-context CPU/allocation/heap instrumentation on small worlds. It is not performance qualification. `calibrate` runs short 1,000/10,000/100,000-entity trials and is excluded from ranking.
@@ -34,10 +36,10 @@ Object messages are the primary transport. JSON encoded into a transferred Array
 The 30 October follow-up adds `--presentation lean`. The default remains `rich` for historical reproduction. Both libraries use the same publisher, authoritative fixture, precision and native systems. The normal lean benchmark subscribes to the player inventory and one processor inspector.
 
 ```text
-yarn bench:worker:check --presentation lean
-yarn bench:worker:smoke --presentation lean --paced --profiles
-yarn bench:worker:browser --presentation lean --phase lean --output tmp/simulation-worker-bench/<lean-run>
-yarn bench:worker:report --input tmp/simulation-worker-bench/<lean-run> --destination docs/reports/simulation-worker/<date>
+node tools/simulation-worker-bench/cli.ts check --presentation lean
+node tools/simulation-worker-bench/cli.ts smoke --presentation lean --paced --profiles
+node tools/simulation-worker-bench/cli.ts browser --presentation lean --phase lean --output tmp/simulation-worker-bench/<lean-run>
+node tools/simulation-worker-bench/cli.ts report --input tmp/simulation-worker-bench/<lean-run> --destination docs/reports/simulation-worker/<date>
 ```
 
 Routine views transfer two newly allocated, presentation-owned ArrayBuffers: Float64 rows and removed identity pairs. Every dirty entity still publishes a row, including the same stable ordinal/generation identity, kind, position, status, work, charge, quantity, reservations, held output and publication tick. A row is 96 bytes; precision is unchanged. The worker neither constructs rich records first nor transfers authoritative stores. The host applies rows to its own typed cache. Frames retain generation/revision/version checks and require explicit full resynchronization on a gap. Full publications can resize host storage.
@@ -46,7 +48,7 @@ Inventories, recipes and ownership remain in authority and full plain captures. 
 
 There is no field-level diff, visibility culling, compression, shared memory or buffer pool. Rows intentionally repeat their small numeric presentation fields. Captures retain complete rich data and their separate serialization/rebuild costs. Contract correctness checks compare every published field and watched nested record with full authority, alongside the original full-state oracle checks. Pure tests cover transfer detachment, precision, stale removals, malformed full frames and cache growth. Neither publication contract changes production `WorldView`.
 
-`--phase lean` saves time by retaining all 120 primary trials (five repetitions, 2,000 steps, original warm-up/timeout), all 36 required normal-world paced runs (all configurations, three pressures, three 30-second repetitions), four 120 Hz diagnostics, and separate target memory/CPU, payload and capture diagnostics. Idle/active paced diagnostics use the two workers at 8 ms pressure, three repetitions each. It omits the superseded JSON/batch variants and alternate clock trials; it does not repeat the full non-qualifying idle/active pressure matrix. Jobs remain sequential in fresh browsers. The normal numerical gates are unchanged. CI covers both rich smoke and lean smoke/pacing; the manual workflow uses the focused lean phase. No hosted workflow is dispatched by running these commands locally.
+`--phase lean` saves time by retaining all 120 primary trials (five repetitions, 2,000 steps, original warm-up/timeout), all 36 required normal-world paced runs (all configurations, three pressures, three 30-second repetitions), four 120 Hz diagnostics, and separate target memory/CPU, payload and capture diagnostics. Idle/active paced diagnostics use the two workers at 8 ms pressure, three repetitions each. It omits the superseded JSON/batch variants and alternate clock trials; it does not repeat the full non-qualifying idle/active pressure matrix. Jobs remain sequential in fresh browsers. The normal numerical gates are unchanged. The manual workflow uses the focused production lean phase; normal CI excludes laboratory smoke and pacing. No hosted workflow is dispatched by running these commands locally.
 
 The 5/8 ms p95/p99 budget applies to per-tick simulation plus detached publication inside its execution context, before messaging. Host round trips include delivery and cache application. Primary cohort A receiver timing covers explicit JavaScript decoding/application. Follow-up cohort B additionally times `MessageEvent.data` access, reporting it separately from the whole message-handler duration as observed receiver cost. Browser-internal work before that access can remain unattributed; round trips, frame intervals and CPU profiles include delivery. Neither timer alone proves total main-thread transport cost. Epoch-aligned delivery estimates are diagnostic; round trips use one host monotonic clock. Initial full-view/import costs and first tick are separate from steady state.
 
@@ -59,15 +61,15 @@ Profiling never contributes to latency rankings. Main and worker targets are mea
 This builds the laboratory through the repository's real Angular production builder into ignored output, without modifying `angular.json` or application entry points:
 
 ```text
-node tools/simulation-worker-bench/packaging-check.mjs
+node tools/simulation-worker-bench/packaging-check.ts
 ```
 
-The probe serves its `browser/` directory under `/lab/` with `worker-src 'self'`, same-origin scripts and hashes authorizing only the Angular-generated inline critical-CSS/bootstrap blocks. It smokes both worker candidates and runs axe. This verifies packaging/CSP/base-path loading of the isolated harness; it does not install a CSP in production hosting. The normal production build must separately pass `tools/ecs-bench/verify-production.mjs`, which rejects both investigation directories and all candidate libraries.
+The probe serves its `browser/` directory under `/lab/` with `worker-src 'self'`, same-origin scripts and hashes authorizing only the Angular-generated inline critical-CSS/bootstrap blocks. It smokes both worker candidates and runs axe. This verifies packaging/CSP/base-path loading of the isolated harness; it does not install a CSP in production hosting. The normal production build must separately pass `tools/ecs-bench/verify-production.ts`, which rejects both investigation directories and all candidate libraries.
 
 ## Follow-up diagnostics
 
 ```text
-yarn bench:worker:browser --phase followup --output tmp/simulation-worker-bench/<followup>
+node tools/simulation-worker-bench/cli.ts browser --phase followup --output tmp/simulation-worker-bench/<followup>
 ```
 
 This repeats the complete primary timing and paced matrix after all four correctness checks, adds four untimed payload size probes, and compares paired host/worker clocks at 8 ms host pressure. It skips the separate ancillary, transport and memory runs, which retain their own cohort A evidence. Warm-up and fresh measurement state reuse the same worker, retaining its warmed JIT while replacing the disposable world. Both clocks retain one outstanding request; worker polling uses elapsed time since the prior dispatch. The original cohort A scheduler polls elapsed time since the prior reply, which would confound publication cadence with clock ownership; those planned cases were not executed. Preserve both source manifests, and use cohort B alone for corrected timing/qualification, with cohort A retained as exploratory and separate diagnostic evidence. Cohort A warmed a disposable worker that was then replaced; do not describe its worker timings as warm-context qualification.
@@ -81,8 +83,8 @@ Frame qualification uses actual `performance.now()` gaps between callback arriva
 The corrected paced stage can be run separately and joined to a compatible primary cohort:
 
 ```text
-yarn bench:worker:browser --phase paced --output tmp/simulation-worker-bench/<paced>
-yarn bench:worker:report --input tmp/simulation-worker-bench/<primary> --paced-input tmp/simulation-worker-bench/<paced> --destination docs/reports/simulation-worker/<date>
+node tools/simulation-worker-bench/cli.ts browser --phase paced --output tmp/simulation-worker-bench/<paced>
+node tools/simulation-worker-bench/cli.ts report --input tmp/simulation-worker-bench/<primary> --paced-input tmp/simulation-worker-bench/<paced> --destination docs/reports/simulation-worker/<date>
 ```
 
 The report excludes the primary cohort's superseded paced samples, verifies unchanged primary timing code and core/domain/adapter sources, and checks packages, gates, hardware and environment labels before combining stages. Original cohort B primary source is archived as `frozen-browser.ts` and checked against its manifest; subsequent manifests record the primary hot-path hash directly. Cohort C repeats all paced cases; qualification never uses the legacy RAF timeline distributions. Full current-source runs need no supplemental cohort.
@@ -92,9 +94,9 @@ The report excludes the primary cohort's superseded paced samples, verifies unch
 Use `--production --presentation lean --phase lean` to qualify the actual `src/session` coordinator, Miniplex authority, domain primitives, publisher and host cache, comparing only Miniplex inline and worker. Synthetic fixture/activity composition stays in `production-fixture.ts` and is absent from the application graph. No competing runtime or future gameplay executors enter production.
 
 ```text
-yarn bench:worker:smoke --production --presentation lean --phase lean --paced --profiles
-yarn bench:worker:browser --production --presentation lean --phase lean --output tmp/simulation-worker-bench/production-reference
-yarn bench:worker:report --input tmp/simulation-worker-bench/production-reference
+node tools/simulation-worker-bench/cli.ts smoke --production --presentation lean --phase lean --paced --profiles
+node tools/simulation-worker-bench/cli.ts browser --production --presentation lean --phase lean --output tmp/simulation-worker-bench/production-reference
+node tools/simulation-worker-bench/cli.ts report --input tmp/simulation-worker-bench/production-reference
 ```
 
 The focused production matrix has 60 primary trials, 18 required normal paced trials, six worker idle/active paced diagnostics, two refresh-rate diagnostics, two profiles, two capture/rebuild diagnostics, two payload checks and two correctness runs. It retains all five primary repetitions and all 2,000 steps, with disposable-world warm-up of at least two seconds and 200 ticks in the retained execution context. Every repetition uses a fresh Chromium process. `--primary-cases mixed:100000` and profile count overrides are development probes; they cannot qualify adoption.
@@ -103,4 +105,4 @@ Production rows contain 14 Float64 fields (112 bytes): slot/generation, transfor
 
 Benchmark-only wrappers time the production step and publisher without putting clocks in pure simulation. `systems` includes domain work and dirty marking; the historical `structural` metric is the residual step time including movement, command handling and structural commits. `publication` includes direct row packing; `packing` is zero because there is no separate codec pass. `observedReceiver` covers MessageEvent.data access, Promise delivery through cache application; browser-internal delivery before that remains in round-trip/callback metrics. These boundaries must be retained when interpreting generated tables.
 
-The real built Angular/Babylon application has a separate acceptance probe: `node tools/world/production-browser.mjs` after `yarn build --stats-json`. It verifies the worker URL under a non-root base path, same-origin worker CSP, keyboard movement, menu pause, idle crash/Retry and teardown. Angular's unit-test builder does not compile worker URL entries, so its page fixture explicitly uses the inline port; it does not substitute for built-worker acceptance. Neither harness qualifies 100,000 rendered meshes, physical input-to-photon, additional devices or multiple ECS workers.
+The real built Angular/Babylon application has a separate acceptance probe: `node tools/world/production-browser.ts` after `yarn build --stats-json`. It verifies the worker URL under a non-root base path, same-origin worker CSP, keyboard movement, menu pause, idle crash/Retry and teardown. Angular's unit-test builder does not compile worker URL entries, so its page fixture explicitly uses the inline port; it does not substitute for built-worker acceptance. Neither harness qualifies 100,000 rendered meshes, physical input-to-photon, additional devices or multiple ECS workers.

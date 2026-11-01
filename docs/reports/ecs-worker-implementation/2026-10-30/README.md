@@ -82,8 +82,8 @@ yarn install --immutable
 yarn test:world
 yarn test
 yarn build --stats-json
-node tools/ecs-bench/verify-production.mjs
-node tools/world/production-browser.mjs
+node tools/ecs-bench/verify-production.ts
+node tools/world/production-browser.ts
 yarn bench:worker:browser --production --presentation lean --phase lean --output tmp/simulation-worker-bench/production-reference-final-2026-10-30
 ```
 

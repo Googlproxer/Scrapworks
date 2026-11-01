@@ -13,6 +13,7 @@ export const EMPTY_CONTENT: ContentDefinition = Object.freeze({
   recipes: Object.freeze({}),
   technologies: Object.freeze([]),
 });
+
 const object = (v: unknown, keys?: readonly string[]): Record<string, unknown> => {
   check(!!v && typeof v === 'object' && !Array.isArray(v), 'Expected snapshot object');
   check(
@@ -26,6 +27,7 @@ const object = (v: unknown, keys?: readonly string[]): Record<string, unknown> =
     );
   return v as Record<string, unknown>;
 };
+
 const number = (v: unknown, integer = false): number => {
   check(
     typeof v === 'number' && Number.isFinite(v) && v >= 0 && (!integer || Number.isSafeInteger(v)),
@@ -33,10 +35,12 @@ const number = (v: unknown, integer = false): number => {
   );
   return v;
 };
+
 const text = (v: unknown): string => {
   check(typeof v === 'string' && v.length > 0 && v.length <= 256, 'Invalid snapshot ID');
   return v;
 };
+
 /** Composition supplies content; the runtime owns an immutable validated copy. */
 export function ownContent(value: ContentDefinition): ContentDefinition {
   text(value.version);
@@ -67,6 +71,7 @@ export function ownContent(value: ContentDefinition): ContentDefinition {
   Object.freeze(copy.technologies);
   return Object.freeze(copy);
 }
+
 function stack(v: unknown, content: ContentDefinition): void {
   const s = object(v, ['item', 'quantity']);
   const item = text(s['item']);
@@ -74,6 +79,7 @@ function stack(v: unknown, content: ContentDefinition): void {
   number(s['quantity'], true);
   check((s['quantity'] as number) > 0, 'Empty item stack');
 }
+
 function inventory(v: unknown, content: ContentDefinition): asserts v is InventoryData {
   const bag = object(v, ['slots', 'reservations']);
   check(Array.isArray(bag['slots']) && bag['slots'].length <= 4096, 'Invalid inventory capacity');
@@ -110,6 +116,7 @@ function inventory(v: unknown, content: ContentDefinition): asserts v is Invento
     check(count <= total, 'Reservation exceeds stock');
   }
 }
+
 export function assertSnapshot(
   value: unknown,
   content: ContentDefinition,

@@ -56,6 +56,19 @@ describe('BabylonGameClient in the browser', () => {
     vi.restoreAllMocks();
   });
 
+  it('rolls back the renderer and subscriptions when resize observation cannot be registered', () => {
+    const error = new Error('Resize observation unavailable');
+    const enginesBefore = EngineStore.Instances.length;
+    const disconnect = vi.spyOn(ResizeObserver.prototype, 'disconnect');
+    vi.spyOn(ResizeObserver.prototype, 'observe').mockImplementationOnce(() => {
+      throw error;
+    });
+    expect(() => startClient()).toThrow(error);
+    expect(disconnect).toHaveBeenCalledOnce();
+    expect(host.querySelector('canvas')).toBeNull();
+    expect(EngineStore.Instances).toHaveLength(enginesBefore);
+  });
+
   function startClient(
     options: GameClientOptions = {},
     inspectorLoader?: InspectorLoader,
@@ -138,10 +151,12 @@ describe('BabylonGameClient in the browser', () => {
 
   async function createPlayableWorld(options: Omit<GameClientOptions, 'session'> = {}) {
     let session: GameSession | undefined;
+
     const currentSession = () => {
       if (!session) throw new Error('World not initialized');
       return session;
     };
+
     const bridge: WorldSessionBridge = {
       initialize: vi.fn((definition) => {
         session = new GameSession(definition, { developerFixture: true });

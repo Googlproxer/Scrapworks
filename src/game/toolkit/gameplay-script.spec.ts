@@ -166,6 +166,7 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
         events.push('render');
       }
     }
+
     const visual = new RenderOnlyScript(new TransformNode('visual', scene), scene, { ticks });
     visual.attach();
     initialize();

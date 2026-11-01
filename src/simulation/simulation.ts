@@ -5,6 +5,7 @@ export {
   SPRINT_SPEED,
   WALK_SPEED,
 } from './ecs-runtime';
+
 export type {
   MovementIntent,
   SimulationOptions,

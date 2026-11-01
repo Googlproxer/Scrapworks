@@ -23,6 +23,7 @@ export interface SessionOptions {
   capture?: SimulationCapture;
   onFailure?: (error: Error) => void;
 }
+
 interface Registration {
   handler: GameTickHandler;
   order: number;
@@ -30,7 +31,9 @@ interface Registration {
   after: number;
   active: boolean;
 }
+
 let nextGeneration = 0;
+
 /** Application coordinator; the production graph imports no simulation implementation. */
 export class GameSession {
   public readonly ready: Promise<void>;
@@ -68,6 +71,7 @@ export class GameSession {
   private resynchronizing?: Promise<void>;
   public readonly definition: WorldDefinition;
   private readonly options: SessionOptions;
+
   constructor(definition: WorldDefinition, options: SessionOptions = {}) {
     this.definition = definition;
     this.options = { developerFixture: options.developerFixture, onFailure: options.onFailure };
@@ -97,24 +101,31 @@ export class GameSession {
     }
     void this.ready.catch(() => undefined);
   }
+
   public get failed(): boolean {
     return !!this.failure;
   }
+
   public get error(): Error | undefined {
     return this.failure;
   }
+
   public get isReady(): boolean {
     return this.initialized && !this.failed && !this.disposed;
   }
+
   public get pendingSteps(): number {
     return this.outstanding;
   }
+
   public get activityRevision(): number {
     return this.revision;
   }
+
   public get submittedInput(): number {
     return this.inputSerial;
   }
+
   public get view(): WorldView {
     const view: { -readonly [K in keyof WorldView]: WorldView[K] } = structuredClone(
       this.readView(),
@@ -125,12 +136,15 @@ export class GameSession {
     delete view.endpoints;
     return view;
   }
+
   public get current(): WorldView {
     return this.view;
   }
+
   public readView(): WorldView {
     return this.cache.read();
   }
+
   private consume(reply: RuntimeReply): RuntimeReply {
     check(
       !this.disposed && reply.protocol === 1 && reply.generation === this.generation,
@@ -177,6 +191,7 @@ export class GameSession {
       }
     return reply;
   }
+
   private request(
     operation: RuntimeRequest['operation'],
     fields: Partial<RuntimeRequest> = {},
@@ -200,6 +215,7 @@ export class GameSession {
     );
     return pending;
   }
+
   private fail(cause: unknown): void {
     if (this.failure || this.disposed) return;
     this.failure = cause instanceof Error ? cause : new Error(String(cause));
@@ -211,6 +227,7 @@ export class GameSession {
     this.port.dispose();
     this.options.onFailure?.(this.failure);
   }
+
   public registerCompletedTickHandler(handler: GameTickHandler, order = 0): () => void {
     check(Number.isFinite(order), 'Game tick order must be finite.');
     const registration: Registration = {
@@ -226,6 +243,7 @@ export class GameSession {
       this.registrations.delete(registration);
     };
   }
+
   public flushCompleted(): void {
     if (this.paused || this.disposed || this.failed) {
       this.notifications = [];
@@ -261,6 +279,7 @@ export class GameSession {
       this.draining = false;
     }
   }
+
   public advance(seconds: number): void {
     if (
       this.paused ||
@@ -305,6 +324,7 @@ export class GameSession {
       throw error;
     }
   }
+
   public setMovement(direction: { readonly x: number; readonly z: number }, sprint = false): void {
     if (this.paused || this.failed || this.disposed) return;
     this.movement = {
@@ -313,6 +333,7 @@ export class GameSession {
       sprint,
     };
   }
+
   private activity(): void {
     this.revision++;
     this.elapsed = 0;
@@ -330,20 +351,25 @@ export class GameSession {
       throw error;
     }
   }
+
   public setPaused(paused: boolean): void {
     if (this.paused === paused) return;
     this.paused = paused;
     this.activity();
   }
+
   public pause(paused = true): void {
     this.setPaused(paused);
   }
+
   public clearInput(): void {
     this.activity();
   }
+
   public resetTiming(): void {
     this.activity();
   }
+
   public enqueue(command: WorldCommand): number | null {
     if (this.paused || this.failed || this.disposed) return null;
     check(this.commands.length < MAX_PENDING_COMMANDS, 'Host command backpressure');
@@ -351,6 +377,7 @@ export class GameSession {
     this.commands.push({ sequence, command: structuredClone(command) });
     return sequence;
   }
+
   public async settled(): Promise<void> {
     await this.ready;
     while (this.pending.size || this.advancing || this.resynchronizing)
@@ -360,6 +387,7 @@ export class GameSession {
         ...(this.resynchronizing ? [this.resynchronizing] : []),
       ]);
   }
+
   public async capture(): Promise<SimulationCapture> {
     check(!this.capturing && !this.failed, 'Capture unavailable');
     this.capturing = true;
@@ -381,16 +409,19 @@ export class GameSession {
       this.capturing = false;
     }
   }
+
   public async resynchronize(): Promise<void> {
     await this.settled();
     await this.request('resync');
     this.notifications = [];
   }
+
   public async inspect(id: string): Promise<Inspection | null> {
     await this.ready;
     const reply = await this.request('inspect', { watch: [id] });
     return reply.details?.find((d) => d.id === id) ?? null;
   }
+
   public subscribeDetails(id: string, listener: (value: Inspection | null) => void): () => void {
     const listeners = this.detailListeners.get(id) ?? new Set();
     check(
@@ -410,16 +441,19 @@ export class GameSession {
       this.updateWatch();
     };
   }
+
   private updateWatch(): void {
     if (this.watching || !this.watchDirty || !this.initialized || this.disposed || this.failed)
       return;
     this.watching = true;
     this.watchDirty = false;
     const watch = [...new Set([this.cache.playerId, ...this.detailListeners.keys()])];
+
     const finish = (): void => {
       this.watching = false;
       if (this.watchDirty) queueMicrotask(() => this.updateWatch());
     };
+
     try {
       const r = this.request('watch', { watch });
       if (r instanceof Promise)
@@ -433,6 +467,7 @@ export class GameSession {
       this.fail(error);
     }
   }
+
   public async disposeWorldForProfile(): Promise<void> {
     await this.settled();
     await this.request('dispose');
@@ -444,6 +479,7 @@ export class GameSession {
     this.captureCommands = [];
     this.initialized = false;
   }
+
   public dispose(): void {
     if (this.disposed) return;
     this.disposed = true;

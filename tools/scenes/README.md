@@ -5,11 +5,11 @@ The official Editor CLI packs the authored project, including its asset library.
 ## Normal export
 
 ```sh
-node tools/scenes/export.mjs
-node tools/scenes/check-export.mjs
+node tools/scenes/export.ts
+node tools/scenes/check-export.ts
 ```
 
-`yarn dev` runs the [development coordinator](dev.mjs); `yarn build` and `yarn test` run the export wrapper once before Angular. Use these commands rather than the raw Editor CLI for deployment. A raw CLI pack or Editor export can repopulate unused generated library copies; the check detects that, and the wrapper reapplies the policy.
+`yarn dev` runs the [development coordinator](dev.ts); `yarn build` and `yarn test` run the export wrapper once before Angular. Use these commands rather than the raw Editor CLI for deployment. A raw CLI pack or Editor export can repopulate unused generated library copies; the check detects that, and the wrapper reapplies the policy.
 
 The wrapper copies authored inputs into an isolated project under ignored `tmp/scene-export/` and runs the official CLI there. It checks scene dependencies and the physics workaround, filters unused generated library copies, then publishes changed files and the generated registry. Publication preserves Angular's watched directories, installs dependencies before scene entry points, removes obsolete generated files and restores previous files on failure. An unchanged registry is not rewritten. Original Editor/library inputs remain intact. The upstream CLI still processes the entire library; staging adds temporary disk/copy cost and does not provide incremental packing.
 
@@ -45,11 +45,11 @@ The exporter compiles saved Game marker metadata into `public/scene/worlds/game.
 ## Repeat the audit
 
 ```sh
-node tools/scenes/inventory.mjs --output tmp/asset-audit/latest.json
-node tools/scenes/check-export.mjs --build
-node --test tools/scenes/*.test.mjs
-node tools/scenes/check-dev-workflow.mjs
-node tools/scenes/profile-browser.mjs --output tmp/asset-audit/browser.json
+node tools/scenes/inventory.ts --output tmp/asset-audit/latest.json
+node tools/scenes/check-export.ts --build
+node --test tools/scenes/*.test.ts
+node tools/scenes/check-dev-workflow.ts
+node tools/scenes/profile-browser.ts --output tmp/asset-audit/browser.json
 ```
 
 Inventory reports list sizes, SHA-256 hashes, duplicate sources, and exported per-scene dependencies. `check-export --build` requires a fresh production build and checks the copied assets, retained-route inputs, and excluded files. The focused Node tests cover retention plus staging/rollback, locking, physics checks, attached scripts, save batching/recovery and native watch exclusions. The separate browser probe copies the project and checks actual Angular/Vite reload, failed-save preservation, corrected-save recovery and Play Game; it writes logs/results/screenshots under `tmp/workflow-browser/` and removes its fixture. See the [23 October workflow validation](../../docs/reports/workflow/2026-10-23/README.md).

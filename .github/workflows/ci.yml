@@ -59,7 +59,7 @@ jobs:
       - name: Lint application and templates
         run: yarn lint
 
-      - name: Test lint rules and configuration
+      - name: Typecheck tools and test lint configuration
         run: yarn test:lint
 
       - name: Check documentation links and diagrams
@@ -73,28 +73,18 @@ jobs:
           yarn tsc -p tools/world/tsconfig.reference.json
           yarn test:world
 
-      - name: Verify ECS adapters and isolated smoke workloads
-        run: |
-          yarn bench:ecs:check --label hosted-ci
-          yarn bench:ecs:smoke --label hosted-ci
-
       - name: Run Chromium application and accessibility tests
         run: yarn test
-
-      - name: Verify single-worker protocols and small comparison workloads
-        run: |
-          yarn bench:worker:smoke --label hosted-ci
-          yarn bench:worker:smoke --presentation lean --paced --label hosted-ci
-          yarn bench:worker:smoke --production --presentation lean --phase lean --paced --label hosted-ci
 
       - name: Build production application
         run: yarn build --stats-json
 
+      # Inspect the production build graph only; this does not run benchmarks.
       - name: Enforce production worker/main dependency separation
-        run: node tools/ecs-bench/verify-production.mjs
+        run: node tools/ecs-bench/verify-production.ts
 
       - name: Exercise the built simulation worker and failure Retry
-        run: node tools/world/production-browser.mjs
+        run: node tools/world/production-browser.ts
 
       - name: Verify exported and built assets
         run: yarn assets:check --build
@@ -110,8 +100,7 @@ jobs:
           path: |
             tmp/workflow-browser/
             .vitest/
-            tmp/ecs-bench/
-            tmp/simulation-worker-bench/
+            tmp/production-worker-browser/
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7

@@ -10,6 +10,7 @@ import type { WorldFrame } from './world-frame';
 
 export class CameraController extends GameplayScript {
   public readonly camera: ArcRotateCamera;
+
   public constructor(
     node: TransformNode,
     private readonly player: TransformNode,
@@ -36,12 +37,15 @@ export class CameraController extends GameplayScript {
     if (pointers && 'buttons' in pointers) (pointers as { buttons: number[] }).buttons = [2];
     camera.panningSensibility = 0;
   }
+
   protected override onUpdate(): void {
     if (this.frame.active) this.controls(this.frame.input, this.frame.seconds);
   }
+
   protected override onLateUpdate(): void {
     if (this.frame.view) this.follow(this.frame.seconds);
   }
+
   public projectMovement(value: { x: number; y: number }): { x: number; z: number } {
     // Current orbit angles include this frame's controller changes before Babylon updates its matrix.
     const forward = new Vector3(-Math.cos(this.camera.alpha), 0, -Math.sin(this.camera.alpha));
@@ -51,6 +55,7 @@ export class CameraController extends GameplayScript {
       z: forward.z * value.y + right.z * value.x,
     };
   }
+
   public controls(frame: ActionFrame, seconds: number): void {
     const orbit = frame.states['orbit'];
     if (orbit?.kind === 'vector2') {

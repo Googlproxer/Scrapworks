@@ -2,10 +2,15 @@ import type { BuildingView, GridCell, WorldDefinition } from '@contracts/world';
 import { footprintCells, worldToCell } from '@core/world-grid';
 
 export const FIXED_STEP_SECONDS = 0.05;
+
 export const PLAYER_RADIUS = 0.35;
+
 export const WALK_SPEED = 1.5;
+
 export const SPRINT_SPEED = 3;
+
 export const PLACEMENT_REACH = 3;
+
 export const TEST_BUILDING_FOOTPRINT = { width: 2, depth: 1 } as const;
 
 export function occupiedCells(

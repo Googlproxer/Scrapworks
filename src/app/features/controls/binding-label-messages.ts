@@ -166,8 +166,11 @@ export const englishControlLabels = {
 } as const;
 
 export type ControlLabelMessageId = keyof typeof englishControlLabels;
+
 export type ControlLabelParameters = Readonly<Record<string, string | number>>;
+
 export type ControlLabelCatalogue = Readonly<Partial<Record<ControlLabelMessageId, string>>>;
+
 export type ControlLabelTranslator = (
   message: ControlLabelMessageId,
   parameters?: ControlLabelParameters,

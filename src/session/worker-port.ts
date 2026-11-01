@@ -1,10 +1,12 @@
 import type { RuntimeReply, RuntimeRequest } from '@contracts/simulation';
 import type { SimulationPort } from './port';
+import { fromEvent, ReplaySubject, Subscription } from 'rxjs';
 
 export class WorkerSimulationPort implements SimulationPort {
   private worker?: Worker;
   private failure?: Error;
-  private readonly failureListeners = new Set<(error: Error) => void>();
+  private readonly subscriptions = new Subscription();
+  private readonly failures = new ReplaySubject<Error>(1);
   private readonly pending = new Map<
     number,
     {
@@ -14,6 +16,7 @@ export class WorkerSimulationPort implements SimulationPort {
     }
   >();
   public timeoutMs = 15000;
+
   constructor(
     worker = new Worker(new URL('../workers/simulation.worker', import.meta.url), {
       type: 'module',
@@ -22,23 +25,31 @@ export class WorkerSimulationPort implements SimulationPort {
     observeReceipt?: (milliseconds: number) => void,
   ) {
     this.worker = worker;
-    worker.onmessage = (event: MessageEvent<RuntimeReply>) => {
-      const begin = observeReceipt ? performance.now() : 0;
-      const reply = event.data;
-      const pending = this.pending.get(reply.id);
-      if (!pending) return;
-      this.pending.delete(reply.id);
-      clearTimeout(pending.timer);
-      pending.resolve(reply);
-      observeReceipt?.(performance.now() - begin);
-    };
-    worker.onerror = (event) => {
-      event.preventDefault();
-      this.fail(new Error(event.message || 'Simulation worker failed'));
-    };
-    worker.onmessageerror = () =>
-      this.fail(new Error('Simulation worker reply could not be decoded'));
+    this.subscriptions.add(
+      fromEvent<MessageEvent<RuntimeReply>>(worker, 'message').subscribe((event) => {
+        const begin = observeReceipt ? performance.now() : 0;
+        const reply = event.data;
+        const pending = this.pending.get(reply.id);
+        if (!pending) return;
+        this.pending.delete(reply.id);
+        clearTimeout(pending.timer);
+        pending.resolve(reply);
+        observeReceipt?.(performance.now() - begin);
+      }),
+    );
+    this.subscriptions.add(
+      fromEvent<ErrorEvent>(worker, 'error').subscribe((event) => {
+        event.preventDefault();
+        this.fail(new Error(event.message || 'Simulation worker failed'));
+      }),
+    );
+    this.subscriptions.add(
+      fromEvent(worker, 'messageerror').subscribe(() =>
+        this.fail(new Error('Simulation worker reply could not be decoded')),
+      ),
+    );
   }
+
   public send(request: RuntimeRequest): Promise<RuntimeReply> {
     if (!this.worker) return Promise.reject(new Error('Disposed simulation worker'));
     if (this.pending.size >= 8) return Promise.reject(new Error('Worker request backpressure'));
@@ -55,14 +66,16 @@ export class WorkerSimulationPort implements SimulationPort {
       }
     });
   }
+
   public subscribeFailure(listener: (error: Error) => void): () => void {
-    if (this.failure) listener(this.failure);
-    else this.failureListeners.add(listener);
-    return () => this.failureListeners.delete(listener);
+    const subscription = this.failures.subscribe(listener);
+    return () => subscription.unsubscribe();
   }
+
   private fail(error: Error): void {
     if (this.failure) return;
     this.failure = error;
+    this.subscriptions.unsubscribe();
     this.worker?.terminate();
     this.worker = undefined;
     for (const p of this.pending.values()) {
@@ -70,10 +83,10 @@ export class WorkerSimulationPort implements SimulationPort {
       p.reject(error);
     }
     this.pending.clear();
-    const listeners = [...this.failureListeners];
-    this.failureListeners.clear();
-    for (const listener of listeners) listener(error);
+    this.failures.next(error);
+    this.failures.complete();
   }
+
   public dispose(): void {
     this.fail(new Error('Simulation worker disposed'));
   }

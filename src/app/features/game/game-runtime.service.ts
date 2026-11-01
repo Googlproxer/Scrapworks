@@ -185,10 +185,12 @@ export class GameRuntimeService {
               )
                 handler(context);
             }, order);
+
             const unsubscribe = () => {
               remove();
               this.tickSubscriptions.delete(unsubscribe);
             };
+
             this.tickSubscriptions.add(unsubscribe);
             return unsubscribe;
           },
@@ -457,6 +459,7 @@ export class GameRuntimeService {
         listener(control);
     });
     let stopped = false;
+
     const stop = () => {
       if (stopped) return;
       stopped = true;
@@ -466,6 +469,7 @@ export class GameRuntimeService {
         this.capturingBinding.set(false);
       }
     };
+
     this.stopCapture = stop;
     return stop;
   }
@@ -473,6 +477,7 @@ export class GameRuntimeService {
   public handleUiKeyboard(input: UiKeyInput): boolean {
     return this.client?.input?.handleUiKeyboard(input) ?? false;
   }
+
   public handleUiPointer(input: { button: number; down: boolean }): boolean {
     return this.client?.input?.handleUiPointer(input) ?? false;
   }

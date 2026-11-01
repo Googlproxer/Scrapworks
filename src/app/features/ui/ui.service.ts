@@ -58,14 +58,17 @@ export class UiService {
       if (this.openDialogs.size === 0) this.gameRuntimeService.setInputEnabled(true);
     }
   }
+
   public closeTopDialog(): boolean {
     const top = [...this.openDialogs].at(-1);
     top?.close();
     return !!top;
   }
+
   public get hasDialogs(): boolean {
     return this.openDialogs.size > 0;
   }
+
   public get activeElement(): HTMLElement | null {
     const top = [...this.openDialogs].at(-1) as DialogRef | undefined;
     return top?.overlayRef.overlayElement ?? null;

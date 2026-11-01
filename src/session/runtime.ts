@@ -91,9 +91,11 @@ export class SimulationRuntime {
   private inputSequence = 0;
   private appliedInput = 0;
   private readonly options: Pick<SimulationOptions, 'content' | 'system'>;
+
   constructor(options: Pick<SimulationOptions, 'content' | 'system'> = {}) {
     this.options = options;
   }
+
   private accept(commands: readonly SequencedCommand[]): void {
     for (const command of commands) {
       if (command.sequence <= this.ledger.accepted) continue;
@@ -106,12 +108,14 @@ export class SimulationRuntime {
       this.ledger.accepted = command.sequence;
     }
   }
+
   public dispose(): void {
     this.world?.dispose();
     this.world = undefined;
     this.commands = [];
     this.watched.clear();
   }
+
   public handle(value: unknown): RuntimeReply {
     assertRequest(value);
     const r = value;
@@ -126,12 +130,14 @@ export class SimulationRuntime {
       ledger: { ...this.ledger },
       appliedInput: this.appliedInput,
     };
+
     const finish = (): RuntimeReply => {
       reply.revision = this.revision;
       reply.ledger = { ...this.ledger };
       reply.appliedInput = this.appliedInput;
       return reply;
     };
+
     try {
       if (r.operation === 'initialize') {
         check(r.generation > this.generation && r.definition, 'Stale/missing initialization');

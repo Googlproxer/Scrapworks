@@ -39,10 +39,12 @@ export class WorldScene {
     this.owner = new TransformNode('world-scripts', scene);
     const player =
       scene.getTransformNodeByName('player-visual') ?? new TransformNode('player-visual', scene);
+
     const own = <T extends GameplayScript>(script: T): T => {
       this.scripts.push(script);
       return script;
     };
+
     try {
       this.entities = own(new EntityViews(this.owner, definition, this.frame));
       this.camera = own(new CameraController(this.owner, player, this.entities, this.frame));
