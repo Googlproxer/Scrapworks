@@ -1,0 +1,18 @@
+<details>
+  <summary>Debug drawings</summary>
+  <fieldset>
+    <legend>Development overlays</legend>
+    <label>
+      <input type="checkbox" [checked]="runtime.debugDrawSettings().enabled"
+        (change)="runtime.setDebugDrawEnabled($event.target.checked)" />
+      Show debug drawings
+    </label>
+    @for (category of runtime.debugDrawStatus().categories; track category) {
+      <label>
+        <input type="checkbox" [checked]="!runtime.debugDrawSettings().disabledCategories.includes(category)"
+          (change)="runtime.setDebugDrawCategory(category, $event.target.checked)" />
+        {{ category }}
+      </label>
+    }
+  </fieldset>
+</details>

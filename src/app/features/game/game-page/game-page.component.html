@@ -73,6 +73,9 @@
         </button>
       }
     </div>
+    @if (developer && gameRuntimeService.debugDrawStatus().available) {
+      <app-debug-draw-panel />
+    }
   </div>
 
   @if (developer && gameRuntimeService.inspectorState().phase === 'loading') {

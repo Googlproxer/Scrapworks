@@ -56,6 +56,7 @@ describe('GameRuntimeService', () => {
       destroy,
       setScene,
       setInputEnabled,
+      setDebugDrawSettings: vi.fn(),
     };
     return {
       client,
@@ -91,6 +92,33 @@ describe('GameRuntimeService', () => {
       ],
     });
     service = TestBed.inject(GameRuntimeService);
+  });
+
+  it('retains debug preferences through renderer Retry without advancing or unpausing the session', () => {
+    const game = createClient();
+    factory.mockReturnValue(game.client);
+    const host = document.createElement('div');
+    service.mount(host);
+    const first = factory.mock.calls[0][1]!;
+    first.onDebugDrawStatus?.({ available: true, categories: ['collision', 'placement'] });
+    game.setInputEnabled.mockClear();
+    service.setDebugDrawEnabled(true);
+    service.setDebugDrawCategory('collision', false);
+    expect(game.client.setDebugDrawSettings).toHaveBeenLastCalledWith({
+      enabled: true,
+      disabledCategories: ['collision'],
+    });
+    expect(game.setInputEnabled).not.toHaveBeenCalled();
+    game.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Renderer probe' });
+    service.retry();
+    expect(factory.mock.calls[1][1]!.debugDrawSettings).toEqual({
+      enabled: true,
+      disabledCategories: ['collision'],
+    });
+    first.onDebugDrawStatus?.({ available: true, categories: ['stale'] });
+    expect(service.debugDrawStatus().categories).not.toContain('stale');
+    service.setDebugDrawCategory('collision', true);
+    expect(service.debugDrawSettings().disabledCategories).toEqual([]);
   });
 
   it('starts idle and projects loading, ready, and error states into readonly signals', () => {

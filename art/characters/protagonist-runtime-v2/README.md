@@ -1,11 +1,13 @@
 # Protagonist runtime v2
 
+Historical derivative, superseded by the [current v3 player character](../Protag/v3/runtime/README.md). The contracts and evidence below describe the earlier asset. Its generated production GLB is recoverable from Git commit `42df71c8381339066571326fbf77f2725da23486` at `public/assets/models/protagonist-v2.glb`; only v3 is deployed now.
+
 Runtime derivative prepared on 23 October 2026 from the user's existing `Protag-v1` character. It preserves that character's appearance, outfit, materials, visible geometry, proportions and skin weights. It does not replace the character with the older, separately generated MPFB model or recolour it to match concept art.
 
 ## Deliverables and runtime contract
 
 - [Editable derivative](protagonist-runtime-v2.blend), with packed textures and named `Idle`, `Walk`, `Run`, `TurnLeft` and `TurnRight` actions.
-- [Runtime GLB](../../../public/assets/models/protagonist-v2.glb), served at `/assets/models/protagonist-v2.glb`.
+- Historical runtime GLB at `/assets/models/protagonist-v2.glb`, recoverable from the Git commit above.
 - [Export and source hashes](export-report.json), [reimport validation](validation-report.json), and [animation contact sheet](animation-contact-sheet.png). The [individual previews](previews/index.json) are renders of the exported GLB after reimport.
 - Current disabled-turn playback: [smooth-turning video](browser-smooth-turning/turning.webm), [247 frame samples and assertions](browser-smooth-turning/report.json), and screenshots of [standing right](browser-smooth-turning/standing-right.png), [standing left](browser-smooth-turning/standing-left.png), and a [moving reversal](browser-smooth-turning/moving-reversal.png).
 - Earlier turn-enabled checkpoint: [browser turning video](browser-turning/turning.webm), [frame samples and assertions](browser-turning/report.json), and screenshots of [standing right](browser-turning/standing-right.png), [standing left](browser-turning/standing-left.png), and a [moving reversal](browser-turning/moving-reversal.png). These predate the user's request to disable turn playback.
@@ -65,8 +67,8 @@ The contact sheet step requires Pillow. Add `-- --no-render` to the validation c
 
 ## Preserved sources and provenance
 
-- [User-authored model source](../Protag-v1.blend) and [retained model export](../Protag-v1.glb).
-- Existing [Female Locomotion Pack archive](../Female%20Locomotion%20Pack.zip): `idle.fbx`, `walking.fbx`, `running.fbx`, `left turn.fbx`, and `right turn.fbx`. Embedded FBX animation stacks identify `mixamo.com`.
+- [User-authored model source](../Protag/v1/Protag-v1.blend) and [retained model export](../Protag/v1/Protag-v1.glb).
+- Existing [Female Locomotion Pack archive](../Protag/v1/Female%20Locomotion%20Pack.zip): `idle.fbx`, `walking.fbx`, `running.fbx`, `left turn.fbx`, and `right turn.fbx`. Embedded FBX animation stacks identify `mixamo.com`.
 - The [older MPFB source and license records](../../README.md#recovering-retired-mpfb-sources) remain a separate asset history recoverable from Git.
 
 The animation archive is an existing user-supplied source. No acquisition receipt, download URL or standalone license file accompanies it. This derivative records that evidence and the input hashes without inventing provenance or applying the separate MPFB asset license to the animation pack. Keep the existing source and authorship records with any future asset distribution.

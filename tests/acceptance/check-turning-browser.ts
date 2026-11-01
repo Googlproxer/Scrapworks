@@ -9,7 +9,7 @@ import { projectRoot } from '../../tools/scenes/inventory.ts';
 const origin = process.argv[2] ?? 'http://localhost:4200';
 const output = path.resolve(
   projectRoot,
-  process.argv[3] ?? 'art/characters/protagonist-runtime-v2/browser-smooth-turning',
+  process.argv[3] ?? 'art/characters/Protag/v3/runtime/browser-smooth-turning',
 );
 await fs.mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true });
@@ -99,6 +99,13 @@ try {
   await page.screenshot({ path: path.join(output, 'moving-reversal.png') });
   await page.waitForTimeout(900);
   await page.keyboard.up('s');
+  await phase('sprint');
+  await page.keyboard.down('w');
+  await page.keyboard.down('Shift');
+  await page.waitForTimeout(1000);
+  await page.screenshot({ path: path.join(output, 'sprinting.png') });
+  await page.keyboard.up('Shift');
+  await page.keyboard.up('w');
   await phase('final');
   await page.waitForTimeout(500);
   const samples = await page.evaluate(() => {
@@ -162,6 +169,12 @@ try {
     reversal.some((sample) => sample.weights.Walk > 0.95),
     'reversal retains walking',
   );
+  assert(
+    samples.some(
+      (sample) => sample.phase === 'sprint' && sample.player.sprinting && sample.weights.Run > 0.95,
+    ),
+    'sprinting plays Run',
+  );
   assert.deepEqual(errors, []);
   await fs.writeFile(
     path.join(output, 'report.json'),
@@ -169,15 +182,21 @@ try {
       {
         recordedAt: new Date().toISOString(),
         method:
-          'Actual local development keyboard input: quick right/left taps, then forward movement and reversal. Smooth heading changes retain Idle while stationary and Walk while moving; TurnLeft/TurnRight remain stopped with zero contribution in every recorded sample. Camera radius set to 6 metres in this browser only for character inspection. Presentation and simulation read through Angular debug access. No physical controller used.',
+          'Actual local development keyboard input: quick right/left taps, forward movement, reversal and sprinting. Smooth heading changes retain Idle while stationary and Walk while moving; sprinting plays Run. TurnLeft/TurnRight remain stopped with zero contribution in every recorded sample. Camera radius set to 6 metres in this browser only for character inspection. Presentation and simulation read through Angular debug access. No physical controller used.',
         checks: {
           turnGroupsStopped: true,
           turnGroupsZeroContribution: true,
           stationaryIdleWhileHeadingSettles: true,
           stationarySimulationPositionUnchanged: true,
           movingReversalKeepsWalk: true,
+          sprintingPlaysRun: true,
         },
-        screenshots: ['standing-right.png', 'standing-left.png', 'moving-reversal.png'],
+        screenshots: [
+          'standing-right.png',
+          'standing-left.png',
+          'moving-reversal.png',
+          'sprinting.png',
+        ],
         video: 'turning.webm',
         errors,
         samples,

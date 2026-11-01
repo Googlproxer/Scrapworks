@@ -2,6 +2,7 @@ import type { GameState, SceneKey } from './game-state';
 import type { GameTickHandler } from './game-tick';
 import type { ActionFrame, BindingProfile, ButtonControl, Context, ControllerInfo } from './input';
 import type { GridCell, WorldDefinition, WorldView } from './world';
+import type { DebugDrawSettings, DebugDrawStatus } from './debug-draw';
 
 export interface UiKeyInput {
   readonly code: string;
@@ -49,6 +50,8 @@ export interface GameClientOptions {
   readonly onWorldView?: (view: WorldView) => void;
   readonly onSelection?: (selection: string | null) => void;
   readonly onInspectorState?: (state: InspectorState) => void;
+  readonly debugDrawSettings?: DebugDrawSettings;
+  readonly onDebugDrawStatus?: (status: DebugDrawStatus) => void;
 }
 
 /** Renderer diagnostics stay separate from gameplay and application load errors. */
@@ -65,5 +68,6 @@ export interface GameClient {
   //  methods angular may need to access
   setScene(key: SceneKey): void;
   setInputEnabled(on: boolean): void;
+  setDebugDrawSettings(settings: DebugDrawSettings): void;
   toggleInspector?(): Promise<void>;
 }

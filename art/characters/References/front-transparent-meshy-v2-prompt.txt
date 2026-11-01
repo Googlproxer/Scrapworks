@@ -1,0 +1,12 @@
+Generated with the built-in imagegen tool; transparent_background=true.
+Edit target: front-transparent-meshy-v1.png.
+Output: front-transparent-meshy-v2.png.
+
+Exact prompt:
+Use case: precise-object-edit.
+Input image: edit target, the existing front-facing character PNG.
+Primary request: Change ONLY her arm pose to a wider, symmetrical A-pose suitable for automatic 3D rigging. Raise BOTH arms substantially outward from the shoulders so each arm extends diagonally down at approximately 45 degrees below horizontal (halfway between hanging down and a horizontal T-pose). Keep elbows almost straight, shoulders relaxed, hands relaxed and fingers naturally slightly separated. The wrists and hands must sit well out to either side of the waist, leaving a large, clearly visible transparent gap between each arm/hand and the torso/hips. Hands must not overlap the hips, tied sleeves, or trousers.
+Preserve: exact same character identity, face, expression, brown ponytail and fringe, body proportions, skin tone, cream tank top, orange jumpsuit tied at waist with cream cuffs, navy leg panels, charcoal lace-up boots, front-facing orthographic view, leg and foot positions, and polished smooth illustration style. Adjust only the arms and their necessary shoulder/underarm anatomy.
+Composition: one full-body front view, head to boot soles entirely visible. Widen the framing as needed to include the raised arms and every fingertip with clear margins. No cropping, no extra views, no text, no props.
+Background: genuinely transparent alpha across all empty areas, including the gaps between arms and body. No backdrop, floor, cast shadow, colored glow, halo, or checkerboard pattern.
+

@@ -14,9 +14,10 @@ import { UiInputAdapterService } from '@app/features/ui/ui-input-adapter.service
 import { UiService } from '@app/features/ui/ui.service';
 import { environment } from '@environments/environment';
 import { GameRuntimeService } from '../game-runtime.service';
+import { DebugDrawPanelComponent } from '../debug-draw-panel/debug-draw-panel.component';
 
 @Component({
-  imports: [JsonPipe, NgOptimizedImage],
+  imports: [JsonPipe, NgOptimizedImage, DebugDrawPanelComponent],
   selector: 'app-game-page',
   styleUrl: './game-page.component.scss',
   templateUrl: './game-page.component.html',

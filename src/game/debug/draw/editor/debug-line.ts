@@ -1,0 +1,31 @@
+import { Color3 } from '@babylonjs/core/Maths/math.color';
+import { Vector3 } from '@babylonjs/core/Maths/math.vector';
+import {
+  visibleAsBoolean,
+  visibleAsColor3,
+  visibleAsNumber,
+  visibleAsString,
+  visibleAsVector3,
+} from 'babylonjs-editor-tools';
+import type { DebugDrawWriter } from '../types';
+import { DebugShapeScript } from './shape-script';
+
+export default class DebugLine extends DebugShapeScript {
+  @visibleAsBoolean('Drawing enabled') public enabled = true;
+  @visibleAsString('Category') public category = 'general';
+  @visibleAsBoolean('World-space coordinates') public worldSpace = false;
+  @visibleAsBoolean('Respect scenery depth') public depthTest = true;
+  @visibleAsColor3('Color') public color = new Color3(0, 1, 1);
+  @visibleAsNumber('Opacity', { min: 0, max: 1 }) public opacity = 1;
+  @visibleAsVector3('Offset (m)') public offset = new Vector3();
+  @visibleAsVector3('Start (m)') public start = new Vector3();
+  @visibleAsVector3('End (m)') public end = new Vector3(1, 0, 0);
+
+  protected override draw(draw: DebugDrawWriter): void {
+    draw.line('shape', {
+      start: this.start.add(this.offset),
+      end: this.end.add(this.offset),
+      ...this.style,
+    });
+  }
+}

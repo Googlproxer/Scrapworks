@@ -45,6 +45,8 @@ export function verifyMetadata(metadata: BuildMetadata) {
       Object.keys(outputs[key].inputs ?? {}).map(normalize),
     );
     for (const input of inputs) {
+      if (/src\/game\/debug\/draw\/(?:backend\.development|development-renderer|geometry)\.ts$/.test(input))
+        throw new Error(`Development debug renderer entered production: ${input}`);
       if (forbidden.test(input)) throw new Error(`Investigation code entered production: ${input}`);
       if (!isWorker && authority.test(input))
         throw new Error(`Simulation authority entered main graph: ${input}`);

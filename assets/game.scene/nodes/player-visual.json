@@ -7,5 +7,17 @@
   "rotation": [0, 0, 0],
   "scaling": [1, 1, 1],
   "isEnabled": true,
-  "metadata": { "scrapworksRole": "player-visual" }
+  "metadata": {
+    "scrapworksRole": "player-visual",
+    "scripts": [{
+      "key": "game/debug/draw/editor/debug-axes.ts",
+      "enabled": true,
+      "debugOnly": false,
+      "values": {
+        "category": { "value": "transforms" },
+        "length": { "value": 1 },
+        "offset": { "value": [0, 0.01, 0] }
+      }
+    }]
+  }
 }

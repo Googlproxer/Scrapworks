@@ -121,6 +121,8 @@ try {
     'Production worker did not step',
   );
   const initial = await worker.evaluate(() => globalThis.productionProbe);
+  assert.equal(await page.getByText('Debug drawings', { exact: true }).count(), 0);
+  assert.equal(await page.getByLabel('Show debug drawings', { exact: true }).count(), 0);
 
   const inspectRenderer = () =>
     page.evaluate(async (file) => {

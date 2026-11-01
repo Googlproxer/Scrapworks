@@ -9,6 +9,9 @@ import type { ActionFrame, ActionState } from '@contracts/input';
 import type { WorldDefinition, WorldView } from '@contracts/world';
 import { AuthoredWorldFixture } from '../testing/authored-world-fixture';
 import { WorldScene } from './world-scene';
+import { debugDrawForScene } from '../debug/draw/debug-draw';
+import type { DevelopmentDebugDraw } from '../debug/draw/development-renderer';
+import { VertexBuffer } from '@babylonjs/core/Buffers/buffer';
 import { GameSession } from '../../app/features/game/session/game-session';
 
 describe('WorldScene with the exported character and authored scene', () => {
@@ -121,6 +124,32 @@ describe('WorldScene with the exported character and authored scene', () => {
     }
   }
 
+  it('draws completed placement/collision boundaries without additional session frames or tick registrations', () => {
+    const manager = debugDrawForScene(scene) as DevelopmentDebugDraw;
+    manager.configure({ enabled: true, disabledCategories: [] }, () => true);
+    const frames = vi.spyOn(bridge, 'frame');
+    const ticks = vi.spyOn(bridge, 'registerCompletedTickHandler');
+    render(frame({}), 0, false);
+    frames.mockClear();
+    render(frame({}), 0, false);
+    expect(frames).toHaveBeenCalledTimes(1);
+    expect(ticks).not.toHaveBeenCalled();
+    const meshes = manager.renderingScene!.meshes;
+    const ring = meshes.find((mesh) => mesh.metadata?.category === 'placement')!;
+    const collision = meshes.find((mesh) => mesh.metadata?.category === 'collision')!;
+    const center = session.readView().player.position;
+    const positions = ring.getVerticesData(VertexBuffer.PositionKind)!;
+    expect(positions[0]).toBeCloseTo(center.x * 100 + 300);
+    expect(positions[1]).toBeCloseTo(1);
+    expect(collision.getVerticesData(VertexBuffer.PositionKind)![0]).toBeCloseTo(
+      center.x * 100 + 35,
+    );
+    expect(ring.scaling.x).toBe(1);
+    const dispose = vi.spyOn(ring, 'dispose');
+    world.dispose();
+    expect(dispose).toHaveBeenCalled();
+  });
+
   it('uses native Toolkit phases for controls, one advance, presentation, follow and picking before draw', () => {
     render(frame({}), 0, false); // native start follows the initial awake render
     expect(world.initialized).toBe(true);
@@ -211,9 +240,11 @@ describe('WorldScene with the exported character and authored scene', () => {
     const root = scene.getTransformNodeByName('player-visual')!;
     expect(root.scaling.asArray()).toEqual([100, 100, 100]);
     expect(scene.skeletons).toHaveLength(1);
-    expect(scene.skeletons[0].bones).toHaveLength(52);
+    expect(scene.skeletons[0].bones).toHaveLength(65);
     const meshes = scene.meshes.filter((mesh) => mesh.skeleton);
-    expect(meshes).toHaveLength(10);
+    expect(meshes).toHaveLength(1);
+    expect(meshes[0].getTotalIndices() / 3).toBe(104972);
+    expect(meshes[0].numBoneInfluencers).toBe(8);
     expect(meshes.every((mesh) => !mesh.isPickable)).toBe(true);
     expect(scene.getMeshByName('Protag-v1.glb')).toBeNull();
     expect(scene.animationGroups.map((clip) => clip.name).sort()).toEqual([
@@ -224,8 +255,8 @@ describe('WorldScene with the exported character and authored scene', () => {
       'Walk',
     ]);
     const bounds = root.getHierarchyBoundingVectors(true);
-    expect(bounds.max.y - bounds.min.y).toBeGreaterThan(150);
-    expect(bounds.max.y - bounds.min.y).toBeLessThan(180);
+    expect(bounds.max.y - bounds.min.y).toBeGreaterThan(180);
+    expect(bounds.max.y - bounds.min.y).toBeLessThan(205);
     expect(Math.abs(bounds.min.y)).toBeLessThan(5);
     expect(scene.getMeshByName('obstacle')!.isEnabled()).toBe(false);
     expect(scene.getMeshByName('player-placeholder')!.isEnabled()).toBe(false);
@@ -343,7 +374,7 @@ describe('WorldScene with the exported character and authored scene', () => {
     const idle = scene.animationGroups.find((clip) => clip.name === 'Idle')!;
     expect(walk.animatables[0].weight).toBeCloseTo(1);
     expect(idle.animatables[0].weight).toBeCloseTo(0);
-    expect(walk.speedRatio).toBeCloseTo(1.5 / 1.5097235);
+    expect(walk.speedRatio).toBeCloseTo(1.5 / 1.7707664);
     const position = root.position.clone();
     walk.goToFrame(walk.to);
     scene.render();
@@ -353,7 +384,7 @@ describe('WorldScene with the exported character and authored scene', () => {
     present(running, 0.4, true);
     const run = scene.animationGroups.find((clip) => clip.name === 'Run')!;
     expect(run.animatables[0].weight).toBeCloseTo(1);
-    expect(run.speedRatio).toBeCloseTo(3 / 3.3952876);
+    expect(run.speedRatio).toBeCloseTo(3 / 3.9823594);
     present(running, 0.05, false);
     expect(scene.animationGroups.every((clip) => !clip.isPlaying)).toBe(true);
     present(running, 0.05, true);

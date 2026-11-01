@@ -532,9 +532,9 @@ describe('BabylonGameClient in the browser', () => {
     expect(scene.getMeshByName('player-placeholder')).toBeTruthy();
     expect(scene.getMeshByName('obstacle')).toBeTruthy();
     expect(scene.skeletons).toHaveLength(1);
-    expect(scene.skeletons[0].bones).toHaveLength(52);
+    expect(scene.skeletons[0].bones).toHaveLength(65);
     const skinnedMeshes = scene.meshes.filter((mesh) => mesh.skeleton);
-    expect(skinnedMeshes).toHaveLength(10);
+    expect(skinnedMeshes).toHaveLength(1);
     expect(skinnedMeshes.every((mesh) => mesh.isVerticesDataPresent('matricesWeights'))).toBe(true);
     expect(scene.getMeshByName('Protag-v1.glb')).toBeNull();
     const root = scene.getTransformNodeByName('player-visual')!;

@@ -4,7 +4,7 @@ Editable art projects, source assets, references, exact prompts and provenance l
 
 | Directory or record | Contents |
 | --- | --- |
-| [characters/](characters/) | Character identity/finish references, editable model sources and the [animated runtime derivative](characters/protagonist-runtime-v2/README.md). |
+| [characters/](characters/) | Character identity/finish references, editable model sources and the [current v3 animated runtime derivative](characters/Protag/v3/runtime/README.md). |
 | [world/](world/) | Environmental progression concepts. |
 | [machinery/](machinery/) | Machine and production progression concepts. |
 | [branding/](branding/) | Logo source, exact prompt and preparation record. |
@@ -17,7 +17,7 @@ The world/machinery images and retained modelling references guide the 3D design
 
 ## Opening the Blender protagonist
 
-Open [Protag-v1.blend](characters/Protag-v1.blend). The [runtime derivative guide](characters/protagonist-runtime-v2/README.md) documents its source model, animation archive, validation and reproduction. Preserve the source FBXs, modelling references, animation sources and current validation alongside it. The unused static Editor import copy has been removed; [Protag-v1.glb](characters/Protag-v1.glb) remains the canonical source export.
+Open [Protag-v3.blend](characters/Protag/v3/Protag-v3.blend) for the editable authoring source. The [current runtime derivative guide](characters/Protag/v3/runtime/README.md) documents the rigged Mixamo archive, animated Blender derivative, full material, validation and reproduction. Preserve the full source mesh: the user owns later polygon optimisation. Earlier source versions live under [Protag/](characters/Protag/); the [v2 derivative record](characters/protagonist-runtime-v2/README.md) is historical.
 
 ## Recovering retired MPFB sources
 

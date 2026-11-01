@@ -1,0 +1,154 @@
+{
+  "runtime_sha256": "efc5f5d461895774ece3eddeb4ab656a6f04eeb189426d8d7cc45031331c0911",
+  "bytes": 7762852,
+  "triangles": 104972,
+  "mesh_decimated": false,
+  "meshes": 1,
+  "materials": 1,
+  "skin_joints": 65,
+  "maximum_vertex_skin_influences": 8,
+  "all_skin_influences_retained": true,
+  "images": [
+    {
+      "name": "Base",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "Metal_Rough",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "name": "Normal",
+      "width": 2048,
+      "height": 2048
+    }
+  ],
+  "external_resources": false,
+  "idle_height_m": 1.891233594797086,
+  "idle_bounds_blender_m": [
+    [
+      -0.2422076165676117,
+      -0.3132646977901459,
+      1.8684484530240297e-05
+    ],
+    [
+      0.41276219487190247,
+      0.24959954619407654,
+      1.8912522792816162
+    ]
+  ],
+  "clips": [
+    {
+      "name": "Idle",
+      "frames": [
+        1,
+        251
+      ],
+      "seconds": 8.333333333333334,
+      "boot_floor_range_m": [
+        -7.025664672255516e-08,
+        2.7586473152041435e-05
+      ],
+      "hip_loop_displacement_m": [
+        0.0,
+        0.0,
+        -1.1920928955078125e-07
+      ],
+      "maximum_vertex_deformation_m": 0.017599557604270483,
+      "maximum_loop_bone_rotation_difference_rad": 0.0,
+      "maximum_hip_heading_change_rad": 0.004789784550666809
+    },
+    {
+      "name": "Run",
+      "frames": [
+        1,
+        22
+      ],
+      "seconds": 0.7,
+      "boot_floor_range_m": [
+        4.332396201789379e-07,
+        0.09070128202438354
+      ],
+      "hip_loop_displacement_m": [
+        0.0,
+        8.195638656616211e-08,
+        3.5762786865234375e-07
+      ],
+      "maximum_vertex_deformation_m": 0.6695993982843789,
+      "maximum_loop_bone_rotation_difference_rad": 0.0,
+      "maximum_hip_heading_change_rad": 0.21495507657527924
+    },
+    {
+      "name": "TurnLeft",
+      "frames": [
+        1,
+        36
+      ],
+      "seconds": 1.1666666666666667,
+      "boot_floor_range_m": [
+        1.9907020032405853e-07,
+        0.0036187756340950727
+      ],
+      "hip_loop_displacement_m": [
+        0.0,
+        0.0,
+        -1.1920928955078125e-07
+      ],
+      "maximum_vertex_deformation_m": 0.27827719057263745,
+      "maximum_loop_bone_rotation_difference_rad": 0.0,
+      "maximum_hip_heading_change_rad": 2.0116569032779807e-07
+    },
+    {
+      "name": "TurnRight",
+      "frames": [
+        1,
+        36
+      ],
+      "seconds": 1.1666666666666667,
+      "boot_floor_range_m": [
+        -5.160109139978886e-07,
+        0.0017133967485278845
+      ],
+      "hip_loop_displacement_m": [
+        0.0,
+        0.0,
+        3.5762786865234375e-07
+      ],
+      "maximum_vertex_deformation_m": 0.3274420778953318,
+      "maximum_loop_bone_rotation_difference_rad": 0.0,
+      "maximum_hip_heading_change_rad": 2.6449575329934305e-07
+    },
+    {
+      "name": "Walk",
+      "frames": [
+        1,
+        30
+      ],
+      "seconds": 0.9666666666666667,
+      "boot_floor_range_m": [
+        8.60774889588356e-07,
+        0.006688601337373257
+      ],
+      "hip_loop_displacement_m": [
+        0.0,
+        -3.725290298461914e-08,
+        1.1920928955078125e-07
+      ],
+      "maximum_vertex_deformation_m": 0.44079118785467863,
+      "maximum_loop_bone_rotation_difference_rad": 0.0,
+      "maximum_hip_heading_change_rad": 0.25457125902175903
+    }
+  ],
+  "root_stationary": true,
+  "reimport_succeeded": true,
+  "source_hashes_unchanged": true,
+  "prior_budget": {
+    "triangles": 40000,
+    "bytes": 5242880,
+    "triangle_target_met": false,
+    "transfer_target_met": false
+  },
+  "budget_exception": "User explicitly requested the complete mesh and retains later polygon optimisation."
+}

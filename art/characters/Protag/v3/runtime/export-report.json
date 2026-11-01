@@ -1,0 +1,120 @@
+{
+  "source_blend": "art\\characters\\Protag\\v3\\Protag-v3.blend",
+  "source_blend_sha256": "dc69e05efc41bebf2b784edc53be7ce2cc5e3f0470a400e268816a6d644995c6",
+  "source_archive": "art\\characters\\Protag\\v3\\Protag_v3_rigged.zip",
+  "source_archive_sha256": "b0bc44718ea3d64b5315d4efadcb0e85b655b7fa078c797a0082e70ae7d20862",
+  "rigged_member": "Protag-v3-Mixamo-upload.fbx",
+  "rigged_member_sha256": "89e91b9059022445bb1958af04b101f997c671444decd538a220e61e8699bb55",
+  "provenance": "User-supplied Meshy character, edited in Blender and rigged in Mixamo. Animation FBX stacks identify mixamo.com; acquisition/license documents were not supplied.",
+  "blender_version": "5.2.2 LTS",
+  "import_scale_correction": 100.0000024327561,
+  "maximum_authored_geometry_error_m": 6.48200511932373e-07,
+  "authored_bounds_blender_m": [
+    [
+      -0.6068740487098694,
+      -0.2609959542751312,
+      -1.1081213280306201e-08
+    ],
+    [
+      0.6397469639778137,
+      0.26099613308906555,
+      1.903324007987976
+    ]
+  ],
+  "source_triangles": 104972,
+  "runtime_triangles": 104972,
+  "mesh_decimated": false,
+  "budget_note": "Full source mesh retained at the user's explicit request; polygon optimisation is deferred to the user. The prior 40k-triangle/5 MiB target is reported, not enforced for this source swap.",
+  "skin_joints": 65,
+  "runtime_glb": "public\\assets\\models\\protagonist-v3.glb",
+  "maximum_vertex_skin_influences": 8,
+  "all_skin_influences_retained": true,
+  "runtime_sha256": "efc5f5d461895774ece3eddeb4ab656a6f04eeb189426d8d7cc45031331c0911",
+  "runtime_bytes": 7762852,
+  "clips": [
+    {
+      "name": "Idle",
+      "source": "idle.fbx",
+      "source_sha256": "cdbdc86ba0de76adb7b6a7c4097c1f1513ef11834b9059f771b7280930ae8f19",
+      "seconds": 8.333333333333334,
+      "frames": 251,
+      "mapped_bones": 65,
+      "reference_speed_mps": 1.7104925064385643e-09,
+      "source_yaw_degrees": 0.0,
+      "root_yaw_removed": false,
+      "ground_offset_m": 0.006611388176679611,
+      "boot_floor_range_m": [
+        0,
+        2.7633272111415863e-05
+      ]
+    },
+    {
+      "name": "Walk",
+      "source": "walking.fbx",
+      "source_sha256": "07afef5c4e24191f77abd51b6165763bccaa0cee663c80048615b9fa21dea9b3",
+      "seconds": 0.9666666666666667,
+      "frames": 30,
+      "mapped_bones": 65,
+      "reference_speed_mps": 1.7707664403935959,
+      "source_yaw_degrees": -8.537736462515939e-07,
+      "root_yaw_removed": false,
+      "ground_offset_m": 0.012594646774232388,
+      "boot_floor_range_m": [
+        0,
+        0.006688179448246956
+      ]
+    },
+    {
+      "name": "Run",
+      "source": "running.fbx",
+      "source_sha256": "92cf99ab2d7c3b961e067e1df83dc77724a13d479fae29d0354a0fa950e9d8de",
+      "seconds": 0.7,
+      "frames": 22,
+      "mapped_bones": 65,
+      "reference_speed_mps": 3.982359383787428,
+      "source_yaw_degrees": 2.5613209387547816e-06,
+      "root_yaw_removed": false,
+      "ground_offset_m": 0.008003151044249535,
+      "boot_floor_range_m": [
+        0,
+        0.09069915674626827
+      ]
+    },
+    {
+      "name": "TurnLeft",
+      "source": "left turn.fbx",
+      "source_sha256": "259ea1c02fa8b5491c17321d0087ebcce9d07241b831dfb246ac2d6237384c00",
+      "seconds": 1.1666666666666667,
+      "frames": 36,
+      "mapped_bones": 65,
+      "reference_speed_mps": 0.01935114683022377,
+      "source_yaw_degrees": 89.9311200466986,
+      "root_yaw_removed": true,
+      "ground_offset_m": 0.00840417854487896,
+      "boot_floor_range_m": [
+        0,
+        0.0036192946135997772
+      ]
+    },
+    {
+      "name": "TurnRight",
+      "source": "right turn.fbx",
+      "source_sha256": "88c326d634fd5ec28153bc4dcd368e61a45a20852d8af01828a4c5ae35698377",
+      "seconds": 1.1666666666666667,
+      "frames": 36,
+      "mapped_bones": 65,
+      "reference_speed_mps": 0.019362108621849883,
+      "source_yaw_degrees": -89.99998884409983,
+      "root_yaw_removed": true,
+      "ground_offset_m": 0.00740156602114439,
+      "boot_floor_range_m": [
+        0,
+        0.0017135906964540482
+      ]
+    }
+  ],
+  "original_files_modified": false,
+  "coordinates": "Blender metres/Z up/faces -Y; GLB metres/Y up/faces +Z. Identity rig at ground origin. Authored torso offset retained.",
+  "material": "Original corrected Blender UVMap and full base colour, normal, packed metallic/roughness material; embedded WebP runtime textures.",
+  "retarget": "Bone-name mapping, anatomical axis alignment and rest-roll correction. Net horizontal travel removed; turn yaw unwound; constant per-clip ground correction preserves bob and flight."
+}

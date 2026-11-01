@@ -15,6 +15,9 @@ import { PlayerView } from './player-view';
 import { SelectionController } from './selection-controller';
 import { SessionDriver } from './session-driver';
 import { WorldFrame } from './world-frame';
+import { attachDebugDraw, debugDrawForScene } from '../debug/draw/debug-draw';
+import type { DebugAttachment } from '../debug/draw/types';
+import { PLACEMENT_REACH, PLAYER_RADIUS } from '@simulation/world-rules';
 
 /** Composition only: Toolkit invokes the explicitly ordered scripts during scene.render(). */
 export class WorldScene {
@@ -27,6 +30,7 @@ export class WorldScene {
   private readonly frame: WorldFrame;
   private readonly owner: TransformNode;
   private readonly scripts: GameplayScript[] = [];
+  private readonly debugAttachments: DebugAttachment[] = [];
   private disposed = false;
 
   private constructor(
@@ -46,6 +50,24 @@ export class WorldScene {
     };
 
     try {
+      debugDrawForScene(scene).bindWorld(() =>
+        this.frame.isCurrent() ? this.frame.view : undefined,
+      );
+      for (const [category, radius, color] of [
+        ['placement', PLACEMENT_REACH, '#00ffff'],
+        ['collision', PLAYER_RADIUS, '#ff9900'],
+      ] as const)
+        this.debugAttachments.push(
+          attachDebugDraw(player, { category, space: 'world' }, (draw) => {
+            const view = this.frame.view;
+            if (view && this.frame.isCurrent())
+              draw.circle('player-radius', {
+                center: { ...view.player.position, y: view.player.position.y + 0.01 },
+                radius,
+                color,
+              });
+          }),
+        );
       this.entities = own(new EntityViews(this.owner, definition, this.frame));
       this.camera = own(new CameraController(this.owner, player, this.entities, this.frame));
       this.playerController = own(new PlayerController(player, this.frame, this.camera));
@@ -68,6 +90,7 @@ export class WorldScene {
         { script: this.placement, order: 70 },
       ]);
     } catch (error) {
+      for (const attachment of this.debugAttachments) attachment.dispose();
       for (const script of [...this.scripts].reverse()) script.dispose();
       // Node disposal also catches a script whose constructor failed after its base initialized.
       player.dispose();
@@ -123,6 +146,7 @@ export class WorldScene {
     if (this.disposed) return;
     this.disposed = true;
     this.endFrame();
+    for (const attachment of this.debugAttachments) attachment.dispose();
     for (const script of [...this.scripts].reverse()) script.dispose();
     this.player.root.dispose();
     this.owner.dispose();

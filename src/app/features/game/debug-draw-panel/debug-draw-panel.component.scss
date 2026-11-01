@@ -1,0 +1,38 @@
+:host {
+  display: block;
+  margin-top: 0.5rem;
+  max-width: 19rem;
+  color: #f1f5f3;
+  background: #101916;
+  border: 1px solid #879a91;
+  border-radius: 0.25rem;
+}
+
+summary {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+fieldset {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #879a91;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2rem;
+  cursor: pointer;
+}
+
+input {
+  accent-color: #00cfcf;
+}
+
+summary:focus-visible,
+input:focus-visible {
+  outline: 3px solid #80ffff;
+  outline-offset: 3px;
+}

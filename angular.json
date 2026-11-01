@@ -50,6 +50,10 @@
                 {
                   "replace": "src/game/debug/inspector-loader.ts",
                   "with": "src/game/debug/inspector-loader.development.ts"
+                },
+                {
+                  "replace": "src/game/debug/draw/backend.ts",
+                  "with": "src/game/debug/draw/backend.development.ts"
                 }
               ]
             }
@@ -77,6 +81,7 @@
           "configurations": {
             "unit": {
               "exclude": [
+                "game/debug/draw/development-renderer.spec.ts",
                 "game/babylon-game-client.spec.ts",
                 "game/input/input-manager.spec.ts",
                 "game/toolkit/gameplay-script.spec.ts",
@@ -86,6 +91,7 @@
             },
             "renderer": {
               "include": [
+                "game/debug/draw/development-renderer.spec.ts",
                 "game/babylon-game-client.spec.ts",
                 "game/input/input-manager.spec.ts",
                 "game/toolkit/gameplay-script.spec.ts",

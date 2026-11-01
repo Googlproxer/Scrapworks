@@ -7,6 +7,8 @@ import { GameplayScript } from '../toolkit/gameplay-script';
 import type { WorldFrame } from './world-frame';
 
 const characterClips = ['Idle', 'Walk', 'Run'];
+// Measured in the v3 archive before removing horizontal root travel.
+const referenceSpeeds = { Walk: 1.7707664, Run: 3.9823594 };
 const facingSpeeds = { moving: Math.PI * 1.5, left: 1.3453665, right: 1.3463967 };
 
 export class PlayerView extends GameplayScript {
@@ -90,7 +92,8 @@ export class PlayerView extends GameplayScript {
           (active ? 1 - Math.exp(-Math.max(0, seconds) * 16) : 0);
       this.weights.set(name, weight);
       animation.setWeightForAllAnimatables(weight);
-      animation.speedRatio = name === 'Walk' ? 1.5 / 1.5097235 : name === 'Run' ? 3 / 3.3952876 : 1;
+      animation.speedRatio =
+        name === 'Walk' ? 1.5 / referenceSpeeds.Walk : name === 'Run' ? 3 / referenceSpeeds.Run : 1;
       if (active) {
         if (!animation.isPlaying) animation.play(true);
       } else animation.pause();

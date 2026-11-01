@@ -148,7 +148,7 @@ const auditProductionAssets = async () => {
     result.retiredRuntimeAssets.length
   )
     throw new Error(`Retired runtime content found: ${JSON.stringify(result)}`);
-  if (result.models.length !== 1 || result.models[0].path !== 'assets/models/protagonist-v2.glb')
+  if (result.models.length !== 1 || result.models[0].path !== 'assets/models/protagonist-v3.glb')
     throw new Error(
       `Expected exactly one deployed protagonist GLB: ${JSON.stringify(result.models)}`,
     );
@@ -331,7 +331,7 @@ try {
     for (const required of [
       '/scene/game.babylon',
       '/scene/worlds/game.json',
-      '/assets/models/protagonist-v2.glb',
+      '/assets/models/protagonist-v3.glb',
     ]) {
       if (!complete.some((entry) => entry.path === required && entry.decodedBodyBytes > 0))
         errors.push(`Play Game did not load required runtime asset: ${required}`);

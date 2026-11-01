@@ -24,6 +24,7 @@ import { ControlSettingsService } from '../controls/control-settings.service';
 import { GAME_CLIENT_FACTORY } from './game-client-factory';
 import { GameSession } from '../../../session/game-session';
 import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
+import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
 
 @Service({ autoProvided: false })
 export class GameRuntimeService {
@@ -51,6 +52,11 @@ export class GameRuntimeService {
   public readonly errorMessage = computed(() => this.state().errorMessage);
   public readonly world = signal<WorldView | null>(null);
   public readonly selection = signal<string | null>(null);
+  public readonly debugDrawSettings = signal<DebugDrawSettings>({
+    enabled: false,
+    disabledCategories: [],
+  });
+  public readonly debugDrawStatus = signal<DebugDrawStatus>({ available: false, categories: [] });
   public readonly inspection = signal<Inspection | null>(null);
   private unsubscribeInspection?: () => void;
   public readonly controllers = signal<readonly ControllerInfo[]>([]);
@@ -102,6 +108,10 @@ export class GameRuntimeService {
       const options: GameClientOptions = {
         bindings: this.settings.profile(),
         developerFixture: !!environment.dev,
+        debugDrawSettings: this.debugDrawSettings(),
+        onDebugDrawStatus: (status) => {
+          if (generation === this.generation) this.debugDrawStatus.set(status);
+        },
         onActionFrame: (frame) => {
           if (generation !== this.generation || this.inspectorActive()) return;
           const revision = this.dispatchRevision;
@@ -319,6 +329,7 @@ export class GameRuntimeService {
     this.stopCapture = undefined;
     this.capturingBinding.set(false);
     this.inspectorValue.set({ phase: 'closed', errorMessage: null });
+    this.debugDrawStatus.set({ available: false, categories: [] });
     this.inspectorReturnFocus = undefined;
     this.unsubscribeControllers?.();
     this.unsubscribeControllers = undefined;
@@ -390,6 +401,23 @@ export class GameRuntimeService {
       this.inspectorReturnFocus = active instanceof HTMLElement ? active : undefined;
     }
     await this.client?.toggleInspector?.();
+  }
+
+  public setDebugDrawEnabled(enabled: boolean): void {
+    if (!environment.dev) return;
+    this.debugDrawSettings.update((settings) => ({ ...settings, enabled }));
+    this.client?.setDebugDrawSettings(this.debugDrawSettings());
+  }
+
+  public setDebugDrawCategory(category: string, enabled: boolean): void {
+    if (!environment.dev) return;
+    this.debugDrawSettings.update((settings) => ({
+      ...settings,
+      disabledCategories: enabled
+        ? settings.disabledCategories.filter((item) => item !== category)
+        : [...new Set([...settings.disabledCategories, category])],
+    }));
+    this.client?.setDebugDrawSettings(this.debugDrawSettings());
   }
 
   public subscribeActions(listener: (frame: ActionFrame) => void): () => void {

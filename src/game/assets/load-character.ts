@@ -8,7 +8,7 @@ export type CharacterLoader = (scene: Scene) => Promise<AssetContainer>;
 export const loadCharacter: CharacterLoader = (scene) =>
   LoadAssetContainerAsync(
     new URL(
-      'assets/models/protagonist-v2.glb',
+      'assets/models/protagonist-v3.glb',
       scene.getEngine().getRenderingCanvas()!.ownerDocument.baseURI,
     ).href,
     scene,

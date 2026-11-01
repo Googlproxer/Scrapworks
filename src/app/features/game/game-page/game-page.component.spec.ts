@@ -34,6 +34,7 @@ describe('GamePageComponent integration', () => {
       ),
       destroy: vi.fn(),
       setInputEnabled: vi.fn(),
+      setDebugDrawSettings: vi.fn(),
     };
     factory = vi.fn(() => client);
     await TestBed.configureTestingModule({
@@ -57,6 +58,31 @@ describe('GamePageComponent integration', () => {
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
     ].find((element) => element.textContent?.trim() === 'Play Game!');
   }
+
+  it('exposes labelled debug switches with accessible native disclosure and category controls', async () => {
+    factory.mock.calls[0][1]!.onDebugDrawStatus?.({
+      available: true,
+      categories: ['collision', 'placement', 'transforms'],
+    });
+    await fixture.whenStable();
+    const panel = (fixture.nativeElement as HTMLElement).querySelector('app-debug-draw-panel')!;
+    expect(panel).not.toBeNull();
+    const disclosure = panel.querySelector('details')!;
+    disclosure.open = true;
+    const inputs = panel.querySelectorAll('input');
+    expect(inputs).toHaveLength(4);
+    expect(inputs[0].checked).toBe(false);
+    inputs[0].click();
+    await fixture.whenStable();
+    expect(client.setDebugDrawSettings).toHaveBeenCalledWith({
+      enabled: true,
+      disabledCategories: [],
+    });
+    inputs[1].click();
+    await fixture.whenStable();
+    expect(runtime.debugDrawSettings().disabledCategories).toEqual(['collision']);
+    expect((await axe.run(panel)).violations).toEqual([]);
+  });
 
   it('mounts into the page renderer host and destroys the client with the page', () => {
     const host = (fixture.nativeElement as HTMLElement).querySelector('.game-container');

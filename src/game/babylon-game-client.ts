@@ -16,6 +16,9 @@ import { SceneInspector, type InspectorLoader } from './debug/scene-inspector';
 import type { Context } from '@contracts/input';
 import { WorldScene } from './views/world-scene';
 import { FrameOwnershipChanged } from './views/world-frame';
+import type { DebugDrawSettings } from '@contracts/debug-draw';
+import { debugDrawForScene } from './debug/draw/debug-draw';
+import type { SceneDebugDraw } from './debug/draw/types';
 
 export class BabylonGameClient implements GameClient {
   private readonly stateSubject = new BehaviorSubject<GameState>({
@@ -33,6 +36,9 @@ export class BabylonGameClient implements GameClient {
   private currentScene?: Scene;
   private currentAssets?: AssetContainer;
   private world?: WorldScene;
+  private sceneDebug?: SceneDebugDraw;
+  private unsubscribeDebug?: () => void;
+  private debugSettings: DebugDrawSettings = { enabled: false, disabledCategories: [] };
   private definition?: WorldDefinition;
   private worldAbort?: AbortController;
   private transition = 0;
@@ -77,6 +83,7 @@ export class BabylonGameClient implements GameClient {
     private readonly loadCharacterFn: CharacterLoader = loadCharacter,
   ) {
     this.ownerDocument = host.ownerDocument;
+    this.debugSettings = options.debugDrawSettings ?? this.debugSettings;
     const ownerWindow = host.ownerDocument.defaultView;
     if (!ownerWindow) throw new Error('The viewport document has no window.');
     this.ownerWindow = ownerWindow;
@@ -264,10 +271,34 @@ export class BabylonGameClient implements GameClient {
     if (host) await this.inspector.toggle(this.currentScene, host);
   }
 
+  public setDebugDrawSettings(settings: DebugDrawSettings): void {
+    if (this.destroyed) return;
+    this.debugSettings = {
+      enabled: settings.enabled,
+      disabledCategories: [...settings.disabledCategories],
+    };
+    const scene = this.currentScene;
+    const transition = this.transition;
+    this.sceneDebug?.configure(
+      this.debugSettings,
+      () => this.isCurrentTransition(transition) && this.currentScene === scene && this.canRender(),
+    );
+  }
+
   private async loadScene(key: SceneKey, transition: number): Promise<void> {
     const scene = new Scene(this.engine);
     this.currentScene = scene;
     try {
+      const debug = debugDrawForScene(scene);
+      this.sceneDebug = debug;
+      debug.configure(
+        this.debugSettings,
+        () =>
+          this.isCurrentTransition(transition) && this.currentScene === scene && this.canRender(),
+      );
+      this.unsubscribeDebug = debug.subscribe((status) => {
+        if (this.isCurrentTransition(transition)) this.options.onDebugDrawStatus?.(status);
+      });
       const assets = await this.loadSceneFn(scene, key);
       if (!this.isCurrentTransition(transition)) {
         assets.dispose();
@@ -373,6 +404,10 @@ export class BabylonGameClient implements GameClient {
 
   private disposeCurrentScene(): void {
     this.scenePrepared = false;
+    this.unsubscribeDebug?.();
+    this.unsubscribeDebug = undefined;
+    this.sceneDebug?.dispose();
+    this.sceneDebug = undefined;
     const inspectorCleanup = this.inspector.close();
     this.worldAbort?.abort();
     this.worldAbort = undefined;

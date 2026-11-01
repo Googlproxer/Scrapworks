@@ -25,6 +25,9 @@ test('production graph permits Miniplex only in its independent worker', () => {
     'src/session/inline-port.ts',
     'tools/simulation-worker-bench/production-fixture.ts',
     'node_modules/bitecs/dist/index.js',
+    'src/game/debug/draw/development-renderer.ts',
+    'src/game/debug/draw/geometry.ts',
+    'src/game/debug/draw/backend.development.ts',
   ]) {
     const m = fixture();
     m.outputs['view.js'].inputs![input] = {};
