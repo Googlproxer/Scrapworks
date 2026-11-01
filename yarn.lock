@@ -3314,9 +3314,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fluentui/react-components@npm:^9.74.11":
-  version: 9.74.11
-  resolution: "@fluentui/react-components@npm:9.74.11"
+"@fluentui/react-components@npm:^9.75.0":
+  version: 9.75.0
+  resolution: "@fluentui/react-components@npm:9.75.0"
   dependencies:
     "@fluentui/react-accordion": "npm:^9.12.5"
     "@fluentui/react-alert": "npm:9.0.2-beta.1"
@@ -3341,7 +3341,7 @@ __metadata:
     "@fluentui/react-label": "npm:^9.4.6"
     "@fluentui/react-link": "npm:^9.8.6"
     "@fluentui/react-list": "npm:^9.7.0"
-    "@fluentui/react-menu": "npm:^9.25.7"
+    "@fluentui/react-menu": "npm:^9.25.8"
     "@fluentui/react-message-bar": "npm:^9.7.9"
     "@fluentui/react-motion": "npm:^9.16.5"
     "@fluentui/react-nav": "npm:^9.4.9"
@@ -3351,7 +3351,7 @@ __metadata:
     "@fluentui/react-portal": "npm:^9.8.17"
     "@fluentui/react-positioning": "npm:^9.23.4"
     "@fluentui/react-progress": "npm:^9.5.7"
-    "@fluentui/react-provider": "npm:^9.22.22"
+    "@fluentui/react-provider": "npm:^9.22.23"
     "@fluentui/react-radio": "npm:^9.6.7"
     "@fluentui/react-rating": "npm:^9.4.7"
     "@fluentui/react-search": "npm:^9.4.8"
@@ -3386,7 +3386,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/3d5392b472f5ab03f93b080e3de4412a9955b36eb658887b0c8f6ab7c9fe211c86c3134d0696f58d9bcb8acc5450f23964137530c322cff7fa6a6f3dc592e4e3
+  checksum: 10c0/537265a46da631a9a69ce798c92f564594ff85fc894b0148e2d822d1a0d828ca232c211f8879746cd9e59ed4a9d5f1510ae63180c8c80a0344bcf8c17eb24640
   languageName: node
   linkType: hard
 
@@ -3685,9 +3685,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fluentui/react-menu@npm:^9.25.7":
-  version: 9.25.7
-  resolution: "@fluentui/react-menu@npm:9.25.7"
+"@fluentui/react-menu@npm:^9.25.8":
+  version: 9.25.8
+  resolution: "@fluentui/react-menu@npm:9.25.8"
   dependencies:
     "@fluentui/keyboard-keys": "npm:^9.0.9"
     "@fluentui/react-aria": "npm:^9.17.16"
@@ -3710,7 +3710,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/e2a44446946b122b2df4d9295b920f1c10b6cb3fe0e8f3069c73395c9599649d8e39379e827ebb050ceb497380b24a455b3d64aed3003511e2a49f9bbe764e69
+  checksum: 10c0/9b3f84e8a0bbc91a0773d46574d2688d26c441d2345ce74949ae50be09266cb69a438f024d575e3c43c4aadfddb779ac78525ad08fc22bfd7af09dd0d203b9fe
   languageName: node
   linkType: hard
 
@@ -3937,9 +3937,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fluentui/react-provider@npm:^9.22.22":
-  version: 9.22.22
-  resolution: "@fluentui/react-provider@npm:9.22.22"
+"@fluentui/react-provider@npm:^9.22.23":
+  version: 9.22.23
+  resolution: "@fluentui/react-provider@npm:9.22.23"
   dependencies:
     "@fluentui/react-icons": "npm:^2.0.245"
     "@fluentui/react-jsx-runtime": "npm:^9.4.7"
@@ -3956,7 +3956,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/41ece16de1d67ea252fde077b14c3b89bcf970e00c5fc593025a6dd7c6b97133948742bee55fac53172d6dda8f4ccd7b90fd4dbfce1e1e0ca0ded985277fcd5e
+  checksum: 10c0/65fea48638437a62f9e45a20c478f127d0a5a42af36b07942b48ef57887e5e1df1acae8b92278d013dbb4d3e7524c7e8e927b306742a50bc7dc95cb238ee9a2a
   languageName: node
   linkType: hard
 
@@ -12513,7 +12513,7 @@ __metadata:
     "@eslint/js": "npm:^10.0.1"
     "@fluentui-contrib/react-resize-handle": "npm:^0.8.4"
     "@fluentui-contrib/react-virtualizer": "npm:^1.0.0"
-    "@fluentui/react-components": "npm:^9.74.11"
+    "@fluentui/react-components": "npm:^9.75.0"
     "@fluentui/react-icons": "npm:^2.0.344"
     "@fluentui/react-motion-components-preview": "npm:^0.15.10"
     "@fluentui/react-shared-contexts": "npm:^9.26.4"

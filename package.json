@@ -82,7 +82,7 @@
     "@eslint/js": "^10.0.1",
     "@fluentui-contrib/react-resize-handle": "^0.8.4",
     "@fluentui-contrib/react-virtualizer": "^1.0.0",
-    "@fluentui/react-components": "^9.74.11",
+    "@fluentui/react-components": "^9.75.0",
     "@fluentui/react-icons": "^2.0.344",
     "@fluentui/react-motion-components-preview": "^0.15.10",
     "@fluentui/react-shared-contexts": "^9.26.4",
