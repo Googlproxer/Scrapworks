@@ -78,7 +78,7 @@ export class PlayerMotor {
 
   private legacyCells(buildings: readonly BuildingView[]): GridCell[] {
     const { columns, rows } = this.definition.grid;
-    const cells = occupiedCells(this.definition, buildings);
+    const cells = occupiedCells(this.definition, buildings, this.definition.deposits);
     for (let row = 0; row < rows; row++) {
       for (let column = 0; column < columns; column++) {
         if (this.definition.terrain[row * columns + column] === 'water')

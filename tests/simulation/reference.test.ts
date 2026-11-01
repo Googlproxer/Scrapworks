@@ -1,15 +1,14 @@
 import type { WorldCommand, QuarterTurn } from '../../src/contracts/world.ts';
-import './register-typescript.ts';
+import '../../tools/testing/register-typescript.ts';
 import test from 'node:test';
-const { ReferenceSimulation } = await import('./reference-simulation.ts');
+const { ReferenceSimulation } = await import('../support/reference-simulation.ts');
 const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
-import { compileMarkers } from './compile.ts';
-import { fixtureMarkers } from './test-fixture.ts';
+import { worldFixture } from '../support/world-fixture.ts';
 test('private ECS movement and placement agree with the legacy plain-object oracle for seeded streams', () => {
   for (let seed of [1729, 451, 983]) {
     const next = () => (seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0);
 
-    const definition = compileMarkers(fixtureMarkers());
+    const definition = worldFixture();
     const ecs = new Simulation(definition, { developerFixture: true }),
       reference = new ReferenceSimulation(definition);
     for (let tick = 0; tick < 1000; tick++) {

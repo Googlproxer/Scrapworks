@@ -2,6 +2,7 @@ import { World } from 'miniplex';
 import type {
   BuildingView,
   CommandResult,
+  DepositDefinition,
   GridCell,
   WorldCommand,
   WorldDefinition,
@@ -288,9 +289,24 @@ export class Simulation {
     entity.dirty |= detailsOnly ? 1 : 3;
   }
 
+  private readDeposits(): DepositDefinition[] {
+    return Array.from(this.depositsQuery).flatMap((e) => {
+      const source = this.definition.deposits.find((d) => d.id === e.id);
+      return source
+        ? [
+            {
+              ...structuredClone(source),
+              position: { ...e.transform.position },
+              quantity: e.deposit.quantity,
+            },
+          ]
+        : [];
+    });
+  }
+
   private rebuildCollision(): void {
     const buildings = Array.from(this.buildingsQuery, (e) => e.building);
-    const cells = occupiedCells(this.definition, buildings);
+    const cells = occupiedCells(this.definition, buildings, this.readDeposits());
     for (let row = 0; row < this.definition.grid.rows; row++)
       for (let column = 0; column < this.definition.grid.columns; column++)
         if (this.definition.terrain[row * this.definition.grid.columns + column] === 'water')
@@ -446,6 +462,13 @@ export class Simulation {
       }
       at += PRESENTATION_STRIDE;
     }
+    // A batch can create, remove and recycle a slot before publication. Only
+    // its surviving generation needs a creation mapping in the final delta.
+    const mappings = full
+      ? Array.from(this.world, (e) => this.mapping(e))
+      : this.created.filter(
+          (mapping) => this.slots[mapping.slot]?.generation === mapping.generation,
+        );
     const packet: PresentationPacket = {
       schema: 1,
       version: ++this.version,
@@ -455,7 +478,7 @@ export class Simulation {
       nextEntityId: this.resources.nextEntityId,
       worldId: this.resources.worldId,
       playerId: this.resources.playerId,
-      mappings: full ? Array.from(this.world, (e) => this.mapping(e)) : this.created,
+      mappings,
       rows: rows.buffer,
       removed: new Float64Array(this.removed).buffer,
       details,
@@ -519,10 +542,7 @@ export class Simulation {
         .filter(([, r]) => r.unlocked)
         .map(([id]) => id),
       productionTotals: { ...this.resources.productionTotals },
-      deposits: Array.from(this.depositsQuery).flatMap((e) => {
-        const source = this.definition.deposits.find((d) => d.id === e.id);
-        return source ? [{ ...structuredClone(source), quantity: e.deposit.quantity }] : [];
-      }),
+      deposits: this.readDeposits(),
       buildings: Array.from(this.buildingsQuery, (e) => structuredClone(e.building)),
       lastCommandResult: structuredClone(this.lastCommandResult),
     };

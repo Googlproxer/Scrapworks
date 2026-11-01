@@ -69,6 +69,7 @@ const files = [
   ...walk(path.join(root, 'docs')).filter((file) => file.endsWith('.md')),
   ...walk(path.join(root, 'art')).filter((file) => file.endsWith('.md')),
   ...walk(path.join(root, 'tools')).filter((file) => file.endsWith('.md')),
+  ...walk(path.join(root, 'tests')).filter((file) => file.endsWith('.md')),
 ];
 for (const file of files) {
   const text = prose(fs.readFileSync(file, 'utf8'));

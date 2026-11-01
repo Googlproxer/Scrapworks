@@ -1,21 +1,19 @@
-import { mutable } from '../shared.ts';
+import { mutable } from '../../tools/shared.ts';
 import type { WorldCommand } from '../../src/contracts/world.ts';
 import type { SimulationPort } from '../../src/session/port.ts';
-import type { RuntimeReply } from '../../src/contracts/simulation.ts';
+import type { RuntimeReply, SimulationCapture } from '../../src/contracts/simulation.ts';
 import type {
   PlayerMotor as PlayerMotorInstance,
   MovementIntent,
 } from '../../src/simulation/player-motor.ts';
-import './register-typescript.ts';
+import '../../tools/testing/register-typescript.ts';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 const { GameSession } = await import('../../src/session/inline-game-session.ts');
+const { GameSession: HostSession } = await import('../../src/session/game-session.ts');
 const { PlayerMotor } = await import('../../src/simulation/player-motor.ts');
 const { SimulationRuntime } = await import('../../src/session/runtime.ts');
-import { compileMarkers } from './compile.ts';
-import { fixtureMarkers } from './test-fixture.ts';
-
-const definition = () => compileMarkers(fixtureMarkers());
+import { worldFixture as definition } from '../support/world-fixture.ts';
 
 const placement: WorldCommand = {
   type: 'place',
@@ -241,4 +239,162 @@ test('capture retains accepted pending commands and continuation sequence, witho
   assert.deepEqual(await a.capture(), await b.capture());
   a.dispose();
   b.dispose();
+});
+
+function delayedRestoration(capture: SimulationCapture) {
+  const runtime = new SimulationRuntime();
+  let initialize!: () => void;
+  let queue = new Promise<void>((resolve) => {
+    initialize = resolve;
+  });
+  const port: SimulationPort = {
+    send(request) {
+      const reply = queue.then(() => runtime.handle(request));
+      queue = reply.then(
+        () => undefined,
+        () => undefined,
+      );
+      return reply;
+    },
+    dispose: () => runtime.dispose(),
+  };
+  const session = new HostSession(definition(), {
+    developerFixture: true,
+    capture,
+    portFactory: () => port,
+  });
+  return { session, initialize };
+}
+
+const continuationPlacements: WorldCommand[] = [
+  placement,
+  { ...placement, cell: { column: 6, row: 5 } },
+  { ...placement, cell: { column: 4, row: 4 } },
+  { ...placement, cell: { column: 6, row: 6 } },
+];
+
+test('delayed restoration preserves pending commands and commands queued before and after readiness exactly once', async () => {
+  const source = new GameSession(definition(), { developerFixture: true });
+  source.enqueue(continuationPlacements[0]);
+  const capture = await source.capture();
+  source.dispose();
+  assert.equal(capture.pending.length, 1);
+  const { session, initialize } = delayedRestoration(capture);
+  try {
+    const beforeReady = continuationPlacements
+      .slice(1, 3)
+      .map((command) => session.enqueue(command));
+    assert.equal(session.isReady, false);
+    initialize();
+    await session.ready;
+    const afterReady = session.enqueue(continuationPlacements[3]);
+    session.advance(0.05);
+    await session.settled();
+    assert.equal(session.failed, false);
+    assert.equal(session.readView().buildings.length, 4);
+    assert.deepEqual([...beforeReady, afterReady], [2, 3, 4]);
+    assert.deepEqual(
+      session.acknowledgements.map((ack) => ack.sequence),
+      [1, 2, 3, 4],
+    );
+    assert(
+      session.acknowledgements.every((ack) => ack.result !== 'cancelled' && ack.result.accepted),
+    );
+    const continued = await session.capture();
+    assert.deepEqual(continued.ledger, { accepted: 4, applied: 4, cancelled: 0, lastApplied: 4 });
+    assert.deepEqual(continued.pending, []);
+    session.flushCompleted();
+    session.advance(0.05);
+    await session.settled();
+    assert.equal(session.readView().buildings.length, 4);
+    assert.equal(session.acknowledgements.length, 4);
+  } finally {
+    initialize();
+    await session.ready.catch(() => undefined);
+    session.dispose();
+  }
+});
+
+for (const history of ['applied', 'cancelled'] as const)
+  test(`delayed restoration allocates after ${history} command history with no pending commands`, async () => {
+    const source = new GameSession(definition(), { developerFixture: true });
+    for (const command of continuationPlacements.slice(0, 3)) source.enqueue(command);
+    if (history === 'applied') source.advance(0.05);
+    else source.pause();
+    const capture = await source.capture();
+    source.dispose();
+    assert.equal(capture.ledger.accepted, 3);
+    assert.equal(capture.ledger[history], 3);
+    assert.deepEqual(capture.pending, []);
+    const { session, initialize } = delayedRestoration(capture);
+    try {
+      const sequence = session.enqueue(continuationPlacements[3]);
+      initialize();
+      await session.ready;
+      session.advance(0.05);
+      await session.settled();
+      assert.equal(session.failed, false);
+      assert.equal(session.readView().buildings.length, history === 'applied' ? 4 : 1);
+      assert.equal(sequence, 4);
+      assert.deepEqual(
+        session.acknowledgements.map((ack) => ack.sequence),
+        [4],
+      );
+      const continued = await session.capture();
+      assert.deepEqual(continued.ledger, {
+        accepted: 4,
+        applied: history === 'applied' ? 4 : 1,
+        cancelled: history === 'cancelled' ? 3 : 0,
+        lastApplied: 4,
+      });
+      assert.deepEqual(continued.pending, []);
+    } finally {
+      initialize();
+      await session.ready.catch(() => undefined);
+      session.dispose();
+    }
+  });
+
+test('pausing delayed restoration cancels captured and newly queued commands with distinct acknowledgements', async () => {
+  const source = new GameSession(definition(), { developerFixture: true });
+  source.enqueue(continuationPlacements[0]);
+  const capture = await source.capture();
+  source.dispose();
+  const { session, initialize } = delayedRestoration(capture);
+  try {
+    const cancelled = session.enqueue(continuationPlacements[1]);
+    session.pause();
+    initialize();
+    await session.settled();
+    assert.equal(session.readView().buildings.length, 0);
+    assert.equal(cancelled, 2);
+    assert.deepEqual(
+      session.acknowledgements.map((ack) => [ack.sequence, ack.result]),
+      [
+        [1, 'cancelled'],
+        [2, 'cancelled'],
+      ],
+    );
+    session.pause(false);
+    const sequence = session.enqueue(continuationPlacements[2]);
+    session.advance(0.05);
+    await session.settled();
+    assert.equal(sequence, 3);
+    assert.equal(session.failed, false);
+    assert.equal(session.readView().buildings.length, 1);
+    assert.deepEqual(
+      session.acknowledgements.map((ack) => ack.sequence),
+      [1, 2, 3],
+    );
+    assert.deepEqual((await session.capture()).ledger, {
+      accepted: 3,
+      applied: 1,
+      cancelled: 2,
+      lastApplied: 3,
+    });
+  } finally {
+    initialize();
+    await session.ready.catch(() => undefined);
+    session.dispose();
+  }
 });

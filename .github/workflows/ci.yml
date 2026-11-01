@@ -59,8 +59,8 @@ jobs:
       - name: Lint application and templates
         run: yarn lint
 
-      - name: Typecheck tools and test lint configuration
-        run: yarn test:lint
+      - name: Typecheck and test development tools
+        run: yarn test:tools
 
       - name: Check documentation links and diagrams
         run: yarn docs:check
@@ -68,10 +68,8 @@ jobs:
       - name: Test scene export tooling
         run: yarn test:export
 
-      - name: Test world compilation and simulation
-        run: |
-          yarn tsc -p tools/world/tsconfig.reference.json
-          yarn test:world
+      - name: Typecheck and test game simulation and sessions
+        run: yarn test:game
 
       - name: Run Chromium application and accessibility tests
         run: yarn test
@@ -84,7 +82,7 @@ jobs:
         run: node tools/ecs-bench/verify-production.ts
 
       - name: Exercise the built simulation worker and failure Retry
-        run: node tools/world/production-browser.ts
+        run: yarn test:acceptance
 
       - name: Verify exported and built assets
         run: yarn assets:check --build

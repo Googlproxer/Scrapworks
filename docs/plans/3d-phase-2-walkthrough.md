@@ -18,7 +18,7 @@ Controls use separate keyboard/mouse and gamepad tabs, action rows with binding 
 
 Verify initial loading and readiness after a usable rendered frame, same-scene requests while paused, visibility and zero-size suspension, resume without a jump, focus and overlapping dialogs, custom bindings and keyboard exit, context loss with Retry, late loads, independent hosts, and repeated teardown/remount. Keep the real Play Game button and accessible Angular loading/error/pause controls in browser checks.
 
-The [browser client tests](../../src/game/babylon-game-client.spec.ts) and focused input/activity/timing tests are the current executable contracts. Run `yarn test`, `yarn lint`, `yarn test:world`, and the production/browser acceptance route after integration changes. Dated test totals in the archived walkthrough do not describe the current suite.
+The [browser client tests](../../src/game/babylon-game-client.spec.ts) and focused input/activity/timing tests are the current executable contracts. Run `yarn test`, `yarn lint`, `yarn test:game`, `yarn test:tools`, and the production/browser acceptance route after integration changes. The [game test guide](../../tests/README.md) owns current locations and commands. Dated test totals in the archived walkthrough do not describe the current suite.
 
 ## Implementation boundary
 

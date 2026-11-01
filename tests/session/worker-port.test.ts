@@ -1,11 +1,12 @@
 import type { RuntimeRequest, RuntimeReply } from '../../src/contracts/simulation.ts';
-import './register-typescript.ts';
+import '../../tools/testing/register-typescript.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 const { WorkerSimulationPort } = await import('../../src/session/worker-port.ts');
 const { GameSession } = await import('../../src/session/game-session.ts');
 const { SimulationRuntime } = await import('../../src/session/runtime.ts');
-const { definition } = await import('../simulation-worker-bench/production-fixture.ts');
+import { worldFixture } from '../support/world-fixture.ts';
+const definition = worldFixture();
 
 class FakeWorker extends EventTarget {
   terminated = 0;

@@ -20,7 +20,7 @@ describe('Babylon game page integration', () => {
       imports: [GamePageComponent],
       providers: [
         // Angular's unit-test bundler does not compile module worker URL entries.
-        // The built application/worker is exercised by tools/world/production-browser.ts.
+        // The built application/worker is exercised by tests/acceptance/production-browser.ts.
         { provide: SIMULATION_PORT_FACTORY, useValue: () => new InlineSimulationPort() },
         {
           provide: GAME_CLIENT_FACTORY,

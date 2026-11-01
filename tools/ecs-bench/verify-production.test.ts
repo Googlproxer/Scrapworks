@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { verifyMetadata } from '../ecs-bench/verify-production.ts';
+import { verifyMetadata } from './verify-production.ts';
 import type { BuildMetadata } from '../shared.ts';
 
 const fixture = (): BuildMetadata => ({

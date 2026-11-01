@@ -2,6 +2,8 @@ import { NullEngine } from '@babylonjs/core/Engines/nullEngine';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import { Scene } from '@babylonjs/core/scene';
 import type { BuildingView, WorldDefinition, WorldView } from '@contracts/world';
+import { GameSession } from '../../session/game-session';
+import { InlineSimulationPort } from '../../session/inline-port';
 import { EntityViews } from './entity-views';
 import { WorldFrame } from './world-frame';
 
@@ -118,5 +120,45 @@ describe('EntityViews completed publication changes', () => {
     views.pulse();
     expect([...views.values()]).toHaveLength(0);
     expect(fullSync).toHaveBeenCalledTimes(2);
+  });
+
+  it('renders a placement when a pause publication arrives before the next frame', async () => {
+    const session = new GameSession(definition, {
+      developerFixture: true,
+      portFactory: () => new InlineSimulationPort(),
+    });
+    try {
+      await session.ready;
+      frame.view = session.readView();
+      views.pulse();
+      session.enqueue({
+        type: 'place',
+        buildingId: 'test-building',
+        cell: { column: 1, row: 0 },
+        rotation: 0,
+      });
+      session.advance(0.05);
+      expect(session.readView().buildings).toHaveLength(1);
+      session.setPaused(true);
+      frame.view = session.readView();
+      expect(frame.view.changes?.buildings).toEqual([]);
+      views.pulse();
+      expect(scene.getMeshByName('entity:building-1')).not.toBeNull();
+    } finally {
+      session.dispose();
+    }
+  });
+
+  it('recovers removals and updates from skipped publications', () => {
+    frame.view = view({ buildings: [building('removed'), building('retained')] });
+    views.pulse();
+    const removed = scene.getMeshByName('entity:removed')!;
+    const updated = { ...building('retained'), position: { x: 5, y: 0, z: 7 } };
+    frame.view = view({ publication: 6, buildings: [updated] });
+    views.pulse();
+    expect(removed.isDisposed()).toBe(true);
+    expect([...views.values()]).toHaveLength(1);
+    expect(scene.getMeshByName('entity:retained')!.position.x).toBe(500);
+    expect(scene.getMeshByName('entity:retained')!.position.z).toBe(700);
   });
 });

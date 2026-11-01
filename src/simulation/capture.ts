@@ -6,6 +6,7 @@ import type {
 } from '@contracts/simulation';
 import { requireInvariant as check } from '@contracts/simulation';
 import { assertWorldDefinition } from '@contracts/world';
+import { cellCenter, cellInBounds } from '@core/world-grid';
 
 export const EMPTY_CONTENT: ContentDefinition = Object.freeze({
   version: 'foundation-empty-v1',
@@ -277,12 +278,28 @@ export function assertSnapshot(
       );
       for (const key of ['x', 'y', 'z'])
         check(typeof p[key] === 'number' && Number.isFinite(p[key]), 'Invalid building position');
+      const width = number(f['width'], true),
+        depth = number(f['depth'], true);
+      check(width > 0 && depth > 0, 'Invalid building footprint');
+      const anchor = {
+        column: number(cell['column'], true),
+        row: number(cell['row'], true),
+      };
+      const grid = s['definition'].grid;
+      const rotatedWidth = Number(b['rotation']) % 2 ? depth : width;
+      const rotatedDepth = Number(b['rotation']) % 2 ? width : depth;
+      // Bound geometry arithmetically before collision rebuilding enumerates cells.
       check(
-        p['y'] === 0 && number(f['width'], true) > 0 && number(f['depth'], true) > 0,
-        'Invalid building footprint',
+        cellInBounds(grid, anchor) &&
+          rotatedWidth <= grid.columns - anchor.column &&
+          rotatedDepth <= grid.rows - anchor.row,
+        'Building footprint outside world bounds',
       );
-      number(cell['column'], true);
-      number(cell['row'], true);
+      const centre = cellCenter(grid, anchor);
+      check(
+        p['x'] === centre.x && p['y'] === 0 && p['z'] === centre.z,
+        'Building position/cell mismatch',
+      );
     }
     entities.push(value as EntityData);
   }

@@ -1,7 +1,7 @@
 import type { Worker } from 'playwright';
 import type { RuntimeReply } from '../../src/contracts/simulation.ts';
 import type { EngineStore } from '@babylonjs/core';
-import { readJson, type BuildMetadata } from '../shared.ts';
+import { readJson, type BuildMetadata } from '../../tools/shared.ts';
 
 interface RendererStats {
   meshes: number;

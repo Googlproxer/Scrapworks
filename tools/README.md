@@ -4,9 +4,11 @@ Run these commands from the repository root after `yarn install --immutable`. Pa
 
 ## TypeScript tooling
 
-Repository tool implementations and Node tooling tests use TypeScript. Node 24.21.0 executes the `.ts` entry points directly; no emitted JavaScript or build step is needed. The benchmark CLI supplies `--experimental-transform-types` when loading adapters that use parameter properties; include that flag when running benchmark test files directly. Run `yarn test:lint` to strictly typecheck all tools, the ESLint configuration and its rules, then run the lint-rule tests. This extends the existing CI check; it does not execute benchmarks. The benchmark projects also retain their separate TypeScript configurations.
+Repository tool implementations and Node tooling tests use TypeScript. Node 24.21.0 executes the `.ts` entry points directly; no emitted JavaScript or build step is needed. The benchmark CLI supplies `--experimental-transform-types` when loading adapters that use parameter properties; include that flag when running benchmark test files directly. Run `yarn test:tools` to strictly typecheck tools and run compiler/export, import-resolver, build-metadata and lint-rule tests. `yarn test:lint` remains the focused lint-configuration/rule check with tool typechecking. Neither command runs laboratory trials. The benchmark projects also retain their separate TypeScript configurations.
 
-Prefer TypeScript for future tools, as recorded in [AGENTS.md](../AGENTS.md). Update imports, subprocess paths, package scripts, workflows and documentation when renaming an entry point. Native Node source tests use the [repository resolver](world/register-typescript.ts) for application aliases; browser entry points continue through Angular or Vite.
+Prefer TypeScript for future tools, as recorded in [AGENTS.md](../AGENTS.md). Update imports, subprocess paths, package scripts, workflows and documentation when renaming an entry point. Native Node source tests use the [repository resolver](testing/register-typescript.ts) for application aliases; browser entry points continue through Angular or Vite.
+
+Game behavior tests live under [tests/](../tests/README.md) and run through `yarn test:game`; tooling tests stay with their implementations. The shared resolver and its regression are owned by `tools/testing/`. The [test audit](../tests/README.md#audit-of-tests-previously-under-tools) distinguishes production game assertions from compiler/export, lint and laboratory tests.
 
 Under `tools/`, two JavaScript compatibility loaders remain: `editor-mcp/index.cjs` exposes the Editor's required CommonJS plugin entry using the pinned `jiti` dependency, and `editor-mcp/run-server.mjs` forwards the existing local MCP configuration to `run-server.ts`. They contain no tool implementation. The Editor's own bundled `index.mjs` is an external dependency and keeps its original filename. Python tools remain Python where they depend on Blender, Matplotlib or Python archive tooling.
 
@@ -57,4 +59,4 @@ The aliases above, plus `assets:audit`, `cleanup:audit` and `editor:mcp:check`, 
 
 ## Production checks
 
-The production dependency audit, `node tools/ecs-bench/verify-production.ts`, inspects build metadata rather than running benchmarks. Main CI retains this audit, the world/session tests and `node tools/world/production-browser.ts` for real built-worker acceptance. The [root development commands](../README.md#development-commands) list the remaining package scripts.
+The production dependency audit, `node tools/ecs-bench/verify-production.ts`, inspects build metadata rather than running benchmarks; its adjacent regression runs in `test:tools`. Main CI also runs `test:game` and `yarn test:acceptance` (`tests/acceptance/production-browser.ts`) for real built-worker acceptance. The [root development commands](../README.md#development-commands) list the package scripts.

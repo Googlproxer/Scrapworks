@@ -78,6 +78,8 @@ export class GameSession {
     this.port = (options.portFactory ?? (() => new WorkerSimulationPort()))();
     this.unsubscribeFailure = this.port.subscribeFailure?.((error) => this.fail(error));
     try {
+      // Commands can be queued before the worker's readiness reply arrives.
+      this.nextCommand = options.capture?.ledger.accepted ?? 0;
       const result = this.request('initialize', {
         definition,
         developerFixture: options.developerFixture,

@@ -1,12 +1,13 @@
 import type { SimulationEntity, SystemContext } from '../../src/simulation/ecs-runtime.ts';
 import type {
+  EntityData,
   SimulationCapture,
   Inspection,
   RuntimeRequest,
   RuntimeReply,
 } from '../../src/contracts/simulation.ts';
 import type { SimulationPort } from '../../src/session/port.ts';
-import './register-typescript.ts';
+import '../../tools/testing/register-typescript.ts';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
@@ -17,7 +18,7 @@ const { InlineSimulationPort } = await import('../../src/session/inline-port.ts'
 const rules = await import('../../src/simulation/domain/inventory.ts');
 const { advanceWork } = await import('../../src/simulation/domain/work.ts');
 const { fixture, content, definition, system } =
-  await import('../simulation-worker-bench/production-fixture.ts');
+  await import('../../tools/simulation-worker-bench/production-fixture.ts');
 const still = { x: 0, z: 0, sprint: false };
 
 test('inventory preflight is atomic, capacity and reservations prevent double spending', () => {
@@ -216,6 +217,60 @@ test('structural mutation boundaries, native membership, stale handles and reuse
   world.dispose();
   cache.dispose();
   assert.equal(cache.size, 0);
+});
+
+test('batched slot reuse and transient removals preserve only surviving presentation entities', async () => {
+  for (const keepSurvivor of [true, false]) {
+    const session = new GameSession(definition, {
+      portFactory: () =>
+        new InlineSimulationPort({
+          system: (ctx) => {
+            const owner = (id: string): EntityData => ({
+              id,
+              kind: 'owner',
+              inventory: rules.emptyInventory(),
+            });
+            switch (ctx.resources.tick) {
+              case 0:
+                ctx.add(owner('original'));
+                break;
+              case 1:
+                ctx.replace('original', owner('intermediate'));
+                break;
+              case 2:
+                ctx.replace('intermediate', owner('survivor'));
+                break;
+              case 3:
+                ctx.add(owner('transient'));
+                break;
+              case 4:
+                ctx.remove('transient');
+                break;
+              case 5:
+                if (!keepSurvivor) ctx.remove('survivor');
+                break;
+            }
+          },
+        }),
+    });
+    try {
+      await session.ready;
+      session.advance(0.05);
+      session.flushCompleted();
+      assert.equal(session.cache.size, 2);
+      assert.doesNotThrow(() => session.advance(0.25));
+      assert.equal(session.failed, false);
+      const captured = await session.capture();
+      session.cache.verify(captured.world.entities);
+      assert.equal(session.cache.size, keepSurvivor ? 2 : 1);
+      assert.deepEqual(
+        captured.world.entities.map((entity) => entity.id),
+        keepSurvivor ? ['player', 'survivor'] : ['player'],
+      );
+    } finally {
+      session.dispose();
+    }
+  }
 });
 
 test('independent sessions deduplicate live detail subscriptions, detached inspection and teardown', async () => {

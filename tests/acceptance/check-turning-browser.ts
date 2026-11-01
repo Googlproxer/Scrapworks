@@ -1,10 +1,10 @@
 // Local development-only visual evidence; Angular debug access never ships in game code.
-import type { TurningSample } from '../browser-types.d.ts';
+import type { TurningSample } from '../../tools/browser-types.d.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { projectRoot } from '../scenes/inventory.ts';
+import { projectRoot } from '../../tools/scenes/inventory.ts';
 
 const origin = process.argv[2] ?? 'http://localhost:4200';
 const output = path.resolve(

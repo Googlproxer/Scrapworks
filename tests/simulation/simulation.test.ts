@@ -1,6 +1,6 @@
-import { mutable } from '../shared.ts';
+import { mutable } from '../../tools/shared.ts';
 import type { WorldCommand, GridCell, QuarterTurn } from '../../src/contracts/world.ts';
-import './register-typescript.ts';
+import '../../tools/testing/register-typescript.ts';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 const { GameSession } = await import('../../src/app/features/game/session/game-session.ts');
@@ -8,10 +8,7 @@ const { Simulation, PLAYER_RADIUS } = await import('../../src/simulation/simulat
 const { validatePlacement } = await import('../../src/simulation/placement.ts');
 const { cellCenter, worldToCell, metresToScene, sceneToMetres, footprintCells } =
   await import('../../src/core/world-grid.ts');
-import { compileMarkers } from './compile.ts';
-import { fixtureMarkers } from './test-fixture.ts';
-
-const definition = () => compileMarkers(fixtureMarkers());
+import { worldFixture as definition } from '../support/world-fixture.ts';
 
 const stationary = { x: 0, z: 0, sprint: false };
 

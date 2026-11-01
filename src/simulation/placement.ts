@@ -46,7 +46,9 @@ export function validatePlacement(
   )
     return reject('terrain');
   const occupied = new Set(
-    occupiedCells(definition, view.buildings).map((item) => `${item.column},${item.row}`),
+    occupiedCells(definition, view.buildings, view.deposits).map(
+      (item) => `${item.column},${item.row}`,
+    ),
   );
   if (cells.some((item) => occupied.has(`${item.column},${item.row}`))) return reject('occupied');
   if (

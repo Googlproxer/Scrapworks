@@ -33,7 +33,11 @@ export class EntityViews extends GameplayScript {
       view.worldGeneration === this.generation
     )
       return;
-    const reset = this.publication < 0 || this.generation !== (view.worldGeneration ?? -1);
+    // Several worker replies can update the cache before the next render frame.
+    const reset =
+      this.publication < 0 ||
+      this.generation !== (view.worldGeneration ?? -1) ||
+      (view.publication !== undefined && view.publication !== this.publication + 1);
     this.publication = view.publication ?? -1;
     this.generation = view.worldGeneration ?? -1;
     if (reset || !view.changes || view.changes.full) {

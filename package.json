@@ -21,6 +21,9 @@
     "assets:check": "node tools/scenes/check-export.ts",
     "test:export": "node --test tools/scenes/*.test.ts",
     "test:world": "node --test tools/world/*.test.ts",
+    "test:tools": "tsc -p tools/tsconfig.json && node --test tools/eslint/*.test.ts tools/scenes/*.test.ts tools/world/*.test.ts tools/testing/*.test.ts tools/ecs-bench/verify-production.test.ts",
+    "test:game": "tsc -p tests/tsconfig.json && tsc -p tests/support/tsconfig.reference.json && node --test tests/session/*.test.ts tests/simulation/*.test.ts",
+    "test:acceptance": "node tests/acceptance/production-browser.ts",
     "test:workflow": "node tools/scenes/check-dev-workflow.ts"
   },
   "repository": {
