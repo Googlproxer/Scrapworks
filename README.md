@@ -4,7 +4,7 @@ Scrapworks is a browser-first 3D factory-restoration game built with Angular and
 
 The [player progression design](docs/design/player-progression.md) records the planned research-led opening, Mini Fabricator, renewable-first industry and peaceful terraforming. These are design requirements; the implementation status remains in the [roadmap](docs/plans/README.md).
 
-Babylon.js is the sole world renderer and Babylon.js Editor owns scene/world-layout authoring. The migration adds an authored world definition, authoritative fixed-step movement and construction-preview validation. Manual salvage, crafting, research, factory systems and gameplay saving remain future milestones.
+Babylon.js is the sole world renderer and Babylon.js Editor owns scene/world-layout authoring. The single Miniplex worker now implements the Milestone 3 empty-handed opening: inventory/salvage, Field Research, safe handcrafting and a requested power-free MiniFab with optional winding. Factory systems and gameplay saving remain later milestones. See the [opening implementation report](docs/reports/milestone-03/2026-11-02/README.md).
 
 Start with the [documentation index](docs/README.md), [3D cleanup record](docs/plans/3d-cleanup.md), and [implementation roadmap](docs/plans/README.md). Editable Blender projects, artwork, references and provenance are indexed in [art/](art/README.md); visual guidance remains in the [Art Document](docs/art/README.md).
 

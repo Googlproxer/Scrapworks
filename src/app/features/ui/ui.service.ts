@@ -1,13 +1,23 @@
 import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import type { ComponentType } from '@angular/cdk/overlay';
-import { DestroyRef, effect, inject, Injector, Service } from '@angular/core';
+import { DestroyRef, effect, inject, Injector, Service, untracked } from '@angular/core';
 import { take } from 'rxjs';
 import { GameRuntimeService } from '../game/game-runtime.service';
+import {
+  NotificationCenter,
+  type NotificationOptions,
+  type NotificationRef,
+} from './notifications';
+import { OpeningFeedback } from './opening-feedback';
 
 export type DialogKey = 'save-dialog' | 'controls' | 'game-menu';
 
 @Service({ autoProvided: false })
 export class UiService {
+  private readonly notificationCenter = new NotificationCenter();
+  private readonly openingFeedback = new OpeningFeedback(this.notificationCenter);
+  public readonly notifications = this.notificationCenter.visible;
+  public readonly queuedNotificationCount = this.notificationCenter.queuedCount;
   private readonly gameRuntimeService = inject(GameRuntimeService);
   private readonly dialog = inject(Dialog);
   private readonly injector = inject(Injector);
@@ -18,11 +28,16 @@ export class UiService {
 
   constructor() {
     effect(() => {
+      const world = this.gameRuntimeService.world?.() ?? null;
+      untracked(() => this.openingFeedback.update(world));
+    });
+    effect(() => {
       if (this.gameRuntimeService.errorMessage()) {
         for (const dialog of [...this.openDialogs]) dialog.close();
       }
     });
     inject(DestroyRef).onDestroy(() => {
+      this.notificationCenter.destroy();
       for (const dialog of this.openDialogs) {
         dialog.close();
       }
@@ -30,6 +45,14 @@ export class UiService {
   }
 
   public openUIDialog<C, D = unknown>(
+    key: DialogKey,
+    component: ComponentType<C>,
+    config?: DialogConfig<D, DialogRef<unknown, C>>,
+  ): void {
+    this.gameRuntimeService.requestWorkExit(() => this.openDialog(key, component, config));
+  }
+
+  private openDialog<C, D = unknown>(
     key: DialogKey,
     component: ComponentType<C>,
     config?: DialogConfig<D, DialogRef<unknown, C>>,
@@ -63,6 +86,18 @@ export class UiService {
     const top = [...this.openDialogs].at(-1);
     top?.close();
     return !!top;
+  }
+
+  public openNotification(options: NotificationOptions): NotificationRef {
+    return this.notificationCenter.open(options);
+  }
+
+  public dismissNotification(id: number): void {
+    this.notificationCenter.dismiss(id);
+  }
+
+  public holdNotification(id: number, reason: 'pointer' | 'focus', held: boolean): void {
+    this.notificationCenter.hold(id, reason, held);
   }
 
   public get hasDialogs(): boolean {

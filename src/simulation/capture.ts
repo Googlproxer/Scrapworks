@@ -7,6 +7,7 @@ import type {
 import { requireInvariant as check } from '@contracts/simulation';
 import { assertWorldDefinition } from '@contracts/world';
 import { cellCenter, cellInBounds } from '@core/world-grid';
+import { assertOpening } from './opening-capture';
 
 export const EMPTY_CONTENT: ContentDefinition = Object.freeze({
   version: 'foundation-empty-v1',
@@ -177,6 +178,7 @@ export function assertSnapshot(
           'owner',
           'work',
           'charge',
+          'opening',
         ].includes(key),
       ),
       'Unknown component',
@@ -217,6 +219,14 @@ export function assertSnapshot(
       check(
         tool === null || (typeof tool === 'string' && Object.hasOwn(content.items, tool)),
         'Unknown tool',
+      );
+    }
+    if (e['opening']) {
+      check(e['kind'] === 'player' && e['inventory'] && e['equipment'], 'Invalid opening owner');
+      assertOpening(
+        e['opening'],
+        e['inventory'] as InventoryData,
+        (e['equipment'] as { tool: string | null }).tool,
       );
     }
     if (e['deposit']) {
@@ -331,6 +341,12 @@ export function assertSnapshot(
             'out-of-reach',
             'unavailable',
             'unknown-command',
+            'invalid-request',
+            'locked',
+            'missing-input',
+            'capacity',
+            'busy',
+            'depleted',
           ].includes(String(object(result)['reason'])))),
     'Invalid command result',
   );

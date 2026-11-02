@@ -7,6 +7,8 @@
     "ng": "ng",
     "dev": "node tools/scenes/dev.ts",
     "build": "yarn scenes:export && ng build",
+    "build:stats": "yarn scenes:export && ng build --stats-json",
+    "build:prod": "yarn scenes:export && ng build --configuration production",
     "test": "yarn scenes:export && ng test --watch=false",
     "test:unit": "yarn scenes:export && ng test --configuration=unit --watch=false",
     "test:renderer": "yarn scenes:export && ng test --configuration=renderer --watch=false",
@@ -24,6 +26,7 @@
     "test:tools": "tsc -p tools/tsconfig.json && node --test tools/eslint/*.test.ts tools/scenes/*.test.ts tools/world/*.test.ts tools/testing/*.test.ts tools/ecs-bench/verify-production.test.ts",
     "test:game": "tsc -p tests/tsconfig.json && tsc -p tests/support/tsconfig.reference.json && node --test tests/session/*.test.ts tests/simulation/*.test.ts",
     "test:acceptance": "node tests/acceptance/production-browser.ts",
+    "test:opening": "node tests/acceptance/opening-browser.ts",
     "test:workflow": "node tools/scenes/check-dev-workflow.ts"
   },
   "repository": {

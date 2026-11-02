@@ -29,8 +29,10 @@ import { cellCenter } from '@core/world-grid';
 import { TEST_BUILDING_FOOTPRINT, validatePlacement } from './placement';
 import { PlayerMotor, type MovementIntent } from './player-motor';
 import { FIXED_STEP_SECONDS, occupiedCells } from './world-rules';
-import { assertSnapshot, EMPTY_CONTENT, ownContent } from './capture';
+import { assertSnapshot, ownContent } from './capture';
 import { emptyInventory } from './domain/inventory';
+import { OPENING_CONTENT } from '../content/opening';
+import { newOpening, OpeningSystem } from './opening';
 
 export type { MovementIntent } from './player-motor';
 
@@ -54,7 +56,9 @@ export interface SimulationEntity extends EntityData {
 export interface SystemContext {
   readonly active: Iterable<SimulationEntity>;
   readonly entities: Iterable<SimulationEntity>;
+  readonly piles: Iterable<SimulationEntity>;
   readonly resources: WorldResources;
+  allocateId(prefix: string): string;
   get(id: string): SimulationEntity | undefined;
   mark(entity: SimulationEntity, detailsOnly?: boolean): void;
   replace(id: string, data: EntityData): void;
@@ -81,6 +85,8 @@ export class Simulation {
   private readonly active = this.world.with('work', 'active');
   private readonly buildingsQuery = this.world.with('building');
   private readonly depositsQuery = this.world.with('deposit', 'transform');
+  private readonly pilesQuery = this.world.with('pile', 'transform');
+  private readonly opening?: OpeningSystem;
   private readonly ids = new Map<string, SimulationEntity>();
   private readonly slots: (SimulationEntity | undefined)[] = [];
   private readonly generations: number[] = [];
@@ -106,7 +112,7 @@ export class Simulation {
   private endpoints: PlayerEndpoint[] = [];
 
   constructor(definition: WorldDefinition, options: SimulationOptions = {}) {
-    this.content = options.content ? ownContent(options.content) : EMPTY_CONTENT;
+    this.content = ownContent(options.content ?? OPENING_CONTENT);
     if (options.snapshot) assertSnapshot(options.snapshot, this.content);
     assertWorldDefinition(definition);
     check(
@@ -155,6 +161,7 @@ export class Simulation {
         },
         inventory: emptyInventory(),
         equipment: { tool: null },
+        ...(!options.content ? { opening: newOpening() } : {}),
       });
       for (const deposit of definition.deposits)
         this.insert({
@@ -181,7 +188,9 @@ export class Simulation {
     this.context = {
       active: this.active.entities,
       entities: this.world.entities,
+      piles: this.pilesQuery.entities,
       resources: this.resources,
+      allocateId: (prefix) => this.allocateId(prefix),
       get: (id) => this.ids.get(id),
       mark: (entity, detailsOnly) => this.mark(entity, detailsOnly),
       replace: (id, data) => {
@@ -213,6 +222,7 @@ export class Simulation {
         this.mark(entity);
       },
     };
+    if (player.opening) this.opening = new OpeningSystem(this.context);
     this.rememberPlayer();
   }
 
@@ -224,6 +234,7 @@ export class Simulation {
       slot: e.slot,
       generation: e.generation,
       kind: e.kind,
+      ...(e.pile ? { pile: { item: e.pile.item } } : {}),
       ...(e.building ? { building: structuredClone(e.building) } : {}),
       ...(authored
         ? {
@@ -258,6 +269,7 @@ export class Simulation {
       pile: data.pile,
       building: data.building,
       owner: data.owner,
+      opening: data.opening,
       active: data.work?.status === 'active' ? true : undefined,
     };
     this.world.add(entity);
@@ -330,6 +342,7 @@ export class Simulation {
   public clearInput(): void {
     this.commands = [];
     this.playerMotor.clearInput();
+    this.opening?.interrupt();
     this.mark(this.ids.get(this.resources.playerId)!);
   }
 
@@ -339,6 +352,11 @@ export class Simulation {
     try {
       this.commandResults = [];
       for (const command of this.commands) {
+        if (command.type !== 'place' && this.opening) {
+          this.lastCommandResult = this.opening.command(command);
+          this.commandResults.push(this.lastCommandResult);
+          continue;
+        }
         if (command.type !== 'place' || command.buildingId !== 'test-building') {
           this.lastCommandResult = { accepted: false, reason: 'unknown-command' };
           this.commandResults.push(this.lastCommandResult);
@@ -354,10 +372,7 @@ export class Simulation {
         this.lastCommandResult = { accepted: result.valid, reason: result.reason };
         this.commandResults.push(this.lastCommandResult);
         if (result.valid) {
-          let id: string;
-          do {
-            id = `building-${this.resources.nextEntityId++}`;
-          } while (this.ids.has(id) || this.definition.blockers.some((e) => e.id === id));
+          const id = this.allocateId('building');
           const building: BuildingView = {
             id,
             buildingId: 'test-building',
@@ -373,6 +388,8 @@ export class Simulation {
       this.commands = [];
       this.system?.(this.context);
       this.playerMotor.step(movement);
+      this.opening?.step(FIXED_STEP_SECONDS);
+      if (this.opening?.collisionChanged) this.rebuildCollision();
       this.mark(this.ids.get(this.resources.playerId)!);
       for (const change of this.structural) {
         if (change.id) this.remove(change.id);
@@ -410,6 +427,7 @@ export class Simulation {
       'owner',
       'work',
       'charge',
+      'opening',
     ] as const)
       if (e[key] !== undefined) Object.assign(data, { [key]: e[key] });
     return structuredClone(data);
@@ -488,6 +506,7 @@ export class Simulation {
         .filter(([, l]) => l.unlocked)
         .map(([id]) => id),
       productionTotals: { ...this.resources.productionTotals },
+      ...(this.opening ? { opening: this.opening.view() } : {}),
     };
     // Retain bounded backing storage, release component references, and avoid
     // growing a new JS array for every publication.
@@ -537,6 +556,7 @@ export class Simulation {
       nextEntityId: this.resources.nextEntityId,
       player: structuredClone(player.transform!),
       inventory,
+      ...(this.opening ? { opening: this.opening.view(), ground: this.groundView() } : {}),
       equipment: player.equipment?.tool ? [player.equipment.tool] : [],
       research: Object.entries(this.resources.research)
         .filter(([, r]) => r.unlocked)
@@ -554,6 +574,7 @@ export class Simulation {
     this.active.disconnect();
     this.buildingsQuery.disconnect();
     this.depositsQuery.disconnect();
+    this.pilesQuery.disconnect();
     this.world.clear();
     this.ids.clear();
     this.slots.length = this.generations.length = this.free.length = 0;
@@ -566,5 +587,22 @@ export class Simulation {
     this.structural = [];
     this.endpoints = [];
     this.collisionCells = [];
+  }
+
+  private groundView() {
+    return Array.from(this.pilesQuery, (entity) => ({
+      id: entity.id,
+      position: { ...entity.transform.position },
+      item: entity.pile.item,
+      quantity: entity.pile.quantity,
+    }));
+  }
+
+  private allocateId(prefix: string): string {
+    let id: string;
+    do {
+      id = `${prefix}-${this.resources.nextEntityId++}`;
+    } while (this.ids.has(id) || this.definition.blockers.some((entity) => entity.id === id));
+    return id;
   }
 }

@@ -1,6 +1,6 @@
 # Scrapworks diagrams
 
-Updated 27 October 2026. The gameplay/research diagrams now describe planned Mini Fabricator production, extraction, sorting, solid recovery as scrap/source ores, with liquid loss, renewable-first power and timed field/lab research. The system-interaction diagram marks planned opening/factory ECS from Milestone 3. The core class/frame diagrams retain implemented `WorldScene`, Toolkit, session and `PlayerMotor` ownership. Editor-marker compilation and plain WorldDefinition/WorldState remain the movement fixture's state boundary; GameState is a separate renderer lifecycle contract.
+Updated 2 November 2026. The core class, application, module and frame diagrams include the implemented OpeningSystem, versioned catalogue and detached player projection on the single worker. Movement/input ownership is distinct from simulation activity while the field kit is focused. The gameplay/research overview still includes explicitly later labs, factories, transport and environment systems. Mermaid blocks remain authoritative and their matching source/SVG/PNG artifacts are regenerated together.
 
 The [technical design](../design/TDD.md) and [implementation roadmap](../plans/README.md) contain the editable Mermaid blocks. Standalone sources are under [src/](src/), and matching SVG and PNG files are stored in this folder for GitHub preview and export.
 

@@ -170,13 +170,17 @@ export class UiInputAdapterService {
     }
     if (frame.context !== 'ui') return;
     if (pressed('cancel')) {
-      if (!this.ui.closeTopDialog() && this.runtime.currentSceneKey() === 'Game')
-        this.runtime.focusViewport();
+      if (this.runtime.workExitWarning()) this.runtime.resolveWorkExit(false);
+      else if (!this.ui.closeTopDialog() && this.runtime.currentSceneKey() === 'Game') {
+        if (this.runtime.fieldKitOpen()) this.runtime.toggleFieldKit();
+        else this.runtime.focusViewport();
+      }
       return;
     }
     const root = this.ui.activeElement ?? this.page;
     if (!root) return;
     const active = root.ownerDocument.activeElement as HTMLElement | null;
+    if (active?.closest('[data-winding]')) return;
     if (pressed('submit')) {
       if (
         active &&

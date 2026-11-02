@@ -8,7 +8,7 @@ This is the original three-clip migration checkpoint. The later user-requested [
 
 The canonical `/` route loads Babylon; `/3d` redirects to it. Angular owns the title, menus, Controls and readable loading/error/Retry states. Controls use a separate Dexie database and support alternate bindings, controller selection, stick deadzones and remapping. Production templates are separate HTML files.
 
-An Editor-authored 10 × 10 world with 2-metre cells compiles to validated plain data. The application owns 20 Hz simulation with at most five catch-up steps, camera-relative movement, collision and empty starting possessions. Terrain/entity picking and development-only placement use plain grid rules. The current protagonist has in-place Idle/Walk/Run animation and is loaded once at an authored anchor.
+An Editor-authored 10 x 10 world with 2-metre cells compiles to validated plain data. The application owns 20 Hz simulation with at most five catch-up steps, camera-relative movement, collision and empty starting possessions. Terrain/entity picking and development-only placement use plain grid rules. The current protagonist has in-place Idle/Walk/Run animation and is loaded once at an authored anchor.
 
 At this checkpoint, source art, original Blender files, earlier character experiments, historical 2D sources and dated evidence were preserved. Superseded sources/tools/reports were subsequently retired by the [28 October cleanup](../../../plans/3d-cleanup.md); the numerical evidence below remains dated 23 October. Retired static character/title scene sources remain recoverable from Git commit `6cd9f6f` using the [scene source recovery instructions](../../../../assets/README.md#recovering-retired-scene-sources).
 
@@ -32,7 +32,7 @@ Preservation update, 24 October 2026: the duplicate local scene archive was remo
 | Runtime/asset cutover audit | No Phaser markers in 740 emitted JavaScript files; no retired runtime assets; sole runtime GLB is protagonist v2 |
 | Documentation and repository checks | 48 documents, 588 local links and 8 diagram sources pass; repository audit verifies 571 source files and 12 generated-ignore rules |
 
-See [browser results](browser/results.json), [production/performance report](performance.json), [build-input audit](build-input-audit.json), [authoring workflow results](../../workflow/2026-10-23/README.md), and the [character validation](../../../../art/characters/protagonist-runtime-v2/validation-report.json). The build-input audit checked all 3,777 inputs in Angular's emitted `browser-stats.json` and found no Phaser dependencies; it supplements the profiler's optional lookup for the older `stats.json` filename.
+See [browser results](browser/results.json), [production/performance report](performance.json), [build-input audit](build-input-audit.json), [authoring workflow results](../../workflow/2026-10-23/README.md), and the [character validation](../../../../art/characters/protagonist-runtime-v2/validation-report.json). The build-input audit checked all 3, 777 inputs in Angular's emitted `browser-stats.json` and found no Phaser dependencies; it supplements the profiler's optional lookup for the older `stats.json` filename.
 
 The application suite covers controller mappings and disconnection, quick taps/simultaneous actions, binding validation, held suppression, stale frames/callbacks, native UI input, focus restoration, real IndexedDB settings reload/failure/isolation, lifecycle failures/late completions, independent hosts, pause/zero size/visibility, graphics loss and disposal. Plain tests cover transforms, units, bounds, deterministic stepping, movement rates, collision and rejection without placement mutation. Renderer tests load the actual exported model and verify heading, blending, picking at multiple camera/display configurations and obstruction fade/restore.
 
@@ -42,21 +42,21 @@ During validation, actual browser interaction exposed and resolved right-drag ma
 
 ## Character and visual evidence
 
-The current-character derivative is **4,102,120 bytes (3.91 MiB), 37,655 triangles, 10 materials and 52 joints**, with 13 embedded WebP images at 512–2048 pixels. It meets the requested runtime budgets. Its SHA-256 is `6707f196afc943e97af9fcb726bd18efe884f5b0a2af731fd787f4a8cf308396`.
+The current-character derivative is **4, 102, 120 bytes (3.91 MiB), 37, 655 triangles, 10 materials and 52 joints**, with 13 embedded WebP images at 512–2048 pixels. It meets the requested runtime budgets. Its SHA-256 is `6707f196afc943e97af9fcb726bd18efe884f5b0a2af731fd787f4a8cf308396` .
 
 Original source and animation-archive hashes, retargeting details and provenance limits are in the [asset README](../../../../art/characters/protagonist-runtime-v2/README.md). The original source files remain unchanged. No acquisition URL/license was invented for the existing animation archive.
 
-- [Production title](production-screenshots/babylon-canonical-menu.png) and [production Game](production-screenshots/babylon-canonical-game.png).
-- [Runtime sprint](browser/run-dpr1.png), [perspective placement fixture](browser/perspective-dpr1.png), [orthographic comparison](browser/orthographic-comparison-dpr1.png), and [640 × 480 resize](browser/resize-dpr1.png).
-- Equivalent DPR 2 screenshots are alongside these files. The [asset contact sheet](../../../../art/characters/protagonist-runtime-v2/animation-contact-sheet.png) covers front/back/side idle and sampled walk/run phases.
+* [Production title](production-screenshots/babylon-canonical-menu.png) and [production Game](production-screenshots/babylon-canonical-game.png).
+* [Runtime sprint](browser/run-dpr1.png), [perspective placement fixture](browser/perspective-dpr1.png), [orthographic comparison](browser/orthographic-comparison-dpr1.png), and [640 x 480 resize](browser/resize-dpr1.png).
+* Equivalent DPR 2 screenshots are alongside these files. The [asset contact sheet](../../../../art/characters/protagonist-runtime-v2/animation-contact-sheet.png) covers front/back/side idle and sampled walk/run phases.
 
 Perspective preserves a larger, more readable character in the default elevated composition; orthographic makes cell proportions more uniform but reduces character prominence at the comparison extent. Perspective remains the authored default. The fixture's capsule deposit and box blocker are intentional test geometry, not finished salvage/machine artwork.
 
 ## Migration-scene measurements
 
-Production deployment: **13,594,432 bytes in 759 files**. Fresh local navigation transfers 2,551,141 encoded body bytes to reach the menu; Game adds 4,124,187 bytes. These are local Resource Timing body sizes, not WAN latency measurements.
+Production deployment: **13, 594, 432 bytes in 759 files**. Fresh local navigation transfers 2, 551, 141 encoded body bytes to reach the menu; Game adds 4, 124, 187 bytes. These are local Resource Timing body sizes, not WAN latency measurements.
 
-Chromium 156.0.8078.4 on Windows, 1440 × 900 at DPR 1, reported **ANGLE Vulkan SwiftShader**. Each route used a fresh context, one-second warmup, two-second stationary sample and two seconds with W held.
+Chromium 156.0.8078.4 on Windows, 1440 x 900 at DPR 1, reported **ANGLE Vulkan SwiftShader**. Each route used a fresh context, one-second warmup, two-second stationary sample and two seconds with W held.
 
 | Route | Stationary mean / p95 | Movement mean / p95 |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ These are browser RAF intervals on a software renderer, not GPU execution timing
 
 ## Reproduction and limits
 
-Use the repository's normal scripts after dependencies are installed: `yarn scenes:export`, `yarn test`, `yarn lint`, `yarn test:lint`, `yarn test:world`, `yarn test:export`, `yarn test:workflow`, `yarn build`, `yarn assets:check --build`, `yarn docs:check` and `yarn cleanup:audit`.
+Use the repository's normal scripts after dependencies are installed: `yarn scenes:export` , `yarn test` , `yarn lint` , `yarn test:lint` , `yarn test:world` , `yarn test:export` , `yarn test:workflow` , `yarn build` , `yarn assets:check --build` , `yarn docs:check` and `yarn cleanup:audit` .
 
 This environment used the installed CLI directly because the pinned Yarn launcher could not be downloaded through the restricted network. Chromium browser commands needed localhost access outside the restricted sandbox. No rejected check was marked passed. This is not a fresh dependency-install validation.
 

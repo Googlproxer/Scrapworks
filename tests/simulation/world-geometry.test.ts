@@ -6,7 +6,8 @@ import test from 'node:test';
 const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
 const { SimulationRuntime } = await import('../../src/session/runtime.ts');
 const { PresentationCache } = await import('../../src/session/presentation-cache.ts');
-const { assertSnapshot, EMPTY_CONTENT } = await import('../../src/simulation/capture.ts');
+const { assertSnapshot } = await import('../../src/simulation/capture.ts');
+const { OPENING_CONTENT: EMPTY_CONTENT } = await import('../../src/content/opening.ts');
 const { validatePlacement } = await import('../../src/simulation/placement.ts');
 const { cellCenter } = await import('../../src/core/world-grid.ts');
 

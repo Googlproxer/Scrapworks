@@ -1,6 +1,6 @@
 # Scrapworks documentation
 
-Updated 1 November 2026. Scrapworks is a browser-first 3D factory-restoration game. Angular owns the interface, Babylon.js owns presentation, Babylon.js Editor owns authored scenes/layout, and plain TypeScript in the simulation worker owns world state, movement and placement rules. Factory progression and gameplay saves remain planned.
+Updated 2 November 2026. Scrapworks is a browser-first 3D factory-restoration game. Angular owns UI; Babylon owns presentation; Editor markers own authored layout; the single plain-TypeScript simulation worker owns movement and the complete Milestone 3 opening. Factory progression and gameplay saves remain later work.
 
 ## Design and planning
 
@@ -33,8 +33,8 @@ Updated 1 November 2026. Scrapworks is a browser-first 3D factory-restoration ga
 
 Babylon is the sole renderer at `/`; `/3d` redirects to it. Angular owns menus, Controls, loading/errors and Retry. The Game scene supplies a 10 by 10 fixture, world markers, camera and neutral character binding. The plain simulation owns fixed-step movement, collision and development-fixture placement; new worlds have empty inventory, equipment and research.
 
-Saved markers compile to plain world definitions and publish atomically with scene exports. `yarn dev` watches saved authoring inputs and retains the last working export on failure. Toolkit scripts present completed worker views and feed the existing session scheduler. The [29 October ECS investigation](reports/ecs/2026-10-29/README.md) selected Miniplex 2.0.0 after the [isolated laboratory](../tools/ecs-bench/README.md) comparison. Miniplex is now a pinned production dependency confined to the simulation worker; the other candidates remain development-only. The Step 0 foundation is implemented, while later core-loop gameplay remains pending. Milestone 6 extends that same runtime for factories.
+Saved markers compile into plain definitions and publish atomically with scene exports. `yarn dev` watches saved inputs and retains the last working export on failure. The host session supplies the sole 20 Hz clock to one private Miniplex worker. Its [foundation qualification](reports/ecs-worker-implementation/2026-10-30/README.md) remains dated evidence; the [Milestone 3 report](reports/milestone-03/2026-11-02/README.md) records the new inventory/salvage/research/handcraft/MiniFab loop, accessible UI and empty-handed opening route. Milestone 6 extends the same runtime with factories.
 
 Development debug drawings attach to scene objects through TypeScript or Editor scripts. Master/category controls, player placement/collision circles and authored player axes run on the main thread using completed presentation data. Production selects a no-op backend; debug geometry and renderer modules are excluded from its dependency graph.
 
-The [23 October migration evidence](reports/migration/2026-10-23/README.md), its refinements and [authoring workflow validation](reports/workflow/2026-10-23/README.md) record dated results. The [28 October cleanup](plans/3d-cleanup.md) retires superseded tools and assets. Controls IndexedDB persistence and the test-data save dialog do not establish gameplay saves. Manual salvage, crafting, research, machines, transport and restoration remain unimplemented. The migration stopped after Phase 7 as requested; planning work does not resume gameplay implementation.
+The [23 October migration evidence](reports/migration/2026-10-23/README.md) and later opening evidence have separate scopes. Controls preferences and the test-data save dialog do not implement gameplay saves. Milestone 3 includes plain detachable work/state and validation; Milestone 4 owns playable save/load. Machines, transport and restoration remain unimplemented.

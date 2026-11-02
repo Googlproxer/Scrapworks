@@ -1,0 +1,4 @@
+# Source formatting is identical in Windows checkouts and Linux CI.
+*.ts text eol=lf
+*.html text eol=lf
+*.scss text eol=lf

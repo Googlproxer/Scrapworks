@@ -62,6 +62,7 @@ export class ReferenceSimulation {
   }
   public step(movement: MovementIntent): void {
     for (const command of this.commands) {
+      if (command.type !== 'place') continue;
       const result = validatePlacement(
         this.definition,
         this.view,
@@ -103,6 +104,9 @@ export class ReferenceSimulation {
       deposits: [...view.deposits].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0)),
       buildings: [...view.buildings].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0)),
     });
-    assert.deepEqual(canonical(actual), canonical(this.view));
+    const movementOnly = { ...actual };
+    delete movementOnly.opening;
+    delete movementOnly.ground;
+    assert.deepEqual(canonical(movementOnly), canonical(this.view));
   }
 }

@@ -68,7 +68,11 @@ export class ControlsComponent {
             if (!this.matchesTab(control)) continue;
             const key = `${control.device}:${control.device === 'keyboard' ? control.code : control.button}`;
             const previous = seen.get(key);
-            if (previous && previous !== row.name)
+            const scopedWinding =
+              context === 'ui' &&
+              [previous, row.name].includes('wind') &&
+              [previous, row.name].includes('navigate');
+            if (previous && previous !== row.name && !scopedWinding)
               conflicts.push(
                 `${this.labels.context(context)}: ${this.describe(control)} — ${this.label(previous)} / ${this.label(row.name)}`,
               );
@@ -95,7 +99,7 @@ export class ControlsComponent {
 
   public rows(context: Context) {
     return Object.entries(actions[context])
-      .filter(([name]) => !['jump', 'inventory'].includes(name))
+      .filter(([name]) => name !== 'jump')
       .map(([name, kind]) => ({
         name,
         kind,

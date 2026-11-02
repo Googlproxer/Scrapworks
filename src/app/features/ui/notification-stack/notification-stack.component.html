@@ -1,0 +1,34 @@
+<section class="notification-stack" aria-label="Notifications">
+  @for (notice of ui.notifications(); track notice.id) {
+    <article
+      [class]="'notification ' + notice.tone"
+      [style.--notice-accent]="notice.colour"
+      [attr.aria-label]="notice.title ?? 'Notification'"
+      (pointerenter)="ui.holdNotification(notice.id, 'pointer', true)"
+      (pointerleave)="ui.holdNotification(notice.id, 'pointer', false)"
+      (focusin)="ui.holdNotification(notice.id, 'focus', true)"
+      (focusout)="ui.holdNotification(notice.id, 'focus', false)"
+    >
+      <span class="icon" aria-hidden="true">{{ notice.icon }}</span>
+      <div
+        [attr.role]="notice.tone === 'error' || notice.tone === 'warning' ? 'alert' : 'status'"
+        aria-atomic="true"
+      >
+        @if (notice.title) {
+          <h2>{{ notice.title }}</h2>
+        }
+        <p>{{ notice.message }}</p>
+      </div>
+      <button
+        type="button"
+        [attr.aria-label]="'Dismiss ' + (notice.title ?? 'notification')"
+        (click)="ui.dismissNotification(notice.id)"
+      >
+        ×
+      </button>
+    </article>
+  }
+  @if (ui.queuedNotificationCount()) {
+    <p class="queued">{{ ui.queuedNotificationCount() }} more queued</p>
+  }
+</section>

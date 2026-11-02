@@ -420,7 +420,7 @@ describe('GameRuntimeService', () => {
   function render(bridge: WorldSessionBridge, ...args: Parameters<WorldSessionBridge['frame']>) {
     bridge.frame(...args);
     bridge.completeFrame!();
-    const view = bridge.frame(0, args[1], args[2], args[3]);
+    const view = bridge.frame(0, args[1], args[2], args[3], args[4]);
     bridge.completeFrame!();
     return view;
   }
@@ -669,14 +669,13 @@ describe('GameRuntimeService', () => {
     },
   );
 
-  it.each(['permission', 'focus', 'capture'] as const)(
+  it.each(['permission', 'capture'] as const)(
     'owns the session pause while %s blocks gameplay and resets partial elapsed time',
     (reason) => {
       const { bridge } = mountWorld();
       render(bridge, 0.025, { x: 1, z: 0 }, false, true);
       let stop: (() => void) | undefined;
       if (reason === 'permission') service.setInputEnabled(false);
-      if (reason === 'focus') service.setUiFocused(true);
       if (reason === 'capture') stop = service.captureBinding(() => undefined);
       const paused = render(bridge, 60, { x: 1, z: 0 }, false, true);
       expect(paused.tick).toBe(0);
@@ -688,6 +687,37 @@ describe('GameRuntimeService', () => {
       expect(render(bridge, 0.025, { x: 1, z: 0 }, false, true).tick).toBe(1);
     },
   );
+
+  it('keeps simulation running with UI focus while blocking movement and gameplay presentation hooks', () => {
+    const { bridge } = mountWorld();
+    const callback = vi.fn();
+    bridge.registerCompletedTickHandler(callback);
+    service.setUiFocused(true);
+    const focused = render(bridge, 0.1, { x: 1, z: 0 }, true, false, true);
+    expect(focused.tick).toBe(2);
+    expect(focused.player.position).toEqual(definition.spawn);
+    expect(callback).not.toHaveBeenCalled();
+    service.setUiFocused(false);
+    expect(render(bridge, 0.05, { x: 1, z: 0 }, false, true).player.position.x).toBeGreaterThan(
+      definition.spawn.x,
+    );
+  });
+
+  it('picks up deliberately selected ground items only while the world owns input', () => {
+    const { options, bridge } = mountWorld();
+    const view = render(bridge, 0, { x: 0, z: 0 }, false, true);
+    service.world.set({
+      ...view,
+      ground: [{ id: 'ground-test', position: definition.spawn, item: 'scrap', quantity: 1 }],
+    });
+    const command = vi.spyOn(service, 'command').mockImplementation(() => undefined);
+    options.onSelection!('ground-test');
+    expect(command).toHaveBeenCalledExactlyOnceWith({ type: 'pickup', target: 'ground-test' });
+    service.setUiFocused(true);
+    command.mockClear();
+    options.onSelection!('ground-test');
+    expect(command).not.toHaveBeenCalled();
+  });
 
   it('gives error/loading/paused lifecycle screens the UI context for controller recovery', () => {
     const { game } = mountWorld();

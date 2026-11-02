@@ -14,7 +14,9 @@ export class SessionDriver extends GameplayScript {
   protected override onUpdate(): void {
     const { session, seconds, movement, sprint, active } = this.frame;
     if (!session) return;
-    const view = session.frame(seconds, movement, sprint, active);
+    const view = session.frame(seconds, movement, sprint, active, this.frame.simulationActive);
+    this.frame.presentationActive =
+      this.frame.simulationActive && (session.isSimulationActive?.() ?? true);
     this.frame.validateOwnership();
     this.frame.view = view;
     this.frame.options.onWorldView?.(view);

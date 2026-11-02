@@ -6,7 +6,8 @@ flowchart LR
     Compiler[World definition compiler]
     Definition[Plain initial world definition]
     Application[GameRuntimeService and GameSession]
-    Simulation[Simulation and plain PlayerMotor own world state]
+    Simulation[Simulation PlayerMotor and OpeningSystem own world state]
+    Content[Versioned plain opening catalogue]
     Grid[Plain grid and placement rules]
     Model[Plain commands, tick contracts and detached WorldView]
     Settings[Controls settings IndexedDB adapter]
@@ -21,6 +22,7 @@ flowchart LR
     Application -->|credits and commands| Worker
     Worker -->|sequential fixed steps| Simulation
     Angular -->|controls settings only| Settings
+    Content -->|recipes eligibility and costs| Simulation
     Simulation -->|uses| Grid
     Simulation -->|uses| Model
     Babylon -->|reads and submits| Model

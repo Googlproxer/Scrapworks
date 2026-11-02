@@ -52,6 +52,21 @@ const view = (partial: Partial<WorldView> = {}): WorldView => ({
 });
 
 describe('EntityViews completed publication changes', () => {
+  it('presents stable ground-item IDs, updates positions and disposes collected piles', () => {
+    const item = { id: 'ground-1', item: 'scrap', quantity: 2, position: { x: 2, y: 0, z: 3 } };
+    frame.view = view({ ground: [item] });
+    views.pulse();
+    const mesh = scene.getMeshByName('ground:ground-1')!;
+    expect(mesh.position.asArray()).toEqual([200, 10, 300]);
+    expect(mesh.metadata.worldEntity).toBe('ground-1');
+    frame.view = view({ publication: 5, ground: [{ ...item, position: { x: 4, y: 0, z: 5 } }] });
+    views.pulse();
+    expect(scene.getMeshByName('ground:ground-1')).toBe(mesh);
+    expect(mesh.position.asArray()).toEqual([400, 10, 500]);
+    frame.view = view({ publication: 6, ground: [] });
+    views.pulse();
+    expect(mesh.isDisposed()).toBe(true);
+  });
   let engine: NullEngine, scene: Scene, frame: WorldFrame, views: ProjectionViews;
   beforeEach(() => {
     engine = new NullEngine();

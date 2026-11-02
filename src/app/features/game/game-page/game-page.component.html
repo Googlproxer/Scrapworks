@@ -1,6 +1,7 @@
 <h1 class="visually-hidden">Scrapworks</h1>
 
 <div #rendererHost class="game-container"></div>
+<app-notification-stack />
 
 @if (developer && gameRuntimeService.inspectorState().phase === 'open') {
   <button
@@ -89,10 +90,12 @@
     <p class="paused-status" role="status">Game paused while the viewport is unavailable.</p>
   }
   @if (gameRuntimeService.currentSceneKey() === 'Game') {
-    <div class="game-help">
+    <app-field-kit />
+    <div class="game-help" [hidden]="gameRuntimeService.fieldKitOpen()">
       <p>
         WASD / left stick to move · Shift / stick press to sprint · Right drag / right stick to
-        orbit · Escape for menu
+        orbit · F to hold salvage · G to toggle salvage · E / click ground items to pick up · Tab
+        for field kit · Escape for menu
       </p>
       @if (gameRuntimeService.selection(); as selection) {
         <p aria-live="polite">{{ selection }}</p>

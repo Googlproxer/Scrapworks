@@ -48,7 +48,8 @@ export class PlayerView extends GameplayScript {
   }
 
   protected override onUpdate(): void {
-    if (this.frame.view) this.present(this.frame.view, this.frame.seconds, this.frame.active);
+    if (this.frame.view)
+      this.present(this.frame.view, this.frame.seconds, this.frame.presentationActive);
   }
 
   public present(view: WorldView, seconds: number, active: boolean): void {

@@ -128,10 +128,12 @@ export class WorldScene {
     active: boolean,
     pointer: { x: number; y: number },
     isCurrent: () => boolean,
+    simulationActive = active,
   ): void {
     this.frame.input = input;
     this.frame.seconds = seconds;
     this.frame.active = active;
+    this.frame.simulationActive = simulationActive;
     this.frame.pointer = pointer;
     this.frame.movement = { x: 0, z: 0 };
     this.frame.sprint = false;

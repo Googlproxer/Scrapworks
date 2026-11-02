@@ -17,6 +17,7 @@ import type {
 import type { GameState, SceneKey } from '@contracts/game-state';
 import type { ActionFrame, ButtonControl, ControllerInfo } from '@contracts/input';
 import type { WorldDefinition, WorldView } from '@contracts/world';
+import type { OpeningCommand } from '@contracts/opening';
 import type { Inspection } from '@contracts/simulation';
 import { environment } from '@environments/environment';
 import { validatePlacement } from '@simulation/placement';
@@ -52,6 +53,9 @@ export class GameRuntimeService {
   public readonly errorMessage = computed(() => this.state().errorMessage);
   public readonly world = signal<WorldView | null>(null);
   public readonly selection = signal<string | null>(null);
+  public readonly fieldKitOpen = signal(false);
+  public readonly workExitWarning = signal(false);
+  private workExitContinuation?: () => void;
   public readonly debugDrawSettings = signal<DebugDrawSettings>({
     enabled: false,
     disabledCategories: [],
@@ -115,6 +119,20 @@ export class GameRuntimeService {
         onActionFrame: (frame) => {
           if (generation !== this.generation || this.inspectorActive()) return;
           const revision = this.dispatchRevision;
+          if (frame.context === 'gameplay') {
+            const salvage = frame.states['salvage'];
+            if (salvage?.kind === 'button' && salvage.pressed) this.salvageNearby();
+            if (salvage?.kind === 'button' && salvage.released)
+              this.command({ type: 'salvage', target: null });
+            const toggle = frame.states['toggleSalvage'];
+            if (toggle?.kind === 'button' && toggle.pressed) {
+              if (this.world()?.opening?.state.salvage)
+                this.command({ type: 'salvage', target: null });
+              else this.salvageNearby();
+            }
+            const inventory = frame.states['inventory'];
+            if (inventory?.kind === 'button' && inventory.pressed) this.toggleFieldKit();
+          }
           for (const listener of this.actionListeners) {
             listener(frame);
             if (generation !== this.generation || revision !== this.dispatchRevision) break;
@@ -128,6 +146,13 @@ export class GameRuntimeService {
           this.unsubscribeInspection?.();
           this.unsubscribeInspection = undefined;
           this.selection.set(selection);
+          // World interaction stays available after removing gathering from the field kit.
+          if (
+            selection &&
+            this.gameplayAllowed() &&
+            this.world()?.ground?.some((pile) => pile.id === selection)
+          )
+            this.command({ type: 'pickup', target: selection });
           this.inspection.set(null);
           if (selection && this.session)
             this.unsubscribeInspection = this.session.subscribeDetails(selection, (value) => {
@@ -204,16 +229,19 @@ export class GameRuntimeService {
             this.tickSubscriptions.add(unsubscribe);
             return unsubscribe;
           },
-          frame: (seconds, movement, sprint, active) => {
+          frame: (seconds, movement, sprint, active, simulationActive = active) => {
             if (!this.session) throw new Error('The world is not initialized.');
             if (generation !== this.generation) return this.session.readView();
             if (this.session.failed) {
               if (active) throw this.session.error;
               return this.session.readView();
             }
-            const canAdvance = active && this.gameplayAllowed();
+            const canAdvance = simulationActive && this.simulationAllowed();
             this.session.setPaused(!canAdvance);
-            this.session.setMovement(canAdvance ? movement : { x: 0, z: 0 }, sprint);
+            this.session.setMovement(
+              canAdvance && active && !this.uiFocused ? movement : { x: 0, z: 0 },
+              sprint,
+            );
             this.frameSeconds = seconds;
             return this.session.readView();
           },
@@ -228,11 +256,12 @@ export class GameRuntimeService {
               this.session === session &&
               revision === this.dispatchRevision &&
               activityRevision === session.activityRevision &&
-              this.gameplayAllowed()
+              this.simulationAllowed()
             )
               session.advance(this.frameSeconds);
             this.frameSeconds = 0;
           },
+          isSimulationActive: () => this.simulationAllowed(),
           place: (cell, rotation) => {
             if (generation === this.generation && this.gameplayAllowed()) {
               this.session?.enqueue({ type: 'place', cell, rotation, buildingId: 'test-building' });
@@ -313,6 +342,9 @@ export class GameRuntimeService {
 
   public unmount(): void {
     if (!this.host && !this.client) return;
+    this.workExitContinuation = undefined;
+    this.workExitWarning.set(false);
+    this.fieldKitOpen.set(false);
     ++this.generation;
     ++this.dispatchRevision;
     for (const unsubscribe of this.tickSubscriptions) unsubscribe();
@@ -395,6 +427,16 @@ export class GameRuntimeService {
   }
 
   public async toggleInspector(): Promise<void> {
+    if (!this.inspectorActive() && this.world()?.opening?.state.handcraft) {
+      this.requestWorkExit(() => {
+        void this.toggleInspectorNow();
+      });
+      return;
+    }
+    await this.toggleInspectorNow();
+  }
+
+  private async toggleInspectorNow(): Promise<void> {
     if (!environment.dev || (!this.isReady() && !this.inspectorActive())) return;
     if (!this.inspectorActive()) {
       const active = this.host?.ownerDocument.activeElement;
@@ -426,9 +468,17 @@ export class GameRuntimeService {
   }
 
   public setUiFocused(focused: boolean): void {
+    if (focused === this.uiFocused) return;
+    if (!focused && this.world()?.opening?.state.handcraft) {
+      this.requestWorkExit(() => this.focusViewportNow());
+      return;
+    }
     ++this.dispatchRevision;
     this.uiFocused = focused;
-    if (focused) this.session?.setPaused(true);
+    if (focused) {
+      this.session?.setMovement({ x: 0, z: 0 });
+      this.command({ type: 'salvage', target: null });
+    }
     this.updateInputContext();
   }
 
@@ -446,6 +496,11 @@ export class GameRuntimeService {
   }
 
   public focusViewport(): void {
+    this.requestWorkExit(() => this.focusViewportNow());
+  }
+
+  private focusViewportNow(): void {
+    this.command({ type: 'handcraft-ui', visible: false });
     ++this.dispatchRevision;
     this.uiFocused = false;
     this.updateInputContext();
@@ -461,6 +516,71 @@ export class GameRuntimeService {
       this.isReady() &&
       this.currentSceneKey() === 'Game'
     );
+  }
+
+  private simulationAllowed(): boolean {
+    return (
+      this.currentInputRequest &&
+      !this.capturingBinding() &&
+      !this.inspectorActive() &&
+      this.isReady() &&
+      this.currentSceneKey() === 'Game'
+    );
+  }
+
+  public command(command: OpeningCommand): void {
+    if (!this.simulationAllowed()) return;
+    this.session?.setPaused(false);
+    this.session?.enqueue(command);
+  }
+
+  public salvageNearby(): void {
+    const world = this.world();
+    if (!world) return;
+    const selected = world.deposits.find((deposit) => deposit.id === this.selection());
+    const target =
+      selected ??
+      [...world.deposits]
+        .filter((deposit) => deposit.quantity > 0)
+        .sort(
+          (a, b) =>
+            Math.hypot(
+              a.position.x - world.player.position.x,
+              a.position.z - world.player.position.z,
+            ) -
+            Math.hypot(
+              b.position.x - world.player.position.x,
+              b.position.z - world.player.position.z,
+            ),
+        )[0];
+    if (target) this.command({ type: 'salvage', target: target.id });
+  }
+
+  public toggleFieldKit(): void {
+    this.requestWorkExit(() => {
+      const open = !this.fieldKitOpen();
+      this.command({ type: 'handcraft-ui', visible: false });
+      this.fieldKitOpen.set(open);
+      if (open) this.setUiFocused(true);
+      else this.focusViewportNow();
+    });
+  }
+
+  public requestWorkExit(continuation: () => void): void {
+    if (this.world()?.opening?.state.handcraft) {
+      if (this.workExitWarning()) return;
+      this.workExitContinuation = continuation;
+      this.workExitWarning.set(true);
+      this.command({ type: 'handcraft-ui', visible: true, suspended: true });
+    } else continuation();
+  }
+
+  public resolveWorkExit(cancel: boolean): void {
+    const continuation = this.workExitContinuation;
+    this.workExitContinuation = undefined;
+    this.workExitWarning.set(false);
+    this.command({ type: 'handcraft-ui', visible: !cancel, suspended: false });
+    if (cancel) continuation?.();
   }
 
   public selectController(id: string | null): void {

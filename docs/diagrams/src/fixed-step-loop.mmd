@@ -3,15 +3,15 @@ flowchart TB
     Input[Sample ActionFrame and validate input ownership]
     Pin[Pin latest completed view]
     Hooks[Drain bounded completed presentation notifications]
-    Active{Still owned and active?}
+    Active{Still owned and simulation active?}
     Pause[Clear pending time and intent and request suspension]
     Credits[Accumulate credits with in-flight steps capped at five]
     Available{Step available and no batch in flight?}
     Send[Submit one advance batch without waiting]
     Commands[Worker revalidates sequenced commands]
-    Systems[Sequential plain systems and PlayerMotor]
+    Systems[PlayerMotor handcraft salvage MiniFab then research]
     Commit[Commit structural changes and increment tick]
-    Publish[Transfer lean deltas and bounded details]
+    Publish[Transfer numeric deltas and bounded player opening state]
     Cache[Apply ordered versions and queue completed summaries]
     Present[Interpolate player and apply entity changes from pinned view]
     Feedback[Camera follow and selection and placement feedback]

@@ -1,6 +1,21 @@
 import { defaultProfile, validateBindingProfile } from '@contracts/input';
 
 describe('binding profiles', () => {
+  it('adds opening actions to an older profile while preserving player bindings and explicit unbinding', () => {
+    const old = structuredClone(defaultProfile) as unknown as {
+      schemaVersion: number;
+      contexts: Record<string, Record<string, unknown>>;
+    };
+    old.contexts['gameplay']['move'] = [];
+    delete old.contexts['gameplay']['salvage'];
+    delete old.contexts['gameplay']['toggleSalvage'];
+    delete old.contexts['ui']['wind'];
+    const upgraded = validateBindingProfile(old);
+    expect(upgraded.contexts.gameplay.move).toEqual([]);
+    expect(upgraded.contexts.gameplay.salvage).toEqual(defaultProfile.contexts.gameplay.salvage);
+    expect(upgraded.contexts.ui.wind).toEqual(defaultProfile.contexts.ui.wind);
+    expect(old.contexts['ui']['wind']).toBeUndefined();
+  });
   it('copies caller-owned configuration and preserves intentionally unbound actions', () => {
     const profile = validateBindingProfile(defaultProfile);
     const edited = {

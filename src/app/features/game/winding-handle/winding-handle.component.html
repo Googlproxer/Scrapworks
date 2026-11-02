@@ -1,0 +1,25 @@
+<button
+  type="button"
+  class="crank"
+  data-winding
+  aria-label="Wind MiniFab handle"
+  aria-describedby="winding-help"
+  (pointerdown)="start($event)"
+  (pointermove)="move($event)"
+  (pointerup)="release()"
+  (pointercancel)="release()"
+  (lostpointercapture)="release()"
+  (blur)="release()"
+  (keydown)="key($event)"
+  (keyup)="key($event)"
+>
+  <span class="arm" [style.transform]="'rotate(' + angle() + 'deg)'" aria-hidden="true"
+    ><span></span
+  ></span>
+  <span class="pivot" aria-hidden="true"></span>
+</button>
+<p id="winding-help">
+  Drag around the pivot, rotate the selected right stick, or press your winding direction keys while
+  focused here. Five turns fill the battery; either direction works. Holding still adds no charge.
+  Winding is optional.
+</p>

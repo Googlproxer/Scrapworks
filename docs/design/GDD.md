@@ -1,6 +1,6 @@
 # Scrapworks Game Design Document
 
-Updated 28 October 2026 for the component-led MiniFab opening and UI-bound safe handcrafting. Research-led crafting, Mini Fabricator progression, renewable-first industry and peaceful world terraforming are agreed direction. Gameplay remains unimplemented beyond the migration foundation.
+Updated 2 November 2026. The component-led MiniFab opening and UI-bound safe handcrafting are implemented in Milestone 3. Renewable-first industry and peaceful restoration remain agreed later direction. See the [opening evidence](../reports/milestone-03/2026-11-02/README.md); catalogue numbers remain provisional playtest balance.
 
 Scrapworks is a web game about building an automated factory to terraform a damaged planet. The player balances industrial progress with the environmental impact of the machinery that enables it, in a peaceful experience without a fail state. This document records the overall gameplay direction; [Player progression and crafting](player-progression.md) records the detailed 27–28 October decisions and unresolved balance questions. Architecture and persistence are covered in the [Technical Design Document](TDD.md). Visual direction is covered in the [Art Document](../art/README.md).
 

@@ -1,5 +1,13 @@
-import type { WorkData } from '@contracts/simulation';
+import type { WorkData, ItemStack } from '@contracts/simulation';
 import { requireInvariant as check } from '@contracts/simulation';
+
+/** First handcrafted tool goes directly into its independent empty equipment slot. */
+export function handcraftBagOutput(
+  recipe: { id: string; outputs: readonly ItemStack[] },
+  tool: string | null,
+): readonly ItemStack[] {
+  return recipe.id === 'scrap-prybar' && tool === null ? [] : recipe.outputs;
+}
 
 /** One bounded unit of paid work. A blocked completion accumulates no catch-up debt. */
 export function advanceWork(

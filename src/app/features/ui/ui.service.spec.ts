@@ -5,6 +5,7 @@ import {
   EnvironmentInjector,
   inject,
   InjectionToken,
+  signal,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { GameRuntimeService } from '../game/game-runtime.service';
@@ -29,7 +30,18 @@ describe('UiService', () => {
     setInputEnabled = vi.fn<(on: boolean) => void>();
     await TestBed.configureTestingModule({
       imports: [TestDialog, AlternateDialog],
-      providers: [UiService, { provide: GameRuntimeService, useValue: { setInputEnabled } }],
+      providers: [
+        UiService,
+        {
+          provide: GameRuntimeService,
+          useValue: {
+            world: signal(null),
+            errorMessage: signal(null),
+            setInputEnabled,
+            requestWorkExit: (continuation: () => void) => continuation(),
+          },
+        },
+      ],
     }).compileComponents();
     dialog = TestBed.inject(Dialog);
     service = TestBed.inject(UiService);

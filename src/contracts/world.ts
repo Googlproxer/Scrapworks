@@ -1,3 +1,5 @@
+import type { OpeningCommand, OpeningRejection, OpeningView, GroundItemView } from './opening';
+
 /** Plain gameplay metres. X points east, Z north, Y up; model-forward is +Z. */
 export interface WorldPosition {
   readonly x: number;
@@ -67,16 +69,18 @@ export interface PlacementResult {
   readonly cells: readonly GridCell[];
 }
 
-export interface WorldCommand {
-  readonly type: 'place';
-  readonly buildingId: 'test-building';
-  readonly cell: GridCell;
-  readonly rotation: QuarterTurn;
-}
+export type WorldCommand =
+  | OpeningCommand
+  | {
+      readonly type: 'place';
+      readonly buildingId: 'test-building';
+      readonly cell: GridCell;
+      readonly rotation: QuarterTurn;
+    };
 
 export interface CommandResult {
   readonly accepted: boolean;
-  readonly reason: PlacementRejection | 'unknown-command' | null;
+  readonly reason: PlacementRejection | OpeningRejection | 'unknown-command' | null;
 }
 
 /** A detached presentation view; renderer handles never enter world data. */
@@ -110,6 +114,8 @@ export interface WorldView {
     readonly facing: number;
   };
   readonly inventory: Readonly<Record<string, number>>;
+  readonly opening?: OpeningView;
+  readonly ground?: readonly GroundItemView[];
   readonly equipment: readonly string[];
   readonly research: readonly string[];
   readonly productionTotals: Readonly<Record<string, number>>;

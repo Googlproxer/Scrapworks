@@ -12,8 +12,8 @@
       "consumer": "src/app/features/game/game-page/game-page.component.html"
     },
     {
-      "path": "assets/models/protagonist-v2.glb",
-      "consumer": "src/game/views/world-scene.ts"
+      "path": "assets/models/protagonist-v3.glb",
+      "consumer": "src/game/assets/load-character.ts"
     },
     {
       "path": "assets/ui/cursor.png",
@@ -22,8 +22,16 @@
   ],
   "provenance": [
     {
-      "source": "art/characters/Protag-v1.glb",
+      "source": "art/characters/Protag/v1/Protag-v1.glb",
       "record": "Canonical source export for the animated runtime derivative. Preserve its editable Blender project, source animation archive and runtime validation records together under art/characters/."
+    },
+    {
+      "source": "art/characters/Protag/v3/Protag-v3.blend",
+      "record": "Current editable protagonist source. Preserve its rigged archive and animated derivative with the provenance and reproduction instructions under art/characters/Protag/v3/runtime/."
+    },
+    {
+      "source": "art/characters/Protag/v3/runtime/README.md",
+      "record": "Current v3 runtime derivative, rigging archive, material/animation validation and exact reproduction provenance. This supersedes the v2 production derivative without deleting its historical records."
     },
     {
       "source": "assets/README.md",

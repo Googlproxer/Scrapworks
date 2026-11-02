@@ -8,6 +8,8 @@ export class WorldFrame {
   public input: ActionFrame = { context: null, revision: 0, states: {} };
   public seconds = 0;
   public active = false;
+  public simulationActive = false;
+  public presentationActive = false;
   public view?: WorldView;
   public pointer = { x: 0, y: 0 };
   public movement = { x: 0, z: 0 };

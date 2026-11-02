@@ -1,5 +1,9 @@
 import type { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import type { WorldDefinition, WorldView } from '@contracts/world';
+import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
+import type { Mesh } from '@babylonjs/core/Meshes/mesh';
+import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
+import { Color3 } from '@babylonjs/core/Maths/math.color';
 import { GameplayScript } from '../toolkit/gameplay-script';
 import { EntityView } from './entity-view';
 import type { WorldFrame } from './world-frame';
@@ -8,6 +12,9 @@ export class EntityViews extends GameplayScript {
   private readonly entities = new Map<string, EntityView>();
   private publication = -1;
   private generation = -1;
+  private readonly ground = new Map<string, Mesh>();
+  private groundMaterial?: StandardMaterial;
+  private groundViews: WorldView['ground'];
 
   public constructor(
     node: TransformNode,
@@ -40,6 +47,7 @@ export class EntityViews extends GameplayScript {
       (view.publication !== undefined && view.publication !== this.publication + 1);
     this.publication = view.publication ?? -1;
     this.generation = view.worldGeneration ?? -1;
+    this.syncGround(view);
     if (reset || !view.changes || view.changes.full) {
       this.sync(view);
       return;
@@ -83,5 +91,37 @@ export class EntityViews extends GameplayScript {
   protected override onDestroy(): void {
     for (const entity of this.entities.values()) entity.dispose();
     this.entities.clear();
+    for (const mesh of this.ground.values()) mesh.dispose();
+    this.ground.clear();
+    this.groundMaterial?.dispose();
+  }
+
+  private syncGround(view: WorldView): void {
+    if (view.ground === this.groundViews) return;
+    this.groundViews = view.ground;
+    const ids = new Set<string>();
+    for (const item of view.ground ?? []) {
+      ids.add(item.id);
+      let mesh = this.ground.get(item.id);
+      if (!mesh) {
+        this.groundMaterial ??= new StandardMaterial('ground-item-material', this.scene);
+        this.groundMaterial.diffuseColor = new Color3(0.75, 0.57, 0.2);
+        mesh = MeshBuilder.CreateBox(
+          `ground:${item.id}`,
+          { width: 35, height: 20, depth: 35 },
+          this.scene,
+        );
+        mesh.material = this.groundMaterial;
+        mesh.metadata = { worldEntity: item.id };
+        mesh.isPickable = true;
+        this.ground.set(item.id, mesh);
+      }
+      mesh.position.set(item.position.x * 100, 10, item.position.z * 100);
+    }
+    for (const [id, mesh] of this.ground)
+      if (!ids.has(id)) {
+        mesh.dispose();
+        this.ground.delete(id);
+      }
   }
 }

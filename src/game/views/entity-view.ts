@@ -40,7 +40,8 @@ export class EntityView {
     this.sync(item, building);
   }
 
-  public sync(item: WorldEntityDefinition, building: boolean): void {
+  public sync(item: WorldEntityDefinition & { quantity?: number }, building: boolean): void {
+    this.mesh.setEnabled(item.quantity === undefined || item.quantity > 0);
     const width = item.rotation % 2 ? item.footprint.depth : item.footprint.width;
     const depth = item.rotation % 2 ? item.footprint.width : item.footprint.depth;
     this.mesh.position.set(

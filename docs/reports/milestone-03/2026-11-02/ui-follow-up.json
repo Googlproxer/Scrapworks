@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-11-02T02:49:51.769Z",
+  "localDate": "2026-11-02",
+  "browserTests": 328,
+  "browserTestFiles": 31,
+  "productionBuild": "passed",
+  "lint": "passed",
+  "strictApplicationTestsToolsTypechecks": "passed",
+  "firstAutomaticSeconds": 264.4085184,
+  "desktopMobileAxeViolations": [],
+  "notifications": {
+    "globalViewport": true,
+    "visibleLimit": 5,
+    "overflow": "FIFO",
+    "timeoutStartsOnPromotion": true,
+    "hoverFocusPause": true,
+    "configurable": [
+      "message",
+      "title",
+      "tone",
+      "colour",
+      "icon",
+      "timeout",
+      "key"
+    ]
+  },
+  "presentation": {
+    "inputIsolated": true,
+    "simulationContinues": true,
+    "renderingContinues": true,
+    "animatedIdle": true,
+    "pauseMenuPauses": true
+  },
+  "worker": {
+    "file": "worker-552FBP2K.js",
+    "mainInputs": 3405,
+    "workerInputs": 23,
+    "unchangedSimulationWorker": true
+  },
+  "files": [
+    "opening-browser-ui-follow-up.json",
+    "production-worker-ui-follow-up.json",
+    "ui.json",
+    "ui-notifications.json",
+    "field-kit-tabbed.png",
+    "field-kit-research.png",
+    "notification-viewport.png",
+    "field-kit-tabbed-mobile.png"
+  ],
+  "sourceHashes": {
+    "src/app/features/ui/ui.service.ts": "ad9a2a060e2c656dd54f052516602a5ce0176d6d6119474b6c41885cde3cf4bd",
+    "src/app/features/ui/notifications.ts": "564ab8ef26743aeb5e50ecd6b394e18b0044310943000ea354486d2c493e8285",
+    "src/app/features/ui/opening-feedback.ts": "b32633bb1ead023a56a19630c3d0e997a9f990ed63f3fe7ee8f2bd1052c8d60f",
+    "src/app/features/ui/notification-stack/notification-stack.component.ts": "ca531bf809ae26057811a330ccfce8ed78e42d655ad166956ee76e334d541dbe",
+    "src/app/features/ui/notification-stack/notification-stack.component.html": "24485e58489b6a4a82f6cf7352e75d8eb4cb0e15018a3aeb251a03f56207ceda",
+    "src/app/features/ui/notification-stack/notification-stack.component.scss": "d54203e36d70c65f215b1d585268f3f04e0920c59a527a4bf4f7fffda21c1aeb",
+    "src/app/features/game/field-kit/field-kit.component.ts": "2b5df5ccca0ecae924ec7d8423a7573c56cbd397586b9edbc691677e0891dbcb",
+    "src/app/features/game/field-kit/field-kit.component.html": "ff2934f0c17cfdf04d0f64431e674666655557c1b09e9f2ef4e353ccc218f12e",
+    "src/app/features/game/field-kit/field-kit.component.scss": "bf5a920fd69f8ba41737cda5a13bc7c3250a811ab1f9b86c85705ea87933f501",
+    "src/app/features/game/game-page/game-page.component.ts": "b0e9c7260639f9c82f3d569ecf4ad5025bf100d29937ce4b72de374da0d70b01",
+    "src/app/features/game/game-page/game-page.component.html": "4bf23d6e626b6a4e2ecda942a20668466aa3ffd01563140c6b5140cd075a9e67",
+    "src/app/features/game/game-runtime.service.ts": "2040f3b110fc513fe5ff3a67a92a3f2d88adfb70e0e5b1566f3c7edd1dba6682",
+    "src/contracts/game-client.ts": "a7c5c53abc2a9677019616688ed7b4b013ecd3018e85035f814eba6de58e7e6b",
+    "src/game/views/world-frame.ts": "debef136c1ef05234e7e0ab4635df472219658198525d3bcb638d1362a696d90",
+    "src/game/views/session-driver.ts": "27239bd483ccf4f6ac6b5639c19d4ce878987c5421f89f22c26e2b351cfcf431",
+    "src/game/views/player-view.ts": "7f44a541828b9937e849b896adf5c613e9a6a09f614a64c4b53e9efdb8ccb2fc",
+    "tests/acceptance/opening-browser.ts": "6d2b804ff067bb1e568aff36246c72e9a859c43a0c68569e664ccafae9af29cf"
+  }
+}

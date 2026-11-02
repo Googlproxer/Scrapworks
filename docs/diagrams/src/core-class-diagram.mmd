@@ -34,6 +34,24 @@ classDiagram
         movement and collision
         authoritative facing
     }
+    class OpeningSystem {
+        +command(intent)
+        +step(delta)
+        +interrupt()
+        atomic slot transactions
+        handcraft salvage MiniFab research
+    }
+    class OpeningData {
+        <<data>>
+        salvage and handcraft jobs
+        field selection and enable state
+        MiniFab request buffers charge
+    }
+    class FieldKitComponent {
+        inventory research crafting MiniFab
+        commands and detached signals
+        accessible exit confirmation
+    }
     class MiniplexWorld {
         private native queries
         owned EntityData components
@@ -76,7 +94,7 @@ classDiagram
     class WorldSessionBridge {
         <<interface>>
         +initialize()
-        +frame(seconds, movement, sprint, active)
+        +frame(seconds, movement, sprint, active, simulationActive)
         +completeFrame()
         +registerCompletedTickHandler(handler, order)
         +place(cell, rotation)
@@ -118,6 +136,10 @@ classDiagram
     SimulationRuntime "1" *-- "1" Simulation : owns authority
     GameSession "1" *-- "1" PresentationCache : completed publication
     Simulation "1" *-- "1" PlayerMotor : owns movement rules
+    Simulation "1" *-- "1" OpeningSystem : owns opening executors
+    MiniplexWorld "1" *-- "1" OpeningData : player component
+    OpeningSystem --> OpeningData : mutate inside fixed step
+    FieldKitComponent --> GameRuntimeService : sequenced opening requests
     Simulation "1" *-- "1" MiniplexWorld : owns component records
     Simulation "1" *-- "1" WorldResources : owns global records
     Simulation ..> WorldDefinition : initializes world

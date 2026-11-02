@@ -4,25 +4,25 @@ Current player character, prepared on 2 November 2026 from the user's [rigged Mi
 
 ## Deliverables
 
-- [Runtime GLB](../../../../../public/assets/models/protagonist-v3.glb), loaded by the game at `/assets/models/protagonist-v3.glb`.
-- [Editable animated derivative](protagonist-runtime-v3.blend), with packed source textures and five named actions.
-- [Export/provenance report](export-report.json) and [actual GLB reimport validation](validation-report.json).
-- [Animation contact sheet](animation-contact-sheet.png), [front idle preview](previews/idle-000.png), [running preview](previews/run-11.png), and the [twelve rendered views/phases](previews/index.json).
-- [Browser playback evidence](browser-smooth-turning/report.json), including [standing](browser-smooth-turning/standing-right.png) and a [moving reversal](browser-smooth-turning/moving-reversal.png).
-- [Production browser audit](production-browser.json), covering both entry routes and the deployed GLB.
+* [Runtime GLB](../../../../../public/assets/models/protagonist-v3.glb), loaded by the game at `/assets/models/protagonist-v3.glb`.
+* [Editable animated derivative](protagonist-runtime-v3.blend), with packed source textures and five named actions.
+* [Export/provenance report](export-report.json) and [actual GLB reimport validation](validation-report.json).
+* [Animation contact sheet](animation-contact-sheet.png), [front idle preview](previews/idle-000.png), [running preview](previews/run-11.png), and the [twelve rendered views/phases](previews/index.json).
+* [Browser playback evidence](browser-smooth-turning/report.json), including [standing](browser-smooth-turning/standing-right.png) and a [moving reversal](browser-smooth-turning/moving-reversal.png).
+* [Production browser audit](production-browser.json), covering both entry routes and the deployed GLB.
 
 | Property | Current value |
 | --- | --- |
-| Geometry | 104,972 triangles, one skinned mesh; no decimation or concealed-face removal |
+| Geometry | 104, 972 triangles, one skinned mesh; no decimation or concealed-face removal |
 | Skeleton | 65 Mixamo joints; all original weights retained, up to eight influences per vertex |
 | Material | One PBR material; base colour, normal and packed metallic/roughness textures |
-| Textures | Three embedded 2048×2048 WebP images; no external resources |
-| Transfer size | 7,762,852 bytes, approximately 7.4 MiB |
+| Textures | Three embedded 2048x2048 WebP images; no external resources |
+| Transfer size | 7, 762, 852 bytes, approximately 7.4 MiB |
 | First idle frame | Approximately 1.8912 metres from boot sole to hair |
 | Root | Identity transform at the ground origin, with the user's torso alignment retained |
 | Coordinates | Blender metres/Z up/facing -Y; GLB metres/Y up/facing +Z; presentation scales metres to Editor centimetres once |
 
-The user explicitly requested the full mesh and retains later polygon optimisation. This version therefore exceeds the previous 40,000-triangle and 5 MiB targets. Those targets are reported in validation rather than enforced by removing geometry or skin weights.
+The user explicitly requested the full mesh and retains later polygon optimisation. This version therefore exceeds the previous 40, 000-triangle and 5 MiB targets. Those targets are reported in validation rather than enforced by removing geometry or skin weights.
 
 Mixamo returned the metre-valued OBJ at centimetre scale. The converter measures the source Blender height and restores the resulting factor of approximately 100. Before export, rigged bind-pose vertices match the edited Blender geometry within 0.7 micrometres. It preserves the authored horizontal offset rather than recentering the bounding box. The full Blender material restores normal/metallic/roughness channels absent from the diffuse-only Mixamo export; the imported UV layer is named `UVMap` to match that graph.
 
@@ -62,4 +62,4 @@ node tools/art/contact-sheet-protagonist-runtime.ts
 
 ## Provenance
 
-The ZIP is a user-supplied Mixamo export of the edited Meshy character. Its animation stacks identify `mixamo.com`. The converter records exact archive/member/source hashes. No acquisition receipt or standalone licence file accompanies this archive; the reports do not infer rights from the separate older MPFB experiment. Keep these source records with future distributions.
+The ZIP is a user-supplied Mixamo export of the edited Meshy character. Its animation stacks identify `mixamo.com` . The converter records exact archive/member/source hashes. No acquisition receipt or standalone licence file accompanies this archive; the reports do not infer rights from the separate older MPFB experiment. Keep these source records with future distributions.

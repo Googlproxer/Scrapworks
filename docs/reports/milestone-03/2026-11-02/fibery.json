@@ -1,0 +1,129 @@
+{
+  "verifiedAt": "2026-11-01T17:45:17.203Z",
+  "milestone": {
+    "url": "https://scrapworks.fibery.io/Project_Tracking/Milestone/3",
+    "Done": 16,
+    "State": "Completed",
+    "Open": 0,
+    "Name": "M03 — Character and manual opening"
+  },
+  "tasks": [
+    {
+      "id": "089964c1-30cd-4a3c-a4ef-67e36833d920",
+      "name": "M03.4 — Add timed field research and the bootstrap catalog",
+      "source": "milestone.03.step.04.open",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/23"
+    },
+    {
+      "id": "1cccb240-31cf-424c-bc7f-0a5ab7982ea4",
+      "name": "Set inventory, salvage and tool interaction rules",
+      "source": "design.inventory-salvage",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/76"
+    },
+    {
+      "id": "5cbd1037-b923-4ede-bb2f-cd84cb27b034",
+      "name": "M03.3 — Add manual salvage",
+      "source": "milestone.03.step.03.open",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/22"
+    },
+    {
+      "id": "78fe465f-8e36-42ec-8798-73133ca6a25b",
+      "name": "M03.1 — Define coordinates and picking",
+      "source": "milestone.03.step.01.done",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/19"
+    },
+    {
+      "id": "81647a13-0cc5-431c-814a-8bb18a442052",
+      "name": "Approve opening tree and safe handcrafting rules",
+      "source": "design.opening-catalogue",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/75"
+    },
+    {
+      "id": "8aa6facf-5a12-4521-aaa4-9e7807027e17",
+      "name": "M03.6 — Add inventory, research and crafting presentation",
+      "source": "milestone.03.step.06.open",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/26"
+    },
+    {
+      "id": "8b0570dd-7ce3-496a-99bc-f92ec4ca1eae",
+      "name": "M03.5 — Add bootstrap jobs and the Mini Fabricator",
+      "source": "milestone.03.step.05.open",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/24"
+    },
+    {
+      "id": "a0420262-df0c-4e2d-ab73-d15285d87f49",
+      "name": "Specify MiniFab precursor queue and full recovery accounting",
+      "source": "design.minifab-queue-recovery",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/78"
+    },
+    {
+      "id": "a36a9e1d-193c-4a4d-b648-32f100e90284",
+      "name": "Define scrap deposit state without salvage mutation",
+      "source": "milestone.03.step.03.done",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/21"
+    },
+    {
+      "id": "aaf0b6e1-859a-4658-8c60-2dd52b7497e5",
+      "name": "Specify field-research contributions and concurrent work",
+      "source": "design.field-research",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/77"
+    },
+    {
+      "id": "c5e36785-f3f4-4a7b-8051-c1061b678fde",
+      "name": "Verify movement, collision and picking",
+      "source": "milestone.03.step.07.done",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/27"
+    },
+    {
+      "id": "cdf6bd45-b5ca-427d-9fa3-e82110ca69e6",
+      "name": "Publish detached views and enforce UI input ownership",
+      "source": "milestone.03.step.06.done",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/25"
+    },
+    {
+      "id": "e993d612-8caf-485c-9d38-71e3035b4b97",
+      "name": "Balance physical winding, local charge and baseline speed",
+      "source": "design.minifab-charge",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/79"
+    },
+    {
+      "id": "ea9baf7e-b1fe-4519-a164-eda239cc0ca2",
+      "name": "M03.7 — Verify the research-led opening",
+      "source": "milestone.03.step.07.open",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/28"
+    },
+    {
+      "id": "fdfa598b-41a0-416d-9f52-a563ed2573bd",
+      "name": "M03.2 — Add player movement (completed groundwork)",
+      "source": "milestone.03.step.02.done",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/20"
+    },
+    {
+      "id": "7aa1d483-0362-436c-a2f6-cd75ba42796a",
+      "name": "M03.0 — Establish and prove the ECS foundation",
+      "source": "milestone.03.step.00.ecs-foundation",
+      "state": "Done",
+      "url": "https://scrapworks.fibery.io/Project_Tracking/Task/85"
+    }
+  ],
+  "acceptanceCriteriaAllChecked": true,
+  "projectSummaryUpdated": true,
+  "milestoneDescriptionAndChecklistUpdated": true,
+  "currentFocusCleared": true,
+  "milestone4RemainsPlanned": true
+}

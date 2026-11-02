@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "centredBox": {
+    "x": 50,
+    "y": 100,
+    "width": 1180,
+    "height": 700
+  },
+  "workerContinues": true,
+  "renderingContinues": true,
+  "animatedIdle": true,
+  "pauseMenuPauses": true
+}

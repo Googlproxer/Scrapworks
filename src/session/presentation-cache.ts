@@ -1,4 +1,5 @@
 import type { BuildingView, DepositDefinition, WorldView } from '@contracts/world';
+import type { GroundItemView } from '@contracts/opening';
 import type {
   EntityData,
   EntityMapping,
@@ -20,6 +21,8 @@ export class PresentationCache {
   private readonly ids = new Map<string, EntityMapping>();
   private readonly deposits = new Map<string, DepositDefinition>();
   private readonly buildings = new Map<string, BuildingView>();
+  private readonly ground = new Map<string, GroundItemView>();
+  private groundViews: readonly GroundItemView[] = [];
   private depositViews: readonly DepositDefinition[] = [];
   private buildingViews: readonly BuildingView[] = [];
   private current?: WorldView;
@@ -127,6 +130,7 @@ export class PresentationCache {
       this.mappings = [];
       this.deposits.clear();
       this.buildings.clear();
+      this.ground.clear();
       this.details.clear();
     }
     if (maximum * stride > this.rows.length) {
@@ -147,7 +151,11 @@ export class PresentationCache {
       this.ids.delete(mapping.id);
       this.mappings[mapping.slot] = undefined;
       this.details.delete(mapping.id);
-      if (this.deposits.delete(mapping.id) || this.buildings.delete(mapping.id)) {
+      if (
+        this.deposits.delete(mapping.id) ||
+        this.buildings.delete(mapping.id) ||
+        this.ground.delete(mapping.id)
+      ) {
         removedIds.push(mapping.id);
         renderablesChanged = true;
       }
@@ -166,7 +174,7 @@ export class PresentationCache {
       check(mapping && mapping.generation === rows[at + 1], 'Missing/stale row mapping');
       const offset = mapping.slot * stride;
       for (let field = 0; field < stride; field++) this.rows[offset + field] = rows[at + field];
-      if (mapping.deposit || mapping.building) {
+      if (mapping.deposit || mapping.building || mapping.pile) {
         const position = { x: rows[at + 2], y: rows[at + 3], z: rows[at + 4] };
         if (mapping.deposit)
           this.deposits.set(mapping.id, {
@@ -178,6 +186,13 @@ export class PresentationCache {
             quantity: rows[at + 7],
           });
         if (mapping.building) this.buildings.set(mapping.id, { ...mapping.building, position });
+        if (mapping.pile)
+          this.ground.set(mapping.id, {
+            id: mapping.id,
+            position,
+            item: mapping.pile.item,
+            quantity: rows[at + 7],
+          });
         if (mapping.deposit) changedDeposits.push(this.deposits.get(mapping.id)!);
         if (mapping.building) changedBuildings.push(this.buildings.get(mapping.id)!);
         upsertedIds.push(mapping.id);
@@ -193,6 +208,7 @@ export class PresentationCache {
     if (renderablesChanged) {
       this.depositViews = Array.from(this.deposits.values());
       this.buildingViews = Array.from(this.buildings.values());
+      this.groundViews = Array.from(this.ground.values());
     }
     const inventory: Record<string, number> = {};
     const playerDetails = this.details.get(packet.playerId)?.entity;
@@ -213,11 +229,13 @@ export class PresentationCache {
       },
       endpoints: packet.endpoints,
       inventory,
+      ...(packet.opening ? { opening: structuredClone(packet.opening) } : {}),
       equipment: playerDetails?.equipment?.tool ? [playerDetails.equipment.tool] : [],
       research: packet.research,
       productionTotals: packet.productionTotals,
       deposits: this.depositViews,
       buildings: this.buildingViews,
+      ground: this.groundViews,
       lastCommandResult: packet.lastCommandResult,
       changes: {
         full: packet.full,
@@ -282,9 +300,11 @@ export class PresentationCache {
     this.ids.clear();
     this.deposits.clear();
     this.buildings.clear();
+    this.ground.clear();
     this.details.clear();
     this.current = undefined;
     this.depositViews = [];
     this.buildingViews = [];
+    this.groundViews = [];
   }
 }

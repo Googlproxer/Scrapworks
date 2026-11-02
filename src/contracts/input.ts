@@ -245,6 +245,8 @@ export type Vector2Binding =
 export const actions = {
   gameplay: {
     move: 'vector2',
+    salvage: 'button',
+    toggleSalvage: 'button',
     orbit: 'vector2',
     zoomIn: 'button',
     zoomOut: 'button',
@@ -260,6 +262,7 @@ export const actions = {
   },
   ui: {
     navigate: 'vector2',
+    wind: 'vector2',
     submit: 'button',
     cancel: 'button',
   },
@@ -308,6 +311,8 @@ export const defaultProfile = {
         { kind: 'stick2d', stick: 'left', deadzone: 0.18 },
       ],
       orbit: [{ kind: 'stick2d', stick: 'right', deadzone: 0.18 }],
+      salvage: [key('KeyF'), pad('rightStick')],
+      toggleSalvage: [key('KeyG'), pad('leftShoulder')],
       zoomIn: [key('Equal'), pad('rightTrigger')],
       zoomOut: [key('Minus'), pad('leftTrigger')],
       rotatePlacement: [key('KeyR'), pad('rightShoulder')],
@@ -322,6 +327,10 @@ export const defaultProfile = {
     },
 
     ui: {
+      wind: [
+        directions(key('ArrowUp'), key('ArrowDown'), key('ArrowLeft'), key('ArrowRight')),
+        { kind: 'stick2d', stick: 'right', deadzone: 0.25 },
+      ],
       navigate: [
         directions(key('ArrowUp'), key('ArrowDown'), key('ArrowLeft'), key('ArrowRight')),
         directions(pad('dpadUp'), pad('dpadDown'), pad('dpadLeft'), pad('dpadRight')),
@@ -439,7 +448,21 @@ function validVector(value: unknown): value is Vector2Binding {
 export function validateBindingProfile(value: unknown): BindingProfile {
   if (!isRecord(value) || value['schemaVersion'] !== 1 || !isRecord(value['contexts']))
     throw new Error('Unsupported control profile');
-  const contexts = value['contexts'];
+  const migrated = structuredClone(value);
+  const contexts = migrated['contexts'] as Record<string, unknown>;
+  // Add new opening actions without resetting existing player rebindings.
+  for (const [context, names] of [
+    ['gameplay', ['salvage', 'toggleSalvage']],
+    ['ui', ['wind']],
+  ] as const) {
+    const entries = contexts[context];
+    if (isRecord(entries))
+      for (const name of names)
+        if (!(name in entries))
+          entries[name] = structuredClone(
+            (defaultProfile.contexts[context] as Record<string, unknown>)[name],
+          );
+  }
   for (const context of Object.keys(actions) as Context[]) {
     const bindings = contexts[context];
     if (!isRecord(bindings)) throw new Error('Missing input context: ' + context);
@@ -449,5 +472,5 @@ export function validateBindingProfile(value: unknown): BindingProfile {
         throw new Error('Invalid binding: ' + context + '.' + action);
     }
   }
-  return JSON.parse(JSON.stringify(value)) as BindingProfile;
+  return migrated as unknown as BindingProfile;
 }

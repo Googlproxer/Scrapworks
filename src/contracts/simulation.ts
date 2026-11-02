@@ -5,6 +5,7 @@ import type {
   WorldDefinition,
   WorldPosition,
 } from './world';
+import type { OpeningData, OpeningView } from './opening';
 
 export type EntityKind = 'player' | 'deposit' | 'pile' | 'building' | 'owner' | 'processor';
 
@@ -56,6 +57,7 @@ export interface EntityData {
   owner?: string;
   work?: WorkData;
   charge?: { value: number; capacity: number };
+  opening?: OpeningData;
 }
 
 export interface WorldResources {
@@ -93,6 +95,7 @@ export interface EntityMapping {
   slot: number;
   generation: number;
   kind: EntityKind;
+  pile?: { item: string };
   building?: BuildingView;
   deposit?: { kind: 'scrap'; footprint: { width: number; depth: number }; rotation: 0 | 1 | 2 | 3 };
 }
@@ -125,6 +128,7 @@ export interface PresentationPacket {
   lastCommandResult: CommandResult | null;
   research: string[];
   productionTotals: Record<string, number>;
+  opening?: OpeningView;
 }
 
 export interface SequencedCommand {

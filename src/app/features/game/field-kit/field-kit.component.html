@@ -1,0 +1,373 @@
+@if (opening(); as opening) {
+  <aside
+    class="opening-guide"
+    [class.kit-open]="runtime.fieldKitOpen()"
+    aria-label="Opening guidance"
+  >
+    <p>{{ guidance() }}</p>
+    <button
+      type="button"
+      (click)="runtime.toggleFieldKit()"
+      [attr.aria-expanded]="runtime.fieldKitOpen()"
+      aria-controls="field-kit"
+    >
+      Open field kit · {{ usedSlots() }}/24 slots
+    </button>
+    <p class="salvage-progress">
+      {{
+        opening.state.salvage
+          ? 'Salvaging · ' + seconds(opening.state.salvage.remaining) + ' s to next scrap'
+          : 'Approach a deposit to salvage in the world.'
+      }}
+    </p>
+  </aside>
+  @if (runtime.fieldKitOpen()) {
+    <section id="field-kit" class="field-kit" aria-labelledby="field-kit-title">
+      <header>
+        <h2 id="field-kit-title" data-kit-heading tabindex="-1">Field kit</h2>
+        <button type="button" (click)="runtime.toggleFieldKit()">Close</button>
+      </header>
+      <div class="tabs" role="tablist" aria-label="Field kit sections">
+        <button
+          id="inventory-tab"
+          type="button"
+          role="tab"
+          aria-controls="inventory-panel"
+          [attr.aria-selected]="activeTab() === 'inventory'"
+          [tabIndex]="activeTab() === 'inventory' ? 0 : -1"
+          (keydown)="tabKey($event)"
+          (click)="selectTab('inventory')"
+        >
+          Inventory &amp; Crafting
+        </button>
+        <button
+          id="research-tab"
+          type="button"
+          role="tab"
+          aria-controls="research-panel"
+          [attr.aria-selected]="activeTab() === 'research'"
+          [tabIndex]="activeTab() === 'research' ? 0 : -1"
+          (keydown)="tabKey($event)"
+          (click)="selectTab('research')"
+        >
+          Research
+        </button>
+      </div>
+      <div
+        id="inventory-panel"
+        class="tab-panel workbench"
+        role="tabpanel"
+        aria-labelledby="inventory-tab"
+        [hidden]="activeTab() !== 'inventory'"
+      >
+        <section aria-labelledby="bag-title">
+          <h3 id="bag-title">
+            Inventory <span>{{ usedSlots() }}/24 slots</span>
+          </h3>
+          <p>
+            Equipped tool: {{ opening.tool ? name(opening.tool) : 'Bare hands' }}. No weight or
+            durability.
+          </p>
+          <div class="equipment-action">
+            @if (opening.tool) {
+              <button
+                type="button"
+                [disabled]="!!opening.state.handcraft"
+                (click)="runtime.command({ type: 'equip', item: null })"
+              >
+                Unequip tool
+              </button>
+            } @else if (amount('prybar')) {
+              <button type="button" (click)="runtime.command({ type: 'equip', item: 'prybar' })">
+                Equip prybar
+              </button>
+            }
+          </div>
+          <ol class="bag" aria-label="Bag slots">
+            @for (slot of opening.bag.slots; track $index) {
+              <li [class.occupied]="!!slot">
+                <span class="slot-number">{{ $index + 1 }}</span>
+                @if (slot) {
+                  <span>{{ name(slot.item) }}</span
+                  ><strong>{{ slot.quantity }}</strong>
+                } @else {
+                  <span class="empty">Empty</span>
+                }
+              </li>
+            }
+          </ol>
+          <details>
+            <summary>Recover materials</summary>
+            <p>Disassembly returns solid material value. It needs room for the complete return.</p>
+            @for (
+              item of ['prybar', 'plate', 'wire', 'mechanical-part', 'electrical-part'];
+              track item
+            ) {
+              @if (amount(item) || opening.tool === item) {
+                <button
+                  type="button"
+                  [disabled]="!!opening.state.handcraft"
+                  (click)="runtime.command({ type: 'dismantle', item })"
+                >
+                  Dismantle one {{ name(item) }}
+                </button>
+              }
+            }
+          </details>
+        </section>
+
+        <section aria-labelledby="craft-title">
+          <h3 id="craft-title">Handcrafting</h3>
+          <p>
+            Keep this field kit open while crafting. Leaving warns and refunds the unfinished unit;
+            completed items remain.
+          </p>
+          <label for="recipe">Recipe</label
+          ><select
+            id="recipe"
+            [value]="recipeId()"
+            (change)="chooseRecipe($event)"
+            [disabled]="!!opening.state.handcraft"
+          >
+            @for (recipe of recipes; track recipe.id) {
+              <option [value]="recipe.id">
+                {{ recipe.name }}{{ recipeUnlocked(recipe) ? '' : ' (research required)' }}
+              </option>
+            }
+          </select>
+          <p>
+            {{ materials(recipe().inputs) }} → {{ recipeResult() }} · {{ recipe().seconds }} s per
+            unit
+          </p>
+          <label for="batch">Batch size</label
+          ><select
+            id="batch"
+            [value]="batch()"
+            (change)="chooseBatch($event)"
+            [disabled]="!!opening.state.handcraft"
+          >
+            <option [value]="1">1</option>
+            @if (recipe().outputs[0]?.item !== 'prybar' && recipe().id !== 'base-minifab') {
+              <option [value]="5">5</option>
+              <option [value]="10">10</option>
+              <option [value]="25">25</option>
+              <option [value]="100">100</option>
+            }
+          </select>
+          <button
+            type="button"
+            [disabled]="
+              !recipeUnlocked(recipe()) ||
+              !!opening.state.handcraft ||
+              (recipe().id === 'base-minifab' && opening.state.minifab.owned)
+            "
+            (click)="craft()"
+          >
+            Handcraft {{ batch() }}
+          </button>
+          <div class="handcraft-status">
+            @if (opening.state.handcraft; as job) {
+              <p>
+                {{ job.unitsLeft }} units remaining · {{ seconds(job.remaining) }} s on this unit
+              </p>
+              <progress
+                [value]="handcraftProgress()"
+                max="1"
+                aria-label="Handcraft progress"
+              ></progress>
+              <button type="button" (click)="runtime.requestWorkExit(cancelHandcraft)">
+                Cancel unfinished work
+              </button>
+            } @else {
+              <p>No handcraft in progress</p>
+              <progress value="0" max="1" aria-label="Handcraft progress"></progress>
+              <button type="button" disabled>Cancel unfinished work</button>
+            }
+          </div>
+        </section>
+
+        <section aria-labelledby="minifab-title">
+          <h3 id="minifab-title">Mini Fabricator</h3>
+          @if (opening.state.minifab.owned) {
+            <p>{{ opening.state.minifab.status }}</p>
+            <p>
+              Power-free baseline ·
+              {{ opening.state.minifab.charge > 0 ? '2x charged speed' : '1x baseline speed' }}
+            </p>
+            <p>
+              {{ seconds(opening.state.minifab.charge) }} / {{ capacity() }} active boost seconds
+            </p>
+            <progress
+              [value]="opening.state.minifab.charge"
+              [max]="capacity()"
+              aria-label="MiniFab charge"
+            ></progress>
+            <app-winding-handle />
+            <div class="operation-status">
+              @if (opening.state.minifab.request; as request) {
+                <p>Target: {{ recipeName(request.recipe) }} · {{ request.left }} remaining</p>
+              } @else {
+                <p>No request selected</p>
+              }
+              @if (opening.state.minifab.job; as job) {
+                <p>
+                  Current operation: {{ recipeName(job.recipe) }} · {{ seconds(job.remaining) }} s
+                  baseline work left
+                </p>
+              } @else {
+                <p>No operation in progress</p>
+              }
+            </div>
+            <p class="buffer">Input buffer: {{ materials(opening.state.minifab.input) }}</p>
+            <p class="buffer">Output buffer: {{ materials(opening.state.minifab.output) }}</p>
+            <label for="minifab-recipe">MiniFab recipe</label>
+            <select
+              id="minifab-recipe"
+              [value]="miniRecipeId()"
+              (change)="chooseMiniRecipe($event)"
+              [disabled]="!!opening.state.minifab.request"
+            >
+              @for (recipe of recipes; track recipe.id) {
+                @if (recipe.minifab) {
+                  <option [value]="recipe.id">
+                    {{ recipe.name }}{{ recipeUnlocked(recipe) ? '' : ' (research required)' }}
+                  </option>
+                }
+              }
+            </select>
+            <p>
+              {{ materials(miniRecipe().inputs) }} → {{ materials(miniRecipe().outputs) }}. Missing
+              compatible precursors are made first.
+            </p>
+            <label for="minifab-batch">MiniFab batch size</label>
+            <select
+              id="minifab-batch"
+              [value]="miniBatch()"
+              (change)="chooseMiniBatch($event)"
+              [disabled]="!!opening.state.minifab.request"
+            >
+              <option [value]="1">1</option>
+              @if (miniRecipe().id !== 'scrap-prybar') {
+                <option [value]="5">5</option>
+                <option [value]="10">10</option>
+                <option [value]="25">25</option>
+                <option [value]="100">100</option>
+              }
+            </select>
+            <button
+              type="button"
+              [disabled]="!recipeUnlocked(miniRecipe()) || !!opening.state.minifab.request"
+              (click)="
+                runtime.command({ type: 'minifab', recipe: miniRecipeId(), quantity: miniBatch() })
+              "
+            >
+              Request {{ miniBatch() }} from MiniFab
+            </button>
+            <button
+              type="button"
+              (click)="runtime.command({ type: 'minifab', recipe: null, quantity: 0 })"
+            >
+              Cancel request / return buffers
+            </button>
+            <button
+              type="button"
+              [disabled]="!!opening.state.handcraft"
+              (click)="runtime.command({ type: 'dismantle', item: 'minifab' })"
+            >
+              Disassemble MiniFab
+            </button>
+          } @else {
+            <p>
+              Research Mini fabrication, then hand-assemble this personal device. It needs no
+              factory electricity.
+            </p>
+          }
+        </section>
+      </div>
+      <div
+        id="research-panel"
+        class="tab-panel research-panel"
+        role="tabpanel"
+        aria-labelledby="research-tab"
+        [hidden]="activeTab() !== 'research'"
+      >
+        <section aria-labelledby="research-title">
+          <h3 id="research-title">Field Research</h3>
+          <p>
+            Enabled research gradually consumes uncommitted bag stock. It continues with this panel
+            closed. Pausing or switching retains progress; paid materials cannot be reclaimed.
+          </p>
+          <button
+            type="button"
+            [attr.aria-pressed]="opening.state.fieldEnabled"
+            (click)="
+              runtime.command({
+                type: 'research',
+                technology: opening.state.fieldTechnology,
+                enabled: !opening.state.fieldEnabled,
+              })
+            "
+          >
+            {{ opening.state.fieldEnabled ? 'Pause field research' : 'Enable field research' }}
+          </button>
+          @for (technology of technologies; track technology.id) {
+            <div class="technology">
+              <h4>{{ technology.name }}</h4>
+              <p>{{ researchStatus(technology) }}</p>
+              <p>{{ materials(technology.costs) }} · {{ technology.seconds }} s field work</p>
+              <p>
+                Consumed:
+                @for (cost of technology.costs; track cost.item) {
+                  <span
+                    >{{ name(cost.item) }}
+                    {{ opening.ledgers[technology.id]?.consumed?.[cost.item] ?? 0 }}/{{
+                      cost.quantity
+                    }}
+                  </span>
+                }
+              </p>
+              <progress
+                [value]="opening.ledgers[technology.id]?.work ?? 0"
+                [max]="technology.seconds"
+                [attr.aria-label]="technology.name + ' research progress'"
+              ></progress>
+              <button
+                type="button"
+                [disabled]="
+                  !technologyReady(technology) || !!opening.ledgers[technology.id]?.unlocked
+                "
+                (click)="
+                  runtime.command({ type: 'research', technology: technology.id, enabled: true })
+                "
+              >
+                {{ opening.state.fieldTechnology === technology.id ? 'Resume' : 'Research' }}
+                {{ technology.name }}
+              </button>
+            </div>
+          }
+        </section>
+      </div>
+    </section>
+  }
+  @if (runtime.workExitWarning()) {
+    <div class="warning-backdrop">
+      <section
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="exit-title"
+        aria-describedby="exit-description"
+        cdkTrapFocus
+        [cdkTrapFocusAutoCapture]="true"
+      >
+        <h2 id="exit-title">Cancel unfinished handcrafting?</h2>
+        <p id="exit-description">
+          Completed items remain. The unfinished unit’s original ingredients return to your bag; its
+          partial work is discarded.
+        </p>
+        <button type="button" data-stay (click)="runtime.resolveWorkExit(false)">
+          Stay and continue</button
+        ><button type="button" (click)="runtime.resolveWorkExit(true)">Cancel and leave</button>
+      </section>
+    </div>
+  }
+}

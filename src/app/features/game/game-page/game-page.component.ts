@@ -15,9 +15,17 @@ import { UiService } from '@app/features/ui/ui.service';
 import { environment } from '@environments/environment';
 import { GameRuntimeService } from '../game-runtime.service';
 import { DebugDrawPanelComponent } from '../debug-draw-panel/debug-draw-panel.component';
+import { FieldKitComponent } from '../field-kit/field-kit.component';
+import { NotificationStackComponent } from '../../ui/notification-stack/notification-stack.component';
 
 @Component({
-  imports: [JsonPipe, NgOptimizedImage, DebugDrawPanelComponent],
+  imports: [
+    JsonPipe,
+    NgOptimizedImage,
+    DebugDrawPanelComponent,
+    FieldKitComponent,
+    NotificationStackComponent,
+  ],
   selector: 'app-game-page',
   styleUrl: './game-page.component.scss',
   templateUrl: './game-page.component.html',

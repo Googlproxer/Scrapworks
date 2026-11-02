@@ -485,6 +485,7 @@ export class BabylonGameClient implements GameClient {
             this.currentScene === scene &&
             this.canRender() &&
             this.inputManager.isCurrent(frame),
+          this.browserActivity.hasFocus,
         );
       }
       if (this.stateSubject.value.phase !== 'ready') this.engine.resize();

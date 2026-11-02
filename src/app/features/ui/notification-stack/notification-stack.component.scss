@@ -1,0 +1,74 @@
+:host {
+  pointer-events: none;
+}
+.notification-stack {
+  position: fixed;
+  z-index: 1100;
+  inset: 1rem 1rem auto auto;
+  width: min(360px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #f1f5f3;
+  font:
+    14px/1.45 system-ui,
+    sans-serif;
+}
+.notification {
+  --notice-accent: #66d5dc;
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: 24px 1fr 32px;
+  gap: 10px;
+  padding: 14px 10px 14px 14px;
+  background: #14231f;
+  border: 1px solid #738e83;
+  border-left: 4px solid var(--notice-accent);
+  border-radius: 10px;
+  box-shadow: 0 8px 28px #0006;
+  overflow-wrap: anywhere;
+}
+.success {
+  --notice-accent: #98d5ac;
+}
+.warning {
+  --notice-accent: #f3d489;
+}
+.error {
+  --notice-accent: #ffb4aa;
+}
+.icon {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+h2 {
+  font-size: 14px;
+  margin: 0 0 4px;
+}
+p {
+  margin: 0;
+}
+button {
+  align-self: start;
+  color: #f1f5f3;
+  background: #233b31;
+  border: 1px solid #738e83;
+  border-radius: 50%;
+  min-width: 30px;
+  min-height: 30px;
+  cursor: pointer;
+  font-size: 20px;
+}
+button:focus-visible {
+  outline: 3px solid #66d5dc;
+  outline-offset: 2px;
+}
+.queued {
+  align-self: end;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: #14231f;
+}

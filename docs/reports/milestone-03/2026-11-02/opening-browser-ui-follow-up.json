@@ -1,0 +1,175 @@
+{
+  "success": true,
+  "itinerary": "Experienced physical-keyboard/UI route",
+  "firstAutomaticSeconds": 264.4085184,
+  "checkpoints": [
+    {
+      "name": "walked to scrap",
+      "seconds": 2.33717,
+      "tick": 177
+    },
+    {
+      "name": "Improvised tools",
+      "seconds": 35.116625,
+      "tick": 829
+    },
+    {
+      "name": "prybar equipped",
+      "seconds": 41.0000008,
+      "tick": 947
+    },
+    {
+      "name": "Material recovery",
+      "seconds": 112.9531896,
+      "tick": 2383
+    },
+    {
+      "name": "Mechanical assembly",
+      "seconds": 184.84217959999998,
+      "tick": 3821
+    },
+    {
+      "name": "Electrical assembly",
+      "seconds": 206.2343004,
+      "tick": 4249
+    },
+    {
+      "name": "Mini fabrication",
+      "seconds": 247.234173,
+      "tick": 5068
+    },
+    {
+      "name": "MiniFab assembled without power",
+      "seconds": 261.5080935,
+      "tick": 5354
+    },
+    {
+      "name": "first automatic plate",
+      "seconds": 264.4101458,
+      "tick": 5412
+    }
+  ],
+  "axeViolations": [],
+  "pointerAndKeyboardWinding": true,
+  "handcraftStayAndCancel": true,
+  "errors": [],
+  "final": {
+    "opening": {
+      "state": {
+        "salvage": null,
+        "handcraft": null,
+        "handcraftVisible": false,
+        "handcraftSuspended": false,
+        "fieldTechnology": null,
+        "fieldEnabled": true,
+        "moved": true,
+        "message": "Handcrafting cancelled. Completed items remain; unfinished ingredients returned.",
+        "minifab": {
+          "owned": true,
+          "request": null,
+          "job": null,
+          "input": [],
+          "output": [],
+          "outputRecipe": null,
+          "charge": 24.000000000000004,
+          "capacityLevel": 0,
+          "gearing": 0,
+          "windBudget": 180,
+          "status": "Request completed"
+        }
+      },
+      "bag": {
+        "slots": [
+          {
+            "item": "plate",
+            "quantity": 2
+          },
+          {
+            "item": "scrap",
+            "quantity": 4
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "reservations": []
+      },
+      "tool": "prybar",
+      "ledgers": {
+        "improvised-tools": {
+          "consumed": {
+            "scrap": 4
+          },
+          "work": 6,
+          "unlocked": true
+        },
+        "material-recovery": {
+          "consumed": {
+            "scrap": 8
+          },
+          "work": 12,
+          "unlocked": true
+        },
+        "mechanical-assembly": {
+          "consumed": {
+            "plate": 4
+          },
+          "work": 15,
+          "unlocked": true
+        },
+        "electrical-assembly": {
+          "consumed": {
+            "plate": 4,
+            "wire": 6
+          },
+          "work": 20,
+          "unlocked": true
+        },
+        "mini-fabrication": {
+          "consumed": {
+            "mechanical-part": 1,
+            "electrical-part": 1
+          },
+          "work": 12,
+          "unlocked": true
+        }
+      },
+      "extracted": {
+        "scrap": 68
+      }
+    },
+    "tick": 5927,
+    "position": {
+      "x": -1.2499999999999996,
+      "y": 0,
+      "z": 1.6749999999999996
+    },
+    "production": {
+      "prybar": 1,
+      "plate": 18,
+      "wire": 12,
+      "mechanical-part": 2,
+      "electrical-part": 2,
+      "minifab": 1
+    }
+  }
+}

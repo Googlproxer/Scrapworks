@@ -55,12 +55,13 @@ describe('WorldScene with the exported character and authored scene', () => {
       initialize: () => undefined,
       registerCompletedTickHandler: (handler, order) =>
         session.registerCompletedTickHandler(handler, order),
-      frame: (seconds, movement, sprint, active) => {
-        session.setPaused(!active);
+      frame: (seconds, movement, sprint, active, simulationActive = active) => {
+        session.setPaused(!simulationActive);
         session.setMovement(movement, sprint);
         session.advance(seconds);
         return session.view;
       },
+      isSimulationActive: () => true,
       place: (cell, rotation) =>
         session.enqueue({ type: 'place', buildingId: 'test-building', cell, rotation }),
       preview: () => ({ valid: true, reason: null, cells: [] }),
@@ -115,14 +116,41 @@ describe('WorldScene with the exported character and authored scene', () => {
     return { context: 'gameplay', revision: 0, states };
   }
 
-  function render(input: ActionFrame, seconds: number, active = true): void {
-    world.beginFrame(input, seconds, active, { x: 320, y: 240 }, () => true);
+  function render(
+    input: ActionFrame,
+    seconds: number,
+    active = true,
+    simulationActive = active,
+  ): void {
+    world.beginFrame(input, seconds, active, { x: 320, y: 240 }, () => true, simulationActive);
     try {
       scene.render();
     } finally {
       world.endFrame();
     }
   }
+
+  it('settles into animated idle with UI input ownership and freezes clips only for a pausing UI', () => {
+    const moving = frame({ move: { kind: 'vector2', value: { x: 1, y: 0 } } });
+    for (let i = 0; i < 12; i++) render(moving, 0.05);
+    const walk = scene.animationGroups.find((clip) => clip.name === 'Walk')!;
+    const idle = scene.animationGroups.find((clip) => clip.name === 'Idle')!;
+    expect(walk.animatables[0].weight).toBeGreaterThan(0.9);
+    const before = session.readView();
+    for (let i = 0; i < 12; i++)
+      render({ context: 'ui', revision: 1, states: {} }, 0.05, false, true);
+    expect(session.readView().tick).toBeGreaterThan(before.tick);
+    expect(session.readView().player.position).toEqual(before.player.position);
+    expect(session.readView().player.moving).toBe(false);
+    expect(idle.isPlaying).toBe(true);
+    expect(idle.animatables[0].weight).toBeGreaterThan(0.99);
+    expect(walk.animatables[0].weight).toBeLessThan(0.01);
+    const position = world.player.root.position.clone();
+    vi.spyOn(bridge, 'isSimulationActive').mockReturnValue(false);
+    render({ context: 'ui', revision: 1, states: {} }, 0.1, false, false);
+    expect(scene.animationGroups.every((clip) => !clip.isPlaying)).toBe(true);
+    expect(world.player.root.position.asArray()).toEqual(position.asArray());
+  });
 
   it('draws completed placement/collision boundaries without additional session frames or tick registrations', () => {
     const manager = debugDrawForScene(scene) as DevelopmentDebugDraw;

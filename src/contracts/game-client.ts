@@ -32,9 +32,12 @@ export interface WorldSessionBridge {
     movement: { x: number; z: number },
     sprint: boolean,
     active: boolean,
+    simulationActive?: boolean,
   ): WorldView;
   /** Drain presentation notifications and submit credits after this frame pins its completed view. */
   completeFrame?(): void;
+  /** Presentation may keep animating while gameplay input belongs to UI. */
+  isSimulationActive?(): boolean;
   place(cell: GridCell, rotation: 0 | 1 | 2 | 3): void;
   preview(
     cell: GridCell,

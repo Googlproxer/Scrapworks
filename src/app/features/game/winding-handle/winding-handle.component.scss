@@ -1,0 +1,57 @@
+:host {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+.crank {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 2px solid #738e83;
+  background: #152821;
+  touch-action: none;
+  cursor: grab;
+}
+.crank:active {
+  cursor: grabbing;
+}
+.crank:focus-visible {
+  outline: 3px solid #0ec3c9;
+  outline-offset: 4px;
+}
+.arm {
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 4px);
+  width: 36px;
+  height: 8px;
+  background: #b9c7c0;
+  transform-origin: 0 50%;
+  border-radius: 4px;
+}
+.arm span {
+  position: absolute;
+  right: -6px;
+  top: -5px;
+  width: 18px;
+  height: 18px;
+  background: #0ec3c9;
+  border-radius: 50%;
+}
+.pivot {
+  position: absolute;
+  left: calc(50% - 9px);
+  top: calc(50% - 9px);
+  width: 18px;
+  height: 18px;
+  background: #dce9e1;
+  border-radius: 50%;
+}
+p {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #c4d2ca;
+  margin: 0;
+}

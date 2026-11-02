@@ -1,33 +1,27 @@
 flowchart TB
-    Command[Research contribution command executes]
-    Known{Technology ID is valid?}
-    Unlocked{Already unlocked?}
-    Prerequisites{Prerequisite technologies unlocked?}
-    Totals{Extraction or production eligibility met?}
-    Demand{Unfunded requirement remains?}
-    Stock{Authoritative source can pay contribution?}
-    Commit[Commit contribution once; preserve histories]
-    Work[Advance funded field and lab work on fixed steps]
-    Complete{Funded work complete?}
-    Unlock[Grant unlock once]
-    Publish[Publish contribution and progress or unlock feedback]
-    Reject[Reject with reason; leave stock and research unchanged]
+    Phase[Field Research phase after manual work and MiniFab intake]
+    Active{Enabled with an eligible selected technology?}
+    Time[Accumulate bounded cycle time]
+    Stock{Complete next remaining-input bundle available?}
+    Wait[Retain partial cycle time and wait without debt]
+    Due{Cycle interval reached?}
+    Commit[Atomically consume one of each still-required input]
+    Work[Record paid work and consumed contributions once]
+    Complete{All materials and work complete?}
+    Unlock[Grant technology unlock once]
+    Publish[Publish detached progress or wait state]
 
-    Command -->|validate| Known
-    Known -->|yes| Unlocked
-    Known -->|no| Reject
-    Unlocked -->|yes| Reject
-    Unlocked -->|no| Prerequisites
-    Prerequisites -->|yes| Totals
-    Prerequisites -->|no| Reject
-    Totals -->|yes| Demand
-    Totals -->|no| Reject
-    Demand -->|yes| Stock
-    Demand -->|no| Reject
-    Stock -->|yes| Commit
-    Stock -->|no| Reject
-    Commit -->|subsequent simulation steps| Work
-    Work -->|check progress| Complete
+    Phase -->|check selection| Active
+    Active -->|yes| Time
+    Active -->|no| Publish
+    Time -->|check inputs| Stock
+    Stock -->|no| Wait
+    Stock -->|yes| Due
+    Wait -->|waiting| Publish
+    Due -->|no| Publish
+    Due -->|yes| Commit
+    Commit -->|paid cycle| Work
+    Work -->|check totals| Complete
     Complete -->|yes| Unlock
     Complete -->|no| Publish
     Unlock -->|completed technology| Publish

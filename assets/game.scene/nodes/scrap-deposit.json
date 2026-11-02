@@ -13,7 +13,7 @@
       "kind": "Deposit",
       "id": "scrap-deposit-1",
       "resource": "scrap",
-      "quantity": 100,
+      "quantity": 250000,
       "footprint": { "width": 1, "depth": 1 }
     }
   }

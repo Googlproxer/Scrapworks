@@ -22,4 +22,4 @@ The [browser client tests](../../src/game/babylon-game-client.spec.ts) and focus
 
 ## Implementation boundary
 
-The user authorized the runtime migration on 23 October. Phase 7 updates milestone statuses and stops. Manual salvage, crafting, research, machinery, transport, restoration and gameplay persistence remain separate work. The existing save database contains test records and is not a world-save format.
+The user authorized the runtime migration on 23 October, ending at Phase 7. A separate 2 November authorization delivered the Milestone 3 inventory/salvage/research/handcraft/MiniFab opening on the same worker. UI focus now blocks world input while allowing simulation work; window focus/visibility loss and menus still suspend. Machinery, transport, restoration and gameplay persistence remain later work. The existing save database contains test records, not playable world saves.

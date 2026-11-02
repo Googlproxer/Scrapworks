@@ -1,6 +1,6 @@
 # Player progression and crafting
 
-Agreed direction recorded 27 October and revised 28 October 2026: safe handcrafting teaches materials/components before the MiniFab, with explicit UI-bound interruption and per-item refunds. The power-free baseline and optional winding remain agreed. These are design requirements, not implemented gameplay. The [GDD](GDD.md) owns the overall game direction; the [TDD](TDD.md) owns technical rules, and the [roadmap](../plans/README.md) tracks implementation separately.
+Agreed direction recorded 27 October and revised 28 October 2026: safe handcrafting teaches materials/components before the MiniFab, with explicit UI-bound interruption and per-item refunds. The opening, power-free baseline and optional winding were implemented and verified on 2 November; later factory, upgrade and restoration branches remain design requirements. The [GDD](GDD.md) owns the overall game direction; the [TDD](TDD.md) owns technical rules, and the [roadmap](../plans/README.md) tracks implementation separately.
 
 ## Progression principles
 
@@ -128,7 +128,7 @@ The Mini Fabricator (MiniFab) is a personal crafting subsystem, separate from th
 - A different compatible recipe cannot begin production until the old output buffer is cleared. The **exact same recipe** as the cancelled one may start before clearing it only if the output buffer has room for another complete result. An empty output buffer clears this output restriction; emptying all retained buffers clears the cancellation-specific recipe restriction.
 - Refund, delivery and cancellation commands must be idempotent. Preserve cancelled recipe/input-type identity and buffer contents across save/load so a reload cannot bypass restrictions, restore discarded partial work or return items twice.
 
-MiniFab queue/buffer/recovery behavior design is complete. Concrete buffer-upgrade costs/tiers and future multi-output recipe rounding belong to their content slices. Advanced field-use recipes and liquid handling are later design work; winding/charge design is also complete; gameplay implementation is next when authorized.
+MiniFab queue/buffer/recovery behavior design is complete. Concrete buffer-upgrade costs/tiers and future multi-output recipe rounding belong to their content slices. Advanced field-use recipes and liquid handling are later design work; winding/charge design is also complete; the opening gameplay is implemented in Milestone 3.
 
 ### Optional winding and local charge
 
@@ -241,9 +241,9 @@ A small-map restoration demonstration is a prototype checkpoint, not the full wo
 
 ## Implementation readiness and later design work
 
-The five Milestone 3 opening design tasks are complete. The final readiness review also settled automatic stock contention (requested MiniFab before Field Research, after manual actions) and atomic disassembly that waits for full inventory capacity. No further opening gameplay-design decision blocks implementation; this is design readiness, not authorization to resume gameplay work or evidence that it exists.
+The five opening design tasks were complete before implementation. On 2 November the user separately authorized the complete Milestone 3 plan. Its inventory/salvage, Field Research, safe handcrafting, requested MiniFab, winding and UI are now implemented and verified; [the dated report](../reports/milestone-03/2026-11-02/README.md) records the evidence and limits. The agreed stock priority and whole-return disassembly rules remain unchanged.
 
-ECS is the selected architecture and its actual library/runtime foundation precedes new core-loop implementation in [Milestone 3 Step 0](../plans/milestone-03-character-and-manual-opening.md#step-0-establish-and-prove-the-ecs-foundation). The 29 October comparison selected Miniplex 2.0.0; the completed [single simulation-worker investigation](../reports/simulation-worker/2026-10-29/README.md) retains that baseline while identifying publication as a blocker to worker integration, with future multithreading suitability assessed separately. Multi-worker ECS implementation remains deferred unless simulation profiles justify further investigation. Milestone 6 extends the same foundation rather than migrating the opening. The gameplay decisions below remain settled.
+The [Step 0 foundation](../plans/milestone-03-character-and-manual-opening.md#step-0-establish-and-prove-the-ecs-foundation) selected and qualified Miniplex 2.0.0 in one dedicated worker. The historical rich-publication blocker was resolved before adoption. Milestone 3 uses that authority, its shared transaction rules and the existing host-owned clock. Multi-worker simulation remains deferred; Milestone 6 extends this same world for factories.
 
 For Milestone 3, deliver the five core technologies and six opening recipes, inventory/salvage/tool loop, background Field Research, handcrafting, player-requested MiniFab and its base crank/battery. Keep recipe costs/work times, 250,000 total starting scrap, placement and gesture sensitivity/rate defaults configurable for playtesting. The prototype pacing numbers are serial reference arithmetic, not required waits or measured results.
 

@@ -1,8 +1,8 @@
 # Scrapworks Technical Design Document
 
-Updated 28 October 2026 for the agreed UI-bound handcrafting cancellation/refund boundary. Core-object/session implementation is unchanged. Planned state, research, random recycling, renewable power and recovery requirements now follow the agreed progression design; migration evidence remains dated separately.
+Updated 2 November 2026 for Milestone 3 opening implementation. Inventory, salvage, background Field Research, safe handcrafting and the requested MiniFab execute in the single simulation worker. Factory systems and gameplay persistence remain later work; migration and ECS performance evidence remain dated separately.
 
-Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step movement session now connect scene presentation to authoritative state. Manual/factory rules and versioned world saves remain planned. The [GDD](GDD.md) and [player progression design](player-progression.md) own gameplay rules; the [roadmap](../plans/README.md) orders implementation.
+Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step simulation connect presentation to one authoritative ECS world. The opening loop is implemented; factory rules and versioned world saves remain planned. The [GDD](GDD.md) and [player progression design](player-progression.md) own gameplay rules; the [roadmap](../plans/README.md) orders implementation.
 
 ## Agreed technical requirements
 
@@ -15,19 +15,19 @@ Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D 
 
 | Responsibility      | Choice                         | Current implementation                                                                                    |
 | ------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Application and UI  | Angular 22, signals, CDK       | Shell, shared page/viewport, dialogs, lifecycle views, errors and retry. Gameplay panels remain planned.  |
+| Application and UI  | Angular 22, signals, CDK       | Shell, shared viewport, field-kit inventory/research/handcraft/MiniFab panels, winding, exit warning, menus and Retry. |
 | 3D presentation     | Babylon.js 9.30.0              | Sole renderer at `/`, with `/3d` compatibility redirect; authored scene bindings and runtime character presentation. |
 | Core object scripts | Babylon Toolkit 9.30.0        | TypeScript-attached scripts own player input/presentation, camera, selection and placement; no physics engine is enabled. |
 | Authoring           | Babylon.js Editor 5.5.2        | Saved inputs export/reload automatically; validated marker metadata compiles into a plain world definition. |
 | Client subscription | RxJS behind plain `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                              |
-| Gameplay            | Plain TypeScript               | Private Miniplex components/resources in one worker, typed placement command, deterministic 20 Hz movement, collision and lean detached views. Manual/factory progression remains planned. |
+| Gameplay            | Plain TypeScript               | Private Miniplex authority, typed movement/opening commands, deterministic 20 Hz salvage/research/handcraft/MiniFab executors and detached views. Factory progression remains planned. |
 | Persistence         | Dexie / IndexedDB              | Test-data service/dialog only; no playable-world snapshot or round trip.                                  |
 
 The [cleanup record](../plans/3d-cleanup.md) defines current asset boundaries and retired-source recovery. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements.
 
 ## Technical structure diagrams
 
-The class diagram describes the implemented migration boundary. The application diagram separates the current movement/session path from planned factory content and gameplay persistence; the final gameplay diagram remains the future design. Angular services, Babylon objects and Editor components stay outside plain state records. `GameState` describes renderer lifecycle and is separate from authoritative `WorldState`.
+The class diagram describes the implemented session and opening. The application diagram separates that path from planned gameplay persistence. The gameplay overview includes both the implemented personal opening and later factory/environment branches. Angular, Babylon and Editor objects remain outside authoritative plain records.
 
 ### Core class diagram
 
@@ -72,6 +72,24 @@ classDiagram
         movement and collision
         authoritative facing
     }
+    class OpeningSystem {
+        +command(intent)
+        +step(delta)
+        +interrupt()
+        atomic slot transactions
+        handcraft salvage MiniFab research
+    }
+    class OpeningData {
+        <<data>>
+        salvage and handcraft jobs
+        field selection and enable state
+        MiniFab request buffers charge
+    }
+    class FieldKitComponent {
+        inventory research crafting MiniFab
+        commands and detached signals
+        accessible exit confirmation
+    }
     class MiniplexWorld {
         private native queries
         owned EntityData components
@@ -114,7 +132,7 @@ classDiagram
     class WorldSessionBridge {
         <<interface>>
         +initialize()
-        +frame(seconds, movement, sprint, active)
+        +frame(seconds, movement, sprint, active, simulationActive)
         +completeFrame()
         +registerCompletedTickHandler(handler, order)
         +place(cell, rotation)
@@ -156,6 +174,10 @@ classDiagram
     SimulationRuntime "1" *-- "1" Simulation : owns authority
     GameSession "1" *-- "1" PresentationCache : completed publication
     Simulation "1" *-- "1" PlayerMotor : owns movement rules
+    Simulation "1" *-- "1" OpeningSystem : owns opening executors
+    MiniplexWorld "1" *-- "1" OpeningData : player component
+    OpeningSystem --> OpeningData : mutate inside fixed step
+    FieldKitComponent --> GameRuntimeService : sequenced opening requests
     Simulation "1" *-- "1" MiniplexWorld : owns component records
     Simulation "1" *-- "1" WorldResources : owns global records
     Simulation ..> WorldDefinition : initializes world
@@ -200,8 +222,8 @@ flowchart TB
         Hooks[Main-thread completed presentation hooks]
         Sim[Worker Simulation and PlayerMotor]
         State[(Private Miniplex components and resources)]
-        Content[Planned recipe and technology definitions]
-        ECS[Sequential foundation systems and planned gameplay executors]
+        Content[Versioned checked-in opening catalogue]
+        ECS[OpeningSystem salvage handcraft MiniFab and research]
     end
 
     subgraph Persistence[Planned gameplay persistence]
@@ -291,7 +313,7 @@ The dependency arrows do not prescribe tick order. For the Milestone 3 opening, 
 
 ### Planned opening-state expansion
 
-The Step 0 foundation owns a real empty 24-slot bag and tool slot, plus component schemas and shared domain primitives for piles, work/buffers/reservations/charge and research/history ledgers. Populated synthetic fixtures prove these records and restoration. Only movement and the development placement command execute in normal gameplay; later steps supply salvage, research, crafting and MiniFab executors. Keep authored WorldDefinition, mutable WorldState and renderer GameState distinct. Author a versioned checked-in plain content catalogue from the agreed source IDs; Fibery/import receipts are design inputs, not runtime dependencies. This is implementation scope and does not imply those systems exist.
+The player ECS entity owns the 24-slot bag, separate tool slot and `OpeningData` component. `OpeningSystem` executes salvage, safe handcrafting, requested MiniFab operations and Field Research inside the existing fixed step, using shared atomic slot transaction rules. Ground piles are separate stable-ID entities with a native query. Research ledgers, histories, time and ID allocation remain world resources. The versioned catalogue in `src/content/opening.ts` declares five technologies, six recipes, separate contribution/eligibility costs, capabilities, source-ID mappings and deferred content; Fibery/import receipts are not runtime dependencies. The bounded opening projection accompanies numeric movement deltas without serializing the ECS population. Plain capture/rebuild includes opening work and validates refund/buffer capacity; gameplay storage remains Milestone 4.
 
 ### Planned handcrafting cancellation boundary
 
@@ -307,7 +329,11 @@ Handcrafting checks its inventory destination after actual per-unit input consum
 
 The simulation owns authoritative player/world state, movement, collision and placement validation. Planned crafting, research, transport, power and restoration modules will join this boundary. Angular and Babylon send commands to the same session and display published views. Scene frames, animation callbacks, and UI handlers must not advance production or directly spend inventory.
 
-Angular owns the shell, menus, dialogs, controls and future gameplay panels. Babylon owns rendering, cameras, picking, visual effects, animation, and input adaptation. Signals expose lifecycle, selection and detached world views without becoming an authoritative world owner.
+Angular owns the shell, menus, dialogs, controls and gameplay panels. Babylon owns rendering, cameras, picking, visual effects, animation, and input adaptation. Signals expose lifecycle, selection and detached world views without becoming an authoritative world owner.
+
+The centred field kit has Inventory & Crafting and Research tabs in a bounded shell, with scrollable contents and reserved work/progress rows. Switching away from active handcrafting uses the same stay/cancel guard as closing the kit. Salvage and deliberate ground pickup belong to world interaction. UI input ownership stops movement/camera input without stopping the worker, renderer or idle animation; pausing dialogs suspend simulation and character animation separately.
+
+`UiService.openNotification({message, title?, tone?, colour?, icon?, timeout?, key?})` returns an ID and `dismiss()` reference. The notification host is a sibling of the renderer/field kit and fixes its stack to the global viewport's top-right corner. Five notifications are visible in FIFO order; additional notifications queue until a slot opens. Timeouts start on promotion, default to 8,000 ms and pause while hovered or focused; zero is persistent. Keys replace matching visible or queued notices. Colour affects the accent while readable text/background colours remain fixed. Icons are plain text, never HTML. Notification ownership/timers end with the UI service. Opening feedback emits shortages, blocked actions and completion transitions without repeating every worker publication; alerts never reflow the kit.
 
 Use `src/app/features/` for Angular/session integration, `src/game/` for 3D presentation, `src/contracts/` for plain boundaries, `src/simulation/` for authoritative rules, and `src/core/` for framework-independent utilities. Simulation/contracts/core remain free of framework, storage, DOM, and wall-clock dependencies. Phaser source and its package dependency have been removed.
 
@@ -371,9 +397,9 @@ The selection spike must measure representative active/idle/blocked processing, 
 
 Production/extraction histories, per-technology consumed-material ledgers and work, the active field technology/enable state, material-wait state and unlocks belong to the saved world. Enabled Field Research runs on simulation steps with the UI closed and alongside other work. It draws uncommitted player stock gradually, after player commands, without full upfront payment/reservation. Missing next inputs wait automatically; disabling field work stops bag withdrawals even while labs continue from their own buffers. Pause/switch retains invested materials/work with no cancellation/refund. Enabled field contributions may join lab research against shared remaining demand without double spending, overshoot or free work; each paced cycle consumes one whole unit of every still-required item atomically, waits for a complete bundle and retains partial cycle time without unpaid catch-up. Already satisfied material totals are excluded. Provisional interval = fully supplied technology work seconds / largest cost quantity; shared lab coordination remains later integration work. Load resolves unseen handcraft refunds before any research draw, and creates no offline progress. See [the progression design](player-progression.md#research-progression).
 
-### Planned progression state and invariants
+### Progression state and invariants
 
-These requirements are not implemented. Keep all records plain and simulation-owned; Editor scripts and Angular views only submit requests and consume projections.
+The opening MiniFab, baseline battery and winding invariants below are implemented. Upgrade progression, lab coordination, factory power and recycler rules remain future requirements. All records remain plain and simulation-owned; Editor scripts and Angular views submit requests and consume projections.
 
 * MiniFab is a personal subsystem with a separate Angular panel beside inventory. Initial recipes must be researched and handcraftable; later crafted/researched modules can enable hazards/liquids. It follows both component branches and is hand-assembled without factory electricity. Plain state holds one requested target/batch, precursor plan, current operation/input buffer, completed output buffer, capacities, work and blocked reasons. Pull each complete operation at start from uncommitted inventory, optionally reuse output directly, and wait on stock shortages. Reject invalid/locked/cyclic chains without spending; share intermediates without hidden storage. Per-request intake is initial capability; autonomous min/max targets remain a later upgrade.
 * Baseline MiniFab work always progresses at 1x without power when ingredients/buffers allow. Initial local charge provides 60 active seconds at 2x speed, draining only during actual processing. Idle, paused, missing-stock, output-blocked and inventory-wait states spend no charge. Split steps at battery expiry/job completion, preserving inputs/work and using baseline speed for uncharged time. Five turns fill initially; gear T decreases toward one. Charge gain = capacity * abs(accepted angular travel degrees) / (360*T), capped at capacity, with concurrent work drain still applied. Unlimited capacity level n = 60*1.5^n boosted seconds, physical level-n cost = base recipe * 2^(n-1); stored charge is not refilled by capacity upgrades. Turns-to-full is independent of capacity. Tier costs/spacing and later source stacking remain future content.
@@ -396,7 +422,7 @@ The narrow `GameplayScript` base connects an implemented optional `onGameTick(co
 
 Continuous movement is sampled state. Discrete commands are captured once and queued until a tick consumes them, so catch-up cannot repeat a button press. Placement confirmation happens after the current frame's session advance and therefore targets a subsequent tick. Each authoritative step processes queued commands, advances player movement, increments the tick and publishes completed state. A failed step cannot expose partial state.
 
-Pause/suspension clears movement, pending commands and accumulated time while UI input polling remains available. Resumption cannot replay hidden or blocked time. A completed step is the future save-capture boundary; gameplay snapshot saving and offline production remain unimplemented.
+The bridge distinguishes active gameplay input from active simulation. Focusing the field kit blocks movement/camera/selection but keeps simulation work running. The existing render callback remains the only frame source. Window focus/visibility loss, menus, binding capture, Inspector and renderer failure suspend simulation and clear transient actions. Intentional handcraft exits warn and suspend its unit; confirmed exit or forced interruption refunds that unit exactly once. MiniFab supplied work and research survive UI closure. Resumption cannot replay hidden or blocked time. A completed step is the future save-capture boundary; gameplay snapshot saving and offline production remain unimplemented.
 
 ## Persistent game state
 

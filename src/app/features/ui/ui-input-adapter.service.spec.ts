@@ -23,6 +23,10 @@ describe('UiInputAdapterService', () => {
     setUiFocused: ReturnType<typeof vi.fn>;
     currentSceneKey: ReturnType<typeof vi.fn>;
     focusViewport: ReturnType<typeof vi.fn>;
+    workExitWarning: ReturnType<typeof signal<boolean>>;
+    fieldKitOpen: ReturnType<typeof signal<boolean>>;
+    resolveWorkExit: ReturnType<typeof vi.fn>;
+    toggleFieldKit: ReturnType<typeof vi.fn>;
   };
   let ui: {
     activeElement: HTMLElement | null;
@@ -53,6 +57,10 @@ describe('UiInputAdapterService', () => {
       setUiFocused: vi.fn(),
       currentSceneKey: vi.fn(() => 'Game'),
       focusViewport: vi.fn(),
+      workExitWarning: signal(false),
+      fieldKitOpen: signal(false),
+      resolveWorkExit: vi.fn(),
+      toggleFieldKit: vi.fn(),
     };
     ui = { activeElement: null, openUIDialog: vi.fn(), closeTopDialog: vi.fn(() => false) };
     await TestBed.configureTestingModule({

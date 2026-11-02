@@ -11,6 +11,7 @@ import {
   requireInvariant as check,
 } from '@contracts/simulation';
 import { Simulation, type SimulationOptions } from '@simulation/simulation';
+import { validWorldCommand } from '../contracts/world-command';
 
 export function assertRequest(value: unknown): asserts value is RuntimeRequest {
   check(!!value && typeof value === 'object', 'Invalid session request');
@@ -61,16 +62,7 @@ export function assertRequest(value: unknown): asserts value is RuntimeRequest {
     );
     for (const c of r.commands)
       check(
-        Number.isSafeInteger(c.sequence) &&
-          c.sequence > 0 &&
-          !!c.command &&
-          c.command.type === 'place' &&
-          c.command.buildingId === 'test-building' &&
-          Number.isInteger(c.command.cell?.column) &&
-          Number.isInteger(c.command.cell?.row) &&
-          Number.isInteger(c.command.rotation) &&
-          c.command.rotation >= 0 &&
-          c.command.rotation <= 3,
+        Number.isSafeInteger(c.sequence) && c.sequence > 0 && validWorldCommand(c.command),
         'Invalid command',
       );
   }

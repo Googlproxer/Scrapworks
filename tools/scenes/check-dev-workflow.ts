@@ -124,7 +124,10 @@ try {
   const ready = async () => {
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /^Play Game/ }).click({ trial: true });
-    await page.getByRole('status').waitFor({ state: 'hidden' });
+    await page
+      .getByRole('status')
+      .filter({ hasText: 'Loading game…' })
+      .waitFor({ state: 'hidden' });
   };
 
   await page.goto(origin + '/3d');
@@ -169,7 +172,7 @@ try {
   );
   await page.getByRole('button', { name: /^Play Game/ }).click();
   await page.getByRole('button', { name: /^Play Game/ }).waitFor({ state: 'hidden' });
-  await page.getByRole('status').waitFor({ state: 'hidden' });
+  await page.getByRole('status').filter({ hasText: 'Loading game…' }).waitFor({ state: 'hidden' });
   await page.waitForLoadState('networkidle');
   await page.evaluate(
     () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
