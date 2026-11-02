@@ -1,9 +1,10 @@
+import { testScenePorts } from '../../testing/game-ports';
 import { NullEngine } from '@babylonjs/core/Engines/nullEngine';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import { Scene } from '@babylonjs/core/scene';
 import type { BuildingView, WorldDefinition, WorldView } from '@contracts/world';
 import { GameSession } from '../../session/game-session';
-import { InlineSimulationPort } from '../../session/inline-port';
+import { InlineSimulationPort } from '../../../tools/testing/inline-simulation-port';
 import { EntityViews } from './entity-views';
 import { WorldFrame } from './world-frame';
 
@@ -46,7 +47,6 @@ const view = (partial: Partial<WorldView> = {}): WorldView => ({
   productionTotals: {},
   deposits: [],
   buildings: [],
-  lastCommandResult: null,
   changes: { full: false, upsertedIds: [], removedIds: [] },
   ...partial,
 });
@@ -71,7 +71,7 @@ describe('EntityViews completed publication changes', () => {
   beforeEach(() => {
     engine = new NullEngine();
     scene = new Scene(engine);
-    frame = new WorldFrame({});
+    frame = new WorldFrame(testScenePorts());
     views = new ProjectionViews(new TransformNode('entities', scene), definition, frame);
   });
   afterEach(() => {

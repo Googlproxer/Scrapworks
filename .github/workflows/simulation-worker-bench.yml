@@ -21,16 +21,12 @@ jobs:
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn playwright install --with-deps chromium --only-shell
-      - run: python3 -m pip install --target tmp/ecs-bench/plotting -r tools/ecs-bench/plot-requirements.txt
-      - name: Run sequential single-worker comparison
-        run: node tools/simulation-worker-bench/cli.ts browser --production --presentation lean --phase lean --label hosted-ci --output tmp/simulation-worker-bench/hosted
-      - name: Summarize complete and partial evidence
-        if: ${{ always() }}
-        run: node tools/simulation-worker-bench/cli.ts report --input tmp/simulation-worker-bench/hosted
+      - name: Run current-game workloads (opt-in)
+        run: node tools/game-bench/cli.ts --full
       - uses: actions/upload-artifact@v7
         if: ${{ always() }}
         with:
           name: simulation-worker-${{ github.run_id }}
-          path: tmp/simulation-worker-bench/hosted/
+          path: tmp/current-game-bench/
           retention-days: 7
           if-no-files-found: error

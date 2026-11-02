@@ -1,10 +1,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const failures: string[] = [];
 let links = 0;
+// Dated reports remain unchanged when implementation sources are intentionally retired.
+// Only these recorded, source-verified historical links resolve through Git recovery.
+const recovery = JSON.parse(
+  fs.readFileSync(path.join(root, 'docs/reports/source-recovery.json'), 'utf8'),
+) as {
+  report: string;
+  sources: Record<string, { revision: string; sha256: string; url: string }>;
+};
 
 function walk(directory: string): string[] {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -50,6 +60,30 @@ function check(file: string, raw: string) {
   const target = name ? path.resolve(path.dirname(file), name) : file;
   links++;
   if (!fs.existsSync(target)) {
+    const original = recovery.sources[path.relative(root, target).replaceAll('\\', '/')];
+    if (
+      path.relative(root, file).replaceAll('\\', '/') === recovery.report &&
+      original &&
+      /^[a-f0-9]{40}$/.test(original.revision) &&
+      /^[a-f0-9]{64}$/.test(original.sha256) &&
+      original.url ===
+        `https://github.com/googlproxer/scrapworks/blob/${original.revision}/${path.relative(root, target).replaceAll('\\', '/')}`
+    ) {
+      try {
+        const source = execFileSync(
+          'git',
+          ['show', `${original.revision}:${path.relative(root, target).replaceAll('\\', '/')}`],
+          { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] },
+        );
+        if (createHash('sha256').update(source).digest('hex') === original.sha256) return;
+      } catch {
+        /* Missing history is a failure, never an unchecked exemption. */
+      }
+      failures.push(
+        `${path.relative(root, file)}: historical source/hash unavailable for ${raw}; fetch the recorded Git history`,
+      );
+      return;
+    }
     failures.push(`${path.relative(root, file)}: missing ${raw}`);
     return;
   }

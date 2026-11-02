@@ -1,6 +1,6 @@
 import type { AssetContainer } from '@babylonjs/core/assetContainer';
 import { LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
-import '@babylonjs/loaders/glTF';
+import '../../scene-registrations';
 import type { Scene } from '@babylonjs/core/scene';
 
 export type CharacterLoader = (scene: Scene) => Promise<AssetContainer>;

@@ -10,7 +10,7 @@ The [migration plan](3d-migration.md) and [acceptance record](../reports/migrati
 
 Babylon is the sole world renderer at `/`; `/3d` redirects to it. Saved Editor markers compile into a versioned plain world definition, and one session advances authoritative movement/collision at 20 Hz. The fixture includes an animated protagonist, orbit/follow camera, picking, controls, pause/suspension and isolated development placement checks. Normal worlds start with no inventory, equipment, machines or research unlocks.
 
-Core objects now use Toolkit scripts composed by `WorldScene`, with plain `PlayerMotor` retaining authoritative movement. The host session delivers ordered completed-tick presentation hooks during its owned render frame, independently of physics. See the [core object design](../design/TDD.md#core-object-scripts) and [timing contract](../design/TDD.md#simulation-timing-and-save-boundaries). The [ECS foundation starts in Milestone 3](../design/TDD.md#ecs-foundation-from-milestone-3), before new inventory/salvage/research/crafting runtime work. The [comparison](../reports/ecs/2026-10-29/README.md) selected Miniplex 2.0.0; the user confirmed a single worker for Simulation/ECS as the starting architecture. The [lean requalification](../reports/simulation-worker/2026-10-30/README.md) now qualifies both candidates with transferred numeric views and bounded inventory/selection details, retaining Miniplex. The rich bridge's failed budgets remain historical. The actual Angular/Babylon worker path has production integration acceptance; see the [implementation report](../reports/ecs-worker-implementation/2026-10-30/README.md) for performance qualification. Keep 60 FPS required, 120 FPS diagnostic and interpolation before visual prediction. The report also assesses future multithreading suitability; multi-worker ECS implementation remains deferred unless simulation profiles warrant a later investigation. Milestone 6 extends the established ECS world with factories.
+Core objects now use native presentation behaviors composed by `WorldScene`, with plain `PlayerMotor` retaining authoritative movement. The host session delivers ordered completed-tick presentation hooks during its owned render frame, independently of physics. See the [core object design](../design/TDD.md#core-object-scripts) and [timing contract](../design/TDD.md#simulation-timing-and-save-boundaries). The [ECS foundation starts in Milestone 3](../design/TDD.md#ecs-foundation-from-milestone-3), before new inventory/salvage/research/crafting runtime work. The [comparison](../reports/ecs/2026-10-29/README.md) selected Miniplex 2.0.0; the user confirmed a single worker for Simulation/ECS as the starting architecture. The [lean requalification](../reports/simulation-worker/2026-10-30/README.md) now qualifies both candidates with transferred numeric views and bounded inventory/selection details, retaining Miniplex. The rich bridge's failed budgets remain historical. The actual Angular/Babylon worker path has production integration acceptance; see the [implementation report](../reports/ecs-worker-implementation/2026-10-30/README.md) for performance qualification. Keep 60 FPS required, 120 FPS diagnostic and interpolation before visual prediction. The report also assesses future multithreading suitability; multi-worker ECS implementation remains deferred unless simulation profiles warrant a later investigation. Milestone 6 extends the established ECS world with factories.
 
 The [cleanup record](3d-cleanup.md) describes retired tools/assets and their recovery sources. Fresh [authoring workflow validation](../reports/workflow/2026-10-23/README.md) verifies export/reload, failed-save retention and recovery.
 
@@ -22,18 +22,18 @@ Manual salvage, recipe jobs, inventory interaction, research, machines, transpor
 
 The [Fibery project tracker](fibery-tracking.md) provides the live task board, milestone hierarchy and current-design work view. Its initial import preserves the implementation credit and outstanding requirements below; it does not resume gameplay implementation.
 
-| Milestone                                                                           | Playable result                                | Current state                                                                                                                                               |
-| ----------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [1. Project and integration](milestone-01-project-and-integration.md)               | One reliable canvas and authored fixture       | Complete for integration: reviewed changes committed; clean pinned-Yarn install and full CI pass. See [CI evidence](../reports/ci/2026-10-28/README.md).                                    |
-| [2. Simulation foundation](milestone-02-simulation-foundation.md)                   | A world advances and pauses predictably        | Plain world/session, typed fixture command, detached views, 20 Hz clock and pause implemented and tested.                                                   |
-| [3. Character and manual opening](milestone-03-character-and-manual-opening.md) | Find scrap, field-research tools/recipes and use the Mini Fabricator | Implemented and verified: empty-handed opening, inventory/salvage, timed research, safe handcrafting, MiniFab, winding and accessible UI. See the dated opening report. |
-| [4. First local save](milestone-04-first-local-save.md)                             | Restore Mini Fabricator and field research in progress | Gameplay snapshots and restore unimplemented. Controls IndexedDB reload verified separately; old save dialog remains test data. |
-| [5. Research](milestone-05-research.md)                                             | Expand the tree toward dedicated craftables and scalable labs | Not started. Bootstrap research is implemented in Milestone 3; physical factory/lab integration follows in Milestone 6. |
-| [6. First working machines](milestone-06-first-working-machines.md)                 | Manually supply renewable-powered recycling, fabrication and labs | Not started. Random recycler outputs, fabrication arity, extraction and full recovery are planned. |
-| [7. Transport](milestone-07-transport.md)                                           | Automate direct supply and sort mixed recycler output | Not started. Trains and loading/unloading stations are later-game work. |
-| [8. Restoration and energy choices](milestone-08-restoration-and-energy-choices.md) | Research greenhouses and demonstrate peaceful terraforming | Not started. Expanded weather/storage, optional coal and pollution mitigation remain planned. |
-| [9. Save resilience](milestone-09-save-resilience.md)                               | Autosave, recover, and transfer progress       | Unvalidated test-data import/export scaffold only.                                                                                                          |
-| [10. Portfolio prototype](milestone-10-portfolio-prototype.md)                      | Complete, understandable small-map demo        | Migration presentation, controls, production packaging and small-fixture profiling verified. Complete factory route and representative performance pending. |
+| Milestone                                                                           | Playable result                                                      | Current state                                                                                                                                                           |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [1. Project and integration](milestone-01-project-and-integration.md)               | One reliable canvas and authored fixture                             | Complete for integration: reviewed changes committed; clean pinned-Yarn install and full CI pass. See [CI evidence](../reports/ci/2026-10-28/README.md).                |
+| [2. Simulation foundation](milestone-02-simulation-foundation.md)                   | A world advances and pauses predictably                              | Plain world/session, typed fixture command, detached views, 20 Hz clock and pause implemented and tested.                                                               |
+| [3. Character and manual opening](milestone-03-character-and-manual-opening.md)     | Find scrap, field-research tools/recipes and use the Mini Fabricator | Implemented and verified: empty-handed opening, inventory/salvage, timed research, safe handcrafting, MiniFab, winding and accessible UI. See the dated opening report. |
+| [4. First local save](milestone-04-first-local-save.md)                             | Restore Mini Fabricator and field research in progress               | Gameplay snapshots and restore unimplemented. Controls IndexedDB reload verified separately; old save dialog remains test data.                                         |
+| [5. Research](milestone-05-research.md)                                             | Expand the tree toward dedicated craftables and scalable labs        | Not started. Bootstrap research is implemented in Milestone 3; physical factory/lab integration follows in Milestone 6.                                                 |
+| [6. First working machines](milestone-06-first-working-machines.md)                 | Manually supply renewable-powered recycling, fabrication and labs    | Not started. Random recycler outputs, fabrication arity, extraction and full recovery are planned.                                                                      |
+| [7. Transport](milestone-07-transport.md)                                           | Automate direct supply and sort mixed recycler output                | Not started. Trains and loading/unloading stations are later-game work.                                                                                                 |
+| [8. Restoration and energy choices](milestone-08-restoration-and-energy-choices.md) | Research greenhouses and demonstrate peaceful terraforming           | Not started. Expanded weather/storage, optional coal and pollution mitigation remain planned.                                                                           |
+| [9. Save resilience](milestone-09-save-resilience.md)                               | Autosave, recover, and transfer progress                             | Unvalidated test-data import/export scaffold only.                                                                                                                      |
+| [10. Portfolio prototype](milestone-10-portfolio-prototype.md)                      | Complete, understandable small-map demo                              | Migration presentation, controls, production packaging and small-fixture profiling verified. Complete factory route and representative performance pending.             |
 
 Use the linked milestone files as the detailed checklists rather than duplicating their tasks here. Keep one small authored map, adding one useful system at a time. Start empty-handed; accounts, cloud sync, remote control, combat, and a large technology tree remain deferred.
 
@@ -57,7 +57,7 @@ scrapworks/
     session/             Host coordinator, ports and lean presentation cache
     workers/             Dedicated simulation worker entry
     contracts/           Lifecycle, input, WorldDefinition and detached WorldView
-    game/                Babylon client, WorldScene, Toolkit scripts and entity views
+    game/                Babylon client, WorldScene, native presentation behaviors and entity views
     simulation/          Authoritative rules, PlayerMotor and plain world data
     core/                Framework-independent utilities
     scripts.ts           Generated presentation-script registry (ignored)
@@ -81,13 +81,13 @@ The host pins the latest completed view, drains bounded completed-tick presentat
 
 | Phase within one tick     | Responsibility                                                                                                                                        |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Commands and movement  | Validate salvage, crafting/device targets, research contributions, recovery and placement in order; apply sampled movement with fixed delta time |
+| 1. Commands and movement  | Validate salvage, crafting/device targets, research contributions, recovery and placement in order; apply sampled movement with fixed delta time      |
 | 2. Transport              | Move existing items and water with destination reservations; production output from this tick waits until the next transport phase                    |
-| 3. Production preparation | Establish eligible precursor/factory/lab jobs, reserve ingredients once, and calculate energy requests; retain any already-rolled recycler output |
+| 3. Production preparation | Establish eligible precursor/factory/lab jobs, reserve ingredients once, and calculate energy requests; retain any already-rolled recycler output     |
 | 4. Power                  | Generate energy, resolve storage and demand in stable order, and record actual fuel use and emissions                                                 |
-| 5. Production work        | Advance player/Mini Fabricator/factory work and funded field/lab research; commit output/history or completed unlock once, respecting capacity |
+| 5. Production work        | Advance player/Mini Fabricator/factory work and funded field/lab research; commit output/history or completed unlock once, respecting capacity        |
 | 6. Environment            | Consume available greenhouse water and update pollution and restoration; freshly supplied resources are used according to this documented phase order |
-| 7. Time and objective     | Advance the simulation tick, saved daylight/weather/event state and peaceful terraforming checkpoint progress |
+| 7. Time and objective     | Advance the simulation tick, saved daylight/weather/event state and peaceful terraforming checkpoint progress                                         |
 | 8. Publication            | Publish read-only views and supply any requested detached snapshot of the completed step                                                              |
 
 Power allocation should be deterministic, such as ordering competing consumers by stable machine ID. Decide whether a generator burns a whole fuel item into stored energy or advances a fuel job over time, and save that progress. Decide when batteries charge relative to consumer allocation. Exact quantities remain balance values, but these accounting rules must be explicit.
@@ -123,7 +123,7 @@ Runtime arrows mean imports or interface dependencies. The Editor-to-compiler-to
 flowchart LR
     Angular[Angular components]
     Babylon[WorldScene core scripts and input adapter]
-    Toolkit[Babylon Toolkit lifecycle without physics]
+    Lifecycle[Scene-owned native lifecycle without physics]
     Editor[Editor scenes and markers]
     Compiler[World definition compiler]
     Definition[Plain initial world definition]
@@ -139,7 +139,7 @@ flowchart LR
     Simulation -->|uses plain layout| Definition
     Angular -->|uses| Application
     Babylon -->|uses| Application
-    Babylon -->|script lifecycle| Toolkit
+    Babylon -->|script lifecycle| Lifecycle
     Worker[One dedicated module worker and private Miniplex]
     Application -->|credits and commands| Worker
     Worker -->|sequential fixed steps| Simulation

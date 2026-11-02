@@ -3,18 +3,22 @@ import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
 import type { Mesh } from '@babylonjs/core/Meshes/mesh';
 import type { TransformNode } from '@babylonjs/core/Meshes/transformNode';
-import type { QuarterTurn, WorldDefinition } from '@contracts/world';
+import type { QuarterTurn, WorldDefinition, WorldView } from '@contracts/world';
 import { cellCenter } from '@core/world-grid';
 import { actionPressed } from '../input/action-state';
-import { GameplayScript } from '../toolkit/gameplay-script';
+import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import type { SelectionController } from './selection-controller';
 import type { WorldFrame } from './world-frame';
 
-export class PlacementController extends GameplayScript {
+export class PlacementController extends PresentationBehavior {
   private building = false;
   private rotation: QuarterTurn = 0;
-  private readonly preview: Mesh;
-  private readonly material: StandardMaterial;
+  private readonly preview?: Mesh;
+  private readonly material?: StandardMaterial;
+  private key = '';
+  private deposits?: WorldView['deposits'];
+  private buildings?: WorldView['buildings'];
+  private feedback?: ReturnType<NonNullable<WorldFrame['options']['placement']>['preview']>;
 
   public constructor(
     node: TransformNode,
@@ -23,6 +27,7 @@ export class PlacementController extends GameplayScript {
     private readonly frame: WorldFrame,
   ) {
     super(node, node.getScene(), frame.scriptOptions, 'PlacementController');
+    if (!frame.options.developerFixture || !frame.options.placement) return;
     this.preview = MeshBuilder.CreateBox(
       'placement-preview',
       { width: 400, height: 120, depth: 200 },
@@ -37,31 +42,39 @@ export class PlacementController extends GameplayScript {
   }
 
   protected override onLateUpdate(): void {
-    const { input, session, active, options } = this.frame;
-    if (!active || !session) {
-      this.showPreview(false, this.rotation, false);
+    const { input, active, options, view } = this.frame;
+    const placement = options.placement;
+    if (!this.preview || !placement) return;
+    if (active && actionPressed(input, 'build')) this.building = !this.building;
+    if (actionPressed(input, 'cancel')) this.building = false;
+    if (!active || !this.building || !view) {
+      this.preview.setEnabled(false);
+      if (this.key) options.placementFeedback.next(null);
+      this.key = '';
       return;
     }
-    if (options.developerFixture && actionPressed(input, 'build')) this.building = !this.building;
-    if (this.building && actionPressed(input, 'cancel')) this.building = false;
-    if (this.building && actionPressed(input, 'rotatePlacement'))
+    if (actionPressed(input, 'rotatePlacement'))
       this.rotation = ((this.rotation + 1) % 4) as QuarterTurn;
     const cell = this.selection.cell;
-    const feedback = cell ? session.preview(cell, this.rotation) : null;
-    this.showPreview(this.building, this.rotation, feedback?.valid ?? false);
-    // Preview uses a completed view; authority revalidates confirmation on a future tick.
-    if (this.building && cell && actionPressed(input, 'confirm'))
-      session.place(cell, this.rotation);
-    if (this.building && this.frame.isCurrent())
-      options.onSelection?.(
-        feedback?.valid
-          ? 'Placement available'
-          : `Cannot place: ${feedback?.reason ?? 'outside world'}`,
-      );
+    const key = `${view.worldGeneration}:${cell?.column}:${cell?.row}:${this.rotation}:${view.player.position.x}:${view.player.position.z}`;
+    if (key !== this.key || this.deposits !== view.deposits || this.buildings !== view.buildings) {
+      this.key = key;
+      this.deposits = view.deposits;
+      this.buildings = view.buildings;
+      this.feedback = cell ? placement.preview(cell, this.rotation) : undefined;
+      options.placementFeedback.next({
+        valid: this.feedback?.valid ?? false,
+        reason: this.feedback?.reason ?? 'invalid-cell',
+      });
+      this.frame.validateOwnership();
+    }
+    this.showPreview(true, this.rotation, this.feedback?.valid ?? false);
+    if (cell && actionPressed(input, 'confirm')) placement.place(cell, this.rotation);
     this.frame.validateOwnership();
   }
 
   public showPreview(enabled: boolean, rotation: QuarterTurn, valid: boolean): void {
+    if (!this.preview || !this.material) return;
     const cell = this.selection.cell;
     this.preview.setEnabled(enabled && !!cell);
     if (!cell) return;
@@ -76,7 +89,7 @@ export class PlacementController extends GameplayScript {
   }
 
   protected override onDestroy(): void {
-    this.preview.dispose();
-    this.material.dispose();
+    this.preview?.dispose();
+    this.material?.dispose();
   }
 }

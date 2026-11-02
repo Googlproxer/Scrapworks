@@ -15,8 +15,10 @@ export class ControlSettingsService {
   private revision = 0;
   private disposed = false;
   private pendingOperations = 0;
-  public readonly profile = signal<BindingProfile>(structuredClone(defaultProfile));
-  public readonly error = signal<string | null>(null);
+  private readonly profileValue = signal<BindingProfile>(structuredClone(defaultProfile));
+  public readonly profile = this.profileValue.asReadonly();
+  private readonly errorValue = signal<string | null>(null);
+  public readonly error = this.errorValue.asReadonly();
   public readonly ready: Promise<void>;
 
   public constructor() {
@@ -34,10 +36,10 @@ export class ControlSettingsService {
     try {
       const record = await this.accessDatabase(() => this.table.get('controls'));
       if (!this.disposed && record && revision === this.revision)
-        this.profile.set(validateBindingProfile(record.profile));
+        this.profileValue.set(validateBindingProfile(record.profile));
     } catch {
       if (!this.disposed)
-        this.error.set('Saved controls could not be read. Default controls are available.');
+        this.errorValue.set('Saved controls could not be read. Default controls are available.');
     }
   }
 
@@ -48,13 +50,13 @@ export class ControlSettingsService {
       const profile = validateBindingProfile(value);
       await this.accessDatabase(() => this.table.put({ key: 'controls', profile }));
       if (!this.disposed) {
-        this.profile.set(profile);
-        this.error.set(null);
+        this.profileValue.set(profile);
+        this.errorValue.set(null);
       }
       return true;
     } catch (error) {
       if (!this.disposed)
-        this.error.set(
+        this.errorValue.set(
           `Controls were not saved: ${error instanceof Error ? error.message : String(error)}`,
         );
       return false;

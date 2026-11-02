@@ -7,6 +7,7 @@ import type { WorldView } from '@contracts/world';
 import type { OpeningCommand } from '@contracts/opening';
 import { Simulation } from '@simulation/simulation';
 import { GameRuntimeService } from '../game-runtime.service';
+import { editableView } from '../../../../testing/editable-view';
 import { FieldKitComponent } from './field-kit.component';
 
 describe('Field kit opening UI', () => {
@@ -69,7 +70,7 @@ describe('Field kit opening UI', () => {
   });
 
   it('submits handcraft and research requests without mutating a completed worker view', async () => {
-    const view = structuredClone(world()!);
+    const view = editableView(world()!);
     view.opening!.ledgers['improvised-tools'] = { consumed: { scrap: 4 }, work: 6, unlocked: true };
     view.opening!.extracted = { scrap: 8 };
     world.set(view);
@@ -121,7 +122,7 @@ describe('Field kit opening UI', () => {
     const before = kit.getBoundingClientRect();
     const cancel = root.querySelector<HTMLButtonElement>('.handcraft-status button')!;
     const cancelBox = cancel.getBoundingClientRect();
-    const view = structuredClone(world()!);
+    const view = editableView(world()!);
     view.opening!.state.handcraft = {
       id: 'job1',
       recipe: 'metal-plate',
@@ -160,7 +161,7 @@ describe('Field kit opening UI', () => {
   });
 
   it('uses real keyboard travel and selected-stick samples with equal angular gain and no stationary charge', async () => {
-    const view = structuredClone(world()!);
+    const view = editableView(world()!);
     view.opening!.state.minifab.owned = true;
     world.set(view);
     const fixture = TestBed.createComponent(FieldKitComponent);

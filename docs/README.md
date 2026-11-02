@@ -21,7 +21,7 @@ Updated 2 November 2026. Scrapworks is a browser-first 3D factory-restoration ga
 - [Simulation worker investigation](plans/simulation-worker-investigation.md) and [lean results](reports/simulation-worker/2026-10-30/README.md): Miniplex and bitECS qualify with compact transferred views and bounded detail subscriptions; retain Miniplex. The [rich transport study](reports/simulation-worker/2026-10-29/README.md) remains historical. The single-worker production path is implemented; additional worker partitioning remains deferred.
 - [Production ECS/worker implementation plan](plans/ecs-worker-implementation.md): Step 0 is implemented and qualified, including production data/contracts, completed-tick presentation hooks, authored-world Retry and integrated acceptance checks. See the [implementation report](reports/ecs-worker-implementation/2026-10-30/README.md).
 - [3D migration](plans/3d-migration.md) and [acceptance checklist](plans/3d-implementation-checklist.md): completed migration scope and evidence.
-- [Runtime walkthrough](plans/3d-phase-2-walkthrough.md): lifecycle, input, Toolkit scripts and session ownership.
+- [Runtime walkthrough](plans/3d-phase-2-walkthrough.md): lifecycle, input, native presentation behaviors and session ownership.
 - [Editor/MCP setup](plans/babylon-editor-setup.md): authoring, export and desktop tools.
 - [World markers](../tools/world/README.md): authored metadata, units and compilation.
 - [Export tools and policy](../tools/scenes/README.md): source boundaries, manifest-driven packaging and recovery.
@@ -38,3 +38,5 @@ Saved markers compile into plain definitions and publish atomically with scene e
 Development debug drawings attach to scene objects through TypeScript or Editor scripts. Master/category controls, player placement/collision circles and authored player axes run on the main thread using completed presentation data. Production selects a no-op backend; debug geometry and renderer modules are excluded from its dependency graph.
 
 The [23 October migration evidence](reports/migration/2026-10-23/README.md) and later opening evidence have separate scopes. Controls preferences and the test-data save dialog do not implement gameplay saves. Milestone 3 includes plain detachable work/state and validation; Milestone 4 owns playable save/load. Machines, transport and restoration remain unimplemented.
+
+Dated benchmark reports retain their original source links. [Source recovery](reports/source-recovery.json) records the exact Git revision, content hash and remote URL for intentionally retired sources. Documentation checks verify those source bytes from Git; shallow checkouts must fetch that recorded history. Historical reports and measurements remain unchanged.

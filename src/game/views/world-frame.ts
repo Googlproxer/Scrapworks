@@ -1,7 +1,8 @@
-import type { GameClientOptions, WorldSessionBridge } from '@contracts/game-client';
+import type { WorldScenePorts } from './world-scene-ports';
+import type { WorldSessionBridge } from '@contracts/game-client';
 import type { ActionFrame } from '@contracts/input';
 import type { WorldView } from '@contracts/world';
-import type { GameplayScriptOptions } from '../toolkit/gameplay-script';
+import type { PresentationBehaviorOptions } from '../lifecycle/presentation-behavior';
 
 /** One sampled input snapshot and one completed view shared by the scene's scripts. */
 export class WorldFrame {
@@ -16,13 +17,13 @@ export class WorldFrame {
   public sprint = false;
   public isCurrent: () => boolean = () => false;
 
-  public constructor(public readonly options: GameClientOptions) {}
+  public constructor(public readonly options: WorldScenePorts) {}
 
-  public get session(): WorldSessionBridge | undefined {
+  public get session(): WorldSessionBridge {
     return this.options.session;
   }
 
-  public get scriptOptions(): GameplayScriptOptions {
+  public get scriptOptions(): PresentationBehaviorOptions {
     return {
       ticks: this.session,
       isCurrent: () => this.isCurrent(),

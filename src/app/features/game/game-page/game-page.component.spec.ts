@@ -1,7 +1,8 @@
+import { clientNotifications, testInputPort } from '../../../../testing/game-ports';
 import { Dialog } from '@angular/cdk/dialog';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { ControlsComponent } from '@app/features/controls/controls/controls.component';
-import type { GameClient, GameClientOptions } from '@contracts/game-client';
+import type { GameClient, GameClientOptions } from '@game/client-api';
 import type { GameState } from '@contracts/game-state';
 import axe from 'axe-core';
 import { BehaviorSubject } from 'rxjs';
@@ -12,7 +13,7 @@ import { GamePageComponent } from './game-page.component';
 describe('GamePageComponent integration', () => {
   let fixture: ComponentFixture<GamePageComponent>;
   let runtime: GameRuntimeService;
-  let client: GameClient;
+  let client: GameClient & ReturnType<typeof clientNotifications>;
   let states: BehaviorSubject<GameState>;
   let factory: ReturnType<
     typeof vi.fn<(host: HTMLElement, options?: GameClientOptions) => GameClient>
@@ -25,10 +26,10 @@ describe('GamePageComponent integration', () => {
       errorMessage: null,
     });
     client = {
-      subscribe: vi.fn((listener) => {
-        const subscription = states.subscribe(listener);
-        return () => subscription.unsubscribe();
-      }),
+      ...clientNotifications(),
+      input: testInputPort(),
+      state$: states,
+      toggleInspector: vi.fn(async () => undefined),
       setScene: vi.fn((sceneKey) =>
         states.next({ phase: 'loading', sceneKey, errorMessage: null }),
       ),
@@ -60,7 +61,7 @@ describe('GamePageComponent integration', () => {
   }
 
   it('exposes labelled debug switches with accessible native disclosure and category controls', async () => {
-    factory.mock.calls[0][1]!.onDebugDrawStatus?.({
+    client.debugDrawStatus$.next({
       available: true,
       categories: ['collision', 'placement', 'transforms'],
     });
@@ -99,14 +100,13 @@ describe('GamePageComponent integration', () => {
   it('keeps Inspector close accessible while hiding the game HUD and restores its trigger focus', async () => {
     states.next({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     await fixture.whenStable();
-    const options = factory.mock.calls[0][1]!;
     client.toggleInspector = vi.fn(async () => {
       if (runtime.inspectorActive()) {
-        options.onInspectorState!({ phase: 'closed', errorMessage: null });
+        client.inspectorState$.next({ phase: 'closed', errorMessage: null });
         return;
       }
-      options.onInspectorState!({ phase: 'loading', errorMessage: null });
-      options.onInspectorState!({ phase: 'open', errorMessage: null });
+      client.inspectorState$.next({ phase: 'loading', errorMessage: null });
+      client.inspectorState$.next({ phase: 'open', errorMessage: null });
     });
     const trigger = [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')].find(
       (element) => element.textContent?.trim() === 'Inspector',

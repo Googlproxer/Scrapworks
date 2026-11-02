@@ -1,7 +1,7 @@
 flowchart LR
     Angular[Angular components]
     Babylon[WorldScene core scripts and input adapter]
-    Toolkit[Babylon Toolkit lifecycle without physics]
+    Lifecycle[Scene-owned native lifecycle without physics]
     Editor[Editor scenes and markers]
     Compiler[World definition compiler]
     Definition[Plain initial world definition]
@@ -17,7 +17,7 @@ flowchart LR
     Simulation -->|uses plain layout| Definition
     Angular -->|uses| Application
     Babylon -->|uses| Application
-    Babylon -->|script lifecycle| Toolkit
+    Babylon -->|script lifecycle| Lifecycle
     Worker[One dedicated module worker and private Miniplex]
     Application -->|credits and commands| Worker
     Worker -->|sequential fixed steps| Simulation

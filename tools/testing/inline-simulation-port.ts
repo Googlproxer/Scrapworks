@@ -1,14 +1,13 @@
 import type { RuntimeReply, RuntimeRequest } from '@contracts/simulation';
-import type { SimulationOptions } from '@simulation/simulation';
-import { SimulationRuntime } from './runtime';
-import type { SimulationPort } from './port';
+import { SimulationRuntime } from '../../src/session/runtime';
+import type { SimulationPort } from '../../src/session/port';
 
 /** Test/development composition only; never imported by the normal application factory. */
 export class InlineSimulationPort implements SimulationPort {
   private runtime?: SimulationRuntime;
 
-  constructor(options: Pick<SimulationOptions, 'content' | 'system'> = {}) {
-    this.runtime = new SimulationRuntime(options);
+  constructor() {
+    this.runtime = new SimulationRuntime();
   }
 
   public send(request: RuntimeRequest): RuntimeReply {

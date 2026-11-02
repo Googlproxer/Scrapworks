@@ -3,6 +3,7 @@ import path from 'node:path';
 import { projectRoot, filesUnder } from './inventory.ts';
 import { localPath } from './retain-assets.ts';
 import { verifyWorldExport } from '../world/verify-export.ts';
+import { sceneRegistrationFiles } from './scene-features.ts';
 
 import { readJson as read, type ExportPolicy, type SceneManifest } from '../shared.ts';
 
@@ -20,6 +21,14 @@ const policy = await readJson<ExportPolicy>('tools/scenes/export-policy.json');
 // This file is generated independently of the Editor's scene manifests. Require it
 // explicitly so a stale long-lived exporter cannot silently omit gameplay data.
 const world = await verifyWorldExport(projectRoot);
+const registrations = await sceneRegistrationFiles(projectRoot);
+if (
+  (await fs.readFile(path.join(projectRoot, 'public/scene/registrations.json'), 'utf8')) !==
+    registrations.manifest ||
+  (await fs.readFile(path.join(projectRoot, 'src/scene-registrations.ts'), 'utf8')) !==
+    registrations.source
+)
+  throw new Error('Stale generated scene registrations; export the authored scenes again.');
 const angular = await readJson<AngularAssets>('angular.json');
 const publicRule = angular.projects.scrapworks.architect.build.options.assets.find(
   (entry) => entry.input === 'public',

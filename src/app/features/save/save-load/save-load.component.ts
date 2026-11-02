@@ -19,6 +19,9 @@ interface SaveSlot {
 })
 export class SaveLoadComponent {
   public readonly slots = signal<SaveSlot[]>([]);
+  public readonly error = signal<string | null>(null);
+  public readonly busy = signal(false);
+  private destroyed = false;
 
   private readonly saveService = inject(SaveService);
   private readonly dialogRef = inject(DialogRef<SaveLoadComponent>);
@@ -33,6 +36,10 @@ export class SaveLoadComponent {
       occupied: false,
     }));
     this.slots.set(initialSlots);
+    this.destroyRef.onDestroy(() => {
+      this.destroyed = true;
+    });
+    void this.execute(() => this.refresh());
   }
 
   public close() {
@@ -40,47 +47,60 @@ export class SaveLoadComponent {
     this.dialogRef.close();
   }
 
-  public save(slotId: number) {
-    const slot = this.slots().find((s) => s.id === slotId);
-    if (slot) {
-      const testData = { name: slot.name, value: Math.random() };
-      this.saveService.save(testData);
-      slot.occupied = true;
-      this.slots.set([...this.slots()]);
+  private async execute(operation: () => Promise<unknown>): Promise<void> {
+    if (this.destroyed || this.busy()) return;
+    this.busy.set(true);
+    this.error.set(null);
+    try {
+      await operation();
+    } catch (error) {
+      if (!this.destroyed) this.error.set(error instanceof Error ? error.message : String(error));
+    } finally {
+      if (!this.destroyed) this.busy.set(false);
     }
   }
 
-  public async load(slotId: number) {
+  public async save(slotId: number): Promise<void> {
     const slot = this.slots().find((s) => s.id === slotId);
-    if (slot && slot.occupied) {
-      await this.saveService.load(slot.id);
-    }
+    if (!slot) return;
+    await this.execute(async () => {
+      await this.saveService.save({ id: slot.id, name: slot.name, value: Math.random() });
+      await this.refresh();
+    });
   }
 
-  public async delete(slotId: number) {
-    const slot = this.slots().find((s) => s.id === slotId);
-    if (slot && slot.occupied) {
-      // Delete the data from the database
-      await this.saveService.load(slot.id); // Load the data to get the id
-      await this.saveService.delete(slot.id); // Assuming you have a delete method in SaveService
-      slot.occupied = false;
-      slot.value = 0;
-      this.slots.set([...this.slots()]);
-    }
+  public async load(slotId: number): Promise<void> {
+    await this.execute(async () => {
+      const data = await this.saveService.load(slotId);
+      if (data && !this.destroyed)
+        this.slots.update((slots) =>
+          slots.map((slot) => (slot.id === slotId ? { ...slot, ...data, occupied: true } : slot)),
+        );
+    });
+  }
+
+  public async delete(slotId: number): Promise<void> {
+    await this.execute(async () => {
+      await this.saveService.delete(slotId);
+      await this.refresh();
+    });
   }
 
   public async export() {
-    const jsonData = await this.saveService.export();
-    // save the jsonData to a file
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'save-data.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    await this.execute(async () => {
+      const jsonData = await this.saveService.export();
+      if (this.destroyed) return;
+      // save the jsonData to a file
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'save-data.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
   }
 
   public async import() {
@@ -98,12 +118,23 @@ export class SaveLoadComponent {
         concatMap((data) => this.importData(data)),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe();
+      .subscribe({
+        error: (error: unknown) => {
+          if (!this.destroyed)
+            this.error.set(error instanceof Error ? error.message : String(error));
+        },
+      });
     input.click();
   }
 
   private async importData(data: string) {
-    await this.saveService.import(data);
+    await this.execute(async () => {
+      await this.saveService.import(data);
+      await this.refresh();
+    });
+  }
+
+  private async refresh(): Promise<void> {
     // Update the slots state after import
     // load the data from the database to update the slots
     const allData = await this.saveService.loadAll();
@@ -115,6 +146,6 @@ export class SaveLoadComponent {
         value: savedData ? savedData.value : 0,
       };
     });
-    this.slots.set(updatedSlots);
+    if (!this.destroyed) this.slots.set(updatedSlots);
   }
 }

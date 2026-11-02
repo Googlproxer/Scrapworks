@@ -13,7 +13,10 @@ const directory = import.meta.dirname;
 const root = path.resolve(directory, '../..');
 const args = process.argv.slice(2);
 const command = args[0] ?? 'smoke';
-const production = args.includes('--production');
+if (args.includes('--production'))
+  throw new Error(
+    'Retired synthetic production workload. Use node tools/game-bench/cli.ts for current-game workloads.',
+  );
 function option(name: string, fallback: undefined | null): string | undefined;
 function option(name: string, fallback: string): string;
 function option(name: string, fallback: number): string | number;
@@ -112,10 +115,7 @@ async function fingerprint() {
 }
 
 const source = await fingerprint();
-const browserSource = await fs.readFile(
-  path.join(directory, production ? 'production-browser.ts' : 'browser.ts'),
-  'utf8',
-);
+const browserSource = await fs.readFile(path.join(directory, 'browser.ts'), 'utf8');
 const primaryHotPath = browserSource.split('// Pacing-only helpers.')[0].trimEnd();
 const qualification = JSON.parse(
   await fs.readFile(path.join(directory, 'qualification.json'), 'utf8'),
@@ -123,7 +123,7 @@ const qualification = JSON.parse(
 const manifest = {
   qualification,
   schema: 1,
-  runtime: production ? 'production' : 'laboratory',
+  runtime: 'laboratory',
   command,
   arguments: args,
   label: option('label', 'reference-desktop'),
@@ -212,7 +212,7 @@ await build({
     target: 'es2022',
     minify: true,
     sourcemap: true,
-    rollupOptions: { input: path.join(directory, production ? 'production.html' : 'browser.html') },
+    rollupOptions: { input: path.join(directory, 'browser.html') },
   },
 });
 const server = http.createServer(async (request, response) => {
@@ -246,12 +246,8 @@ const server = http.createServer(async (request, response) => {
   }
 });
 await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
-const url = `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/lab/${production ? 'production' : 'browser'}.html`;
-const candidates = option('candidates', production ? 'miniplex' : 'miniplex,bitecs').split(
-  ',',
-) as Candidate[];
-if (production && candidates.join() !== 'miniplex')
-  throw new Error('Production qualification compares Miniplex execution modes only');
+const url = `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/lab/browser.html`;
+const candidates = option('candidates', 'miniplex,bitecs').split(',') as Candidate[];
 const executions = option('executions', 'inline,worker').split(',') as Execution[];
 for (const c of candidates)
   if (!['miniplex', 'bitecs'].includes(c)) throw new Error('Unknown candidate');
@@ -377,7 +373,7 @@ if (command !== 'check') {
           warmupMs: 100,
         },
       });
-    for (const config of configurations.filter((c) => !production && c.execution === 'worker'))
+    for (const config of configurations.filter((c) => c.execution === 'worker'))
       jobs.push({
         mode: 'paced',
         diagnostic: true,

@@ -1,44 +1,21 @@
-import type {
-  BuildingView,
-  CommandResult,
-  WorldCommand,
-  WorldDefinition,
-  WorldPosition,
-} from './world';
+import type { BuildingView, CommandResult, WorldCommand, WorldDefinition } from './world';
 import type { OpeningData, OpeningView } from './opening';
+import type { OpeningEvent, RuntimeEvent } from './session-event';
+import type { ReadonlyData, EditableData } from './readonly-data';
 
-export type EntityKind = 'player' | 'deposit' | 'pile' | 'building' | 'owner' | 'processor';
+export type EntityKind = 'player' | 'deposit' | 'pile' | 'building';
 
 export interface ItemStack {
   item: string;
   quantity: number;
 }
 
-export interface Reservation {
-  id: string;
-  owner: string;
-  items: ItemStack[];
-}
-
 export interface InventoryData {
   slots: (ItemStack | null)[];
-  reservations: Reservation[];
-}
-
-export interface WorkData {
-  recipe: string;
-  status: 'active' | 'idle' | 'blocked';
-  remaining: number;
-  duration: number;
-  completed: number;
-  input: InventoryData;
-  output: InventoryData;
-  reserved: ItemStack[];
-  held: ItemStack[];
 }
 
 export interface TransformData {
-  position: WorldPosition;
+  position: { x: number; y: number; z: number };
   facing: number;
   moving: boolean;
   sprinting: boolean;
@@ -53,10 +30,7 @@ export interface EntityData {
   equipment?: { tool: string | null };
   deposit?: { kind: 'scrap'; quantity: number };
   pile?: ItemStack;
-  building?: BuildingView;
-  owner?: string;
-  work?: WorkData;
-  charge?: { value: number; capacity: number };
+  building?: EditableData<BuildingView>;
   opening?: OpeningData;
 }
 
@@ -69,7 +43,6 @@ export interface WorldResources {
   research: Record<string, { consumed: Record<string, number>; work: number; unlocked: boolean }>;
   productionTotals: Record<string, number>;
   extractionTotals: Record<string, number>;
-  counters: Record<string, number>;
 }
 
 export interface ContentDefinition {
@@ -82,12 +55,11 @@ export interface ContentDefinition {
 }
 
 export interface SimulationSnapshot {
-  version: 1;
+  version: 2;
   contentVersion: string;
-  definition: WorldDefinition;
+  definition: EditableData<WorldDefinition>;
   resources: WorldResources;
   entities: EntityData[];
-  lastCommandResult: CommandResult | null;
 }
 
 export interface EntityMapping {
@@ -101,9 +73,9 @@ export interface EntityMapping {
 }
 
 export interface Inspection {
-  id: string;
-  tick: number;
-  entity: EntityData;
+  readonly id: string;
+  readonly tick: number;
+  readonly entity: ReadonlyData<EntityData>;
 }
 
 export interface PlayerEndpoint {
@@ -112,7 +84,7 @@ export interface PlayerEndpoint {
 }
 
 export interface PresentationPacket {
-  schema: 1;
+  schema: 2;
   version: number;
   base: number;
   full: boolean;
@@ -125,7 +97,6 @@ export interface PresentationPacket {
   removed: ArrayBuffer;
   details: Inspection[];
   endpoints: PlayerEndpoint[];
-  lastCommandResult: CommandResult | null;
   research: string[];
   productionTotals: Record<string, number>;
   opening?: OpeningView;
@@ -162,47 +133,168 @@ export interface SimulationInput {
   sprint: boolean;
 }
 
-export interface RuntimeRequest {
-  protocol: 1;
-  id: number;
-  generation: number;
-  revision: number;
-  operation:
-    'initialize' | 'advance' | 'activity' | 'watch' | 'inspect' | 'capture' | 'resync' | 'dispose';
-  definition?: WorldDefinition;
-  developerFixture?: boolean;
-  capture?: SimulationCapture;
-  steps?: number;
-  active?: boolean;
-  input?: SimulationInput;
-  inputSequence?: number;
-  commands?: SequencedCommand[];
-  watch?: string[];
+export interface SimulationStepResult {
+  readonly commandResults: readonly CommandResult[];
+  readonly events: readonly OpeningEvent[];
 }
 
-export interface RuntimeReply {
-  protocol: 1;
+interface Envelope {
+  protocol: 2;
   id: number;
   generation: number;
   revision: number;
-  ok: boolean;
-  error?: string;
-  packet?: PresentationPacket;
-  details?: Inspection[];
-  watch?: string[];
-  capture?: SimulationCapture;
+}
+
+type RequestData =
+  | {
+      operation: 'initialize';
+      definition: WorldDefinition;
+      developerFixture?: boolean;
+      capture?: SimulationCapture;
+    }
+  | {
+      operation: 'advance';
+      steps: number;
+      input?: SimulationInput;
+      inputSequence?: number;
+      commands?: SequencedCommand[];
+    }
+  | { operation: 'activity'; active: boolean; commands?: SequencedCommand[] }
+  | { operation: 'watch' | 'inspect'; watch: string[] }
+  | { operation: 'capture' | 'resync' | 'dispose' };
+
+type CompleteFields<T, K extends PropertyKey> = T extends unknown
+  ? T & Partial<Record<Exclude<K, keyof T>, never>>
+  : never;
+
+export type RuntimeRequestBody = CompleteFields<
+  RequestData,
+  | 'definition'
+  | 'developerFixture'
+  | 'capture'
+  | 'steps'
+  | 'active'
+  | 'input'
+  | 'inputSequence'
+  | 'commands'
+  | 'watch'
+>;
+
+export type RuntimeRequest = Envelope & RuntimeRequestBody;
+
+type ReplyData =
+  | { operation: 'initialize' | 'resync'; packet: PresentationPacket }
+  | { operation: 'advance' | 'activity'; packet?: PresentationPacket }
+  | { operation: 'watch'; watch: string[]; details: Inspection[] }
+  | { operation: 'inspect'; details: Inspection[] }
+  | { operation: 'capture'; capture: SimulationCapture }
+  | { operation: 'dispose' };
+
+type ResultData =
+  ({ ok: true } & ReplyData) | { ok: false; operation: RuntimeRequest['operation']; error: string };
+
+export type RuntimeReply = Envelope & {
   completedTicks: number[];
   acknowledgements: CommandAcknowledgement[];
+  events: RuntimeEvent[];
   ledger: CommandLedger;
   appliedInput: number;
-}
+} & CompleteFields<ResultData, 'packet' | 'watch' | 'details' | 'capture' | 'error'>;
 
-export const PRESENTATION_STRIDE = 14;
+export const PRESENTATION_STRIDE = 8;
 
 export const MAX_DETAIL_SUBSCRIPTIONS = 16;
 
 export const MAX_PENDING_COMMANDS = 256;
 
+export const MAX_PENDING_SESSION_EVENTS = 4096;
+
 export function requireInvariant(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
+}
+
+/** Validate the worker boundary before its payload can mutate the presentation cache. */
+export function assertRuntimeReply(value: unknown): asserts value is RuntimeReply {
+  const check: typeof requireInvariant = requireInvariant;
+  check(!!value && typeof value === 'object', 'Invalid session reply');
+  const reply = value as Partial<RuntimeReply>;
+  check(
+    reply.protocol === 2 &&
+      Number.isSafeInteger(reply.id) &&
+      Number.isSafeInteger(reply.generation) &&
+      Number.isSafeInteger(reply.revision) &&
+      typeof reply.ok === 'boolean',
+    'Invalid reply envelope',
+  );
+  check(
+    Array.isArray(reply.completedTicks) &&
+      reply.completedTicks.every((tick) => Number.isSafeInteger(tick) && tick >= 0),
+    'Invalid completed ticks',
+  );
+  check(
+    Array.isArray(reply.acknowledgements) &&
+      reply.acknowledgements.every(
+        (ack) =>
+          ack &&
+          Number.isSafeInteger(ack.sequence) &&
+          Number.isSafeInteger(ack.tick) &&
+          (ack.result === 'cancelled' || (ack.result && typeof ack.result.accepted === 'boolean')),
+      ),
+    'Invalid acknowledgements',
+  );
+  check(Array.isArray(reply.events), 'Missing session events');
+  const kinds = [
+    'command-result',
+    'research-completed',
+    'handcraft-ended',
+    'salvage-attention',
+    'materials-recovered',
+    'minifab-status',
+  ];
+  check(
+    reply.events.every(
+      (event) =>
+        event &&
+        Number.isSafeInteger(event.id) &&
+        Number.isSafeInteger(event.tick) &&
+        event.event &&
+        kinds.includes(event.event.kind),
+    ),
+    'Invalid domain events',
+  );
+  check(
+    reply.ledger &&
+      ['accepted', 'applied', 'cancelled', 'lastApplied'].every(
+        (key) =>
+          Number.isSafeInteger(reply.ledger![key as keyof CommandLedger]) &&
+          reply.ledger![key as keyof CommandLedger] >= 0,
+      ),
+    'Invalid command ledger',
+  );
+  check(Number.isSafeInteger(reply.appliedInput), 'Invalid applied input');
+  if (!reply.ok) {
+    check(typeof reply.error === 'string', 'Missing reply error');
+    return;
+  }
+  switch (reply.operation) {
+    case 'initialize':
+    case 'resync':
+      check(!!reply.packet, 'Missing publication');
+      break;
+    case 'watch':
+      check(Array.isArray(reply.watch) && Array.isArray(reply.details), 'Missing watched details');
+      break;
+    case 'inspect':
+      check(Array.isArray(reply.details), 'Missing inspection');
+      break;
+    case 'capture':
+      check(!!reply.capture, 'Missing capture');
+      break;
+    case 'advance':
+    case 'activity':
+    case 'dispose':
+      break;
+    default:
+      check(false, 'Unknown reply operation');
+  }
 }

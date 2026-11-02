@@ -1,7 +1,8 @@
+import type { OpeningEvent, MiniFabStatus } from '@contracts/session-event';
 import type { OpeningCommand, OpeningData, OpeningView } from '@contracts/opening';
 import type { CommandResult, WorldPosition } from '@contracts/world';
 import type { ItemStack, InventoryData } from '@contracts/simulation';
-import type { SimulationEntity, SystemContext } from './ecs-runtime';
+import type { SimulationEntity, OpeningContext } from './opening-context';
 import {
   OPENING_CONTENT,
   OPENING_RECIPES,
@@ -41,7 +42,6 @@ export function newOpening(): OpeningData {
     fieldTechnology: null,
     fieldEnabled: false,
     moved: false,
-    message: 'Move toward the scrap deposit. Collect four scrap to begin Improvised tools.',
     minifab: {
       owned: false,
       request: null,
@@ -53,7 +53,7 @@ export function newOpening(): OpeningData {
       capacityLevel: 0,
       gearing: 0,
       windBudget: 180,
-      status: 'Research and assemble a Mini Fabricator.',
+      status: 'unowned',
     },
   };
 }
@@ -61,15 +61,33 @@ export function newOpening(): OpeningData {
 /** Executors operate exclusively on the player ECS component and shared atomic slot rules. */
 export class OpeningSystem {
   public collisionChanged = false;
-  private readonly context: SystemContext;
+  private events: OpeningEvent[] = [];
 
-  public constructor(context: SystemContext) {
+  public drainEvents(): OpeningEvent[] {
+    const events = this.events;
+    this.events = [];
+    return events;
+  }
+
+  private setMiniStatus(status: MiniFabStatus): void {
+    if (this.state.minifab.status === status) return;
+    this.state.minifab.status = status;
+    this.events.push({
+      kind: 'minifab-status',
+      status,
+      recipe: this.state.minifab.job?.recipe ?? this.state.minifab.request?.recipe ?? null,
+    });
+  }
+
+  private readonly context: OpeningContext;
+
+  public constructor(context: OpeningContext) {
     this.context = context;
     validateOpeningCatalogue();
   }
 
   private get player(): SimulationEntity {
-    return this.context.get(this.context.resources.playerId)!;
+    return this.context.player;
   }
 
   private get state(): OpeningData {
@@ -123,8 +141,6 @@ export class OpeningSystem {
         if (!target.deposit.quantity) return this.result('depleted');
         if (state.salvage?.target !== target.id)
           state.salvage = { target: target.id, remaining: this.salvageDuration() };
-        state.message =
-          'Salvaging. Stop to interrupt; a full bag leaves recoverable scrap on the ground.';
         break;
       case 'pickup': {
         if (state.handcraft) return this.result('busy');
@@ -135,7 +151,6 @@ export class OpeningSystem {
         target.pile.quantity -= count;
         if (target.pile.quantity) this.context.mark(target);
         else this.context.remove(target.id);
-        state.message = `Picked up ${count}. Pickup does not add extraction or production history.`;
         break;
       }
       case 'equip': {
@@ -216,10 +231,9 @@ export class OpeningSystem {
           mini.request = null;
           mini.job = null;
           this.returnBuffers();
-          mini.status =
-            mini.input.length || mini.output.length
-              ? 'Cancelled; clear retained buffers before changing inputs.'
-              : 'Idle';
+          this.setMiniStatus(
+            mini.input.length || mini.output.length ? 'cancelled-retained' : 'idle',
+          );
           break;
         }
         const recipe = recipeById(command.recipe);
@@ -234,7 +248,7 @@ export class OpeningSystem {
         )
           return this.result('capacity');
         mini.request = { recipe: recipe.id, left: command.quantity };
-        mini.status = 'Requested';
+        this.setMiniStatus('requested');
         break;
       }
       case 'wind': {
@@ -280,7 +294,7 @@ export class OpeningSystem {
             return this.result('capacity');
           if (equipped) this.player.equipment!.tool = null;
         }
-        state.message = 'Recovered materials. Research and earned history are preserved.';
+        this.events.push({ kind: 'materials-recovered', item: command.item });
         break;
       }
     }
@@ -348,8 +362,7 @@ export class OpeningSystem {
     if (!transact(this.bag, [], job.inputs, OPENING_CONTENT))
       throw new Error('Handcraft refund capacity invariant violated');
     this.state.handcraft = null;
-    this.state.message =
-      'Handcrafting cancelled. Completed items remain; unfinished ingredients returned.';
+    this.events.push({ kind: 'handcraft-ended', recipe: job.recipe, reason: 'cancelled' });
   }
 
   private record(recipe: OpeningRecipe): void {
@@ -378,7 +391,7 @@ export class OpeningSystem {
     if (equipFirst) this.player.equipment!.tool = 'prybar';
     if (recipe.id === 'base-minifab') {
       this.state.minifab.owned = true;
-      this.state.minifab.status = 'Idle';
+      this.setMiniStatus('idle');
     }
     this.record(recipe);
     this.state.handcraft = null;
@@ -394,9 +407,11 @@ export class OpeningSystem {
     )
       this.beginHandcraft(recipe, left);
     else
-      this.state.message = left
-        ? 'Batch stopped: the next unit needs materials or space.'
-        : `${recipe.name} completed.`;
+      this.events.push({
+        kind: 'handcraft-ended',
+        recipe: recipe.id,
+        reason: left ? 'stock-or-space' : 'completed',
+      });
   }
 
   private salvage(delta: number): void {
@@ -410,8 +425,7 @@ export class OpeningSystem {
       this.state.handcraft
     ) {
       this.state.salvage = null;
-      this.state.message =
-        'Salvage stopped: move within two metres of a deposit with scrap remaining.';
+      this.events.push({ kind: 'salvage-attention', reason: 'range-or-depleted' });
       return;
     }
     task.remaining -= delta;
@@ -436,8 +450,7 @@ export class OpeningSystem {
           pile: { item: 'scrap', quantity: 1 },
           transform: { position: { ...position }, facing: 0, moving: false, sprinting: false },
         });
-      this.state.message =
-        'Bag full. Salvaged scrap is on the ground; pick it up when there is room.';
+      this.events.push({ kind: 'salvage-attention', reason: 'bag-full' });
     }
     target.deposit.quantity--;
     this.context.resources.extractionTotals['scrap'] =
@@ -498,11 +511,11 @@ export class OpeningSystem {
     if (!mini.request) return false;
     const recipe = this.nextRecipe(recipeById(mini.request.recipe)!);
     if (!recipe) {
-      mini.status = 'Waiting for a complete ingredient set';
+      this.setMiniStatus('ingredients');
       return false;
     }
     if (mini.input.length && signature(mini.input) !== signature(recipe.inputs)) {
-      mini.status = 'Clear retained inputs before changing recipe';
+      this.setMiniStatus('retained-inputs');
       return false;
     }
     const fromInput: ItemStack[] = [],
@@ -529,13 +542,13 @@ export class OpeningSystem {
       if (left) fromBag.push({ item: input.item, quantity: left });
     }
     if (this.state.handcraft && fromBag.length) {
-      mini.status = 'Waiting for handcraft inventory access';
+      this.setMiniStatus('handcraft');
       return false;
     }
     const remainingOutput = take(mini.output, fromOutput);
     let nextSlots = planTransaction(this.bag, fromBag, [], OPENING_CONTENT);
     if (!nextSlots) {
-      mini.status = 'Waiting for ingredients';
+      this.setMiniStatus('ingredients');
       return false;
     }
     let delivered = false;
@@ -545,14 +558,9 @@ export class OpeningSystem {
     ) {
       const afterDelivery =
         !this.state.handcraft &&
-        planTransaction(
-          { slots: nextSlots, reservations: this.bag.reservations },
-          [],
-          remainingOutput,
-          OPENING_CONTENT,
-        );
+        planTransaction({ slots: nextSlots }, [], remainingOutput, OPENING_CONTENT);
       if (!afterDelivery) {
-        mini.status = 'Output buffer full';
+        this.setMiniStatus('output-full');
         return false;
       }
       nextSlots = afterDelivery;
@@ -564,7 +572,7 @@ export class OpeningSystem {
     const residue = take(mini.input, fromInput);
     mini.input = [...residue, ...copy(recipe.inputs)];
     mini.job = { id: this.id(), recipe: recipe.id, remaining: recipe.seconds };
-    mini.status = `Making ${recipe.name}${recipe.id === mini.request.recipe ? '' : ' precursor'}`;
+    this.setMiniStatus('making');
     return true;
   }
 
@@ -609,7 +617,7 @@ export class OpeningSystem {
       mini.job = null;
       if (mini.request?.recipe === recipe.id && --mini.request.left === 0) {
         mini.request = null;
-        mini.status = 'Request completed';
+        this.setMiniStatus('completed');
       }
       deliver();
       if (!mini.request) break;
@@ -637,7 +645,7 @@ export class OpeningSystem {
     if (technology.costs.every((cost) => (ledger.consumed[cost.item] ?? 0) >= cost.quantity)) {
       ledger.work = technology.seconds;
       ledger.unlocked = true;
-      state.message = `${technology.name} researched. Its recipes are now available.`;
+      this.events.push({ kind: 'research-completed', technology: technology.id });
       state.fieldTechnology = null;
     }
   }

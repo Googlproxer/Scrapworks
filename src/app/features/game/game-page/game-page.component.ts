@@ -9,7 +9,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { ControlsComponent } from '@app/features/controls/controls/controls.component';
-import { SaveLoadComponent } from '@app/features/save/save-load/save-load.component';
+import { loadDeveloperSaveDialog } from '@app/features/save/developer-save-dialog';
 import { UiInputAdapterService } from '@app/features/ui/ui-input-adapter.service';
 import { UiService } from '@app/features/ui/ui.service';
 import { environment } from '@environments/environment';
@@ -61,7 +61,9 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
   }
 
   public async openSaveDialog() {
-    this.uiService.openUIDialog('save-dialog', SaveLoadComponent, {
+    const component = await loadDeveloperSaveDialog();
+    if (!component) return;
+    this.uiService.openUIDialog('save-dialog', component, {
       ariaLabelledBy: 'save-load-component',
     });
   }

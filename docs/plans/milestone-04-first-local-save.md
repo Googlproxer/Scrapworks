@@ -8,7 +8,7 @@ Implement one manual local save slot that restores the research-led opening, inc
 
 ## Current implementation
 
-Dexie is installed, and `src/app/features/save/` contains a test-data service and a CDK save/load dialog. They store `name`/`value` records, not gameplay snapshots. Writes are not awaited by `save()`, `load()` logs rather than restores a world, and dialog occupancy is in-memory. There is no SaveRepository, versioned codec, detached snapshot, world-replacement boundary, or verified reload round trip. Keep the snapshot and transaction requirements below open.
+Dexie and the development-only Save/Load dialog retain their existing test-data records. Imported records are validated, operations await committed storage, failures are visible, and occupancy refreshes after success. The implementation is excluded from the production graph and remains independent of live sessions, captures, world replacement, inventory and research. Build on this storage/dialog experience when implementing this milestone, introducing SaveRepository, a versioned codec, capture orchestration and the world-replacement boundary then. Gameplay persistence and a verified reload round trip remain unimplemented.
 
 Migration added plain authoritative `WorldState`, detached presentation views and a separate controls-settings IndexedDB adapter. The [23 October browser evidence](../reports/migration/2026-10-23/README.md) verifies bindings survive page reload, including modifier capture. That proves settings persistence only. Neither `WorldDefinition` (initial authored layout) nor `WorldView` (presentation state) is a gameplay save format. Save/test-data controls are absent from the production game menu. Every gameplay snapshot/restore checklist item below remains pending.
 

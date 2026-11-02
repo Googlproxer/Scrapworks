@@ -1,6 +1,8 @@
 import type { WorldView } from '@contracts/world';
-import { OPENING_TECHNOLOGIES } from '../../../content/opening';
+import type { SessionEvent } from '@contracts/session-event';
+import { OPENING_TECHNOLOGIES, OPENING_RECIPES } from '../../../content/opening';
 import type { NotificationCenter } from './notifications';
+import { minifabStatus } from './opening-labels';
 
 const rejections: Readonly<Record<string, string>> = {
   'out-of-reach': 'Move within two metres of the target.',
@@ -13,56 +15,86 @@ const rejections: Readonly<Record<string, string>> = {
   'invalid-request': 'Choose an available recipe and a batch within its stack limit.',
 };
 
-/** Notify on transitions, without flooding the queue on worker publications. */
+/** Outcome delivery is independent of how many steps fit in one publication. */
 export class OpeningFeedback {
-  private rejection: string | null = null;
-  private message = '';
   private researchWait = '';
   private miniWait = '';
-  private worldId?: string;
+  private worldId = '';
 
   public constructor(private readonly notifications: NotificationCenter) {}
+
+  public handle({ event }: SessionEvent): void {
+    switch (event.kind) {
+      case 'command-result': {
+        const result = event.acknowledgement.result;
+        if (result !== 'cancelled' && !result.accepted)
+          this.notifications.open({
+            key: `opening-rejection:${result.reason}`,
+            title: 'Action unavailable',
+            message: rejections[result.reason ?? ''] ?? 'The action is unavailable here.',
+            tone: 'warning',
+          });
+        break;
+      }
+      case 'research-completed':
+        this.notifications.open({
+          title: 'Research complete',
+          message: `${OPENING_TECHNOLOGIES.find((technology) => technology.id === event.technology)?.name ?? event.technology} researched. Its recipes are now available.`,
+          tone: 'success',
+        });
+        break;
+      case 'handcraft-ended':
+        this.notifications.open({
+          key: event.reason === 'stock-or-space' ? 'opening-attention' : undefined,
+          title: 'Field kit',
+          message:
+            event.reason === 'cancelled'
+              ? 'Handcrafting cancelled. Completed items remain; unfinished ingredients returned.'
+              : event.reason === 'stock-or-space'
+                ? 'Batch stopped: the next unit needs materials or space.'
+                : `${OPENING_RECIPES.find((recipe) => recipe.id === event.recipe)?.name ?? event.recipe} completed.`,
+          tone: event.reason === 'stock-or-space' ? 'warning' : 'success',
+        });
+        break;
+      case 'salvage-attention':
+        this.notifications.open({
+          key: 'opening-attention',
+          title: 'Materials and capacity',
+          message:
+            event.reason === 'bag-full'
+              ? 'Bag full. Salvaged scrap is on the ground; pick it up when there is room.'
+              : 'Salvage stopped: move within two metres of a deposit with scrap remaining.',
+          tone: 'warning',
+        });
+        break;
+      case 'materials-recovered':
+        this.notifications.open({
+          title: 'Field kit',
+          message: 'Recovered materials. Research and earned history are preserved.',
+          tone: 'success',
+        });
+        break;
+      case 'minifab-status':
+        if (event.status === 'completed')
+          this.notifications.open({
+            title: 'MiniFab',
+            message: 'Request completed.',
+            tone: 'success',
+          });
+        break;
+    }
+  }
 
   public update(world: WorldView | null): void {
     const opening = world?.opening;
     if (!world || !opening) return;
     const identity = `${world.worldId}:${world.worldGeneration ?? 0}`;
     if (identity !== this.worldId) {
-      for (const key of ['opening-rejection', 'research-wait', 'minifab-wait'])
+      for (const key of ['research-wait', 'minifab-wait', 'opening-attention'])
         this.notifications.dismissKey(key);
       this.worldId = identity;
-      this.rejection = null;
-      this.message = opening.state.message;
       this.researchWait = this.miniWait = '';
     }
-    const reason =
-      world.lastCommandResult?.accepted === false ? world.lastCommandResult.reason : null;
-    if (reason && reason !== this.rejection)
-      this.notifications.open({
-        key: 'opening-rejection',
-        title: 'Action unavailable',
-        message: rejections[reason] ?? 'The action is unavailable here.',
-        tone: 'warning',
-      });
-    this.rejection = reason;
-    const message = opening.state.message;
-    if (message !== this.message && /Batch stopped|Bag full|Salvage stopped/.test(message))
-      this.notifications.open({
-        key: 'opening-attention',
-        title: 'Materials and capacity',
-        message,
-        tone: 'warning',
-      });
-    if (
-      message !== this.message &&
-      /researched\.|Handcrafting cancelled|Recovered materials|completed/i.test(message)
-    )
-      this.notifications.open({
-        title: /researched\./.test(message) ? 'Research complete' : 'Field kit',
-        message,
-        tone: 'success',
-      });
-    this.message = message;
     const technology = OPENING_TECHNOLOGIES.find(
       (entry) => entry.id === opening.state.fieldTechnology,
     );
@@ -89,8 +121,15 @@ export class OpeningFeedback {
       else this.notifications.dismissKey('research-wait');
       this.researchWait = researchWait;
     }
-    const mini = opening.state.minifab.status;
-    const miniWait = /Waiting|full|Clear retained/.test(mini) ? mini : '';
+    const miniWait = [
+      'ingredients',
+      'handcraft',
+      'retained-inputs',
+      'output-full',
+      'cancelled-retained',
+    ].includes(opening.state.minifab.status)
+      ? minifabStatus(opening.state.minifab)
+      : '';
     if (miniWait !== this.miniWait) {
       if (miniWait)
         this.notifications.open({

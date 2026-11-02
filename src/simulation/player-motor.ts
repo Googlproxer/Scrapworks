@@ -1,12 +1,6 @@
-import type { BuildingView, GridCell, WorldDefinition, WorldPosition } from '@contracts/world';
+import type { GridCell, WorldDefinition, WorldPosition } from '@contracts/world';
 import { circleOverlapsCell } from '@core/world-grid';
-import {
-  FIXED_STEP_SECONDS,
-  occupiedCells,
-  PLAYER_RADIUS,
-  SPRINT_SPEED,
-  WALK_SPEED,
-} from './world-rules';
+import { FIXED_STEP_SECONDS, PLAYER_RADIUS, SPRINT_SPEED, WALK_SPEED } from './world-rules';
 import type { PlayerState } from './world-state';
 
 export interface MovementIntent {
@@ -19,12 +13,12 @@ export interface MovementIntent {
 export class PlayerMotor {
   private readonly definition: WorldDefinition;
   private readonly player: PlayerState;
-  private readonly buildings: readonly BuildingView[] | (() => readonly GridCell[]);
+  private readonly buildings: () => readonly GridCell[];
 
   constructor(
     definition: WorldDefinition,
     player: PlayerState,
-    buildings: readonly BuildingView[] | (() => readonly GridCell[]),
+    buildings: () => readonly GridCell[],
   ) {
     this.definition = definition;
     this.player = player;
@@ -69,22 +63,9 @@ export class PlayerMotor {
       position.z + PLAYER_RADIUS > origin.z + rows * metresPerCell
     )
       return false;
-    const cells =
-      typeof this.buildings === 'function' ? this.buildings() : this.legacyCells(this.buildings);
+    const cells = this.buildings();
     return !cells.some((cell) =>
       circleOverlapsCell(this.definition.grid, position, PLAYER_RADIUS, cell),
     );
-  }
-
-  private legacyCells(buildings: readonly BuildingView[]): GridCell[] {
-    const { columns, rows } = this.definition.grid;
-    const cells = occupiedCells(this.definition, buildings, this.definition.deposits);
-    for (let row = 0; row < rows; row++) {
-      for (let column = 0; column < columns; column++) {
-        if (this.definition.terrain[row * columns + column] === 'water')
-          cells.push({ row, column });
-      }
-    }
-    return cells;
   }
 }

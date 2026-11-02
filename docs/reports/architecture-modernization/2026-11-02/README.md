@@ -1,0 +1,48 @@
+# Architecture modernization, 2 November 2026
+
+Implemented the approved seven-stage remediation from revision `16951310aa51fcef6b9b40293a26b85b5ceab733`. Delivery is the working-tree change set; no publishing or deployment was performed. Gameplay rules, balance, input ownership and one-worker authority are retained.
+
+The [runtime decision](../../../decisions/runtime-architecture.md) is the current architecture contract. [Evidence](evidence.json) records source/dependency fingerprints, build metadata hashes, raw route sizes and validation. [Benchmark smoke data](benchmark-smoke.json) includes source/environment manifests and every current-game workload result.
+
+## Stage results
+
+| Stage                  | Implemented result and verification                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Outcomes            | Typed command/domain events replace `lastCommandResult` and message-text decisions. Every outcome survives batching, repeated rejections, cancellation, resynchronization and world replacement. Simultaneous handcraft/research/MiniFab completions are covered. Events are generation/tick/identity stamped, non-replaying and bounded to 4,096 while resynchronizing; overflow fails visibly.                                                                                                                                                                                                     |
+| 2. Authority           | Production catalogue/opening initialization, command batches and detached step results. Private ECS records, slots, dirty tracking and indexes; real player/deposit/pile/development-building shapes. Synthetic systems/content, owner/processor/work/reservation/counter schemas and profiling controls removed. Real-command tests cover refunds, continuation, overflow, collision, removal, slot reuse and publication detachment. Inline controls moved to tooling.                                                                                                                             |
+| 3. Bridge              | Required frame/action ports, separate typed development placement capability, renderer-owned current-state streams, typed entity/cell selection and read-only Angular state. Session, renderer, input and opening UI collaborators own focused lifetimes. Entity inspection changes only on selected ID changes; deliberate pickup is preserved. Presentation DTOs are deeply read-only; captures remain editable and detached. Field-kit presentation is split into four panels and its focus-owning shell.                                                                                         |
+| 4. Lifecycle           | Toolkit removed from source, dependencies and production. Native scene-owned ordered update/late dispatch starts on the first owned frame, validates ownership and propagates failures synchronously. Late work runs once despite Babylon's per-camera hook. Tests cover enablement, invalidation, exceptions, disposal, context loss and Retry.                                                                                                                                                                                                                                                     |
+| 5. Presentation/export | No preview allocation/validation outside development placement; previews invalidate only for relevant changes. Occlusion restores the previously faded mesh's original visibility. A validated serialized-feature catalogue generates scene/character/input registrations and a fingerprint. Unsupported features report paths and preserve the complete previous export. Both registries publish with rollback; export checks enforce freshness.                                                                                                                                                    |
+| 6. Tools/storage       | Current-game inline/worker benchmark controls use the production runtime/codec and validated captures, with distinct workload identifiers. Historical reports and standalone synthetic comparisons remain. Watcher filtering/reconciliation covers metadata, renames, missing names and cache directories, with deterministic filter tests and native integration. Developer Save/Load remains development-only, validates imports, awaits writes, displays failures and refreshes committed occupancy. Milestone 4 remains unimplemented and explicitly builds upon this storage/dialog experience. |
+| 7. Enforcement         | Updated architecture, event handling, walkthrough, test ownership and milestone notes. Authoritative Mermaid and all eight matching source/SVG/PNG sets regenerated. Source/dependency checks reject deterministic-layer framework/time dependencies, laboratory authority, Toolkit and development implementations in production. CI enforces graph boundaries and bundle limits; benchmarks remain opt-in.                                                                                                                                                                                         |
+
+## Bundle evidence
+
+The same metadata traversal measures the game route's statically reachable raw JavaScript, counting each shared static chunk once and excluding dynamic imports and worker URLs.
+
+| Baseline         | Completed       | Reduction | Required reduction |
+| ---------------- | --------------- | --------- | ------------------ |
+| 13,349,796 bytes | 4,090,975 bytes | 69.4%     | At least 40%       |
+
+[Committed limits](../../../../tools/architecture/bundle-limits.json) warn at 5% and fail at 10% above the completed result, while retaining the original 40% reduction gate. This is bundle-size evidence, not a claim about runtime frame-rate improvement.
+
+## Validation
+
+- Strict application/spec, worker, Node game/oracle and tool TypeScript checks; application/template lint.
+- 128 Node simulation/session/tool tests, including dependency graph and bundle accounting checks.
+- 331 Chromium tests across 31 files, including desktop/mobile accessibility, field-kit tabs/winding/dialogs, input capture, ownership, native lifecycle and renderer tests.
+- Production build with statistics; production graph exclusions; authored asset/build-copy and generated registration freshness checks.
+- Built-worker normal and 1,000 ms stalled-frame acceptance: base path, CSP, movement, pause, healthy renderer Retry, worker crash/fresh-world Retry and teardown.
+- Complete empty-handed opening through the first automatic MiniFab plate. Bounded virtual time proves functional progression; it does not qualify real-time pacing.
+- Real development export/reload: valid save reload, invalid save rollback without reload, corrected save recovery and Game readiness. Native watcher integration ran on Windows; Linux coverage remains in CI.
+- Live development Inspector SDK opened and closed without browser errors.
+- Ten current-game smoke cases: five workloads in inline/worker controls, accepted commands and matching captured continuation. These end-to-end smoke timings are not comparable with historical synthetic compute or frame budgets; full qualification remains opt-in.
+- Immutable dependency installation and a clean recursive dependency audit.
+
+The build retains Miniplex/eventery's existing CommonJS optimization warning. Yarn retains the Inspector's optional Fluent UI charts peer warning; the real Inspector opens/closes successfully. Neither warning was suppressed. Historical reports remain unchanged; their retired source links resolve through Git revision/content-hash verification in the documentation checker.
+
+## Dependency remediation
+
+The initial recursive audit reported 40 advisory/deprecation entries. Removed the deprecated unused Angular build wrapper in favor of the `@angular/build` package already selected in configuration, declared directly used Node types, and refreshed vulnerable dependencies. Explicit transitive resolutions cover upstream pins on fast-xml-parser 5.11.2, glob 14.0.2, minimatch 11.0.1 and sharp 0.35.5. Revisit those resolutions when upstream dependency ranges are updated. Export, lint, build, browser and recovery checks pass with the refreshed toolchain. Patch rationale follows the upstream advisories for [XML parsing](https://github.com/advisories/GHSA-m7jm-9gc2-mpf2), [glob](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4), [minimatch](https://github.com/advisories/GHSA-g3hv-75wg-m249) and [sharp](https://github.com/advisories/GHSA-wq5f-xc86-pv6w).
+
+No gameplay persistence, offline progression, new content/factories or additional simulation workers were added.

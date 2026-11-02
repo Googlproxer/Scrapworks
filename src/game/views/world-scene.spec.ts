@@ -1,3 +1,5 @@
+import { testScenePorts } from '../../testing/game-ports';
+import type { PlacementPort } from '@contracts/game-client';
 import { AssetContainer } from '@babylonjs/core/assetContainer';
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
 import { Engine } from '@babylonjs/core/Engines/engine';
@@ -12,7 +14,7 @@ import { WorldScene } from './world-scene';
 import { debugDrawForScene } from '../debug/draw/debug-draw';
 import type { DevelopmentDebugDraw } from '../debug/draw/development-renderer';
 import { VertexBuffer } from '@babylonjs/core/Buffers/buffer';
-import { GameSession } from '../../app/features/game/session/game-session';
+import { GameSession } from '../../../tools/testing/inline-game-session';
 
 describe('WorldScene with the exported character and authored scene', () => {
   let fixture: AuthoredWorldFixture;
@@ -25,6 +27,7 @@ describe('WorldScene with the exported character and authored scene', () => {
   let definition: WorldDefinition;
   let session: GameSession;
   let bridge: WorldSessionBridge;
+  let placement: PlacementPort;
 
   beforeAll(async () => {
     fixture = await AuthoredWorldFixture.load();
@@ -52,7 +55,9 @@ describe('WorldScene with the exported character and authored scene', () => {
     definition = fixture.definition();
     session = new GameSession(definition, { developerFixture: true });
     bridge = {
-      initialize: () => undefined,
+      initialize: async () => undefined,
+      completeFrame: () => undefined,
+      suspend: () => session.setPaused(true),
       registerCompletedTickHandler: (handler, order) =>
         session.registerCompletedTickHandler(handler, order),
       frame: (seconds, movement, sprint, active, simulationActive = active) => {
@@ -62,6 +67,8 @@ describe('WorldScene with the exported character and authored scene', () => {
         return session.view;
       },
       isSimulationActive: () => true,
+    };
+    placement = {
       place: (cell, rotation) =>
         session.enqueue({ type: 'place', buildingId: 'test-building', cell, rotation }),
       preview: () => ({ valid: true, reason: null, cells: [] }),
@@ -69,7 +76,7 @@ describe('WorldScene with the exported character and authored scene', () => {
     world = await WorldScene.create(
       scene,
       definition,
-      { session: bridge, developerFixture: true },
+      { ...testScenePorts(bridge), placement, developerFixture: true },
       fixture.loadCharacter,
     );
     expect(scene.activeCamera).toBeInstanceOf(ArcRotateCamera);
@@ -101,7 +108,6 @@ describe('WorldScene with the exported character and authored scene', () => {
       productionTotals: {},
       deposits: definition.deposits,
       buildings: [],
-      lastCommandResult: null,
       ...overrides,
     };
   }
@@ -178,10 +184,10 @@ describe('WorldScene with the exported character and authored scene', () => {
     expect(dispose).toHaveBeenCalled();
   });
 
-  it('uses native Toolkit phases for controls, one advance, presentation, follow and picking before draw', () => {
+  it('uses native Babylon phases for controls, one advance, presentation, follow and picking before draw', () => {
     render(frame({}), 0, false); // native start follows the initial awake render
     expect(world.initialized).toBe(true);
-    expect(scene.isPhysicsEnabled()).toBe(false);
+    expect(scene.isPhysicsEnabled()).toBeFalsy();
     const order: string[] = [];
     const controls = world.camera.controls.bind(world.camera);
     vi.spyOn(world.camera, 'controls').mockImplementation((...args) => {
@@ -239,16 +245,43 @@ describe('WorldScene with the exported character and authored scene', () => {
     vi.spyOn(world.selection, 'pick').mockImplementation(() => {
       world.selection.cell = { column: 6, row: 5 };
     });
-    const place = vi.spyOn(bridge, 'place');
+    const place = vi.spyOn(placement, 'place');
     const pressed = { kind: 'button', held: true, pressed: true, released: false } as const;
     render(frame({ build: pressed, confirm: pressed }), 0.01);
     expect(session.view.tick).toBe(0);
-    expect(session.view.lastCommandResult).toBeNull();
+    expect(session.acknowledgements).toEqual([]);
     expect(place).toHaveBeenCalledTimes(1);
     render(frame({}), 0.25);
     expect(session.view.tick).toBe(5);
-    expect(session.view.lastCommandResult).not.toBeNull();
+    expect(session.acknowledgements.length).toBeGreaterThan(0);
     expect(place).toHaveBeenCalledTimes(1);
+  });
+
+  it('validates previews only during placement and when relevant completed data changes', () => {
+    const completed = session.readView();
+    const sample = vi.spyOn(bridge, 'frame').mockReturnValue(completed);
+    vi.spyOn(world.selection, 'pick').mockImplementation(() => {
+      world.selection.cell = { column: 6, row: 5 };
+    });
+    const preview = vi.spyOn(placement, 'preview');
+    render(frame({}), 0);
+    expect(preview).not.toHaveBeenCalled();
+    render(frame({ build: { kind: 'button', held: true, pressed: true, released: false } }), 0);
+    expect(preview).toHaveBeenCalledTimes(1);
+    render(frame({}), 0);
+    expect(preview).toHaveBeenCalledTimes(1);
+    sample.mockReturnValue({
+      ...completed,
+      player: {
+        ...completed.player,
+        position: { ...completed.player.position, x: completed.player.position.x + 0.1 },
+      },
+    });
+    render(frame({}), 0);
+    expect(preview).toHaveBeenCalledTimes(2);
+    sample.mockReturnValue({ ...completed, deposits: [...completed.deposits] });
+    render(frame({}), 0);
+    expect(preview).toHaveBeenCalledTimes(3);
   });
 
   function project(point: Vector3) {
@@ -303,7 +336,7 @@ describe('WorldScene with the exported character and authored scene', () => {
       otherWorld = await WorldScene.create(
         otherScene,
         otherDefinition,
-        { developerFixture: true },
+        { ...testScenePorts(bridge), placement, developerFixture: true },
         fixture.loadCharacter,
       );
       await otherScene.whenReadyAsync();
@@ -685,7 +718,9 @@ describe('WorldScene with the exported character and authored scene', () => {
     scene.activeCamera = null;
     const beforeUpdates = scene.onBeforeRenderObservable.observers.length;
     // Keep a cold glTF construction-failure check alongside the snapshot behavior cases.
-    await expect(WorldScene.create(scene, definition)).rejects.toThrow('authored ArcRotateCamera');
+    await expect(WorldScene.create(scene, definition, testScenePorts(bridge))).rejects.toThrow(
+      'authored ArcRotateCamera',
+    );
     expect(scene.getTransformNodeByName('world-scripts')).toBeNull();
     expect(scene.getTransformNodeByName('player-visual')).toBeNull();
     expect(scene.meshes.some((mesh) => mesh.name.startsWith('entity:'))).toBe(false);

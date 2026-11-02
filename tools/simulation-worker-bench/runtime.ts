@@ -45,15 +45,22 @@ export function movementProbe(): WorldView[] {
   const simulation = new Simulation(definition, { developerFixture: true });
   const views: WorldView[] = [];
   for (let i = 0; i < 1000; i++) {
+    let commands: import('../../src/contracts/world.ts').WorldCommand[] = [];
     if (i % 79 === 0)
-      simulation.enqueue({
+      commands.push({
         type: 'place',
         buildingId: 'test-building',
         cell: { column: i % 10, row: 3 },
         rotation: 0,
       });
-    if (i % 113 === 0) simulation.clearInput();
-    simulation.step({ x: i % 160 < 80 ? 1 : -1, z: i % 100 < 50 ? 1 : -1, sprint: i % 70 < 20 });
+    if (i % 113 === 0) {
+      commands = [];
+      simulation.clearInput();
+    }
+    simulation.step(
+      { x: i % 160 < 80 ? 1 : -1, z: i % 100 < 50 ? 1 : -1, sprint: i % 70 < 20 },
+      commands,
+    );
     if (i % 10 === 0 || i === 999) views.push(simulation.view);
   }
   return views;

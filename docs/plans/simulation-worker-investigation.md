@@ -45,9 +45,9 @@ Use the [lean method](../reports/simulation-worker/2026-10-30/methodology.md) an
 
 Read and map the implemented contracts before writing the prototype:
 
-- [`GameSession`](../../src/app/features/game/session/game-session.ts) owns the synchronous accumulator, movement state, ordered tick registrations, command submission and completed view.
+- [`GameSession`](../../src/session/game-session.ts) owns the synchronous accumulator, movement state, ordered tick registrations, command submission and completed view.
 - [`GameRuntimeService`](../../src/app/features/game/game-runtime.service.ts) composes pause/input ownership and currently expects `session.frame` to return the just-completed view synchronously.
-- [`WorldSessionBridge`](../../src/contracts/game-client.ts), [`GameTickHandler`](../../src/contracts/game-tick.ts) and the Toolkit bindings connect renderer input/hooks to that session.
+- [`WorldSessionBridge`](../../src/contracts/game-client.ts), [`GameTickHandler`](../../src/contracts/game-tick.ts) and the presentation bindings connect renderer input/hooks to that session.
 - [`Simulation`](../../src/simulation/simulation.ts), [`PlayerMotor`](../../src/simulation/player-motor.ts) and [`WorldView`](../../src/contracts/world.ts) provide the implemented plain-state fixture and authoritative movement reference.
 - The [ECS laboratory](../../tools/ecs-bench/README.md) supplies both [Miniplex](../../tools/ecs-bench/adapters/miniplex.ts) and [bitECS](../../tools/ecs-bench/adapters/bitecs.ts) adapters, deterministic synthetic fixtures, command rules, capture and correctness oracle. Its synthetic processors are not future gameplay implementations.
 

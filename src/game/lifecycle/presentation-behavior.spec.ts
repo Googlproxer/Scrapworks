@@ -3,10 +3,9 @@ import { NullEngine } from '@babylonjs/core/Engines/nullEngine';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import { Scene } from '@babylonjs/core/scene';
-import { SceneManager } from '@babylonjs-toolkit/next/scenemanager';
 import type { GameTickContext, GameTickHandler } from '@contracts/game-tick';
-import { attachScriptsInOrder } from './attach-scripts-in-order';
-import { GameplayScript, type GameplayScriptOptions } from './gameplay-script';
+import { attachPresentationBehaviors } from './attach-presentation-behaviors';
+import { PresentationBehavior, type PresentationBehaviorOptions } from './presentation-behavior';
 
 class TickSource {
   public readonly handlers = new Set<GameTickHandler>();
@@ -32,7 +31,7 @@ class TickSource {
   }
 }
 
-class RecordingScript extends GameplayScript {
+class RecordingScript extends PresentationBehavior {
   public onUpdateAction?: () => void;
   public onTickAction?: () => void;
 
@@ -41,7 +40,7 @@ class RecordingScript extends GameplayScript {
     scene: Scene,
     private readonly events: string[],
     private readonly name: string,
-    options: GameplayScriptOptions = {},
+    options: PresentationBehaviorOptions = {},
   ) {
     super(transform, scene, options, name);
   }
@@ -69,16 +68,13 @@ class RecordingScript extends GameplayScript {
   }
 }
 
-describe('GameplayScript with native Toolkit lifecycle', () => {
+describe('PresentationBehavior with native Babylon lifecycle', () => {
   let engine: NullEngine;
   let scene: Scene;
   let events: string[];
   let ticks: TickSource;
-  let previousPlaying: boolean;
 
   beforeEach(() => {
-    previousPlaying = SceneManager.ScenePlaying;
-    SceneManager.ScenePlaying = true;
     engine = new NullEngine();
     scene = new Scene(engine);
     new FreeCamera('camera', Vector3.Zero(), scene);
@@ -89,11 +85,10 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
   afterEach(() => {
     scene.dispose();
     engine.dispose();
-    SceneManager.ScenePlaying = previousPlaying;
     vi.restoreAllMocks();
   });
 
-  function script(name = 'player', options: GameplayScriptOptions = {}): RecordingScript {
+  function script(name = 'player', options: PresentationBehaviorOptions = {}): RecordingScript {
     return new RecordingScript(new TransformNode(name, scene), scene, events, name, {
       ticks,
       ...options,
@@ -101,33 +96,34 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
   }
 
   function initialize(): void {
-    scene.render(); // Toolkit awakens components on their first frame.
-    scene.render(); // Toolkit starts components on their second frame.
+    scene.render();
   }
 
   it('attaches once in explicit order and runs without physics or global runtime initialization', () => {
-    const initializeRuntime = vi.spyOn(SceneManager, 'InitializeRuntime');
     const later = script('later');
     const earlier = script('earlier');
     const registrations = [
       { script: later, order: 20 },
       { script: earlier, order: 10 },
     ];
-    attachScriptsInOrder(registrations);
-    attachScriptsInOrder(registrations);
+    attachPresentationBehaviors(registrations);
+    attachPresentationBehaviors(registrations);
     expect(earlier.initialized).toBe(false);
     scene.render();
-    expect(events).toEqual([]);
-    expect(ticks.handlers.size).toBe(0);
-    scene.render();
-    expect(events).toEqual(['earlier:start', 'later:start']);
+    expect(events).toEqual([
+      'earlier:start',
+      'later:start',
+      'earlier:update',
+      'later:update',
+      'earlier:late',
+      'later:late',
+    ]);
     expect(earlier.initialized).toBe(true);
     expect(ticks.handlers.size).toBe(2);
     events.length = 0;
     scene.render();
     expect(events).toEqual(['earlier:update', 'later:update', 'earlier:late', 'later:late']);
-    expect(scene.getPhysicsEngine()).toBeNull();
-    expect(initializeRuntime).not.toHaveBeenCalled();
+    expect(scene.getPhysicsEngine()).toBeFalsy();
   });
 
   it('registers tick hooks on start with their explicit order and never advances them from render', () => {
@@ -161,7 +157,7 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
   });
 
   it('does not register render-only components for gameplay ticks', () => {
-    class RenderOnlyScript extends GameplayScript {
+    class RenderOnlyScript extends PresentationBehavior {
       protected override onUpdate(): void {
         events.push('render');
       }
@@ -170,7 +166,6 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
     const visual = new RenderOnlyScript(new TransformNode('visual', scene), scene, { ticks });
     visual.attach();
     initialize();
-    scene.render();
     expect(events).toEqual(['render']);
     expect(ticks.registerCompletedTickHandler).not.toHaveBeenCalled();
   });
@@ -224,18 +219,14 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
     expect(events).toEqual(['player:update']);
   });
 
-  it('honors Toolkit scene suspension for gameplay ticks as well as frame hooks', () => {
+  it('propagates ordered update failures to the renderer boundary', () => {
     const player = script();
     player.attach();
-    initialize();
-    events.length = 0;
-    SceneManager.ScenePlaying = false;
-    scene.render();
-    ticks.emit();
-    expect(events).toEqual([]);
-    SceneManager.ScenePlaying = true;
-    ticks.emit();
-    expect(events).toEqual(['player:tick:1']);
+    player.onUpdateAction = () => {
+      throw new Error('frame probe');
+    };
+    expect(() => scene.render()).toThrow('frame probe');
+    expect(events).toEqual(['player:start', 'player:update']);
   });
 
   it.each(['component', 'node', 'scene'] as const)(
@@ -245,7 +236,6 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
       player.attach();
       initialize();
       const transform = player.transform;
-      expect(SceneManager.GetComponent(transform, 'player')).toBe(player);
       events.length = 0;
       if (owner === 'component') player.dispose();
       if (owner === 'node') transform.dispose();
@@ -256,7 +246,6 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
       expect(events).toEqual(['player:destroy']);
       expect(player.initialized).toBe(false);
       expect(ticks.handlers.size).toBe(0);
-      expect(SceneManager.GetComponent(transform, 'player')).toBeNull();
     },
   );
 
@@ -276,7 +265,7 @@ describe('GameplayScript with native Toolkit lifecycle', () => {
     const first = script('first', { isCurrent: () => current });
     const second = script('second', { isCurrent: () => current });
     first.onTickAction = () => (current = false);
-    attachScriptsInOrder([
+    attachPresentationBehaviors([
       { script: first, order: 1 },
       { script: second, order: 2 },
     ]);

@@ -1,9 +1,9 @@
 import type { TransformNode } from '@babylonjs/core/Meshes/transformNode';
-import { GameplayScript } from '../toolkit/gameplay-script';
+import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import type { WorldFrame } from './world-frame';
 
 /** The only active-frame call into the application-owned gameplay clock. */
-export class SessionDriver extends GameplayScript {
+export class SessionDriver extends PresentationBehavior {
   public constructor(
     node: TransformNode,
     private readonly frame: WorldFrame,
@@ -13,15 +13,11 @@ export class SessionDriver extends GameplayScript {
 
   protected override onUpdate(): void {
     const { session, seconds, movement, sprint, active } = this.frame;
-    if (!session) return;
     const view = session.frame(seconds, movement, sprint, active, this.frame.simulationActive);
-    this.frame.presentationActive =
-      this.frame.simulationActive && (session.isSimulationActive?.() ?? true);
+    this.frame.presentationActive = this.frame.simulationActive && session.isSimulationActive();
     this.frame.validateOwnership();
     this.frame.view = view;
-    this.frame.options.onWorldView?.(view);
-    this.frame.validateOwnership();
-    session.completeFrame?.();
+    session.completeFrame();
     this.frame.validateOwnership();
   }
 }

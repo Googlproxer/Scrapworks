@@ -1,15 +1,20 @@
+import { Subject } from 'rxjs';
+import type { RuntimeEvent, SessionEvent } from '@contracts/session-event';
 import type { GameTickContext, GameTickHandler } from '@contracts/game-tick';
 import type {
   CommandAcknowledgement,
   Inspection,
   RuntimeReply,
   RuntimeRequest,
+  RuntimeRequestBody,
   SequencedCommand,
   SimulationCapture,
 } from '@contracts/simulation';
 import {
   MAX_DETAIL_SUBSCRIPTIONS,
   MAX_PENDING_COMMANDS,
+  MAX_PENDING_SESSION_EVENTS,
+  assertRuntimeReply,
   requireInvariant as check,
 } from '@contracts/simulation';
 import type { WorldCommand, WorldDefinition, WorldView } from '@contracts/world';
@@ -19,6 +24,7 @@ import { PresentationCache, PublicationGapError } from './presentation-cache';
 
 export interface SessionOptions {
   developerFixture?: boolean;
+  freezeViews?: boolean;
   portFactory?: SimulationPortFactory;
   capture?: SimulationCapture;
   onFailure?: (error: Error) => void;
@@ -38,8 +44,26 @@ let nextGeneration = 0;
 export class GameSession {
   public readonly ready: Promise<void>;
   public readonly generation = ++nextGeneration;
-  public readonly cache = new PresentationCache();
-  public readonly acknowledgements: CommandAcknowledgement[] = [];
+  private readonly cache: PresentationCache;
+  private readonly eventSource = new Subject<SessionEvent>();
+  public readonly events$ = this.eventSource.asObservable();
+  private eventBuffer: RuntimeEvent[] = [];
+  private lastEvent = 0;
+
+  public get populationSize(): number {
+    return this.cache.size;
+  }
+
+  public get publication(): number {
+    return this.cache.version;
+  }
+
+  private readonly acknowledgementValues: CommandAcknowledgement[] = [];
+
+  public get acknowledgements(): readonly CommandAcknowledgement[] {
+    return this.acknowledgementValues;
+  }
+
   public maxPendingSteps = 0;
   public droppedSeconds = 0;
   public appliedInput = 0;
@@ -74,13 +98,15 @@ export class GameSession {
 
   constructor(definition: WorldDefinition, options: SessionOptions = {}) {
     this.definition = definition;
+    this.cache = new PresentationCache(options.freezeViews);
     this.options = { developerFixture: options.developerFixture, onFailure: options.onFailure };
     this.port = (options.portFactory ?? (() => new WorkerSimulationPort()))();
     this.unsubscribeFailure = this.port.subscribeFailure?.((error) => this.fail(error));
     try {
       // Commands can be queued before the worker's readiness reply arrives.
       this.nextCommand = options.capture?.ledger.accepted ?? 0;
-      const result = this.request('initialize', {
+      const result = this.request({
+        operation: 'initialize',
         definition,
         developerFixture: options.developerFixture,
         capture: options.capture,
@@ -149,15 +175,31 @@ export class GameSession {
 
   private consume(reply: RuntimeReply): RuntimeReply {
     check(
-      !this.disposed && reply.protocol === 1 && reply.generation === this.generation,
+      !this.disposed && reply.protocol === 2 && reply.generation === this.generation,
       'Stale/disposed session reply',
     );
     check(reply.ok, reply.error ?? 'Simulation failed');
     this.nextCommand = Math.max(this.nextCommand, reply.ledger.accepted);
     this.appliedInput = reply.appliedInput;
     for (const ack of reply.acknowledgements) {
-      this.acknowledgements.push(ack);
-      if (this.acknowledgements.length > MAX_PENDING_COMMANDS) this.acknowledgements.shift();
+      this.acknowledgementValues.push(ack);
+      if (this.acknowledgementValues.length > MAX_PENDING_COMMANDS)
+        this.acknowledgementValues.shift();
+    }
+    check(
+      reply.events.length + this.eventBuffer.length <= MAX_PENDING_SESSION_EVENTS,
+      'Session event overflow',
+    );
+    for (const value of reply.events) {
+      check(
+        Number.isSafeInteger(value.id) &&
+          value.id > 0 &&
+          Number.isSafeInteger(value.tick) &&
+          value.tick >= 0,
+        'Invalid session event',
+      );
+      if (value.id > this.lastEvent && !this.eventBuffer.some((pending) => pending.id === value.id))
+        this.eventBuffer.push(value);
     }
     if (reply.packet) {
       try {
@@ -169,7 +211,7 @@ export class GameSession {
         this.notifications = [];
         this.resynchronizing = Promise.resolve()
           .then(async () => {
-            await this.request('resync');
+            await this.request({ operation: 'resync' });
           })
           .catch((cause: unknown) => this.fail(cause))
           .finally(() => {
@@ -188,28 +230,46 @@ export class GameSession {
     }
     if (reply.packet || reply.watch)
       for (const [id, listeners] of this.detailListeners) {
-        const value = this.cache.details.get(id) ?? null;
+        const value = this.cache.detail(id) ?? null;
         for (const listener of listeners) listener(value ? structuredClone(value) : null);
       }
+    if (this.cache.version) {
+      const available = this.eventBuffer;
+      this.eventBuffer = [];
+      for (const value of available) {
+        check(value.tick <= this.readView().tick, 'Event ahead of publication');
+        if (this.disposed || this.failed) break;
+        this.lastEvent = value.id;
+        this.eventSource.next({ ...value, generation: this.generation });
+      }
+    }
     return reply;
   }
 
-  private request(
-    operation: RuntimeRequest['operation'],
-    fields: Partial<RuntimeRequest> = {},
-  ): RuntimeReply | Promise<RuntimeReply> {
+  private request(body: RuntimeRequestBody): RuntimeReply | Promise<RuntimeReply> {
     check(!this.disposed, 'Disposed session');
     const request: RuntimeRequest = {
-      ...fields,
-      protocol: 1,
+      ...body,
+      protocol: 2,
       id: ++this.requestSerial,
       generation: this.generation,
       revision: this.revision,
-      operation,
     };
     const value = this.port.send(request);
-    if (!(value instanceof Promise)) return this.consume(value);
-    const pending = value.then((reply) => this.consume(reply));
+
+    const accept = (reply: unknown) => {
+      assertRuntimeReply(reply);
+      check(
+        reply.id === request.id &&
+          reply.operation === request.operation &&
+          reply.revision === request.revision,
+        'Mismatched session reply',
+      );
+      return this.consume(reply);
+    };
+
+    if (!(value instanceof Promise)) return accept(value);
+    const pending = value.then(accept);
     this.pending.add(pending);
     void pending.then(
       () => this.pending.delete(pending),
@@ -226,6 +286,7 @@ export class GameSession {
     this.commands = [];
     this.captureCommands = [];
     this.notifications = [];
+    this.eventBuffer = [];
     this.port.dispose();
     this.options.onFailure?.(this.failure);
   }
@@ -305,7 +366,8 @@ export class GameSession {
     const commands = this.commands;
     this.commands = [];
     try {
-      const reply = this.request('advance', {
+      const reply = this.request({
+        operation: 'advance',
         steps,
         input: this.movement,
         inputSequence: ++this.inputSerial,
@@ -346,7 +408,7 @@ export class GameSession {
     this.commands = [];
     if (this.failed || this.disposed) return;
     try {
-      const result = this.request('activity', { active: !this.paused, commands });
+      const result = this.request({ operation: 'activity', active: !this.paused, commands });
       if (result instanceof Promise) void result.catch((error: unknown) => this.fail(error));
     } catch (error) {
       this.fail(error);
@@ -400,8 +462,8 @@ export class GameSession {
       await this.settled();
       const commands = this.captureCommands;
       this.captureCommands = [];
-      if (commands.length) await this.request('advance', { steps: 0, commands });
-      const reply = await this.request('capture');
+      if (commands.length) await this.request({ operation: 'advance', steps: 0, commands });
+      const reply = await this.request({ operation: 'capture' });
       check(reply.capture, 'Missing capture');
       return reply.capture;
     } catch (error) {
@@ -414,22 +476,20 @@ export class GameSession {
 
   public async resynchronize(): Promise<void> {
     await this.settled();
-    await this.request('resync');
+    await this.request({ operation: 'resync' });
     this.notifications = [];
   }
 
   public async inspect(id: string): Promise<Inspection | null> {
     await this.ready;
-    const reply = await this.request('inspect', { watch: [id] });
+    const reply = await this.request({ operation: 'inspect', watch: [id] });
     return reply.details?.find((d) => d.id === id) ?? null;
   }
 
   public subscribeDetails(id: string, listener: (value: Inspection | null) => void): () => void {
     const listeners = this.detailListeners.get(id) ?? new Set();
     check(
-      this.detailListeners.has(id) ||
-        this.detailListeners.size + (this.detailListeners.has(this.cache.playerId) ? 0 : 1) <
-          MAX_DETAIL_SUBSCRIPTIONS,
+      this.detailListeners.has(id) || this.detailListeners.size < MAX_DETAIL_SUBSCRIPTIONS,
       'Detail subscription limit',
     );
     listeners.add(listener);
@@ -449,7 +509,7 @@ export class GameSession {
       return;
     this.watching = true;
     this.watchDirty = false;
-    const watch = [...new Set([this.cache.playerId, ...this.detailListeners.keys()])];
+    const watch = [...this.detailListeners.keys()];
 
     const finish = (): void => {
       this.watching = false;
@@ -457,7 +517,7 @@ export class GameSession {
     };
 
     try {
-      const r = this.request('watch', { watch });
+      const r = this.request({ operation: 'watch', watch });
       if (r instanceof Promise)
         void r.then(finish, (error: unknown) => {
           finish();
@@ -470,21 +530,11 @@ export class GameSession {
     }
   }
 
-  public async disposeWorldForProfile(): Promise<void> {
-    await this.settled();
-    await this.request('dispose');
-    this.cache.dispose();
-    this.registrations.clear();
-    this.detailListeners.clear();
-    this.notifications = [];
-    this.commands = [];
-    this.captureCommands = [];
-    this.initialized = false;
-  }
-
   public dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.eventBuffer = [];
+    this.eventSource.complete();
     this.unsubscribeFailure?.();
     this.port.dispose();
     this.cache.dispose();

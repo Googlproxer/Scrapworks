@@ -1,11 +1,7 @@
+import { freezePresentation } from './freeze-presentation';
 import type { BuildingView, DepositDefinition, WorldView } from '@contracts/world';
 import type { GroundItemView } from '@contracts/opening';
-import type {
-  EntityData,
-  EntityMapping,
-  Inspection,
-  PresentationPacket,
-} from '@contracts/simulation';
+import type { EntityMapping, Inspection, PresentationPacket } from '@contracts/simulation';
 import {
   PRESENTATION_STRIDE as stride,
   MAX_DETAIL_SUBSCRIPTIONS,
@@ -16,6 +12,12 @@ export class PublicationGapError extends Error {}
 
 /** Main-thread presentation storage. No ECS import, component aliases or per-frame population scan. */
 export class PresentationCache {
+  private readonly freezeViews: boolean;
+
+  public constructor(freezeViews = false) {
+    this.freezeViews = freezeViews;
+  }
+
   private rows = new Float64Array(0);
   private mappings: (EntityMapping | undefined)[] = [];
   private readonly ids = new Map<string, EntityMapping>();
@@ -26,9 +28,22 @@ export class PresentationCache {
   private depositViews: readonly DepositDefinition[] = [];
   private buildingViews: readonly BuildingView[] = [];
   private current?: WorldView;
-  public readonly details = new Map<string, Inspection>();
-  public version = 0;
-  public playerId = '';
+  private readonly details = new Map<string, Inspection>();
+  private versionValue = 0;
+
+  public get version(): number {
+    return this.versionValue;
+  }
+
+  private playerIdValue = '';
+
+  public get playerId(): string {
+    return this.playerIdValue;
+  }
+
+  public detail(id: string): Inspection | undefined {
+    return this.details.get(id);
+  }
 
   public get size(): number {
     return this.ids.size;
@@ -42,7 +57,7 @@ export class PresentationCache {
   public apply(packet: PresentationPacket, generation: number): boolean {
     if (packet.version <= this.version) return false;
     if (!(
-      packet.schema === 1 &&
+      packet.schema === 2 &&
       Number.isSafeInteger(packet.version) &&
       Number.isSafeInteger(packet.base) &&
       packet.version === packet.base + 1 &&
@@ -200,7 +215,7 @@ export class PresentationCache {
       }
     }
     for (const detail of packet.details) this.details.set(detail.id, detail);
-    this.playerId = packet.playerId;
+    this.playerIdValue = packet.playerId;
     const player = this.ids.get(packet.playerId);
     check(player, 'Missing player presentation');
     const offset = player.slot * stride;
@@ -211,8 +226,8 @@ export class PresentationCache {
       this.groundViews = Array.from(this.ground.values());
     }
     const inventory: Record<string, number> = {};
-    const playerDetails = this.details.get(packet.playerId)?.entity;
-    for (const slot of playerDetails?.inventory?.slots ?? [])
+    const opening = packet.opening;
+    for (const slot of opening?.bag.slots ?? [])
       if (slot) inventory[slot.item] = (inventory[slot.item] ?? 0) + slot.quantity;
     this.current = {
       worldId: packet.worldId,
@@ -230,13 +245,12 @@ export class PresentationCache {
       endpoints: packet.endpoints,
       inventory,
       ...(packet.opening ? { opening: structuredClone(packet.opening) } : {}),
-      equipment: playerDetails?.equipment?.tool ? [playerDetails.equipment.tool] : [],
+      equipment: opening?.tool ? [opening.tool] : [],
       research: packet.research,
       productionTotals: packet.productionTotals,
       deposits: this.depositViews,
       buildings: this.buildingViews,
       ground: this.groundViews,
-      lastCommandResult: packet.lastCommandResult,
       changes: {
         full: packet.full,
         upsertedIds,
@@ -245,7 +259,8 @@ export class PresentationCache {
         buildings: changedBuildings,
       },
     };
-    this.version = packet.version;
+    if (this.freezeViews) freezePresentation(this.current);
+    this.versionValue = packet.version;
     return true;
   }
 
@@ -254,44 +269,6 @@ export class PresentationCache {
     this.details.clear();
     for (const detail of details)
       if (ids.includes(detail.id) && this.ids.has(detail.id)) this.details.set(detail.id, detail);
-  }
-
-  /** Independent field decoder assertion, used outside measured regions. */
-  public verify(entities: readonly EntityData[]): void {
-    check(
-      entities.length === this.ids.size && entities.every((e) => this.ids.has(e.id)),
-      'Presentation population mismatch',
-    );
-    for (const entity of entities) {
-      const m = this.ids.get(entity.id)!;
-      const offset = m.slot * stride,
-        t = entity.transform,
-        p = t?.position ?? entity.building?.position;
-      const expected = [
-        p?.x ?? 0,
-        p?.y ?? 0,
-        p?.z ?? 0,
-        t?.facing ?? 0,
-        (t ? 1 : 0) | (t?.moving ? 2 : 0) | (t?.sprinting ? 4 : 0),
-        entity.deposit?.quantity ?? entity.pile?.quantity ?? 0,
-        entity.work?.remaining ?? 0,
-        entity.charge?.value ?? 0,
-        entity.work?.reserved.reduce((n, s) => n + s.quantity, 0) ?? 0,
-        entity.work?.held.reduce((n, s) => n + s.quantity, 0) ?? 0,
-        entity.work?.status === 'active' ? 1 : entity.work?.status === 'blocked' ? 2 : 0,
-        entity.work?.completed ?? 0,
-      ];
-      check(
-        expected.every((value, field) => value === this.rows[offset + field + 2]),
-        `Presentation field mismatch: ${entity.id}`,
-      );
-      const detail = this.details.get(entity.id);
-      if (detail)
-        check(
-          JSON.stringify(detail.entity) === JSON.stringify(entity),
-          `Inspection mismatch: ${entity.id}`,
-        );
-    }
   }
 
   public dispose(): void {

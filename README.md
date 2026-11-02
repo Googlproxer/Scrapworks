@@ -12,14 +12,14 @@ Start with the [documentation index](docs/README.md), [3D cleanup record](docs/p
 
 The [migration plan](docs/plans/3d-migration.md) records the current integration and validation work. At Phase 7, update milestone progress and stop; migration work does not authorize continuing the later gameplay milestones.
 
-| Responsibility        | Direction                                                                                                         |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Application interface | Angular 22, signals, CDK dialogs/overlays, and SCSS.                                                              |
-| World presentation    | Babylon.js 9: rendering, camera, picking, animation, effects, and input adaptation.                               |
-| Scene authoring       | One Babylon.js Editor project in this repository. Attached scripts handle presentation and scene bindings.        |
+| Responsibility        | Direction                                                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Application interface | Angular 22, signals, CDK dialogs/overlays, and SCSS.                                                                                             |
+| World presentation    | Babylon.js 9: rendering, camera, picking, animation, effects, and input adaptation.                                                              |
+| Scene authoring       | One Babylon.js Editor project in this repository. Attached scripts handle presentation and scene bindings.                                       |
 | Gameplay              | Strict TypeScript 6, independent of Angular, Babylon, the DOM, and storage. A plain world/session owns fixed-step movement and footprint checks. |
-| Saves                 | Versioned plain snapshots through Dexie/IndexedDB; currently a test-data experiment.                              |
-| Tests                 | Vitest with Playwright/headless Chromium, plus separate lint-tooling checks.                                      |
+| Saves                 | Versioned plain snapshots through Dexie/IndexedDB; currently a test-data experiment.                                                             |
+| Tests                 | Vitest with Playwright/headless Chromium, plus separate lint-tooling checks.                                                                     |
 
 Keep gameplay rules and saved world state outside scene components. `GameClient` reports renderer lifecycle; it is not the world-state model.
 
@@ -43,26 +43,26 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 
 ## Development commands
 
-| Command                             | Purpose                                                                         |
-| ----------------------------------- | ------------------------------------------------------------------------------- |
-| `yarn dev` | Export scenes, start Angular, and watch saved authoring changes.                |
-| `yarn build` | Export scenes, then create a production build.                                  |
-| `yarn scenes:export` | Pack saved Editor inputs into generated browser assets and the script registry. |
-| `yarn test` | Export scenes and run the Chromium application suite once.                      |
-| `yarn test:unit` | Run Chromium UI, input/capture and Inspector ownership tests without creating Babylon engines. |
-| `yarn test:renderer` | Run the real Babylon device, Toolkit, renderer and authored-world integration tests. |
-| `yarn test:export` | Check staged export, retention, physics guards and watcher behavior.            |
-| `yarn test:game` | Typecheck and run Node simulation, domain, session and worker-transport tests. |
-| `yarn test:tools` | Typecheck tools and run compiler/export, resolver, dependency-audit and lint-rule tests. |
-| `yarn test:world` | Run focused authored marker compilation and world-export validation tests. |
-| `yarn test:acceptance` | Exercise the built game worker, movement, pause, crash/Retry and teardown; build with `--stats-json` first. |
-| `yarn test:workflow` | Verify dev reload/failure recovery in an isolated browser fixture.              |
-| `yarn test:watch` | Export scenes once, then watch application tests.                               |
-| `yarn test:setup` | Install the matching Playwright Chromium headless shell.                        |
-| `yarn lint` | Check TypeScript and Angular templates through the shared ESLint configuration. |
-| `yarn test:lint` | Check the custom rule and combined lint configuration.                          |
-| `yarn format` | Apply ESLint fixes and Prettier to application source.                          |
-| `node tools/cleanup/check-docs.ts` | Check documentation links, anchors, and Mermaid source consistency.             |
+| Command                            | Purpose                                                                                                     |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `yarn dev`                         | Export scenes, start Angular, and watch saved authoring changes.                                            |
+| `yarn build`                       | Export scenes, then create a production build.                                                              |
+| `yarn scenes:export`               | Pack saved Editor inputs into generated browser assets and the script registry.                             |
+| `yarn test`                        | Export scenes and run the Chromium application suite once.                                                  |
+| `yarn test:unit`                   | Run Chromium UI, input/capture and Inspector ownership tests without creating Babylon engines.              |
+| `yarn test:renderer`               | Run the real Babylon device, lifecycle, renderer and authored-world integration tests.                      |
+| `yarn test:export`                 | Check staged export, retention, physics guards and watcher behavior.                                        |
+| `yarn test:game`                   | Typecheck and run Node simulation, domain, session and worker-transport tests.                              |
+| `yarn test:tools`                  | Typecheck tools and run compiler/export, resolver, dependency-audit and lint-rule tests.                    |
+| `yarn test:world`                  | Run focused authored marker compilation and world-export validation tests.                                  |
+| `yarn test:acceptance`             | Exercise the built game worker, movement, pause, crash/Retry and teardown; build with `--stats-json` first. |
+| `yarn test:workflow`               | Verify dev reload/failure recovery in an isolated browser fixture.                                          |
+| `yarn test:watch`                  | Export scenes once, then watch application tests.                                                           |
+| `yarn test:setup`                  | Install the matching Playwright Chromium headless shell.                                                    |
+| `yarn lint`                        | Check TypeScript and Angular templates through the shared ESLint configuration.                             |
+| `yarn test:lint`                   | Check the custom rule and combined lint configuration.                                                      |
+| `yarn format`                      | Apply ESLint fixes and Prettier to application source.                                                      |
+| `node tools/cleanup/check-docs.ts` | Check documentation links, anchors, and Mermaid source consistency.                                         |
 
 Direct Angular targets need `yarn scenes:export` first. Do not rely on an old `public/scene/` export or generated `src/scripts.ts` from a previous checkout.
 
@@ -70,7 +70,7 @@ Occasional asset/repository audits, Editor connection checks and ECS/worker inve
 
 Plain game tests live under [tests/session and tests/simulation](tests/README.md), with browser acceptance probes under `tests/acceptance`. `yarn test:game` runs without Angular, scene export or a browser. Tool tests stay beside the tools they exercise. The [test audit](tests/README.md#audit-of-tests-previously-under-tools) records the separation and all relocated entry points.
 
-Use `yarn test:game` for plain simulation/session changes and `yarn test:unit` for browser UI/input changes, or `yarn test:unit --watch` while editing. The browser unit tests use client/device/scene doubles and run in Chromium for DOM, IndexedDB, focus and accessibility checks. They currently need scene export for the default factory's generated script imports, even though they never construct its renderer. `yarn test:renderer` covers the tests that need a real engine: browser device wiring, native Toolkit lifecycle, WebGL/context loss, authored assets, animation and picking. `yarn test` continues to run both Chromium groups and remains the CI gate. Add future engine-dependent suites to both test configurations in `angular.json`.
+Use `yarn test:game` for plain simulation/session changes and `yarn test:unit` for browser UI/input changes, or `yarn test:unit --watch` while editing. The browser unit tests use client/device/scene doubles and run in Chromium for DOM, IndexedDB, focus and accessibility checks. They currently need scene export for the default factory's generated script imports, even though they never construct its renderer. `yarn test:renderer` covers the tests that need a real engine: browser device wiring, native Babylon lifecycle, WebGL/context loss, authored assets, animation and picking. `yarn test` continues to run both Chromium groups and remains the CI gate. Add future engine-dependent suites to both test configurations in `angular.json`.
 
 Renderer behavior suites prepare the real authored world and character once per suite using [Babylon scene serialization](https://github.com/BabylonJS/Babylon.js/blob/master/packages/dev/core/src/Misc/sceneSerializer.ts). The test-only `AuthoredWorldFixture` retains JSON strings after disposing its source engine, then restores fresh geometry, materials, skeletons, animation groups and world definitions for each test. `WorldScene` tests reuse one engine's compiled shaders, reset render state and dimensions, and dispose every test scene; client lifecycle/context-loss tests retain separate engines. Scripts and simulation sessions are always reconstructed. An isolation regression mutates and disposes one owner while another remains usable. The client authored-load check, WorldScene construction-failure check and Angular Play Game/Retry tests still use the uncached production loaders, so snapshots do not replace end-to-end import coverage. Snapshots are rebuilt from the current exported assets on each test/watch run and are never committed.
 
@@ -92,21 +92,21 @@ The local Editor MCP package uses Yarn's `portal:` protocol so Windows and Linux
 
 ## Source and asset layout
 
-| Path                                                          | Purpose                                                                         |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `src/app/` | Angular UI, routed page, scoped runtime, viewport, and current save experiment. |
-| `src/contracts/` | Plain renderer lifecycle, client, and event contracts.                          |
-| `src/game/` | Active 3D presentation adapter and authored-scene loader.                       |
-| `src/simulation/` | Plain authoritative world, fixed movement and collision/placement rules. |
-| `src/session/` | Renderer-neutral host coordination, presentation cache and simulation ports. |
-| `src/core/` | Framework-independent utilities.                                                |
-| `tests/` | Node game tests, fixtures/reference oracle and real application acceptance probes. |
-| `scrapworks.bjseditor` , `assets/` | Authored Editor project and complete scene/asset sources.                       |
-| `public/scene/` , `src/scripts.ts` | Generated Editor exports and script map; ignored by Git.                        |
-| `public/assets/` | Browser-served assets, including existing runtime copies still in use.          |
-| `art/` | Blender projects, source artwork, references, prompts and provenance.           |
-| `docs/` | Design, plans, visual guidance, diagrams and current validation.          |
-| `tools/` | Scene export, Editor connection, art, diagram, and cleanup utilities.           |
+| Path                               | Purpose                                                                            |
+| ---------------------------------- | ---------------------------------------------------------------------------------- |
+| `src/app/`                         | Angular UI, routed page, scoped runtime, viewport, and current save experiment.    |
+| `src/contracts/`                   | Plain renderer lifecycle, client, and event contracts.                             |
+| `src/game/`                        | Active 3D presentation adapter and authored-scene loader.                          |
+| `src/simulation/`                  | Plain authoritative world, fixed movement and collision/placement rules.           |
+| `src/session/`                     | Renderer-neutral host coordination, presentation cache and simulation ports.       |
+| `src/core/`                        | Framework-independent utilities.                                                   |
+| `tests/`                           | Node game tests, fixtures/reference oracle and real application acceptance probes. |
+| `scrapworks.bjseditor` , `assets/` | Authored Editor project and complete scene/asset sources.                          |
+| `public/scene/` , `src/scripts.ts` | Generated Editor exports and script map; ignored by Git.                           |
+| `public/assets/`                   | Browser-served assets, including existing runtime copies still in use.             |
+| `art/`                             | Blender projects, source artwork, references, prompts and provenance.              |
+| `docs/`                            | Design, plans, visual guidance, diagrams and current validation.                   |
+| `tools/`                           | Scene export, Editor connection, art, diagram, and cleanup utilities.              |
 
 Gameplay coordinates use metres on an X/Z ground plane; Editor coordinates use centimetres. Saved marker metadata compiles to `public/scene/worlds/game.json` in the same staged export as the scenes. The simulation creates an empty-handed world from that definition; scene serialization is not a gameplay save. See [marker authoring](tools/world/README.md).
 

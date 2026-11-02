@@ -2,6 +2,7 @@ import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import type { ComponentType } from '@angular/cdk/overlay';
 import { DestroyRef, effect, inject, Injector, Service, untracked } from '@angular/core';
 import { take } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GameRuntimeService } from '../game/game-runtime.service';
 import {
   NotificationCenter,
@@ -27,6 +28,9 @@ export class UiService {
   private readonly openDialogs = new Set<Pick<DialogRef, 'close'>>();
 
   constructor() {
+    this.gameRuntimeService.events$
+      .pipe(takeUntilDestroyed())
+      .subscribe((event) => this.openingFeedback.handle(event));
     effect(() => {
       const world = this.gameRuntimeService.world?.() ?? null;
       untracked(() => this.openingFeedback.update(world));

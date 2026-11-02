@@ -1,3 +1,4 @@
+import { generateSceneRegistrations } from './scene-features.ts';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -90,8 +91,19 @@ export async function publishOutput(
   const output = path.join(root, 'public/scene');
   const next = path.join(stage, 'public/scene');
   const previous = path.join(stage, 'previous-scene');
-  const registry = path.join(root, 'src/scripts.ts');
-  const bytes = await fs.readFile(path.join(stage, 'src/scripts.ts'));
+  const registries = await Promise.all(
+    ['scripts.ts', 'scene-registrations.ts'].map(async (name) => ({
+      name,
+      next: await fs.readFile(path.join(stage, 'src', name)).catch((error: unknown) => {
+        if (hasCode(error, 'ENOENT')) return undefined;
+        throw error;
+      }),
+      previous: await fs.readFile(path.join(root, 'src', name)).catch((error: unknown) => {
+        if (hasCode(error, 'ENOENT')) return undefined;
+        throw error;
+      }),
+    })),
+  );
   // Validate absolute paths before moving any directory. Stages are workspace-local.
   if (
     path.dirname(stage) !== path.join(root, 'tmp/scene-export') ||
@@ -129,9 +141,23 @@ export async function publishOutput(
       await rename(file, target);
     }
     for (const name of oldNames) if (!newNames.has(name)) await fs.unlink(localPath(output, name));
-    await writeIfChanged(registry, bytes, path.join(stage, 'next-scripts.ts'));
+    for (const item of registries)
+      if (item.next)
+        await writeIfChanged(
+          path.join(root, 'src', item.name),
+          item.next,
+          path.join(stage, 'next-' + item.name),
+        );
   } catch (error) {
     try {
+      for (const item of registries) {
+        const target = path.join(root, 'src', item.name);
+        if (item.previous) await fs.writeFile(target, item.previous);
+        else
+          await fs.unlink(target).catch((error: unknown) => {
+            if (!hasCode(error, 'ENOENT')) throw error;
+          });
+      }
       for (const name of newNames)
         if (!oldNames.has(name))
           await fs.unlink(localPath(output, name)).catch((failure) => {
@@ -242,6 +268,7 @@ export async function exportProject(
       scene.physicsEnabled = false;
       await fs.writeFile(target, JSON.stringify(scene));
     }
+    await generateSceneRegistrations(stage);
     const policy = await readJson<ExportPolicy>(path.join(root, 'tools/scenes/export-policy.json'));
     const report = await retainSceneAssets(output, policy);
     signal?.throwIfAborted();

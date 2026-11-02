@@ -9,13 +9,6 @@ import { assertWorldDefinition } from '@contracts/world';
 import { cellCenter, cellInBounds } from '@core/world-grid';
 import { assertOpening } from './opening-capture';
 
-export const EMPTY_CONTENT: ContentDefinition = Object.freeze({
-  version: 'foundation-empty-v1',
-  items: Object.freeze({}),
-  recipes: Object.freeze({}),
-  technologies: Object.freeze([]),
-});
-
 const object = (v: unknown, keys?: readonly string[]): Record<string, unknown> => {
   check(!!v && typeof v === 'object' && !Array.isArray(v), 'Expected snapshot object');
   check(
@@ -83,7 +76,7 @@ function stack(v: unknown, content: ContentDefinition): void {
 }
 
 function inventory(v: unknown, content: ContentDefinition): asserts v is InventoryData {
-  const bag = object(v, ['slots', 'reservations']);
+  const bag = object(v, ['slots']);
   check(Array.isArray(bag['slots']) && bag['slots'].length <= 4096, 'Invalid inventory capacity');
   for (const slot of bag['slots'])
     if (slot !== null) {
@@ -91,48 +84,15 @@ function inventory(v: unknown, content: ContentDefinition): asserts v is Invento
       const s = slot as { item: string; quantity: number };
       check(s.quantity <= content.items[s.item].stackLimit, 'Overfull stack');
     }
-  check(
-    Array.isArray(bag['reservations']) && bag['reservations'].length <= 256,
-    'Invalid reservations',
-  );
-  const ids = new Set<string>();
-  const held = new Map<string, number>();
-  for (const value of bag['reservations']) {
-    const r = object(value, ['id', 'owner', 'items']);
-    const id = text(r['id']);
-    text(r['owner']);
-    check(!ids.has(id), 'Duplicate reservation ID');
-    ids.add(id);
-    check(Array.isArray(r['items']) && r['items'].length <= 256, 'Invalid reservation items');
-    for (const item of r['items']) {
-      stack(item, content);
-      const s = item as { item: string; quantity: number };
-      held.set(s.item, (held.get(s.item) ?? 0) + s.quantity);
-    }
-  }
-  for (const [item, count] of held) {
-    const total = bag['slots'].reduce((n: number, value: unknown) => {
-      const s = value as { item: string; quantity: number } | null;
-      return n + (s?.item === item ? s.quantity : 0);
-    }, 0);
-    check(count <= total, 'Reservation exceeds stock');
-  }
 }
 
 export function assertSnapshot(
   value: unknown,
   content: ContentDefinition,
 ): asserts value is SimulationSnapshot {
-  const s = object(value, [
-    'version',
-    'contentVersion',
-    'definition',
-    'resources',
-    'entities',
-    'lastCommandResult',
-  ]);
+  const s = object(value, ['version', 'contentVersion', 'definition', 'resources', 'entities']);
   check(
-    s['version'] === 1 && s['contentVersion'] === content.version,
+    s['version'] === 2 && s['contentVersion'] === content.version,
     'Unsupported snapshot/content version',
   );
   assertWorldDefinition(s['definition']);
@@ -144,7 +104,7 @@ export function assertSnapshot(
   text(resources['playerId']);
   number(resources['tick'], true);
   number(resources['nextEntityId'], true);
-  for (const key of ['productionTotals', 'extractionTotals', 'counters'])
+  for (const key of ['productionTotals', 'extractionTotals'])
     for (const n of Object.values(object(resources[key]))) number(n, true);
   for (const [id, value] of Object.entries(object(resources['research']))) {
     check(content.technologies.includes(id), 'Unknown technology');
@@ -175,9 +135,6 @@ export function assertSnapshot(
           'deposit',
           'pile',
           'building',
-          'owner',
-          'work',
-          'charge',
           'opening',
         ].includes(key),
       ),
@@ -187,13 +144,11 @@ export function assertSnapshot(
     check(!ids.has(id), 'Duplicate entity ID');
     ids.add(id);
     check(
-      ['player', 'deposit', 'pile', 'building', 'owner', 'processor'].includes(String(e['kind'])),
+      ['player', 'deposit', 'pile', 'building'].includes(String(e['kind'])),
       'Unknown entity kind',
     );
     const required: Record<string, string> = {
       player: 'transform',
-      owner: 'inventory',
-      processor: 'work',
       pile: 'pile',
       deposit: 'deposit',
       building: 'building',
@@ -235,37 +190,6 @@ export function assertSnapshot(
       number(d['quantity'], true);
     }
     if (e['pile']) stack(e['pile'], content);
-    if (e['charge']) {
-      const c = object(e['charge'], ['value', 'capacity']);
-      check(number(c['value']) <= number(c['capacity']), 'Invalid charge');
-    }
-    if (e['work']) {
-      const w = object(e['work'], [
-        'recipe',
-        'status',
-        'remaining',
-        'duration',
-        'completed',
-        'input',
-        'output',
-        'reserved',
-        'held',
-      ]);
-      check(
-        typeof w['recipe'] === 'string' && Object.hasOwn(content.recipes, w['recipe']),
-        'Unknown work recipe',
-      );
-      check(['active', 'idle', 'blocked'].includes(String(w['status'])), 'Invalid work status');
-      number(w['remaining']);
-      check(number(w['duration']) > 0, 'Invalid work duration');
-      number(w['completed'], true);
-      inventory(w['input'], content);
-      inventory(w['output'], content);
-      for (const key of ['reserved', 'held']) {
-        check(Array.isArray(w[key]) && w[key].length <= 256, 'Invalid work stock');
-        for (const item of w[key]) stack(item, content);
-      }
-    }
     if (e['building']) {
       const b = object(e['building'], [
         'id',
@@ -321,33 +245,5 @@ export function assertSnapshot(
       players[0].inventory?.slots.length === 24 &&
       players[0].equipment,
     'Invalid player components',
-  );
-  for (const e of entities) {
-    if (e.owner) check(ids.has(e.owner) && e.owner !== e.id, 'Invalid owner link');
-    for (const bag of [e.inventory, e.work?.input, e.work?.output])
-      for (const r of bag?.reservations ?? []) check(ids.has(r.owner), 'Invalid reservation owner');
-  }
-  const result = s['lastCommandResult'];
-  check(
-    result === null ||
-      (typeof object(result)['accepted'] === 'boolean' &&
-        (object(result)['reason'] === null ||
-          [
-            'invalid-cell',
-            'out-of-bounds',
-            'terrain',
-            'occupied',
-            'player-overlap',
-            'out-of-reach',
-            'unavailable',
-            'unknown-command',
-            'invalid-request',
-            'locked',
-            'missing-input',
-            'capacity',
-            'busy',
-            'depleted',
-          ].includes(String(object(result)['reason'])))),
-    'Invalid command result',
   );
 }

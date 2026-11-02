@@ -33,6 +33,16 @@ describe('SaveLoadComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('reports a failed import and retains the last committed occupancy', async () => {
+    await expect.poll(() => component.busy()).toBe(false);
+    saves.import.mockRejectedValueOnce(new Error('Storage rejected the import'));
+    await openPicker();
+    select(new File(['[]'], 'failed.json'));
+    await expect.poll(() => component.error()).toBe('Storage rejected the import');
+    expect(component.slots()[0].occupied).toBe(true);
+    expect(saves.loadAll).toHaveBeenCalledTimes(1);
+  });
+
   function select(file: File) {
     const transfer = new DataTransfer();
     transfer.items.add(file);
@@ -42,6 +52,7 @@ describe('SaveLoadComponent', () => {
 
   async function openPicker() {
     const click = vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => undefined);
+    await expect.poll(() => component.busy()).toBe(false);
     await component.import();
     fileInput = click.mock.contexts.at(-1) as HTMLInputElement;
   }
@@ -50,7 +61,7 @@ describe('SaveLoadComponent', () => {
     await openPicker();
     select(new File(['{"value":0.42}'], 'save.json'));
     fileInput.dispatchEvent(new Event('change'));
-    await expect.poll(() => saves.loadAll.mock.calls.length).toBe(1);
+    await expect.poll(() => saves.loadAll.mock.calls.length).toBe(2);
     expect(saves.import).toHaveBeenCalledExactlyOnceWith('{"value":0.42}');
     expect(component.slots()[0]).toMatchObject({ occupied: true, value: 0.42 });
   });

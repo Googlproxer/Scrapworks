@@ -1,3 +1,4 @@
+import { editableView } from '../../../testing/editable-view';
 import { Simulation } from '@simulation/simulation';
 import { NotificationCenter } from './notifications';
 import { OpeningFeedback } from './opening-feedback';
@@ -16,15 +17,24 @@ describe('Opening notifications', () => {
     const center = new NotificationCenter();
     try {
       const feedback = new OpeningFeedback(center);
-      const view = structuredClone(simulation.view);
+      const view = editableView(simulation.view);
       feedback.update(view);
       expect(center.visible()).toEqual([]);
       const rejected = {
-        ...view,
-        lastCommandResult: { accepted: false, reason: 'missing-input' as const },
+        generation: 1,
+        id: 1,
+        tick: 1,
+        event: {
+          kind: 'command-result' as const,
+          acknowledgement: {
+            sequence: 1,
+            tick: 1,
+            result: { accepted: false, reason: 'missing-input' as const },
+          },
+        },
       };
-      feedback.update(rejected);
-      feedback.update(structuredClone(rejected));
+      feedback.handle(rejected);
+      feedback.handle({ ...rejected, id: 2 });
       expect(center.visible()).toHaveLength(1);
       expect(center.visible()[0].message).toContain('required materials');
       view.opening!.state.fieldTechnology = 'improvised-tools';
@@ -34,12 +44,19 @@ describe('Opening notifications', () => {
       view.opening!.state.fieldEnabled = false;
       feedback.update(view);
       expect(center.visible().some((n) => n.key === 'research-wait')).toBe(false);
-      view.opening!.state.message = 'Improvised tools researched. Its recipes are now available.';
-      feedback.update(view);
-      feedback.update(structuredClone(view));
+      feedback.handle({
+        generation: 1,
+        id: 3,
+        tick: 2,
+        event: { kind: 'research-completed', technology: 'improvised-tools' },
+      });
       expect(center.visible().filter((n) => n.title === 'Research complete')).toHaveLength(1);
-      view.opening!.state.message = 'Batch stopped: the next unit needs materials or space.';
-      feedback.update(view);
+      feedback.handle({
+        generation: 1,
+        id: 4,
+        tick: 2,
+        event: { kind: 'handcraft-ended', recipe: 'metal-plate', reason: 'stock-or-space' },
+      });
       expect(center.visible().at(-1)?.tone).toBe('warning');
     } finally {
       center.destroy();

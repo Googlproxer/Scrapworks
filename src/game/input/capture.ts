@@ -8,7 +8,7 @@ import {
   type IWheelEvent,
   PointerInput,
   XboxInput,
-} from '@babylonjs/core';
+} from '@babylonjs/core/pure';
 import type { ButtonControl, MouseButton, PadButton, RawInput } from '@contracts/input';
 import { ActionEvaluator } from './evaluator/evaluator';
 import { controlId } from './evaluator/evaluator.helpers';

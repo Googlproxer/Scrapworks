@@ -1,12 +1,12 @@
 import type { AssetContainer } from '@babylonjs/core/assetContainer';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import type { Scene } from '@babylonjs/core/scene';
-import type { GameClientOptions } from '@contracts/game-client';
+import type { WorldScenePorts } from './world-scene-ports';
 import type { ActionFrame } from '@contracts/input';
 import type { WorldDefinition } from '@contracts/world';
 import { loadCharacter, type CharacterLoader } from '../assets/load-character';
-import { attachScriptsInOrder } from '../toolkit/attach-scripts-in-order';
-import type { GameplayScript } from '../toolkit/gameplay-script';
+import { attachPresentationBehaviors } from '../lifecycle/attach-presentation-behaviors';
+import type { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import { CameraController } from './camera-controller';
 import { EntityViews } from './entity-views';
 import { PlacementController } from './placement-controller';
@@ -19,7 +19,7 @@ import { attachDebugDraw, debugDrawForScene } from '../debug/draw/debug-draw';
 import type { DebugAttachment } from '../debug/draw/types';
 import { PLACEMENT_REACH, PLAYER_RADIUS } from '@simulation/world-rules';
 
-/** Composition only: Toolkit invokes the explicitly ordered scripts during scene.render(). */
+/** Composition only: native Babylon hooks invoke ordered behaviors during scene.render(). */
 export class WorldScene {
   public readonly player: PlayerView;
   public readonly playerController: PlayerController;
@@ -29,7 +29,7 @@ export class WorldScene {
   public readonly placement: PlacementController;
   private readonly frame: WorldFrame;
   private readonly owner: TransformNode;
-  private readonly scripts: GameplayScript[] = [];
+  private readonly scripts: PresentationBehavior[] = [];
   private readonly debugAttachments: DebugAttachment[] = [];
   private disposed = false;
 
@@ -37,14 +37,14 @@ export class WorldScene {
     scene: Scene,
     definition: WorldDefinition,
     character: AssetContainer,
-    options: GameClientOptions,
+    options: WorldScenePorts,
   ) {
     this.frame = new WorldFrame(options);
     this.owner = new TransformNode('world-scripts', scene);
     const player =
       scene.getTransformNodeByName('player-visual') ?? new TransformNode('player-visual', scene);
 
-    const own = <T extends GameplayScript>(script: T): T => {
+    const own = <T extends PresentationBehavior>(script: T): T => {
       this.scripts.push(script);
       return script;
     };
@@ -69,7 +69,7 @@ export class WorldScene {
           }),
         );
       this.entities = own(new EntityViews(this.owner, definition, this.frame));
-      this.camera = own(new CameraController(this.owner, player, this.entities, this.frame));
+      this.camera = own(new CameraController(this.owner, player, this.frame));
       this.playerController = own(new PlayerController(player, this.frame, this.camera));
       this.player = own(new PlayerView(player, character, this.frame));
       this.selection = own(new SelectionController(this.owner, definition, this.frame));
@@ -80,7 +80,7 @@ export class WorldScene {
       // Numeric phase order, deliberately independent of construction/array order.
       // Native update: controls -> input -> session -> player/entities.
       // Native late: camera follow -> selection -> placement, all before drawing.
-      attachScriptsInOrder([
+      attachPresentationBehaviors([
         { script: this.camera, order: 10 },
         { script: this.playerController, order: 20 },
         { script: driver, order: 30 },
@@ -102,10 +102,12 @@ export class WorldScene {
   public static async create(
     scene: Scene,
     definition: WorldDefinition,
-    options: GameClientOptions = {},
+    options: WorldScenePorts,
     loadCharacterFn: CharacterLoader = loadCharacter,
   ): Promise<WorldScene> {
+    const camera = scene.activeCamera;
     const character = await loadCharacterFn(scene);
+    scene.activeCamera = camera;
     if (scene.isDisposed) {
       character.dispose();
       throw new Error('Character owner was disposed.');

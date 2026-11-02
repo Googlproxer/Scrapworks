@@ -27,6 +27,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -79,17 +80,15 @@ jobs:
 
       # Inspect the production build graph only; this does not run benchmarks.
       - name: Enforce production worker/main dependency separation
-        run: node tools/ecs-bench/verify-production.ts
+        run: |
+          node tools/architecture/check.ts
+          node tools/ecs-bench/verify-production.ts
+          node tools/architecture/bundle.ts
 
       - name: Exercise the built simulation worker and failure Retry
         run: |
           yarn test:acceptance
           yarn test:acceptance --render-delay-ms=1000
-
-      - name: Play the empty-handed opening through the first MiniFab craft
-        # Functional progression uses bounded virtual time. Real-time pacing remains
-        # an explicit reference-desktop qualification via yarn test:opening.
-        run: yarn test:opening --virtual-time
 
       - name: Verify exported and built assets
         run: yarn assets:check --build

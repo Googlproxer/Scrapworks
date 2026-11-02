@@ -1,27 +1,29 @@
+import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { Ray } from '@babylonjs/core/Culling/ray';
 import type { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import type { ActionFrame } from '@contracts/input';
 import { actionHeld } from '../input/action-state';
-import type { EntityViews } from './entity-views';
-import { GameplayScript } from '../toolkit/gameplay-script';
+import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import type { WorldFrame } from './world-frame';
 
-export class CameraController extends GameplayScript {
+export class CameraController extends PresentationBehavior {
   public readonly camera: ArcRotateCamera;
+  private faded?: { mesh: AbstractMesh; visibility: number };
 
   public constructor(
     node: TransformNode,
     private readonly player: TransformNode,
-    private readonly entities: EntityViews,
     private readonly frame: WorldFrame,
   ) {
     super(node, node.getScene(), frame.scriptOptions, 'CameraController');
     const scene = node.getScene();
     const camera = scene.activeCamera;
     if (!(camera instanceof ArcRotateCamera))
-      throw new Error('Game requires an authored ArcRotateCamera.');
+      throw new Error(
+        `Game requires an authored ArcRotateCamera; received ${camera?.getClassName() ?? 'no active camera'}.`,
+      );
     this.camera = camera;
     camera.lowerBetaLimit = Math.PI / 9;
     camera.upperBetaLimit = (Math.PI * 5) / 12;
@@ -82,13 +84,29 @@ export class CameraController extends GameplayScript {
     );
 
     this.camera.getViewMatrix(true);
-    for (const entity of this.entities.values()) entity.mesh.visibility = 1;
     const direction = target.subtract(this.camera.position),
       length = direction.length();
     const hit = this.scene.pickWithRay(
       new Ray(this.camera.position, direction.normalize(), length),
       (mesh) => !!mesh.metadata?.worldEntity,
     );
-    if (hit?.hit && hit.pickedMesh) hit.pickedMesh.visibility = 0.25;
+    const mesh = hit?.hit ? hit.pickedMesh : null;
+    if (mesh !== this.faded?.mesh) {
+      this.restoreOcclusion();
+      if (mesh) {
+        this.faded = { mesh, visibility: mesh.visibility };
+        mesh.visibility = Math.min(mesh.visibility, 0.25);
+      }
+    }
+  }
+
+  private restoreOcclusion(): void {
+    if (this.faded && !this.faded.mesh.isDisposed())
+      this.faded.mesh.visibility = this.faded.visibility;
+    this.faded = undefined;
+  }
+
+  protected override onDestroy(): void {
+    this.restoreOcclusion();
   }
 }

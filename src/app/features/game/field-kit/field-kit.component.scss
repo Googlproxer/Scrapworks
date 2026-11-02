@@ -72,14 +72,14 @@ header {
   grid-template-columns: 1fr 1fr 1.15fr;
   gap: 20px;
 }
-.workbench > section {
+.workbench > * {
   min-width: 0;
   overflow: auto;
   overscroll-behavior: contain;
   padding-right: 8px;
   scrollbar-gutter: stable;
 }
-.workbench > section + section {
+.workbench > * + * {
   border-left: 1px solid #526a61;
   padding-left: 16px;
 }
@@ -255,11 +255,11 @@ summary {
     overflow: auto;
     overscroll-behavior: contain;
   }
-  .workbench > section {
+  .workbench > * {
     overflow: visible;
     padding: 0 0 16px;
   }
-  .workbench > section + section {
+  .workbench > * + * {
     border-left: 0;
     border-top: 1px solid #526a61;
   }

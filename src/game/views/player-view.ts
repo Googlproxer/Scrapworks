@@ -3,7 +3,7 @@ import type { AnimationGroup } from '@babylonjs/core/Animations/animationGroup';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import type { WorldView } from '@contracts/world';
-import { GameplayScript } from '../toolkit/gameplay-script';
+import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import type { WorldFrame } from './world-frame';
 
 const characterClips = ['Idle', 'Walk', 'Run'];
@@ -11,7 +11,7 @@ const characterClips = ['Idle', 'Walk', 'Run'];
 const referenceSpeeds = { Walk: 1.7707664, Run: 3.9823594 };
 const facingSpeeds = { moving: Math.PI * 1.5, left: 1.3453665, right: 1.3463967 };
 
-export class PlayerView extends GameplayScript {
+export class PlayerView extends PresentationBehavior {
   private readonly animations = new Map<string, AnimationGroup>();
   private activeClip = 'Idle';
   private readonly weights = new Map<string, number>();

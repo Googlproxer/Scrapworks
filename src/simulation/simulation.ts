@@ -6,10 +6,4 @@ export {
   WALK_SPEED,
 } from './ecs-runtime';
 
-export type {
-  MovementIntent,
-  SimulationOptions,
-  SimulationEntity,
-  SimulationSystem,
-  SystemContext,
-} from './ecs-runtime';
+export type { MovementIntent, SimulationOptions } from './ecs-runtime';

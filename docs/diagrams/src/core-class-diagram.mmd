@@ -8,12 +8,12 @@ classDiagram
     }
     class GameClient {
         <<interface>>
-        +subscribe(listener)
+        state$ and typed notification streams
         +setScene(key)
         +destroy()
     }
     class BabylonGameClient {
-        +subscribe(listener)
+        state$ and typed notification streams
         +setScene(key)
         +destroy()
     }
@@ -26,9 +26,9 @@ classDiagram
         +view
     }
     class Simulation {
-        +enqueue(command)
-        +step(movement)
-        +view
+        +step(movement, commandBatch)
+        detached SimulationStepResult
+        +publish() and capture()
     }
     class PlayerMotor {
         movement and collision
@@ -79,15 +79,15 @@ classDiagram
         <<data>>
         lean numeric cache and bounded details
         movement presentation
-        command result
+        deeply readonly completed data
     }
     class WorldScene {
         compose scripts and entity views
         explicit frame phases
         +dispose()
     }
-    class GameplayScript {
-        Toolkit lifecycle
+    class PresentationBehavior {
+        Native Babylon lifecycle
         optional onGameTick(context)
         automatic tick subscription
     }
@@ -97,8 +97,6 @@ classDiagram
         +frame(seconds, movement, sprint, active, simulationActive)
         +completeFrame()
         +registerCompletedTickHandler(handler, order)
-        +place(cell, rotation)
-        +preview(cell, rotation)
     }
     class InputManager {
         +takeFrame()
@@ -149,8 +147,8 @@ classDiagram
     PresentationCache ..> WorldView : exposes completed data
     WorldScene ..> WorldView : displays completed state
     GameSession ..> WorldView : exposes current view
-    WorldScene "1" *-- "many" GameplayScript : composes core objects
-    GameplayScript ..> WorldSessionBridge : sends intent and registers ticks
+    WorldScene "1" *-- "many" PresentationBehavior : composes core objects
+    PresentationBehavior ..> WorldSessionBridge : sends intent and registers ticks
     WorldScene ..> WorldSessionBridge : advances once per frame
     GameRuntimeService --> WorldSessionBridge : supplies guarded adapter
     WorldSessionBridge ..> GameSession : delegates to current session

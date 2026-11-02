@@ -1,12 +1,10 @@
 import { AssetContainer } from '@babylonjs/core/assetContainer';
 import { SceneLoaderFlags } from '@babylonjs/core/Loading/sceneLoaderFlags';
 import type { Scene } from '@babylonjs/core/scene';
-// Register Babylon's serialized types so ordinary Editor changes remain loadable.
-import '@babylonjs/core';
-// Editor materials such as GridMaterial register their serialized classes here.
-import '@babylonjs/materials';
+import '../../scene-registrations';
 import type { SceneKey } from '@contracts/game-state';
-import { loadScene, scriptsMap } from '../../scripts';
+import { scriptsMap } from '../../scripts';
+import { loadScene } from 'babylonjs-editor-tools/loading/loader';
 
 type AuthoredSceneKey = Extract<SceneKey, 'MainMenu' | 'Game'>;
 
@@ -25,7 +23,12 @@ export async function loadEditorScene(
   await loadScene(rootUrl, filenames[key], scene, scriptsMap);
   // Scene ownership starts before loading. A disposed scene must never re-enter the client.
   if (scene.isDisposed) throw new Error('Scene was disposed while loading');
-  const camera = scene.activeCamera;
+  const cameraId: unknown = scene.metadata?.activeCameraId;
+  const camera = typeof cameraId === 'string' ? scene.getCameraById(cameraId) : scene.activeCamera;
+  if (!camera)
+    throw new Error(
+      `Authored scene ${key} has no registered active camera (${scene.cameras.map((entry) => `${entry.id}:${entry.getClassName()}`).join(', ')}; requested ${String(cameraId)}).`,
+    );
   const assets = new AssetContainer(scene);
   assets.moveAllFromScene();
   scene.activeCamera = camera;

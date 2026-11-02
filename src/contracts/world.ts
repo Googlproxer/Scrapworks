@@ -121,7 +121,6 @@ export interface WorldView {
   readonly productionTotals: Readonly<Record<string, number>>;
   readonly deposits: readonly DepositDefinition[];
   readonly buildings: readonly BuildingView[];
-  readonly lastCommandResult: CommandResult | null;
 }
 
 /** Validate the versioned JSON boundary before constructing a session. */

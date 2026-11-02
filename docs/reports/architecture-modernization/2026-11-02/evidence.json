@@ -1,0 +1,92 @@
+{
+  "recordedAt": "2026-11-02T07:35:15.942Z",
+  "baselineRevision": "16951310aa51fcef6b9b40293a26b85b5ceab733",
+  "delivery": "Uncommitted working tree; no publication or deployment",
+  "source": {
+    "files": 148,
+    "sha256": "31a7a192e7cbd5bcc13a441a07f7eeb35210a9d61e915c63b373fb657744705f",
+    "packageJson": "a72fb62065bd4c2abaff2953e830547c7ef4732e1d699a72633a9ed151d01686",
+    "yarnLock": "ac279dbc53f61698c82a98d609b532d42c25ed53e0748d46f7744943f6bc1962"
+  },
+  "bundle": {
+    "baselineBytes": 13349796,
+    "completedBytes": 4090975,
+    "reduction": 0.6935552423422799,
+    "baselineMetadataSha256": "0d1c652a1c3459828641ab87fa5ddd63da258a469f877070c30498d823ebebc9",
+    "completedMetadataSha256": "7ecdd97d0a472d9c88189ae499e0a979b1dd27476393b5313a40e859072ed5e6",
+    "graph": {
+      "mainInputs": 1818,
+      "workerInputs": 23,
+      "worker": "worker-MXEJ5EYU.js"
+    },
+    "workerBytes": 63270
+  },
+  "validation": {
+    "nodeTests": 128,
+    "chromiumTests": 331,
+    "dependencyAuditFindings": 0,
+    "productionWorker": "ok",
+    "stalledWorker": "ok",
+    "openingSuccess": true,
+    "openingTimingMode": "virtual-time",
+    "openingPacingQualified": false,
+    "openingGameSeconds": 238.45000000000002,
+    "liveInspector": {
+      "status": "passed",
+      "opened": true,
+      "closed": true,
+      "errors": []
+    },
+    "benchmarkCases": 10,
+    "checks": [
+      {
+        "check": "application types",
+        "status": 0
+      },
+      {
+        "check": "spec types",
+        "status": 0
+      },
+      {
+        "check": "worker types",
+        "status": 0
+      },
+      {
+        "check": "game types",
+        "status": 0
+      },
+      {
+        "check": "reference types",
+        "status": 0
+      },
+      {
+        "check": "tool types",
+        "status": 0
+      },
+      {
+        "check": "lint",
+        "status": 0
+      },
+      {
+        "check": "documentation",
+        "status": 0
+      },
+      {
+        "check": "boundaries",
+        "status": 0
+      },
+      {
+        "check": "production graph",
+        "status": 0
+      },
+      {
+        "check": "bundle limits",
+        "status": 0
+      },
+      {
+        "check": "asset freshness",
+        "status": 0
+      }
+    ]
+  }
+}

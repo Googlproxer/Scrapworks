@@ -18,7 +18,11 @@ export function occupiedCells(
   buildings: readonly BuildingView[],
   deposits: readonly DepositDefinition[],
 ): GridCell[] {
-  return [...definition.blockers, ...deposits, ...buildings].flatMap((entity) => {
+  return [
+    ...definition.blockers,
+    ...deposits.filter((deposit) => deposit.quantity > 0),
+    ...buildings,
+  ].flatMap((entity) => {
     const anchor = worldToCell(definition.grid, entity.position);
     return anchor ? footprintCells(anchor, entity.footprint, entity.rotation) : [];
   });

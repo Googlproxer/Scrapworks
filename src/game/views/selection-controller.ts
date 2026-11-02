@@ -6,10 +6,10 @@ import type { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import type { GridCell, WorldDefinition } from '@contracts/world';
 import { cellCenter, sceneToMetres, worldToCell } from '@core/world-grid';
 import { actionPressed } from '../input/action-state';
-import { GameplayScript } from '../toolkit/gameplay-script';
+import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import type { WorldFrame } from './world-frame';
 
-export class SelectionController extends GameplayScript {
+export class SelectionController extends PresentationBehavior {
   public cell: GridCell | null = null;
   public entity: string | null = null;
   private readonly selector: Mesh;
@@ -49,8 +49,12 @@ export class SelectionController extends GameplayScript {
     }
     this.pick(this.frame.pointer.x, this.frame.pointer.y);
     if (actionPressed(this.frame.input, 'interact'))
-      this.frame.options.onSelection?.(
-        this.entity ?? (this.cell ? `Cell ${this.cell.column + 1}, ${this.cell.row + 1}` : null),
+      this.frame.options.selection.next(
+        this.entity
+          ? { kind: 'entity', id: this.entity }
+          : this.cell
+            ? { kind: 'cell', cell: this.cell }
+            : null,
       );
     this.frame.validateOwnership();
   }

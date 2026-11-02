@@ -42,7 +42,7 @@ class FakeWorker extends EventTarget {
 }
 
 const request = (id: number): RuntimeRequest => ({
-  protocol: 1,
+  protocol: 2,
   id,
   generation: 1,
   revision: 0,

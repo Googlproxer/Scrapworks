@@ -97,8 +97,11 @@
         orbit · F to hold salvage · G to toggle salvage · E / click ground items to pick up · Tab
         for field kit · Escape for menu
       </p>
-      @if (gameRuntimeService.selection(); as selection) {
+      @if (gameRuntimeService.selectionLabel(); as selection) {
         <p aria-live="polite">{{ selection }}</p>
+      }
+      @if (gameRuntimeService.placementLabel(); as feedback) {
+        <p aria-live="polite">{{ feedback }}</p>
       }
       @if (developer) {
         <p>

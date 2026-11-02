@@ -12,6 +12,7 @@ test('private ECS movement and placement agree with the legacy plain-object orac
     const ecs = new Simulation(definition, { developerFixture: true }),
       reference = new ReferenceSimulation(definition);
     for (let tick = 0; tick < 1000; tick++) {
+      let commands: WorldCommand[] = [];
       if (tick % 17 === 0) {
         const command: WorldCommand = {
           type: 'place',
@@ -19,15 +20,16 @@ test('private ECS movement and placement agree with the legacy plain-object orac
           cell: { column: next() % 10, row: next() % 10 },
           rotation: (next() % 4) as QuarterTurn,
         };
-        ecs.enqueue(command);
+        commands.push(command);
         reference.enqueue(command);
       }
       if (tick % 131 === 0) {
+        commands = [];
         ecs.clearInput();
         reference.clearInput();
       }
       const movement = { x: (next() % 3) - 1, z: (next() % 3) - 1, sprint: next() % 7 === 0 };
-      ecs.step(movement);
+      ecs.step(movement, commands);
       reference.step(movement);
       reference.assertMatches(ecs.view);
     }

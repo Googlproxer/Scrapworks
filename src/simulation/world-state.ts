@@ -7,6 +7,3 @@ export interface PlayerState {
   moving: boolean;
   sprinting: boolean;
 }
-
-/** World authority is now private ECS components/resources; plain captures are separate. */
-export type { EntityData, WorldResources, SimulationSnapshot } from '@contracts/simulation';

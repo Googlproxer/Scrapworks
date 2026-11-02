@@ -21,7 +21,7 @@ node --test tests/simulation/*.test.ts
 
 `test:game` strictly typechecks these suites and the independent oracle before running the Node tests. It requires neither scene export nor a browser. Each source test imports the shared [TypeScript resolver](../tools/testing/register-typescript.ts) before loading game modules; source aliases follow the repository's TypeScript configuration. The plain [world fixture](support/world-fixture.ts) uses gameplay metres and keeps session/simulation tests independent of Editor marker compilation.
 
-The populated ECS foundation tests reuse the production-schema fixture from [the worker laboratory](../tools/simulation-worker-bench/production-fixture.ts). That fixture stays with its benchmark owner; the relocated assertions exercise the production runtime, domain rules and session/cache implementation.
+Foundation tests exercise actual opening commands and production player/deposit/pile schemas. Detached packet fixtures cover growth/malformed transport without arbitrary simulation mutation hooks. Shared inline controls live under `tools/testing`; current-game benchmark captures belong to [tools/game-bench](../tools/game-bench/README.md).
 
 Built-worker acceptance requires a fresh production build and Playwright's installed Chromium:
 

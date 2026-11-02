@@ -1,3 +1,4 @@
+import { occupiedCells } from '@simulation/world-rules';
 /** Node-only movement/placement oracle, retained from 421cc28 before ECS adoption.
  * Plain object storage is independent of Miniplex; domain/motor rules are shared.
  * This executable fixture is never a production backend. */
@@ -34,7 +35,6 @@ export class ReferenceSimulation {
   private readonly state: ReferenceState;
   private readonly playerMotor: PlayerMotor;
   private commands: WorldCommand[] = [];
-  private lastCommandResult: CommandResult | null = null;
   constructor(definition: WorldDefinition) {
     assertWorldDefinition(definition);
     this.definition = structuredClone(definition);
@@ -51,7 +51,14 @@ export class ReferenceSimulation {
       deposits: structuredClone([...definition.deposits]),
       buildings: [],
     };
-    this.playerMotor = new PlayerMotor(this.definition, this.state.player, this.state.buildings);
+    this.playerMotor = new PlayerMotor(this.definition, this.state.player, () => {
+      const cells = occupiedCells(this.definition, this.state.buildings, this.state.deposits);
+      for (let row = 0; row < this.definition.grid.rows; row++)
+        for (let column = 0; column < this.definition.grid.columns; column++)
+          if (this.definition.terrain[row * this.definition.grid.columns + column] === 'water')
+            cells.push({ row, column });
+      return cells;
+    });
   }
   public enqueue(command: WorldCommand): void {
     this.commands.push(structuredClone(command));
@@ -70,7 +77,6 @@ export class ReferenceSimulation {
         command.rotation,
         true,
       );
-      this.lastCommandResult = { accepted: result.valid, reason: result.reason };
       if (result.valid) {
         const ids = new Set(
           [...this.definition.blockers, ...this.state.deposits, ...this.state.buildings].map(
@@ -95,7 +101,6 @@ export class ReferenceSimulation {
   public get view(): WorldView {
     return {
       ...structuredClone(this.state),
-      lastCommandResult: this.lastCommandResult ? { ...this.lastCommandResult } : null,
     };
   }
   public assertMatches(actual: WorldView): void {

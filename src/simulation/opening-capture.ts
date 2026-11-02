@@ -73,15 +73,10 @@ export function assertOpening(
     'fieldTechnology',
     'fieldEnabled',
     'moved',
-    'message',
     'minifab',
   ]);
   for (const key of ['handcraftVisible', 'handcraftSuspended', 'fieldEnabled', 'moved'])
     check(typeof state[key] === 'boolean', 'Invalid opening flag');
-  check(
-    typeof state['message'] === 'string' && state['message'].length <= 512,
-    'Invalid opening feedback',
-  );
   check(
     state['fieldTechnology'] === null ||
       OPENING_TECHNOLOGIES.some((technology) => technology.id === state['fieldTechnology']),
@@ -128,7 +123,19 @@ export function assertOpening(
     'status',
   ]);
   check(
-    typeof mini['owned'] === 'boolean' && typeof mini['status'] === 'string',
+    typeof mini['owned'] === 'boolean' &&
+      [
+        'unowned',
+        'idle',
+        'requested',
+        'making',
+        'ingredients',
+        'handcraft',
+        'retained-inputs',
+        'output-full',
+        'completed',
+        'cancelled-retained',
+      ].includes(String(mini['status'])),
     'Invalid MiniFab',
   );
   check(

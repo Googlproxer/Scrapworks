@@ -17,7 +17,6 @@ test('Node source imports follow tsconfig aliases independently of cwd and prese
       path.join(root, 'alias probe.ts'),
       `import assert from 'node:assert/strict';
 import ts from 'typescript';
-import { GameSession } from '@app/features/game/session/game-session';
 import { assertWorldDefinition } from '@contracts/world';
 import { cellCenter } from '@core/world-grid';
 import { FrameClock } from '@game/timing/frame-clock';
@@ -25,7 +24,6 @@ import { Simulation } from '@simulation/simulation';
 import { value } from './relative-value';
 import { value as nativeValue } from './native-value.mjs';
 
-assert.equal(typeof GameSession, 'function');
 assert.equal(typeof assertWorldDefinition, 'function');
 assert.equal(typeof cellCenter, 'function');
 // Resolve browser configuration without executing its application-only imports.

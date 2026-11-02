@@ -1,10 +1,17 @@
 import type { AssetContainer } from '@babylonjs/core/assetContainer';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
-import type { GameClient, GameClientOptions, GameInputPort } from '@contracts/game-client';
+import type { GameClient, GameClientOptions } from './client-api';
+import type {
+  GameInputPort,
+  WorldSelection,
+  PlacementFeedback,
+  InspectorState,
+} from '@contracts/game-client';
+import type { DebugDrawStatus } from '@contracts/debug-draw';
 import { isValidSceneKey, type GameState, type SceneKey } from '@contracts/game-state';
 import { assertWorldDefinition, type WorldDefinition } from '@contracts/world';
-import { BehaviorSubject, fromEvent, fromEventPattern, Subscription } from 'rxjs';
+import { BehaviorSubject, defer, of, fromEvent, fromEventPattern, Subscription } from 'rxjs';
 import { loadEditorScene } from './assets/load-editor-scene';
 import { loadCharacter, type CharacterLoader } from './assets/load-character';
 import { InputManager } from './input/input-manager';
@@ -21,11 +28,28 @@ import { debugDrawForScene } from './debug/draw/debug-draw';
 import type { SceneDebugDraw } from './debug/draw/types';
 
 export class BabylonGameClient implements GameClient {
+  private readonly selectionSource = new BehaviorSubject<WorldSelection>(null);
+  private readonly placementSource = new BehaviorSubject<PlacementFeedback | null>(null);
+  private readonly inspectorSource = new BehaviorSubject<InspectorState>({
+    phase: 'closed',
+    errorMessage: null,
+  });
+  private readonly debugSource = new BehaviorSubject<DebugDrawStatus>({
+    available: false,
+    categories: [],
+  });
+  public readonly selection$ = this.selectionSource.asObservable();
+  public readonly placementFeedback$ = this.placementSource.asObservable();
+  public readonly inspectorState$ = this.inspectorSource.asObservable();
+  public readonly debugDrawStatus$ = this.debugSource.asObservable();
   private readonly stateSubject = new BehaviorSubject<GameState>({
     phase: 'loading',
     sceneKey: null,
     errorMessage: null,
   });
+  public readonly state$ = defer(() =>
+    this.destroyed ? of(this.stateSubject.value) : this.stateSubject.asObservable(),
+  );
   private readonly clock = new FrameClock();
   private readonly canvas: HTMLCanvasElement;
   private readonly ownerDocument: Document;
@@ -57,7 +81,7 @@ export class BabylonGameClient implements GameClient {
     (state) => {
       this.inputManager?.setContext(this.inspectorActive ? null : this.requestedInputContext);
       if (this.inspectorActive) this.suspendWorld();
-      this.options.onInspectorState?.(state);
+      this.inspectorSource.next(state);
       if (this.inputManager) this.attachCamera();
     },
   );
@@ -78,7 +102,7 @@ export class BabylonGameClient implements GameClient {
   public constructor(
     host: HTMLElement,
     private readonly loadSceneFn = loadEditorScene,
-    private readonly options: GameClientOptions = {},
+    private readonly options: GameClientOptions,
     private readonly inspectorLoader: InspectorLoader = loadInspector,
     private readonly loadCharacterFn: CharacterLoader = loadCharacter,
   ) {
@@ -182,7 +206,7 @@ export class BabylonGameClient implements GameClient {
           if (this.destroyed || this.contextLost) return;
           this.contextLost = true;
           ++this.transition;
-          this.suspendWorld(false);
+          this.suspendWorld();
           this.inputManager.clear();
           this.reportError(
             new Error('Graphics context was lost. Choose Retry to restore the 3D viewport.'),
@@ -203,15 +227,6 @@ export class BabylonGameClient implements GameClient {
     }
   }
 
-  public subscribe(listener: (state: GameState) => void): () => void {
-    if (this.destroyed) {
-      listener(this.stateSubject.value);
-      return () => undefined;
-    }
-    const subscription = this.stateSubject.subscribe(listener);
-    return () => subscription.unsubscribe();
-  }
-
   public destroy(): void {
     if (this.destroyed) return;
     this.destroyed = true;
@@ -219,6 +234,10 @@ export class BabylonGameClient implements GameClient {
     this.cleanup();
     this.stateSubject.next({ phase: 'stopped', sceneKey: null, errorMessage: null });
     this.stateSubject.complete();
+    this.selectionSource.complete();
+    this.placementSource.complete();
+    this.inspectorSource.complete();
+    this.debugSource.complete();
   }
 
   private cleanup(): void {
@@ -226,7 +245,7 @@ export class BabylonGameClient implements GameClient {
     this.recoveryFrame = undefined;
     this.subscriptions.unsubscribe();
     this.engine?.stopRenderLoop(this.renderFrame);
-    this.suspendWorld(false);
+    this.suspendWorld();
     this.disposeCurrentScene();
     this.inspector.dispose();
     this.inputManager?.dispose();
@@ -249,6 +268,8 @@ export class BabylonGameClient implements GameClient {
     if (!this.isCurrentTransition(transition)) return;
     this.disposeCurrentScene();
     this.pointer = undefined;
+    this.selectionSource.next(null);
+    this.placementSource.next(null);
     this.inputManager.clear();
     this.stateSubject.next({ phase: 'loading', sceneKey: key, errorMessage: null });
     this.reconcileActivity();
@@ -297,7 +318,7 @@ export class BabylonGameClient implements GameClient {
           this.isCurrentTransition(transition) && this.currentScene === scene && this.canRender(),
       );
       this.unsubscribeDebug = debug.subscribe((status) => {
-        if (this.isCurrentTransition(transition)) this.options.onDebugDrawStatus?.(status);
+        if (this.isCurrentTransition(transition)) this.debugSource.next(status);
       });
       const assets = await this.loadSceneFn(scene, key);
       if (!this.isCurrentTransition(transition)) {
@@ -317,12 +338,18 @@ export class BabylonGameClient implements GameClient {
         const definition: unknown = await response.json();
         assertWorldDefinition(definition);
         if (!this.isCurrentTransition(transition)) return;
-        await this.options.session?.initialize(definition);
+        await this.options.session.initialize(definition);
         if (!this.isCurrentTransition(transition)) return;
         const world = await WorldScene.create(
           scene,
           definition,
-          this.options,
+          {
+            session: this.options.session,
+            placement: this.options.placement,
+            developerFixture: this.options.developerFixture,
+            selection: this.selectionSource,
+            placementFeedback: this.placementSource,
+          },
           this.loadCharacterFn,
         );
         if (!this.isCurrentTransition(transition)) {
@@ -388,15 +415,12 @@ export class BabylonGameClient implements GameClient {
     } else camera.detachControl();
   }
 
-  private suspendWorld(publish = true): void {
+  private suspendWorld(): void {
     this.clock.reset();
     if (this.suspendingWorld) return;
     this.suspendingWorld = true;
     try {
-      if (this.definition && this.options.session) {
-        const view = this.options.session.frame(0, { x: 0, z: 0 }, false, false);
-        if (publish) this.options.onWorldView?.(view);
-      }
+      if (this.definition) this.options.session.suspend();
     } finally {
       this.suspendingWorld = false;
     }
@@ -437,7 +461,7 @@ export class BabylonGameClient implements GameClient {
   private reportError(error: unknown): void {
     const transition = this.transition;
     const sceneKey = this.currentKey;
-    this.suspendWorld(false);
+    this.suspendWorld();
     if (!this.isCurrentTransition(transition)) return;
     this.disposeCurrentScene();
     this.inputManager.clear();
@@ -462,7 +486,7 @@ export class BabylonGameClient implements GameClient {
     try {
       const frame = this.inputManager.takeFrame();
       // UI polling is independent of scene readiness and rendering capability.
-      this.options.onActionFrame?.(frame);
+      this.options.actions.dispatch(frame);
       if (!this.isCurrentTransition(transition) || !this.inputManager.isCurrent(frame)) return;
       const scene = this.currentScene;
       if (!scene || !this.canRender()) {

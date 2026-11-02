@@ -41,9 +41,6 @@ const definition: WorldDefinition = {
 test('removing a deposit clears live collision and placement occupancy across capture restoration', () => {
   const world = new Simulation(definition, {
     developerFixture: true,
-    system: (ctx) => {
-      if (ctx.resources.tick === 0) ctx.remove('deposit');
-    },
   });
   const cache = new PresentationCache();
   let restored: InstanceType<typeof Simulation> | undefined;
@@ -52,9 +49,13 @@ test('removing a deposit clears live collision and placement occupancy across ca
   try {
     cache.apply(world.publish(new Set(['player']), true), 1);
     assert.equal(validatePlacement(definition, cache.read(), cell, 0, true).reason, 'occupied');
-    world.step(still);
+    world.step(still, [{ type: 'salvage', target: 'deposit' }]);
+    for (let tick = 1; tick < 600; tick++) world.step(still);
     cache.apply(world.publish(new Set(['player'])), 1);
-    assert.deepEqual(cache.read().deposits, []);
+    assert.deepEqual(
+      cache.read().deposits.filter((deposit) => deposit.quantity > 0),
+      [],
+    );
     assert.equal(validatePlacement(definition, cache.read(), cell, 0, true).valid, true);
     assert.equal(
       validatePlacement(definition, cache.read(), { column: 2, row: 1 }, 0, true).reason,
@@ -72,9 +73,10 @@ test('removing a deposit clears live collision and placement occupancy across ca
     for (let tick = 0; tick < 30; tick++) restored.step({ x: 1, z: 0, sprint: false });
     assert.ok(restored.view.player.position.x > 4, 'Restored collision must remain clear');
     placement = new Simulation(definition, { snapshot: cleared, developerFixture: true });
-    placement.enqueue({ type: 'place', buildingId: 'test-building', cell, rotation: 0 });
-    placement.step(still);
-    assert.equal(placement.view.lastCommandResult?.accepted, true);
+    const result = placement.step(still, [
+      { type: 'place', buildingId: 'test-building', cell, rotation: 0 },
+    ]);
+    assert.equal(result.commandResults[0].accepted, true);
     assert.equal(placement.view.buildings.length, 1);
     for (let tick = 0; tick < 40; tick++) placement.step({ x: 1, z: 0, sprint: false });
     assert.ok(placement.view.player.position.x < 2, 'The new building must still collide');
@@ -187,7 +189,7 @@ for (const { name, change } of invalidBuildings)
       operation: RuntimeRequest['operation'],
       fields: Partial<RuntimeRequest> = {},
     ) =>
-      runtime.handle({ protocol: 1, generation: 1, revision: 0, id: ++id, operation, ...fields });
+      runtime.handle({ protocol: 2, generation: 1, revision: 0, id: ++id, operation, ...fields });
     try {
       assert.equal(request('initialize', { definition: edgeDefinition }).ok, true);
       const before = request('capture').capture;

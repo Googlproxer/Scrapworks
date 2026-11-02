@@ -4,11 +4,11 @@ import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
 import type { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { Color3 } from '@babylonjs/core/Maths/math.color';
-import { GameplayScript } from '../toolkit/gameplay-script';
+import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import { EntityView } from './entity-view';
 import type { WorldFrame } from './world-frame';
 
-export class EntityViews extends GameplayScript {
+export class EntityViews extends PresentationBehavior {
   private readonly entities = new Map<string, EntityView>();
   private publication = -1;
   private generation = -1;

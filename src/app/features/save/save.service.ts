@@ -1,6 +1,6 @@
-import { Service } from '@angular/core';
-import { Dexie, EntityTable } from 'dexie';
-import { TestData } from './schema';
+import { DestroyRef, inject, Service } from '@angular/core';
+import { Dexie, type EntityTable } from 'dexie';
+import { assertTestData, type TestData } from './schema';
 
 interface DBSchema {
   testData: EntityTable<TestData, 'id'>;
@@ -8,62 +8,67 @@ interface DBSchema {
 
 type DBInstance = Dexie & DBSchema;
 
+/** Isolated developer records. Milestone 4 introduces gameplay persistence separately. */
 @Service()
 export class SaveService {
-  private db: DBInstance;
+  private readonly db = new Dexie('GameSaveDatabase') as DBInstance;
+  private pending = 0;
+  private destroyed = false;
 
   public constructor() {
-    this.db = new Dexie('GameSaveDatabase') as DBInstance;
-    this.db.version(1).stores({
-      testData: '++id, name, value',
+    this.db.version(1).stores({ testData: '++id, name, value' });
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      if (!this.pending) this.db.close();
     });
   }
 
-  public save(testData: Omit<TestData, 'id'>) {
-    //  save data to the database
-    this.db.testData.put(testData);
-  }
-
-  public async load(id: number) {
-    //  load data from the database
-    const data = await this.db.testData.get(id);
-    if (data) {
-      console.log('Loaded data:', data);
-    } else {
-      console.log('No data found.');
+  private async access<T>(operation: () => PromiseLike<T>): Promise<T> {
+    if (this.destroyed) throw new Error('Developer save utility is closed.');
+    this.pending++;
+    try {
+      return await operation();
+    } finally {
+      if (--this.pending === 0 && this.destroyed) this.db.close();
     }
   }
 
-  public async loadAll(): Promise<TestData[]> {
-    //  load all data from the database
-    const data = await this.db.testData.toArray();
-    console.log('Loaded all data:', data);
-    return data;
+  public save(data: TestData): Promise<number> {
+    assertTestData(data);
+    return this.access(() => this.db.testData.put(data));
   }
 
-  public async delete(id: number) {
-    //  delete data from the database
-    await this.db.testData.delete(id);
-    console.log(`Deleted data with id: ${id}`);
+  public load(id: number): Promise<TestData | undefined> {
+    return this.access(() => this.db.testData.get(id));
   }
 
-  public async clear() {
-    //  clear all data from the database
-    await this.db.testData.clear();
-    console.log('Cleared all data.');
+  public loadAll(): Promise<TestData[]> {
+    return this.access(() => this.db.testData.toArray());
+  }
+
+  public delete(id: number): Promise<void> {
+    return this.access(() => this.db.testData.delete(id));
+  }
+
+  public clear(): Promise<void> {
+    return this.access(() => this.db.testData.clear());
   }
 
   public async export(): Promise<string> {
-    //  export data from the database, to be saved to a file or sent to a server
-    const data = await this.db.testData.toArray();
-    const jsonData = JSON.stringify(data);
-    console.log('Exported data:', jsonData);
-    return jsonData;
+    return JSON.stringify(await this.loadAll());
   }
 
-  public async import(data: string) {
-    //  import data into the database
-    const testData = JSON.parse(data);
-    await this.db.testData.bulkPut(testData);
+  public async import(data: string): Promise<void> {
+    const values: unknown = JSON.parse(data);
+    if (!Array.isArray(values) || values.length > 10000)
+      throw new Error('Expected an array of developer test records.');
+    for (const value of values) assertTestData(value);
+    if (new Set(values.map((value: TestData) => value.id)).size !== values.length)
+      throw new Error('Duplicate developer record ID.');
+    await this.access(() =>
+      this.db.transaction('rw', this.db.testData, () =>
+        this.db.testData.bulkPut(values as TestData[]),
+      ),
+    );
   }
 }

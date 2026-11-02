@@ -3,12 +3,12 @@ import { EngineStore } from '@babylonjs/core/Engines/engineStore';
 import { LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
 import { loadEditorScene } from '@game/assets/load-editor-scene';
 import { BabylonGameClient } from '@game/babylon-game-client';
-import type { GameClientOptions } from '@contracts/game-client';
+import type { GameClientOptions } from '@game/client-api';
 import axe from 'axe-core';
 import { GAME_CLIENT_FACTORY } from '../game-client-factory';
 import { GamePageComponent } from './game-page.component';
 import { SIMULATION_PORT_FACTORY } from '../simulation-port-factory';
-import { InlineSimulationPort } from '../../../../session/inline-port';
+import { InlineSimulationPort } from '../../../../../tools/testing/inline-simulation-port';
 
 describe('Babylon game page integration', () => {
   let fixture: ComponentFixture<GamePageComponent>;
@@ -35,8 +35,8 @@ describe('Babylon game page integration', () => {
     (fixture.nativeElement as HTMLElement).setAttribute('role', 'main');
     fixture.detectChanges();
     await expect
-      .poll(() => fixture.componentInstance.gameRuntimeService.isReady(), { timeout: 30_000 })
-      .toBe(true);
+      .poll(() => fixture.componentInstance.gameRuntimeService.state(), { timeout: 15000 })
+      .toMatchObject({ phase: 'ready' });
     fixture.detectChanges();
   });
 

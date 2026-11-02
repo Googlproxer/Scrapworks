@@ -1,0 +1,49 @@
+@if (opening(); as opening) {
+  <h3 id="research-title">Field Research</h3>
+  <p>
+    Enabled research gradually consumes uncommitted bag stock. It continues with this panel closed.
+    Pausing or switching retains progress; paid materials cannot be reclaimed.
+  </p>
+  <button
+    type="button"
+    [attr.aria-pressed]="opening.state.fieldEnabled"
+    (click)="
+      runtime.command({
+        type: 'research',
+        technology: opening.state.fieldTechnology,
+        enabled: !opening.state.fieldEnabled,
+      })
+    "
+  >
+    {{ opening.state.fieldEnabled ? 'Pause field research' : 'Enable field research' }}
+  </button>
+  @for (technology of technologies; track technology.id) {
+    <div class="technology">
+      <h4>{{ technology.name }}</h4>
+      <p>{{ researchStatus(technology) }}</p>
+      <p>{{ materials(technology.costs) }} · {{ technology.seconds }} s field work</p>
+      <p>
+        Consumed:
+        @for (cost of technology.costs; track cost.item) {
+          <span
+            >{{ name(cost.item) }}
+            {{ opening.ledgers[technology.id]?.consumed?.[cost.item] ?? 0 }}/{{ cost.quantity }}
+          </span>
+        }
+      </p>
+      <progress
+        [value]="opening.ledgers[technology.id]?.work ?? 0"
+        [max]="technology.seconds"
+        [attr.aria-label]="technology.name + ' research progress'"
+      ></progress>
+      <button
+        type="button"
+        [disabled]="!technologyReady(technology) || !!opening.ledgers[technology.id]?.unlocked"
+        (click)="runtime.command({ type: 'research', technology: technology.id, enabled: true })"
+      >
+        {{ opening.state.fieldTechnology === technology.id ? 'Resume' : 'Research' }}
+        {{ technology.name }}
+      </button>
+    </div>
+  }
+}

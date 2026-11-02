@@ -3,7 +3,7 @@ import type { WorldCommand, GridCell, QuarterTurn } from '../../src/contracts/wo
 import '../../tools/testing/register-typescript.ts';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-const { GameSession } = await import('../../src/app/features/game/session/game-session.ts');
+const { GameSession } = await import('../../tools/testing/inline-game-session.ts');
 const { Simulation, PLAYER_RADIUS } = await import('../../src/simulation/simulation.ts');
 const { validatePlacement } = await import('../../src/simulation/placement.ts');
 const { cellCenter, worldToCell, metresToScene, sceneToMetres, footprintCells } =
@@ -107,17 +107,16 @@ test('normal worlds cannot place test buildings; dev fixture validates and reche
     rotation: 0,
   };
   const rejectedBefore = normal.view;
-  normal.enqueue(command);
-  normal.step(stationary);
-  assert.equal(normal.view.lastCommandResult!.reason, 'unavailable');
+
+  const normalResult = normal.step(stationary, [command]);
+  assert.equal(normalResult.commandResults[0].reason, 'unavailable');
   assert.deepEqual(normal.view.inventory, rejectedBefore.inventory);
   assert.equal(normal.view.buildings.length, 0);
   const dev = new Simulation(definition(), { developerFixture: true });
-  dev.enqueue(command);
-  dev.enqueue(command);
-  dev.step(stationary);
+
+  const devResult = dev.step(stationary, [command, command]);
   assert.equal(dev.view.buildings.length, 1);
-  assert.equal(dev.view.lastCommandResult!.reason, 'occupied');
+  assert.equal(devResult.commandResults[1].reason, 'occupied');
   assert.deepEqual(dev.view.inventory, {});
   assert.equal(dev.view.nextEntityId, 2);
 });
@@ -128,10 +127,12 @@ test('placement validates the previous completed position before the player moto
     { developerFixture: true },
   );
   const cell = { column: 4, row: 6 };
-  simulation.enqueue({ type: 'place', buildingId: 'test-building', cell, rotation: 0 });
-  simulation.step({ x: 1, z: 0, sprint: false });
+
+  const result = simulation.step({ x: 1, z: 0, sprint: false }, [
+    { type: 'place', buildingId: 'test-building', cell, rotation: 0 },
+  ]);
   const view = mutable(simulation.view);
-  assert.deepEqual(view.lastCommandResult, { accepted: true, reason: null });
+  assert.deepEqual(result.commandResults[0], { accepted: true, reason: null });
   assert.equal(view.buildings.length, 1);
   const anchor = cellCenter(definition().grid, cell);
   assert.ok(Math.hypot(anchor.x - view.player.position.x, anchor.z - view.player.position.z) > 3);

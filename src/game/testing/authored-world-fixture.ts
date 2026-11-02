@@ -1,4 +1,7 @@
 import { AssetContainer } from '@babylonjs/core/assetContainer';
+// Development debug lines appear in serialized fixtures, never in authored production scenes.
+import '@babylonjs/core/Materials/shaderMaterial';
+import '@babylonjs/core/Meshes/linesMesh';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { AppendSceneAsync, LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
 import { SceneSerializer } from '@babylonjs/core/Misc/sceneSerializer';

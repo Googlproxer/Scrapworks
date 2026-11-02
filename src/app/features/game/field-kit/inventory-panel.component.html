@@ -1,0 +1,51 @@
+@if (opening(); as opening) {
+  <h3 id="bag-title">
+    Inventory <span>{{ usedSlots() }}/24 slots</span>
+  </h3>
+  <p>
+    Equipped tool: {{ opening.tool ? name(opening.tool) : 'Bare hands' }}. No weight or durability.
+  </p>
+  <div class="equipment-action">
+    @if (opening.tool) {
+      <button
+        type="button"
+        [disabled]="!!opening.state.handcraft"
+        (click)="runtime.command({ type: 'equip', item: null })"
+      >
+        Unequip tool
+      </button>
+    } @else if (amount('prybar')) {
+      <button type="button" (click)="runtime.command({ type: 'equip', item: 'prybar' })">
+        Equip prybar
+      </button>
+    }
+  </div>
+  <ol class="bag" aria-label="Bag slots">
+    @for (slot of opening.bag.slots; track $index) {
+      <li [class.occupied]="!!slot">
+        <span class="slot-number">{{ $index + 1 }}</span>
+        @if (slot) {
+          <span>{{ name(slot.item) }}</span
+          ><strong>{{ slot.quantity }}</strong>
+        } @else {
+          <span class="empty">Empty</span>
+        }
+      </li>
+    }
+  </ol>
+  <details>
+    <summary>Recover materials</summary>
+    <p>Disassembly returns solid material value. It needs room for the complete return.</p>
+    @for (item of ['prybar', 'plate', 'wire', 'mechanical-part', 'electrical-part']; track item) {
+      @if (amount(item) || opening.tool === item) {
+        <button
+          type="button"
+          [disabled]="!!opening.state.handcraft"
+          (click)="runtime.command({ type: 'dismantle', item })"
+        >
+          Dismantle one {{ name(item) }}
+        </button>
+      }
+    }
+  </details>
+}

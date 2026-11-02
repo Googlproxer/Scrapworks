@@ -6,7 +6,7 @@ import {
   visibleAsNumber,
   visibleAsString,
   visibleAsVector3,
-} from 'babylonjs-editor-tools';
+} from 'babylonjs-editor-tools/decorators/inspector';
 import type { DebugDrawWriter } from '../types';
 import { DebugShapeScript } from './shape-script';
 

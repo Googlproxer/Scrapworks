@@ -76,6 +76,28 @@ async function previousStillWorks(root: string) {
   );
 }
 
+test('unsupported authored features preserve scenes and both generated registries', async () =>
+  fixture(async (root) => {
+    await fs.writeFile(path.join(root, 'src/scene-registrations.ts'), '// old features');
+    await assert.rejects(
+      exportProject(root, {
+        packProject: async (stage) => {
+          await fakePack(stage);
+          await fs.writeFile(
+            path.join(stage, 'public/scene/game.babylon'),
+            '{"cameras":[{"type":"UnsupportedCamera"}]}',
+          );
+        },
+      }),
+      /UnsupportedCamera.*game.babylon.cameras\[0\]/,
+    );
+    await previousStillWorks(root);
+    assert.equal(
+      await fs.readFile(path.join(root, 'src/scene-registrations.ts'), 'utf8'),
+      '// old features',
+    );
+  }));
+
 test('successful staging replaces obsolete output and publishes a matching registry without modifying authoring inputs', async () =>
   fixture(async (root: string) => {
     const original = await fs.readFile(path.join(root, 'assets/game.scene/config.json'));
@@ -262,31 +284,44 @@ test('save bursts coalesce, saves during export supersede it, and a later save r
   }
 });
 
-test('native watcher includes authored assets and attached scripts but excludes caches and generated outputs', async () =>
-  fixture(async (root: string) => {
-    let events = 0;
-    const errors: Error[] = [];
-    await fs.writeFile(path.join(root, 'src/presentation.ts'), '// original');
-    const stop = watchAuthoring(root, {
-      changed: () => events++,
-      failed: (error) => errors.push(error),
-      scripts: () => new Set(['src/presentation.ts']),
-    });
-    try {
-      await fs.writeFile(path.join(root, 'src/scripts.ts'), '// generated');
-      await fs.writeFile(path.join(root, 'assets/.export-cache.json'), '{}');
-      await fs.writeFile(path.join(root, 'public/scene/game.babylon'), '{}');
-      await sleep(100);
-      assert.equal(events, 0);
-      await fs.writeFile(path.join(root, 'assets/game.scene/config.json'), '{}');
-      await sleep(100);
-      assert.ok(events > 0);
-      const previous = events;
-      await fs.writeFile(path.join(root, 'src/presentation.ts'), '// changed');
-      await sleep(100);
-      assert.ok(events > previous);
-      assert.deepEqual(errors, []);
-    } finally {
-      stop();
-    }
-  }));
+test(
+  'native watcher includes authored assets and attached scripts but excludes caches and generated outputs',
+  { timeout: 5000 },
+  async () =>
+    fixture(async (root: string) => {
+      let events = 0;
+      let nextEvent: (() => void) | undefined;
+      const errors: Error[] = [];
+      await fs.writeFile(path.join(root, 'src/presentation.ts'), '// original');
+      await fs.mkdir(path.join(root, '.bjseditor'));
+      const stop = watchAuthoring(root, {
+        changed: () => {
+          events++;
+          nextEvent?.();
+        },
+        failed: (error) => errors.push(error),
+        scripts: () => new Set(['src/presentation.ts']),
+      });
+      try {
+        await fs.writeFile(path.join(root, 'src/scripts.ts'), '// generated');
+        await fs.writeFile(path.join(root, 'assets/.export-cache.json'), '{}');
+        await fs.writeFile(path.join(root, 'public/scene/game.babylon'), '{}');
+        const first = new Promise<void>((resolve) => {
+          nextEvent = resolve;
+        });
+        await fs.writeFile(path.join(root, 'assets/game.scene/config.json'), '{}');
+        await first;
+        assert.equal(events, 1);
+        const previous = events;
+        const second = new Promise<void>((resolve) => {
+          nextEvent = resolve;
+        });
+        await fs.writeFile(path.join(root, 'src/presentation.ts'), '// changed');
+        await second;
+        assert.ok(events > previous);
+        assert.deepEqual(errors, []);
+      } finally {
+        stop();
+      }
+    }),
+);

@@ -1,3 +1,9 @@
+import { GameSessionOwner } from './game-session-owner';
+import { RendererConnection } from './renderer-connection';
+import { GameInputCoordinator } from './game-input-coordinator';
+import { OpeningUiController } from './opening-ui-controller';
+import type { GameClientOptions } from '@game/client-api';
+import type { WorldSelection, PlacementFeedback } from '@contracts/game-client';
 import {
   afterNextRender,
   computed,
@@ -8,22 +14,16 @@ import {
   Service,
   signal,
 } from '@angular/core';
-import type {
-  GameClient,
-  GameClientOptions,
-  InspectorState,
-  UiKeyInput,
-} from '@contracts/game-client';
+import type { InspectorState, UiKeyInput } from '@contracts/game-client';
 import type { GameState, SceneKey } from '@contracts/game-state';
-import type { ActionFrame, ButtonControl, ControllerInfo } from '@contracts/input';
-import type { WorldDefinition, WorldView } from '@contracts/world';
+import type { ActionFrame, ButtonControl } from '@contracts/input';
+
 import type { OpeningCommand } from '@contracts/opening';
 import type { Inspection } from '@contracts/simulation';
 import { environment } from '@environments/environment';
 import { validatePlacement } from '@simulation/placement';
 import { ControlSettingsService } from '../controls/control-settings.service';
 import { GAME_CLIENT_FACTORY } from './game-client-factory';
-import { GameSession } from '../../../session/game-session';
 import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
 
@@ -38,12 +38,35 @@ export class GameRuntimeService {
   private readonly createClient = inject(GAME_CLIENT_FACTORY);
   private readonly createSimulationPort = inject(SIMULATION_PORT_FACTORY);
   private readonly injector = inject(Injector);
-  private client?: GameClient;
-  private host?: HTMLElement;
   private unsubscribe?: () => void;
-  private generation = 0;
-  private dispatchRevision = 0;
-  private captureRevision = 0;
+  private readonly sessions = new GameSessionOwner(this.createSimulationPort, !!environment.dev);
+  private readonly renderer = new RendererConnection(this.createClient);
+  private readonly inputCoordinator = new GameInputCoordinator({
+    clearInput: () => this.session?.clearInput(),
+    pause: () => this.session?.setPaused(true),
+  });
+
+  private get client() {
+    return this.renderer.client;
+  }
+
+  private get host() {
+    return this.renderer.host;
+  }
+
+  private get generation() {
+    return this.renderer.generation;
+  }
+
+  private get session() {
+    return this.sessions.current;
+  }
+
+  private get definition() {
+    return this.sessions.definition;
+  }
+
+  public readonly events$ = this.sessions.events$;
   private disposed = false;
 
   public readonly state = this.stateValue.asReadonly();
@@ -51,61 +74,102 @@ export class GameRuntimeService {
   public readonly isReady = computed(() => this.state().phase === 'ready');
   public readonly isLoading = computed(() => this.state().phase === 'loading');
   public readonly errorMessage = computed(() => this.state().errorMessage);
-  public readonly world = signal<WorldView | null>(null);
-  public readonly selection = signal<string | null>(null);
-  public readonly fieldKitOpen = signal(false);
-  public readonly workExitWarning = signal(false);
-  private workExitContinuation?: () => void;
-  public readonly debugDrawSettings = signal<DebugDrawSettings>({
+  public readonly world = this.sessions.world;
+  private readonly selectionValue = signal<WorldSelection>(null);
+  public readonly selection = this.selectionValue.asReadonly();
+  private readonly placementValue = signal<PlacementFeedback | null>(null);
+  public readonly placementFeedback = this.placementValue.asReadonly();
+  public readonly placementLabel = computed(() => {
+    const feedback = this.placementFeedback();
+    if (!feedback) return null;
+    if (feedback.valid) return 'Placement available';
+    return {
+      'invalid-cell': 'Point at a world cell.',
+      'out-of-bounds': 'Choose a cell inside the world.',
+      terrain: 'This terrain cannot hold a building.',
+      occupied: 'This space is occupied.',
+      'player-overlap': 'Move clear of the building footprint.',
+      'out-of-reach': 'Move closer to place here.',
+      unavailable: 'Placement is unavailable.',
+    }[feedback.reason ?? 'unavailable'];
+  });
+  public readonly selectedEntityId = computed(() => {
+    const selection = this.selection();
+    return selection?.kind === 'entity' ? selection.id : null;
+  });
+  public readonly selectionLabel = computed(() => {
+    const selection = this.selection();
+    return selection?.kind === 'entity'
+      ? selection.id
+      : selection
+        ? 'Cell ' + (selection.cell.column + 1) + ', ' + (selection.cell.row + 1)
+        : null;
+  });
+  private readonly openingUi = new OpeningUiController({
+    world: this.world,
+    selectedEntityId: this.selectedEntityId,
+    submit: (command) => this.command(command),
+    setUiFocused: (focused) => this.setUiFocused(focused),
+    focusViewport: () => this.focusViewportNow(),
+  });
+  public readonly fieldKitOpen = this.openingUi.fieldKitOpen;
+  public readonly workExitWarning = this.openingUi.workExitWarning;
+  private readonly debugDrawSettingsValue = signal<DebugDrawSettings>({
     enabled: false,
     disabledCategories: [],
   });
-  public readonly debugDrawStatus = signal<DebugDrawStatus>({ available: false, categories: [] });
-  public readonly inspection = signal<Inspection | null>(null);
+  public readonly debugDrawSettings = this.debugDrawSettingsValue.asReadonly();
+  private readonly debugDrawStatusValue = signal<DebugDrawStatus>({
+    available: false,
+    categories: [],
+  });
+  public readonly debugDrawStatus = this.debugDrawStatusValue.asReadonly();
+  private readonly inspectionValue = signal<Inspection | null>(null);
+  public readonly inspection = this.inspectionValue.asReadonly();
   private unsubscribeInspection?: () => void;
-  public readonly controllers = signal<readonly ControllerInfo[]>([]);
-  private readonly requestedController = signal<string | null>(null);
-  public readonly selectedController = this.requestedController.asReadonly();
-  public readonly capturingBinding = signal(false);
+  public readonly controllers = this.inputCoordinator.controllers;
+  public readonly selectedController = this.inputCoordinator.selectedController;
+  public readonly capturingBinding = this.inputCoordinator.capturing;
   private readonly inspectorValue = signal<InspectorState>({ phase: 'closed', errorMessage: null });
   public readonly inspectorState = this.inspectorValue.asReadonly();
   public readonly inspectorActive = computed(() =>
     ['loading', 'open'].includes(this.inspectorState().phase),
   );
   public readonly settings = inject(ControlSettingsService);
-  private readonly actionListeners = new Set<(frame: ActionFrame) => void>();
-  private session?: GameSession;
-  private definition?: WorldDefinition;
   private readonly tickSubscriptions = new Set<() => void>();
-  private unsubscribeControllers?: () => void;
-  private stopCapture?: () => void;
-  private uiFocused = false;
   private inspectorReturnFocus?: HTMLElement;
 
-  private currentInputRequest = true;
   private frameSeconds = 0;
-  private worldGeneration = 0;
   private retainingRendererSession = false;
 
   constructor() {
     effect(() => {
       // Read even while unmounted so later preference changes remain observed.
       const profile = this.settings.profile();
-      ++this.dispatchRevision;
-      this.session?.clearInput();
-      this.client?.input?.updateBindings(profile);
+      this.inputCoordinator.updateBindings(profile);
+    });
+    const failures = this.sessions.failures$.subscribe((error) => {
+      if (this.disposed) return;
+      this.stateValue.set({
+        phase: 'error',
+        sceneKey: 'Game',
+        errorMessage: error.message + ' Retry restarts this world from its authored beginning.',
+      });
+      this.client?.setInputEnabled(false);
+      this.updateInputContext();
     });
     inject(DestroyRef).onDestroy(() => {
       this.disposed = true;
       this.unmount();
+      failures.unsubscribe();
+      this.sessions.destroy();
     });
   }
 
   public mount(host: HTMLElement): void {
     if (this.disposed || (this.host === host && this.client)) return;
     this.unmount();
-    const generation = ++this.generation;
-    this.host = host;
+    const generation = this.renderer.begin(host);
     this.stateValue.set({ phase: 'loading', sceneKey: null, errorMessage: null });
 
     try {
@@ -113,101 +177,43 @@ export class GameRuntimeService {
         bindings: this.settings.profile(),
         developerFixture: !!environment.dev,
         debugDrawSettings: this.debugDrawSettings(),
-        onDebugDrawStatus: (status) => {
-          if (generation === this.generation) this.debugDrawStatus.set(status);
-        },
-        onActionFrame: (frame) => {
-          if (generation !== this.generation || this.inspectorActive()) return;
-          const revision = this.dispatchRevision;
-          if (frame.context === 'gameplay') {
-            const salvage = frame.states['salvage'];
-            if (salvage?.kind === 'button' && salvage.pressed) this.salvageNearby();
-            if (salvage?.kind === 'button' && salvage.released)
-              this.command({ type: 'salvage', target: null });
-            const toggle = frame.states['toggleSalvage'];
-            if (toggle?.kind === 'button' && toggle.pressed) {
-              if (this.world()?.opening?.state.salvage)
+        actions: {
+          dispatch: (frame) => {
+            if (generation !== this.generation || this.inspectorActive()) return;
+            const revision = this.inputCoordinator.revision;
+            if (frame.context === 'gameplay') {
+              const salvage = frame.states['salvage'];
+              if (salvage?.kind === 'button' && salvage.pressed) this.salvageNearby();
+              if (salvage?.kind === 'button' && salvage.released)
                 this.command({ type: 'salvage', target: null });
-              else this.salvageNearby();
+              const toggle = frame.states['toggleSalvage'];
+              if (toggle?.kind === 'button' && toggle.pressed) {
+                if (this.world()?.opening?.state.salvage)
+                  this.command({ type: 'salvage', target: null });
+                else this.salvageNearby();
+              }
+              const inventory = frame.states['inventory'];
+              if (inventory?.kind === 'button' && inventory.pressed) this.toggleFieldKit();
             }
-            const inventory = frame.states['inventory'];
-            if (inventory?.kind === 'button' && inventory.pressed) this.toggleFieldKit();
-          }
-          for (const listener of this.actionListeners) {
-            listener(frame);
-            if (generation !== this.generation || revision !== this.dispatchRevision) break;
-          }
-        },
-        onWorldView: (view) => {
-          if (generation === this.generation) this.world.set(view);
-        },
-        onSelection: (selection) => {
-          if (generation !== this.generation) return;
-          this.unsubscribeInspection?.();
-          this.unsubscribeInspection = undefined;
-          this.selection.set(selection);
-          // World interaction stays available after removing gathering from the field kit.
-          if (
-            selection &&
-            this.gameplayAllowed() &&
-            this.world()?.ground?.some((pile) => pile.id === selection)
-          )
-            this.command({ type: 'pickup', target: selection });
-          this.inspection.set(null);
-          if (selection && this.session)
-            this.unsubscribeInspection = this.session.subscribeDetails(selection, (value) => {
-              if (generation === this.generation && this.selection() === selection)
-                this.inspection.set(value);
-            });
-        },
-        onInspectorState: (state) => {
-          if (generation !== this.generation) return;
-          const wasActive = this.inspectorActive();
-          ++this.dispatchRevision;
-          this.inspectorValue.set(state);
-          if (this.inspectorActive()) this.session?.setPaused(true);
-          this.updateInputContext();
-          if (wasActive && !this.inspectorActive()) {
-            const focus = this.inspectorReturnFocus;
-            this.inspectorReturnFocus = undefined;
-            afterNextRender(
-              () => {
-                if (generation === this.generation && !this.inspectorActive() && focus?.isConnected)
-                  focus.focus();
-              },
-              { injector: this.injector },
+            this.inputCoordinator.dispatch(
+              frame,
+              () => generation === this.generation && revision === this.inputCoordinator.revision,
             );
-          }
+          },
         },
         session: {
+          suspend: () => {
+            if (generation === this.generation) this.session?.setPaused(true);
+          },
           initialize: (definition) => {
-            if (generation !== this.generation) return;
+            if (generation !== this.generation) return Promise.resolve();
             if (!this.session || this.session.failed || this.definition?.id !== definition.id) {
               this.unsubscribeInspection?.();
               this.unsubscribeInspection = undefined;
-              this.inspection.set(null);
-              this.selection.set(null);
-              this.definition = definition;
-              this.session?.dispose();
-              const worldGeneration = ++this.worldGeneration;
-              this.session = new GameSession(definition, {
-                developerFixture: !!environment.dev,
-                portFactory: this.createSimulationPort,
-                onFailure: (error) => {
-                  if (worldGeneration !== this.worldGeneration || this.disposed) return;
-                  this.stateValue.set({
-                    phase: 'error',
-                    sceneKey: 'Game',
-                    errorMessage: `${error.message} Retry restarts this world from its authored beginning.`,
-                  });
-                  this.client?.setInputEnabled(false);
-                  this.updateInputContext();
-                },
-              });
+              this.inspectionValue.set(null);
+              this.selectionValue.set(null);
             }
-            this.session.clearInput();
-            this.session.resetTiming();
-            return this.session.ready;
+            return this.sessions.initialize(definition);
           },
           registerCompletedTickHandler: (handler, order) => {
             const session = this.session;
@@ -239,22 +245,23 @@ export class GameRuntimeService {
             const canAdvance = simulationActive && this.simulationAllowed();
             this.session.setPaused(!canAdvance);
             this.session.setMovement(
-              canAdvance && active && !this.uiFocused ? movement : { x: 0, z: 0 },
+              canAdvance && active && !this.inputCoordinator.uiFocused ? movement : { x: 0, z: 0 },
               sprint,
             );
             this.frameSeconds = seconds;
-            return this.session.readView();
+            const view = this.session.readView();
+            return this.sessions.pin(view);
           },
           completeFrame: () => {
             const session = this.session;
             if (!session || generation !== this.generation) return;
-            const revision = this.dispatchRevision;
+            const revision = this.inputCoordinator.revision;
             const activityRevision = session.activityRevision;
             session.flushCompleted();
             if (
               generation === this.generation &&
               this.session === session &&
-              revision === this.dispatchRevision &&
+              revision === this.inputCoordinator.revision &&
               activityRevision === session.activityRevision &&
               this.simulationAllowed()
             )
@@ -262,76 +269,124 @@ export class GameRuntimeService {
             this.frameSeconds = 0;
           },
           isSimulationActive: () => this.simulationAllowed(),
-          place: (cell, rotation) => {
-            if (generation === this.generation && this.gameplayAllowed()) {
-              this.session?.enqueue({ type: 'place', cell, rotation, buildingId: 'test-building' });
-            }
-          },
-          preview: (cell, rotation) => {
-            if (generation !== this.generation || !this.session || !this.definition)
-              return { valid: false, reason: 'World not ready', cells: [] };
-            return validatePlacement(
-              this.definition,
-              this.session.readView(),
-              cell,
-              rotation,
-              !!environment.dev,
-            );
-          },
         },
+        placement: environment.dev
+          ? {
+              place: (cell, rotation) => {
+                if (generation === this.generation && this.gameplayAllowed()) {
+                  this.session?.enqueue({
+                    type: 'place',
+                    cell,
+                    rotation,
+                    buildingId: 'test-building',
+                  });
+                }
+              },
+              preview: (cell, rotation) => {
+                if (generation !== this.generation || !this.session || !this.definition)
+                  return { valid: false, reason: 'unavailable', cells: [] };
+                return validatePlacement(
+                  this.definition,
+                  this.session.readView(),
+                  cell,
+                  rotation,
+                  !!environment.dev,
+                );
+              },
+            }
+          : undefined,
       };
-      const client = this.createClient(host, options);
+
+      const onDebugDrawStatus = (status: DebugDrawStatus) => {
+        if (generation === this.generation) this.debugDrawStatusValue.set(status);
+      };
+
+      const onSelection = (selection: WorldSelection) => {
+        if (generation !== this.generation) return;
+        const entityId = selection?.kind === 'entity' ? selection.id : null;
+        const previousId = this.selectedEntityId();
+        this.selectionValue.set(selection);
+        // World interaction stays available after removing gathering from the field kit.
+        if (
+          selection &&
+          this.gameplayAllowed() &&
+          this.world()?.ground?.some((pile) => pile.id === entityId)
+        )
+          this.command({ type: 'pickup', target: entityId! });
+        if (entityId === previousId) return;
+        this.unsubscribeInspection?.();
+        this.unsubscribeInspection = undefined;
+        this.inspectionValue.set(null);
+        if (entityId && this.session)
+          this.unsubscribeInspection = this.session.subscribeDetails(entityId, (value) => {
+            if (generation === this.generation && this.selectedEntityId() === entityId)
+              this.inspectionValue.set(value);
+          });
+      };
+
+      const onInspectorState = (state: InspectorState) => {
+        if (generation !== this.generation) return;
+        const wasActive = this.inspectorActive();
+        this.inputCoordinator.invalidate();
+        this.inspectorValue.set(state);
+        if (this.inspectorActive()) this.session?.setPaused(true);
+        this.updateInputContext();
+        if (wasActive && !this.inspectorActive()) {
+          const focus = this.inspectorReturnFocus;
+          this.inspectorReturnFocus = undefined;
+          afterNextRender(
+            () => {
+              if (generation === this.generation && !this.inspectorActive() && focus?.isConnected)
+                focus.focus();
+            },
+            { injector: this.injector },
+          );
+        }
+      };
+
+      const client = this.renderer.create(options);
       if (this.disposed || generation !== this.generation) {
         client.destroy();
         return;
       }
-      this.client = client;
-      const unsubscribe = client.subscribe((state) => {
-        if (generation === this.generation && this.client === client) {
-          ++this.dispatchRevision;
-          this.stateValue.set(
-            this.session?.failed && state.sceneKey === 'Game'
-              ? {
-                  phase: 'error',
-                  sceneKey: 'Game',
-                  errorMessage: `${this.session.error?.message} Retry restarts this world from its authored beginning.`,
-                }
-              : state,
-          );
-          if (state.phase !== 'ready' || state.sceneKey !== 'Game') this.session?.setPaused(true);
-          this.updateInputContext();
-        }
+      const unsubscribe = this.renderer.connect({
+        state: (state) => {
+          if (generation === this.generation && this.client === client) {
+            this.inputCoordinator.invalidate();
+            this.stateValue.set(
+              this.session?.failed && state.sceneKey === 'Game'
+                ? {
+                    phase: 'error',
+                    sceneKey: 'Game',
+                    errorMessage: `${this.session.error?.message} Retry restarts this world from its authored beginning.`,
+                  }
+                : state,
+            );
+            if (state.phase !== 'ready' || state.sceneKey !== 'Game') this.session?.setPaused(true);
+            this.updateInputContext();
+          }
+        },
+        selection: onSelection,
+        inspectorState: onInspectorState,
+        debugDrawStatus: onDebugDrawStatus,
+        placementFeedback: (feedback) => this.placementValue.set(feedback),
       });
+
       if (generation === this.generation && this.client === client) this.unsubscribe = unsubscribe;
       else {
         unsubscribe();
         return;
       }
-      client.setInputEnabled(this.currentInputRequest);
+      client.setInputEnabled(this.inputCoordinator.enabledRequested);
       if (generation !== this.generation || this.client !== client) return;
-      const unsubscribeControllers = client.input?.subscribeControllers((controllers) => {
-        if (generation === this.generation && this.client === client) {
-          this.controllers.set(controllers);
-          const requested = this.requestedController();
-          if (requested !== null) {
-            const controller = controllers.find((candidate) => candidate.id === requested);
-            if (!controller) this.requestedController.set(null);
-            else if (!controller.selected) this.selectController(requested);
-          }
-        }
-      });
-      if (generation !== this.generation || this.client !== client) {
-        unsubscribeControllers?.();
-        return;
-      }
-      this.unsubscribeControllers = unsubscribeControllers;
+      this.inputCoordinator.attach(client.input);
       this.updateInputContext();
     } catch (error) {
       if (generation !== this.generation) return;
       this.unmount();
       console.error(error);
       if (this.disposed) return;
-      this.host = host;
+      this.renderer.begin(host);
       this.stateValue.set({
         phase: 'error',
         sceneKey: null,
@@ -342,41 +397,29 @@ export class GameRuntimeService {
 
   public unmount(): void {
     if (!this.host && !this.client) return;
-    this.workExitContinuation = undefined;
-    this.workExitWarning.set(false);
-    this.fieldKitOpen.set(false);
-    ++this.generation;
-    ++this.dispatchRevision;
+    this.openingUi.reset();
+    this.renderer.invalidate();
+    this.inputCoordinator.invalidate();
     for (const unsubscribe of this.tickSubscriptions) unsubscribe();
     this.unsubscribeInspection?.();
     this.unsubscribeInspection = undefined;
-    this.inspection.set(null);
-    this.selection.set(null);
-    const client = this.client;
+    this.inspectionValue.set(null);
+    this.selectionValue.set(null);
+    this.placementValue.set(null);
     const unsubscribe = this.unsubscribe;
-    this.client = undefined;
-    this.host = undefined;
     this.unsubscribe = undefined;
-    this.stopCapture?.();
-    this.stopCapture = undefined;
-    this.capturingBinding.set(false);
+    this.inputCoordinator.detach();
     this.inspectorValue.set({ phase: 'closed', errorMessage: null });
-    this.debugDrawStatus.set({ available: false, categories: [] });
+    this.debugDrawStatusValue.set({ available: false, categories: [] });
     this.inspectorReturnFocus = undefined;
-    this.unsubscribeControllers?.();
-    this.unsubscribeControllers = undefined;
-    this.controllers.set([]);
     this.session?.clearInput();
     this.session?.setPaused(true);
     unsubscribe?.();
     try {
-      client?.destroy();
+      this.renderer.unmount();
     } finally {
       if (!this.retainingRendererSession) {
-        this.session?.dispose();
-        this.session = undefined;
-        this.definition = undefined;
-        ++this.worldGeneration;
+        this.sessions.disposeWorld();
       }
       this.stateValue.set({ phase: 'stopped', sceneKey: null, errorMessage: null });
     }
@@ -384,7 +427,7 @@ export class GameRuntimeService {
 
   public setScene(key: SceneKey): void {
     if (!this.client || !this.isReady()) return;
-    ++this.dispatchRevision;
+    this.inputCoordinator.invalidate();
     this.session?.setPaused(true);
     try {
       this.client.setScene(key);
@@ -398,8 +441,8 @@ export class GameRuntimeService {
   }
 
   public setInputEnabled(on: boolean) {
-    ++this.dispatchRevision;
-    this.currentInputRequest = on;
+    this.inputCoordinator.invalidate();
+    this.inputCoordinator.requestEnabled(on);
     if (!on) this.session?.setPaused(true);
     if (!this.client) return;
     try {
@@ -447,34 +490,33 @@ export class GameRuntimeService {
 
   public setDebugDrawEnabled(enabled: boolean): void {
     if (!environment.dev) return;
-    this.debugDrawSettings.update((settings) => ({ ...settings, enabled }));
-    this.client?.setDebugDrawSettings(this.debugDrawSettings());
+    this.debugDrawSettingsValue.update((settings) => ({ ...settings, enabled }));
+    this.renderer.configureDebug(this.debugDrawSettings());
   }
 
   public setDebugDrawCategory(category: string, enabled: boolean): void {
     if (!environment.dev) return;
-    this.debugDrawSettings.update((settings) => ({
+    this.debugDrawSettingsValue.update((settings) => ({
       ...settings,
       disabledCategories: enabled
         ? settings.disabledCategories.filter((item) => item !== category)
         : [...new Set([...settings.disabledCategories, category])],
     }));
-    this.client?.setDebugDrawSettings(this.debugDrawSettings());
+    this.renderer.configureDebug(this.debugDrawSettings());
   }
 
   public subscribeActions(listener: (frame: ActionFrame) => void): () => void {
-    this.actionListeners.add(listener);
-    return () => this.actionListeners.delete(listener);
+    return this.inputCoordinator.subscribe(listener);
   }
 
   public setUiFocused(focused: boolean): void {
-    if (focused === this.uiFocused) return;
+    if (focused === this.inputCoordinator.uiFocused) return;
     if (!focused && this.world()?.opening?.state.handcraft) {
       this.requestWorkExit(() => this.focusViewportNow());
       return;
     }
-    ++this.dispatchRevision;
-    this.uiFocused = focused;
+    this.inputCoordinator.invalidate();
+    this.inputCoordinator.setUiFocused(focused);
     if (focused) {
       this.session?.setMovement({ x: 0, z: 0 });
       this.command({ type: 'salvage', target: null });
@@ -483,11 +525,11 @@ export class GameRuntimeService {
   }
 
   private updateInputContext(): void {
-    this.client?.input?.setContext(
+    this.inputCoordinator.setContext(
       this.inspectorActive()
         ? null
-        : !this.currentInputRequest ||
-            this.uiFocused ||
+        : !this.inputCoordinator.enabledRequested ||
+            this.inputCoordinator.uiFocused ||
             this.currentSceneKey() !== 'Game' ||
             this.state().phase !== 'ready'
           ? 'ui'
@@ -501,16 +543,16 @@ export class GameRuntimeService {
 
   private focusViewportNow(): void {
     this.command({ type: 'handcraft-ui', visible: false });
-    ++this.dispatchRevision;
-    this.uiFocused = false;
+    this.inputCoordinator.invalidate();
+    this.inputCoordinator.setUiFocused(false);
     this.updateInputContext();
-    this.client?.input?.focus();
+    this.inputCoordinator.focus();
   }
 
   private gameplayAllowed(): boolean {
     return (
-      this.currentInputRequest &&
-      !this.uiFocused &&
+      this.inputCoordinator.enabledRequested &&
+      !this.inputCoordinator.uiFocused &&
       !this.capturingBinding() &&
       !this.inspectorActive() &&
       this.isReady() &&
@@ -520,7 +562,7 @@ export class GameRuntimeService {
 
   private simulationAllowed(): boolean {
     return (
-      this.currentInputRequest &&
+      this.inputCoordinator.enabledRequested &&
       !this.capturingBinding() &&
       !this.inspectorActive() &&
       this.isReady() &&
@@ -528,105 +570,44 @@ export class GameRuntimeService {
     );
   }
 
-  public command(command: OpeningCommand): void {
-    if (!this.simulationAllowed()) return;
-    this.session?.setPaused(false);
-    this.session?.enqueue(command);
+  public command(command: OpeningCommand): import('@contracts/session-event').CommandSubmission {
+    if (!this.simulationAllowed() || !this.session) return { status: 'unavailable' };
+    this.session.setPaused(false);
+    const sequence = this.session.enqueue(command);
+    return sequence === null
+      ? { status: 'unavailable' }
+      : { status: 'queued', sequence, generation: this.session.generation };
   }
 
   public salvageNearby(): void {
-    const world = this.world();
-    if (!world) return;
-    const selected = world.deposits.find((deposit) => deposit.id === this.selection());
-    const target =
-      selected ??
-      [...world.deposits]
-        .filter((deposit) => deposit.quantity > 0)
-        .sort(
-          (a, b) =>
-            Math.hypot(
-              a.position.x - world.player.position.x,
-              a.position.z - world.player.position.z,
-            ) -
-            Math.hypot(
-              b.position.x - world.player.position.x,
-              b.position.z - world.player.position.z,
-            ),
-        )[0];
-    if (target) this.command({ type: 'salvage', target: target.id });
+    this.openingUi.salvageNearby();
   }
 
   public toggleFieldKit(): void {
-    this.requestWorkExit(() => {
-      const open = !this.fieldKitOpen();
-      this.command({ type: 'handcraft-ui', visible: false });
-      this.fieldKitOpen.set(open);
-      if (open) this.setUiFocused(true);
-      else this.focusViewportNow();
-    });
+    this.openingUi.toggleFieldKit();
   }
 
   public requestWorkExit(continuation: () => void): void {
-    if (this.world()?.opening?.state.handcraft) {
-      if (this.workExitWarning()) return;
-      this.workExitContinuation = continuation;
-      this.workExitWarning.set(true);
-      this.command({ type: 'handcraft-ui', visible: true, suspended: true });
-    } else continuation();
+    this.openingUi.requestWorkExit(continuation);
   }
 
   public resolveWorkExit(cancel: boolean): void {
-    const continuation = this.workExitContinuation;
-    this.workExitContinuation = undefined;
-    this.workExitWarning.set(false);
-    this.command({ type: 'handcraft-ui', visible: !cancel, suspended: false });
-    if (cancel) continuation?.();
+    this.openingUi.resolveWorkExit(cancel);
   }
 
   public selectController(id: string | null): void {
-    ++this.dispatchRevision;
-    this.session?.clearInput();
-    const previous = this.requestedController();
-    this.requestedController.set(id);
-    if (this.client?.input?.selectController(id) === false) this.requestedController.set(previous);
+    this.inputCoordinator.selectController(id);
   }
 
   public captureBinding(listener: (control: ButtonControl) => void): () => void {
-    this.stopCapture?.();
-    const capture = ++this.captureRevision;
-    const generation = this.generation;
-    ++this.dispatchRevision;
-    this.session?.setPaused(true);
-    this.capturingBinding.set(true);
-    const unsubscribe = this.client?.input?.captureBinding((control) => {
-      if (
-        generation === this.generation &&
-        capture === this.captureRevision &&
-        this.capturingBinding()
-      )
-        listener(control);
-    });
-    let stopped = false;
-
-    const stop = () => {
-      if (stopped) return;
-      stopped = true;
-      unsubscribe?.();
-      if (capture === this.captureRevision) {
-        ++this.dispatchRevision;
-        this.capturingBinding.set(false);
-      }
-    };
-
-    this.stopCapture = stop;
-    return stop;
+    return this.inputCoordinator.captureBinding(listener);
   }
 
   public handleUiKeyboard(input: UiKeyInput): boolean {
-    return this.client?.input?.handleUiKeyboard(input) ?? false;
+    return this.inputCoordinator.handleKeyboard(input);
   }
 
   public handleUiPointer(input: { button: number; down: boolean }): boolean {
-    return this.client?.input?.handleUiPointer(input) ?? false;
+    return this.inputCoordinator.handlePointer(input);
   }
 }

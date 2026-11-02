@@ -51,3 +51,5 @@ Thumbs.db
 /assets/.export-cache.json
 /assets/.assets-cache.json
 /agentdata/
+
+/src/scene-registrations.ts

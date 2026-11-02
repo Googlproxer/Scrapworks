@@ -49,9 +49,7 @@ const run = (sim: Sim, seconds: number) => {
   for (let n = 0; n < Math.round(seconds / 0.05); n++) sim.step(still);
 };
 const command = (sim: Sim, value: WorldCommand) => {
-  sim.enqueue(value);
-  sim.step(still);
-  return sim.view.lastCommandResult!;
+  return sim.step(still, [value]).commandResults[0];
 };
 function unlock(snapshot: SimulationSnapshot): void {
   for (const technology of OPENING_TECHNOLOGIES)
@@ -62,6 +60,46 @@ function unlock(snapshot: SimulationSnapshot): void {
     };
 }
 const state = (sim: Sim) => sim.view.opening!.state;
+
+test('one fixed step retains simultaneous handcraft, research and MiniFab completion events', () => {
+  const prepared = setup((snapshot) => {
+    unlock(snapshot);
+    player(snapshot).inventory!.slots[0] = { item: 'scrap', quantity: 100 };
+    player(snapshot).opening!.minifab.owned = true;
+    player(snapshot).opening!.minifab.charge = 60;
+  });
+  command(prepared, { type: 'minifab', recipe: 'metal-plate', quantity: 1 });
+  command(prepared, { type: 'handcraft-ui', visible: true });
+  command(prepared, { type: 'craft', recipe: 'metal-plate', quantity: 1 });
+  const snapshot = prepared.capture();
+  prepared.dispose();
+  const opening = player(snapshot).opening!;
+  opening.handcraft!.remaining = 0.01;
+  opening.minifab.job!.remaining = 0.01;
+  const technology = OPENING_TECHNOLOGIES[0];
+  snapshot.resources.research[technology.id].unlocked = false;
+  snapshot.resources.research[technology.id].work = technology.seconds - 0.01;
+  snapshot.resources.research[technology.id].consumed = Object.fromEntries(
+    technology.costs.map((cost) => [cost.item, cost.quantity - 1]),
+  );
+  opening.fieldTechnology = technology.id;
+  opening.fieldEnabled = true;
+  snapshot.resources.extractionTotals['scrap'] = 100;
+  const simulation = new Simulation(definition, { snapshot });
+  const result = simulation.step(still);
+  assert(
+    result.events.some((event) => event.kind === 'handcraft-ended' && event.reason === 'completed'),
+  );
+  assert(
+    result.events.some(
+      (event) => event.kind === 'research-completed' && event.technology === technology.id,
+    ),
+  );
+  assert(
+    result.events.some((event) => event.kind === 'minifab-status' && event.status === 'completed'),
+  );
+  simulation.dispose();
+});
 
 test('opening catalogue is conserving, acyclic, explicit and excludes future free content', () => {
   assert.doesNotThrow(validateOpeningCatalogue);
@@ -163,9 +201,11 @@ test('completion splits charge precisely and concurrent winding still pays actua
     player(snapshot).opening!.minifab.owned = true;
     player(snapshot).inventory!.slots[0] = { item: 'scrap', quantity: 2 };
   });
-  simultaneous.enqueue({ type: 'wind', degrees: 90 });
-  simultaneous.enqueue({ type: 'minifab', recipe: 'metal-plate', quantity: 1 });
-  simultaneous.step(still);
+
+  simultaneous.step(still, [
+    { type: 'wind', degrees: 90 },
+    { type: 'minifab', recipe: 'metal-plate', quantity: 1 },
+  ]);
   assert(Math.abs(state(simultaneous).minifab.charge - 2.95) < 1e-8);
   assert(Math.abs(state(simultaneous).minifab.job!.remaining - 1.9) < 1e-8);
 });
@@ -283,7 +323,9 @@ test('handcraft checks capacity after consuming inputs, auto-equips first prybar
 test('an empty tool slot accepts the first prybar even when input consumption leaves every bag slot occupied', () => {
   const sim = setup((snapshot) => {
     unlock(snapshot);
-    player(snapshot).inventory!.slots = Array.from({ length: 24 }, (_, index) => index === 0 ? { item: 'scrap', quantity: 100 } : { item: 'prybar', quantity: 1 });
+    player(snapshot).inventory!.slots = Array.from({ length: 24 }, (_, index) =>
+      index === 0 ? { item: 'scrap', quantity: 100 } : { item: 'prybar', quantity: 1 },
+    );
   });
   command(sim, { type: 'handcraft-ui', visible: true });
   assert(command(sim, { type: 'craft', recipe: 'scrap-prybar', quantity: 1 }).accepted);
@@ -337,10 +379,12 @@ test('manual craft commits before MiniFab and research; handcraft protects capac
     player(snapshot).inventory!.slots[0] = { item: 'scrap', quantity: 2 };
     player(snapshot).opening!.minifab.owned = true;
   });
-  sim.enqueue({ type: 'handcraft-ui', visible: true });
-  sim.enqueue({ type: 'minifab', recipe: 'metal-plate', quantity: 1 });
-  sim.enqueue({ type: 'craft', recipe: 'metal-plate', quantity: 1 });
-  sim.step(still);
+
+  sim.step(still, [
+    { type: 'handcraft-ui', visible: true },
+    { type: 'minifab', recipe: 'metal-plate', quantity: 1 },
+    { type: 'craft', recipe: 'metal-plate', quantity: 1 },
+  ]);
   assert(state(sim).handcraft);
   assert.equal(state(sim).minifab.job, null);
   assert.equal(sim.view.inventory['scrap'], undefined);
@@ -464,8 +508,8 @@ test('detached opening views, active work and rate budget survive capture/rebuil
   run(restored, 15);
   assert.deepEqual(restored.capture(), sim.capture());
   const detached = sim.view.opening!;
-  detached.bag.slots.fill(null);
-  detached.state.minifab.charge = 59;
+  Reflect.set(detached.bag, 'slots', []);
+  Reflect.set(detached.state.minifab, 'charge', 59);
   assert.notEqual(state(sim).minifab.charge, 59);
   const malformed = sim.capture();
   player(malformed).opening!.minifab.charge = Infinity;
@@ -483,9 +527,11 @@ test('requested MiniFab stock precedes research while consume-only field work ru
     p.inventory!.slots[0] = { item: 'plate', quantity: 1 };
     p.inventory!.slots[1] = { item: 'wire', quantity: 2 };
   });
-  priority.enqueue({ type: 'research', technology: 'mechanical-assembly', enabled: true });
-  priority.enqueue({ type: 'minifab', recipe: 'electrical-part', quantity: 1 });
-  priority.step(still);
+
+  priority.step(still, [
+    { type: 'research', technology: 'mechanical-assembly', enabled: true },
+    { type: 'minifab', recipe: 'electrical-part', quantity: 1 },
+  ]);
   assert(state(priority).minifab.job);
   assert.equal(priority.view.opening!.ledgers['mechanical-assembly'].work, 0);
   assert.equal(priority.view.inventory['plate'], undefined);
@@ -499,11 +545,13 @@ test('requested MiniFab stock precedes research while consume-only field work ru
     p.inventory!.slots[0] = { item: 'scrap', quantity: 6 };
     p.inventory!.slots[1] = { item: 'plate', quantity: 4 };
   });
-  protectedWork.enqueue({ type: 'handcraft-ui', visible: true });
-  protectedWork.enqueue({ type: 'craft', recipe: 'scrap-prybar', quantity: 1 });
-  protectedWork.enqueue({ type: 'minifab', recipe: 'metal-plate', quantity: 1 });
-  protectedWork.enqueue({ type: 'research', technology: 'mechanical-assembly', enabled: true });
-  protectedWork.step(still);
+
+  protectedWork.step(still, [
+    { type: 'handcraft-ui', visible: true },
+    { type: 'craft', recipe: 'scrap-prybar', quantity: 1 },
+    { type: 'minifab', recipe: 'metal-plate', quantity: 1 },
+    { type: 'research', technology: 'mechanical-assembly', enabled: true },
+  ]);
   run(protectedWork, 3.75);
   assert(state(protectedWork).handcraft);
   assert.equal(protectedWork.view.inventory['scrap'], 2);
@@ -621,7 +669,7 @@ test('a completely empty world reaches the first unpowered automatic craft using
   const before = sim.view.productionTotals['plate'];
   assert(command(sim, { type: 'minifab', recipe: 'metal-plate', quantity: 1 }).accepted);
   until(() => sim.view.productionTotals['plate'] === before + 1, 'first automatic craft');
-  assert(sim.resources.tick * 0.05 < 300);
+  assert(sim.tick * 0.05 < 300);
   assert.equal(state(sim).minifab.charge, 0);
   assert.equal(sim.view.opening!.extracted['scrap'], 62);
   assert.equal(sim.view.inventory['plate'], 1);

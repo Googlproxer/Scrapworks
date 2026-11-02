@@ -1,5 +1,5 @@
 import type { WorldDefinition } from '../contracts/world';
-import { GameSession } from '../app/features/game/session/game-session';
+import { GameSession } from '../../tools/testing/inline-game-session';
 import { Simulation } from './simulation';
 
 const definition: WorldDefinition = {
@@ -20,18 +20,19 @@ describe('Simulation', () => {
   });
 
   it('starts empty and rejects unavailable construction without granting resources', () => {
-    simulation.enqueue({
-      type: 'place',
-      buildingId: 'test-building',
-      cell: { column: 4, row: 6 },
-      rotation: 0,
-    });
-    simulation.step({ x: 0, z: 0, sprint: false });
+    const result = simulation.step({ x: 0, z: 0, sprint: false }, [
+      {
+        type: 'place',
+        buildingId: 'test-building',
+        cell: { column: 4, row: 6 },
+        rotation: 0,
+      },
+    ]);
     expect(simulation.view.inventory).toEqual({});
     expect(simulation.view.equipment).toEqual([]);
     expect(simulation.view.research).toEqual([]);
     expect(simulation.view.buildings).toEqual([]);
-    expect(simulation.view.lastCommandResult?.reason).toBe('unavailable');
+    expect(result.commandResults[0]?.reason).toBe('unavailable');
   });
 
   it('advances equal distances across rendering schedules and clears held movement on pause', () => {

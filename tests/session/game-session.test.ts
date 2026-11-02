@@ -9,7 +9,7 @@ import type {
 import '../../tools/testing/register-typescript.ts';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-const { GameSession } = await import('../../src/session/inline-game-session.ts');
+const { GameSession } = await import('../../tools/testing/inline-game-session.ts');
 const { GameSession: HostSession } = await import('../../src/session/game-session.ts');
 const { PlayerMotor } = await import('../../src/simulation/player-motor.ts');
 const { SimulationRuntime } = await import('../../src/session/runtime.ts');

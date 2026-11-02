@@ -1,7 +1,11 @@
+import { clientNotifications } from '../../../testing/game-ports';
+import '../../../testing/readonly-contracts';
+import { finalize } from 'rxjs';
+import type { WorldSessionBridge } from '@contracts/game-client';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { expectConsoleMessage } from '../../../testing/console-policy';
-import type { GameClient, GameClientOptions, WorldSessionBridge } from '@contracts/game-client';
+import type { GameClient, GameClientOptions } from '@game/client-api';
 import {
   defaultProfile,
   type ActionFrame,
@@ -12,7 +16,7 @@ import {
 import type { WorldDefinition } from '@contracts/world';
 import { ControlSettingsService } from '../controls/control-settings.service';
 import { GameSession } from '../../../session/game-session';
-import { InlineSimulationPort } from '../../../session/inline-port';
+import { InlineSimulationPort } from '../../../../tools/testing/inline-simulation-port';
 import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 import type { GameState } from '@contracts/game-state';
 import { GAME_CLIENT_FACTORY } from './game-client-factory';
@@ -20,7 +24,7 @@ import { GameRuntimeService } from './game-runtime.service';
 
 describe('GameRuntimeService', () => {
   function createClient(connected: readonly ControllerInfo[] = []) {
-    let listener: ((state: GameState) => void) | undefined;
+    const notices = clientNotifications();
     const unsubscribe = vi.fn();
     const destroy = vi.fn();
     const setScene = vi.fn();
@@ -48,11 +52,9 @@ describe('GameRuntimeService', () => {
     };
     const client: GameClient = {
       input,
-      subscribe: vi.fn((callback) => {
-        listener = callback;
-        callback({ phase: 'loading', sceneKey: 'MainMenu', errorMessage: null });
-        return unsubscribe;
-      }),
+      ...notices,
+      state$: notices.state$.pipe(finalize(unsubscribe)),
+      toggleInspector: vi.fn(async () => undefined),
       destroy,
       setScene,
       setInputEnabled,
@@ -60,6 +62,7 @@ describe('GameRuntimeService', () => {
     };
     return {
       client,
+      notices,
       input,
       unsubscribeControllers,
       stopCapture,
@@ -70,7 +73,7 @@ describe('GameRuntimeService', () => {
       destroy,
       setScene,
       setInputEnabled,
-      emit: (state: GameState) => listener?.(state),
+      emit: (state: GameState) => notices.state$.next(state),
     };
   }
 
@@ -96,11 +99,14 @@ describe('GameRuntimeService', () => {
 
   it('retains debug preferences through renderer Retry without advancing or unpausing the session', () => {
     const game = createClient();
-    factory.mockReturnValue(game.client);
+    factory.mockReturnValueOnce(game.client).mockReturnValue(createClient().client);
     const host = document.createElement('div');
     service.mount(host);
     const first = factory.mock.calls[0][1]!;
-    first.onDebugDrawStatus?.({ available: true, categories: ['collision', 'placement'] });
+    notifications(first).debugDrawStatus$.next({
+      available: true,
+      categories: ['collision', 'placement'],
+    });
     game.setInputEnabled.mockClear();
     service.setDebugDrawEnabled(true);
     service.setDebugDrawCategory('collision', false);
@@ -115,7 +121,7 @@ describe('GameRuntimeService', () => {
       enabled: true,
       disabledCategories: ['collision'],
     });
-    first.onDebugDrawStatus?.({ available: true, categories: ['stale'] });
+    notifications(first).debugDrawStatus$.next({ available: true, categories: ['stale'] });
     expect(service.debugDrawStatus().categories).not.toContain('stale');
     service.setDebugDrawCategory('collision', true);
     expect(service.debugDrawSettings().disabledCategories).toEqual([]);
@@ -146,7 +152,7 @@ describe('GameRuntimeService', () => {
       host,
       expect.objectContaining({ session: expect.any(Object) }),
     );
-    expect(game.client.subscribe).toHaveBeenCalledOnce();
+    expect(game.notices.state$.observed).toBe(true);
     expect(game.destroy).not.toHaveBeenCalled();
   });
 
@@ -354,8 +360,10 @@ describe('GameRuntimeService', () => {
     const error = new Error('Subscription failed');
     expectConsoleMessage('error', error);
     const game = createClient();
-    vi.mocked(game.client.subscribe).mockImplementation(() => {
-      throw error;
+    Object.defineProperty(game.client, 'state$', {
+      get: () => {
+        throw error;
+      },
     });
     factory.mockReturnValue(game.client);
     service.mount(document.createElement('div'));
@@ -416,6 +424,11 @@ describe('GameRuntimeService', () => {
     return { game, options: currentOptions(), bridge: currentOptions().session! };
   }
 
+  function notifications(options: GameClientOptions) {
+    const index = factory.mock.calls.findIndex((call) => call[1] === options);
+    return factory.mock.results[index].value as GameClient & ReturnType<typeof clientNotifications>;
+  }
+
   // Explicitly run submission and the next owned presentation frame for this inline control.
   function render(bridge: WorldSessionBridge, ...args: Parameters<WorldSessionBridge['frame']>) {
     bridge.frame(...args);
@@ -458,10 +471,10 @@ describe('GameRuntimeService', () => {
         if (change === 'scene') service.setScene('MainMenu');
         if (change === 'controller') service.selectController(null);
         if (change === 'inspector')
-          options.onInspectorState!({ phase: 'loading', errorMessage: null });
+          notifications(options).inspectorState$.next({ phase: 'loading', errorMessage: null });
       });
       service.subscribeActions(next);
-      options.onActionFrame!(actionFrame);
+      options.actions.dispatch(actionFrame);
       expect(next).not.toHaveBeenCalled();
     },
   );
@@ -472,18 +485,16 @@ describe('GameRuntimeService', () => {
     service.subscribeActions(action);
     const next = mountWorld();
     const view = render(next.bridge, 0, { x: 0, z: 0 }, false, true);
-    next.options.onWorldView!(view);
-    next.options.onSelection!('new');
-    previous.options.onActionFrame!(actionFrame);
-    previous.options.onWorldView!({ ...view, worldId: 'old' });
-    previous.options.onSelection!('old');
-    previous.options.onInspectorState!({ phase: 'open', errorMessage: null });
+    notifications(next.options).selection$.next({ kind: 'entity', id: 'new' });
+    previous.options.actions.dispatch(actionFrame);
+    notifications(previous.options).selection$.next({ kind: 'entity', id: 'old' });
+    notifications(previous.options).inspectorState$.next({ phase: 'open', errorMessage: null });
     previous.game.emitControllers([
       { id: 'xbox:9', type: 'xbox', slot: 9, name: 'Old controller', selected: true },
     ]);
     expect(action).not.toHaveBeenCalled();
     expect(service.world()).toEqual(view);
-    expect(service.selection()).toBe('new');
+    expect(service.selection()).toEqual({ kind: 'entity', id: 'new' });
     expect(service.controllers()).toEqual([]);
     expect(service.inspectorActive()).toBe(false);
     expect(previous.game.unsubscribeControllers).toHaveBeenCalledOnce();
@@ -494,19 +505,19 @@ describe('GameRuntimeService', () => {
     const listener = vi.fn();
     service.subscribeActions(listener);
     render(bridge, 0.025, { x: 1, z: 0 }, false, true);
-    options.onInspectorState!({ phase: 'loading', errorMessage: null });
+    notifications(options).inspectorState$.next({ phase: 'loading', errorMessage: null });
     expect(service.inspectorActive()).toBe(true);
     expect(game.input.setContext).toHaveBeenLastCalledWith(null);
     service.setInputEnabled(false);
     service.setInputEnabled(true);
     service.focusViewport();
     expect(game.input.setContext).toHaveBeenLastCalledWith(null);
-    options.onInspectorState!({ phase: 'open', errorMessage: null });
-    options.onActionFrame!(actionFrame);
+    notifications(options).inspectorState$.next({ phase: 'open', errorMessage: null });
+    options.actions.dispatch(actionFrame);
     expect(listener).not.toHaveBeenCalled();
     expect(render(bridge, 60, { x: 1, z: 0 }, false, true).tick).toBe(0);
     service.setInputEnabled(false);
-    options.onInspectorState!({ phase: 'closed', errorMessage: null });
+    notifications(options).inspectorState$.next({ phase: 'closed', errorMessage: null });
     expect(game.input.setContext).toHaveBeenLastCalledWith('ui');
     service.setInputEnabled(true);
     expect(game.input.setContext).toHaveBeenLastCalledWith('gameplay');
@@ -516,13 +527,16 @@ describe('GameRuntimeService', () => {
 
   it('keeps Inspector load failures separate from game errors and clears diagnostics on unmount', () => {
     const { options } = mountWorld();
-    options.onInspectorState!({ phase: 'error', errorMessage: 'Chunk unavailable' });
+    notifications(options).inspectorState$.next({
+      phase: 'error',
+      errorMessage: 'Chunk unavailable',
+    });
     expect(service.isReady()).toBe(true);
     expect(service.errorMessage()).toBeNull();
     expect(service.inspectorState().errorMessage).toBe('Chunk unavailable');
     service.unmount();
     expect(service.inspectorState()).toEqual({ phase: 'closed', errorMessage: null });
-    options.onInspectorState!({ phase: 'open', errorMessage: null });
+    notifications(options).inspectorState$.next({ phase: 'open', errorMessage: null });
     expect(service.inspectorActive()).toBe(false);
   });
 
@@ -533,9 +547,9 @@ describe('GameRuntimeService', () => {
     previous.bridge.initialize({ ...definition, id: 'superseded' });
     expect(render(previous.bridge, 2, { x: 1, z: 1 }, true, true)).toEqual(before);
     const enqueue = vi.spyOn(GameSession.prototype, 'enqueue');
-    previous.bridge.place({ column: 4, row: 6 }, 0);
+    previous.options.placement!.place({ column: 4, row: 6 }, 0);
     expect(enqueue).not.toHaveBeenCalled();
-    expect(previous.bridge.preview({ column: 4, row: 6 }, 0).valid).toBe(false);
+    expect(previous.options.placement!.preview({ column: 4, row: 6 }, 0).valid).toBe(false);
     expect(render(next.bridge, 0, { x: 0, z: 0 }, false, true)).toEqual(before);
   });
 
@@ -658,7 +672,7 @@ describe('GameRuntimeService', () => {
         if (change === 'scene') service.setScene('MainMenu');
         if (change === 'controller') service.selectController(null);
         if (change === 'inspector')
-          options.onInspectorState!({ phase: 'loading', errorMessage: null });
+          notifications(options).inspectorState$.next({ phase: 'loading', errorMessage: null });
         if (change === 'unmount') service.unmount();
       }, -1);
       bridge.registerCompletedTickHandler(next);
@@ -706,16 +720,18 @@ describe('GameRuntimeService', () => {
   it('picks up deliberately selected ground items only while the world owns input', () => {
     const { options, bridge } = mountWorld();
     const view = render(bridge, 0, { x: 0, z: 0 }, false, true);
-    service.world.set({
+    vi.spyOn(service, 'world').mockReturnValue({
       ...view,
       ground: [{ id: 'ground-test', position: definition.spawn, item: 'scrap', quantity: 1 }],
     });
-    const command = vi.spyOn(service, 'command').mockImplementation(() => undefined);
-    options.onSelection!('ground-test');
+    const command = vi
+      .spyOn(service, 'command')
+      .mockImplementation(() => ({ status: 'unavailable' }));
+    notifications(options).selection$.next({ kind: 'entity', id: 'ground-test' });
     expect(command).toHaveBeenCalledExactlyOnceWith({ type: 'pickup', target: 'ground-test' });
     service.setUiFocused(true);
     command.mockClear();
-    options.onSelection!('ground-test');
+    notifications(options).selection$.next({ kind: 'entity', id: 'ground-test' });
     expect(command).not.toHaveBeenCalled();
   });
 

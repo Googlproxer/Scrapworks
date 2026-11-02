@@ -1,4 +1,9 @@
-import { DeviceSourceManager, DeviceType, type Engine, type IKeyboardEvent } from '@babylonjs/core';
+import {
+  DeviceSourceManager,
+  DeviceType,
+  type Engine,
+  type IKeyboardEvent,
+} from '@babylonjs/core/pure';
 import type { DeviceSourceType } from '@babylonjs/core/DeviceInput/internalDeviceSourceManager';
 import {
   actions,

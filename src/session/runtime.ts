@@ -1,7 +1,11 @@
+import type { RuntimeEvent } from '@contracts/session-event';
 import type {
   CommandLedger,
   RuntimeReply,
   RuntimeRequest,
+  PresentationPacket,
+  Inspection,
+  SimulationCapture,
   SequencedCommand,
   SimulationInput,
 } from '@contracts/simulation';
@@ -10,14 +14,28 @@ import {
   MAX_PENDING_COMMANDS,
   requireInvariant as check,
 } from '@contracts/simulation';
-import { Simulation, type SimulationOptions } from '@simulation/simulation';
+import { Simulation } from '@simulation/simulation';
 import { validWorldCommand } from '../contracts/world-command';
+
+function assertCommandBatch(commands: unknown): asserts commands is SequencedCommand[] {
+  check(Array.isArray(commands) && commands.length <= MAX_PENDING_COMMANDS, 'Command overflow');
+  for (const value of commands) {
+    const command = value as Partial<SequencedCommand> | null;
+    check(
+      command &&
+        Number.isSafeInteger(command.sequence) &&
+        command.sequence! > 0 &&
+        validWorldCommand(command.command),
+      'Invalid command',
+    );
+  }
+}
 
 export function assertRequest(value: unknown): asserts value is RuntimeRequest {
   check(!!value && typeof value === 'object', 'Invalid session request');
   const r = value as Partial<RuntimeRequest>;
   check(
-    r.protocol === 1 &&
+    r.protocol === 2 &&
       Number.isSafeInteger(r.id) &&
       Number.isSafeInteger(r.generation) &&
       Number.isSafeInteger(r.revision),
@@ -36,6 +54,29 @@ export function assertRequest(value: unknown): asserts value is RuntimeRequest {
     ].includes(String(r.operation)),
     'Unknown operation',
   );
+  const fields: Record<RuntimeRequest['operation'], readonly string[]> = {
+    initialize: ['definition', 'developerFixture', 'capture'],
+    advance: ['steps', 'input', 'inputSequence', 'commands'],
+    activity: ['active', 'commands'],
+    watch: ['watch'],
+    inspect: ['watch'],
+    capture: [],
+    resync: [],
+    dispose: [],
+  };
+  for (const [key, field] of Object.entries(r))
+    check(
+      field === undefined ||
+        ['protocol', 'id', 'generation', 'revision', 'operation', ...fields[r.operation!]].includes(
+          key,
+        ),
+      'Unexpected operation payload',
+    );
+  if (r.operation === 'initialize') check(!!r.definition, 'Missing world definition');
+  if (r.operation === 'advance') check(r.steps !== undefined, 'Missing step credits');
+  if (r.operation === 'activity') check(typeof r.active === 'boolean', 'Missing activity');
+  if (r.operation === 'watch' || r.operation === 'inspect')
+    check(Array.isArray(r.watch), 'Missing watch list');
   if (r.steps !== undefined)
     check(Number.isInteger(r.steps) && r.steps >= 0 && r.steps <= 5, 'Invalid step credit');
   if (r.input)
@@ -55,17 +96,7 @@ export function assertRequest(value: unknown): asserts value is RuntimeRequest {
         r.watch.every((id) => typeof id === 'string' && id.length > 0 && id.length <= 256),
       'Invalid detail subscriptions',
     );
-  if (r.commands) {
-    check(
-      Array.isArray(r.commands) && r.commands.length <= MAX_PENDING_COMMANDS,
-      'Command overflow',
-    );
-    for (const c of r.commands)
-      check(
-        Number.isSafeInteger(c.sequence) && c.sequence > 0 && validWorldCommand(c.command),
-        'Invalid command',
-      );
-  }
+  if (r.commands !== undefined) assertCommandBatch(r.commands);
 }
 
 /** The same synchronous coordinator runs in the worker and the isolated inline control. */
@@ -82,11 +113,7 @@ export class SimulationRuntime {
   private input: SimulationInput = { x: 0, z: 0, sprint: false };
   private inputSequence = 0;
   private appliedInput = 0;
-  private readonly options: Pick<SimulationOptions, 'content' | 'system'>;
-
-  constructor(options: Pick<SimulationOptions, 'content' | 'system'> = {}) {
-    this.options = options;
-  }
+  private eventSerial = 0;
 
   private accept(commands: readonly SequencedCommand[]): void {
     for (const command of commands) {
@@ -111,24 +138,62 @@ export class SimulationRuntime {
   public handle(value: unknown): RuntimeReply {
     assertRequest(value);
     const r = value;
-    const reply: RuntimeReply = {
-      protocol: 1,
+    const reply: {
+      packet?: PresentationPacket;
+      details?: Inspection[];
+      watch?: string[];
+      capture?: SimulationCapture;
+      completedTicks: number[];
+      acknowledgements: import('@contracts/simulation').CommandAcknowledgement[];
+      events: RuntimeEvent[];
+    } = {
+      completedTicks: [],
+      acknowledgements: [],
+      events: [],
+    };
+
+    const envelope = () => ({
+      protocol: 2 as const,
       id: r.id,
       generation: r.generation,
       revision: this.revision,
-      ok: true,
-      completedTicks: [],
-      acknowledgements: [],
       ledger: { ...this.ledger },
       appliedInput: this.appliedInput,
-    };
+    });
 
     const finish = (): RuntimeReply => {
-      reply.revision = this.revision;
-      reply.ledger = { ...this.ledger };
-      reply.appliedInput = this.appliedInput;
-      return reply;
+      // This closed operation switch verifies every required response payload.
+      const common = {
+        ...envelope(),
+        completedTicks: reply.completedTicks,
+        acknowledgements: reply.acknowledgements,
+        events: reply.events,
+        ok: true as const,
+      };
+      switch (r.operation) {
+        case 'initialize':
+        case 'resync':
+          check(reply.packet, 'Missing publication');
+          return { ...common, operation: r.operation, packet: reply.packet };
+        case 'capture':
+          check(reply.capture, 'Missing capture');
+          return { ...common, operation: 'capture', capture: reply.capture };
+        case 'watch':
+          check(reply.details && reply.watch, 'Missing watched details');
+          return { ...common, operation: 'watch', watch: reply.watch, details: reply.details };
+        case 'inspect':
+          check(reply.details, 'Missing inspection');
+          return { ...common, operation: 'inspect', details: reply.details };
+        case 'advance':
+        case 'activity':
+          return { ...common, operation: r.operation, packet: reply.packet };
+        case 'dispose':
+          return { ...common, operation: 'dispose' };
+      }
     };
+
+    const event = (tick: number, value: RuntimeEvent['event']) =>
+      reply.events.push({ id: ++this.eventSerial, tick, event: value });
 
     try {
       if (r.operation === 'initialize') {
@@ -145,7 +210,7 @@ export class SimulationRuntime {
             'Invalid continuation ledger',
           );
           check(r.capture.pending.length <= MAX_PENDING_COMMANDS, 'Continuation command overflow');
-          assertRequest({ ...r, commands: r.capture.pending });
+          assertCommandBatch(r.capture.pending);
           const sequences = r.capture.pending.map((c) => c.sequence);
           check(
             new Set(sequences).size === sequences.length &&
@@ -156,7 +221,6 @@ export class SimulationRuntime {
           );
         }
         const next = new Simulation(r.definition, {
-          ...this.options,
           snapshot: r.capture?.world,
           developerFixture: r.developerFixture,
         });
@@ -173,7 +237,8 @@ export class SimulationRuntime {
         this.ledger = structuredClone(
           r.capture?.ledger ?? { accepted: 0, applied: 0, cancelled: 0, lastApplied: 0 },
         );
-        this.watched = new Set([next.resources.playerId]);
+        this.watched = new Set();
+        this.eventSerial = 0;
         reply.packet = next.publish(this.watched, true);
         return finish();
       }
@@ -200,18 +265,20 @@ export class SimulationRuntime {
         this.active = r.active;
         this.accept(r.commands ?? []);
         for (const command of this.commands) {
-          reply.acknowledgements.push({
+          const acknowledgement = {
             sequence: command.sequence,
-            tick: this.world.resources.tick,
-            result: 'cancelled',
-          });
+            tick: this.world.tick,
+            result: 'cancelled' as const,
+          };
+          reply.acknowledgements.push(acknowledgement);
+          event(this.world.tick, { kind: 'command-result', acknowledgement });
           this.ledger.cancelled++;
         }
         this.commands = [];
         this.input = { x: 0, z: 0, sprint: false };
         this.inputSequence = 0;
         if (!this.failed) {
-          this.world.clearInput();
+          for (const value of this.world.clearInput()) event(this.world.tick, value);
           reply.packet = this.world.publish(this.watched);
         }
         return finish();
@@ -250,20 +317,25 @@ export class SimulationRuntime {
       for (let step = 0; step < (r.steps ?? 1); step++) {
         const commands = this.commands;
         this.commands = [];
-        for (const c of commands) this.world.enqueue(c.command);
-        this.world.step(this.input);
+        const result = this.world.step(
+          this.input,
+          commands.map((c) => c.command),
+        );
         for (let i = 0; i < commands.length; i++) {
           const c = commands[i];
           this.ledger.applied++;
           this.ledger.lastApplied = c.sequence;
-          reply.acknowledgements.push({
+          const acknowledgement = {
             sequence: c.sequence,
-            tick: this.world.resources.tick,
-            result: this.world.commandResults[i],
-          });
+            tick: this.world.tick,
+            result: result.commandResults[i],
+          };
+          reply.acknowledgements.push(acknowledgement);
+          event(this.world.tick, { kind: 'command-result', acknowledgement });
         }
+        for (const value of result.events) event(this.world.tick, value);
         this.appliedInput = this.inputSequence;
-        reply.completedTicks.push(this.world.resources.tick);
+        reply.completedTicks.push(this.world.tick);
       }
       if (reply.completedTicks.length) reply.packet = this.world.publish(this.watched);
       return finish();
@@ -272,9 +344,15 @@ export class SimulationRuntime {
         this.failed = true;
         this.active = false;
       }
-      reply.ok = false;
-      reply.error = error instanceof Error ? error.message : String(error);
-      return finish();
+      return {
+        ...envelope(),
+        operation: r.operation,
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        completedTicks: [],
+        acknowledgements: [],
+        events: [],
+      };
     }
   }
 }

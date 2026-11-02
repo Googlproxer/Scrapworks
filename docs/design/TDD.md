@@ -6,22 +6,24 @@ Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D 
 
 ## Agreed technical requirements
 
-* Keep the game browser-first, with Angular UI and a fully 3D world/character.
-* Author scenes and world layout in one Scrapworks Editor project; attached scripts handle presentation and scene bindings.
-* Keep authoritative gameplay in plain TypeScript and save progress locally through versioned data snapshots.
-* Defer accounts/cloud saves, remote control, physics, and navigation systems until a defined requirement needs them.
+- Keep the game browser-first, with Angular UI and a fully 3D world/character.
+- Author scenes and world layout in one Scrapworks Editor project; attached scripts handle presentation and scene bindings.
+- Keep authoritative gameplay in plain TypeScript and save progress locally through versioned data snapshots.
+- Defer accounts/cloud saves, remote control, physics, and navigation systems until a defined requirement needs them.
+
+The [runtime architecture decision](../decisions/runtime-architecture.md) defines version-2 contracts, ownership, notifications, scene registrations and enforcement.
 
 ## Technical stack and current implementation
 
-| Responsibility      | Choice                         | Current implementation                                                                                    |
-| ------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Application and UI  | Angular 22, signals, CDK       | Shell, shared viewport, field-kit inventory/research/handcraft/MiniFab panels, winding, exit warning, menus and Retry. |
-| 3D presentation     | Babylon.js 9.30.0              | Sole renderer at `/`, with `/3d` compatibility redirect; authored scene bindings and runtime character presentation. |
-| Core object scripts | Babylon Toolkit 9.30.0        | TypeScript-attached scripts own player input/presentation, camera, selection and placement; no physics engine is enabled. |
-| Authoring           | Babylon.js Editor 5.5.2        | Saved inputs export/reload automatically; validated marker metadata compiles into a plain world definition. |
-| Client subscription | RxJS behind plain `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                              |
-| Gameplay            | Plain TypeScript               | Private Miniplex authority, typed movement/opening commands, deterministic 20 Hz salvage/research/handcraft/MiniFab executors and detached views. Factory progression remains planned. |
-| Persistence         | Dexie / IndexedDB              | Test-data service/dialog only; no playable-world snapshot or round trip.                                  |
+| Responsibility      | Choice                           | Current implementation                                                                                                                                                                 |
+| ------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Application and UI  | Angular 22, signals, CDK         | Shell, shared viewport, field-kit inventory/research/handcraft/MiniFab panels, winding, exit warning, menus and Retry.                                                                 |
+| 3D presentation     | Babylon.js 9.32.0                | Sole renderer at `/`, with `/3d` compatibility redirect; authored scene bindings and runtime character presentation.                                                                   |
+| Core object scripts | Scene-owned native Babylon hooks | TypeScript-attached scripts own player input/presentation, camera, selection and placement; no physics engine is enabled.                                                              |
+| Authoring           | Babylon.js Editor 5.5.3          | Saved inputs export/reload automatically; validated marker metadata compiles into a plain world definition.                                                                            |
+| Client subscription | RxJS in main-thread `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                                                                                                           |
+| Gameplay            | Plain TypeScript                 | Private Miniplex authority, typed movement/opening commands, deterministic 20 Hz salvage/research/handcraft/MiniFab executors and detached views. Factory progression remains planned. |
+| Persistence         | Dexie / IndexedDB                | Test-data service/dialog only; no playable-world snapshot or round trip.                                                                                                               |
 
 The [cleanup record](../plans/3d-cleanup.md) defines current asset boundaries and retired-source recovery. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements.
 
@@ -31,7 +33,7 @@ The class diagram describes the implemented session and opening. The application
 
 ### Core class diagram
 
-The application runtime owns one host `GameSession`; the existing render callback supplies bounded credits to one dedicated module worker. `Simulation` exclusively owns private Miniplex components and world resources and delegates authoritative player movement to plain [`PlayerMotor`](../../src/simulation/player-motor.ts). [`WorldScene`](../../src/game/views/world-scene.ts) composes Toolkit scripts and entity views that consume the initial definition and detached `WorldView` values. [`WorldSessionBridge`](../../src/contracts/game-client.ts) connects these scene objects to the application-owned session without exposing its mutable state.
+The application runtime owns one host `GameSession`; the existing render callback supplies bounded credits to one dedicated module worker. `Simulation` exclusively owns private Miniplex components and world resources and delegates authoritative player movement to plain [`PlayerMotor`](../../src/simulation/player-motor.ts). [`WorldScene`](../../src/game/views/world-scene.ts) composes native presentation behaviors and entity views that consume the initial definition and detached `WorldView` values. [`WorldSessionBridge`](../../src/contracts/game-client.ts) connects these scene objects to the application-owned session without exposing its mutable state.
 
 [SVG image](../diagrams/core-class-diagram.svg) / [PNG image](../diagrams/core-class-diagram.png) / [Mermaid source](../diagrams/src/core-class-diagram.mmd)
 
@@ -46,12 +48,12 @@ classDiagram
     }
     class GameClient {
         <<interface>>
-        +subscribe(listener)
+        state$ and typed notification streams
         +setScene(key)
         +destroy()
     }
     class BabylonGameClient {
-        +subscribe(listener)
+        state$ and typed notification streams
         +setScene(key)
         +destroy()
     }
@@ -64,9 +66,9 @@ classDiagram
         +view
     }
     class Simulation {
-        +enqueue(command)
-        +step(movement)
-        +view
+        +step(movement, commandBatch)
+        detached SimulationStepResult
+        +publish() and capture()
     }
     class PlayerMotor {
         movement and collision
@@ -117,15 +119,15 @@ classDiagram
         <<data>>
         lean numeric cache and bounded details
         movement presentation
-        command result
+        deeply readonly completed data
     }
     class WorldScene {
         compose scripts and entity views
         explicit frame phases
         +dispose()
     }
-    class GameplayScript {
-        Toolkit lifecycle
+    class PresentationBehavior {
+        Native Babylon lifecycle
         optional onGameTick(context)
         automatic tick subscription
     }
@@ -135,8 +137,6 @@ classDiagram
         +frame(seconds, movement, sprint, active, simulationActive)
         +completeFrame()
         +registerCompletedTickHandler(handler, order)
-        +place(cell, rotation)
-        +preview(cell, rotation)
     }
     class InputManager {
         +takeFrame()
@@ -187,8 +187,8 @@ classDiagram
     PresentationCache ..> WorldView : exposes completed data
     WorldScene ..> WorldView : displays completed state
     GameSession ..> WorldView : exposes current view
-    WorldScene "1" *-- "many" GameplayScript : composes core objects
-    GameplayScript ..> WorldSessionBridge : sends intent and registers ticks
+    WorldScene "1" *-- "many" PresentationBehavior : composes core objects
+    PresentationBehavior ..> WorldSessionBridge : sends intent and registers ticks
     WorldScene ..> WorldSessionBridge : advances once per frame
     GameRuntimeService --> WorldSessionBridge : supplies guarded adapter
     WorldSessionBridge ..> GameSession : delegates to current session
@@ -212,7 +212,7 @@ flowchart TB
 
     subgraph Presentation[Presentation]
         UI[Angular panels and menus]
-        Scene[WorldScene and Toolkit core scripts]
+        Scene[WorldScene and native presentation behaviors]
         Facade[GameRuntimeService session bridge]
         Views[Published read-only views]
     end
@@ -343,19 +343,17 @@ The Editor owns saved cameras, lights, materials, static geometry, and world mar
 
 ### Core object scripts
 
-`@babylonjs-toolkit/next` is pinned to 9.30.0 alongside Babylon 9.30.0. Core scripts are constructed and attached in TypeScript; the Editor continues to own scenes, layout and visual bindings. Toolkit owns initialization, render updates, late updates and destruction. Physics callbacks are reserved for future physics features; Havok and physics-based scheduling are not part of this integration.
+[PresentationBehavior](../../src/game/lifecycle/presentation-behavior.ts) and [ScenePresentationLifecycle](../../src/game/lifecycle/scene-presentation-lifecycle.ts) own the code-attached behaviors. One ordered before-render dispatcher starts each enabled behavior on its first owned frame and then runs updates. One late dispatcher runs once before render targets, even when Babylon repeats that hook per camera. There is no global playing flag or extra ticker. Editor-attached scripts retain the Editor lifecycle.
 
-The adapter uses Toolkit's public `SceneManager.AttachScriptComponent` registration directly. It deliberately omits `InitializeRuntime`, which installs global glTF loader overrides that these code-attached scripts do not need. Native startup calls `awake` on the first render, `start` on the second and `update` from the third. The client waits for script initialization before reporting Game ready. No component lifecycle method is invoked manually.
-
-| Responsibility | Owner |
-| --- | --- |
-| Shared movement and sprint input | `PlayerController` interprets the frame's shared `ActionFrame` and submits plain intent. |
-| Authoritative position, collision and facing | Session-owned `PlayerMotor` in plain simulation code. |
-| Character rig, interpolation, turning and animation | `PlayerView`. |
-| Orbit, zoom, following and occlusion | `CameraController`. |
-| Picking and interaction feedback | `SelectionController`. |
-| Build mode, rotation, preview and confirmation | `PlacementController`. |
-| Entity meshes and materials | Individual view objects, synchronized by entity ID. |
+| Responsibility                                      | Owner                                                                                    |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Shared movement and sprint input                    | `PlayerController` interprets the frame's shared `ActionFrame` and submits plain intent. |
+| Authoritative position, collision and facing        | Session-owned `PlayerMotor` in plain simulation code.                                    |
+| Character rig, interpolation, turning and animation | `PlayerView`.                                                                            |
+| Orbit, zoom, following and occlusion                | `CameraController`.                                                                      |
+| Picking and interaction feedback                    | `SelectionController`.                                                                   |
+| Build mode, rotation, preview and confirmation      | `PlacementController`.                                                                   |
+| Entity meshes and materials                         | Individual view objects, synchronized by entity ID.                                      |
 
 `WorldScene` is the composition root for those objects. `BabylonGameClient` retains browser/render lifecycle responsibilities rather than gameplay-feature branches. The integration defines frame phases explicitly, so incidental construction or array order does not determine behavior:
 
@@ -366,11 +364,7 @@ The adapter uses Toolkit's public `SceneManager.AttachScriptComponent` registrat
 5. Follow the player, update occlusion, pick the world and update placement feedback.
 6. Draw the scene.
 
-[`attachScriptsInOrder`](../../src/game/toolkit/attach-scripts-in-order.ts) sorts explicit numeric phases before native Toolkit registration. During one `scene.render()`, native `update` runs camera controls (10), player interpretation (20), `SessionDriver` advancement/publication (30), player presentation (40) and entity presentation (50). Native `late`, before render targets are drawn, runs camera follow/occlusion (10), selection (60) and placement feedback (70). The script ordering belongs to the composition root; optional gameplay tick ordering belongs separately to the session.
-
-Generation, transition and input-revision checks invalidate remaining work when ownership changes during a frame. Scene destruction unregisters scripts before disposing their assets; asynchronous Inspector closure remains ahead of scene/engine disposal. Cancelled loads cannot attach scripts or publish into a newer scene. A healthy session survives viewport recreation and renderer-only Retry. A failed authoritative session exposes only its last completed state and is recreated on explicit Retry.
-
-[`GameplayScript`](../../src/game/toolkit/gameplay-script.ts) guards callbacks against stale ownership and observes both node and scene disposal. Its idempotent teardown calls public `SceneManager.DestroyScriptComponent`: Toolkit 9.30.0's base `ScriptComponent.dispose()` is empty. Native destruction then removes the application's tick subscription and disposes the script's owned resources.
+[attachPresentationBehaviors](../../src/game/lifecycle/attach-presentation-behaviors.ts) registers numeric phases: camera input (10), player interpretation (20), session pin/completion/credits (30), player presentation (40), entities (50), selection (60), placement (70). Late hooks run camera follow/occlusion, selection and placement. Ordered hooks execute synchronously so exceptions reach the renderer boundary. Node/ancestor enablement and frame generation/revision guards stop invalid work immediately. Disposal releases observers and tick subscriptions, then destroys resources in reverse order. Healthy sessions survive renderer Retry; failed workers restart only on explicit Retry.
 
 ### ECS foundation from Milestone 3
 
@@ -385,9 +379,9 @@ Browser results govern worker qualification: 100,000 meaningful entities on the 
 The [production implementation plan](../plans/ecs-worker-implementation.md) is complete through Step 0, with [production qualification](../reports/ecs-worker-implementation/2026-10-30/README.md). Its two user-confirmed policies are implemented: existing `onGameTick` hooks are main-thread completed-tick **presentation** notifications, drained during an owned render frame; failure Retry starts a fresh world from the authored initial definition, with no automatic checkpoints. Healthy renderer-only Retry retains its live session; page teardown disposes it. A failed worker or presentation hook requires a fresh authored world.
 
 - **Single authority:** Simulation owns one ECS runtime, component stores and explicit world resources. Component values remain plain gameplay data; queries/indexes/library handles are private runtime machinery. The old mutable WorldState scaffold has been removed. WorldView is a detached projection, not another writable world. WorldDefinition remains authored initialization; renderer GameState remains lifecycle state.
-- **Opening composition:** meaningful entities include the player/inventory owner, deposits, ground piles and personal processing jobs/devices. Components hold position/owner links, bag/equipment, work/reservations, buffers/capabilities and charge as needed. Keep content immutable and shared time/ID allocation, research and histories as explicit world resources where appropriate; do not invent entities for every item unit or singleton field.
+- **Opening composition:** meaningful entities include the player/inventory owner, deposits, ground piles and personal processing jobs/devices. Production entities are player, deposits, piles and development placement buildings. Opening jobs, buffers and charge are player-owned components; generic owner/work/reservation schemas are absent. Keep content immutable and shared time/ID allocation, research and histories as explicit world resources where appropriate; do not invent entities for every item unit or singleton field.
 - **Shared domain logic:** slot capacity/transactions, recipe costs/eligibility, work progression, recovery/history rules and result accounting remain plain functions independent of the ECS library. Systems query relevant components and invoke those rules. Handcraft UI requirements, MiniFab charge/precursors and factory arity/power remain executor policies; later machines do not require replacing the opening's inventory or production engine.
-- **Existing clock:** retain one application-owned 20 Hz scheduler and the five-step catch-up contract. GameSession supplies host frame credits, counts in-flight steps against the same five-step allowance, and permits one advance request at a time. The worker has no ticker. Simulation's fixed step invokes ordered ECS systems with explicit structural-mutation boundaries; manual/current-handcraft spending precedes requested MiniFab then Field Research. Do not derive priorities from incidental query iteration or run authoritative systems through Toolkit tick subscriptions. Reuse PlayerMotor's tested movement algorithms against ECS-owned data; camera and player Toolkit scripts continue as presentation/input adapters.
+- **Existing clock:** retain one application-owned 20 Hz scheduler and the five-step catch-up contract. GameSession supplies host frame credits, counts in-flight steps against the same five-step allowance, and permits one advance request at a time. The worker has no ticker. Simulation's fixed step invokes ordered ECS systems with explicit structural-mutation boundaries; manual/current-handcraft spending precedes requested MiniFab then Field Research. Do not derive priorities from incidental query iteration or run authoritative systems through presentation tick subscriptions. Reuse PlayerMotor's tested movement algorithms against ECS-owned data; camera and player native presentation behaviors continue as presentation/input adapters.
 - **Stable boundaries:** game-owned stable IDs identify persisted entities/references; library-recycled IDs and object identity are runtime details. Angular/Babylon consume projections and submit commands without ECS query/component handles. Preserve the useful GameClient/WorldView interface while changing its internal state representation. Profile changed/selective projections and explicit snapshots so repeated full-world cloning does not erase the ECS benefit.
 - **Snapshot groundwork:** capture plain versioned component/resource data and rebuild a fresh runtime/queries/ID mapping. Verify continued simulation is equivalent and restoring components never fabricates production/refunds/research contributions. Milestone 4 implements persistence around this boundary; never serialize the ECS world, observers, queries or renderer objects as the save schema.
 
@@ -401,16 +395,16 @@ Production/extraction histories, per-technology consumed-material ledgers and wo
 
 The opening MiniFab, baseline battery and winding invariants below are implemented. Upgrade progression, lab coordination, factory power and recycler rules remain future requirements. All records remain plain and simulation-owned; Editor scripts and Angular views submit requests and consume projections.
 
-* MiniFab is a personal subsystem with a separate Angular panel beside inventory. Initial recipes must be researched and handcraftable; later crafted/researched modules can enable hazards/liquids. It follows both component branches and is hand-assembled without factory electricity. Plain state holds one requested target/batch, precursor plan, current operation/input buffer, completed output buffer, capacities, work and blocked reasons. Pull each complete operation at start from uncommitted inventory, optionally reuse output directly, and wait on stock shortages. Reject invalid/locked/cyclic chains without spending; share intermediates without hidden storage. Per-request intake is initial capability; autonomous min/max targets remain a later upgrade.
-* Baseline MiniFab work always progresses at 1x without power when ingredients/buffers allow. Initial local charge provides 60 active seconds at 2x speed, draining only during actual processing. Idle, paused, missing-stock, output-blocked and inventory-wait states spend no charge. Split steps at battery expiry/job completion, preserving inputs/work and using baseline speed for uncharged time. Five turns fill initially; gear T decreases toward one. Charge gain = capacity * abs(accepted angular travel degrees) / (360*T), capped at capacity, with concurrent work drain still applied. Unlimited capacity level n = 60*1.5^n boosted seconds, physical level-n cost = base recipe * 2^(n-1); stored charge is not refilled by capacity upgrades. Turns-to-full is independent of capacity. Tier costs/spacing and later source stacking remain future content.
-* Winding adapters report actual accepted handle angular travel while the focused/grabbed crank owns input. Pointer drag and selected right-stick direction align the handle; keyboard Up/Right/Down/Left/Up is one turn-equivalent. Credit fractional clockwise/counterclockwise/back-and-forth travel continuously, with no full-turn gate. Filter device noise/centre ambiguity/stale jumps, not genuine reversals; unchanged held keys/centre stick earn nothing. Enforce equivalent configurable angular rate/capacity bounds across adapters and frame schedules. Release/focus/selection ownership changes end the gesture without replaying gaps. Save charge/ranks, not active gestures; no factory electricity or accelerometer implementation is required.
-* MiniFab upgrade state distinguishes related general technology, MiniFab-specific research, crafted upgrade ownership and applied effects. Solar/wind/coal/grid upgrades improve speed and coal incurs pollution; no research-complete callback grants the physical upgrade. Grid integration waits for electricity. Inventory-driven min/max automation is a separate later upgrade with unresolved trigger semantics. Persist local charge/capacity and applied upgrades, not current gesture paths or device permission handles.
-* Content distinguishes a recipe's distinct ingredient count from quantities: Basic Fabricator accepts one type, Medium two, Advanced three or four. Higher tiers cannot execute lower-arity recipes; recycler and Mini Fabricator capabilities are separate.
-* Recycler output comes from a specified random output catalog rather than a selected deterministic recipe. Use a simulation-owned seeded PRNG, save its state and persist any rolled pending output. Blocked output, load and repeated commands cannot reroll a batch.
-* Disassembly must preflight its entire body-material return and intact buffers against post-removal bag capacity. If insufficient, leave item/device/job/contents intact, with no partial dismantle, early cancellation or ground spill. A successful atomic action cancels unfinished work with original inputs, recovers contents once and preserves research/history.
-* Dismantling completed buildings/items returns full embodied solid value as scrap for scrap-origin material or source ore for other material; source ores require full reprocessing. Liquids are lost, with exact future equivalence/provenance deferred until advanced materials exist. Research inputs are permanently consumed and never refundable. Every completed re-craft counts as production; recovery/refunds/transfers do not. MiniFab cancellation discards partial work and preserves original inputs; return to inventory or retain input/output buffers if blocked. While residue remains, replacement requires the same input types (quantities may differ), and output must clear before another recipe starts. Exact same cancelled recipe may start with uncleared output only if a full next result fits. Save cancellation recipe identity/input types and residual contents; never duplicate refunds or bypass restrictions on load.
-* Daylight, fluctuating wind, the non-event wind minimum and Dunkelflaute events derive from saved simulation time/weather state. Save any random state; do not read wall-clock time or use presentation randomness for gameplay decisions. Coal-free progression is required, and weather/pollution cannot create a permanent progression lockout.
-* Finite resource quantities are deliberately generous. Future resource configuration and train/loading-station systems remain outside the first prototype.
+- MiniFab is a personal subsystem with a separate Angular panel beside inventory. Initial recipes must be researched and handcraftable; later crafted/researched modules can enable hazards/liquids. It follows both component branches and is hand-assembled without factory electricity. Plain state holds one requested target/batch, precursor plan, current operation/input buffer, completed output buffer, capacities, work and blocked reasons. Pull each complete operation at start from uncommitted inventory, optionally reuse output directly, and wait on stock shortages. Reject invalid/locked/cyclic chains without spending; share intermediates without hidden storage. Per-request intake is initial capability; autonomous min/max targets remain a later upgrade.
+- Baseline MiniFab work always progresses at 1x without power when ingredients/buffers allow. Initial local charge provides 60 active seconds at 2x speed, draining only during actual processing. Idle, paused, missing-stock, output-blocked and inventory-wait states spend no charge. Split steps at battery expiry/job completion, preserving inputs/work and using baseline speed for uncharged time. Five turns fill initially; gear T decreases toward one. Charge gain = capacity * abs(accepted angular travel degrees) / (360*T), capped at capacity, with concurrent work drain still applied. Unlimited capacity level n = 60*1.5^n boosted seconds, physical level-n cost = base recipe * 2^(n-1); stored charge is not refilled by capacity upgrades. Turns-to-full is independent of capacity. Tier costs/spacing and later source stacking remain future content.
+- Winding adapters report actual accepted handle angular travel while the focused/grabbed crank owns input. Pointer drag and selected right-stick direction align the handle; keyboard Up/Right/Down/Left/Up is one turn-equivalent. Credit fractional clockwise/counterclockwise/back-and-forth travel continuously, with no full-turn gate. Filter device noise/centre ambiguity/stale jumps, not genuine reversals; unchanged held keys/centre stick earn nothing. Enforce equivalent configurable angular rate/capacity bounds across adapters and frame schedules. Release/focus/selection ownership changes end the gesture without replaying gaps. Save charge/ranks, not active gestures; no factory electricity or accelerometer implementation is required.
+- MiniFab upgrade state distinguishes related general technology, MiniFab-specific research, crafted upgrade ownership and applied effects. Solar/wind/coal/grid upgrades improve speed and coal incurs pollution; no research-complete callback grants the physical upgrade. Grid integration waits for electricity. Inventory-driven min/max automation is a separate later upgrade with unresolved trigger semantics. Persist local charge/capacity and applied upgrades, not current gesture paths or device permission handles.
+- Content distinguishes a recipe's distinct ingredient count from quantities: Basic Fabricator accepts one type, Medium two, Advanced three or four. Higher tiers cannot execute lower-arity recipes; recycler and Mini Fabricator capabilities are separate.
+- Recycler output comes from a specified random output catalog rather than a selected deterministic recipe. Use a simulation-owned seeded PRNG, save its state and persist any rolled pending output. Blocked output, load and repeated commands cannot reroll a batch.
+- Disassembly must preflight its entire body-material return and intact buffers against post-removal bag capacity. If insufficient, leave item/device/job/contents intact, with no partial dismantle, early cancellation or ground spill. A successful atomic action cancels unfinished work with original inputs, recovers contents once and preserves research/history.
+- Dismantling completed buildings/items returns full embodied solid value as scrap for scrap-origin material or source ore for other material; source ores require full reprocessing. Liquids are lost, with exact future equivalence/provenance deferred until advanced materials exist. Research inputs are permanently consumed and never refundable. Every completed re-craft counts as production; recovery/refunds/transfers do not. MiniFab cancellation discards partial work and preserves original inputs; return to inventory or retain input/output buffers if blocked. While residue remains, replacement requires the same input types (quantities may differ), and output must clear before another recipe starts. Exact same cancelled recipe may start with uncleared output only if a full next result fits. Save cancellation recipe identity/input types and residual contents; never duplicate refunds or bypass restrictions on load.
+- Daylight, fluctuating wind, the non-event wind minimum and Dunkelflaute events derive from saved simulation time/weather state. Save any random state; do not read wall-clock time or use presentation randomness for gameplay decisions. Coal-free progression is required, and weather/pollution cannot create a permanent progression lockout.
+- Finite resource quantities are deliberately generous. Future resource configuration and train/loading-station systems remain outside the first prototype.
 
 ## Simulation timing and save boundaries
 
@@ -418,7 +412,7 @@ The opening MiniFab, baseline battery and winding invariants below are implement
 
 `registerCompletedTickHandler(handler, order?)` registers main-thread presentation notifications. The owned render frame pins the latest completed publication, drains at most five summaries in tick/order/registration order, then submits future credits. Context includes the completed tick, fixed duration, world generation and publication tick/version; a catch-up notification may describe an earlier tick than the pinned view. New registrations never replay committed ticks. Unsubscription and ownership changes stop dispatch immediately. Hook commands affect a future step; hook failure retains the completed view and requires explicit authored-world Retry. Worker message handlers never execute scene scripts.
 
-The narrow `GameplayScript` base connects an implemented optional `onGameTick(context)` method through `WorldSessionBridge` during native `start` and disconnects it during destruction. The adapter checks script and object activation at dispatch time. Toolkit lifecycle registration and application tick registration remain distinct; this is not a second component framework or a manual invocation of Toolkit's physics hooks.
+The narrow `PresentationBehavior` base connects an implemented optional `onGameTick(context)` method through `WorldSessionBridge` during native `start` and disconnects it during destruction. The adapter checks script and object activation at dispatch time. Native Babylon lifecycle registration and application tick registration remain distinct; the renderer hooks never become simulation scheduling mechanisms.
 
 Continuous movement is sampled state. Discrete commands are captured once and queued until a tick consumes them, so catch-up cannot repeat a button press. Placement confirmation happens after the current frame's session advance and therefore targets a subsequent tick. Each authoritative step processes queued commands, advances player movement, increments the tick and publishes completed state. A failed step cannot expose partial state.
 
@@ -428,13 +422,13 @@ The bridge distinguishes active gameplay input from active simulation. Focusing 
 
 Keep active gameplay state in memory. Save a versioned data snapshot containing:
 
-* Player position, inventory, tools and MiniFab subsystem ownership, target/batch, precursor plan, local charge/capacity, crafted/applied upgrades, input/output buffers and capacities, remaining work, blocked reasons and cancelled recipe/input-type residue; later power-source/automatic policies only when implemented. Active winding gestures and device permission handles are session state, not save data.
-* Remaining deposits, placed machines, and connections.
-* Machine buffers, work progress, and items in transit.
-* Stored energy and water.
-* Cumulative production/extraction histories, per-technology consumed-material ledgers and remaining/partial work, active field target/enabled state, material-wait state, lab targets and research unlocks.
-* Seeded random-stream state, already-selected recycler outputs, daylight/wind/weather/event state and any deterministic coordination state.
-* Pollution, vegetation, and simulation time.
+- Player position, inventory, tools and MiniFab subsystem ownership, target/batch, precursor plan, local charge/capacity, crafted/applied upgrades, input/output buffers and capacities, remaining work, blocked reasons and cancelled recipe/input-type residue; later power-source/automatic policies only when implemented. Active winding gestures and device permission handles are session state, not save data.
+- Remaining deposits, placed machines, and connections.
+- Machine buffers, work progress, and items in transit.
+- Stored energy and water.
+- Cumulative production/extraction histories, per-technology consumed-material ledgers and remaining/partial work, active field target/enabled state, material-wait state, lab targets and research unlocks.
+- Seeded random-stream state, already-selected recycler outputs, daylight/wind/weather/event state and any deterministic coordination state.
+- Pollution, vegetation, and simulation time.
 
 Store identifiers and data rather than Angular services, Babylon meshes/materials, scene handles, or Editor components. Recipe and technology definitions belong to the game content; saves reference their identifiers and record a compatible content version.
 
@@ -462,9 +456,9 @@ Keep persistence behind a small save repository interface for listing, loading, 
 
 The first implementation checks should cover:
 
-* Saving and loading a running factory without changing inventory, research, production totals, or machine progress.
-* Continuing the simulation with the same results after restoration.
-* Migrating supported older save schemas.
-* Invalid saves or failed writes preserving the last usable state.
-* Research consuming the required materials exactly once while retaining cumulative production totals.
-* Crafting and placement rejecting equipment whose technology has not been researched.
+- Saving and loading a running factory without changing inventory, research, production totals, or machine progress.
+- Continuing the simulation with the same results after restoration.
+- Migrating supported older save schemas.
+- Invalid saves or failed writes preserving the last usable state.
+- Research consuming the required materials exactly once while retaining cumulative production totals.
+- Crafting and placement rejecting equipment whose technology has not been researched.

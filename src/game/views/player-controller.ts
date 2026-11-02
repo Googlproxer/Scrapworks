@@ -1,11 +1,11 @@
 import type { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import type { ActionFrame } from '@contracts/input';
 import { actionHeld } from '../input/action-state';
-import { GameplayScript } from '../toolkit/gameplay-script';
+import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import type { CameraController } from './camera-controller';
 import type { WorldFrame } from './world-frame';
 
-export class PlayerController extends GameplayScript {
+export class PlayerController extends PresentationBehavior {
   public constructor(
     node: TransformNode,
     private readonly frame: WorldFrame,

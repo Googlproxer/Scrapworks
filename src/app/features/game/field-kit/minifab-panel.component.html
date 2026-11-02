@@ -1,0 +1,90 @@
+@if (opening(); as opening) {
+  <h3 id="minifab-title">Mini Fabricator</h3>
+  @if (opening.state.minifab.owned) {
+    <p>{{ minifabStatus(opening.state.minifab) }}</p>
+    <p>
+      Power-free baseline ·
+      {{ opening.state.minifab.charge > 0 ? '2x charged speed' : '1x baseline speed' }}
+    </p>
+    <p>{{ seconds(opening.state.minifab.charge) }} / {{ capacity() }} active boost seconds</p>
+    <progress
+      [value]="opening.state.minifab.charge"
+      [max]="capacity()"
+      aria-label="MiniFab charge"
+    ></progress>
+    <app-winding-handle />
+    <div class="operation-status">
+      @if (opening.state.minifab.request; as request) {
+        <p>Target: {{ recipeName(request.recipe) }} · {{ request.left }} remaining</p>
+      } @else {
+        <p>No request selected</p>
+      }
+      @if (opening.state.minifab.job; as job) {
+        <p>
+          Current operation: {{ recipeName(job.recipe) }} · {{ seconds(job.remaining) }} s baseline
+          work left
+        </p>
+      } @else {
+        <p>No operation in progress</p>
+      }
+    </div>
+    <p class="buffer">Input buffer: {{ materials(opening.state.minifab.input) }}</p>
+    <p class="buffer">Output buffer: {{ materials(opening.state.minifab.output) }}</p>
+    <label for="minifab-recipe">MiniFab recipe</label>
+    <select
+      id="minifab-recipe"
+      [value]="miniRecipeId()"
+      (change)="chooseMiniRecipe($event)"
+      [disabled]="!!opening.state.minifab.request"
+    >
+      @for (recipe of recipes; track recipe.id) {
+        @if (recipe.minifab) {
+          <option [value]="recipe.id">
+            {{ recipe.name }}{{ recipeUnlocked(recipe) ? '' : ' (research required)' }}
+          </option>
+        }
+      }
+    </select>
+    <p>
+      {{ materials(miniRecipe().inputs) }} → {{ materials(miniRecipe().outputs) }}. Missing
+      compatible precursors are made first.
+    </p>
+    <label for="minifab-batch">MiniFab batch size</label>
+    <select
+      id="minifab-batch"
+      [value]="miniBatch()"
+      (change)="chooseMiniBatch($event)"
+      [disabled]="!!opening.state.minifab.request"
+    >
+      <option [value]="1">1</option>
+      @if (miniRecipe().id !== 'scrap-prybar') {
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="100">100</option>
+      }
+    </select>
+    <button
+      type="button"
+      [disabled]="!recipeUnlocked(miniRecipe()) || !!opening.state.minifab.request"
+      (click)="runtime.command({ type: 'minifab', recipe: miniRecipeId(), quantity: miniBatch() })"
+    >
+      Request {{ miniBatch() }} from MiniFab
+    </button>
+    <button type="button" (click)="runtime.command({ type: 'minifab', recipe: null, quantity: 0 })">
+      Cancel request / return buffers
+    </button>
+    <button
+      type="button"
+      [disabled]="!!opening.state.handcraft"
+      (click)="runtime.command({ type: 'dismantle', item: 'minifab' })"
+    >
+      Disassemble MiniFab
+    </button>
+  } @else {
+    <p>
+      Research Mini fabrication, then hand-assemble this personal device. It needs no factory
+      electricity.
+    </p>
+  }
+}

@@ -1,3 +1,6 @@
+import type { SimulationEntity, OpeningContext } from './opening-context';
+import type { EditableData } from '@contracts/readonly-data';
+import type { OpeningEvent } from '@contracts/session-event';
 import { World } from 'miniplex';
 import type {
   BuildingView,
@@ -18,7 +21,7 @@ import type {
   PresentationPacket,
   SimulationSnapshot,
   WorldResources,
-  ItemStack,
+  SimulationStepResult,
 } from '@contracts/simulation';
 import {
   MAX_DETAIL_SUBSCRIPTIONS,
@@ -38,55 +41,29 @@ export type { MovementIntent } from './player-motor';
 
 export { FIXED_STEP_SECONDS, PLAYER_RADIUS, SPRINT_SPEED, WALK_SPEED } from './world-rules';
 
-const stackCount = (stacks: readonly ItemStack[] | undefined): number => {
-  let count = 0;
-  if (stacks) for (const stack of stacks) count += stack.quantity;
-  return count;
-};
-
-/** Internal simulation records. Only detached plain data crosses the session boundary. */
-export interface SimulationEntity extends EntityData {
-  slot: number;
-  generation: number;
-  active?: true;
-  /** 1 = detached details changed, 2 = numeric row changed. */
-  dirty: number;
-}
-
-export interface SystemContext {
-  readonly active: Iterable<SimulationEntity>;
-  readonly entities: Iterable<SimulationEntity>;
-  readonly piles: Iterable<SimulationEntity>;
-  readonly resources: WorldResources;
-  allocateId(prefix: string): string;
-  get(id: string): SimulationEntity | undefined;
-  mark(entity: SimulationEntity, detailsOnly?: boolean): void;
-  replace(id: string, data: EntityData): void;
-  add(data: EntityData): void;
-  remove(id: string): void;
-  membership(entity: SimulationEntity, active: boolean): void;
-}
-
-export type SimulationSystem = (context: SystemContext) => void;
-
 export interface SimulationOptions {
   developerFixture?: boolean;
-  content?: ContentDefinition;
   snapshot?: SimulationSnapshot;
-  /** Trusted plain system composition; never accepted in a worker message. */
-  system?: SimulationSystem;
 }
 
 /** One private ECS authority, pure fixed steps, no renderer, storage or clock APIs. */
 export class Simulation {
   public readonly definition: WorldDefinition;
-  public readonly resources: WorldResources;
+  private readonly resources: WorldResources;
+
+  public get tick(): number {
+    return this.resources.tick;
+  }
+
+  public get playerId(): string {
+    return this.resources.playerId;
+  }
+
   private readonly world = new World<SimulationEntity>();
-  private readonly active = this.world.with('work', 'active');
   private readonly buildingsQuery = this.world.with('building');
   private readonly depositsQuery = this.world.with('deposit', 'transform');
   private readonly pilesQuery = this.world.with('pile', 'transform');
-  private readonly opening?: OpeningSystem;
+  private readonly opening: OpeningSystem;
   private readonly ids = new Map<string, SimulationEntity>();
   private readonly slots: (SimulationEntity | undefined)[] = [];
   private readonly generations: number[] = [];
@@ -97,13 +74,10 @@ export class Simulation {
   private created: EntityMapping[] = [];
   private removed: number[] = [];
   private version = 0;
-  private commands: WorldCommand[] = [];
-  private lastCommandResult: CommandResult | null = null;
-  public commandResults: CommandResult[] = [];
   private readonly playerMotor: PlayerMotor;
   private readonly content: ContentDefinition;
-  private readonly system?: SimulationSystem;
-  private readonly context: SystemContext;
+  private readonly context: OpeningContext;
+  private readonly authoredDeposits: ReadonlyMap<string, DepositDefinition>;
   private collisionCells: readonly GridCell[] = [];
   private structural: { id?: string; data?: EntityData }[] = [];
   private disposed = false;
@@ -112,7 +86,7 @@ export class Simulation {
   private endpoints: PlayerEndpoint[] = [];
 
   constructor(definition: WorldDefinition, options: SimulationOptions = {}) {
-    this.content = ownContent(options.content ?? OPENING_CONTENT);
+    this.content = ownContent(OPENING_CONTENT);
     if (options.snapshot) assertSnapshot(options.snapshot, this.content);
     assertWorldDefinition(definition);
     check(
@@ -121,6 +95,9 @@ export class Simulation {
       'Restore definition mismatch',
     );
     this.definition = structuredClone(definition);
+    this.authoredDeposits = new Map(
+      this.definition.deposits.map((deposit) => [deposit.id, deposit]),
+    );
 
     const freeze = (value: unknown): void => {
       if (!value || typeof value !== 'object' || Object.isFrozen(value)) return;
@@ -144,11 +121,9 @@ export class Simulation {
           research: {},
           productionTotals: {},
           extractionTotals: {},
-          counters: {},
         };
     if (options.snapshot) {
       for (const record of options.snapshot.entities) this.insert(structuredClone(record));
-      this.lastCommandResult = structuredClone(options.snapshot.lastCommandResult);
     } else {
       this.insert({
         id: playerId,
@@ -161,7 +136,7 @@ export class Simulation {
         },
         inventory: emptyInventory(),
         equipment: { tool: null },
-        ...(!options.content ? { opening: newOpening() } : {}),
+        opening: newOpening(),
       });
       for (const deposit of definition.deposits)
         this.insert({
@@ -184,22 +159,13 @@ export class Simulation {
       player.transform,
       () => this.collisionCells,
     );
-    this.system = options.system;
     this.context = {
-      active: this.active.entities,
-      entities: this.world.entities,
+      player,
       piles: this.pilesQuery.entities,
       resources: this.resources,
       allocateId: (prefix) => this.allocateId(prefix),
       get: (id) => this.ids.get(id),
       mark: (entity, detailsOnly) => this.mark(entity, detailsOnly),
-      replace: (id, data) => {
-        check(
-          this.stepping && this.structural.length < 250000,
-          'Mutation outside fixed step/overflow',
-        );
-        this.structural.push({ id, data });
-      },
       add: (data) => {
         check(
           this.stepping && this.structural.length < 250000,
@@ -214,21 +180,14 @@ export class Simulation {
         );
         this.structural.push({ id });
       },
-      membership: (entity, enabled) => {
-        check(this.stepping && this.ids.get(entity.id) === entity, 'Stale membership');
-        // Undefined is Miniplex's absent-component sentinel. Native update/reindex
-        // preserves query semantics without deleting a hot object's property.
-        this.world.update(entity, 'active', enabled ? true : undefined);
-        this.mark(entity);
-      },
     };
-    if (player.opening) this.opening = new OpeningSystem(this.context);
+    check(player.opening, 'Missing opening component');
+    this.opening = new OpeningSystem(this.context);
     this.rememberPlayer();
   }
 
   private mapping(e: SimulationEntity): EntityMapping {
-    const authored =
-      e.deposit && e.transform ? this.definition.deposits.find((d) => d.id === e.id) : undefined;
+    const authored = e.deposit && e.transform ? this.authoredDeposits.get(e.id) : undefined;
     return {
       id: e.id,
       slot: e.slot,
@@ -258,8 +217,6 @@ export class Simulation {
       slot,
       generation,
       dirty: 0,
-      work: data.work,
-      charge: data.charge,
       id: data.id,
       kind: data.kind,
       transform: data.transform,
@@ -268,9 +225,7 @@ export class Simulation {
       deposit: data.deposit,
       pile: data.pile,
       building: data.building,
-      owner: data.owner,
       opening: data.opening,
-      active: data.work?.status === 'active' ? true : undefined,
     };
     this.world.add(entity);
     this.ids.set(entity.id, entity);
@@ -303,7 +258,7 @@ export class Simulation {
 
   private readDeposits(): DepositDefinition[] {
     return Array.from(this.depositsQuery).flatMap((e) => {
-      const source = this.definition.deposits.find((d) => d.id === e.id);
+      const source = this.authoredDeposits.get(e.id);
       return source
         ? [
             {
@@ -334,32 +289,32 @@ export class Simulation {
     if (this.endpoints.length > 2) this.endpoints.shift();
   }
 
-  public enqueue(command: WorldCommand): void {
-    check(!this.disposed && this.commands.length < 256, 'Disposed simulation/command overflow');
-    this.commands.push(structuredClone(command));
-  }
-
-  public clearInput(): void {
-    this.commands = [];
+  public clearInput(): readonly OpeningEvent[] {
+    check(!this.disposed, 'Disposed simulation');
     this.playerMotor.clearInput();
-    this.opening?.interrupt();
+    this.opening.interrupt();
     this.mark(this.ids.get(this.resources.playerId)!);
+    return this.opening.drainEvents();
   }
 
-  public step(movement: MovementIntent): void {
+  public step(
+    movement: MovementIntent,
+    commands: readonly WorldCommand[] = [],
+  ): SimulationStepResult {
     check(!this.disposed && !this.stepping, 'Disposed or recursive simulation');
+    check(commands.length <= 256, 'Command overflow');
     this.stepping = true;
+    const commandResults: CommandResult[] = [];
     try {
-      this.commandResults = [];
-      for (const command of this.commands) {
-        if (command.type !== 'place' && this.opening) {
-          this.lastCommandResult = this.opening.command(command);
-          this.commandResults.push(this.lastCommandResult);
+      for (const command of commands) {
+        if (command.type !== 'place') {
+          const result = this.opening.command(command);
+          commandResults.push(result);
           continue;
         }
         if (command.type !== 'place' || command.buildingId !== 'test-building') {
-          this.lastCommandResult = { accepted: false, reason: 'unknown-command' };
-          this.commandResults.push(this.lastCommandResult);
+          const result: CommandResult = { accepted: false, reason: 'unknown-command' };
+          commandResults.push(result);
           continue;
         }
         const result = validatePlacement(
@@ -369,8 +324,7 @@ export class Simulation {
           command.rotation,
           this.developerFixture,
         );
-        this.lastCommandResult = { accepted: result.valid, reason: result.reason };
-        this.commandResults.push(this.lastCommandResult);
+        commandResults.push({ accepted: result.valid, reason: result.reason });
         if (result.valid) {
           const id = this.allocateId('building');
           const building: BuildingView = {
@@ -385,11 +339,9 @@ export class Simulation {
           this.rebuildCollision();
         }
       }
-      this.commands = [];
-      this.system?.(this.context);
       this.playerMotor.step(movement);
-      this.opening?.step(FIXED_STEP_SECONDS);
-      if (this.opening?.collisionChanged) this.rebuildCollision();
+      this.opening.step(FIXED_STEP_SECONDS);
+      if (this.opening.collisionChanged) this.rebuildCollision();
       this.mark(this.ids.get(this.resources.playerId)!);
       for (const change of this.structural) {
         if (change.id) this.remove(change.id);
@@ -399,6 +351,7 @@ export class Simulation {
       this.structural = [];
       this.resources.tick++;
       this.rememberPlayer();
+      return { commandResults, events: this.opening.drainEvents() };
     } finally {
       this.stepping = false;
     }
@@ -424,9 +377,6 @@ export class Simulation {
       'deposit',
       'pile',
       'building',
-      'owner',
-      'work',
-      'charge',
       'opening',
     ] as const)
       if (e[key] !== undefined) Object.assign(data, { [key]: e[key] });
@@ -469,15 +419,6 @@ export class Simulation {
       }
       if (e.deposit) rows[at + 7] = e.deposit.quantity;
       else if (e.pile) rows[at + 7] = e.pile.quantity;
-      if (e.charge) rows[at + 9] = e.charge.value;
-      const work = e.work;
-      if (work) {
-        rows[at + 8] = work.remaining;
-        rows[at + 10] = stackCount(work.reserved);
-        rows[at + 11] = stackCount(work.held);
-        rows[at + 12] = work.status === 'active' ? 1 : work.status === 'blocked' ? 2 : 0;
-        rows[at + 13] = work.completed;
-      }
       at += PRESENTATION_STRIDE;
     }
     // A batch can create, remove and recycle a slot before publication. Only
@@ -488,7 +429,7 @@ export class Simulation {
           (mapping) => this.slots[mapping.slot]?.generation === mapping.generation,
         );
     const packet: PresentationPacket = {
-      schema: 1,
+      schema: 2,
       version: ++this.version,
       base: this.version - 1,
       full,
@@ -501,12 +442,11 @@ export class Simulation {
       removed: new Float64Array(this.removed).buffer,
       details,
       endpoints: this.endpoints.map((e) => structuredClone(e)),
-      lastCommandResult: this.lastCommandResult ? { ...this.lastCommandResult } : null,
       research: Object.entries(this.resources.research)
         .filter(([, l]) => l.unlocked)
         .map(([id]) => id),
       productionTotals: { ...this.resources.productionTotals },
-      ...(this.opening ? { opening: this.opening.view() } : {}),
+      opening: this.opening.view(),
     };
     // Retain bounded backing storage, release component references, and avoid
     // growing a new JS array for every publication.
@@ -518,29 +458,16 @@ export class Simulation {
     return packet;
   }
 
-  public setPublicationDirty(fraction: number): void {
-    for (let index = 0; index < this.dirtyLength; index++) this.dirty[index]!.dirty = 0;
-    this.dirty.fill(undefined, 0, this.dirtyLength);
-    this.dirtyLength = 0;
-    this.dirtyCount = 0;
-    let remaining = Math.floor(this.ids.size * fraction);
-    for (const entity of this.world) {
-      if (remaining-- <= 0) break;
-      this.mark(entity);
-    }
-  }
-
   public capture(): SimulationSnapshot {
     check(!this.disposed && !this.stepping, 'Invalid capture boundary');
     return {
-      version: 1,
+      version: 2,
       contentVersion: this.content.version,
-      definition: structuredClone(this.definition),
+      definition: structuredClone(this.definition) as EditableData<WorldDefinition>,
       resources: structuredClone(this.resources),
       entities: Array.from(this.world, (e) => this.detach(e)).sort((a, b) =>
         a.id < b.id ? -1 : a.id > b.id ? 1 : 0,
       ),
-      lastCommandResult: structuredClone(this.lastCommandResult),
     };
   }
 
@@ -556,7 +483,8 @@ export class Simulation {
       nextEntityId: this.resources.nextEntityId,
       player: structuredClone(player.transform!),
       inventory,
-      ...(this.opening ? { opening: this.opening.view(), ground: this.groundView() } : {}),
+      opening: this.opening.view(),
+      ground: this.groundView(),
       equipment: player.equipment?.tool ? [player.equipment.tool] : [],
       research: Object.entries(this.resources.research)
         .filter(([, r]) => r.unlocked)
@@ -564,14 +492,12 @@ export class Simulation {
       productionTotals: { ...this.resources.productionTotals },
       deposits: this.readDeposits(),
       buildings: Array.from(this.buildingsQuery, (e) => structuredClone(e.building)),
-      lastCommandResult: structuredClone(this.lastCommandResult),
     };
   }
 
   public dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
-    this.active.disconnect();
     this.buildingsQuery.disconnect();
     this.depositsQuery.disconnect();
     this.pilesQuery.disconnect();
@@ -583,7 +509,6 @@ export class Simulation {
     this.dirtyCount = 0;
     this.created = [];
     this.removed = [];
-    this.commands = [];
     this.structural = [];
     this.endpoints = [];
     this.collisionCells = [];

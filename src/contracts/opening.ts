@@ -1,4 +1,5 @@
-import type { ItemStack, InventoryData, WorldResources } from './simulation';
+import type { MiniFabStatus } from './session-event';
+import type { ItemStack } from './simulation';
 import type { WorldPosition } from './world';
 
 export interface CraftOperation {
@@ -21,7 +22,6 @@ export interface OpeningData {
   fieldTechnology: string | null;
   fieldEnabled: boolean;
   moved: boolean;
-  message: string;
   minifab: {
     owned: boolean;
     request: { recipe: string; left: number } | null;
@@ -33,24 +33,70 @@ export interface OpeningData {
     capacityLevel: number;
     gearing: number;
     windBudget: number;
-    status: string;
+    status: MiniFabStatus;
   };
 }
 
 export interface GroundItemView {
-  id: string;
-  position: WorldPosition;
-  item: string;
-  quantity: number;
+  readonly id: string;
+  readonly position: WorldPosition;
+  readonly item: string;
+  readonly quantity: number;
 }
 
 /** Small detached player projection; never serializes the ECS population. */
 export interface OpeningView {
-  state: OpeningData;
-  bag: InventoryData;
-  tool: string | null;
-  ledgers: WorldResources['research'];
-  extracted: Readonly<Record<string, number>>;
+  readonly state: {
+    readonly salvage: { readonly target: string; readonly remaining: number } | null;
+    readonly handcraft:
+      | (CraftOperationView & {
+          readonly inputs: readonly ItemStackView[];
+          readonly unitsLeft: number;
+        })
+      | null;
+    readonly handcraftVisible: boolean;
+    readonly handcraftSuspended: boolean;
+    readonly fieldTechnology: string | null;
+    readonly fieldEnabled: boolean;
+    readonly moved: boolean;
+    readonly minifab: {
+      readonly owned: boolean;
+      readonly request: { readonly recipe: string; readonly left: number } | null;
+      readonly job: CraftOperationView | null;
+      readonly input: readonly ItemStackView[];
+      readonly output: readonly ItemStackView[];
+      readonly outputRecipe: string | null;
+      readonly charge: number;
+      readonly capacityLevel: number;
+      readonly gearing: number;
+      readonly windBudget: number;
+      readonly status: MiniFabStatus;
+    };
+  };
+  readonly bag: { readonly slots: readonly (ItemStackView | null)[] };
+  readonly tool: string | null;
+  readonly ledgers: Readonly<
+    Record<
+      string,
+      {
+        readonly consumed: Readonly<Record<string, number>>;
+        readonly work: number;
+        readonly unlocked: boolean;
+      }
+    >
+  >;
+  readonly extracted: Readonly<Record<string, number>>;
+}
+
+interface ItemStackView {
+  readonly item: string;
+  readonly quantity: number;
+}
+
+interface CraftOperationView {
+  readonly id: string;
+  readonly recipe: string;
+  readonly remaining: number;
 }
 
 export type OpeningCommand =

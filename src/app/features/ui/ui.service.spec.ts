@@ -1,3 +1,4 @@
+import { EMPTY } from 'rxjs';
 import { Dialog } from '@angular/cdk/dialog';
 import {
   Component,
@@ -36,6 +37,7 @@ describe('UiService', () => {
           provide: GameRuntimeService,
           useValue: {
             world: signal(null),
+            events$: EMPTY,
             errorMessage: signal(null),
             setInputEnabled,
             requestWorkExit: (continuation: () => void) => continuation(),
