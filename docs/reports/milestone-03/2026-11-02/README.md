@@ -10,6 +10,12 @@ Presentation activity is now independent of canvas input ownership. The built ap
 
 The revised empty-handed route reaches its first automatic craft in 264.41 seconds (4:24), with no gameplay waits added. Desktop/mobile full-page axe checks report no violations. The simulation worker remains byte-identical to the opening build; production worker lifecycle/Retry and graph separation pass again. Screenshots: [centred kit](field-kit-tabbed.png), [Research tab](field-kit-research.png), [viewport notification with the kit closed](notification-viewport.png) and [narrow viewport](field-kit-tabbed-mobile.png).
 
+## CI acceptance timing fix
+
+[CI run 41387335351](https://github.com/Googlproxer/Scrapworks/actions/runs/41387335351) passed all 328 browser tests, the production build and worker separation, then failed the built-worker acceptance assertion because the player position remained at its spawn. The harness released its movement key after a fixed 300 ms, assuming a render callback had sampled it. Withholding render callbacks locally reproduced the identical failure with no browser errors or failed requests.
+
+The repaired test holds native input until authoritative movement is observed, releases it in `finally`, waits for a later stopped worker state, and polls for the original 1 mm renderer-convergence threshold. The opening UI check also waits for actual movement before opening the kit. CI now runs production acceptance normally and with `--render-delay-ms=1000`; delayed callbacks preserve cancellation and do not mutate game state. Failure diagnostics include the stage, last worker state and browser activity. Both production modes pass locally. The full opening route also passes in 259.07 seconds, including axe, native winding and handcraft refund checks. Strict tests/tools typechecks, formatting, built assets, documentation and worker separation pass. [The CI fix receipt](ci-fix.json) retains the reproduction and verification. A new hosted CI result requires pushing the fix; the failing run remains historical.
+
 ## Delivered behavior
 
 * Empty 24-slot bag and separate tool slot; configurable stacks, 2 m reach, 3 s hand / 1 s prybar salvage, lossless ground overflow/merging and deliberate pickup. The existing authored deposit contains 250, 000 scrap.

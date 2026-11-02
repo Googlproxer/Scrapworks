@@ -33,6 +33,7 @@ declare global {
     tick: number;
     first: { x: number; z: number } | null | undefined;
     position: { x: number; z: number } | null | undefined;
+    moving?: boolean;
     mappingUpdates?: number;
   };
 }

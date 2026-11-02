@@ -152,10 +152,22 @@ try {
     }, engineStoreChunk);
   const verifyGameplayUi = async () => {
     await page.locator('canvas').focus();
+    const beforeMovement = await read();
     await page.keyboard.down('KeyW');
-    await page.waitForTimeout(350);
-    await page.keyboard.press('Tab');
-    await page.keyboard.up('KeyW');
+    try {
+      await until(
+        (probe) =>
+          Math.hypot(
+            probe.position.x - beforeMovement.position.x,
+            probe.position.z - beforeMovement.position.z,
+          ) > 0.05,
+        'movement before opening gameplay UI',
+        30000,
+      );
+      await page.keyboard.press('Tab');
+    } finally {
+      await page.keyboard.up('KeyW');
+    }
     const kit = page.locator('#field-kit');
     await kit.waitFor();
     await page.waitForTimeout(650);

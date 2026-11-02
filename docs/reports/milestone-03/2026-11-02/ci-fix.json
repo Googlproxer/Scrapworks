@@ -1,0 +1,262 @@
+{
+  "verifiedAt": "2026-11-02T04:43:57.924Z",
+  "baselineCommit": "52ee11d938bd089a8150886741b1c48e0e30886f",
+  "failedCiRun": "https://github.com/Googlproxer/Scrapworks/actions/runs/41387335351",
+  "ciFailure": {
+    "step": "Exercise the built simulation worker and failure Retry",
+    "assertion": "Expected player position to differ from spawn after a 300 ms key hold",
+    "browserTestsPassed": 328,
+    "browserErrors": [],
+    "failedRequests": []
+  },
+  "negativeControl": {
+    "method": "Original harness, native keyboard events, render callbacks delayed 1000 ms for a 2000 ms interval",
+    "error": "AssertionError [ERR_ASSERTION]: Expected \"actual\" not to be strictly deep-equal to:\n\n{\n  x: 1,\n  y: 0,\n  z: 1\n}\n"
+  },
+  "verification": {
+    "normal": {
+      "status": "ok",
+      "renderDelayMs": 0,
+      "renderer": {
+        "meshes": 9,
+        "visibleMeshes": 6,
+        "activeMeshes": 6,
+        "drawCalls": 5,
+        "canvasWidth": 1280,
+        "canvasHeight": 800,
+        "player": [
+          1,
+          0,
+          1
+        ]
+      },
+      "renderedMoved": {
+        "meshes": 9,
+        "visibleMeshes": 6,
+        "activeMeshes": 6,
+        "drawCalls": 5,
+        "canvasWidth": 1280,
+        "canvasHeight": 800,
+        "player": [
+          1,
+          0,
+          1.2249999999999999
+        ]
+      },
+      "healthyRetry": {
+        "tick": 58,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1.2249999999999999
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "initial": {
+        "tick": 3,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "moved": {
+        "tick": 35,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1.2249999999999999
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "paused": {
+        "tick": 53,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1.2249999999999999
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "restarted": {
+        "tick": 1,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "error": "Uncaught Error: Production worker crash probe Retry restarts this world from its authored beginning.",
+      "targetsBefore": 1,
+      "workerURL": "http://127.0.0.1:56584/worker-test/worker-552FBP2K.js",
+      "csp": "worker-src 'self'",
+      "errors": [],
+      "requests": []
+    },
+    "delayed": {
+      "status": "ok",
+      "renderDelayMs": 1000,
+      "renderer": {
+        "meshes": 9,
+        "visibleMeshes": 6,
+        "activeMeshes": 6,
+        "drawCalls": 5,
+        "canvasWidth": 1280,
+        "canvasHeight": 800,
+        "player": [
+          1,
+          0,
+          1
+        ]
+      },
+      "renderedMoved": {
+        "meshes": 9,
+        "visibleMeshes": 6,
+        "activeMeshes": 6,
+        "drawCalls": 5,
+        "canvasWidth": 1280,
+        "canvasHeight": 800,
+        "player": [
+          1,
+          0,
+          1.3749999999999998
+        ]
+      },
+      "healthyRetry": {
+        "tick": 65,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1.3749999999999998
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "initial": {
+        "tick": 3,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "moved": {
+        "tick": 40,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1.3749999999999998
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "paused": {
+        "tick": 62,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1.3749999999999998
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "restarted": {
+        "tick": 1,
+        "first": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "moving": false,
+        "mappingUpdates": 0
+      },
+      "error": "Uncaught Error: Production worker crash probe Retry restarts this world from its authored beginning.",
+      "targetsBefore": 1,
+      "workerURL": "http://127.0.0.1:56585/worker-test/worker-552FBP2K.js",
+      "csp": "worker-src 'self'",
+      "errors": [],
+      "requests": []
+    },
+    "testsTypecheck": "passed",
+    "toolsTypecheck": "passed",
+    "buildAssets": "passed",
+    "workerSeparation": "passed",
+    "opening": {
+      "success": true,
+      "firstAutomaticSeconds": 259.0720943,
+      "axeViolations": [],
+      "pointerAndKeyboardWinding": true,
+      "handcraftStayAndCancel": true,
+      "errors": []
+    },
+    "formatting": "passed",
+    "docs": "passed"
+  },
+  "productionGameCodeChanged": false,
+  "hostedCiOnFix": "not run; changes uncommitted",
+  "sourceHashes": {
+    ".github/workflows/ci.yml": "9cebd0078bb0e36cd3d96ca5833cc71045c7e8050984de7e77b5fc7ce296ddf8",
+    "tests/acceptance/production-browser.ts": "171f721aff2eb5bab05472617b4d7a9524e5115634587211cf1f92f52bb37ff6",
+    "tests/acceptance/opening-browser.ts": "254507368c6fb82fe4e3c12c79d880eb22f33469a2dae64093e66c8feea69041",
+    "tools/browser-types.d.ts": "aea0ee4a5cf4bda0a3e9f0503ec30d9c8bcb570d1dec72f4ad1e4fececee41cf"
+  }
+}

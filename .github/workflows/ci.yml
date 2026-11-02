@@ -82,7 +82,9 @@ jobs:
         run: node tools/ecs-bench/verify-production.ts
 
       - name: Exercise the built simulation worker and failure Retry
-        run: yarn test:acceptance
+        run: |
+          yarn test:acceptance
+          yarn test:acceptance --render-delay-ms=1000
 
       - name: Play the empty-handed opening through the first MiniFab craft
         run: yarn test:opening

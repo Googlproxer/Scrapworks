@@ -19,7 +19,18 @@ import http from 'node:http';
 import path from 'node:path';
 import { chromium } from 'playwright';
 const root = path.resolve(import.meta.dirname, '../..');
-const output = path.join(root, 'tmp/production-worker-browser');
+const renderDelayMs = Number(
+  process.argv.find((arg) => arg.startsWith('--render-delay-ms='))?.split('=')[1] ?? 0,
+);
+assert(
+  Number.isSafeInteger(renderDelayMs) && renderDelayMs >= 0 && renderDelayMs <= 5000,
+  'Invalid diagnostic render delay',
+);
+const output = path.join(
+  root,
+  'tmp/production-worker-browser',
+  renderDelayMs ? 'stalled-frames' : '',
+);
 await fs.mkdir(output, { recursive: true });
 const directory = path.join(root, 'dist/scrapworks/browser');
 const metadata = await readJson<BuildMetadata>(
@@ -63,8 +74,39 @@ const server = http.createServer(async (request, response) => {
 await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+if (renderDelayMs) {
+  // Diagnostic mode delays only browser render callbacks. Input events, the worker
+  // and authoritative simulation time are untouched. Preserve callback cancellation.
+  await page.addInitScript(() => {
+    const request = window.requestAnimationFrame.bind(window);
+    const cancel = window.cancelAnimationFrame.bind(window);
+    const timers = new Map<number, ReturnType<typeof setTimeout>>();
+    window.requestAnimationFrame = (callback) => {
+      const id = request((timestamp) => {
+        const delay =
+          (globalThis as unknown as { acceptanceFrameDelay?: number }).acceptanceFrameDelay ?? 0;
+        if (!delay) return callback(timestamp);
+        timers.set(
+          id,
+          setTimeout(() => {
+            timers.delete(id);
+            callback(performance.now());
+          }, delay),
+        );
+      });
+      return id;
+    };
+    window.cancelAnimationFrame = (id) => {
+      cancel(id);
+      clearTimeout(timers.get(id));
+      timers.delete(id);
+    };
+  });
+}
 const errors: string[] = [];
 const requests: { url: string; failure: { errorText: string } | null }[] = [];
+let currentWorker: Worker | undefined;
+let stage = 'menu loading';
 page.on('pageerror', (error) => errors.push(String(error)));
 page.on('requestfailed', (request) =>
   requests.push({ url: request.url(), failure: request.failure() }),
@@ -80,11 +122,13 @@ async function attachProbe(worker: Worker) {
     scope.postMessage = (message, ...rest) => {
       if (message.packet) {
         const packet = message.packet;
-        const position = packet.endpoints.at(-1)?.transform.position;
+        const transform = packet.endpoints.at(-1)?.transform;
+        const position = transform?.position;
         globalThis.productionProbe = {
           tick: packet.tick,
           first: globalThis.productionProbe.first ?? position,
           position,
+          moving: transform?.moving,
           mappingUpdates: packet.mappings.length,
         };
       }
@@ -114,6 +158,7 @@ try {
   const created = page.waitForEvent('worker');
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
   const worker = await created;
+  currentWorker = worker;
   assert(worker.url().includes('/worker-test/worker-'));
   await attachProbe(worker);
   await until(
@@ -167,13 +212,50 @@ try {
     }, engineStoreChunk);
 
   const renderer = await inspectRenderer();
+  stage = 'keyboard movement and render convergence';
   await page.locator('canvas').click();
+  if (renderDelayMs)
+    await page.evaluate((delay) => {
+      const scope = globalThis as unknown as { acceptanceFrameDelay?: number };
+      scope.acceptanceFrameDelay = delay;
+      setTimeout(() => {
+        scope.acceptanceFrameDelay = 0;
+      }, delay * 2);
+    }, renderDelayMs);
   await page.keyboard.down('KeyW');
-  await page.waitForTimeout(300);
-  await page.keyboard.up('KeyW');
-  await page.waitForTimeout(150);
+  let movingTick = initial.tick;
+  try {
+    await until(async () => {
+      const probe = await worker.evaluate(() => globalThis.productionProbe);
+      movingTick = probe.tick;
+      return (
+        !!probe.position &&
+        !!initial.position &&
+        Math.hypot(probe.position.x - initial.position.x, probe.position.z - initial.position.z) >
+          0.05
+      );
+    }, 'Held keyboard input did not produce authoritative movement');
+  } finally {
+    await page.keyboard.up('KeyW');
+  }
+  await until(async () => {
+    const probe = await worker.evaluate(() => globalThis.productionProbe);
+    return probe.tick > movingTick && probe.moving === false;
+  }, 'Key release did not stop authoritative movement');
   const moved = await worker.evaluate(() => globalThis.productionProbe);
-  const renderedMoved = await inspectRenderer();
+  let renderedMoved = await inspectRenderer();
+  await until(async () => {
+    renderedMoved = await inspectRenderer();
+    return (
+      !!moved.position &&
+      'player' in renderedMoved &&
+      !!renderedMoved.player &&
+      Math.hypot(
+        renderedMoved.player[0] - moved.position.x,
+        renderedMoved.player[2] - moved.position.z,
+      ) < 0.001
+    );
+  }, 'Rendered player did not converge to the completed worker position');
   assert.notDeepEqual(moved.position, initial.position);
   assert(moved.position && 'player' in renderedMoved && renderedMoved.player);
   assert(
@@ -182,6 +264,7 @@ try {
       renderedMoved.player[2] - moved.position.z,
     ) < 0.001,
   );
+  stage = 'menu pause';
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.waitForTimeout(150);
   const paused = await worker.evaluate(() => globalThis.productionProbe);
@@ -189,6 +272,7 @@ try {
   assert.equal((await worker.evaluate(() => globalThis.productionProbe)).tick, paused.tick);
   await page.screenshot({ path: path.join(output, 'paused.png') });
   await page.getByRole('button', { name: 'Resume game', exact: true }).click();
+  stage = 'healthy renderer Retry';
   await page.evaluate(() =>
     document
       .querySelector('canvas')!
@@ -211,6 +295,7 @@ try {
   assert.equal(page.workers()[0], worker);
   const healthyRetry = await worker.evaluate(() => globalThis.productionProbe);
   assert.deepEqual(healthyRetry.position, moved.position);
+  stage = 'worker failure and authored Retry';
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.waitForTimeout(150);
   // Error injection only in this diagnostic process. No authority or assets are edited.
@@ -229,6 +314,7 @@ try {
   const recreated = page.waitForEvent('worker');
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
   const fresh = await recreated;
+  currentWorker = fresh;
   await attachProbe(fresh);
   await until(
     async () => (await fresh.evaluate(() => globalThis.productionProbe)).tick >= 1,
@@ -245,6 +331,7 @@ try {
     JSON.stringify(
       {
         status: 'ok',
+        renderDelayMs,
         renderer,
         renderedMoved,
         healthyRetry,
@@ -267,9 +354,21 @@ try {
     'Production worker/base path/CSP, keyboard movement, menu pause, crash/Retry and teardown passed.',
   );
 } catch (error) {
+  const probe = await currentWorker?.evaluate(() => globalThis.productionProbe).catch(() => null);
+  const activity = await page
+    .evaluate(() => ({
+      focused: document.hasFocus(),
+      hidden: document.hidden,
+      activeElement: document.activeElement?.tagName,
+    }))
+    .catch(() => null);
   await fs.writeFile(
     path.join(output, 'failure.json'),
-    JSON.stringify({ error: String(error), errors, requests }, null, 2),
+    JSON.stringify(
+      { error: String(error), stage, renderDelayMs, probe, activity, errors, requests },
+      null,
+      2,
+    ),
   );
   await page.screenshot({ path: path.join(output, 'failure.png') });
   throw error;
