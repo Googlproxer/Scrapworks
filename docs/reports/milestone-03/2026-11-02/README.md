@@ -18,6 +18,20 @@ The repaired test holds native input until authoritative movement is observed, r
 
 The [first hosted retry](https://github.com/Googlproxer/Scrapworks/actions/runs/41390359975), on `4ded6c8`, passed both production acceptance modes. It then exposed the equivalent timing assumption in the opening route's repeated 100 ms walking taps. Each approach input now stays held until the worker reports movement, then waits for a stopped state before choosing the next direction. The 2 m reach and under-five-minute route checks are retained. Opening failure artifacts also retain the last worker observation.
 
+## Playthrough speed and CI timing
+
+The [next hosted run](https://github.com/Googlproxer/Scrapworks/actions/runs/41391039494), on `1d0b9d1`, successfully walked, researched, crafted the MiniFab and completed its first automatic craft. It failed only the reference-desktop wall-clock limit: 364.26 seconds on the shared Linux runner. That is a pacing measurement, separate from functional progression correctness.
+
+| Approach | Measured result | Appropriate coverage |
+| --- | --- | --- |
+| Existing direct fixed-step simulation test | Complete empty-handed opening in 84 ms | Gameplay rules, spending and unlocks; no browser presentation |
+| Bounded Playwright virtual time | About 70–75 s to first automatic craft locally | Full UI, production worker, resource/job progression, accessibility and interruption checks |
+| Real-time browser route | About 4:30 locally; 6:04 on this CI runner | Pacing on the measured machine, native frame/input timing |
+
+Routine CI uses `yarn test:opening --virtual-time`. It installs [Playwright's clock](https://playwright.dev/docs/clock) before application loading, pauses only during state waits, and advances in 250 ms batches with event-loop turns for real worker replies. This retains the actual five-step allowance and 50 ms gameplay steps. A single large jump would discard time, while replaying every intermediate render frame proved slower. The prototype using every render frame timed out gathering eight scrap; the bounded version passed the complete route, including winding, original-input refunds and axe. Date is held momentarily when pausing to avoid a future-timestamp/RPC-latency race, then restored before normal browser interaction resumes. Production code, content costs and work durations are unchanged.
+
+Results distinguish wall duration from simulation-tick duration and mark virtual runs as **not pacing-qualified**. The default `yarn test:opening` keeps its real-time under-five-minute assertion, and `--relaxed` retains the separate real-time reading/decision reference; combining relaxed and virtual modes is rejected. The existing headless test still checks the opening's simulation duration below five minutes. Normal and delayed-frame production acceptance continue to exercise the native browser clock on every CI run.
+
 ## Delivered behavior
 
 * Empty 24-slot bag and separate tool slot; configurable stacks, 2 m reach, 3 s hand / 1 s prybar salvage, lossless ground overflow/merging and deliberate pickup. The existing authored deposit contains 250, 000 scrap.
@@ -52,6 +66,7 @@ yarn build --stats-json
 node tools/ecs-bench/verify-production.ts
 yarn test:acceptance
 yarn test:opening
+yarn test:opening --virtual-time
 yarn assets:check --build
 yarn test:workflow
 yarn docs:check

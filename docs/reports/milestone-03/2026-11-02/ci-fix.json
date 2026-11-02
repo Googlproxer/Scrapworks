@@ -267,5 +267,24 @@
     "openingFailure": "Repeated 100 ms movement taps did not reach salvage on Linux CI",
     "correction": "Observe movement and stopped state for each native approach input; retain reach/pacing thresholds",
     "openingSourceSha256": "8bbc85b57746c334b045b8ab65be8263cea73a8c037373357e14d06778b3a41d"
+  },
+  "virtualTimeInvestigation": {
+    "recordedAt": "2026-11-02T05:21:52.975Z",
+    "realTimeRun": "https://github.com/Googlproxer/Scrapworks/actions/runs/41391039494",
+    "realTimeHostedFirstAutomaticSeconds": 364.257475769,
+    "headlessCompleteOpeningMs": 84.4008,
+    "virtualBrowserFirstAutomaticSeconds": 72.64105559999999,
+    "virtualBrowserGameSeconds": 238.95000000000002,
+    "virtualBatchMs": 250,
+    "pacingQualified": false,
+    "axeViolations": [],
+    "browserErrors": [],
+    "pointerAndKeyboardWinding": true,
+    "handcraftStayAndCancel": true,
+    "decision": "Virtual-time functional route in routine CI; real-time reference command and headless simulation-duration check retained",
+    "sourceHashes": {
+      ".github/workflows/ci.yml": "d4dc9357b185b1ba7e88fcfb1059a03731d70b5dbdf59ee085edbf99848d4c22",
+      "tests/acceptance/opening-browser.ts": "a10c425738ce9a4b8fcf84bba5f2b0145d9396fd4c2a3e84bb4b0287b7aaf415"
+    }
   }
 }

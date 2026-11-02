@@ -27,7 +27,16 @@ const engineStoreChunk = Object.entries(metadata.outputs).find(([, output]) =>
   ),
 )?.[0];
 const relaxed = process.argv.includes('--relaxed');
-const output = path.join(root, relaxed ? 'tmp/opening-browser-relaxed' : 'tmp/opening-browser');
+const virtualTime = process.argv.includes('--virtual-time');
+assert(!(relaxed && virtualTime), 'The relaxed pacing reference requires real time');
+const output = path.join(
+  root,
+  relaxed
+    ? 'tmp/opening-browser-relaxed'
+    : virtualTime
+      ? 'tmp/opening-browser/virtual-time'
+      : 'tmp/opening-browser',
+);
 await fs.mkdir(output, { recursive: true });
 const server = http.createServer(async (request, response) => {
   try {
@@ -58,6 +67,7 @@ await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 const page = await context.newPage();
+if (virtualTime) await page.clock.install();
 const errors: string[] = [];
 page.on('pageerror', (error) => errors.push(String(error)));
 page.on('console', (message) => {
@@ -66,6 +76,9 @@ page.on('console', (message) => {
 const checkpoints: { name: string; seconds: number; tick: number }[] = [];
 let start = performance.now();
 let firstAutomatic = 0;
+let firstAutomaticGameSeconds = 0;
+let routeStartTick = 0;
+let virtualAdvanceMs = 0;
 let lastProbe: Probe | null = null;
 try {
   await page.goto(`http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/`);
@@ -100,13 +113,37 @@ try {
   };
   const until = async (predicate: (probe: Probe) => boolean, label: string, timeout = 130000) => {
     const deadline = performance.now() + timeout;
-    while (performance.now() < deadline) {
-      const probe = await read();
-      if (probe && predicate(probe)) return probe;
-      await page.waitForTimeout(100);
+    let stamp: number | undefined;
+    let advanced = 0;
+    if (virtualTime) {
+      // Freeze Date momentarily so pauseAt cannot race browser/RPC latency.
+      // The game's monotonic clock is controlled through Playwright, not game hooks.
+      stamp = await page.evaluate(() => Date.now());
+      await page.clock.setFixedTime(stamp);
+      await page.clock.pauseAt(stamp);
     }
-    await page.screenshot({ path: path.join(output, 'failure.png'), fullPage: true });
-    throw new Error(`Timed out: ${label}; ${JSON.stringify(await read())}`);
+    try {
+      while (performance.now() < deadline) {
+        const probe = await read();
+        if (probe && predicate(probe)) return probe;
+        if (virtualTime) {
+          // One render callback can credit at most five real 50 ms worker steps.
+          // A large jump would discard time; runFor would render all intervening frames.
+          await page.clock.fastForward(250);
+          advanced += 250;
+          virtualAdvanceMs += 250;
+          // Let real worker messages and host promise continuations run between batches.
+          await page.waitForTimeout(0);
+        } else await page.waitForTimeout(100);
+      }
+      await page.screenshot({ path: path.join(output, 'failure.png'), fullPage: true });
+      throw new Error(`Timed out: ${label}; ${JSON.stringify(await read())}`);
+    } finally {
+      if (stamp !== undefined) {
+        await page.clock.setSystemTime(stamp + advanced);
+        await page.clock.resume();
+      }
+    }
   };
   const mark = async (name: string) => {
     const probe = await read();
@@ -288,6 +325,7 @@ try {
   } else {
     await verifyGameplayUi();
     start = performance.now();
+    routeStartTick = (await read()).tick;
     await page.locator('canvas').focus();
     // Authored camera alpha -pi/2: W is +Z and D is +X. Physical key input only.
     const deposit = JSON.parse(
@@ -388,10 +426,12 @@ try {
     await page.getByRole('button', { name: 'Request 1 from MiniFab', exact: true }).click();
     await until((probe) => probe.production['plate'] === before + 1, 'first automatic plate');
     firstAutomatic = (performance.now() - start) / 1000;
-    assert(
-      relaxed ? firstAutomatic >= 900 && firstAutomatic <= 1200 : firstAutomatic < 300,
-      `Opening reference pacing outside its target: ${firstAutomatic}`,
-    );
+    firstAutomaticGameSeconds = ((await read()).tick - routeStartTick) * 0.05;
+    if (!virtualTime)
+      assert(
+        relaxed ? firstAutomatic >= 900 && firstAutomatic <= 1200 : firstAutomatic < 300,
+        `Opening reference pacing outside its target: ${firstAutomatic}`,
+      );
     await mark('first automatic plate');
     const handle = page.getByRole('button', { name: 'Wind MiniFab handle', exact: true });
     await handle.focus();
@@ -487,8 +527,14 @@ try {
           success: true,
           itinerary: relaxed
             ? 'Scripted relaxed route with 40 seconds reading/decision time per research/craft action; not a human usability study'
-            : 'Experienced physical-keyboard/UI route',
+            : virtualTime
+              ? 'Virtual-time functional UI/worker route; not a real-time pacing qualification'
+              : 'Experienced physical-keyboard/UI route',
+          timingMode: virtualTime ? 'virtual-time' : 'real-time',
+          pacingQualified: !virtualTime,
           firstAutomaticSeconds: firstAutomatic,
+          firstAutomaticGameSeconds,
+          virtualAdvanceMs,
           checkpoints,
           axeViolations: accessibility,
           pointerAndKeyboardWinding: true,
@@ -508,7 +554,18 @@ try {
     .catch(() => undefined);
   await fs.writeFile(
     path.join(output, 'failure.json'),
-    JSON.stringify({ error: String(error), checkpoints, lastProbe, errors }, null, 2),
+    JSON.stringify(
+      {
+        error: String(error),
+        timingMode: virtualTime ? 'virtual-time' : 'real-time',
+        virtualAdvanceMs,
+        checkpoints,
+        lastProbe,
+        errors,
+      },
+      null,
+      2,
+    ),
   );
   throw error;
 } finally {
