@@ -1,0 +1,25 @@
+{
+  "name": "physics-crate",
+  "id": "physics-crate",
+  "uniqueId": 900000011,
+  "type": "TransformNode",
+  "position": [100, 45, 350],
+  "rotation": [0, 0, 0],
+  "scaling": [1, 1, 1],
+  "isEnabled": true,
+  "metadata": {
+    "scrapworks": {
+      "version": 1,
+      "kind": "PhysicsBody",
+      "id": "physics-crate",
+      "collision": {
+        "depth": 90,
+        "shape": "box",
+        "width": 90,
+        "height": 90
+      },
+      "motion": "dynamic",
+      "mass": 8
+    }
+  }
+}

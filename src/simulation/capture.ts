@@ -8,6 +8,8 @@ import { requireInvariant as check } from '@contracts/simulation';
 import { assertWorldDefinition } from '@contracts/world';
 import { cellCenter, cellInBounds } from '@core/world-grid';
 import { assertOpening } from './opening-capture';
+import { assertPhysicsBodyDefinition } from '@contracts/world';
+import { RAPIER_VERSION } from '@contracts/physics';
 
 const object = (v: unknown, keys?: readonly string[]): Record<string, unknown> => {
   check(!!v && typeof v === 'object' && !Array.isArray(v), 'Expected snapshot object');
@@ -90,12 +92,57 @@ export function assertSnapshot(
   value: unknown,
   content: ContentDefinition,
 ): asserts value is SimulationSnapshot {
-  const s = object(value, ['version', 'contentVersion', 'definition', 'resources', 'entities']);
+  const s = object(value, [
+    'version',
+    'contentVersion',
+    'definition',
+    'resources',
+    'entities',
+    'physics',
+  ]);
   check(
-    s['version'] === 2 && s['contentVersion'] === content.version,
+    s['version'] === 3 && s['contentVersion'] === content.version,
     'Unsupported snapshot/content version',
   );
   assertWorldDefinition(s['definition']);
+  const definition = s['definition'];
+  {
+    const physics = object(s['physics'], [
+      'format',
+      'engine',
+      'engineVersion',
+      'bytes',
+      'bodyIds',
+      'verticalVelocity',
+    ]);
+    check(
+      physics['format'] === 2 &&
+        physics['engine'] === 'rapier3d' &&
+        physics['engineVersion'] === RAPIER_VERSION,
+      'Unsupported physics snapshot',
+    );
+    check(
+      Array.isArray(physics['bytes']) &&
+        physics['bytes'].length > 0 &&
+        physics['bytes'].length <= 64 * 1024 * 1024 &&
+        physics['bytes'].every((n) => Number.isInteger(n) && n >= 0 && n <= 255),
+      'Invalid physics snapshot bytes',
+    );
+    check(
+      Array.isArray(physics['bodyIds']) &&
+        physics['bodyIds'].length <= 250000 &&
+        physics['bodyIds'].every(
+          (id) => typeof id === 'string' && id.length > 0 && id.length <= 512,
+        ) &&
+        new Set(physics['bodyIds']).size === physics['bodyIds'].length,
+      'Invalid physics snapshot identities',
+    );
+    check(
+      typeof physics['verticalVelocity'] === 'number' &&
+        Number.isFinite(physics['verticalVelocity']),
+      'Invalid physics velocity',
+    );
+  }
   const resources = object(s['resources']);
   check(
     resources['worldId'] === s['definition'].id && resources['stepSeconds'] === 0.05,
@@ -136,6 +183,7 @@ export function assertSnapshot(
           'pile',
           'building',
           'opening',
+          'physics',
         ].includes(key),
       ),
       'Unknown component',
@@ -144,7 +192,7 @@ export function assertSnapshot(
     check(!ids.has(id), 'Duplicate entity ID');
     ids.add(id);
     check(
-      ['player', 'deposit', 'pile', 'building'].includes(String(e['kind'])),
+      ['player', 'deposit', 'pile', 'building', 'body'].includes(String(e['kind'])),
       'Unknown entity kind',
     );
     const required: Record<string, string> = {
@@ -152,20 +200,45 @@ export function assertSnapshot(
       pile: 'pile',
       deposit: 'deposit',
       building: 'building',
+      body: 'physics',
     };
     check(e[required[String(e['kind'])]], 'Missing required component');
     if (e['transform']) {
-      const t = object(e['transform'], ['position', 'facing', 'moving', 'sprinting']);
+      const t = object(e['transform'], ['position', 'facing', 'moving', 'sprinting', 'rotation']);
       const p = object(t['position'], ['x', 'y', 'z']);
       for (const key of ['x', 'y', 'z'])
         check(typeof p[key] === 'number' && Number.isFinite(p[key]), 'Invalid transform');
       check(
-        p['y'] === 0 &&
+        (e['kind'] === 'body' || e['kind'] === 'player' || p['y'] === 0) &&
           typeof t['facing'] === 'number' &&
           Number.isFinite(t['facing']) &&
           typeof t['moving'] === 'boolean' &&
           typeof t['sprinting'] === 'boolean',
         'Invalid movement',
+      );
+      if (t['rotation'] !== undefined) {
+        const rotation = object(t['rotation'], ['x', 'y', 'z', 'w']);
+        const values = ['x', 'y', 'z', 'w'].map((key) => rotation[key]);
+        check(
+          values.every((n) => typeof n === 'number' && Number.isFinite(n)) &&
+            Math.abs(Math.hypot(...(values as number[])) - 1) < 0.001,
+          'Invalid physics rotation',
+        );
+      }
+    }
+    if (e['physics']) {
+      assertPhysicsBodyDefinition(e['physics'], s['definition'].grid);
+      check(
+        e['kind'] === 'body' &&
+          e['physics'].id === id &&
+          e['transform'] &&
+          object(e['transform'])['rotation'],
+        'Invalid physics component owner',
+      );
+      const source = s['definition'].bodies?.find((body) => body.id === id);
+      check(
+        source && JSON.stringify(source) === JSON.stringify(e['physics']),
+        'Physics definition mismatch',
       );
     }
     if (e['inventory']) inventory(e['inventory'], content);
@@ -238,12 +311,19 @@ export function assertSnapshot(
     entities.push(value as EntityData);
   }
   const players = entities.filter((e) => e.kind === 'player');
+  const bodies = entities.filter((entity) => entity.kind === 'body');
+  check(
+    bodies.length === (definition.bodies?.length ?? 0) &&
+      bodies.every((entity) => definition.bodies?.some((source) => source.id === entity.id)),
+    'Physics entity population mismatch',
+  );
   check(
     players.length === 1 &&
       players[0].id === resources['playerId'] &&
       players[0].transform &&
       players[0].inventory?.slots.length === 24 &&
-      players[0].equipment,
+      players[0].equipment &&
+      players[0].opening,
     'Invalid player components',
   );
 }

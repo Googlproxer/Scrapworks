@@ -108,6 +108,12 @@
           Development fixture: B / Select toggles placement, R / right shoulder rotates, click /
           south button places.
         </p>
+        @if (gameRuntimeService.world()?.bodies?.length) {
+          <p>
+            Physics test: push the brown crates and barrel. Watch the falling stack and blue moving
+            block. Enable collision debug drawings to see their bounds.
+          </p>
+        }
       }
     </div>
   }

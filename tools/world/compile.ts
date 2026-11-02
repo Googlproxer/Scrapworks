@@ -16,6 +16,13 @@ export interface MarkerData {
   resource?: string;
   quantity?: number;
   footprint?: { width: number; depth: number };
+  /** Editor centimetres; compilation converts dimensions once to gameplay metres. */
+  collision?:
+    | { shape: 'box'; width: number; height: number; depth: number }
+    | { shape: 'cylinder'; radius: number; height: number };
+  motion?: 'dynamic' | 'kinematic';
+  mass?: number;
+  travel?: { axis: 'x' | 'z'; distance: number; periodTicks: number };
 }
 
 export interface MarkerNode {
@@ -111,7 +118,9 @@ export function compileMarkers(nodes: readonly MarkerNode[]): WorldDefinition {
   for (const node of markers) {
     const marker = node.metadata.scrapworks;
     if (marker.version !== 1) throw new Error('Unsupported world marker version');
-    if (!['WorldSettings', 'PlayerSpawn', 'Deposit', 'Blocker'].includes(marker.kind))
+    if (
+      !['WorldSettings', 'PlayerSpawn', 'Deposit', 'Blocker', 'PhysicsBody'].includes(marker.kind)
+    )
       throw new Error(`Unsupported marker kind ${marker.kind}`);
     if (typeof marker.id !== 'string' || !marker.id || ids.has(marker.id))
       throw new Error('Duplicate or missing world marker ID');
@@ -150,6 +159,16 @@ export function compileMarkers(nodes: readonly MarkerNode[]): WorldDefinition {
     position: toMetres(node),
     footprint: node.metadata.scrapworks.footprint,
     rotation: ((transform(node).quarter % 4) + 4) % 4,
+    ...(node.metadata.scrapworks.collision !== undefined
+      ? {
+          collision: Object.fromEntries(
+            Object.entries(node.metadata.scrapworks.collision).map(([key, value]) => [
+              key,
+              typeof value === 'number' ? value / 100 : value,
+            ]),
+          ),
+        }
+      : {}),
   });
 
   const definition = {
@@ -171,6 +190,28 @@ export function compileMarkers(nodes: readonly MarkerNode[]): WorldDefinition {
         quantity: node.metadata.scrapworks.quantity,
       })),
     blockers: markers.filter((node) => node.metadata.scrapworks.kind === 'Blocker').map(entity),
+    ...(!markers.some((node) => node.metadata.scrapworks.kind === 'PhysicsBody')
+      ? {}
+      : {
+          bodies: markers
+            .filter((node) => node.metadata.scrapworks.kind === 'PhysicsBody')
+            .map((node) => ({
+              id: node.metadata.scrapworks.id,
+              position: toMetres(node),
+              rotation: ((transform(node).quarter % 4) + 4) % 4,
+              collision: entity(node).collision,
+              motion: node.metadata.scrapworks.motion,
+              mass: node.metadata.scrapworks.mass,
+              ...(node.metadata.scrapworks.travel
+                ? {
+                    travel: {
+                      ...node.metadata.scrapworks.travel,
+                      distance: node.metadata.scrapworks.travel.distance / 100,
+                    },
+                  }
+                : {}),
+            })),
+        }),
   };
   assertWorldDefinition(definition);
   return definition;

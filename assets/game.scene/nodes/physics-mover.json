@@ -1,0 +1,30 @@
+{
+  "name": "physics-mover",
+  "id": "physics-mover",
+  "uniqueId": 900000016,
+  "type": "TransformNode",
+  "position": [-600, 30, 300],
+  "rotation": [0, 0, 0],
+  "scaling": [1, 1, 1],
+  "isEnabled": true,
+  "metadata": {
+    "scrapworks": {
+      "version": 1,
+      "kind": "PhysicsBody",
+      "id": "physics-mover",
+      "collision": {
+        "depth": 150,
+        "shape": "box",
+        "width": 150,
+        "height": 60
+      },
+      "motion": "kinematic",
+      "mass": 30,
+      "travel": {
+        "periodTicks": 160,
+        "distance": 400,
+        "axis": "x"
+      }
+    }
+  }
+}

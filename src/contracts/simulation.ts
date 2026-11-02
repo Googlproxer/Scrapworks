@@ -1,9 +1,16 @@
-import type { BuildingView, CommandResult, WorldCommand, WorldDefinition } from './world';
+import type {
+  BuildingView,
+  CommandResult,
+  DepositDefinition,
+  WorldCommand,
+  WorldDefinition,
+} from './world';
 import type { OpeningData, OpeningView } from './opening';
 import type { OpeningEvent, RuntimeEvent } from './session-event';
 import type { ReadonlyData, EditableData } from './readonly-data';
+import type { PhysicsBodyDefinition, PhysicsSnapshot, WorldRotation } from './physics';
 
-export type EntityKind = 'player' | 'deposit' | 'pile' | 'building';
+export type EntityKind = 'player' | 'deposit' | 'pile' | 'building' | 'body';
 
 export interface ItemStack {
   item: string;
@@ -19,6 +26,7 @@ export interface TransformData {
   facing: number;
   moving: boolean;
   sprinting: boolean;
+  rotation?: EditableData<WorldRotation>;
 }
 
 /** Plain owned components. ECS handles and transport slots are deliberately absent. */
@@ -32,6 +40,7 @@ export interface EntityData {
   pile?: ItemStack;
   building?: EditableData<BuildingView>;
   opening?: OpeningData;
+  physics?: EditableData<PhysicsBodyDefinition>;
 }
 
 export interface WorldResources {
@@ -55,11 +64,12 @@ export interface ContentDefinition {
 }
 
 export interface SimulationSnapshot {
-  version: 2;
+  version: 3;
   contentVersion: string;
   definition: EditableData<WorldDefinition>;
   resources: WorldResources;
   entities: EntityData[];
+  physics: PhysicsSnapshot;
 }
 
 export interface EntityMapping {
@@ -69,7 +79,8 @@ export interface EntityMapping {
   kind: EntityKind;
   pile?: { item: string };
   building?: BuildingView;
-  deposit?: { kind: 'scrap'; footprint: { width: number; depth: number }; rotation: 0 | 1 | 2 | 3 };
+  deposit?: Pick<DepositDefinition, 'kind' | 'footprint' | 'rotation' | 'collision'>;
+  physics?: PhysicsBodyDefinition;
 }
 
 export interface Inspection {
@@ -100,6 +111,8 @@ export interface PresentationPacket {
   research: string[];
   productionTotals: Record<string, number>;
   opening?: OpeningView;
+  /** Slot/generation/quaternion for changed physics bodies only. Base entity rows stay lean. */
+  rotations?: ArrayBuffer;
 }
 
 export interface SequencedCommand {
@@ -202,6 +215,8 @@ export type RuntimeReply = Envelope & {
 } & CompleteFields<ResultData, 'packet' | 'watch' | 'details' | 'capture' | 'error'>;
 
 export const PRESENTATION_STRIDE = 8;
+
+export const ROTATION_STRIDE = 6;
 
 export const MAX_DETAIL_SUBSCRIPTIONS = 16;
 

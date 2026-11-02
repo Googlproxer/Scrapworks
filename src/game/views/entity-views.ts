@@ -7,6 +7,7 @@ import { Color3 } from '@babylonjs/core/Maths/math.color';
 import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import { EntityView } from './entity-view';
 import type { WorldFrame } from './world-frame';
+import { PhysicsBodyViews } from './physics-body-views';
 
 export class EntityViews extends PresentationBehavior {
   private readonly entities = new Map<string, EntityView>();
@@ -15,6 +16,7 @@ export class EntityViews extends PresentationBehavior {
   private readonly ground = new Map<string, Mesh>();
   private groundMaterial?: StandardMaterial;
   private groundViews: WorldView['ground'];
+  private readonly physics: PhysicsBodyViews;
 
   public constructor(
     node: TransformNode,
@@ -22,6 +24,7 @@ export class EntityViews extends PresentationBehavior {
     private readonly frame: WorldFrame,
   ) {
     super(node, node.getScene(), frame.scriptOptions, 'EntityViews');
+    this.physics = new PhysicsBodyViews(this.scene);
     for (const name of ['obstacle', 'player-placeholder'])
       this.scene.getMeshByName(name)?.setEnabled(false);
     this.sync({ deposits: definition.deposits, buildings: [] });
@@ -38,8 +41,13 @@ export class EntityViews extends PresentationBehavior {
       view.publication !== undefined &&
       view.publication === this.publication &&
       view.worldGeneration === this.generation
-    )
+    ) {
+      this.physics.present(
+        this.frame.presentationActive ? this.frame.seconds : 0,
+        view.stepSeconds,
+      );
       return;
+    }
     // Several worker replies can update the cache before the next render frame.
     const reset =
       this.publication < 0 ||
@@ -48,6 +56,8 @@ export class EntityViews extends PresentationBehavior {
     this.publication = view.publication ?? -1;
     this.generation = view.worldGeneration ?? -1;
     this.syncGround(view);
+    this.physics.sync(view, reset || !view.changes || view.changes.full);
+    this.physics.present(this.frame.presentationActive ? this.frame.seconds : 0, view.stepSeconds);
     if (reset || !view.changes || view.changes.full) {
       this.sync(view);
       return;
@@ -62,8 +72,12 @@ export class EntityViews extends PresentationBehavior {
     ] as const)
       for (const item of items) {
         const entity = this.entities.get(item.id);
-        if (entity) entity.sync(item, building);
-        else this.entities.set(item.id, new EntityView(this.scene, item, building, template));
+        if (entity) entity.sync(item);
+        else
+          this.entities.set(
+            item.id,
+            new EntityView(this.scene, item, building, this.definition.grid, template),
+          );
       }
   }
 
@@ -77,8 +91,12 @@ export class EntityViews extends PresentationBehavior {
       for (const item of items) {
         ids.add(item.id);
         const entity = this.entities.get(item.id);
-        if (entity) entity.sync(item, building);
-        else this.entities.set(item.id, new EntityView(this.scene, item, building, template));
+        if (entity) entity.sync(item);
+        else
+          this.entities.set(
+            item.id,
+            new EntityView(this.scene, item, building, this.definition.grid, template),
+          );
       }
     }
     for (const [id, entity] of this.entities)
@@ -89,6 +107,7 @@ export class EntityViews extends PresentationBehavior {
   }
 
   protected override onDestroy(): void {
+    this.physics.dispose();
     for (const entity of this.entities.values()) entity.dispose();
     this.entities.clear();
     for (const mesh of this.ground.values()) mesh.dispose();

@@ -8,6 +8,10 @@ Run `yarn dev`, open the game, expand **Debug drawings**, and enable **Show debu
 
 The supplied `placement` circle uses the current 3 m placement rule. The `collision` circle uses the current 0.35 m player radius. Both are centred on the latest completed player position published by the simulation, one centimetre above the ground. The `transforms` axes follow the rendered player anchor. Its interpolated position can differ from the completed position; that difference is useful when diagnosing presentation delay. These circles do not represent the future interaction-distance rule.
 
+The `collision` category also draws orange bounds on world objects: a 1.5 m box around the current blocker and a 0.25 m radius, 1.7 m tall cylinder around the capsule used for scrap. Developer test buildings draw their rectangular bounds too. These drawings use the same plain shape calculation as authoritative movement, including rotated multi-cell footprints. Each entity owns its attachment; depletion hides it and entity disposal releases it. Placement footprints remain separate from the tighter movement shapes. Edit the marker's `metadata.scrapworks.collision` dimensions in centimetres, save, and export through the normal workflow; see [authored world compilation](../../tools/world/README.md).
+
+The Rapier test's crates, cylinder and moving block also own `collision` attachments. Their local box/cylinder drawings follow the interpolated 3D position and quaternion from completed worker publications, ignoring model scale. Engine handles and physics execution stay in the worker; drawing providers consume only the plain shape description and presented transform. The player ring remains the ground-plane cross-section of its unchanged 0.35 m capsule radius.
+
 The controls do not request a simulation pause. Normal focus/input rules still apply while operating UI. The separate Inspector retains its existing pause behavior.
 
 ## Attach from TypeScript

@@ -18,6 +18,7 @@ describe('Simulation', () => {
   beforeEach(() => {
     simulation = new Simulation(definition);
   });
+  afterEach(() => simulation.dispose());
 
   it('starts empty and rejects unavailable construction without granting resources', () => {
     const result = simulation.step({ x: 0, z: 0, sprint: false }, [

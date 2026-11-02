@@ -6,7 +6,6 @@ import type {
   BuildingView,
   CommandResult,
   DepositDefinition,
-  GridCell,
   WorldCommand,
   WorldDefinition,
   WorldView,
@@ -29,9 +28,11 @@ import {
   requireInvariant as check,
 } from '@contracts/simulation';
 import { cellCenter } from '@core/world-grid';
+import { WorldPhysics } from './physics/world-physics';
+import { staticColliders } from './physics/collision-definitions';
 import { TEST_BUILDING_FOOTPRINT, validatePlacement } from './placement';
 import { PlayerMotor, type MovementIntent } from './player-motor';
-import { FIXED_STEP_SECONDS, occupiedCells } from './world-rules';
+import { FIXED_STEP_SECONDS } from './world-rules';
 import { assertSnapshot, ownContent } from './capture';
 import { emptyInventory } from './domain/inventory';
 import { OPENING_CONTENT } from '../content/opening';
@@ -63,6 +64,7 @@ export class Simulation {
   private readonly buildingsQuery = this.world.with('building');
   private readonly depositsQuery = this.world.with('deposit', 'transform');
   private readonly pilesQuery = this.world.with('pile', 'transform');
+  private readonly bodiesQuery = this.world.with('physics', 'transform');
   private readonly opening: OpeningSystem;
   private readonly ids = new Map<string, SimulationEntity>();
   private readonly slots: (SimulationEntity | undefined)[] = [];
@@ -78,7 +80,7 @@ export class Simulation {
   private readonly content: ContentDefinition;
   private readonly context: OpeningContext;
   private readonly authoredDeposits: ReadonlyMap<string, DepositDefinition>;
-  private collisionCells: readonly GridCell[] = [];
+  private readonly physics: WorldPhysics;
   private structural: { id?: string; data?: EntityData }[] = [];
   private disposed = false;
   private stepping = false;
@@ -108,7 +110,11 @@ export class Simulation {
     freeze(this.definition);
     this.developerFixture = options.developerFixture ?? false;
     let playerId = 'player';
-    const authored = new Set([...definition.deposits, ...definition.blockers].map((e) => e.id));
+    const authored = new Set(
+      [...definition.deposits, ...definition.blockers, ...(definition.bodies ?? [])].map(
+        (e) => e.id,
+      ),
+    );
     for (let n = 0; authored.has(playerId); n++) playerId = `player:${n}`;
     this.resources = options.snapshot
       ? structuredClone(options.snapshot.resources)
@@ -150,15 +156,48 @@ export class Simulation {
           },
           deposit: { kind: 'scrap', quantity: deposit.quantity },
         });
+      for (const body of definition.bodies ?? []) {
+        const angle = (body.rotation * Math.PI) / 2;
+        this.insert({
+          id: body.id,
+          kind: 'body',
+          physics: structuredClone(body),
+          transform: {
+            position: { ...body.position },
+            facing: 0,
+            moving: false,
+            sprinting: false,
+            rotation: { x: 0, y: Math.sin(angle / 2), z: 0, w: Math.cos(angle / 2) },
+          },
+        });
+      }
     }
     const player = this.ids.get(this.resources.playerId);
     check(player?.transform, 'Missing player transform');
-    this.rebuildCollision();
-    this.playerMotor = new PlayerMotor(
+    check(player.opening, 'Missing opening component');
+    this.physics = new WorldPhysics(
       this.definition,
-      player.transform,
-      () => this.collisionCells,
+      player.id,
+      player.transform.position,
+      options.snapshot?.physics,
     );
+    try {
+      this.rebuildCollision();
+      if (options.snapshot?.physics)
+        this.physics.assertRestoredState(
+          player.transform.position,
+          Array.from(this.bodiesQuery, (e) => ({
+            id: e.id,
+            position: e.transform.position,
+            rotation: e.transform.rotation!,
+          })),
+        );
+      else this.physics.assertClearance();
+    } catch (error) {
+      this.physics.dispose();
+      throw error;
+    }
+    this.playerMotor = new PlayerMotor(player.transform, this.physics);
     this.context = {
       player,
       piles: this.pilesQuery.entities,
@@ -181,7 +220,6 @@ export class Simulation {
         this.structural.push({ id });
       },
     };
-    check(player.opening, 'Missing opening component');
     this.opening = new OpeningSystem(this.context);
     this.rememberPlayer();
   }
@@ -195,12 +233,14 @@ export class Simulation {
       kind: e.kind,
       ...(e.pile ? { pile: { item: e.pile.item } } : {}),
       ...(e.building ? { building: structuredClone(e.building) } : {}),
+      ...(e.physics ? { physics: structuredClone(e.physics) } : {}),
       ...(authored
         ? {
             deposit: {
               kind: 'scrap' as const,
               footprint: { ...authored.footprint },
               rotation: authored.rotation,
+              ...(authored.collision ? { collision: { ...authored.collision } } : {}),
             },
           }
         : {}),
@@ -226,6 +266,7 @@ export class Simulation {
       pile: data.pile,
       building: data.building,
       opening: data.opening,
+      physics: data.physics,
     };
     this.world.add(entity);
     this.ids.set(entity.id, entity);
@@ -273,12 +314,8 @@ export class Simulation {
 
   private rebuildCollision(): void {
     const buildings = Array.from(this.buildingsQuery, (e) => e.building);
-    const cells = occupiedCells(this.definition, buildings, this.readDeposits());
-    for (let row = 0; row < this.definition.grid.rows; row++)
-      for (let column = 0; column < this.definition.grid.columns; column++)
-        if (this.definition.terrain[row * this.definition.grid.columns + column] === 'water')
-          cells.push({ row, column });
-    this.collisionCells = cells;
+    this.physics.syncStatic(staticColliders(this.definition, buildings, this.readDeposits()));
+    this.physics.syncBodies(Array.from(this.bodiesQuery, (entity) => entity.physics));
   }
 
   private rememberPlayer(): void {
@@ -339,15 +376,40 @@ export class Simulation {
           this.rebuildCollision();
         }
       }
-      this.playerMotor.step(movement);
+      this.playerMotor.step(movement, this.resources.tick);
+      for (const id of this.physics.changedBodies()) {
+        const entity = this.ids.get(id);
+        check(entity?.physics && entity.transform, 'Missing physical ECS entity');
+        const pose = this.physics.pose(entity.id);
+        const previous = entity.transform;
+        const rotation = previous.rotation!;
+        if (
+          previous.position.x === pose.position.x &&
+          previous.position.y === pose.position.y &&
+          previous.position.z === pose.position.z &&
+          rotation.x === pose.rotation.x &&
+          rotation.y === pose.rotation.y &&
+          rotation.z === pose.rotation.z &&
+          rotation.w === pose.rotation.w &&
+          previous.moving === !pose.sleeping
+        )
+          continue;
+        previous.position = { ...pose.position };
+        previous.rotation = { ...pose.rotation };
+        previous.moving = !pose.sleeping;
+        this.mark(entity);
+      }
       this.opening.step(FIXED_STEP_SECONDS);
       if (this.opening.collisionChanged) this.rebuildCollision();
       this.mark(this.ids.get(this.resources.playerId)!);
+      let physicalChange = false;
       for (const change of this.structural) {
+        const record = change.data ?? (change.id ? this.ids.get(change.id) : undefined);
+        physicalChange ||= !!(record?.physics || record?.building || record?.deposit);
         if (change.id) this.remove(change.id);
         if (change.data) this.insert(change.data);
       }
-      if (this.structural.length) this.rebuildCollision();
+      if (physicalChange) this.rebuildCollision();
       this.structural = [];
       this.resources.tick++;
       this.rememberPlayer();
@@ -378,6 +440,7 @@ export class Simulation {
       'pile',
       'building',
       'opening',
+      'physics',
     ] as const)
       if (e[key] !== undefined) Object.assign(data, { [key]: e[key] });
     return structuredClone(data);
@@ -393,6 +456,7 @@ export class Simulation {
     const count = full ? this.ids.size : this.dirtyCount;
     const rows = new Float64Array(count * PRESENTATION_STRIDE);
     const details: Inspection[] = [];
+    const rotations: number[] = [];
     let at = 0;
     for (let index = 0; index < length; index++) {
       const e = entities[index]!;
@@ -419,6 +483,15 @@ export class Simulation {
       }
       if (e.deposit) rows[at + 7] = e.deposit.quantity;
       else if (e.pile) rows[at + 7] = e.pile.quantity;
+      if (e.physics && t?.rotation)
+        rotations.push(
+          e.slot,
+          e.generation,
+          t.rotation.x,
+          t.rotation.y,
+          t.rotation.z,
+          t.rotation.w,
+        );
       at += PRESENTATION_STRIDE;
     }
     // A batch can create, remove and recycle a slot before publication. Only
@@ -447,6 +520,7 @@ export class Simulation {
         .map(([id]) => id),
       productionTotals: { ...this.resources.productionTotals },
       opening: this.opening.view(),
+      ...(rotations.length ? { rotations: new Float64Array(rotations).buffer } : {}),
     };
     // Retain bounded backing storage, release component references, and avoid
     // growing a new JS array for every publication.
@@ -461,13 +535,14 @@ export class Simulation {
   public capture(): SimulationSnapshot {
     check(!this.disposed && !this.stepping, 'Invalid capture boundary');
     return {
-      version: 2,
+      version: 3,
       contentVersion: this.content.version,
       definition: structuredClone(this.definition) as EditableData<WorldDefinition>,
       resources: structuredClone(this.resources),
       entities: Array.from(this.world, (e) => this.detach(e)).sort((a, b) =>
         a.id < b.id ? -1 : a.id > b.id ? 1 : 0,
       ),
+      physics: this.physics.capture(),
     };
   }
 
@@ -492,6 +567,13 @@ export class Simulation {
       productionTotals: { ...this.resources.productionTotals },
       deposits: this.readDeposits(),
       buildings: Array.from(this.buildingsQuery, (e) => structuredClone(e.building)),
+      bodies: Array.from(this.bodiesQuery, (e) => ({
+        id: e.id,
+        position: { ...e.transform.position },
+        rotation: { ...e.transform.rotation! },
+        collision: { ...e.physics.collision },
+        motion: e.physics.motion,
+      })).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0)),
     };
   }
 
@@ -501,6 +583,8 @@ export class Simulation {
     this.buildingsQuery.disconnect();
     this.depositsQuery.disconnect();
     this.pilesQuery.disconnect();
+    this.bodiesQuery.disconnect();
+    this.physics.dispose();
     this.world.clear();
     this.ids.clear();
     this.slots.length = this.generations.length = this.free.length = 0;
@@ -511,7 +595,6 @@ export class Simulation {
     this.removed = [];
     this.structural = [];
     this.endpoints = [];
-    this.collisionCells = [];
   }
 
   private groundView() {

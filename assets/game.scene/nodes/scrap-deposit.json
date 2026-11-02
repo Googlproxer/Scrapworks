@@ -14,7 +14,8 @@
       "id": "scrap-deposit-1",
       "resource": "scrap",
       "quantity": 250000,
-      "footprint": { "width": 1, "depth": 1 }
+      "footprint": { "width": 1, "depth": 1 },
+      "collision": { "shape": "cylinder", "radius": 25, "height": 170 }
     }
   }
 }

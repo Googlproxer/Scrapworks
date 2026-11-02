@@ -16,6 +16,24 @@ test('compiles saved authored markers into a plain finite 10x10 world', async ()
   assert.equal(definition.terrain.length, 100);
   assert.equal(definition.deposits.length, 1);
   assert.equal(definition.blockers.length, 1);
+  assert.equal(definition.bodies?.length, 6);
+  assert.equal(definition.bodies.filter((body) => body.motion === 'dynamic').length, 5);
+  assert.deepEqual(definition.bodies.find((body) => body.id === 'physics-mover')?.travel, {
+    axis: 'x',
+    distance: 4,
+    periodTicks: 160,
+  });
+  assert.deepEqual(definition.blockers[0].collision, {
+    shape: 'box',
+    width: 1.5,
+    height: 1.5,
+    depth: 1.5,
+  });
+  assert.deepEqual(definition.deposits[0].collision, {
+    shape: 'cylinder',
+    radius: 0.25,
+    height: 1.7,
+  });
   assert.deepEqual(JSON.parse(JSON.stringify(definition)), definition);
 });
 
@@ -25,6 +43,7 @@ test('composes parent translations and quarter-turns once, including rotated foo
   blocker.position = [100, 0, 0];
   blocker.metadata.parentId = 'parent';
   blocker.metadata.scrapworks.footprint = { width: 2, depth: 1 };
+  blocker.metadata.scrapworks.collision = { shape: 'box', width: 300, height: 150, depth: 100 };
   const definition = compileMarkers([
     ...nodes,
     {
@@ -36,6 +55,27 @@ test('composes parent translations and quarter-turns once, including rotated foo
   ]);
   assert.deepEqual(definition.blockers[0].position, { x: 3, y: 0, z: -1 });
   assert.equal(definition.blockers[0].rotation, 1);
+  assert.deepEqual(definition.blockers[0].collision, {
+    shape: 'box',
+    width: 3,
+    height: 1.5,
+    depth: 1,
+  });
+});
+
+test('rejects invalid collision geometry before publishing a world', () => {
+  for (const collision of [
+    { shape: 'box', width: 0, height: 150, depth: 150 },
+    { shape: 'box', width: 201, height: 150, depth: 150 },
+    { shape: 'box', width: 150, height: Infinity, depth: 150 },
+    { shape: 'cylinder', radius: -25, height: 170 },
+    { shape: 'cylinder', radius: 101, height: 170 },
+    { shape: 'cylinder', radius: NaN, height: 170 },
+  ] as const) {
+    const nodes = fixtureMarkers();
+    nodes[3].metadata.scrapworks.collision = collision;
+    assert.throws(() => compileMarkers(nodes), /collision|finite/);
+  }
 });
 
 test('rejects bad IDs, versions, dimensions, alignment and overlapping or out-of-bounds footprints', () => {

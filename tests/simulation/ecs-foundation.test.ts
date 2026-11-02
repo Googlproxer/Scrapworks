@@ -1,4 +1,5 @@
 import '../../tools/testing/register-typescript.ts';
+const { rebuildPhysics } = await import('../../tools/testing/rebuild-physics.ts');
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { RuntimeReply } from '../../src/contracts/simulation.ts';
@@ -86,6 +87,8 @@ test('real pickup removal and recycled slots preserve presentation generations',
     ...snapshot.definition.deposits[0].position,
     x: snapshot.definition.deposits[0].position.x + 1.5,
   };
+  // This fixture edits the physical initial conditions rather than continuing a native snapshot.
+  rebuildPhysics(snapshot);
   snapshot.entities.find((entity) => entity.id === 'pile')!.transform!.position = {
     ...player.transform!.position,
   };

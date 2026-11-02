@@ -12,7 +12,8 @@
       "version": 1,
       "kind": "Blocker",
       "id": "blocker-1",
-      "footprint": { "width": 1, "depth": 1 }
+      "footprint": { "width": 1, "depth": 1 },
+      "collision": { "shape": "box", "width": 150, "height": 150, "depth": 150 }
     }
   }
 }

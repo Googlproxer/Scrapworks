@@ -1,4 +1,3 @@
-import { occupiedCells } from '@simulation/world-rules';
 /** Node-only movement/placement oracle, retained from 421cc28 before ECS adoption.
  * Plain object storage is independent of Miniplex; domain/motor rules are shared.
  * This executable fixture is never a production backend. */
@@ -13,10 +12,12 @@ import type {
 } from '@contracts/world';
 import { assertWorldDefinition } from '@contracts/world';
 import { cellCenter } from '@core/world-grid';
+import { entityCollider } from '@core/world-collision';
 import { TEST_BUILDING_FOOTPRINT, validatePlacement } from '@simulation/placement';
 import { PlayerMotor, type MovementIntent } from '@simulation/player-motor';
 import { FIXED_STEP_SECONDS } from '@simulation/world-rules';
 import type { PlayerState } from '@simulation/world-state';
+import { WorldPhysics } from '@simulation/physics/world-physics';
 interface ReferenceState {
   worldId: string;
   tick: number;
@@ -34,6 +35,7 @@ export class ReferenceSimulation {
   public readonly definition: WorldDefinition;
   private readonly state: ReferenceState;
   private readonly playerMotor: PlayerMotor;
+  private readonly physics: WorldPhysics;
   private commands: WorldCommand[] = [];
   constructor(definition: WorldDefinition) {
     assertWorldDefinition(definition);
@@ -51,14 +53,29 @@ export class ReferenceSimulation {
       deposits: structuredClone([...definition.deposits]),
       buildings: [],
     };
-    this.playerMotor = new PlayerMotor(this.definition, this.state.player, () => {
-      const cells = occupiedCells(this.definition, this.state.buildings, this.state.deposits);
-      for (let row = 0; row < this.definition.grid.rows; row++)
-        for (let column = 0; column < this.definition.grid.columns; column++)
-          if (this.definition.terrain[row * this.definition.grid.columns + column] === 'water')
-            cells.push({ row, column });
-      return cells;
-    });
+    this.physics = new WorldPhysics(this.definition, 'player', this.state.player.position);
+    this.playerMotor = new PlayerMotor(this.state.player, this.physics);
+    this.syncCollision();
+  }
+
+  private syncCollision(): void {
+    const colliders = [
+      ...this.definition.blockers,
+      ...this.state.deposits.filter((deposit) => deposit.quantity > 0),
+      ...this.state.buildings,
+    ].map((entity) => ({ ...entityCollider(this.definition.grid, entity), id: entity.id }));
+    for (let row = 0; row < this.definition.grid.rows; row++)
+      for (let column = 0; column < this.definition.grid.columns; column++)
+        if (this.definition.terrain[row * this.definition.grid.columns + column] === 'water')
+          colliders.push({
+            id: `water:${column}:${row}`,
+            shape: 'box',
+            center: cellCenter(this.definition.grid, { row, column }),
+            width: this.definition.grid.metresPerCell,
+            depth: this.definition.grid.metresPerCell,
+            height: 1,
+          });
+    this.physics.syncStatic(colliders);
   }
   public enqueue(command: WorldCommand): void {
     this.commands.push(structuredClone(command));
@@ -66,6 +83,9 @@ export class ReferenceSimulation {
   public clearInput(): void {
     this.commands = [];
     this.playerMotor.clearInput();
+  }
+  public dispose(): void {
+    this.physics.dispose();
   }
   public step(movement: MovementIntent): void {
     for (const command of this.commands) {
@@ -95,7 +115,8 @@ export class ReferenceSimulation {
       }
     }
     this.commands = [];
-    this.playerMotor.step(movement);
+    this.syncCollision();
+    this.playerMotor.step(movement, this.state.tick);
     this.state.tick++;
   }
   public get view(): WorldView {
@@ -112,6 +133,7 @@ export class ReferenceSimulation {
     const movementOnly = { ...actual };
     delete movementOnly.opening;
     delete movementOnly.ground;
+    delete movementOnly.bodies;
     assert.deepEqual(canonical(movementOnly), canonical(this.view));
   }
 }

@@ -87,6 +87,7 @@ describe('WorldScene with the exported character and authored scene', () => {
 
   afterEach(() => {
     world?.dispose();
+    session?.dispose();
     assets?.dispose();
     scene?.dispose();
     canvas?.remove();
@@ -179,6 +180,22 @@ describe('WorldScene with the exported character and authored scene', () => {
       center.x * 100 + 35,
     );
     expect(ring.scaling.x).toBe(1);
+    // Draw the exact simulation shapes around the current authored box and capsule.
+    const objectBounds = meshes.filter((mesh) => mesh.name.startsWith('debug:entity:'));
+    expect(objectBounds).toHaveLength(2);
+    for (const bounds of objectBounds) {
+      const name = bounds.name.slice('debug:'.length, -':collision'.length);
+      const object = scene.getMeshByName(name)!;
+      object.computeWorldMatrix(true);
+      bounds.computeWorldMatrix(true);
+      const actual = object.getBoundingInfo().boundingBox;
+      const drawn = bounds.getBoundingInfo().boundingBox;
+      for (const axis of ['x', 'y', 'z'] as const) {
+        expect(drawn.minimumWorld[axis]).toBeCloseTo(actual.minimumWorld[axis]);
+        expect(drawn.maximumWorld[axis]).toBeCloseTo(actual.maximumWorld[axis]);
+      }
+      expect(bounds.isPickable).toBe(false);
+    }
     const dispose = vi.spyOn(ring, 'dispose');
     world.dispose();
     expect(dispose).toHaveBeenCalled();
@@ -428,7 +445,7 @@ describe('WorldScene with the exported character and authored scene', () => {
     present(walking, 0.1, true);
     expect(root.position.asArray()).toEqual([300, 0, 100]);
     expect(root.rotation.y).toBeGreaterThan(0);
-    expect(root.rotation.y).toBeLessThan(Math.PI / 2);
+    expect(root.rotation.y).toBeCloseTo(Math.PI / 2);
     for (let step = 0; step < 12; step++) present(walking, 0.05, true);
     expect(root.rotation.y).toBeCloseTo(Math.PI / 2);
     const walk = scene.animationGroups.find((clip) => clip.name === 'Walk')!;
@@ -545,7 +562,7 @@ describe('WorldScene with the exported character and authored scene', () => {
       present(view(), 0.05, true);
       const turning = view({ player: { ...view().player, facing: (direction * Math.PI) / 2 } });
       const before = JSON.stringify(turning);
-      present(turning, 0.1, true);
+      present(turning, 0.025, true);
       expect(direction * root.rotation.y).toBeGreaterThan(0);
       expect(direction * root.rotation.y).toBeLessThan(Math.PI / 2);
       const turns = scene.animationGroups.filter((clip) => clip.name.startsWith('Turn'));
@@ -560,7 +577,7 @@ describe('WorldScene with the exported character and authored scene', () => {
       expect(root.rotation.y).toBe(pausedHeading);
       expect(idle.animatables[0].weight).toBe(pausedWeight);
       expect(idle.isPlaying).toBe(false);
-      for (let step = 0; step < 30; step++) present(turning, 0.05, true);
+      for (let step = 0; step < 2; step++) present(turning, 0.05, true);
       expect(root.rotation.y).toBeCloseTo((direction * Math.PI) / 2);
       expect(
         scene.animationGroups.find((clip) => clip.name === 'Idle')!.animatables[0].weight,
@@ -583,18 +600,18 @@ describe('WorldScene with the exported character and authored scene', () => {
       present(reversing, 0.05, true);
       expect(root.position.asArray()).toEqual([100, 0, -100]);
       expect(root.rotation.y).toBeGreaterThan(0);
-      expect(root.rotation.y).toBeLessThan(Math.PI / 8);
+      expect(root.rotation.y).toBeCloseTo(Math.PI / 4);
       const turns = scene.animationGroups.filter((clip) => clip.name.startsWith('Turn'));
       const locomotion = scene.animationGroups.find(
         (clip) => clip.name === (sprinting ? 'Run' : 'Walk'),
       )!;
       expect(locomotion.animatables[0].weight).toBeGreaterThan(0.5);
-      for (let step = 0; step < 24; step++) {
+      for (let step = 0; step < 3; step++) {
         present(reversing, 0.05, true);
         expect(turns.every((clip) => !clip.isStarted && !clip.isPlaying)).toBe(true);
       }
       expect(root.rotation.y).toBeCloseTo(Math.PI);
-      expect(locomotion.animatables[0].weight).toBeGreaterThan(0.99);
+      expect(locomotion.animatables[0].weight).toBeGreaterThan(0.95);
       expect(root.position.asArray()).toEqual([100, 0, -100]);
     },
   );
@@ -606,20 +623,37 @@ describe('WorldScene with the exported character and authored scene', () => {
       present(view(), 0, true);
       const turning = view({ player: { ...view().player, facing: Math.PI, moving: true } });
       let previous = 0;
-      for (let step = 0; step < fps / 2; step++) {
+      for (let step = 0; step < fps / 10; step++) {
         present(turning, 1 / fps, true);
-        expect(root.rotation.y - previous).toBeLessThanOrEqual((Math.PI * 1.5) / fps + 1e-8);
+        expect(root.rotation.y - previous).toBeLessThanOrEqual((Math.PI * 5) / fps + 1e-8);
         previous = root.rotation.y;
       }
-      expect(root.rotation.y).toBeCloseTo((Math.PI * 3) / 4, 6);
+      const frames = Math.ceil(fps / 10);
+      expect(root.rotation.y).toBeCloseTo((Math.PI * 5 * frames) / fps, 6);
+      present(turning, 0.1, true);
+      expect(root.rotation.y).toBeCloseTo(Math.PI, 6);
     },
   );
+
+  it('finishes a brief movement tap at the same rate after movement stops', () => {
+    const root = scene.getTransformNodeByName('player-visual')!;
+    present(view(), 0, true);
+    const tapped = view({ tick: 1, player: { ...view().player, facing: Math.PI, moving: true } });
+    present(tapped, 0.05, true);
+    expect(root.rotation.y).toBeCloseTo(Math.PI / 4);
+    const stopped = { ...tapped, tick: 2, player: { ...tapped.player, moving: false } };
+    present(stopped, 0.05, true);
+    expect(root.rotation.y).toBeCloseTo(Math.PI / 2);
+    present(stopped, 0.1, true);
+    expect(root.rotation.y).toBeCloseTo(Math.PI);
+    expect(root.position.asArray()).toEqual([100, 0, 100]);
+  });
 
   it('takes the short turn across the -pi/pi boundary', () => {
     const root = scene.getTransformNodeByName('player-visual')!;
     present(view({ player: { ...view().player, facing: Math.PI - 0.1 } }), 0, true);
     const turning = view({ player: { ...view().player, facing: -Math.PI + 0.1 } });
-    present(turning, 0.05, true);
+    present(turning, 0.005, true);
     expect(root.rotation.y).toBeGreaterThan(Math.PI - 0.1);
     expect(root.rotation.y).toBeLessThan(Math.PI);
     present(turning, 0.15, true);

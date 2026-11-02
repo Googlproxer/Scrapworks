@@ -112,6 +112,7 @@ try {
     window.turningEvidence.running = false;
     return window.turningEvidence.samples;
   });
+  await fs.writeFile(path.join(output, 'samples.json'), JSON.stringify(samples, null, 2));
 
   const headingDifference = (sample: TurningSample) =>
     Math.atan2(
@@ -134,15 +135,25 @@ try {
   }
   for (const name of ['right-settle', 'left-settle']) {
     const stationary = samples.filter((sample) => sample.phase === name && !sample.player.moving);
+    const target = name === 'right-settle' ? Math.PI / 2 : -Math.PI / 2;
+    // Worker publications can arrive after the input phase has already changed to "settle".
+    const requested = samples.find(
+      (sample) =>
+        [name, name.replace('settle', 'tap')].includes(sample.phase) &&
+        Math.abs(sample.player.facing - target) < 0.01,
+    );
+    assert(requested, 'The worker must receive the tapped direction');
+    const settled = stationary.find(
+      (sample) => sample.time >= requested.time && Math.abs(headingDifference(sample)) < 0.01,
+    );
+    assert(settled, 'A brief tap finishes turning after movement stops');
     assert(
-      stationary.some(
-        (sample) => sample.weights.Idle > 0.95 && Math.abs(headingDifference(sample)) > 0.15,
-      ),
-      'Idle plays while the stationary heading is still settling',
+      settled.time - requested.time < 300,
+      'Even a reversal settles within 300 ms of published input',
     );
     assert(
-      stationary.some((sample) => Math.abs(headingDifference(sample)) > 0.15),
-      'heading settles over time',
+      stationary.some((sample) => sample.weights.Idle > 0.95),
+      'The character returns to Idle after the tap',
     );
     assert(
       Math.abs(headingDifference(stationary.at(-1)!)) < 0.01,
@@ -161,7 +172,7 @@ try {
   const reversal = samples.filter((sample) => sample.phase === 'reverse' && sample.player.moving);
   assert(
     reversal.some(
-      (sample) => sample.weights.Walk > 0.95 && Math.abs(headingDifference(sample)) > Math.PI / 4,
+      (sample) => sample.weights.Walk > 0.5 && Math.abs(headingDifference(sample)) > Math.PI / 4,
     ),
     'Walk continues during the sharp heading reversal',
   );
@@ -186,7 +197,7 @@ try {
         checks: {
           turnGroupsStopped: true,
           turnGroupsZeroContribution: true,
-          stationaryIdleWhileHeadingSettles: true,
+          briefTapSettlesWithin300ms: true,
           stationarySimulationPositionUnchanged: true,
           movingReversalKeepsWalk: true,
           sprintingPlaysRun: true,

@@ -1,4 +1,5 @@
 import '../../tools/testing/register-typescript.ts';
+const { rebuildPhysics } = await import('../../tools/testing/rebuild-physics.ts');
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { SimulationSnapshot } from '../../src/contracts/simulation.ts';
@@ -41,6 +42,7 @@ function setup(edit?: (snapshot: SimulationSnapshot) => void): Sim {
   const snapshot = initial.capture();
   initial.dispose();
   edit(snapshot);
+  rebuildPhysics(snapshot); // Physical edits define a new initial world, not a continuation.
   return new Simulation(definition, { snapshot });
 }
 const player = (snapshot: SimulationSnapshot) =>

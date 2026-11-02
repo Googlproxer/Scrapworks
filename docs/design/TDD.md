@@ -9,7 +9,7 @@ Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D 
 - Keep the game browser-first, with Angular UI and a fully 3D world/character.
 - Author scenes and world layout in one Scrapworks Editor project; attached scripts handle presentation and scene bindings.
 - Keep authoritative gameplay in plain TypeScript and save progress locally through versioned data snapshots.
-- Defer accounts/cloud saves, remote control, physics, and navigation systems until a defined requirement needs them.
+- Defer accounts/cloud saves, remote control and navigation systems until a defined requirement needs them. The current playable physics test supplies the defined requirement for Rapier integration.
 
 The [runtime architecture decision](../decisions/runtime-architecture.md) defines version-2 contracts, ownership, notifications, scene registrations and enforcement.
 
@@ -19,7 +19,8 @@ The [runtime architecture decision](../decisions/runtime-architecture.md) define
 | ------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Application and UI  | Angular 22, signals, CDK         | Shell, shared viewport, field-kit inventory/research/handcraft/MiniFab panels, winding, exit warning, menus and Retry.                                                                 |
 | 3D presentation     | Babylon.js 9.32.0                | Sole renderer at `/`, with `/3d` compatibility redirect; authored scene bindings and runtime character presentation.                                                                   |
-| Core object scripts | Scene-owned native Babylon hooks | TypeScript-attached scripts own player input/presentation, camera, selection and placement; no physics engine is enabled.                                                              |
+| Core object scripts | Scene-owned native Babylon hooks | TypeScript-attached scripts own player input/presentation, camera, selection and placement. Babylon physics remains disabled; Rapier runs inside simulation. |
+| Physical simulation | Rapier 0.21.0, WebAssembly | Worker-owned character controller and static/dynamic/kinematic bodies, three 60 Hz substeps per gameplay tick, changed-only pose publication and native-state continuation. |
 | Authoring           | Babylon.js Editor 5.5.3          | Saved inputs export/reload automatically; validated marker metadata compiles into a plain world definition.                                                                            |
 | Client subscription | RxJS in main-thread `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                                                                                                           |
 | Gameplay            | Plain TypeScript                 | Private Miniplex authority, typed movement/opening commands, deterministic 20 Hz salvage/research/handcraft/MiniFab executors and detached views. Factory progression remains planned. |
@@ -409,6 +410,8 @@ The opening MiniFab, baseline battery and winding invariants below are implement
 ## Simulation timing and save boundaries
 
 `GameSession.advance(deltaSeconds)` retains a 50 ms accumulator (20 Hz), a five-step catch-up limit and the existing browser frame source. It adds no timer or animation loop and does not depend on physics, physics substeps or global Babylon timing. A zero-tick render frame still updates presentation; excess elapsed time beyond the bounded catch-up budget is discarded.
+
+The [Rapier integration](../../tools/world/README.md#physics-ownership-and-continuation) nests three 1/60 s physics steps inside each authoritative gameplay tick. Physics has no independent clock. Version-3 captures include pinned native physics bytes and project-owned stable identity alongside plain ECS data; geometry/pose validation protects candidate replacement and exact continuation. Protocol/presentation remain version 2, with sparse transferred quaternion rows for physical entities. The current crate/barrel/stack/moving-block layout is authored in the active Game scene and remains test content; performance qualification of large active-body populations is separate work.
 
 `registerCompletedTickHandler(handler, order?)` registers main-thread presentation notifications. The owned render frame pins the latest completed publication, drains at most five summaries in tick/order/registration order, then submits future credits. Context includes the completed tick, fixed duration, world generation and publication tick/version; a catch-up notification may describe an earlier tick than the pinned view. New registrations never replay committed ticks. Unsubscription and ownership changes stop dispatch immediately. Hook commands affect a future step; hook failure retains the completed view and requires explicit authored-world Retry. Worker message handlers never execute scene scripts.
 

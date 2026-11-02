@@ -37,7 +37,9 @@ export function verifyMetadata(metadata: BuildMetadata) {
     throw new Error('Expected exactly one production simulation worker entry');
   const workerGraph = visit(workers[0]);
   const mainGraph = new Set(
-    entries.filter((key) => !workers.includes(key)).flatMap((key) => [...visit(key)]),
+    // Worker code-split chunks also have entryPoint metadata. They are worker roots,
+    // while any actual main import of them remains reachable from the main entry.
+    entries.filter((key) => !workerGraph.has(key)).flatMap((key) => [...visit(key)]),
   );
 
   const inspect = (keys: Iterable<string>, isWorker: boolean) => {
@@ -68,6 +70,8 @@ export function verifyMetadata(metadata: BuildMetadata) {
       if (forbidden.test(input)) throw new Error(`Investigation code entered production: ${input}`);
       if (!isWorker && authority.test(input))
         throw new Error(`Simulation authority entered main graph: ${input}`);
+      if (!isWorker && /node_modules\/@dimforge\/rapier|src\/simulation\/physics\//.test(input))
+        throw new Error(`Physics authority entered main graph: ${input}`);
       if (isWorker && /src\/(?:app|game)\//.test(input))
         throw new Error(`Presentation entered worker graph: ${input}`);
       if (isWorker && /(?:^|\/)node_modules\/rxjs\//.test(input))

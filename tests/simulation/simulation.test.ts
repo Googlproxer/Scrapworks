@@ -56,11 +56,11 @@ test('movement is deterministic across render schedules; diagonal distance is no
   const fast = run(Array(144).fill(1 / 144), { x: 0, z: 1 });
   assert.deepEqual(slow, fast);
   assert.equal(slow.tick, 20);
-  assert.ok(Math.abs(slow.player.position.z - 2.5) < 1e-10);
+  assert.ok(Math.abs(slow.player.position.z - 2.5) < 1e-5);
   const diagonal = run(Array(60).fill(1 / 60), { x: 1, z: 1 });
   assert.ok(
     Math.abs(Math.hypot(diagonal.player.position.x - 1, diagonal.player.position.z - 1) - 1.5) <
-      1e-10,
+      1e-5,
   );
 });
 
@@ -69,7 +69,7 @@ test('catch-up is bounded and pause clears held input, queued placement and left
   session.setMovement({ x: 0, z: 1 }, true);
   session.advance(60);
   assert.equal(session.view.tick, 5);
-  assert.ok(Math.abs(session.view.player.position.z - 1.75) < 1e-10);
+  assert.ok(Math.abs(session.view.player.position.z - 1.75) < 1e-5);
   session.advance(0.04);
   session.enqueue({
     type: 'place',

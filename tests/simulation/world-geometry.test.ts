@@ -1,6 +1,7 @@
 import type { BuildingView, QuarterTurn, WorldDefinition } from '../../src/contracts/world.ts';
 import type { RuntimeRequest, SimulationSnapshot } from '../../src/contracts/simulation.ts';
 import '../../tools/testing/register-typescript.ts';
+const { rebuildPhysics } = await import('../../tools/testing/rebuild-physics.ts');
 import assert from 'node:assert/strict';
 import test from 'node:test';
 const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
@@ -115,6 +116,7 @@ function snapshotWithBuilding(rotation: QuarterTurn = 0): SimulationSnapshot {
         rotation,
       },
     });
+    rebuildPhysics(snapshot);
     return snapshot;
   } finally {
     world.dispose();

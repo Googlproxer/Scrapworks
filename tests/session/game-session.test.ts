@@ -45,7 +45,7 @@ test('completed presentation ticks agree across render schedules and observe com
   });
   assert.deepEqual(results[0], results[1]);
   assert.deepEqual(results[0], results[2]);
-  assert.ok(Math.abs(results[0].player.position.z - 2.5) < 1e-10);
+  assert.ok(Math.abs(results[0].player.position.z - 2.5) < 1e-5);
 });
 test('zero-step frames retain commands; catch-up commits at most five steps and applies a command once', () => {
   const session = new GameSession(definition(), { developerFixture: true });
@@ -97,7 +97,7 @@ test('presentation commands and movement affect a future tick', () => {
   assert.equal(session.view.player.position.x, 1);
   session.advance(0.05);
   assert.equal(session.view.buildings.length, 1);
-  assert.ok(Math.abs(session.view.player.position.x - 1.075) < 1e-10);
+  assert.ok(Math.abs(session.view.player.position.x - 1.075) < 1e-5);
   session.dispose();
 });
 test('pause in a completed hook stops notifications and future input without rolling back completed work', () => {

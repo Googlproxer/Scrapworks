@@ -39,9 +39,12 @@ yarn dev --port 4200
 # In another terminal:
 node tests/acceptance/check-migration-browser.ts http://localhost:4200 tmp/migration-browser
 node tests/acceptance/check-turning-browser.ts http://localhost:4200 tmp/turning-browser
+node tests/acceptance/rapier-browser.ts http://localhost:4200 tmp/rapier-browser
 ```
 
 The migration probe covers keyboard/mouse flows, controls, placement, resizing and axe checks at two device-pixel ratios. The turning probe verifies animation/heading behavior and captures visual evidence. Passing an explicit output directory keeps fresh turning evidence separate from the existing art records.
+
+The Rapier probe exercises the authored physics fixture through real keyboard input: one worker, falling/stacked objects, a kinematic moving block, pushing a dynamic crate, collision drawings, menu pause/resume and AXE. A spawn-only browser fixture checks that an idle player beside the blue mover stays detached through a round trip and can walk away. The Node physics suite covers all four mover sides, pushing without pulling, supported riding/walking off, native dynamic-body interactions, exact capture/rebuild continuation beside/on the platform, 1,000-step contact continuation, sparse quaternion transport, sleeping-body publication and disposal. Version-3 captures require native physics state; test setup that deliberately edits physical initial conditions uses `tools/testing/rebuild-physics.ts`.
 
 ## Audit of tests previously under tools
 

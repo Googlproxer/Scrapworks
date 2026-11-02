@@ -28,6 +28,8 @@ test('production graph permits Miniplex only in its independent worker', () => {
     'src/game/debug/draw/development-renderer.ts',
     'src/game/debug/draw/geometry.ts',
     'src/game/debug/draw/backend.development.ts',
+    'src/simulation/physics/world-physics.ts',
+    'node_modules/@dimforge/rapier3d-compat/dist/rapier.mjs',
   ]) {
     const m = fixture();
     m.outputs['view.js'].inputs![input] = {};
@@ -42,4 +44,16 @@ test('production graph permits Miniplex only in its independent worker', () => {
   const reactiveWorker = fixture();
   reactiveWorker.outputs['worker.js'].inputs!['node_modules/rxjs/dist/esm/index.js'] = {};
   assert.throws(() => verifyMetadata(reactiveWorker), /RxJS entered simulation worker/);
+});
+
+test('async worker chunks remain worker-owned and a real main import still fails', () => {
+  const metadata = fixture();
+  metadata.outputs['worker.js'].imports = [{ path: 'worker-runtime.js', kind: 'dynamic-import' }];
+  metadata.outputs['worker-runtime.js'] = {
+    entryPoint: 'src/session/runtime.ts',
+    inputs: { 'node_modules/@dimforge/rapier3d-compat/dist/rapier.mjs': {}, 'src/simulation/physics/world-physics.ts': {} },
+  };
+  assert.equal(verifyMetadata(metadata).worker, 'worker.js');
+  metadata.outputs['view.js'].imports = [{ path: 'worker-runtime.js', kind: 'dynamic-import' }];
+  assert.throws(() => verifyMetadata(metadata), /Physics authority entered main/);
 });

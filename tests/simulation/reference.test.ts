@@ -34,5 +34,6 @@ test('private ECS movement and placement agree with the legacy plain-object orac
       reference.assertMatches(ecs.view);
     }
     ecs.dispose();
+    reference.dispose();
   }
 });

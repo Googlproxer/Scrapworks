@@ -13,6 +13,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 const errors: string[] = [];
 const driverWarnings: string[] = [];
 const expectedFailures: string[] = [];
+const enabledCategories = [...Array<string>(9).fill('collision'), 'placement', 'transforms'];
 
 async function openPanel(): Promise<void> {
   const details = page.locator('app-debug-draw-panel details');
@@ -81,11 +82,11 @@ try {
       scene
         .getEngine()
         ._virtualScenes.flatMap((layer) => layer.meshes)
-        .filter((mesh) => mesh.metadata?.debugDraw && mesh.isEnabled()).length === 3
+        .filter((mesh) => mesh.metadata?.debugDraw && mesh.isEnabled()).length === 11
     );
   });
   const enabled = await inspect();
-  assert.deepEqual(enabled.categories, ['collision', 'placement', 'transforms']);
+  assert.deepEqual(enabled.categories, enabledCategories);
   assert.equal(enabled.canvases, 1);
   assert.equal(enabled.pickable, false);
   assert(
@@ -152,7 +153,7 @@ try {
   await page.getByLabel('transforms', { exact: true }).waitFor();
   assert.equal(await master.isChecked(), true);
   await page.waitForTimeout(150);
-  assert.deepEqual((await inspect()).categories, ['collision', 'placement', 'transforms']);
+  assert.deepEqual((await inspect()).categories, enabledCategories);
 
   // Exercise the existing renderer-failure boundary without destroying GPU state in the probe.
   const healthyWorker = page.workers()[0];
@@ -169,7 +170,7 @@ try {
   await page.waitForTimeout(150);
   assert.equal(page.workers()[0], healthyWorker, 'Renderer Retry must retain the healthy worker');
   assert.equal(await master.isChecked(), true);
-  assert.deepEqual((await inspect()).categories, ['collision', 'placement', 'transforms']);
+  assert.deepEqual((await inspect()).categories, enabledCategories);
 
   await healthyWorker.evaluate(() =>
     setTimeout(() => {
@@ -189,7 +190,7 @@ try {
   await page.getByLabel('transforms', { exact: true }).waitFor();
   await page.waitForTimeout(150);
   assert.equal(await master.isChecked(), true);
-  assert.deepEqual((await inspect()).categories, ['collision', 'placement', 'transforms']);
+  assert.deepEqual((await inspect()).categories, enabledCategories);
   await page.reload();
   await page.getByRole('button', { name: 'Play Game!', exact: true }).waitFor();
   await openPanel();

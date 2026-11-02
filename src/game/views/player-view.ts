@@ -9,7 +9,8 @@ import type { WorldFrame } from './world-frame';
 const characterClips = ['Idle', 'Walk', 'Run'];
 // Measured in the v3 archive before removing horizontal root travel.
 const referenceSpeeds = { Walk: 1.7707664, Run: 3.9823594 };
-const facingSpeeds = { moving: Math.PI * 1.5, left: 1.3453665, right: 1.3463967 };
+// Finish a reversal in 0.2 s; releasing a brief movement tap must not slow the turn.
+const facingSpeed = Math.PI * 5;
 
 export class PlayerView extends PresentationBehavior {
   private readonly animations = new Map<string, AnimationGroup>();
@@ -106,12 +107,7 @@ export class PlayerView extends PresentationBehavior {
       Math.sin(view.player.facing - this.root.rotation.y),
       Math.cos(view.player.facing - this.root.rotation.y),
     );
-    const speed = view.player.moving
-      ? facingSpeeds.moving
-      : difference < 0
-        ? facingSpeeds.left
-        : facingSpeeds.right;
-    const step = Math.sign(difference) * Math.min(Math.abs(difference), speed * seconds);
+    const step = Math.sign(difference) * Math.min(Math.abs(difference), facingSpeed * seconds);
     const heading = this.root.rotation.y + step;
     this.root.rotation.y = Math.atan2(Math.sin(heading), Math.cos(heading));
   }

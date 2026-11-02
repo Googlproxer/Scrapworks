@@ -1,0 +1,24 @@
+{
+  "name": "physics-barrel",
+  "id": "physics-barrel",
+  "uniqueId": 900000015,
+  "type": "TransformNode",
+  "position": [-300, 65, 450],
+  "rotation": [0, 0, 0],
+  "scaling": [1, 1, 1],
+  "isEnabled": true,
+  "metadata": {
+    "scrapworks": {
+      "version": 1,
+      "kind": "PhysicsBody",
+      "id": "physics-barrel",
+      "collision": {
+        "shape": "cylinder",
+        "height": 110,
+        "radius": 40
+      },
+      "motion": "dynamic",
+      "mass": 5
+    }
+  }
+}

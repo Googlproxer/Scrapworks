@@ -1,10 +1,12 @@
 import { freezePresentation } from './freeze-presentation';
 import type { BuildingView, DepositDefinition, WorldView } from '@contracts/world';
 import type { GroundItemView } from '@contracts/opening';
+import type { PhysicsBodyView } from '@contracts/physics';
 import type { EntityMapping, Inspection, PresentationPacket } from '@contracts/simulation';
 import {
   PRESENTATION_STRIDE as stride,
   MAX_DETAIL_SUBSCRIPTIONS,
+  ROTATION_STRIDE,
   requireInvariant as check,
 } from '@contracts/simulation';
 
@@ -24,6 +26,8 @@ export class PresentationCache {
   private readonly deposits = new Map<string, DepositDefinition>();
   private readonly buildings = new Map<string, BuildingView>();
   private readonly ground = new Map<string, GroundItemView>();
+  private readonly bodies = new Map<string, PhysicsBodyView>();
+  private bodyViews: readonly PhysicsBodyView[] = [];
   private groundViews: readonly GroundItemView[] = [];
   private depositViews: readonly DepositDefinition[] = [];
   private buildingViews: readonly BuildingView[] = [];
@@ -77,6 +81,12 @@ export class PresentationCache {
     );
     const rows = new Float64Array(packet.rows);
     const removed = new Float64Array(packet.removed);
+    const rotations = packet.rotations ? new Float64Array(packet.rotations) : new Float64Array(0);
+    check(
+      rotations.length % ROTATION_STRIDE === 0 && rotations.length <= 10000 * ROTATION_STRIDE,
+      'Invalid physics publication dimensions',
+    );
+    const orientation = new Map<number, { x: number; y: number; z: number; w: number }>();
     let maximum = 0;
     for (const m of packet.mappings) {
       check(
@@ -133,6 +143,26 @@ export class PresentationCache {
     }
     for (let at = 0; at < rows.length; at += stride)
       check(lookup(rows[at])?.generation === rows[at + 1], 'Missing/stale row mapping');
+    for (let at = 0; at < rotations.length; at += ROTATION_STRIDE) {
+      const slot = rotations[at];
+      check(
+        Number.isInteger(slot) &&
+          slot >= 0 &&
+          lookup(slot)?.generation === rotations[at + 1] &&
+          lookup(slot)?.physics &&
+          !orientation.has(slot),
+        'Missing/stale physics mapping',
+      );
+      const values = [rotations[at + 2], rotations[at + 3], rotations[at + 4], rotations[at + 5]];
+      check(
+        values.every(Number.isFinite) && Math.abs(Math.hypot(...values) - 1) < 0.001,
+        'Invalid published rotation',
+      );
+      orientation.set(slot, { x: values[0], y: values[1], z: values[2], w: values[3] });
+    }
+    for (let at = 0; at < rows.length; at += stride)
+      if (lookup(rows[at])?.physics)
+        check(orientation.has(rows[at]), 'Missing physics orientation');
     const playerMapping =
       packet.mappings.find((m) => m.id === packet.playerId) ??
       (packet.full ? undefined : this.ids.get(packet.playerId));
@@ -146,6 +176,7 @@ export class PresentationCache {
       this.deposits.clear();
       this.buildings.clear();
       this.ground.clear();
+      this.bodies.clear();
       this.details.clear();
     }
     if (maximum * stride > this.rows.length) {
@@ -159,6 +190,7 @@ export class PresentationCache {
     const removedIds: string[] = [];
     const changedDeposits: DepositDefinition[] = [];
     const changedBuildings: BuildingView[] = [];
+    const changedBodies: PhysicsBodyView[] = [];
     let renderablesChanged = packet.full;
     for (let at = 0; at < removed.length; at += 2) {
       const mapping = this.mappings[removed[at]];
@@ -169,7 +201,8 @@ export class PresentationCache {
       if (
         this.deposits.delete(mapping.id) ||
         this.buildings.delete(mapping.id) ||
-        this.ground.delete(mapping.id)
+        this.ground.delete(mapping.id) ||
+        this.bodies.delete(mapping.id)
       ) {
         removedIds.push(mapping.id);
         renderablesChanged = true;
@@ -189,7 +222,7 @@ export class PresentationCache {
       check(mapping && mapping.generation === rows[at + 1], 'Missing/stale row mapping');
       const offset = mapping.slot * stride;
       for (let field = 0; field < stride; field++) this.rows[offset + field] = rows[at + field];
-      if (mapping.deposit || mapping.building || mapping.pile) {
+      if (mapping.deposit || mapping.building || mapping.pile || mapping.physics) {
         const position = { x: rows[at + 2], y: rows[at + 3], z: rows[at + 4] };
         if (mapping.deposit)
           this.deposits.set(mapping.id, {
@@ -197,10 +230,22 @@ export class PresentationCache {
             position,
             footprint: mapping.deposit.footprint,
             rotation: mapping.deposit.rotation,
+            ...(mapping.deposit.collision ? { collision: mapping.deposit.collision } : {}),
             kind: 'scrap',
             quantity: rows[at + 7],
           });
         if (mapping.building) this.buildings.set(mapping.id, { ...mapping.building, position });
+        if (mapping.physics) {
+          const body: PhysicsBodyView = {
+            id: mapping.id,
+            position,
+            rotation: orientation.get(mapping.slot)!,
+            collision: mapping.physics.collision,
+            motion: mapping.physics.motion,
+          };
+          this.bodies.set(mapping.id, body);
+          changedBodies.push(body);
+        }
         if (mapping.pile)
           this.ground.set(mapping.id, {
             id: mapping.id,
@@ -224,6 +269,7 @@ export class PresentationCache {
       this.depositViews = Array.from(this.deposits.values());
       this.buildingViews = Array.from(this.buildings.values());
       this.groundViews = Array.from(this.ground.values());
+      this.bodyViews = Array.from(this.bodies.values());
     }
     const inventory: Record<string, number> = {};
     const opening = packet.opening;
@@ -251,12 +297,14 @@ export class PresentationCache {
       deposits: this.depositViews,
       buildings: this.buildingViews,
       ground: this.groundViews,
+      bodies: this.bodyViews,
       changes: {
         full: packet.full,
         upsertedIds,
         removedIds,
         deposits: changedDeposits,
         buildings: changedBuildings,
+        bodies: changedBodies,
       },
     };
     if (this.freezeViews) freezePresentation(this.current);
@@ -279,9 +327,11 @@ export class PresentationCache {
     this.buildings.clear();
     this.ground.clear();
     this.details.clear();
+    this.bodies.clear();
     this.current = undefined;
     this.depositViews = [];
     this.buildingViews = [];
     this.groundViews = [];
+    this.bodyViews = [];
   }
 }

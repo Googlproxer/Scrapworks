@@ -1,4 +1,5 @@
 import type { OpeningCommand, OpeningRejection, OpeningView, GroundItemView } from './opening';
+import type { PhysicsBodyDefinition, PhysicsBodyView } from './physics';
 
 /** Plain gameplay metres. X points east, Z north, Y up; model-forward is +Z. */
 export interface WorldPosition {
@@ -26,12 +27,23 @@ export interface Footprint {
   readonly depth: number;
 }
 
+/** Simple ground-standing movement bounds in metres, centred on the footprint. */
+export type CollisionShape =
+  | {
+      readonly shape: 'box';
+      readonly width: number;
+      readonly height: number;
+      readonly depth: number;
+    }
+  | { readonly shape: 'cylinder'; readonly radius: number; readonly height: number };
+
 /** Position is the centre of the footprint's minimum X/Z cell. */
 export interface WorldEntityDefinition {
   readonly id: string;
   readonly position: WorldPosition;
   readonly footprint: Footprint;
   readonly rotation: QuarterTurn;
+  readonly collision?: CollisionShape;
 }
 
 export interface DepositDefinition extends WorldEntityDefinition {
@@ -47,6 +59,7 @@ export interface WorldDefinition {
   readonly spawn: WorldPosition;
   readonly deposits: readonly DepositDefinition[];
   readonly blockers: readonly WorldEntityDefinition[];
+  readonly bodies?: readonly PhysicsBodyDefinition[];
 }
 
 export interface BuildingView extends WorldEntityDefinition {
@@ -93,6 +106,7 @@ export interface WorldView {
     readonly removedIds: readonly string[];
     readonly deposits?: readonly DepositDefinition[];
     readonly buildings?: readonly BuildingView[];
+    readonly bodies?: readonly PhysicsBodyView[];
   };
   readonly endpoints?: readonly {
     readonly tick: number;
@@ -121,6 +135,7 @@ export interface WorldView {
   readonly productionTotals: Readonly<Record<string, number>>;
   readonly deposits: readonly DepositDefinition[];
   readonly buildings: readonly BuildingView[];
+  readonly bodies?: readonly PhysicsBodyView[];
 }
 
 /** Validate the versioned JSON boundary before constructing a session. */
@@ -198,6 +213,28 @@ export function assertWorldDefinition(value: unknown): asserts value is WorldDef
       const rotation = integer(entity['rotation'], 0, 3);
       const w = rotation % 2 ? depth : width;
       const d = rotation % 2 ? width : depth;
+      if (entity['collision'] !== undefined) {
+        const collision = object(entity['collision']);
+
+        const positive = (key: string): number => {
+          const result = finite(collision[key]);
+          if (result <= 0) fail('collision dimensions must be positive');
+
+          return result;
+        };
+
+        positive('height');
+        let collisionWidth: number;
+        let collisionDepth: number;
+        if (collision['shape'] === 'box') {
+          collisionWidth = positive('width');
+          collisionDepth = positive('depth');
+        } else if (collision['shape'] === 'cylinder') {
+          collisionWidth = collisionDepth = positive('radius') * 2;
+        } else return fail('unsupported collision shape');
+        if (collisionWidth > width * size || collisionDepth > depth * size)
+          fail('collision bounds must fit the footprint');
+      }
       for (let dz = 0; dz < d; dz++) {
         for (let dx = 0; dx < w; dx++) {
           const col = Math.round(column) + dx;
@@ -216,4 +253,79 @@ export function assertWorldDefinition(value: unknown): asserts value is WorldDef
   }
   const spawnCell = `${Math.floor((spawn.x - x) / size)},${Math.floor((spawn.z - z) / size)}`;
   if (occupied.has(spawnCell)) fail('spawn overlaps an authored footprint');
+  if (record['bodies'] !== undefined) {
+    if (!Array.isArray(record['bodies']) || record['bodies'].length > 10000)
+      fail('invalid physics population');
+    for (const body of record['bodies'] as unknown[]) {
+      assertPhysicsBodyDefinition(body, { origin: { x, z }, columns, rows, metresPerCell: size });
+      if (ids.has(body.id)) fail('duplicate physics entity ID');
+      ids.add(body.id);
+    }
+  }
+}
+
+export function assertPhysicsBodyDefinition(
+  value: unknown,
+  grid: GridDefinition,
+): asserts value is PhysicsBodyDefinition {
+  const fail = (): never => {
+    throw new Error('Invalid physics body definition');
+  };
+
+  const object = (v: unknown): Record<string, unknown> =>
+    v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : fail();
+
+  const finite = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) ? v : fail());
+
+  const positive = (v: unknown): number => {
+    const n = finite(v);
+    return n > 0 ? n : fail();
+  };
+
+  const b = object(value),
+    p = object(b['position']),
+    c = object(b['collision']);
+  if (
+    typeof b['id'] !== 'string' ||
+    !b['id'] ||
+    !['dynamic', 'kinematic'].includes(String(b['motion']))
+  )
+    fail();
+  const rotation = finite(b['rotation']);
+  if (!Number.isInteger(rotation) || rotation < 0 || rotation > 3) fail();
+  positive(b['mass']);
+  const height = positive(c['height']);
+  const width =
+    c['shape'] === 'box'
+      ? positive(c['width'])
+      : c['shape'] === 'cylinder'
+        ? positive(c['radius']) * 2
+        : fail();
+  const depth = c['shape'] === 'box' ? positive(c['depth']) : width;
+  const x = finite(p['x']),
+    y = finite(p['y']),
+    z = finite(p['z']);
+  const w = rotation % 2 ? depth : width,
+    d = rotation % 2 ? width : depth;
+  let endX = x,
+    endZ = z;
+  if (b['travel'] !== undefined) {
+    const t = object(b['travel']);
+    if (b['motion'] !== 'kinematic' || !['x', 'z'].includes(String(t['axis']))) fail();
+    const distance = finite(t['distance']),
+      ticks = positive(t['periodTicks']);
+    if (!Number.isSafeInteger(ticks)) fail();
+    if (t['axis'] === 'x') endX += distance;
+    else endZ += distance;
+  }
+  if (
+    height > 100 ||
+    y < height / 2 ||
+    y > 100 ||
+    Math.min(x, endX) - w / 2 < grid.origin.x ||
+    Math.max(x, endX) + w / 2 > grid.origin.x + grid.columns * grid.metresPerCell ||
+    Math.min(z, endZ) - d / 2 < grid.origin.z ||
+    Math.max(z, endZ) + d / 2 > grid.origin.z + grid.rows * grid.metresPerCell
+  )
+    fail();
 }

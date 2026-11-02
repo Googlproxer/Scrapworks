@@ -1,0 +1,25 @@
+{
+  "name": "physics-crate-light",
+  "id": "physics-crate-light",
+  "uniqueId": 900000012,
+  "type": "TransformNode",
+  "position": [240, 45, 470],
+  "rotation": [0, 0, 0],
+  "scaling": [1, 1, 1],
+  "isEnabled": true,
+  "metadata": {
+    "scrapworks": {
+      "version": 1,
+      "kind": "PhysicsBody",
+      "id": "physics-crate-light",
+      "collision": {
+        "depth": 90,
+        "shape": "box",
+        "width": 90,
+        "height": 90
+      },
+      "motion": "dynamic",
+      "mass": 2
+    }
+  }
+}
