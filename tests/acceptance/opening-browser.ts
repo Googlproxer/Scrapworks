@@ -13,6 +13,7 @@ interface Probe {
   opening: OpeningView;
   tick: number;
   position: WorldPosition;
+  moving: boolean;
   production: Record<string, number>;
 }
 const root = path.resolve(import.meta.dirname, '../..');
@@ -65,6 +66,7 @@ page.on('console', (message) => {
 const checkpoints: { name: string; seconds: number; tick: number }[] = [];
 let start = performance.now();
 let firstAutomatic = 0;
+let lastProbe: Probe | null = null;
 try {
   await page.goto(`http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/`);
   const play = page.getByRole('button', { name: 'Play Game!', exact: true });
@@ -84,13 +86,18 @@ try {
           opening: message.packet.opening,
           tick: message.packet.tick,
           position: message.packet.endpoints.at(-1)!.transform.position,
+          moving: message.packet.endpoints.at(-1)!.transform.moving,
           production: message.packet.productionTotals,
         };
       return send(message, ...rest);
     };
   });
-  const read = () =>
-    worker.evaluate(() => (globalThis as unknown as { openingProbe: Probe }).openingProbe);
+  const read = async () => {
+    lastProbe = await worker.evaluate(
+      () => (globalThis as unknown as { openingProbe: Probe }).openingProbe,
+    );
+    return lastProbe;
+  };
   const until = async (predicate: (probe: Probe) => boolean, label: string, timeout = 130000) => {
     const deadline = performance.now() + timeout;
     while (performance.now() < deadline) {
@@ -295,8 +302,22 @@ try {
       const key =
         Math.abs(dx) > Math.abs(dz) ? (dx > 0 ? 'KeyD' : 'KeyA') : dz > 0 ? 'KeyW' : 'KeyS';
       await page.keyboard.down(key);
-      await page.waitForTimeout(100);
-      await page.keyboard.up(key);
+      try {
+        await until(
+          (next) =>
+            Math.hypot(next.position.x - probe.position.x, next.position.z - probe.position.z) >
+            0.05,
+          `authoritative movement toward salvage with ${key}`,
+          15000,
+        );
+      } finally {
+        await page.keyboard.up(key);
+      }
+      await until(
+        (next) => !next.moving,
+        'movement stopped before choosing the next salvage approach',
+        15000,
+      );
       if (attempt === 179) throw new Error('Could not walk into salvage reach');
     }
     await mark('walked to scrap');
@@ -487,7 +508,7 @@ try {
     .catch(() => undefined);
   await fs.writeFile(
     path.join(output, 'failure.json'),
-    JSON.stringify({ error: String(error), checkpoints, errors }, null, 2),
+    JSON.stringify({ error: String(error), checkpoints, lastProbe, errors }, null, 2),
   );
   throw error;
 } finally {

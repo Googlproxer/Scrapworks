@@ -258,5 +258,14 @@
     "tests/acceptance/production-browser.ts": "171f721aff2eb5bab05472617b4d7a9524e5115634587211cf1f92f52bb37ff6",
     "tests/acceptance/opening-browser.ts": "254507368c6fb82fe4e3c12c79d880eb22f33469a2dae64093e66c8feea69041",
     "tools/browser-types.d.ts": "aea0ee4a5cf4bda0a3e9f0503ec30d9c8bcb570d1dec72f4ad1e4fececee41cf"
+  },
+  "hostedFollowup": {
+    "commit": "4ded6c8b6b27c0d1b2ae756a9b994037297aba39",
+    "run": "https://github.com/Googlproxer/Scrapworks/actions/runs/41390359975",
+    "normalAcceptance": "passed",
+    "delayedFrameAcceptance": "passed",
+    "openingFailure": "Repeated 100 ms movement taps did not reach salvage on Linux CI",
+    "correction": "Observe movement and stopped state for each native approach input; retain reach/pacing thresholds",
+    "openingSourceSha256": "8bbc85b57746c334b045b8ab65be8263cea73a8c037373357e14d06778b3a41d"
   }
 }

@@ -16,6 +16,8 @@ The revised empty-handed route reaches its first automatic craft in 264.41 secon
 
 The repaired test holds native input until authoritative movement is observed, releases it in `finally`, waits for a later stopped worker state, and polls for the original 1 mm renderer-convergence threshold. The opening UI check also waits for actual movement before opening the kit. CI now runs production acceptance normally and with `--render-delay-ms=1000`; delayed callbacks preserve cancellation and do not mutate game state. Failure diagnostics include the stage, last worker state and browser activity. Both production modes pass locally. The full opening route also passes in 259.07 seconds, including axe, native winding and handcraft refund checks. Strict tests/tools typechecks, formatting, built assets, documentation and worker separation pass. [The CI fix receipt](ci-fix.json) retains the reproduction and verification. A new hosted CI result requires pushing the fix; the failing run remains historical.
 
+The [first hosted retry](https://github.com/Googlproxer/Scrapworks/actions/runs/41390359975), on `4ded6c8`, passed both production acceptance modes. It then exposed the equivalent timing assumption in the opening route's repeated 100 ms walking taps. Each approach input now stays held until the worker reports movement, then waits for a stopped state before choosing the next direction. The 2 m reach and under-five-minute route checks are retained. Opening failure artifacts also retain the last worker observation.
+
 ## Delivered behavior
 
 * Empty 24-slot bag and separate tool slot; configurable stacks, 2 m reach, 3 s hand / 1 s prybar salvage, lossless ground overflow/merging and deliberate pickup. The existing authored deposit contains 250, 000 scrap.
