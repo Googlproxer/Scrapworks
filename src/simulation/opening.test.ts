@@ -1,10 +1,9 @@
-import '../../tools/testing/register-typescript.ts';
 const { rebuildPhysics } = await import('../../tools/testing/rebuild-physics.ts');
 import assert from 'node:assert/strict';
-import test from 'node:test';
-import type { SimulationSnapshot } from '../../src/contracts/simulation.ts';
-import type { WorldCommand, WorldDefinition } from '../../src/contracts/world.ts';
-const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
+import { test } from 'vitest';
+import type { SimulationSnapshot } from '../contracts/simulation.ts';
+import type { WorldCommand, WorldDefinition } from '../contracts/world.ts';
+const { Simulation } = await import('./ecs-runtime.ts');
 const {
   OPENING_CONTENT,
   OPENING_RECIPES,
@@ -13,9 +12,9 @@ const {
   chargeCapacity,
   turnsToFull,
   upgradeCostMultiplier,
-} = await import('../../src/content/opening.ts');
-const { assertSnapshot } = await import('../../src/simulation/capture.ts');
-const { quantity } = await import('../../src/simulation/domain/inventory.ts');
+} = await import('../content/opening.ts');
+const { assertSnapshot } = await import('./capture.ts');
+const { quantity } = await import('./domain/inventory.ts');
 const still = { x: 0, z: 0, sprint: false };
 const definition: WorldDefinition = {
   version: 1,
@@ -35,7 +34,9 @@ const definition: WorldDefinition = {
   ],
   blockers: [],
 };
+
 type Sim = InstanceType<typeof Simulation>;
+
 function setup(edit?: (snapshot: SimulationSnapshot) => void): Sim {
   const initial = new Simulation(definition);
   if (!edit) return initial;
@@ -45,14 +46,18 @@ function setup(edit?: (snapshot: SimulationSnapshot) => void): Sim {
   rebuildPhysics(snapshot); // Physical edits define a new initial world, not a continuation.
   return new Simulation(definition, { snapshot });
 }
+
 const player = (snapshot: SimulationSnapshot) =>
   snapshot.entities.find((entity) => entity.kind === 'player')!;
+
 const run = (sim: Sim, seconds: number) => {
   for (let n = 0; n < Math.round(seconds / 0.05); n++) sim.step(still);
 };
+
 const command = (sim: Sim, value: WorldCommand) => {
   return sim.step(still, [value]).commandResults[0];
 };
+
 function unlock(snapshot: SimulationSnapshot): void {
   for (const technology of OPENING_TECHNOLOGIES)
     snapshot.resources.research[technology.id] = {
@@ -61,6 +66,7 @@ function unlock(snapshot: SimulationSnapshot): void {
       unlocked: true,
     };
 }
+
 const state = (sim: Sim) => sim.view.opening!.state;
 
 test('one fixed step retains simultaneous handcraft, research and MiniFab completion events', () => {
@@ -153,7 +159,7 @@ test('unaffordable, locked and over-stack requests never partially spend; multi-
     );
   assert.equal(sim.view.inventory['scrap'], 1);
   assert.deepEqual(sim.view.productionTotals, {});
-  const { emptyInventory, transact } = await import('../../src/simulation/domain/inventory.ts');
+  const { emptyInventory, transact } = await import('./domain/inventory.ts');
   const bag = emptyInventory(2);
   bag.slots[0] = { item: 'scrap', quantity: 1 };
   const before = structuredClone(bag);
@@ -217,11 +223,13 @@ test('solid recovery does not erase research/history and a genuinely completed r
     unlock(snapshot);
     player(snapshot).inventory!.slots[0] = { item: 'scrap', quantity: 4 };
   });
+
   const craftPrybar = () => {
     command(sim, { type: 'handcraft-ui', visible: true });
     command(sim, { type: 'craft', recipe: 'scrap-prybar', quantity: 1 });
     run(sim, 3.95);
   };
+
   craftPrybar();
   command(sim, { type: 'dismantle', item: 'prybar' });
   assert.equal(sim.view.inventory['scrap'], 4);
@@ -577,6 +585,7 @@ test('only actual next-input removals free held-output space; blocked and missin
         index === 0 ? { item: 'scrap', quantity: scrap } : { item: 'prybar', quantity: 1 },
       );
     });
+
   const partial = make(4);
   command(partial, { type: 'minifab', recipe: 'metal-plate', quantity: 1 });
   // A new request is blocked by uncleared output. Restore a legitimate ongoing batch instead.
@@ -628,6 +637,7 @@ test('MiniFab routes complete precursor inputs directly without requiring an int
 
 test('a completely empty world reaches the first unpowered automatic craft using only real gameplay commands', () => {
   const sim = setup();
+
   const until = (predicate: () => boolean, label: string) => {
     for (let step = 0; step < 6000; step++) {
       if (predicate()) return;
@@ -635,21 +645,25 @@ test('a completely empty world reaches the first unpowered automatic craft using
     }
     assert.fail(`Opening stalled: ${label}`);
   };
+
   const gather = (count: number) => {
     command(sim, { type: 'handcraft-ui', visible: false });
     assert(command(sim, { type: 'salvage', target: 'scrap' }).accepted);
     until(() => (sim.view.inventory['scrap'] ?? 0) >= count, 'gathering');
     command(sim, { type: 'salvage', target: null });
   };
+
   const research = (technology: string) => {
     assert(command(sim, { type: 'research', technology, enabled: true }).accepted);
     until(() => sim.view.research.includes(technology), technology);
   };
+
   const craft = (recipe: string, count: number) => {
     command(sim, { type: 'handcraft-ui', visible: true });
     assert(command(sim, { type: 'craft', recipe, quantity: count }).accepted);
     until(() => !state(sim).handcraft, recipe);
   };
+
   gather(8);
   research('improvised-tools');
   craft('scrap-prybar', 1);

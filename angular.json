@@ -80,9 +80,16 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "browsers": ["chromiumHeadless"],
+            "include": ["**/*.spec.ts"],
             "setupFiles": ["src/testing/setup-tests.ts"]
           },
           "configurations": {
+            "coverage": {
+              "buildTarget": "scrapworks:build:development",
+              "coverage": true,
+              "coverageInclude": ["src/**/*.ts"],
+              "runnerConfig": "vitest.browser.config.ts"
+            },
             "unit": {
               "exclude": [
                 "game/debug/draw/development-renderer.spec.ts",

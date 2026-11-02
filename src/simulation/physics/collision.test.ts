@@ -1,13 +1,12 @@
-import type { WorldDefinition } from '../../src/contracts/world.ts';
-import '../../tools/testing/register-typescript.ts';
+import type { WorldDefinition } from '../../contracts/world.ts';
 import assert from 'node:assert/strict';
-import test from 'node:test';
-import { worldFixture } from '../support/world-fixture.ts';
-const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
-const { PresentationCache } = await import('../../src/session/presentation-cache.ts');
-const { entityCollider } = await import('../../src/core/world-collision.ts');
-const { validatePlacement } = await import('../../src/simulation/placement.ts');
-const { PLAYER_RADIUS } = await import('../../src/simulation/world-rules.ts');
+import { test } from 'vitest';
+import { worldFixture } from '../../../tests/support/world-fixture.ts';
+const { Simulation } = await import('../ecs-runtime.ts');
+const { PresentationCache } = await import('../../session/presentation-cache.ts');
+const { entityCollider } = await import('../../core/world-collision.ts');
+const { validatePlacement } = await import('../placement.ts');
+const { PLAYER_RADIUS } = await import('../world-rules.ts');
 
 function shapedWorld(): WorldDefinition {
   const world = worldFixture();

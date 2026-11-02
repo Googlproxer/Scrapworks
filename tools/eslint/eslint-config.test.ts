@@ -1,6 +1,6 @@
 import { ESLint } from 'eslint';
 import assert from 'node:assert/strict';
-import { it } from 'node:test';
+import { it } from 'vitest';
 import { format, resolveConfig } from 'prettier';
 
 const eslint = new ESLint();

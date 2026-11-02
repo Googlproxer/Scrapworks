@@ -116,7 +116,7 @@ export function assertSnapshot(
       'verticalVelocity',
     ]);
     check(
-      physics['format'] === 2 &&
+      physics['format'] === 3 &&
         physics['engine'] === 'rapier3d' &&
         physics['engineVersion'] === RAPIER_VERSION,
       'Unsupported physics snapshot',
@@ -209,7 +209,7 @@ export function assertSnapshot(
       for (const key of ['x', 'y', 'z'])
         check(typeof p[key] === 'number' && Number.isFinite(p[key]), 'Invalid transform');
       check(
-        (e['kind'] === 'body' || e['kind'] === 'player' || p['y'] === 0) &&
+        (e['kind'] === 'body' || e['kind'] === 'player' || e['kind'] === 'pile' || p['y'] === 0) &&
           typeof t['facing'] === 'number' &&
           Number.isFinite(t['facing']) &&
           typeof t['moving'] === 'boolean' &&

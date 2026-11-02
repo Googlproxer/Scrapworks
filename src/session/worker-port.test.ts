@@ -1,19 +1,18 @@
-import type { RuntimeRequest, RuntimeReply } from '../../src/contracts/simulation.ts';
-import '../../tools/testing/register-typescript.ts';
-import test from 'node:test';
+import type { RuntimeRequest, RuntimeReply } from '../contracts/simulation.ts';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
-const { WorkerSimulationPort } = await import('../../src/session/worker-port.ts');
-const { GameSession } = await import('../../src/session/game-session.ts');
-const { SimulationRuntime } = await import('../../src/session/runtime.ts');
-import { worldFixture } from '../support/world-fixture.ts';
+const { WorkerSimulationPort } = await import('./worker-port.ts');
+const { GameSession } = await import('./game-session.ts');
+const { SimulationRuntime } = await import('./runtime.ts');
+import { worldFixture } from '../../tests/support/world-fixture.ts';
 const definition = worldFixture();
 
 class FakeWorker extends EventTarget {
-  terminated = 0;
-  requests: RuntimeRequest[] = [];
-  removed: string[] = [];
+  public terminated = 0;
+  public requests: RuntimeRequest[] = [];
+  public removed: string[] = [];
 
-  override removeEventListener(
+  public override removeEventListener(
     type: string,
     callback: EventListenerOrEventListenerObject | null,
     options?: EventListenerOptions | boolean,
@@ -22,21 +21,21 @@ class FakeWorker extends EventTarget {
     super.removeEventListener(type, callback, options);
   }
 
-  reply(reply: RuntimeReply) {
+  public reply(reply: RuntimeReply) {
     this.dispatchEvent(new MessageEvent('message', { data: reply }));
   }
 
-  crash(message: string) {
+  public crash(message: string) {
     const event = Object.assign(new Event('error', { cancelable: true }), { message });
     this.dispatchEvent(event);
     assert(event.defaultPrevented);
   }
 
-  postMessage(request: RuntimeRequest) {
+  public postMessage(request: RuntimeRequest) {
     this.requests.push(request);
   }
 
-  terminate() {
+  public terminate() {
     this.terminated++;
   }
 }

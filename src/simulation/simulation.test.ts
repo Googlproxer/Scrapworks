@@ -1,14 +1,13 @@
 import { mutable } from '../../tools/shared.ts';
-import type { WorldCommand, GridCell, QuarterTurn } from '../../src/contracts/world.ts';
-import '../../tools/testing/register-typescript.ts';
+import type { WorldCommand, GridCell, QuarterTurn } from '../contracts/world.ts';
 import assert from 'node:assert/strict';
-import test from 'node:test';
+import { test } from 'vitest';
 const { GameSession } = await import('../../tools/testing/inline-game-session.ts');
-const { Simulation, PLAYER_RADIUS } = await import('../../src/simulation/simulation.ts');
-const { validatePlacement } = await import('../../src/simulation/placement.ts');
+const { Simulation, PLAYER_RADIUS } = await import('./simulation.ts');
+const { validatePlacement } = await import('./placement.ts');
 const { cellCenter, worldToCell, metresToScene, sceneToMetres, footprintCells } =
-  await import('../../src/core/world-grid.ts');
-import { worldFixture as definition } from '../support/world-fixture.ts';
+  await import('../core/world-grid.ts');
+import { worldFixture as definition } from '../../tests/support/world-fixture.ts';
 
 const stationary = { x: 0, z: 0, sprint: false };
 

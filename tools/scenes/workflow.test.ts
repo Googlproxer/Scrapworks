@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import test from 'node:test';
+import { test } from 'vitest';
 import {
   assertNoPhysicsBodies,
   attachedScripts,
@@ -286,7 +286,6 @@ test('save bursts coalesce, saves during export supersede it, and a later save r
 
 test(
   'native watcher includes authored assets and attached scripts but excludes caches and generated outputs',
-  { timeout: 5000 },
   async () =>
     fixture(async (root: string) => {
       let events = 0;
@@ -324,4 +323,5 @@ test(
         stop();
       }
     }),
+  5000,
 );

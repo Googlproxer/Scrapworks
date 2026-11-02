@@ -47,7 +47,7 @@ export function verifyMetadata(metadata: BuildMetadata) {
       Object.keys(outputs[key].inputs ?? {}).map(normalize),
     );
     for (const input of inputs) {
-      if (/src\/testing\//.test(input))
+      if (/src\/testing\/|\.(?:spec|test)\.ts$|node_modules\/(?:vitest|@vitest)\//.test(input))
         throw new Error(`Test support entered production: ${input}`);
       if (
         /src\/app\/features\/save\/(?:save-load\/|save\.service\.ts|schema\.ts|developer-save-dialog\.development\.ts)/.test(

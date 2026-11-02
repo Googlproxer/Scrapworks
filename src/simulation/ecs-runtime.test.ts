@@ -1,16 +1,14 @@
-import '../../tools/testing/register-typescript.ts';
 const { rebuildPhysics } = await import('../../tools/testing/rebuild-physics.ts');
 import assert from 'node:assert/strict';
-import test from 'node:test';
-import type { RuntimeReply } from '../../src/contracts/simulation.ts';
-import type { SessionEvent } from '../../src/contracts/session-event.ts';
-import type { SimulationPort } from '../../src/session/port.ts';
-const { Simulation } = await import('../../src/simulation/simulation.ts');
-const { SimulationRuntime } = await import('../../src/session/runtime.ts');
-const { PresentationCache } = await import('../../src/session/presentation-cache.ts');
-const { GameSession } = await import('../../src/session/game-session.ts');
+import { test } from 'vitest';
+import type { SessionEvent } from '../contracts/session-event.ts';
+import type { SimulationPort } from '../session/port.ts';
+const { Simulation } = await import('./simulation.ts');
+const { SimulationRuntime } = await import('../session/runtime.ts');
+const { PresentationCache } = await import('../session/presentation-cache.ts');
+const { GameSession } = await import('../session/game-session.ts');
 const { InlineSimulationPort } = await import('../../tools/testing/inline-simulation-port.ts');
-const { worldFixture } = await import('../support/world-fixture.ts');
+const { worldFixture } = await import('../../tests/support/world-fixture.ts');
 const still = { x: 0, z: 0, sprint: false };
 
 function session(port?: SimulationPort) {

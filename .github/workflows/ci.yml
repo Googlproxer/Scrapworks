@@ -61,19 +61,16 @@ jobs:
         run: yarn lint
 
       - name: Typecheck and test development tools
-        run: yarn test:tools
+        run: yarn test:coverage:tools
 
       - name: Check documentation links and diagrams
         run: yarn docs:check
 
-      - name: Test scene export tooling
-        run: yarn test:export
-
       - name: Typecheck and test game simulation and sessions
-        run: yarn test:game
+        run: yarn test:game --coverage
 
       - name: Run Chromium application and accessibility tests
-        run: yarn test
+        run: yarn test --configuration=coverage
 
       - name: Build production application
         run: yarn build --stats-json
@@ -95,6 +92,25 @@ jobs:
 
       - name: Verify development reload and export recovery
         run: yarn test:workflow
+
+      - name: Summarize game and tooling coverage
+        run: yarn coverage:report
+
+      - name: Upload game coverage
+        uses: actions/upload-artifact@v7
+        with:
+          name: game-coverage
+          path: coverage/game/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload tooling coverage
+        uses: actions/upload-artifact@v7
+        with:
+          name: tooling-coverage
+          path: coverage/tooling/
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Upload browser diagnostics
         if: ${{ !cancelled() }}

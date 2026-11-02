@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import test from 'node:test';
+import { test } from 'vitest';
 import { statistics } from './experiment.ts';
 import { recordFor, statusFor } from './model.ts';
 import { Reference } from './adapters/reference.ts';

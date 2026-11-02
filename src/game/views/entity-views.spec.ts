@@ -59,15 +59,27 @@ describe('EntityViews completed publication changes', () => {
     const mesh = scene.getMeshByName('ground:ground-1')!;
     expect(mesh.position.asArray()).toEqual([200, 10, 300]);
     expect(mesh.metadata.worldEntity).toBe('ground-1');
-    frame.view = view({ publication: 5, ground: [{ ...item, position: { x: 4, y: 0, z: 5 } }] });
+    frame.view = view({ publication: 5, ground: [{ ...item, position: { x: 4, y: 0.6, z: 5 } }] });
     views.pulse();
     expect(scene.getMeshByName('ground:ground-1')).toBe(mesh);
-    expect(mesh.position.asArray()).toEqual([400, 10, 500]);
+    expect(mesh.position.asArray()).toEqual([400, 70, 500]);
     frame.view = view({ publication: 6, ground: [] });
     views.pulse();
     expect(mesh.isDisposed()).toBe(true);
   });
   let engine: NullEngine, scene: Scene, frame: WorldFrame, views: ProjectionViews;
+  it('does not rescan retained ground items when another publication arrives', () => {
+    const ground = [
+      { id: 'ground-1', item: 'scrap', quantity: 1, position: { x: 2, y: 0.6, z: 3 } },
+    ];
+    frame.view = view({ ground });
+    views.pulse();
+    const scan = vi.spyOn(ground, Symbol.iterator);
+    frame.view = view({ publication: 5, tick: 6, ground });
+    views.pulse();
+    expect(scan).not.toHaveBeenCalled();
+    expect(scene.getMeshByName('ground:ground-1')!.position.y).toBe(70);
+  });
   beforeEach(() => {
     engine = new NullEngine();
     scene = new Scene(engine);

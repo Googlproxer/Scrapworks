@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import test from 'node:test';
+import { test } from 'vitest';
 import { compileMarkers } from './compile.ts';
 import { fixtureMarkers } from './test-fixture.ts';
 import { verifyWorldExport } from './verify-export.ts';

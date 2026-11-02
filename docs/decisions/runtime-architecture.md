@@ -28,7 +28,11 @@ Protocol and presentation packets remain version 2. Rapier integration advances 
 
 The [playable Rapier test](../../tools/world/README.md#play-the-rapier-test) adds physical ECS entities and one private Rapier 0.21.0 world inside the same authoritative worker. The maintained character controller replaces custom collision response. Three physics substeps belong to each existing 50 ms tick; there is no additional scheduler. ECS structural boundaries reconcile native bodies; active/final-sleeping poses publish changed-only, with separate transferred quaternion rows preserving the existing base stride. Babylon interpolates those read-only poses and remains the sole presentation owner. Async WASM startup is confined to module readiness; the worker installs its process-lifetime listener before loading runtime authority and routes rejected startup to the existing native fatal-error boundary.
 
-Presentation DTOs are deeply read-only and separate from mutable records and editable detached captures. Cache maps are private. Angular writable signals are private and exposed as read-only signals/computed selectors. Development publication freezing detects mutation, reusing already frozen values rather than cloning the population each frame.
+Native physics snapshots use format 3. Restore validates world gravity/timestep, built-in floor/boundaries, player capsule, collider configuration, body motion/mass and ECS poses before accepting a candidate world. It retains native solver/contact state for exact continuation. Static identities separate `solid:entity:` from `solid:terrain:`; authored IDs cannot alias generated water colliders. Older native formats are rejected explicitly.
+
+Ground items retain their drop position, including elevation, until collected. Rendering places each mesh above that position; capture/rebuild preserves it. Pickup and pile merging include vertical distance. Salvage reach retains its existing horizontal rule.
+
+Presentation DTOs are deeply read-only and separate from mutable records and editable detached captures. Cache maps are private. Deposits, buildings, ground items and physical bodies each retain their array identity until that collection changes or a full publication replaces it; moving physical bodies do not invalidate unchanged ground items. Angular writable signals are private and exposed as read-only signals/computed selectors. Development publication freezing detects mutation, reusing already frozen values rather than cloning the population each frame.
 
 ## Presentation and authored features
 

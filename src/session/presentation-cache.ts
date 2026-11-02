@@ -191,21 +191,26 @@ export class PresentationCache {
     const changedDeposits: DepositDefinition[] = [];
     const changedBuildings: BuildingView[] = [];
     const changedBodies: PhysicsBodyView[] = [];
-    let renderablesChanged = packet.full;
+    let depositsChanged = packet.full;
+    let buildingsChanged = packet.full;
+    let groundChanged = packet.full;
+    let bodiesChanged = packet.full;
     for (let at = 0; at < removed.length; at += 2) {
       const mapping = this.mappings[removed[at]];
       if (mapping?.generation !== removed[at + 1]) continue;
       this.ids.delete(mapping.id);
       this.mappings[mapping.slot] = undefined;
       this.details.delete(mapping.id);
-      if (
-        this.deposits.delete(mapping.id) ||
-        this.buildings.delete(mapping.id) ||
-        this.ground.delete(mapping.id) ||
-        this.bodies.delete(mapping.id)
-      ) {
+      const depositRemoved = this.deposits.delete(mapping.id);
+      const buildingRemoved = this.buildings.delete(mapping.id);
+      const groundRemoved = this.ground.delete(mapping.id);
+      const bodyRemoved = this.bodies.delete(mapping.id);
+      depositsChanged ||= depositRemoved;
+      buildingsChanged ||= buildingRemoved;
+      groundChanged ||= groundRemoved;
+      bodiesChanged ||= bodyRemoved;
+      if (depositRemoved || buildingRemoved || groundRemoved || bodyRemoved) {
         removedIds.push(mapping.id);
-        renderablesChanged = true;
       }
     }
     for (const mapping of packet.mappings) {
@@ -256,7 +261,10 @@ export class PresentationCache {
         if (mapping.deposit) changedDeposits.push(this.deposits.get(mapping.id)!);
         if (mapping.building) changedBuildings.push(this.buildings.get(mapping.id)!);
         upsertedIds.push(mapping.id);
-        renderablesChanged = true;
+        depositsChanged ||= !!mapping.deposit;
+        buildingsChanged ||= !!mapping.building;
+        groundChanged ||= !!mapping.pile;
+        bodiesChanged ||= !!mapping.physics;
       }
     }
     for (const detail of packet.details) this.details.set(detail.id, detail);
@@ -265,12 +273,10 @@ export class PresentationCache {
     check(player, 'Missing player presentation');
     const offset = player.slot * stride;
     const flags = this.rows[offset + 6];
-    if (renderablesChanged) {
-      this.depositViews = Array.from(this.deposits.values());
-      this.buildingViews = Array.from(this.buildings.values());
-      this.groundViews = Array.from(this.ground.values());
-      this.bodyViews = Array.from(this.bodies.values());
-    }
+    if (depositsChanged) this.depositViews = Array.from(this.deposits.values());
+    if (buildingsChanged) this.buildingViews = Array.from(this.buildings.values());
+    if (groundChanged) this.groundViews = Array.from(this.ground.values());
+    if (bodiesChanged) this.bodyViews = Array.from(this.bodies.values());
     const inventory: Record<string, number> = {};
     const opening = packet.opening;
     for (const slot of opening?.bag.slots ?? [])

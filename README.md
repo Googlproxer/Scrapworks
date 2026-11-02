@@ -53,7 +53,12 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 | `yarn test:renderer`               | Run the real Babylon device, lifecycle, renderer and authored-world integration tests.                      |
 | `yarn test:export`                 | Check staged export, retention, physics guards and watcher behavior.                                        |
 | `yarn test:game`                   | Typecheck and run Node simulation, domain, session and worker-transport tests.                              |
-| `yarn test:tools`                  | Typecheck tools and run compiler/export, resolver, dependency-audit and lint-rule tests.                    |
+| `yarn test:tools`                  | Typecheck tools and run Vitest compiler/export, alias, coverage, dependency-audit and lint-rule tests.                    |
+| `yarn test:coverage` | Run both coverage groups and generate separate Game and Tooling reports. |
+| `yarn test:coverage:game` | Collect and merge Angular browser and Node game coverage. |
+| `yarn test:coverage:tools` | Collect normal tooling coverage. |
+| `yarn coverage:report` | Regenerate reports and print both totals from collected results. |
+| `yarn test:labs` | Run opt-in laboratory unit tests through Vitest without performance trials. |
 | `yarn test:world`                  | Run focused authored marker compilation and world-export validation tests.                                  |
 | `yarn test:acceptance`             | Exercise the built game worker, movement, pause, crash/Retry and teardown; build with `--stats-json` first. |
 | `yarn test:workflow`               | Verify dev reload/failure recovery in an isolated browser fixture.                                          |
@@ -68,7 +73,7 @@ Direct Angular targets need `yarn scenes:export` first. Do not rely on an old `p
 
 Occasional asset/repository audits, Editor connection checks and ECS/worker investigations use direct Node commands documented in the [tool catalogue](tools/README.md). Their package aliases have been removed; the catalogue includes replacements for commands found in historical reports. Tests, primary development commands and commands used by main CI remain package scripts.
 
-Plain game tests live under [tests/session and tests/simulation](tests/README.md), with browser acceptance probes under `tests/acceptance`. `yarn test:game` runs without Angular, scene export or a browser. Tool tests stay beside the tools they exercise. The [test audit](tests/README.md#audit-of-tests-previously-under-tools) records the separation and all relocated entry points.
+Plain game `.test.ts` suites sit beside their production code in [src/session](src/session/) and [src/simulation](src/simulation/). Shared fixtures and browser acceptance probes remain under [tests](tests/README.md). Angular/browser suites use `.spec.ts`; the two runners discover their own suffix explicitly. `yarn test:game` uses Vitest in a real Node environment without Angular, scene export or a browser. Tool tests stay beside the tools they exercise. The [test audit](tests/README.md#audit-of-tests-previously-under-tools) records the separation and all relocated entry points.
 
 Use `yarn test:game` for plain simulation/session changes and `yarn test:unit` for browser UI/input changes, or `yarn test:unit --watch` while editing. The browser unit tests use client/device/scene doubles and run in Chromium for DOM, IndexedDB, focus and accessibility checks. They currently need scene export for the default factory's generated script imports, even though they never construct its renderer. `yarn test:renderer` covers the tests that need a real engine: browser device wiring, native Babylon lifecycle, WebGL/context loss, authored assets, animation and picking. `yarn test` continues to run both Chromium groups and remains the CI gate. Add future engine-dependent suites to both test configurations in `angular.json`.
 
@@ -79,6 +84,8 @@ Application tests fail on unexpected `console.error`, `console.warn` or `console
 ## Continuous integration and dependency updates
 
 [GitHub Actions CI](.github/workflows/ci.yml) runs on pull requests, pushes to `master`, and manual dispatch. It uses GitHub's `ubuntu-latest` runner, Node 24, and the Yarn version pinned in `package.json`, with an immutable lockfile install and a Yarn download cache. Chromium and its Linux dependencies are installed before browser checks.
+
+CI prints separate Game and Tooling coverage tables in the Actions run summary and logs, with HTML/LCOV/JSON artifacts retained for seven days. Coverage is informational and includes untested files within each report scope. See [coverage commands and exclusions](tests/README.md#coverage).
 
 Normal CI validates the shipping application, production simulation/session correctness, built-worker lifecycle and dependency separation. It runs no ECS/worker benchmark or comparison commands. The separate [ECS investigation](.github/workflows/ecs-bench.yml) and [worker qualification](.github/workflows/simulation-worker-bench.yml) workflows are manual-only; run them when new performance evidence is needed. The build-graph audit under `tools/ecs-bench/verify-production.ts` is a production dependency check and launches no benchmark trials.
 

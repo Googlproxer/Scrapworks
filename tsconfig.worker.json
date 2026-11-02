@@ -1,5 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": { "outDir": "./out-tsc/worker", "lib": ["ES2022", "WebWorker"], "types": [] },
-  "include": ["src/workers/**/*.ts"]
+  "include": ["src/workers/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

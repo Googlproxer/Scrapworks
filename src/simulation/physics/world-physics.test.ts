@@ -1,18 +1,18 @@
-import '../../tools/testing/register-typescript.ts';
 import assert from 'node:assert/strict';
-import test from 'node:test';
-import type { WorldDefinition } from '../../src/contracts/world.ts';
-import { worldFixture } from '../support/world-fixture.ts';
-const { rebuildPhysics } = await import('../../tools/testing/rebuild-physics.ts');
-const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
-const { PresentationCache } = await import('../../src/session/presentation-cache.ts');
-const { SimulationRuntime } = await import('../../src/session/runtime.ts');
-const captureModule = await import('../../src/simulation/capture.ts');
+import { test } from 'vitest';
+import type { WorldDefinition } from '../../contracts/world.ts';
+import { worldFixture } from '../../../tests/support/world-fixture.ts';
+const { rebuildPhysics } = await import('../../../tools/testing/rebuild-physics.ts');
+const { Simulation } = await import('../ecs-runtime.ts');
+const { PresentationCache } = await import('../../session/presentation-cache.ts');
+const { SimulationRuntime } = await import('../../session/runtime.ts');
+const captureModule = await import('../capture.ts');
 const assertSnapshot: typeof captureModule.assertSnapshot = captureModule.assertSnapshot;
-const { OPENING_CONTENT } = await import('../../src/content/opening.ts');
-const { WorldPhysics } = await import('../../src/simulation/physics/world-physics.ts');
+const { OPENING_CONTENT } = await import('../../content/opening.ts');
+const { WorldPhysics } = await import('./world-physics.ts');
 
 const still = { x: 0, z: 0, sprint: false };
+
 function definition(): WorldDefinition {
   return {
     ...worldFixture(),
@@ -369,7 +369,7 @@ test('native engine version and byte corruption fail validation and fresh world 
     assert.throws(
       () =>
         assertSnapshot(
-          { ...snapshot, physics: { ...snapshot.physics, format: 1 } },
+          { ...snapshot, physics: { ...snapshot.physics, format: 2 } },
           OPENING_CONTENT,
         ),
       /physics snapshot/,

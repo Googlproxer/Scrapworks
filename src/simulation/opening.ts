@@ -23,6 +23,9 @@ const signature = (items: readonly ItemStack[]): string =>
 
 const distance = (a: WorldPosition, b: WorldPosition): number => Math.hypot(a.x - b.x, a.z - b.z);
 
+const pileDistance = (a: WorldPosition, b: WorldPosition): number =>
+  Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+
 const recipeById = (id: string): OpeningRecipe | undefined =>
   OPENING_RECIPES.find((recipe) => recipe.id === id);
 
@@ -144,7 +147,13 @@ export class OpeningSystem {
         break;
       case 'pickup': {
         if (state.handcraft) return this.result('busy');
-        if (!target?.pile || !near || !target.pile.quantity) return this.result('out-of-reach');
+        if (
+          !target?.pile ||
+          !target.transform ||
+          !target.pile.quantity ||
+          pileDistance(target.transform.position, this.player.transform!.position) > settings.reach
+        )
+          return this.result('out-of-reach');
         const count = this.fitting(target.pile.item, target.pile.quantity);
         if (!count) return this.result('capacity');
         transact(this.bag, [], [{ item: target.pile.item, quantity: count }], OPENING_CONTENT);
@@ -438,7 +447,7 @@ export class OpeningSystem {
         (entity) =>
           entity.pile?.item === 'scrap' &&
           entity.transform &&
-          distance(position, entity.transform.position) <= settings.groundMergeRadius,
+          pileDistance(position, entity.transform.position) <= settings.groundMergeRadius,
       );
       if (pile?.pile) {
         pile.pile.quantity++;

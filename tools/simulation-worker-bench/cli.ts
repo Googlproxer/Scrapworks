@@ -60,8 +60,10 @@ if (command === 'check' || command === 'smoke') {
   execFileSync(
     process.execPath,
     [
-      '--experimental-transform-types',
-      '--test',
+      path.join(root, 'node_modules/vitest/vitest.mjs'),
+      'run',
+      '--config',
+      path.join(root, 'vitest.labs.config.ts'),
       path.join(directory, 'protocol.test.ts'),
       path.join(directory, 'presentation.test.ts'),
     ],

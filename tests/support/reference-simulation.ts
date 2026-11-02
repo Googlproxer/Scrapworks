@@ -17,7 +17,7 @@ import { TEST_BUILDING_FOOTPRINT, validatePlacement } from '@simulation/placemen
 import { PlayerMotor, type MovementIntent } from '@simulation/player-motor';
 import { FIXED_STEP_SECONDS } from '@simulation/world-rules';
 import type { PlayerState } from '@simulation/world-state';
-import { WorldPhysics } from '@simulation/physics/world-physics';
+import { WorldPhysics, type NamedCollider } from '@simulation/physics/world-physics';
 interface ReferenceState {
   worldId: string;
   tick: number;
@@ -59,16 +59,21 @@ export class ReferenceSimulation {
   }
 
   private syncCollision(): void {
-    const colliders = [
+    const colliders: NamedCollider[] = [
       ...this.definition.blockers,
       ...this.state.deposits.filter((deposit) => deposit.quantity > 0),
       ...this.state.buildings,
-    ].map((entity) => ({ ...entityCollider(this.definition.grid, entity), id: entity.id }));
+    ].map((entity) => ({
+      ...entityCollider(this.definition.grid, entity),
+      source: 'entity' as const,
+      id: entity.id,
+    }));
     for (let row = 0; row < this.definition.grid.rows; row++)
       for (let column = 0; column < this.definition.grid.columns; column++)
         if (this.definition.terrain[row * this.definition.grid.columns + column] === 'water')
           colliders.push({
             id: `water:${column}:${row}`,
+            source: 'terrain',
             shape: 'box',
             center: cellCenter(this.definition.grid, { row, column }),
             width: this.definition.grid.metresPerCell,

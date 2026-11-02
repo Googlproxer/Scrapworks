@@ -135,7 +135,7 @@ export class EntityViews extends PresentationBehavior {
         mesh.isPickable = true;
         this.ground.set(item.id, mesh);
       }
-      mesh.position.set(item.position.x * 100, 10, item.position.z * 100);
+      mesh.position.set(item.position.x * 100, item.position.y * 100 + 10, item.position.z * 100);
     }
     for (const [id, mesh] of this.ground)
       if (!ids.has(id)) {

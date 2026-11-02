@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import test from 'node:test';
+import { test } from 'vitest';
 import { compileMarkers, compileWorld } from './compile.ts';
 import { fixtureMarkers } from './test-fixture.ts';
 import type { FixtureMarker } from './compile.ts';

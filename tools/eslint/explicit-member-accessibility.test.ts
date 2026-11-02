@@ -1,7 +1,7 @@
 import tsParser from '@typescript-eslint/parser';
 import { ESLint, RuleTester } from 'eslint';
 import assert from 'node:assert/strict';
-import { describe, it } from 'node:test';
+import { describe, it } from 'vitest';
 import rule from './explicit-member-accessibility.ts';
 
 RuleTester.describe = describe;

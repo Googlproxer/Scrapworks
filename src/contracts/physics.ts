@@ -34,7 +34,7 @@ export interface PhysicsBodyView {
 
 /** Engine-owned bytes plus stable IDs in native iteration order; no exposed native handles. */
 export interface PhysicsSnapshot {
-  readonly format: 2;
+  readonly format: 3;
   readonly engine: 'rapier3d';
   readonly engineVersion: string;
   readonly bytes: readonly number[];

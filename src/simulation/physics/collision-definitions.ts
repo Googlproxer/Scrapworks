@@ -13,12 +13,17 @@ export function staticColliders(
     ...definition.blockers,
     ...deposits.filter((deposit) => deposit.quantity > 0),
     ...buildings,
-  ].map((entity) => ({ ...entityCollider(definition.grid, entity), id: entity.id }));
+  ].map((entity) => ({
+    ...entityCollider(definition.grid, entity),
+    source: 'entity',
+    id: entity.id,
+  }));
   for (let row = 0; row < definition.grid.rows; row++)
     for (let column = 0; column < definition.grid.columns; column++)
       if (definition.terrain[row * definition.grid.columns + column] === 'water')
         colliders.push({
           id: `water:${column}:${row}`,
+          source: 'terrain',
           shape: 'box',
           center: cellCenter(definition.grid, { row, column }),
           width: definition.grid.metresPerCell,

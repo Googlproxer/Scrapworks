@@ -4,6 +4,7 @@ import { requireInvariant as check } from '@contracts/simulation';
 import type { WorldCollider } from '@core/world-collision';
 import { FIXED_STEP_SECONDS, PLAYER_RADIUS } from '../world-rules';
 import { PHYSICS_ENGINE_VERSION, RAPIER } from './rapier';
+import { assertFixedPose, assertRestoredBody } from './snapshot-validation';
 
 export const PHYSICS_SUBSTEPS = 3;
 
@@ -16,7 +17,10 @@ const STEP = FIXED_STEP_SECONDS / PHYSICS_SUBSTEPS;
 const PLATFORM_CONTACT_PREDICTION = 0.05;
 const identity = { x: 0, y: 0, z: 0, w: 1 };
 
-export type NamedCollider = WorldCollider & { readonly id: string };
+export type NamedCollider = WorldCollider & {
+  readonly source: 'entity' | 'terrain';
+  readonly id: string;
+};
 
 /** One simulation-owned physics backend. Native handles never leave this module. */
 export class WorldPhysics {
@@ -49,10 +53,9 @@ export class WorldPhysics {
       : new RAPIER.World({ x: 0, y: -9.81, z: 0 });
     check(this.world, 'Invalid Rapier snapshot bytes');
     try {
-      this.world.timestep = STEP;
       if (snapshot) {
         check(
-          snapshot.format === 2 && snapshot.engineVersion === PHYSICS_ENGINE_VERSION,
+          snapshot.format === 3 && snapshot.engineVersion === PHYSICS_ENGINE_VERSION,
           'Unsupported Rapier snapshot version',
         );
         let index = 0;
@@ -64,24 +67,32 @@ export class WorldPhysics {
         });
         check(index === snapshot.bodyIds.length, 'Physics snapshot population mismatch');
         this.verticalVelocity = snapshot.verticalVelocity;
-      } else {
-        const { origin, columns, rows, metresPerCell } = definition.grid;
-        const width = columns * metresPerCell;
-        const depth = rows * metresPerCell;
-        const cx = origin.x + width / 2;
-        const cz = origin.z + depth / 2;
-        this.fixed(
-          'floor',
-          { x: 0, y: 0, z: 0 },
-          new RAPIER.ColliderDesc(new RAPIER.HalfSpace({ x: 0, y: 1, z: 0 })),
+        check(
+          this.world.gravity.x === 0 &&
+            Math.abs(this.world.gravity.y + 9.81) < 0.00001 &&
+            this.world.gravity.z === 0 &&
+            Math.abs(this.world.timestep - STEP) < 0.000001,
+          'Physics snapshot/world configuration mismatch',
         );
-        for (const [id, x, z, w, d] of [
-          ['west', origin.x - 0.5, cz, 1, depth + 2],
-          ['east', origin.x + width + 0.5, cz, 1, depth + 2],
-          ['south', cx, origin.z - 0.5, width + 2, 1],
-          ['north', cx, origin.z + depth + 0.5, width + 2, 1],
-        ] as const)
-          this.fixed(`boundary:${id}`, { x, y: 5, z }, RAPIER.ColliderDesc.cuboid(w / 2, 5, d / 2));
+      } else this.world.timestep = STEP;
+      const { origin, columns, rows, metresPerCell } = definition.grid;
+      const width = columns * metresPerCell;
+      const depth = rows * metresPerCell;
+      const cx = origin.x + width / 2;
+      const cz = origin.z + depth / 2;
+      this.fixed(
+        'floor',
+        { x: 0, y: 0, z: 0 },
+        new RAPIER.ColliderDesc(new RAPIER.HalfSpace({ x: 0, y: 1, z: 0 })),
+      );
+      for (const [id, x, z, w, d] of [
+        ['west', origin.x - 0.5, cz, 1, depth + 2],
+        ['east', origin.x + width + 0.5, cz, 1, depth + 2],
+        ['south', cx, origin.z - 0.5, width + 2, 1],
+        ['north', cx, origin.z + depth + 0.5, width + 2, 1],
+      ] as const)
+        this.fixed(`boundary:${id}`, { x, y: 5, z }, RAPIER.ColliderDesc.cuboid(w / 2, 5, d / 2));
+      if (!snapshot) {
         const player = this.world.createRigidBody(
           RAPIER.RigidBodyDesc.kinematicPositionBased()
             .setTranslation(position.x, position.y + PLAYER_HEIGHT / 2 + 0.01, position.z)
@@ -98,6 +109,19 @@ export class WorldPhysics {
       check(player && player.numColliders() === 1, 'Missing physics player');
       this.player = player;
       this.playerCollider = player.collider(0);
+      if (snapshot) {
+        assertRestoredBody(
+          player,
+          RAPIER.RigidBodyType.KinematicPositionBased,
+          RAPIER.ColliderDesc.capsule(PLAYER_HEIGHT / 2 - PLAYER_RADIUS, PLAYER_RADIUS),
+        );
+        const rotation = player.rotation();
+        check(
+          Math.hypot(rotation.x, rotation.y, rotation.z) < 0.00001 &&
+            Math.abs(rotation.w - 1) < 0.00001,
+          'Physics snapshot/player rotation mismatch',
+        );
+      }
       this.controller = this.world.createCharacterController(COLLISION_SKIN);
       this.controller.setSlideEnabled(true);
       this.controller.setCharacterMass(70);
@@ -117,6 +141,12 @@ export class WorldPhysics {
   }
 
   private fixed(id: string, position: WorldPosition, shape: RAPIER.ColliderDesc): void {
+    if (this.restoring) {
+      const body = this.bodies.get(id);
+      assertRestoredBody(body, RAPIER.RigidBodyType.Fixed, shape);
+      assertFixedPose(body, position);
+      return;
+    }
     const body = this.world.createRigidBody(
       RAPIER.RigidBodyDesc.fixed().setTranslation(position.x, position.y, position.z),
     );
@@ -132,7 +162,18 @@ export class WorldPhysics {
       const key = `entity:${source.id}`;
       retained.add(key);
       if (source.motion === 'kinematic') this.kinematics.set(source.id, source);
-      if (this.bodies.has(key)) continue;
+      if (this.bodies.has(key)) {
+        if (this.restoringActors)
+          assertRestoredBody(
+            this.bodies.get(key),
+            source.motion === 'dynamic'
+              ? RAPIER.RigidBodyType.Dynamic
+              : RAPIER.RigidBodyType.KinematicVelocityBased,
+            this.shape(source.collision).setMass(source.mass).setFriction(0.6),
+            source.motion === 'dynamic',
+          );
+        continue;
+      }
       check(!this.restoringActors, 'Physics snapshot/body component mismatch');
       const descriptor =
         source.motion === 'dynamic'
@@ -171,36 +212,11 @@ export class WorldPhysics {
     check(!this.disposed, 'Disposed physics world');
     const retained = new Set<string>();
     for (const collider of colliders) {
-      const key = `solid:${collider.id}`;
+      const key = `solid:${collider.source}:${collider.id}`;
       const signature = JSON.stringify(collider);
+      check(!retained.has(key), 'Duplicate static collider identity');
       retained.add(key);
-      if (this.restoring) {
-        const restored = this.bodies.get(key);
-        check(restored && restored.numColliders() === 1, 'Physics snapshot/static entity mismatch');
-        const position = restored.translation();
-        check(
-          Math.hypot(
-            position.x - collider.center.x,
-            position.y - collider.center.y,
-            position.z - collider.center.z,
-          ) < 0.0001,
-          'Physics snapshot/static pose mismatch',
-        );
-        const shape = restored.collider(0).shape;
-        check(
-          collider.shape === 'box'
-            ? shape instanceof RAPIER.Cuboid &&
-                Math.hypot(
-                  shape.halfExtents.x * 2 - collider.width,
-                  shape.halfExtents.y * 2 - collider.height,
-                  shape.halfExtents.z * 2 - collider.depth,
-                ) < 0.0001
-            : shape instanceof RAPIER.Cylinder &&
-                Math.abs(shape.radius - collider.radius) < 0.0001 &&
-                Math.abs(shape.halfHeight * 2 - collider.height) < 0.0001,
-          'Physics snapshot/static shape mismatch',
-        );
-      }
+      if (this.restoring) this.fixed(key, collider.center, this.shape(collider));
       if (this.fixedKeys.has(key) && this.fixedKeys.get(key) !== signature) {
         this.bodyKeys.delete(this.bodies.get(key)!.handle);
         this.world.removeRigidBody(this.bodies.get(key)!);
@@ -237,6 +253,7 @@ export class WorldPhysics {
     ]);
     check(
       this.bodies.size === expected.size &&
+        this.world.colliders.len() === expected.size &&
         Array.from(this.bodies.keys()).every((id) => expected.has(id)),
       'Physics snapshot identity mismatch',
     );
@@ -437,7 +454,7 @@ export class WorldPhysics {
       bodyIds.push(id);
     });
     return {
-      format: 2,
+      format: 3,
       engine: 'rapier3d',
       engineVersion: PHYSICS_ENGINE_VERSION,
       bytes: Array.from(this.world.takeSnapshot()),

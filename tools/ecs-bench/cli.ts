@@ -343,7 +343,13 @@ try {
     throw new Error('Strict benchmark typecheck failed');
   const protocol = spawn(
     process.execPath,
-    ['--experimental-transform-types', '--test', path.join(directory, 'protocol.test.ts')],
+    [
+      path.join(root, 'node_modules/vitest/vitest.mjs'),
+      'run',
+      '--config',
+      path.join(root, 'vitest.labs.config.ts'),
+      path.join(directory, 'protocol.test.ts'),
+    ],
     { cwd: root, windowsHide: true, stdio: 'inherit' },
   );
   if ((await new Promise((resolve) => protocol.on('close', resolve))) !== 0)

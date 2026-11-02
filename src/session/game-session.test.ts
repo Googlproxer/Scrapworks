@@ -1,19 +1,18 @@
 import { mutable } from '../../tools/shared.ts';
-import type { WorldCommand } from '../../src/contracts/world.ts';
-import type { SimulationPort } from '../../src/session/port.ts';
-import type { RuntimeReply, SimulationCapture } from '../../src/contracts/simulation.ts';
+import type { WorldCommand } from '../contracts/world.ts';
+import type { SimulationPort } from './port.ts';
+import type { RuntimeReply, SimulationCapture } from '../contracts/simulation.ts';
 import type {
   PlayerMotor as PlayerMotorInstance,
   MovementIntent,
-} from '../../src/simulation/player-motor.ts';
-import '../../tools/testing/register-typescript.ts';
+} from '../simulation/player-motor.ts';
 import assert from 'node:assert/strict';
-import test from 'node:test';
+import { test, vi } from 'vitest';
 const { GameSession } = await import('../../tools/testing/inline-game-session.ts');
-const { GameSession: HostSession } = await import('../../src/session/game-session.ts');
-const { PlayerMotor } = await import('../../src/simulation/player-motor.ts');
-const { SimulationRuntime } = await import('../../src/session/runtime.ts');
-import { worldFixture as definition } from '../support/world-fixture.ts';
+const { GameSession: HostSession } = await import('./game-session.ts');
+const { PlayerMotor } = await import('../simulation/player-motor.ts');
+const { SimulationRuntime } = await import('./runtime.ts');
+import { worldFixture as definition } from '../../tests/support/world-fixture.ts';
 
 const placement: WorldCommand = {
   type: 'place',
@@ -154,20 +153,19 @@ test('presentation failure retains the newly completed view, terminates dispatch
   assert.deepEqual(fresh.view.player.position, definition().spawn);
   fresh.dispose();
 });
-test('a motor exception after mutation cannot expose partial state across the serialized boundary', (t) => {
+test('a motor exception after mutation cannot expose partial state across the serialized boundary', () => {
   const session = new GameSession(definition(), { developerFixture: true });
   session.setMovement({ x: 1, z: 0 });
   session.advance(0.05);
   const completed = session.view;
   const step = PlayerMotor.prototype.step;
-  t.mock.method(
-    PlayerMotor.prototype,
-    'step',
-    function (this: PlayerMotorInstance, input: MovementIntent) {
-      step.call(this, input);
-      throw new Error('Motor failed after mutation');
-    },
-  );
+  vi.spyOn(PlayerMotor.prototype, 'step').mockImplementation(function (
+    this: PlayerMotorInstance,
+    input: MovementIntent,
+  ) {
+    step.call(this, input);
+    throw new Error('Motor failed after mutation');
+  });
   session.enqueue(placement);
   assert.throws(() => session.advance(0.1), /Motor failed after mutation/);
   assert.equal(session.failed, true);

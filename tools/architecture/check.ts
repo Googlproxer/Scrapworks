@@ -6,7 +6,9 @@ const root = path.resolve(import.meta.dirname, '../..');
 const failures: string[] = [];
 for (const relative of (await fs.readdir(path.join(root, 'src'), { recursive: true })).filter(
   (file) =>
-    file.endsWith('.ts') && !file.endsWith('.spec.ts') && !file.startsWith('testing' + path.sep),
+    file.endsWith('.ts') &&
+    !/\.(?:spec|test)\.ts$/.test(file) &&
+    !file.startsWith('testing' + path.sep),
 )) {
   const filename = 'src/' + relative.replaceAll('\\', '/');
   const source = await fs.readFile(path.join(root, filename), 'utf8');

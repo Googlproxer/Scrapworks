@@ -1,4 +1,4 @@
-import test from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { Reference } from '../ecs-bench/adapters/reference.ts';
 import { defaultDetails, PresentationCache, publishLean, stride } from './presentation.ts';

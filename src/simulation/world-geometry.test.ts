@@ -1,16 +1,15 @@
-import type { BuildingView, QuarterTurn, WorldDefinition } from '../../src/contracts/world.ts';
-import type { RuntimeRequest, SimulationSnapshot } from '../../src/contracts/simulation.ts';
-import '../../tools/testing/register-typescript.ts';
+import type { BuildingView, QuarterTurn, WorldDefinition } from '../contracts/world.ts';
+import type { RuntimeRequest, SimulationSnapshot } from '../contracts/simulation.ts';
 const { rebuildPhysics } = await import('../../tools/testing/rebuild-physics.ts');
 import assert from 'node:assert/strict';
-import test from 'node:test';
-const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
-const { SimulationRuntime } = await import('../../src/session/runtime.ts');
-const { PresentationCache } = await import('../../src/session/presentation-cache.ts');
-const { assertSnapshot } = await import('../../src/simulation/capture.ts');
-const { OPENING_CONTENT: EMPTY_CONTENT } = await import('../../src/content/opening.ts');
-const { validatePlacement } = await import('../../src/simulation/placement.ts');
-const { cellCenter } = await import('../../src/core/world-grid.ts');
+import { test } from 'vitest';
+const { Simulation } = await import('./ecs-runtime.ts');
+const { SimulationRuntime } = await import('../session/runtime.ts');
+const { PresentationCache } = await import('../session/presentation-cache.ts');
+const { assertSnapshot } = await import('./capture.ts');
+const { OPENING_CONTENT: EMPTY_CONTENT } = await import('../content/opening.ts');
+const { validatePlacement } = await import('./placement.ts');
+const { cellCenter } = await import('../core/world-grid.ts');
 
 const still = { x: 0, z: 0, sprint: false };
 const definition: WorldDefinition = {
@@ -187,11 +186,13 @@ for (const { name, change } of invalidBuildings)
     assert.throws(() => assertSnapshot(snapshot, EMPTY_CONTENT));
     const runtime = new SimulationRuntime();
     let id = 0;
+
     const request = (
       operation: RuntimeRequest['operation'],
       fields: Partial<RuntimeRequest> = {},
     ) =>
       runtime.handle({ protocol: 2, generation: 1, revision: 0, id: ++id, operation, ...fields });
+
     try {
       assert.equal(request('initialize', { definition: edgeDefinition }).ok, true);
       const before = request('capture').capture;

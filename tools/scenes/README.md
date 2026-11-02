@@ -47,7 +47,7 @@ The exporter compiles saved Game marker metadata into `public/scene/worlds/game.
 ```sh
 node tools/scenes/inventory.ts --output tmp/asset-audit/latest.json
 node tools/scenes/check-export.ts --build
-node --test tools/scenes/*.test.ts
+yarn test:export
 node tools/scenes/check-dev-workflow.ts
 node tools/scenes/profile-browser.ts --output tmp/asset-audit/browser.json
 ```

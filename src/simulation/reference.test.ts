@@ -1,9 +1,8 @@
-import type { WorldCommand, QuarterTurn } from '../../src/contracts/world.ts';
-import '../../tools/testing/register-typescript.ts';
-import test from 'node:test';
-const { ReferenceSimulation } = await import('../support/reference-simulation.ts');
-const { Simulation } = await import('../../src/simulation/ecs-runtime.ts');
-import { worldFixture } from '../support/world-fixture.ts';
+import type { WorldCommand, QuarterTurn } from '../contracts/world.ts';
+import { test } from 'vitest';
+const { ReferenceSimulation } = await import('../../tests/support/reference-simulation.ts');
+const { Simulation } = await import('./ecs-runtime.ts');
+import { worldFixture } from '../../tests/support/world-fixture.ts';
 test('private ECS movement and placement agree with the legacy plain-object oracle for seeded streams', () => {
   for (let seed of [1729, 451, 983]) {
     const next = () => (seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0);

@@ -39,6 +39,7 @@ export interface OpeningData {
 
 export interface GroundItemView {
   readonly id: string;
+  /** Drop location in metres, including elevation; fixed until collected. */
   readonly position: WorldPosition;
   readonly item: string;
   readonly quantity: number;
