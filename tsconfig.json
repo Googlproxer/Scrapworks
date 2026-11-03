@@ -24,7 +24,8 @@
       "@game/*": ["./src/game/*"],
       "@simulation/*": ["./src/simulation/*"],
       "@contracts/*": ["./src/contracts/*"],
-      "@environments/*": ["./src/environments/*"]
+      "@environments/*": ["./src/environments/*"],
+      "@content/*": ["./src/content/*"]
     }
   },
   "angularCompilerOptions": {

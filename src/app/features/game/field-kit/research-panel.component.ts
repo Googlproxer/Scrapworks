@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { OpeningPanel } from './opening-panel';
 
-import type { OpeningTechnology } from '../../../../content/opening';
+import type { OpeningTechnology } from '@content/opening';
 
 @Component({
   selector: 'app-research-panel',

@@ -4,9 +4,11 @@ import type { GameClientFactory } from './game-client-factory';
 import type { GameState } from '@contracts/game-state';
 import type { WorldSelection, PlacementFeedback, InspectorState } from '@contracts/game-client';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
+import type { LoadingStatus } from '@contracts/loading';
 
 interface RendererNotifications {
   state(value: GameState): void;
+  loading(value: LoadingStatus | null): void;
   selection(value: WorldSelection): void;
   placementFeedback(value: PlacementFeedback | null): void;
   inspectorState(value: InspectorState): void;
@@ -19,8 +21,6 @@ export class RendererConnection {
   private hostValue?: HTMLElement;
   private revision = 0;
   private lifetime = new Subscription();
-
-  public constructor(private readonly factory: GameClientFactory) {}
 
   public get client(): GameClient | undefined {
     return this.clientValue;
@@ -44,10 +44,10 @@ export class RendererConnection {
     return ++this.revision;
   }
 
-  public create(options: GameClientOptions): GameClient {
+  public create(factory: GameClientFactory, options: GameClientOptions): GameClient {
     if (!this.hostValue) throw new Error('Renderer host is absent');
     const generation = this.revision;
-    const client = this.factory(this.hostValue, options);
+    const client = factory(this.hostValue, options);
     if (generation !== this.revision) {
       client.destroy();
       return client;
@@ -70,6 +70,7 @@ export class RendererConnection {
         }),
       );
 
+    listen(client.loading$, handlers.loading);
     listen(client.state$, handlers.state);
     listen(client.selection$, handlers.selection);
     listen(client.inspectorState$, handlers.inspectorState);

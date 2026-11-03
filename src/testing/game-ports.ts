@@ -1,5 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import type { GameState } from '@contracts/game-state';
+import type { LoadingStatus } from '@contracts/loading';
 import type { DebugDrawStatus } from '@contracts/debug-draw';
 import type {
   GameInputPort,
@@ -29,6 +30,7 @@ export function menuClientOptions(): GameClientOptions {
 
 export function clientNotifications() {
   return {
+    loading$: new BehaviorSubject<LoadingStatus | null>(null),
     state$: new BehaviorSubject<GameState>({
       phase: 'loading',
       sceneKey: 'MainMenu',

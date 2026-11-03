@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import type { CoverageOptions } from 'vitest/node';
 
 export const projectRoot = fileURLToPath(new URL('../../', import.meta.url));
+
 // The browser coverage target explicitly uses this Angular build configuration.
 const workspace = JSON.parse(
   fs.readFileSync(new URL('../../angular.json', import.meta.url), 'utf8'),
@@ -21,15 +22,19 @@ const workspace = JSON.parse(
     };
   };
 };
+
 export const browserReplacements =
   workspace.projects.scrapworks.architect.build.configurations.development.fileReplacements;
+
 export const gameInclude = ['src/**/*.ts'];
+
 export const toolingInclude = [
   'eslint.config.ts',
-  'tools/{architecture,cleanup,coverage,eslint,scenes,testing,world}/**/*.ts',
+  'tools/{architecture,build,cleanup,coverage,eslint,scenes,testing,world}/**/*.ts',
   'tools/shared.ts',
   'tools/ecs-bench/verify-production.ts',
 ];
+
 export const coverageExclude = [
   '**/node_modules/**',
   '**/*.{spec,test}.ts',

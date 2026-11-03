@@ -46,19 +46,19 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 | Command                            | Purpose                                                                                                     |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `yarn dev`                         | Export scenes, start Angular, and watch saved authoring changes.                                            |
-| `yarn build`                       | Export scenes, then create a production build.                                                              |
+| `yarn build`                       | Export scenes, create a production build, and generate Brotli sidecars.                                     |
 | `yarn scenes:export`               | Pack saved Editor inputs into generated browser assets and the script registry.                             |
 | `yarn test`                        | Export scenes and run the Chromium application suite once.                                                  |
 | `yarn test:unit`                   | Run Chromium UI, input/capture and Inspector ownership tests without creating Babylon engines.              |
 | `yarn test:renderer`               | Run the real Babylon device, lifecycle, renderer and authored-world integration tests.                      |
 | `yarn test:export`                 | Check staged export, retention, physics guards and watcher behavior.                                        |
 | `yarn test:game`                   | Typecheck and run Node simulation, domain, session and worker-transport tests.                              |
-| `yarn test:tools`                  | Typecheck tools and run Vitest compiler/export, alias, coverage, dependency-audit and lint-rule tests.                    |
-| `yarn test:coverage` | Run both coverage groups and generate separate Game and Tooling reports. |
-| `yarn test:coverage:game` | Collect and merge Angular browser and Node game coverage. |
-| `yarn test:coverage:tools` | Collect normal tooling coverage. |
-| `yarn coverage:report` | Regenerate reports and print both totals from collected results. |
-| `yarn test:labs` | Run opt-in laboratory unit tests through Vitest without performance trials. |
+| `yarn test:tools`                  | Typecheck tools and run Vitest compiler/export, alias, coverage, dependency-audit and lint-rule tests.      |
+| `yarn test:coverage`               | Run both coverage groups and generate separate Game and Tooling reports.                                    |
+| `yarn test:coverage:game`          | Collect and merge Angular browser and Node game coverage.                                                   |
+| `yarn test:coverage:tools`         | Collect normal tooling coverage.                                                                            |
+| `yarn coverage:report`             | Regenerate reports and print both totals from collected results.                                            |
+| `yarn test:labs`                   | Run opt-in laboratory unit tests through Vitest without performance trials.                                 |
 | `yarn test:world`                  | Run focused authored marker compilation and world-export validation tests.                                  |
 | `yarn test:acceptance`             | Exercise the built game worker, movement, pause, crash/Retry and teardown; build with `--stats-json` first. |
 | `yarn test:workflow`               | Verify dev reload/failure recovery in an isolated browser fixture.                                          |
@@ -134,6 +134,10 @@ yarn build
 ```
 
 The static browser application is written to `dist/scrapworks/browser/`. Configure the host to serve `index.html` for application routes. The [export policy](tools/scenes/export-policy.json) retains live public assets and scene-declared dependencies; original character projects remain outside deployment. See [migration production evidence](docs/reports/migration/2026-10-23/README.md) and [retired-source recovery](docs/plans/3d-cleanup.md#recovery). Record fresh measurements when changing production assets.
+
+All package build commands generate smaller Brotli-compressed files alongside the originals (`main-*.js.br`, worker chunks, CSS, HTML and compressible scene/model assets). Images and existing compressed files are skipped. `yarn build --stats-json` still forwards options to Angular; `--output-path` is supported. The build uses Node's built-in Brotli encoder at quality 11 and adds no runtime dependency. To regenerate sidecars for an existing build, run `node tools/build/compress.ts` (or pass a browser-output directory).
+
+Upload the originals and their `.br` sidecars together. When hosting is chosen, configure content negotiation to serve the `.br` sibling for requests accepting Brotli, with `Content-Encoding: br`, `Vary: Accept-Encoding`, and the original file's content type. Keep the original URL in the application and fall back to the original file for other clients. Generating sidecars does not configure a web server or change `yarn dev`.
 
 ## License
 

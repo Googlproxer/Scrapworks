@@ -5,7 +5,7 @@ import { loadEditorScene } from '@game/assets/load-editor-scene';
 import { BabylonGameClient } from '@game/babylon-game-client';
 import type { GameClientOptions } from '@game/client-api';
 import axe from 'axe-core';
-import { GAME_CLIENT_FACTORY } from '../game-client-factory';
+import { GAME_CLIENT_LOADER } from '../game-client-factory';
 import { GamePageComponent } from './game-page.component';
 import { SIMULATION_PORT_FACTORY } from '../simulation-port-factory';
 import { InlineSimulationPort } from '../../../../../tools/testing/inline-simulation-port';
@@ -23,8 +23,8 @@ describe('Babylon game page integration', () => {
         // The built application/worker is exercised by tests/acceptance/production-browser.ts.
         { provide: SIMULATION_PORT_FACTORY, useValue: () => new InlineSimulationPort() },
         {
-          provide: GAME_CLIENT_FACTORY,
-          useValue: (host: HTMLElement, options: GameClientOptions) =>
+          provide: GAME_CLIENT_LOADER,
+          useValue: async () => (host: HTMLElement, options: GameClientOptions) =>
             new BabylonGameClient(host, loadSceneFn, options),
         },
       ],

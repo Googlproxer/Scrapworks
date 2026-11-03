@@ -92,7 +92,7 @@ describe('Notification lifetime and queue', () => {
     expect(center.visible()[0]).toMatchObject({
       message: 'Missing wire',
       tone: 'error',
-      icon: '×',
+      icon: 'x',
       timeout: 0,
     });
     for (let i = 0; i < 4; i++) center.open({ message: 'Other', timeout: 0 });

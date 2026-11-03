@@ -1,6 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { fromEvent } from 'rxjs';
 import type { ActionFrame, ActionState } from '@contracts/input';
 import { GameRuntimeService } from '../game/game-runtime.service';
 import { SaveLoadComponent } from '../save/save-load/save-load.component';
@@ -15,6 +16,8 @@ describe('UiInputAdapterService', () => {
   let dispatch: (frame: ActionFrame) => void;
   let unsubscribe: ReturnType<typeof vi.fn>;
   let runtime: {
+    isBusy: ReturnType<typeof signal<boolean>>;
+    isReady: ReturnType<typeof signal<boolean>>;
     subscribeActions: ReturnType<typeof vi.fn>;
     capturingBinding: ReturnType<typeof signal<boolean>>;
     inspectorActive: ReturnType<typeof signal<boolean>>;
@@ -46,6 +49,8 @@ describe('UiInputAdapterService', () => {
     document.body.append(page, overlay);
     unsubscribe = vi.fn();
     runtime = {
+      isBusy: signal(false),
+      isReady: signal(true),
       subscribeActions: vi.fn((listener: (frame: ActionFrame) => void) => {
         dispatch = listener;
         return unsubscribe;
@@ -82,6 +87,29 @@ describe('UiInputAdapterService', () => {
     page.remove();
     overlay.remove();
     vi.restoreAllMocks();
+  });
+
+  it('keeps menu recovery available when an already-loaded viewport pauses', () => {
+    runtime.isReady.set(false);
+    adapter.openMenu();
+    expect(ui.openUIDialog).toHaveBeenCalledOnce();
+  });
+
+  it('blocks controller activation and menu opening while a scene is loading', () => {
+    const button = page.querySelector('button')!;
+    const click = vi.fn();
+    const subscription = fromEvent(button, 'click').subscribe(click);
+    button.focus();
+    runtime.isBusy.set(true);
+    press('submit');
+    press('menu', 'gameplay');
+    adapter.openMenu();
+    expect(click).not.toHaveBeenCalled();
+    expect(ui.openUIDialog).not.toHaveBeenCalled();
+    runtime.isBusy.set(false);
+    press('submit');
+    expect(click).toHaveBeenCalledOnce();
+    subscription.unsubscribe();
   });
 
   function frame(states: Record<string, ActionState>, context: ActionFrame['context'] = 'ui') {

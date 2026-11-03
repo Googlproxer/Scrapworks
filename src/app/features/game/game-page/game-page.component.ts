@@ -1,4 +1,4 @@
-import { JsonPipe, NgOptimizedImage } from '@angular/common';
+import { JsonPipe } from '@angular/common';
 import {
   afterRenderEffect,
   AfterViewInit,
@@ -17,14 +17,19 @@ import { GameRuntimeService } from '../game-runtime.service';
 import { DebugDrawPanelComponent } from '../debug-draw-panel/debug-draw-panel.component';
 import { FieldKitComponent } from '../field-kit/field-kit.component';
 import { NotificationStackComponent } from '../../ui/notification-stack/notification-stack.component';
+import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator/loading-indicator.component';
+import { LoadingScreenComponent } from '../../../shared/loading/loading-screen/loading-screen.component';
+import { MenuLogoComponent } from '../../../shared/loading/menu-logo/menu-logo.component';
 
 @Component({
   imports: [
     JsonPipe,
-    NgOptimizedImage,
+    MenuLogoComponent,
     DebugDrawPanelComponent,
     FieldKitComponent,
     NotificationStackComponent,
+    LoadingIndicatorComponent,
+    LoadingScreenComponent,
   ],
   selector: 'app-game-page',
   styleUrl: './game-page.component.scss',
@@ -38,11 +43,26 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
   public readonly inputAdapter = inject(UiInputAdapterService);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   public readonly developer = !!environment.dev;
+  private wasBusy = false;
 
   public constructor() {
     afterRenderEffect(() => {
-      if (this.gameRuntimeService.errorMessage())
+      const busy = this.gameRuntimeService.isBusy();
+      if (this.gameRuntimeService.errorMessage()) {
         this.element.nativeElement.querySelector<HTMLButtonElement>('[data-retry]')?.focus();
+      } else if (busy) {
+        this.element.nativeElement
+          .querySelector<HTMLElement>('[data-loading-focus]')
+          ?.focus({ preventScroll: true });
+      } else if (this.wasBusy && this.gameRuntimeService.isReady()) {
+        if (this.gameRuntimeService.currentSceneKey() === 'Game')
+          this.gameRuntimeService.focusViewport();
+        else
+          this.element.nativeElement
+            .querySelector<HTMLButtonElement>('[data-play]')
+            ?.focus({ preventScroll: true });
+      }
+      this.wasBusy = busy;
     });
   }
 
@@ -57,7 +77,6 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
 
   public startGame() {
     this.gameRuntimeService.setScene('Game');
-    this.gameRuntimeService.focusViewport();
   }
 
   public async openSaveDialog() {

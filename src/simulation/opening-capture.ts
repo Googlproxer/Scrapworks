@@ -1,12 +1,12 @@
-import type { OpeningData } from '@contracts/opening';
-import type { InventoryData } from '@contracts/simulation';
-import { requireInvariant as check } from '@contracts/simulation';
 import {
   OPENING_CONTENT,
   OPENING_RECIPES,
   OPENING_TECHNOLOGIES,
   chargeCapacity,
-} from '../content/opening';
+} from '@content/opening';
+import type { OpeningData } from '@contracts/opening';
+import type { InventoryData } from '@contracts/simulation';
+import { requireInvariant as check } from '@contracts/simulation';
 import { planTransaction } from './domain/inventory';
 import { handcraftBagOutput } from './domain/work';
 

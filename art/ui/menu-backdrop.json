@@ -1,0 +1,8 @@
+{
+  "source": "menu-backdrop-v1.png",
+  "sourceLocation": "Moved unchanged from public/assets/bg.png on 2026-11-04; earlier authorship is not recorded here.",
+  "sourceDimensions": [1024, 768],
+  "runtime": "../../public/assets/bg.webp",
+  "preparation": "node tools/art/prepare-menu-images.ts; original dimensions, WebP quality 85, alpha quality 100, effort 6.",
+  "usage": "Angular menu and loading-screen backdrop."
+}

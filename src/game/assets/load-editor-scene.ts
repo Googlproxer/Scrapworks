@@ -18,9 +18,10 @@ SceneLoaderFlags.ShowLoadingScreen = false; // Angular owns loading and error pr
 export async function loadEditorScene(
   scene: Scene,
   key: AuthoredSceneKey,
+  onProgress?: (value: number) => void,
 ): Promise<AssetContainer> {
   const rootUrl = new URL('scene/', document.baseURI).href;
-  await loadScene(rootUrl, filenames[key], scene, scriptsMap);
+  await loadScene(rootUrl, filenames[key], scene, scriptsMap, { onProgress });
   // Scene ownership starts before loading. A disposed scene must never re-enter the client.
   if (scene.isDisposed) throw new Error('Scene was disposed while loading');
   const cameraId: unknown = scene.metadata?.activeCameraId;

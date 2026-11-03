@@ -1,7 +1,22 @@
-import type { SimulationEntity, OpeningContext } from './opening-context';
+import { OPENING_CONTENT } from '@content/opening';
 import type { EditableData } from '@contracts/readonly-data';
 import type { OpeningEvent } from '@contracts/session-event';
-import { World } from 'miniplex';
+import type {
+  ContentDefinition,
+  EntityData,
+  EntityMapping,
+  Inspection,
+  PlayerEndpoint,
+  PresentationPacket,
+  SimulationSnapshot,
+  SimulationStepResult,
+  WorldResources,
+} from '@contracts/simulation';
+import {
+  requireInvariant as check,
+  MAX_DETAIL_SUBSCRIPTIONS,
+  PRESENTATION_STRIDE,
+} from '@contracts/simulation';
 import type {
   BuildingView,
   CommandResult,
@@ -11,32 +26,17 @@ import type {
   WorldView,
 } from '@contracts/world';
 import { assertWorldDefinition } from '@contracts/world';
-import type {
-  ContentDefinition,
-  EntityData,
-  EntityMapping,
-  Inspection,
-  PlayerEndpoint,
-  PresentationPacket,
-  SimulationSnapshot,
-  WorldResources,
-  SimulationStepResult,
-} from '@contracts/simulation';
-import {
-  MAX_DETAIL_SUBSCRIPTIONS,
-  PRESENTATION_STRIDE,
-  requireInvariant as check,
-} from '@contracts/simulation';
 import { cellCenter } from '@core/world-grid';
-import { WorldPhysics } from './physics/world-physics';
+import { World } from 'miniplex';
+import { assertSnapshot, ownContent } from './capture';
+import { emptyInventory } from './domain/inventory';
+import { newOpening, OpeningSystem } from './opening';
+import type { OpeningContext, SimulationEntity } from './opening-context';
 import { staticColliders } from './physics/collision-definitions';
+import { WorldPhysics } from './physics/world-physics';
 import { TEST_BUILDING_FOOTPRINT, validatePlacement } from './placement';
 import { PlayerMotor, type MovementIntent } from './player-motor';
 import { FIXED_STEP_SECONDS } from './world-rules';
-import { assertSnapshot, ownContent } from './capture';
-import { emptyInventory } from './domain/inventory';
-import { OPENING_CONTENT } from '../content/opening';
-import { newOpening, OpeningSystem } from './opening';
 
 export type { MovementIntent } from './player-motor';
 

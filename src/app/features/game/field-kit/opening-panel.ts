@@ -1,8 +1,8 @@
 import { computed, inject } from '@angular/core';
-import { GameRuntimeService } from '../game-runtime.service';
-import { ITEM_NAMES, OPENING_RECIPES, OPENING_TECHNOLOGIES } from '../../../../content/opening';
-import type { OpeningRecipe } from '../../../../content/opening';
+import type { OpeningRecipe } from '@content/opening';
+import { ITEM_NAMES, OPENING_RECIPES, OPENING_TECHNOLOGIES } from '@content/opening';
 import type { ItemStack } from '@contracts/simulation';
+import { GameRuntimeService } from '../game-runtime.service';
 
 /** Readonly presentation selectors shared by focused field-kit panels. */
 export abstract class OpeningPanel {

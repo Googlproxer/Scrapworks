@@ -23,7 +23,9 @@ import type { Inspection } from '@contracts/simulation';
 import { environment } from '@environments/environment';
 import { validatePlacement } from '@simulation/placement';
 import { ControlSettingsService } from '../controls/control-settings.service';
-import { GAME_CLIENT_FACTORY } from './game-client-factory';
+import { GAME_CLIENT_LOADER, type GameClientFactory } from './game-client-factory';
+import { AFTER_PAINT } from '../../shared/loading/after-paint';
+import type { LoadingStatus } from '@contracts/loading';
 import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
 
@@ -35,12 +37,15 @@ export class GameRuntimeService {
     errorMessage: null,
   });
 
-  private readonly createClient = inject(GAME_CLIENT_FACTORY);
+  private readonly loadClient = inject(GAME_CLIENT_LOADER);
+  private readonly afterPaint = inject(AFTER_PAINT);
+  private cancelPaint?: () => void;
+  private pendingScene?: SceneKey;
   private readonly createSimulationPort = inject(SIMULATION_PORT_FACTORY);
   private readonly injector = inject(Injector);
   private unsubscribe?: () => void;
   private readonly sessions = new GameSessionOwner(this.createSimulationPort, !!environment.dev);
-  private readonly renderer = new RendererConnection(this.createClient);
+  private readonly renderer = new RendererConnection();
   private readonly inputCoordinator = new GameInputCoordinator({
     clearInput: () => this.session?.clearInput(),
     pause: () => this.session?.setPaused(true),
@@ -70,6 +75,12 @@ export class GameRuntimeService {
   private disposed = false;
 
   public readonly state = this.stateValue.asReadonly();
+  private readonly loadingValue = signal<LoadingStatus | null>({
+    task: 'Starting Scrapworks…',
+    progress: null,
+  });
+  public readonly loading = this.loadingValue.asReadonly();
+  public readonly isBusy = computed(() => this.loading() !== null);
   public readonly currentSceneKey = computed(() => this.state().sceneKey);
   public readonly isReady = computed(() => this.state().phase === 'ready');
   public readonly isLoading = computed(() => this.state().phase === 'loading');
@@ -155,6 +166,8 @@ export class GameRuntimeService {
         sceneKey: 'Game',
         errorMessage: error.message + ' Retry restarts this world from its authored beginning.',
       });
+      this.loadingValue.set(null);
+      this.pendingScene = undefined;
       this.client?.setInputEnabled(false);
       this.updateInputContext();
     });
@@ -167,11 +180,29 @@ export class GameRuntimeService {
   }
 
   public mount(host: HTMLElement): void {
-    if (this.disposed || (this.host === host && this.client)) return;
+    if (this.disposed || (this.host === host && (this.client || this.isLoading()))) return;
     this.unmount();
     const generation = this.renderer.begin(host);
     this.stateValue.set({ phase: 'loading', sceneKey: null, errorMessage: null });
+    this.loadingValue.set({ task: 'Loading 3D renderer…', progress: null });
+    this.cancelPaint = this.afterPaint(() => {
+      if (generation !== this.generation || this.disposed) return;
+      try {
+        void this.loadClient().then(
+          (factory) => {
+            if (generation !== this.generation || this.disposed || this.host !== host) return;
+            this.loadingValue.set({ task: 'Starting 3D renderer…', progress: null });
+            this.mountClient(host, generation, factory);
+          },
+          (error: unknown) => this.mountFailed(host, generation, error),
+        );
+      } catch (error) {
+        this.mountFailed(host, generation, error);
+      }
+    });
+  }
 
+  private mountClient(host: HTMLElement, generation: number, factory: GameClientFactory): void {
     try {
       const options: GameClientOptions = {
         bindings: this.settings.profile(),
@@ -344,14 +375,24 @@ export class GameRuntimeService {
         }
       };
 
-      const client = this.renderer.create(options);
+      const client = this.renderer.create(factory, options);
       if (this.disposed || generation !== this.generation) {
         client.destroy();
         return;
       }
       const unsubscribe = this.renderer.connect({
+        loading: (status) => {
+          // Lifecycle readiness owns dismissal, including a pause before the first frame.
+          if (status && this.isBusy()) this.loadingValue.set(status);
+        },
         state: (state) => {
           if (generation === this.generation && this.client === client) {
+            if (
+              this.pendingScene &&
+              state.sceneKey !== this.pendingScene &&
+              state.phase !== 'error'
+            )
+              return;
             this.inputCoordinator.invalidate();
             this.stateValue.set(
               this.session?.failed && state.sceneKey === 'Game'
@@ -362,6 +403,12 @@ export class GameRuntimeService {
                   }
                 : state,
             );
+            if (this.state().phase === 'ready' || this.state().phase === 'error') {
+              this.loadingValue.set(null);
+              this.pendingScene = undefined;
+            } else if (state.phase === 'loading' && !this.isBusy()) {
+              this.loadingValue.set({ task: 'Loading scene…', progress: null });
+            }
             if (state.phase !== 'ready' || state.sceneKey !== 'Game') this.session?.setPaused(true);
             this.updateInputContext();
           }
@@ -382,21 +429,29 @@ export class GameRuntimeService {
       this.inputCoordinator.attach(client.input);
       this.updateInputContext();
     } catch (error) {
-      if (generation !== this.generation) return;
-      this.unmount();
-      console.error(error);
-      if (this.disposed) return;
-      this.renderer.begin(host);
-      this.stateValue.set({
-        phase: 'error',
-        sceneKey: null,
-        errorMessage: error instanceof Error ? error.message : String(error),
-      });
+      this.mountFailed(host, generation, error);
     }
+  }
+
+  private mountFailed(host: HTMLElement, generation: number, error: unknown): void {
+    if (generation !== this.generation || this.disposed) return;
+    this.unmount();
+    console.error(error);
+    if (this.disposed) return;
+    this.renderer.begin(host);
+    this.stateValue.set({
+      phase: 'error',
+      sceneKey: null,
+      errorMessage: error instanceof Error ? error.message : String(error),
+    });
   }
 
   public unmount(): void {
     if (!this.host && !this.client) return;
+    this.cancelPaint?.();
+    this.cancelPaint = undefined;
+    this.pendingScene = undefined;
+    this.loadingValue.set(null);
     this.openingUi.reset();
     this.renderer.invalidate();
     this.inputCoordinator.invalidate();
@@ -427,17 +482,34 @@ export class GameRuntimeService {
 
   public setScene(key: SceneKey): void {
     if (!this.client || !this.isReady()) return;
+    if (key === this.currentSceneKey()) return;
     this.inputCoordinator.invalidate();
     this.session?.setPaused(true);
-    try {
-      this.client.setScene(key);
-    } catch (error) {
-      this.stateValue.set({
-        phase: 'error',
-        sceneKey: key,
-        errorMessage: error instanceof Error ? error.message : String(error),
-      });
-    }
+    this.pendingScene = key;
+    this.stateValue.set({ phase: 'loading', sceneKey: key, errorMessage: null });
+    this.loadingValue.set({
+      task: key === 'Game' ? 'Loading game scene…' : 'Loading main menu…',
+      progress: null,
+    });
+    this.updateInputContext();
+    const client = this.client;
+    const generation = this.generation;
+    this.cancelPaint?.();
+    this.cancelPaint = this.afterPaint(() => {
+      if (generation !== this.generation || this.client !== client || this.pendingScene !== key)
+        return;
+      try {
+        client.setScene(key);
+      } catch (error) {
+        this.pendingScene = undefined;
+        this.loadingValue.set(null);
+        this.stateValue.set({
+          phase: 'error',
+          sceneKey: key,
+          errorMessage: error instanceof Error ? error.message : String(error),
+        });
+      }
+    });
   }
 
   public setInputEnabled(on: boolean) {

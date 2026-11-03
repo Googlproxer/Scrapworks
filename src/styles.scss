@@ -1,9 +1,12 @@
+@use './app/shared/loading/loading';
+
 html,
 body {
   margin: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background: #0c1313;
 }
 
 app-root {

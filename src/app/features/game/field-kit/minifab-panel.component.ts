@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
+import { chargeCapacity } from '@content/opening';
 import { OpeningPanel } from './opening-panel';
-import { chargeCapacity } from '../../../../content/opening';
 
 import { minifabStatus } from '../../ui/opening-labels';
 import { WindingHandleComponent } from '../winding-handle/winding-handle.component';

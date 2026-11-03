@@ -37,7 +37,7 @@ retain the last working export; correcting the save retries automatically.
 compilation publishes `public/scene/worlds/game.json` in the same generation; invalid metadata retains previous output. See [marker authoring](../../tools/world/README.md), the [tool guide](../../tools/scenes/README.md)
 and [workflow validation](../reports/workflow/2026-10-23/README.md).
 
-`assets/**/*.scene` and the project file are authored inputs. `public/scene/` , 
+`assets/**/*.scene` and the project file are authored inputs. `public/scene/` ,
 `src/scripts.ts` , `.bjseditor/` and export caches are generated and ignored.
 Run `yarn scenes:export` before invoking Angular CLI targets directly. The
 export wrapper packs an isolated workspace copy and checks dependencies before
@@ -50,7 +50,7 @@ map and the official `babylonjs-editor-tools` loader. Keep Babylon presentation
 code under `src/game/`; simulation rules and gameplay saves stay plain
 TypeScript. The runtime registers Babylon core types and the
 `@babylonjs/materials` library, including Editor-selected Grid, Sky and Water
-materials. Installing a package alone does not register its serialized classes; 
+materials. Installing a package alone does not register its serialized classes;
 add registrations when introducing other libraries or loaders.
 
 Core runtime objects use `@babylonjs-toolkit/next` 9.30.0 scripts constructed and
@@ -59,7 +59,7 @@ presentation bindings. Toolkit supplies script lifecycle callbacks; the existing
 application `GameSession` supplies independent 20 Hz gameplay ticks. No Havok or
 physics scheduler is required. See the [core object design](../design/TDD.md#core-object-scripts).
 
-Angular's title uses the prepared `public/assets/logo.png` derivative. The original
+Angular's title uses responsive `public/assets/logo-*.webp` derivatives. The original
 `assets/textures/branding/title-logo-v1.png` import remains source material and is no longer a MainMenu mesh dependency. Import world textures into `assets/` so the Editor
 exporter packages them with the scenes. On Editor 5.5.2 for Windows, use a
 project-relative `sourcePath` with MCP `import_asset` ; its absolute-path check
@@ -82,17 +82,17 @@ The scene-export wrapper uses the CLI per-scene dependency manifests to filter u
 
 Normal export/build uses the repository's Node/Yarn dependencies and official CLI; it does not launch the desktop Editor or Blender. A fresh dependency bootstrap remains unverified in the cleanup baseline.
 
-| Tool or resource                            | When it is needed                                                                                                                                                                                                  |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Node and Yarn                               | Normal dev/build/test; versions are selected in the root README and package metadata. Direct installed CLI equivalents remain available when Yarn's bootstrap cannot download its release.                         |
-| Playwright Chromium                         | Application/browser workflow tests. Use `yarn test:setup` ; set `PLAYWRIGHT_BROWSERS_PATH` when using a different existing browser cache.                                                                           |
-| Babylon.js Editor 5.5.2                     | Interactive scene authoring and live desktop MCP. `run-server.mjs` discovers the Windows installation or uses `SCRAPWORKS_BABYLON_EDITOR_PATH` . The desktop bundle is a workstation dependency.                    |
-| Python 3 standard library                   | Optional file/history checkpoint and source-verification tools; not required to run the game.                                                                                                                      |
-| Blender (MPFB for historical sources)                           | Optional editable protagonist work and `tools/art/*.py` scripts run inside Blender. See the [runtime derivative guide](../../art/characters/protagonist-runtime-v2/README.md); older MPFB tooling requires [source recovery from Git](../../art/README.md#recovering-retired-mpfb-sources). |
-| `L:/Angular/tools/mpfb-assets` | Historical downloaded asset-pack cache used by `tools/art/install-mpfb-packs.py` ; only needed to reinstall/recreate packs. Selected MPFB source meshes, textures and licences are recoverable from the documented Git commit.                         |
-| `@viz-js/viz` and `sharp` | Optional diagram renderer; pass an absolute module directory as described in the [diagram guide](../diagrams/README.md). These are not app dependencies.                                                           |
-| Texture compression tools                   | Optional when enabling compression in the Editor project. The current project has compressed textures disabled, so normal exports do not require PVRTexTool/Khronos tools.                                         |
-| `L:/Angular/babylon` and graph-server setup | Template/reference and separately installed authoring tools; neither is an application runtime input. The graph-server validation path below is historical workstation evidence.                                   |
+| Tool or resource                            | When it is needed                                                                                                                                                                                                                                                                           |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Node and Yarn                               | Normal dev/build/test; versions are selected in the root README and package metadata. Direct installed CLI equivalents remain available when Yarn's bootstrap cannot download its release.                                                                                                  |
+| Playwright Chromium                         | Application/browser workflow tests. Use `yarn test:setup` ; set `PLAYWRIGHT_BROWSERS_PATH` when using a different existing browser cache.                                                                                                                                                   |
+| Babylon.js Editor 5.5.2                     | Interactive scene authoring and live desktop MCP. `run-server.mjs` discovers the Windows installation or uses `SCRAPWORKS_BABYLON_EDITOR_PATH` . The desktop bundle is a workstation dependency.                                                                                            |
+| Python 3 standard library                   | Optional file/history checkpoint and source-verification tools; not required to run the game.                                                                                                                                                                                               |
+| Blender (MPFB for historical sources)       | Optional editable protagonist work and `tools/art/*.py` scripts run inside Blender. See the [runtime derivative guide](../../art/characters/protagonist-runtime-v2/README.md); older MPFB tooling requires [source recovery from Git](../../art/README.md#recovering-retired-mpfb-sources). |
+| `L:/Angular/tools/mpfb-assets`              | Historical downloaded asset-pack cache used by `tools/art/install-mpfb-packs.py` ; only needed to reinstall/recreate packs. Selected MPFB source meshes, textures and licences are recoverable from the documented Git commit.                                                              |
+| `@viz-js/viz` and `sharp`                   | Optional diagram renderer; pass an absolute module directory as described in the [diagram guide](../diagrams/README.md). These are not app dependencies.                                                                                                                                    |
+| Texture compression tools                   | Optional when enabling compression in the Editor project. The current project has compressed textures disabled, so normal exports do not require PVRTexTool/Khronos tools.                                                                                                                  |
+| `L:/Angular/babylon` and graph-server setup | Template/reference and separately installed authoring tools; neither is an application runtime input. The graph-server validation path below is historical workstation evidence.                                                                                                            |
 
 ## Desktop scene MCP
 
@@ -122,7 +122,7 @@ live tool (default `get_active_scene` ). A missing Editor or bridge makes the
 live call fail. Tool discovery alone does not establish a live scene connection.
 `check.ts` also accepts JSON arguments or `@path/to/arguments.json` and an
 optional image output path. The Editor's native Save confirmation needs to be
-accepted in its window. Leave the Editor visible for screenshot/Play checks; 
+accepted in its window. Leave the Editor visible for screenshot/Play checks;
 stop preview before editing.
 
 Wait for Play preparation to finish before stopping it. Editor 5.5.2 can lose
@@ -130,7 +130,7 @@ its render loop and texture parser if Play is stopped during preparation.
 Reloading the saved Editor project clears that temporary preview state.
 
 Only one Editor window should own port 3712. Verify project and scene identity
-before modifying nodes. Use the official live tools while the project is open; 
+before modifying nodes. Use the official live tools while the project is open;
 avoid rewriting serialized scene files behind the Editor. Preserve authored
 content and restore temporary validation changes.
 

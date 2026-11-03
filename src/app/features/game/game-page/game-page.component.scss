@@ -94,27 +94,6 @@ div.circle {
   display: none;
 }
 
-.title-image {
-  position: absolute;
-  left: 50%;
-  top: 14%;
-  transform: translateX(-50%);
-  width: min(70vw, 640px);
-  pointer-events: none;
-}
-.menu-backdrop {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(rgb(12 19 19 / 15%), rgb(12 19 19 / 65%)),
-    url('/assets/bg.png') center/cover;
-  pointer-events: none;
-}
-.title-image img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
 .game-help {
   position: absolute;
   left: 12px;

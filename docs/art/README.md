@@ -8,11 +8,12 @@ Art projects, source assets, references and provenance are organised under the r
 
 ## Current repository assets
 
+- The menu and loading screens use responsive WebP logo derivatives (320/640/1024 pixels) and a WebP backdrop. Original PNGs and conversion provenance remain under `art/branding/` and `art/ui/`. Reproduce them with `node tools/art/prepare-menu-images.ts`; the logo retains its transparent padding and aspect ratio.
+
 - The retained [modelling references](../../art/characters/References/) and model sources preserve character identity. The approved flat finish is described below; the earlier south-idle illustration has been retired, with its exact edit prompt retained in the [generation log](../../art/generation.json).
 - The retired [MPFB character experiment](../../art/README.md#recovering-retired-mpfb-sources) is recoverable from Git with its editable Blender/rigged GLB sources, licensing and original validation. Its source mesh statistics are distinct from the separately authored runtime model.
 - The current [editable protagonist source](../../art/characters/Protag/v3/Protag-v3.blend) and [rigged Mixamo archive](../../art/characters/Protag/v3/Protag_v3_rigged.zip) supply the [v3 runtime derivative](../../art/characters/Protag/v3/runtime/README.md). The active Game scene provides its neutral presentation binding. The complete mesh is retained at the user's request; polygon optimisation remains with the user. Earlier character sources are grouped under `art/characters/Protag/`.
 - World and machinery comparisons remain useful visual concepts. The [generation log](../../art/generation.json) and individual branding/UI records preserve exact provenance; historical reference inputs are identified by their recovery commit.
-
 
 ## Agreed visual direction
 

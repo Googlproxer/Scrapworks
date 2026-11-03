@@ -1,20 +1,20 @@
-import type { OpeningEvent, MiniFabStatus } from '@contracts/session-event';
-import type { OpeningCommand, OpeningData, OpeningView } from '@contracts/opening';
-import type { CommandResult, WorldPosition } from '@contracts/world';
-import type { ItemStack, InventoryData } from '@contracts/simulation';
-import type { SimulationEntity, OpeningContext } from './opening-context';
+import type { OpeningRecipe } from '@content/opening';
 import {
   OPENING_CONTENT,
   OPENING_RECIPES,
-  OPENING_SETTINGS as settings,
   OPENING_TECHNOLOGIES,
   chargeCapacity,
+  OPENING_SETTINGS as settings,
   turnsToFull,
   validateOpeningCatalogue,
-} from '../content/opening';
-import type { OpeningRecipe } from '../content/opening';
+} from '@content/opening';
+import type { OpeningCommand, OpeningData, OpeningView } from '@contracts/opening';
+import type { MiniFabStatus, OpeningEvent } from '@contracts/session-event';
+import type { InventoryData, ItemStack } from '@contracts/simulation';
+import type { CommandResult, WorldPosition } from '@contracts/world';
 import { available, planTransaction, transact } from './domain/inventory';
 import { handcraftBagOutput } from './domain/work';
+import type { OpeningContext, SimulationEntity } from './opening-context';
 
 const copy = (items: readonly ItemStack[]): ItemStack[] => items.map((item) => ({ ...item }));
 

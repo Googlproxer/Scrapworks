@@ -2,6 +2,7 @@ import type { Worker } from 'playwright';
 import type { RuntimeReply } from '../../src/contracts/simulation.ts';
 import type { EngineStore } from '@babylonjs/core';
 import { readJson, type BuildMetadata } from '../../tools/shared.ts';
+import { checkLoading } from './loading-checks.ts';
 
 interface RendererStats {
   meshes: number;
@@ -56,9 +57,14 @@ const server = http.createServer(async (request, response) => {
       '.css': 'text/css',
       '.json': 'application/json',
       '.png': 'image/png',
+      '.webp': 'image/webp',
       '.glb': 'model/gltf-binary',
     };
     response.setHeader('Content-Type', mime[path.extname(target)] ?? 'application/octet-stream');
+    response.setHeader(
+      'Cache-Control',
+      target.endsWith('index.html') ? 'no-store' : 'public, max-age=3600',
+    );
     response.setHeader(
       'Content-Security-Policy',
       "worker-src 'self'; object-src 'none'; base-uri 'self'",
@@ -147,6 +153,17 @@ const until = async (predicate: () => unknown | Promise<unknown>, message: strin
 };
 
 try {
+  const loading = await checkLoading(
+    browser,
+    `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/worker-test/`,
+    metadata,
+    output,
+  );
+  console.log(
+    'Production loading/paint, responsive images, accessibility, delayed assets and Retry passed:',
+    JSON.stringify(loading),
+  );
+  await page.bringToFront();
   await page.goto(
     `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/worker-test/`,
   );
@@ -331,6 +348,7 @@ try {
     JSON.stringify(
       {
         status: 'ok',
+        loading,
         renderDelayMs,
         renderer,
         renderedMoved,

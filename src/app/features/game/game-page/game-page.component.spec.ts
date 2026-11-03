@@ -6,9 +6,10 @@ import type { GameClient, GameClientOptions } from '@game/client-api';
 import type { GameState } from '@contracts/game-state';
 import axe from 'axe-core';
 import { BehaviorSubject } from 'rxjs';
-import { GAME_CLIENT_FACTORY } from '../game-client-factory';
+import { GAME_CLIENT_LOADER } from '../game-client-factory';
 import { GameRuntimeService } from '../game-runtime.service';
 import { GamePageComponent } from './game-page.component';
+import { AFTER_PAINT } from '../../../shared/loading/after-paint';
 
 describe('GamePageComponent integration', () => {
   let fixture: ComponentFixture<GamePageComponent>;
@@ -40,7 +41,16 @@ describe('GamePageComponent integration', () => {
     factory = vi.fn(() => client);
     await TestBed.configureTestingModule({
       imports: [GamePageComponent],
-      providers: [{ provide: GAME_CLIENT_FACTORY, useValue: factory }],
+      providers: [
+        { provide: GAME_CLIENT_LOADER, useValue: async () => factory },
+        {
+          provide: AFTER_PAINT,
+          useValue: (work: () => void) => {
+            work();
+            return () => undefined;
+          },
+        },
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(GamePageComponent);
     runtime = fixture.componentInstance.gameRuntimeService;
@@ -271,6 +281,8 @@ describe('GamePageComponent integration', () => {
     const page = fixture.nativeElement as HTMLElement;
     const host = page.querySelector<HTMLElement>('.game-container')!;
     const indicator = page.querySelector<HTMLElement>('#focus-indicator')!;
+    states.next({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    fixture.detectChanges();
     expect(getComputedStyle(indicator).display).toBe('none');
     const canvas = document.createElement('canvas');
     canvas.tabIndex = 0;

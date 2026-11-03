@@ -1,7 +1,30 @@
 <h1 class="visually-hidden">Scrapworks</h1>
 
-<div #rendererHost class="game-container"></div>
-<app-notification-stack />
+<div
+  #rendererHost
+  class="game-container"
+  [attr.aria-busy]="gameRuntimeService.isBusy()"
+  [inert]="gameRuntimeService.isBusy() || !!gameRuntimeService.errorMessage()"
+></div>
+<app-notification-stack [attr.inert]="gameRuntimeService.isBusy() ? '' : null" />
+
+@if (gameRuntimeService.errorMessage(); as errorMessage) {
+  <app-loading-screen>
+    <p role="alert">{{ errorMessage }}</p>
+    <button type="button" class="button" data-retry (click)="gameRuntimeService.retry()">
+      Retry
+    </button>
+  </app-loading-screen>
+} @else if (gameRuntimeService.loading(); as loading) {
+  <app-loading-screen>
+    <app-loading-indicator
+      data-loading-focus
+      tabindex="-1"
+      [task]="loading.task"
+      [progress]="loading.progress"
+    />
+  </app-loading-screen>
+}
 
 @if (developer && gameRuntimeService.inspectorState().phase === 'open') {
   <button
@@ -13,38 +36,28 @@
   </button>
 }
 
-<div [hidden]="gameRuntimeService.inspectorState().phase === 'open'">
+<div
+  [hidden]="gameRuntimeService.inspectorState().phase === 'open'"
+  [inert]="gameRuntimeService.isBusy() || !!gameRuntimeService.errorMessage()"
+>
   @if (gameRuntimeService.currentSceneKey() !== 'Game') {
     <div class="menu-backdrop" aria-hidden="true"></div>
-    <div class="title-image">
-      <img ngSrc="assets/logo.png" width="1024" height="357" priority alt="Scrapworks" />
-    </div>
+    <app-menu-logo />
   }
 
-  @if (gameRuntimeService.errorMessage(); as errorMessage) {
+  @if (!gameRuntimeService.errorMessage() && gameRuntimeService.currentSceneKey() !== 'Game') {
     <div class="centre">
-      <p role="alert">{{ errorMessage }}</p>
-      <button type="button" class="button" data-retry (click)="gameRuntimeService.retry()">
-        Retry
+      <button
+        type="button"
+        class="button"
+        data-play
+        [disabled]="
+          !gameRuntimeService.isReady() || gameRuntimeService.currentSceneKey() !== 'MainMenu'
+        "
+        (click)="startGame()"
+      >
+        Play Game!
       </button>
-    </div>
-  } @else if (gameRuntimeService.currentSceneKey() !== 'Game' || gameRuntimeService.isLoading()) {
-    <div class="centre">
-      @if (gameRuntimeService.isLoading()) {
-        <p role="status">Loading game…</p>
-      }
-      @if (gameRuntimeService.currentSceneKey() !== 'Game') {
-        <button
-          type="button"
-          class="button"
-          [disabled]="
-            !gameRuntimeService.isReady() || gameRuntimeService.currentSceneKey() !== 'MainMenu'
-          "
-          (click)="startGame()"
-        >
-          Play Game!
-        </button>
-      }
     </div>
   }
   @if (developer && gameRuntimeService.state(); as state) {
@@ -89,7 +102,11 @@
   @if (gameRuntimeService.state().phase === 'paused') {
     <p class="paused-status" role="status">Game paused while the viewport is unavailable.</p>
   }
-  @if (gameRuntimeService.currentSceneKey() === 'Game') {
+  @if (
+    gameRuntimeService.currentSceneKey() === 'Game' &&
+    !gameRuntimeService.isBusy() &&
+    !gameRuntimeService.errorMessage()
+  ) {
     <app-field-kit />
     <div class="game-help" [hidden]="gameRuntimeService.fieldKitOpen()">
       <p>

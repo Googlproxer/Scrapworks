@@ -72,7 +72,7 @@ if (process.argv.includes('--build')) {
   }
   for (const file of await filesUnder(path.join(build, 'scene/assets'))) {
     const name = path.relative(path.join(build, 'scene'), file).split(path.sep).join('/');
-    if (!allowed.has(name))
+    if (!allowed.has(name) && !(name.endsWith('.br') && allowed.has(name.slice(0, -3))))
       throw new Error(`Unreferenced scene asset leaked into the build: ${name}`);
   }
   for (const entry of policy.retainedPublicAssets) {

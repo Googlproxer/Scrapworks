@@ -1,0 +1,19 @@
+<div class="loading-indicator">
+  <p class="loading-task" role="status" aria-live="polite" aria-atomic="true">{{ task() }}</p>
+  <div
+    class="loading-track"
+    role="progressbar"
+    [attr.aria-label]="task()"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [attr.aria-valuenow]="percentage()"
+    [class.loading-indeterminate]="percentage() === null"
+  >
+    <span class="loading-fill" [style.width.%]="percentage()" aria-hidden="true"></span>
+  </div>
+  <span class="loading-percentage" aria-hidden="true">
+    @if (percentage() !== null) {
+      {{ percentage() }}%
+    }
+  </span>
+</div>

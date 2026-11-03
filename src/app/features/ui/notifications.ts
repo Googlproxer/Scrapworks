@@ -40,7 +40,7 @@ const icons: Record<NotificationTone, string> = {
   info: 'i',
   success: '✓',
   warning: '!',
-  error: '×',
+  error: 'x',
 };
 
 /** UI lifetime only: queued notifications never run down their timeout. */

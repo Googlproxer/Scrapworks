@@ -4,6 +4,8 @@ Run these commands from the repository root after `yarn install --immutable`. Pa
 
 ## TypeScript tooling
 
+The [build coordinator](build/build.ts) exports scenes, forwards Angular build arguments, then generates quality-11 Brotli sidecars in the browser output. All package build commands use it, including CI's `yarn build --stats-json`. Run `node tools/build/compress.ts [browser-output-directory]` to regenerate sidecars independently. The [compression tests](build/compress.test.ts) check exact decompression, unchanged originals, repeat runs, stale sidecars and skipped media. Hosting remains separate; see the [production build instructions](../README.md#production-build).
+
 Repository tools and tests use TypeScript. Node 24.21.0 executes tool entry points directly; Vitest compiles and runs the Node test suites. Run `yarn test:tools` to strictly typecheck tools and runner configurations, then run compiler/export, source-alias resolution, coverage/reporting, build-metadata and lint-rule tests. `yarn test:lint` remains the focused lint-configuration/rule check with tool typechecking. Neither command runs laboratory trials. The benchmark projects also retain their separate TypeScript configurations.
 
 Prefer TypeScript for future tools, as recorded in [AGENTS.md](../AGENTS.md). Update imports, subprocess paths, package scripts, workflows and documentation when renaming an entry point. Node suites use the [shared Vitest defaults](testing/vitest-node.ts), including Vite's built-in tsconfig path resolution, a real Node environment, file isolation and automatic mock restoration. Browser entry points continue through Angular or Vite.
@@ -18,10 +20,10 @@ Use `yarn test:coverage:tools` for a separate HTML/LCOV/JSON tooling report, or 
 
 ## Occasional diagnostics
 
-| Purpose | Direct command | Prerequisites and output |
-| --- | --- | --- |
-| Check the live Babylon.js Editor connection | `node tools/editor-mcp/check.ts` | Open the project in the desktop Editor with its bridge enabled. Initializes MCP and reads the active scene; prints the result. See [Editor/MCP setup](../docs/plans/babylon-editor-setup.md). |
-| Inventory source, exported and built assets | `node tools/scenes/inventory.ts --output tmp/asset-audit/latest.json` | Run `yarn scenes:export` first; run `yarn build` if built-output figures are needed. Writes file sizes, hashes, manifest usage and duplicates to the ignored JSON report. |
+| Purpose                                         | Direct command                                                                | Prerequisites and output                                                                                                                                                                                                                     |
+| ----------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Check the live Babylon.js Editor connection     | `node tools/editor-mcp/check.ts`                                              | Open the project in the desktop Editor with its bridge enabled. Initializes MCP and reads the active scene; prints the result. See [Editor/MCP setup](../docs/plans/babylon-editor-setup.md).                                                |
+| Inventory source, exported and built assets     | `node tools/scenes/inventory.ts --output tmp/asset-audit/latest.json`         | Run `yarn scenes:export` first; run `yarn build` if built-output figures are needed. Writes file sizes, hashes, manifest usage and duplicates to the ignored JSON report.                                                                    |
 | Audit repository tracking and generated ignores | `node tools/cleanup/audit-repository.ts --output tmp/cleanup/repository.json` | Requires the Git checkout. Reads tracking/ignore state, reports untracked sources and writes ignored JSON; does not stage, commit or delete files. See [cleanup tools](cleanup/README.md) for the stricter opt-in `--require-tracked` check. |
 
 The Editor check also accepts `--list` to show tool definitions, or a tool name followed by JSON arguments. Check [the setup guide](../docs/plans/babylon-editor-setup.md) before using live scene tools.
@@ -30,18 +32,18 @@ The Editor check also accepts `--list` to show tool definitions, or a tool name 
 
 Use **Node 24.21.0**, the pinned Yarn install and Playwright's matching Chromium (`yarn test:setup`). These are opt-in experiments: normal CI runs no benchmark commands. Full measurements can take hours; keep them sequential and separate hosted-runner results from reference-desktop evidence. Reporting charts use the Python dependencies and environment options described in the laboratory guides.
 
-| Former package script | Direct replacement |
-| --- | --- |
-| `bench:ecs:check` | `node tools/ecs-bench/cli.ts check` |
-| `bench:ecs:smoke` | `node tools/ecs-bench/cli.ts smoke` |
-| `bench:ecs:node` | `node tools/ecs-bench/cli.ts node` |
-| `bench:ecs:browser` | `node tools/ecs-bench/cli.ts browser` |
-| `bench:ecs:full` | `node tools/ecs-bench/cli.ts full` |
-| `bench:ecs:report` | `node tools/ecs-bench/cli.ts report` |
-| `bench:worker:check` | `node tools/simulation-worker-bench/cli.ts check` |
-| `bench:worker:smoke` | `node tools/simulation-worker-bench/cli.ts smoke` |
+| Former package script  | Direct replacement                                  |
+| ---------------------- | --------------------------------------------------- |
+| `bench:ecs:check`      | `node tools/ecs-bench/cli.ts check`                 |
+| `bench:ecs:smoke`      | `node tools/ecs-bench/cli.ts smoke`                 |
+| `bench:ecs:node`       | `node tools/ecs-bench/cli.ts node`                  |
+| `bench:ecs:browser`    | `node tools/ecs-bench/cli.ts browser`               |
+| `bench:ecs:full`       | `node tools/ecs-bench/cli.ts full`                  |
+| `bench:ecs:report`     | `node tools/ecs-bench/cli.ts report`                |
+| `bench:worker:check`   | `node tools/simulation-worker-bench/cli.ts check`   |
+| `bench:worker:smoke`   | `node tools/simulation-worker-bench/cli.ts smoke`   |
 | `bench:worker:browser` | `node tools/simulation-worker-bench/cli.ts browser` |
-| `bench:worker:report` | `node tools/simulation-worker-bench/cli.ts report` |
+| `bench:worker:report`  | `node tools/simulation-worker-bench/cli.ts report`  |
 
 Append the same options previously passed to the package alias. `check` runs correctness checks; `smoke` adds small trials and does not qualify performance. ECS `node`/`browser` run one environment, while `full` includes both and the diagnostics. Worker `browser` runs the selected comparison or production qualification. `report` reads saved results without repeating measurements.
 

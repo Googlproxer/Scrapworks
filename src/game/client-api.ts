@@ -1,4 +1,5 @@
 import type { Observable } from 'rxjs';
+import type { LoadingStatus } from '@contracts/loading';
 import type {
   ActionFrameSink,
   GameInputPort,
@@ -25,6 +26,7 @@ export interface GameClientOptions {
 export interface GameClient {
   readonly input: GameInputPort;
   readonly state$: Observable<GameState>;
+  readonly loading$: Observable<LoadingStatus | null>;
   readonly selection$: Observable<WorldSelection>;
   readonly placementFeedback$: Observable<PlacementFeedback | null>;
   readonly inspectorState$: Observable<InspectorState>;

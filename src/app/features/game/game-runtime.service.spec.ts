@@ -19,8 +19,9 @@ import { GameSession } from '../../../session/game-session';
 import { InlineSimulationPort } from '../../../../tools/testing/inline-simulation-port';
 import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 import type { GameState } from '@contracts/game-state';
-import { GAME_CLIENT_FACTORY } from './game-client-factory';
+import { GAME_CLIENT_LOADER, type GameClientLoader } from './game-client-factory';
 import { GameRuntimeService } from './game-runtime.service';
+import { AFTER_PAINT, type AfterPaint } from '../../shared/loading/after-paint';
 
 describe('GameRuntimeService', () => {
   function createClient(connected: readonly ControllerInfo[] = []) {
@@ -81,27 +82,146 @@ describe('GameRuntimeService', () => {
     typeof vi.fn<(host: HTMLElement, options?: GameClientOptions) => GameClient>
   >;
   let service: GameRuntimeService;
+  let loader: ReturnType<typeof vi.fn<GameClientLoader>>;
+  let paint: ReturnType<typeof vi.fn<AfterPaint>>;
   let settings: { profile: ReturnType<typeof signal<BindingProfile>> };
 
   beforeEach(() => {
     factory = vi.fn<(host: HTMLElement, options?: GameClientOptions) => GameClient>();
+    loader = vi.fn(async () => factory);
+    paint = vi.fn((work) => {
+      work();
+      return () => undefined;
+    });
     settings = { profile: signal<BindingProfile>(structuredClone(defaultProfile)) };
     TestBed.configureTestingModule({
       providers: [
         GameRuntimeService,
         { provide: SIMULATION_PORT_FACTORY, useValue: () => new InlineSimulationPort() },
-        { provide: GAME_CLIENT_FACTORY, useValue: factory },
+        { provide: GAME_CLIENT_LOADER, useValue: loader },
+        { provide: AFTER_PAINT, useValue: paint },
         { provide: ControlSettingsService, useValue: settings },
       ],
     });
     service = TestBed.inject(GameRuntimeService);
   });
 
-  it('retains debug preferences through renderer Retry without advancing or unpausing the session', () => {
+  it('waits for paint before importing and cancels a pending mount', () => {
+    let painted: (() => void) | undefined;
+    const cancel = vi.fn();
+    paint.mockImplementationOnce((work) => {
+      painted = work;
+      return cancel;
+    });
+    const host = document.createElement('div');
+    service.mount(host);
+    service.mount(host);
+    expect(service.isBusy()).toBe(true);
+    expect(paint).toHaveBeenCalledOnce();
+    expect(loader).not.toHaveBeenCalled();
+    service.unmount();
+    painted?.();
+    expect(cancel).toHaveBeenCalledOnce();
+    expect(loader).not.toHaveBeenCalled();
+    expect(factory).not.toHaveBeenCalled();
+  });
+
+  it('does not construct a superseded renderer when its module finishes importing', async () => {
+    const oldFactory = vi.fn(() => createClient().client);
+    let finish: ((value: typeof factory) => void) | undefined;
+    loader.mockReturnValueOnce(
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+    );
+    service.mount(document.createElement('div'));
+    factory.mockReturnValue(createClient().client);
+    await mount(document.createElement('div'));
+    finish?.(oldFactory);
+    await Promise.resolve();
+    expect(oldFactory).not.toHaveBeenCalled();
+    expect(factory).toHaveBeenCalledOnce();
+  });
+
+  it('reports module import failures and retries the loader', async () => {
+    const error = new Error('Renderer module unavailable');
+    expectConsoleMessage('error', error);
+    loader.mockRejectedValueOnce(error);
+    await mount(document.createElement('div'));
+    expect(service.errorMessage()).toBe(error.message);
+    expect(service.isBusy()).toBe(false);
+    factory.mockReturnValue(createClient().client);
+    await retry();
+    expect(loader).toHaveBeenCalledTimes(2);
+    expect(factory).toHaveBeenCalledOnce();
+  });
+
+  it('keeps progress independent of input and covers a pause before the first ready frame', async () => {
+    const game = createClient();
+    factory.mockReturnValue(game.client);
+    await mount(document.createElement('div'));
+    game.input.setContext.mockClear();
+    const state = service.state();
+    game.notices.loading$.next({ task: 'Loading scene assets…', progress: 0.5 });
+    expect(service.loading()?.progress).toBe(0.5);
+    expect(service.state()).toBe(state);
+    expect(game.input.setContext).not.toHaveBeenCalled();
+    game.emit({ phase: 'paused', sceneKey: 'MainMenu', errorMessage: null });
+    expect(service.isBusy()).toBe(true);
+    game.notices.loading$.next(null);
+    expect(service.isBusy()).toBe(true);
+    game.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
+    expect(service.loading()).toBeNull();
+  });
+
+  it('covers a transition before dispatching and ignores the previous scene readiness', async () => {
+    const game = createClient();
+    factory.mockReturnValue(game.client);
+    await mount(document.createElement('div'));
+    game.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
+    let painted: (() => void) | undefined;
+    paint.mockImplementationOnce((work) => {
+      painted = work;
+      return () => undefined;
+    });
+    service.setScene('Game');
+    expect(service.isLoading()).toBe(true);
+    expect(game.input.setContext).toHaveBeenLastCalledWith('ui');
+    expect(game.setScene).not.toHaveBeenCalled();
+    game.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
+    expect(service.isLoading()).toBe(true);
+    service.setScene('Game');
+    painted?.();
+    expect(game.setScene).toHaveBeenCalledExactlyOnceWith('Game');
+    game.notices.loading$.next({ task: 'Loading character…', progress: 1 });
+    expect(service.isBusy()).toBe(true);
+    game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    expect(service.isBusy()).toBe(false);
+  });
+
+  it('cancels a queued scene change if the old viewport fails before it can paint', async () => {
+    const game = createClient();
+    factory.mockReturnValue(game.client);
+    await mount(document.createElement('div'));
+    game.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
+    let painted: (() => void) | undefined;
+    paint.mockImplementationOnce((work) => {
+      painted = work;
+      return () => undefined;
+    });
+    service.setScene('Game');
+    game.emit({ phase: 'error', sceneKey: 'MainMenu', errorMessage: 'Graphics context lost' });
+    expect(service.errorMessage()).toBe('Graphics context lost');
+    expect(service.isBusy()).toBe(false);
+    painted?.();
+    expect(game.setScene).not.toHaveBeenCalled();
+  });
+
+  it('retains debug preferences through renderer Retry without advancing or unpausing the session', async () => {
     const game = createClient();
     factory.mockReturnValueOnce(game.client).mockReturnValue(createClient().client);
     const host = document.createElement('div');
-    service.mount(host);
+    await mount(host);
     const first = factory.mock.calls[0][1]!;
     notifications(first).debugDrawStatus$.next({
       available: true,
@@ -116,7 +236,7 @@ describe('GameRuntimeService', () => {
     });
     expect(game.setInputEnabled).not.toHaveBeenCalled();
     game.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Renderer probe' });
-    service.retry();
+    await retry();
     expect(factory.mock.calls[1][1]!.debugDrawSettings).toEqual({
       enabled: true,
       disabledCategories: ['collision'],
@@ -127,12 +247,12 @@ describe('GameRuntimeService', () => {
     expect(service.debugDrawSettings().disabledCategories).toEqual([]);
   });
 
-  it('starts idle and projects loading, ready, and error states into readonly signals', () => {
+  it('starts idle and projects loading, ready, and error states into readonly signals', async () => {
     expect(service.state()).toEqual({ phase: 'idle', sceneKey: null, errorMessage: null });
     expect(service.isReady()).toBe(false);
     const game = createClient();
     factory.mockReturnValue(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     expect(service.isLoading()).toBe(true);
     expect(service.currentSceneKey()).toBe('MainMenu');
     game.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
@@ -142,12 +262,12 @@ describe('GameRuntimeService', () => {
     expect(service.isReady()).toBe(false);
   });
 
-  it('makes repeated mounts on the same host harmless', () => {
+  it('makes repeated mounts on the same host harmless', async () => {
     const game = createClient();
     factory.mockReturnValue(game.client);
     const host = document.createElement('div');
-    service.mount(host);
-    service.mount(host);
+    await mount(host);
+    await mount(host);
     expect(factory).toHaveBeenCalledExactlyOnceWith(
       host,
       expect.objectContaining({ session: expect.any(Object) }),
@@ -156,7 +276,7 @@ describe('GameRuntimeService', () => {
     expect(game.destroy).not.toHaveBeenCalled();
   });
 
-  it('retains requested controller selection for Controls and reapplies it on renderer retry', () => {
+  it('retains requested controller selection for Controls and reapplies it on renderer retry', async () => {
     const controllers: readonly ControllerInfo[] = [
       { id: 'xbox:0', type: 'xbox', slot: 0, name: 'First', selected: true },
       { id: 'dualsense:1', type: 'dualsense', slot: 1, name: 'Second', selected: false },
@@ -164,12 +284,12 @@ describe('GameRuntimeService', () => {
     const game = createClient(controllers);
     const replacement = createClient(controllers);
     factory.mockReturnValueOnce(game.client).mockReturnValueOnce(replacement.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     expect(service.selectedController()).toBeNull();
     service.selectController('dualsense:1');
     expect(service.selectedController()).toBe('dualsense:1');
     game.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Context lost' });
-    service.retry();
+    await retry();
     expect(service.selectedController()).toBe('dualsense:1');
     expect(replacement.input.selectController).toHaveBeenCalledWith('dualsense:1');
     service.selectController(null);
@@ -177,7 +297,7 @@ describe('GameRuntimeService', () => {
     expect(replacement.input.selectController).toHaveBeenLastCalledWith(null);
   });
 
-  it('reverts rejected controller requests and shows Automatic after the selected device disconnects', () => {
+  it('reverts rejected controller requests and shows Automatic after the selected device disconnects', async () => {
     const controller: ControllerInfo = {
       id: 'xbox:0',
       type: 'xbox',
@@ -187,7 +307,7 @@ describe('GameRuntimeService', () => {
     };
     const game = createClient([controller]);
     factory.mockReturnValue(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     service.selectController(controller.id);
     game.input.selectController.mockReturnValueOnce(false);
     service.selectController('missing:9');
@@ -196,16 +316,16 @@ describe('GameRuntimeService', () => {
     expect(service.selectedController()).toBeNull();
   });
 
-  it('retains a pre-mount input block and applies it to replacement clients', () => {
+  it('retains a pre-mount input block and applies it to replacement clients', async () => {
     const previous = createClient();
     const next = createClient();
     factory.mockReturnValueOnce(previous.client).mockReturnValueOnce(next.client);
 
     service.setInputEnabled(false);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     expect(previous.setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
 
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     expect(previous.destroy).toHaveBeenCalledOnce();
     expect(next.setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
     next.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
@@ -213,25 +333,25 @@ describe('GameRuntimeService', () => {
     expect(next.setInputEnabled.mock.calls).toEqual([[false], [true]]);
   });
 
-  it('retains the current dialog block when Retry replaces a failed client', () => {
+  it('retains the current dialog block when Retry replaces a failed client', async () => {
     const previous = createClient();
     const next = createClient();
     factory.mockReturnValueOnce(previous.client).mockReturnValueOnce(next.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     previous.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     service.setInputEnabled(false);
     previous.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Graphics failed' });
 
-    service.retry();
+    await retry();
 
     expect(previous.destroy).toHaveBeenCalledOnce();
     expect(next.setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
   });
 
-  it('forwards permission while ready and reports a renderer permission failure', () => {
+  it('forwards permission while ready and reports a renderer permission failure', async () => {
     const game = createClient();
     factory.mockReturnValue(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     expect(game.setInputEnabled).toHaveBeenCalledExactlyOnceWith(true);
     game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     service.setInputEnabled(false);
@@ -248,10 +368,10 @@ describe('GameRuntimeService', () => {
     });
   });
 
-  it('forwards a new input block to the existing client during loading', () => {
+  it('forwards a new input block to the existing client during loading', async () => {
     const game = createClient();
     factory.mockReturnValue(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     expect(service.isLoading()).toBe(true);
 
     service.setInputEnabled(false);
@@ -261,10 +381,10 @@ describe('GameRuntimeService', () => {
     expect(game.setInputEnabled).toHaveBeenLastCalledWith(false);
   });
 
-  it('forwards an input unblock during pause before the existing client resumes', () => {
+  it('forwards an input unblock during pause before the existing client resumes', async () => {
     const game = createClient();
     factory.mockReturnValue(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     service.setInputEnabled(false);
     game.emit({ phase: 'paused', sceneKey: 'Game', errorMessage: null });
@@ -277,16 +397,16 @@ describe('GameRuntimeService', () => {
     expect(game.setInputEnabled).toHaveBeenLastCalledWith(true);
   });
 
-  it('unsubscribes before destroying the old client and rejects stale callbacks after remounting', () => {
+  it('unsubscribes before destroying the old client and rejects stale callbacks after remounting', async () => {
     const previous = createClient();
     const next = createClient();
     factory.mockReturnValueOnce(previous.client).mockReturnValueOnce(next.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     previous.destroy.mockImplementation(() => {
       expect(previous.unsubscribe).toHaveBeenCalledOnce();
       previous.emit({ phase: 'stopped', sceneKey: null, errorMessage: null });
     });
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     next.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
     previous.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Old game' });
     expect(previous.destroy).toHaveBeenCalledOnce();
@@ -299,26 +419,26 @@ describe('GameRuntimeService', () => {
     expect(service.state()).toEqual({ phase: 'stopped', sceneKey: null, errorMessage: null });
   });
 
-  it('cleans up when its injector is destroyed even without component unmounting', () => {
+  it('cleans up when its injector is destroyed even without component unmounting', async () => {
     const game = createClient();
     factory.mockReturnValue(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     TestBed.resetTestingModule();
     expect(game.unsubscribe).toHaveBeenCalledOnce();
     expect(game.destroy).toHaveBeenCalledOnce();
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     expect(factory).toHaveBeenCalledOnce();
     expect(service.state().phase).toBe('stopped');
   });
 
-  it('reports factory failures and allows a later mount to retry', () => {
+  it('reports factory failures and allows a later mount to retry', async () => {
     const error = new Error('Renderer failed');
     expectConsoleMessage('error', error);
     factory.mockImplementationOnce(() => {
       throw error;
     });
     const host = document.createElement('div');
-    service.mount(host);
+    await mount(host);
     expect(service.state()).toEqual({
       phase: 'error',
       sceneKey: null,
@@ -326,7 +446,7 @@ describe('GameRuntimeService', () => {
     });
     const game = createClient();
     factory.mockReturnValue(game.client);
-    service.retry();
+    await retry();
     expect(service.state().phase).toBe('loading');
     expect(factory).toHaveBeenCalledTimes(2);
     expect(factory).toHaveBeenLastCalledWith(
@@ -335,14 +455,14 @@ describe('GameRuntimeService', () => {
     );
   });
 
-  it('retries an asynchronous load failure by replacing the failed client on the same host', () => {
+  it('retries an asynchronous load failure by replacing the failed client on the same host', async () => {
     const previous = createClient();
     const next = createClient();
     factory.mockReturnValueOnce(previous.client).mockReturnValueOnce(next.client);
     const host = document.createElement('div');
-    service.mount(host);
+    await mount(host);
     previous.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Missing model' });
-    service.retry();
+    await retry();
     expect(previous.unsubscribe).toHaveBeenCalledOnce();
     expect(previous.destroy).toHaveBeenCalledOnce();
     expect(factory).toHaveBeenLastCalledWith(
@@ -352,11 +472,11 @@ describe('GameRuntimeService', () => {
     next.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
     previous.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     expect(service.currentSceneKey()).toBe('MainMenu');
-    service.retry();
+    await retry();
     expect(factory).toHaveBeenCalledTimes(2);
   });
 
-  it('destroys a client if subscription setup fails', () => {
+  it('destroys a client if subscription setup fails', async () => {
     const error = new Error('Subscription failed');
     expectConsoleMessage('error', error);
     const game = createClient();
@@ -366,16 +486,16 @@ describe('GameRuntimeService', () => {
       },
     });
     factory.mockReturnValue(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     expect(game.destroy).toHaveBeenCalledOnce();
     expect(service.errorMessage()).toBe('Subscription failed');
   });
 
-  it('only forwards commands while ready and reports a thrown command', () => {
+  it('only forwards commands while ready and reports a thrown command', async () => {
     const game = createClient();
     factory.mockReturnValue(game.client);
     service.setScene('Game');
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     service.setScene('Game');
     expect(game.setScene).not.toHaveBeenCalled();
     game.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
@@ -384,7 +504,8 @@ describe('GameRuntimeService', () => {
     game.setScene.mockImplementation(() => {
       throw new Error('Command failed');
     });
-    service.setScene('Game');
+    game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+    service.setScene('MainMenu');
     expect(service.errorMessage()).toBe('Command failed');
     service.setScene('Game');
     service.unmount();
@@ -411,14 +532,24 @@ describe('GameRuntimeService', () => {
     states: { menu: { kind: 'button', held: true, pressed: true, released: false } },
   };
 
+  async function mount(host: HTMLElement): Promise<void> {
+    service.mount(host);
+    await Promise.resolve();
+  }
+
+  async function retry(): Promise<void> {
+    service.retry();
+    await Promise.resolve();
+  }
+
   function currentOptions(): GameClientOptions {
     return factory.mock.calls.at(-1)![1]!;
   }
 
-  function mountWorld() {
+  async function mountWorld() {
     const game = createClient();
     factory.mockReturnValueOnce(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     currentOptions().session!.initialize(definition);
     game.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
     return { game, options: currentOptions(), bridge: currentOptions().session! };
@@ -438,8 +569,8 @@ describe('GameRuntimeService', () => {
     return view;
   }
 
-  it('pins the completed view before submitting the next authoritative batch', () => {
-    const { bridge } = mountWorld();
+  it('pins the completed view before submitting the next authoritative batch', async () => {
+    const { bridge } = await mountWorld();
     const callback = vi.fn();
     bridge.registerCompletedTickHandler(callback);
     expect(bridge.frame(0.05, { x: 1, z: 0 }, false, true).tick).toBe(0);
@@ -450,9 +581,9 @@ describe('GameRuntimeService', () => {
     expect(callback).toHaveBeenCalledOnce();
   });
 
-  it('observes preference changes even if its initial effect ran before mounting', () => {
+  it('observes preference changes even if its initial effect ran before mounting', async () => {
     TestBed.tick();
-    const { game } = mountWorld();
+    const { game } = await mountWorld();
     const next = structuredClone(defaultProfile);
     settings.profile.set(next);
     TestBed.tick();
@@ -461,8 +592,8 @@ describe('GameRuntimeService', () => {
 
   it.each(['permission', 'focus', 'capture', 'scene', 'controller', 'inspector'] as const)(
     'stops dispatching an old action frame after a listener changes %s ownership',
-    (change) => {
-      const { options } = mountWorld();
+    async (change) => {
+      const { options } = await mountWorld();
       const next = vi.fn();
       service.subscribeActions(() => {
         if (change === 'permission') service.setInputEnabled(false);
@@ -479,11 +610,11 @@ describe('GameRuntimeService', () => {
     },
   );
 
-  it('rejects old action, world, selection and controller callbacks after remount', () => {
-    const previous = mountWorld();
+  it('rejects old action, world, selection and controller callbacks after remount', async () => {
+    const previous = await mountWorld();
     const action = vi.fn();
     service.subscribeActions(action);
-    const next = mountWorld();
+    const next = await mountWorld();
     const view = render(next.bridge, 0, { x: 0, z: 0 }, false, true);
     notifications(next.options).selection$.next({ kind: 'entity', id: 'new' });
     previous.options.actions.dispatch(actionFrame);
@@ -500,8 +631,8 @@ describe('GameRuntimeService', () => {
     expect(previous.game.unsubscribeControllers).toHaveBeenCalledOnce();
   });
 
-  it('suspends gameplay and page actions for Inspector while preserving other ownership requests', () => {
-    const { game, options, bridge } = mountWorld();
+  it('suspends gameplay and page actions for Inspector while preserving other ownership requests', async () => {
+    const { game, options, bridge } = await mountWorld();
     const listener = vi.fn();
     service.subscribeActions(listener);
     render(bridge, 0.025, { x: 1, z: 0 }, false, true);
@@ -525,8 +656,8 @@ describe('GameRuntimeService', () => {
     expect(render(bridge, 0.025, { x: 1, z: 0 }, false, true).tick).toBe(1);
   });
 
-  it('keeps Inspector load failures separate from game errors and clears diagnostics on unmount', () => {
-    const { options } = mountWorld();
+  it('keeps Inspector load failures separate from game errors and clears diagnostics on unmount', async () => {
+    const { options } = await mountWorld();
     notifications(options).inspectorState$.next({
       phase: 'error',
       errorMessage: 'Chunk unavailable',
@@ -540,9 +671,9 @@ describe('GameRuntimeService', () => {
     expect(service.inspectorActive()).toBe(false);
   });
 
-  it('prevents old renderer session callbacks from advancing or changing the current world', () => {
-    const previous = mountWorld();
-    const next = mountWorld();
+  it('prevents old renderer session callbacks from advancing or changing the current world', async () => {
+    const previous = await mountWorld();
+    const next = await mountWorld();
     const before = render(next.bridge, 0, { x: 0, z: 0 }, false, true);
     previous.bridge.initialize({ ...definition, id: 'superseded' });
     expect(render(previous.bridge, 2, { x: 1, z: 1 }, true, true)).toEqual(before);
@@ -553,10 +684,10 @@ describe('GameRuntimeService', () => {
     expect(render(next.bridge, 0, { x: 0, z: 0 }, false, true)).toEqual(before);
   });
 
-  it('registers ordered tick callbacks only after the current world is initialized', () => {
+  it('registers ordered tick callbacks only after the current world is initialized', async () => {
     const game = createClient();
     factory.mockReturnValue(game.client);
-    service.mount(document.createElement('div'));
+    await mount(document.createElement('div'));
     const bridge = currentOptions().session!;
     const premature = vi.fn();
     bridge.registerCompletedTickHandler(premature)();
@@ -573,7 +704,7 @@ describe('GameRuntimeService', () => {
     expect(calls).toEqual(['first:1', 'later:1', 'first:2', 'later:2']);
   });
 
-  it('removes old tick handlers before renderer teardown and ignores delayed old cleanup after remount', () => {
+  it('removes old tick handlers before renderer teardown and ignores delayed old cleanup after remount', async () => {
     const register = GameSession.prototype.registerCompletedTickHandler;
     const removals: ReturnType<typeof vi.fn<() => void>>[] = [];
     vi.spyOn(GameSession.prototype, 'registerCompletedTickHandler').mockImplementation(function (
@@ -585,7 +716,7 @@ describe('GameRuntimeService', () => {
       removals.push(remove);
       return remove;
     });
-    const previous = mountWorld();
+    const previous = await mountWorld();
     const oldHandler = vi.fn();
     const stopOld = previous.bridge.registerCompletedTickHandler(oldHandler);
     render(previous.bridge, 0.1, { x: 1, z: 0 }, false, true);
@@ -595,7 +726,7 @@ describe('GameRuntimeService', () => {
       // Inspector disposal can delay the scene script's own unsubscribe.
       cleanupAfterInspector = stopOld;
     });
-    const next = mountWorld();
+    const next = await mountWorld();
     const newHandler = vi.fn();
     next.bridge.registerCompletedTickHandler(newHandler);
     const staleRegistration = vi.fn();
@@ -612,13 +743,13 @@ describe('GameRuntimeService', () => {
     expect(newHandler).toHaveBeenCalledTimes(2);
   });
 
-  it('preserves a healthy session through renderer Retry and clears partial elapsed time', () => {
-    const previous = mountWorld();
+  it('preserves a healthy session through renderer Retry and clears partial elapsed time', async () => {
+    const previous = await mountWorld();
     const before = render(previous.bridge, 0.125, { x: 1, z: 0 }, false, true);
     previous.game.emit({ phase: 'error', sceneKey: 'Game', errorMessage: 'Graphics failed' });
     const replacement = createClient();
     factory.mockReturnValueOnce(replacement.client);
-    service.retry();
+    await retry();
     const bridge = currentOptions().session!;
     bridge.initialize(definition);
     replacement.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
@@ -628,8 +759,8 @@ describe('GameRuntimeService', () => {
     expect(render(bridge, 0.025, { x: 0, z: 0 }, false, true).tick).toBe(before.tick + 1);
   });
 
-  it('restarts from the authored world after a completed presentation hook fails', () => {
-    const previous = mountWorld();
+  it('restarts from the authored world after a completed presentation hook fails', async () => {
+    const previous = await mountWorld();
     render(previous.bridge, 0.05, { x: 1, z: 0 }, false, true);
     const failure = new Error('Player tick failed');
     const handler = vi.fn(() => {
@@ -641,7 +772,7 @@ describe('GameRuntimeService', () => {
     previous.game.emit({ phase: 'error', sceneKey: 'Game', errorMessage: failure.message });
     const replacement = createClient();
     factory.mockReturnValueOnce(replacement.client);
-    service.retry();
+    await retry();
     const bridge = currentOptions().session!;
     bridge.initialize(definition);
     replacement.emit({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
@@ -662,8 +793,8 @@ describe('GameRuntimeService', () => {
     'unmount',
   ] as const)(
     'aborts tick dispatch and its remaining catch-up when a tick handler changes %s ownership',
-    (change) => {
-      const { options, bridge } = mountWorld();
+    async (change) => {
+      const { options, bridge } = await mountWorld();
       const next = vi.fn();
       bridge.registerCompletedTickHandler(() => {
         if (change === 'permission') service.setInputEnabled(false);
@@ -685,8 +816,8 @@ describe('GameRuntimeService', () => {
 
   it.each(['permission', 'capture'] as const)(
     'owns the session pause while %s blocks gameplay and resets partial elapsed time',
-    (reason) => {
-      const { bridge } = mountWorld();
+    async (reason) => {
+      const { bridge } = await mountWorld();
       render(bridge, 0.025, { x: 1, z: 0 }, false, true);
       let stop: (() => void) | undefined;
       if (reason === 'permission') service.setInputEnabled(false);
@@ -702,8 +833,8 @@ describe('GameRuntimeService', () => {
     },
   );
 
-  it('keeps simulation running with UI focus while blocking movement and gameplay presentation hooks', () => {
-    const { bridge } = mountWorld();
+  it('keeps simulation running with UI focus while blocking movement and gameplay presentation hooks', async () => {
+    const { bridge } = await mountWorld();
     const callback = vi.fn();
     bridge.registerCompletedTickHandler(callback);
     service.setUiFocused(true);
@@ -717,8 +848,8 @@ describe('GameRuntimeService', () => {
     );
   });
 
-  it('picks up deliberately selected ground items only while the world owns input', () => {
-    const { options, bridge } = mountWorld();
+  it('picks up deliberately selected ground items only while the world owns input', async () => {
+    const { options, bridge } = await mountWorld();
     const view = render(bridge, 0, { x: 0, z: 0 }, false, true);
     vi.spyOn(service, 'world').mockReturnValue({
       ...view,
@@ -735,8 +866,8 @@ describe('GameRuntimeService', () => {
     expect(command).not.toHaveBeenCalled();
   });
 
-  it('gives error/loading/paused lifecycle screens the UI context for controller recovery', () => {
-    const { game } = mountWorld();
+  it('gives error/loading/paused lifecycle screens the UI context for controller recovery', async () => {
+    const { game } = await mountWorld();
     expect(game.input.setContext).toHaveBeenLastCalledWith('gameplay');
     for (const phase of ['error', 'loading', 'paused'] as const) {
       game.emit({
@@ -748,8 +879,8 @@ describe('GameRuntimeService', () => {
     }
   });
 
-  it('does not let an old capture disposer or callback cancel or edit a newer capture', () => {
-    const { game } = mountWorld();
+  it('does not let an old capture disposer or callback cancel or edit a newer capture', async () => {
+    const { game } = await mountWorld();
     const first = vi.fn();
     const stopFirst = service.captureBinding(first);
     const oldCallback = game.input.captureBinding.mock.calls.at(-1)![0];

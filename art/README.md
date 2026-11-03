@@ -2,14 +2,14 @@
 
 Editable art projects, source assets, references, exact prompts and provenance live here. The [Art Document](../docs/art/README.md) owns the current visual direction.
 
-| Directory or record | Contents |
-| --- | --- |
-| [characters/](characters/) | Character identity/finish references, editable model sources and the [current v3 animated runtime derivative](characters/Protag/v3/runtime/README.md). |
-| [world/](world/) | Environmental progression concepts. |
-| [machinery/](machinery/) | Machine and production progression concepts. |
-| [branding/](branding/) | Logo source, exact prompt and preparation record. |
-| [ui/](ui/) | Cursor source, exact prompt and preparation record. |
-| [generation.json](generation.json) | Exact generation prompts and input/output provenance for the retained concepts. |
+| Directory or record                | Contents                                                                                                                                               |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [characters/](characters/)         | Character identity/finish references, editable model sources and the [current v3 animated runtime derivative](characters/Protag/v3/runtime/README.md). |
+| [world/](world/)                   | Environmental progression concepts.                                                                                                                    |
+| [machinery/](machinery/)           | Machine and production progression concepts.                                                                                                           |
+| [branding/](branding/)             | Logo source, exact prompt and preparation record.                                                                                                      |
+| [ui/](ui/)                         | Cursor source, exact prompt and preparation record; original menu backdrop and its conversion record.                                                  |
+| [generation.json](generation.json) | Exact generation prompts and input/output provenance for the retained concepts.                                                                        |
 
 Keep project files, source textures, previews, available licensing and provenance together. Preserve original sources when making runtime derivatives and document their preparation. Current automation lives in [tools/art/](../tools/art/). Active Editor scenes/imports remain in `assets/`, live runtime derivatives in `public/assets/`, and generated scene exports in ignored `public/scene/`.
 

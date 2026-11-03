@@ -1,3 +1,13 @@
 <main id="app">
-  <router-outlet />
+  <router-outlet (activate)="routeActivated.set(true)" />
+  @if (!routeActivated()) {
+    <app-loading-screen>
+      @if (startupFailed()) {
+        <p role="alert">Scrapworks could not start. Reload to try again.</p>
+        <a class="button" href="">Reload</a>
+      } @else {
+        <app-loading-indicator task="Starting Scrapworks…" />
+      }
+    </app-loading-screen>
+  }
 </main>

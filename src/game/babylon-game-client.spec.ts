@@ -8,6 +8,7 @@ import { Material } from '@babylonjs/core/Materials/material';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type { GameClientOptions } from '@game/client-api';
 import type { GameState } from '@contracts/game-state';
+import type { LoadingStatus } from '@contracts/loading';
 import { defaultProfile, type BindingProfile } from '@contracts/input';
 import type { WorldView } from '@contracts/world';
 import { GameSession } from '../../tools/testing/inline-game-session';
@@ -57,6 +58,101 @@ describe('BabylonGameClient in the browser', () => {
     for (const created of clients) created.destroy();
     host.remove();
     vi.restoreAllMocks();
+  });
+
+  it('reports task progress separately from lifecycle state and finishes after the first frame', async () => {
+    startClient();
+    await waitForMenu();
+    const loading: (LoadingStatus | null)[] = [];
+    client.loading$.subscribe((status) => loading.push(status));
+    client.setScene('Game');
+    const report = loadSceneFn.mock.lastCall![2]!;
+    const phaseCount = states.length;
+    report(Number.NaN);
+    expect(loading.at(-1)?.progress).toBeNull();
+    report(0.4);
+    report(0.2);
+    report(Number.POSITIVE_INFINITY);
+    expect(loading.at(-1)?.progress).toBe(0.4);
+    report(2);
+    expect(loading.at(-1)?.progress).toBe(1);
+    expect(states).toHaveLength(phaseCount);
+    expect(states.at(-1)?.phase).toBe('loading');
+    await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('ready');
+    expect(loading.at(-1)).toBeNull();
+    expect(loading.map((status) => status?.task)).toEqual(
+      expect.arrayContaining([
+        'Loading world data…',
+        'Starting simulation…',
+        'Loading character…',
+        'Preparing scene…',
+        'Drawing first frame…',
+      ]),
+    );
+  });
+
+  it('does not start the next task if a progress subscriber destroys the client', async () => {
+    startClient();
+    await waitForMenu();
+    const fetchWorld = vi.spyOn(window, 'fetch');
+    client.loading$.subscribe((status) => {
+      if (status?.task === 'Loading world data…') client.destroy();
+    });
+    client.setScene('Game');
+    await expect.poll(() => states.at(-1)?.phase).toBe('stopped');
+    expect(fetchWorld).not.toHaveBeenCalled();
+  });
+
+  it.each(['ready', 'error'] as const)(
+    'preserves new progress when a %s subscriber immediately changes scenes',
+    async (phase) => {
+      startClient();
+      await waitForMenu();
+
+      let release = () => undefined as void;
+
+      const menuGate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const load = loadSceneFn.getMockImplementation()!;
+      loadSceneFn.mockImplementation(async (scene, key, progress) => {
+        if (key === 'MainMenu') await menuGate;
+        if (key === 'Game' && phase === 'error') throw new Error('Scene failure fixture');
+        return load(scene, key, progress);
+      });
+      let latest: LoadingStatus | null = null;
+      client.loading$.subscribe((status) => {
+        latest = status;
+      });
+      client.state$.subscribe((state) => {
+        if (state.sceneKey === 'Game' && state.phase === phase) client.setScene('MainMenu');
+      });
+      client.setScene('Game');
+      await expect
+        .poll(() => states.at(-1))
+        .toMatchObject({ sceneKey: 'MainMenu', phase: 'loading' });
+      expect(latest).toEqual({ task: 'Loading main menu…', progress: null });
+      release();
+      await waitForMenu();
+    },
+  );
+
+  it('ignores asset progress belonging to a superseded scene', async () => {
+    startClient();
+    await waitForMenu();
+    let latest: LoadingStatus | null = null;
+    client.loading$.subscribe((status) => {
+      latest = status;
+    });
+    client.setScene('Game');
+    const oldReport = loadSceneFn.mock.lastCall![2]!;
+    client.setScene('MainMenu');
+    const current = latest;
+    oldReport(0.9);
+    expect(latest).toBe(current);
+    client.destroy();
+    oldReport(1);
+    expect(latest).toBe(current);
   });
 
   it('rolls back the renderer and subscriptions when resize observation cannot be registered', () => {

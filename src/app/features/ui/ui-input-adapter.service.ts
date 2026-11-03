@@ -147,11 +147,16 @@ export class UiInputAdapterService {
   }
 
   public openMenu(): void {
-    if (!this.runtime.inspectorActive() && this.runtime.currentSceneKey() === 'Game')
+    if (
+      !this.runtime.isBusy() &&
+      !this.runtime.inspectorActive() &&
+      this.runtime.currentSceneKey() === 'Game'
+    )
       this.ui.openUIDialog('game-menu', GameMenuComponent, { ariaLabelledBy: 'game-menu-title' });
   }
 
   private dispatch(frame: ActionFrame): void {
+    if (this.runtime.isBusy()) return;
     if (this.runtime.inspectorActive()) {
       this.lastDirection = '';
       this.nextRepeat = 0;

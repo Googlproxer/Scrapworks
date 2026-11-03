@@ -6,10 +6,55 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="preload" fetchpriority="high" as="image" href="assets/logo.png" />
+    <link
+      rel="preload"
+      fetchpriority="high"
+      as="image"
+      type="image/webp"
+      href="assets/logo-640.webp"
+      imagesrcset="assets/logo-320.webp 320w, assets/logo-640.webp 640w, assets/logo-1024.webp 1024w"
+      imagesizes="(max-width: 914px) 70vw, 640px"
+    />
   </head>
 
   <body>
-    <app-root></app-root>
+    <app-root>
+      <main class="loading-screen" aria-label="Starting Scrapworks">
+        <div class="menu-backdrop" aria-hidden="true"></div>
+        <div class="title-image">
+          <img
+            src="assets/logo-640.webp"
+            srcset="
+              assets/logo-320.webp   320w,
+              assets/logo-640.webp   640w,
+              assets/logo-1024.webp 1024w
+            "
+            sizes="(max-width: 914px) 70vw, 640px"
+            width="1024"
+            height="357"
+            fetchpriority="high"
+            alt="Scrapworks"
+          />
+        </div>
+        <div class="loading-content">
+          <div class="loading-indicator">
+            <p id="startup-task" class="loading-task" role="status">Starting Scrapworks…</p>
+            <div
+              id="startup-progress"
+              class="loading-track loading-indeterminate"
+              role="progressbar"
+              aria-label="Starting Scrapworks"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <span class="loading-fill" aria-hidden="true"></span>
+            </div>
+            <span class="loading-percentage" aria-hidden="true"></span>
+            <a id="startup-reload" class="button" href="" hidden>Reload</a>
+          </div>
+          <noscript>Scrapworks needs JavaScript to run. Please enable it and reload.</noscript>
+        </div>
+      </main>
+    </app-root>
   </body>
 </html>

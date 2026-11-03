@@ -7,7 +7,7 @@ export default mergeConfig(
   defineConfig({
     test: {
       include: [
-        'tools/{architecture,coverage,eslint,scenes,world,testing}/**/*.test.ts',
+        'tools/{architecture,build,coverage,eslint,scenes,world,testing}/**/*.test.ts',
         'tools/ecs-bench/verify-production.test.ts',
       ],
       coverage: coverageOptions('tooling'),

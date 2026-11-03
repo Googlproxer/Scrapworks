@@ -4,12 +4,20 @@
   "excludedPublicAssets": [],
   "retainedPublicAssets": [
     {
-      "path": "assets/bg.png",
-      "consumer": "src/app/features/game/game-page/game-page.component.scss"
+      "path": "assets/bg.webp",
+      "consumer": "src/app/shared/loading/_loading.scss"
     },
     {
-      "path": "assets/logo.png",
-      "consumer": "src/app/features/game/game-page/game-page.component.html"
+      "path": "assets/logo-320.webp",
+      "consumer": "src/app/shared/loading/menu-logo/menu-logo.component.html"
+    },
+    {
+      "path": "assets/logo-640.webp",
+      "consumer": "src/app/shared/loading/menu-logo/menu-logo.component.html"
+    },
+    {
+      "path": "assets/logo-1024.webp",
+      "consumer": "src/app/shared/loading/menu-logo/menu-logo.component.html"
     },
     {
       "path": "assets/models/protagonist-v3.glb",

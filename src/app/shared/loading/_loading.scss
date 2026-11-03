@@ -1,0 +1,106 @@
+// The production builder inlines rules matching the document fallback.
+.loading-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  background: #0c1313;
+  color: #f1f5f3;
+  font:
+    1rem/1.5 system-ui,
+    sans-serif;
+}
+
+.menu-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgb(12 19 19 / 15%), rgb(12 19 19 / 65%)),
+    url('/assets/bg.webp') center/cover;
+  pointer-events: none;
+}
+
+.title-image {
+  position: absolute;
+  left: 50%;
+  top: 14%;
+  transform: translateX(-50%);
+  width: min(70vw, 640px);
+  pointer-events: none;
+}
+
+.title-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.loading-content {
+  position: absolute;
+  top: 66%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(28rem, calc(100% - 32px));
+  text-align: center;
+}
+
+.loading-indicator {
+  display: block;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #101916;
+  color: #f1f5f3;
+}
+
+.loading-task {
+  margin: 0 0 0.75rem;
+}
+.loading-content:has([role='alert']) {
+  box-sizing: border-box;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: #101916;
+}
+.loading-track {
+  height: 0.375rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #53665f;
+}
+.loading-fill {
+  display: block;
+  height: 100%;
+  background: #0ec3c9;
+}
+.loading-indeterminate .loading-fill {
+  width: 40%;
+  animation: loading-travel 1.2s ease-in-out infinite alternate;
+}
+.loading-percentage {
+  display: block;
+  min-height: 1.5em;
+  font-variant-numeric: tabular-nums;
+}
+@keyframes loading-travel {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(150%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loading-indeterminate .loading-fill {
+    animation: none;
+    transform: translateX(75%);
+  }
+}
+
+@media (max-height: 440px) {
+  .loading-content {
+    top: auto;
+    bottom: 8px;
+    max-height: 45%;
+    overflow: auto;
+  }
+}

@@ -1,6 +1,6 @@
-import type { WorldView } from '@contracts/world';
+import { OPENING_RECIPES, OPENING_TECHNOLOGIES } from '@content/opening';
 import type { SessionEvent } from '@contracts/session-event';
-import { OPENING_TECHNOLOGIES, OPENING_RECIPES } from '../../../content/opening';
+import type { WorldView } from '@contracts/world';
 import type { NotificationCenter } from './notifications';
 import { minifabStatus } from './opening-labels';
 

@@ -26,8 +26,14 @@ import { FrameOwnershipChanged } from './views/world-frame';
 import type { DebugDrawSettings } from '@contracts/debug-draw';
 import { debugDrawForScene } from './debug/draw/debug-draw';
 import type { SceneDebugDraw } from './debug/draw/types';
+import { loadingProgress, type LoadingStatus } from '@contracts/loading';
 
 export class BabylonGameClient implements GameClient {
+  private readonly loadingSource = new BehaviorSubject<LoadingStatus | null>({
+    task: 'Starting 3D renderer…',
+    progress: null,
+  });
+  public readonly loading$ = this.loadingSource.asObservable();
   private readonly selectionSource = new BehaviorSubject<WorldSelection>(null);
   private readonly placementSource = new BehaviorSubject<PlacementFeedback | null>(null);
   private readonly inspectorSource = new BehaviorSubject<InspectorState>({
@@ -238,6 +244,7 @@ export class BabylonGameClient implements GameClient {
     this.placementSource.complete();
     this.inspectorSource.complete();
     this.debugSource.complete();
+    this.loadingSource.complete();
   }
 
   private cleanup(): void {
@@ -320,7 +327,12 @@ export class BabylonGameClient implements GameClient {
       this.unsubscribeDebug = debug.subscribe((status) => {
         if (this.isCurrentTransition(transition)) this.debugSource.next(status);
       });
-      const assets = await this.loadSceneFn(scene, key);
+      const sceneTask = key === 'Game' ? 'Loading game scene…' : 'Loading main menu…';
+      this.reportLoading(sceneTask);
+      if (!this.isCurrentTransition(transition)) return;
+      const assets = await this.loadSceneFn(scene, key, (progress) => {
+        if (this.isCurrentTransition(transition)) this.reportLoading(sceneTask, progress);
+      });
       if (!this.isCurrentTransition(transition)) {
         assets.dispose();
         return;
@@ -330,6 +342,8 @@ export class BabylonGameClient implements GameClient {
       if (key === 'Game') {
         const abort = new AbortController();
         this.worldAbort = abort;
+        this.reportLoading('Loading world data…');
+        if (!this.isCurrentTransition(transition)) return;
         const response = await fetch(
           new URL('scene/worlds/game.json', this.ownerDocument.baseURI),
           { signal: abort.signal },
@@ -338,7 +352,11 @@ export class BabylonGameClient implements GameClient {
         const definition: unknown = await response.json();
         assertWorldDefinition(definition);
         if (!this.isCurrentTransition(transition)) return;
+        this.reportLoading('Starting simulation…');
+        if (!this.isCurrentTransition(transition)) return;
         await this.options.session.initialize(definition);
+        if (!this.isCurrentTransition(transition)) return;
+        this.reportLoading('Loading character…');
         if (!this.isCurrentTransition(transition)) return;
         const world = await WorldScene.create(
           scene,
@@ -350,7 +368,11 @@ export class BabylonGameClient implements GameClient {
             selection: this.selectionSource,
             placementFeedback: this.placementSource,
           },
-          this.loadCharacterFn,
+          (owner) =>
+            this.loadCharacterFn(owner, (progress) => {
+              if (this.isCurrentTransition(transition))
+                this.reportLoading('Loading character…', progress);
+            }),
         );
         if (!this.isCurrentTransition(transition)) {
           world.dispose();
@@ -359,7 +381,11 @@ export class BabylonGameClient implements GameClient {
         this.definition = definition;
         this.world = world;
       }
+      this.reportLoading('Preparing scene…');
+      if (!this.isCurrentTransition(transition)) return;
       await scene.whenReadyAsync();
+      if (!this.isCurrentTransition(transition)) return;
+      this.reportLoading('Drawing first frame…');
       if (!this.isCurrentTransition(transition)) return;
       this.scenePrepared = true;
       this.clock.reset();
@@ -371,6 +397,18 @@ export class BabylonGameClient implements GameClient {
 
   private isCurrentTransition(transition: number): boolean {
     return !this.destroyed && this.transition === transition;
+  }
+
+  private reportLoading(task: string, progress?: number): void {
+    if (this.destroyed || this.hasError) return;
+    const previous = this.loadingSource.value;
+    this.loadingSource.next({
+      task,
+      progress:
+        progress === undefined
+          ? null
+          : loadingProgress(previous?.task === task ? previous.progress : null, progress),
+    });
   }
 
   private canRender(): boolean {
@@ -463,6 +501,7 @@ export class BabylonGameClient implements GameClient {
     const sceneKey = this.currentKey;
     this.suspendWorld();
     if (!this.isCurrentTransition(transition)) return;
+    const failedTransition = ++this.transition;
     this.disposeCurrentScene();
     this.inputManager.clear();
     this.stateSubject.next({
@@ -470,6 +509,8 @@ export class BabylonGameClient implements GameClient {
       sceneKey,
       errorMessage: error instanceof Error ? error.message : String(error),
     });
+    if (!this.isCurrentTransition(failedTransition)) return;
+    this.loadingSource.next(null);
     this.reconcileActivity();
   }
 
@@ -523,6 +564,8 @@ export class BabylonGameClient implements GameClient {
         return;
       const state = this.stateSubject.value;
       if (state.phase !== 'ready') this.stateSubject.next({ ...state, phase: 'ready' });
+      if (this.isCurrentTransition(transition) && this.loadingSource.value !== null)
+        this.loadingSource.next(null);
     } catch (error) {
       if (!(error instanceof FrameOwnershipChanged) && this.isCurrentTransition(transition))
         this.reportError(error);

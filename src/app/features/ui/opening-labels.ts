@@ -1,5 +1,5 @@
+import { OPENING_RECIPES } from '@content/opening';
 import type { OpeningView } from '@contracts/opening';
-import { OPENING_RECIPES } from '../../../content/opening';
 
 export function minifabStatus(mini: OpeningView['state']['minifab']): string {
   switch (mini.status) {
