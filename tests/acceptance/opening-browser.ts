@@ -8,6 +8,12 @@ import type { OpeningView } from '../../src/contracts/opening.ts';
 import type { WorldPosition } from '../../src/contracts/world.ts';
 import type { EngineStore } from '@babylonjs/core';
 import { readJson, type BuildMetadata } from '../../tools/shared.ts';
+import {
+  installBrowserEvents,
+  installWorkerEvents,
+  nextWorkerReply,
+  workerVersion,
+} from './browser-events.ts';
 
 interface Probe {
   opening: OpeningView;
@@ -67,6 +73,7 @@ await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 const page = await context.newPage();
+await installBrowserEvents(page, engineStoreChunk);
 if (virtualTime) await page.clock.install();
 const errors: string[] = [];
 page.on('pageerror', (error) => errors.push(String(error)));
@@ -87,6 +94,7 @@ try {
   const created = page.waitForEvent('worker');
   await play.click();
   const worker = await created;
+  await installWorkerEvents(worker);
   await worker.evaluate(() => {
     const scope = globalThis as unknown as {
       openingProbe?: Probe;
@@ -115,6 +123,7 @@ try {
     const deadline = performance.now() + timeout;
     let stamp: number | undefined;
     let advanced = 0;
+    let version = await workerVersion(worker);
     if (virtualTime) {
       // Freeze Date momentarily so pauseAt cannot race browser/RPC latency.
       // The game's monotonic clock is controlled through Playwright, not game hooks.
@@ -133,8 +142,12 @@ try {
           advanced += 250;
           virtualAdvanceMs += 250;
           // Let real worker messages and host promise continuations run between batches.
-          await page.waitForTimeout(0);
-        } else await page.waitForTimeout(100);
+          await worker.evaluate(() => undefined);
+        } else {
+          version = (
+            await nextWorkerReply(worker, version, Math.max(1, deadline - performance.now()))
+          ).version;
+        }
       }
       await page.screenshot({ path: path.join(output, 'failure.png'), fullPage: true });
       throw new Error(`Timed out: ${label}; ${JSON.stringify(await read())}`);
@@ -154,13 +167,14 @@ try {
   const verifyFocusPause = async () => {
     // Chromium headless reports all tabs focused, even after bringToFront/CDP focus emulation.
     // Inject only the browser focus signal; never alter session/world state or time.
+    const beforeBlur = await workerVersion(worker);
     await page.evaluate(() => {
       Object.defineProperty(document, 'hasFocus', { configurable: true, value: () => false });
       window.dispatchEvent(new Event('blur'));
     });
-    await page.waitForTimeout(300);
+    await nextWorkerReply(worker, beforeBlur, 30000, false);
     const pausedTick = (await read()).tick;
-    await page.waitForTimeout(600);
+    await page.evaluate(() => window.testEvents.frames(12));
     assert.equal((await read()).tick, pausedTick);
     await page.evaluate(() => {
       Reflect.deleteProperty(document, 'hasFocus');
@@ -173,27 +187,33 @@ try {
   assert(initial.opening.bag.slots.every((slot) => slot === null));
   assert.equal(initial.opening.tool, null);
   assert.deepEqual(initial.opening.ledgers, {});
-  const inspectPresentation = () =>
-    page.evaluate(async (file) => {
-      if (!file) throw new Error('EngineStore chunk missing');
-      const module: Record<string, unknown> = await import(new URL(file, document.baseURI).href);
-      const store = Object.values(module).find(
-        (value): value is typeof EngineStore =>
-          !!value &&
-          typeof value === 'function' &&
-          'Instances' in value &&
-          'LastCreatedEngine' in value,
-      );
-      const scene = store?.LastCreatedEngine?.scenes.at(-1);
-      if (!scene) throw new Error('Rendered scene missing');
-      const idle = scene.animationGroups.find((clip) => clip.name === 'Idle');
-      return {
-        frame: scene.getFrameId(),
-        idlePlaying: idle?.isPlaying,
-        idleWeight: idle?.animatables[0]?.weight,
-        clipsPaused: scene.animationGroups.every((clip) => !clip.isPlaying),
-      };
-    }, engineStoreChunk);
+  const inspectPresentation = (settleIdle = false) =>
+    page.evaluate(
+      async ({ file, settleIdle }) => {
+        if (!file) throw new Error('EngineStore chunk missing');
+        const module: Record<string, unknown> = await import(new URL(file, document.baseURI).href);
+        const store = Object.values(module).find(
+          (value): value is typeof EngineStore =>
+            !!value &&
+            typeof value === 'function' &&
+            'Instances' in value &&
+            'LastCreatedEngine' in value,
+        );
+        const scene = store?.LastCreatedEngine?.scenes.at(-1);
+        if (!scene) throw new Error('Rendered scene missing');
+        const idle = scene.animationGroups.find((clip) => clip.name === 'Idle');
+        await window.testEvents.frame(
+          () => !settleIdle || (!!idle?.isPlaying && (idle.animatables[0]?.weight ?? 0) > 0.99),
+        );
+        return {
+          frame: scene.getFrameId(),
+          idlePlaying: idle?.isPlaying,
+          idleWeight: idle?.animatables[0]?.weight,
+          clipsPaused: scene.animationGroups.every((clip) => !clip.isPlaying),
+        };
+      },
+      { file: engineStoreChunk, settleIdle },
+    );
   const verifyGameplayUi = async () => {
     await page.locator('canvas').focus();
     const beforeMovement = await read();
@@ -214,10 +234,10 @@ try {
     }
     const kit = page.locator('#field-kit');
     await kit.waitFor();
-    await page.waitForTimeout(650);
+    await until((probe) => !probe.moving, 'movement stops with gameplay UI');
+    const idle = await inspectPresentation(true);
     const stopped = await read();
-    const idle = await inspectPresentation();
-    await page.waitForTimeout(250);
+    await until((probe) => probe.tick > stopped.tick, 'gameplay UI keeps simulation active');
     const next = await read();
     const rendered = await inspectPresentation();
     assert(next.tick > stopped.tick, 'Gameplay UI must keep the worker active');
@@ -238,11 +258,12 @@ try {
     await page.getByRole('tab', { name: 'Research', exact: true }).click();
     assert.deepEqual(await kit.boundingBox(), box, 'Tab switch must retain kit geometry');
     await page.screenshot({ path: path.join(output, 'field-kit-research.png'), fullPage: true });
+    const beforePause = await workerVersion(worker);
     await page.getByRole('button', { name: 'Menu', exact: true }).click();
-    await page.waitForTimeout(250);
+    await nextWorkerReply(worker, beforePause, 30000, false);
     const paused = (await read()).tick;
     assert((await inspectPresentation()).clipsPaused, 'Pause menu must pause animation');
-    await page.waitForTimeout(250);
+    await page.evaluate(() => window.testEvents.frames(12));
     assert.equal((await read()).tick, paused);
     await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'Close', exact: true }).click();
@@ -437,7 +458,7 @@ try {
     await handle.focus();
     for (const key of ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp']) {
       await page.keyboard.press(key);
-      await page.waitForTimeout(150);
+      await page.evaluate(() => window.testEvents.frame());
     }
     await until(
       (probe) => probe.opening.state.minifab.charge > 11.9,
@@ -446,6 +467,7 @@ try {
     );
     const held = (await read()).opening.state.minifab.charge;
     await page.keyboard.down('ArrowUp');
+    // Deliberate hold exercises keyboard auto-repeat suppression.
     await page.waitForTimeout(800);
     await page.keyboard.up('ArrowUp');
     assert.equal((await read()).opening.state.minifab.charge, held);
@@ -466,6 +488,7 @@ try {
     for (let step = 1; step <= 16; step++) {
       const next = point(step);
       await page.mouse.move(next.x, next.y);
+      // Gesture velocity is part of the winding contract; keep the physical cadence.
       await page.waitForTimeout(45);
     }
     await page.mouse.up();
@@ -475,8 +498,9 @@ try {
       5000,
     );
     const afterPointer = (await read()).opening.state.minifab.charge;
+    const beforeClickTick = (await read()).tick;
     await handle.click();
-    await page.waitForTimeout(300);
+    await until((probe) => probe.tick >= beforeClickTick + 4, 'click processed without winding');
     assert.equal((await read()).opening.state.minifab.charge, afterPointer);
     await handle.screenshot({ path: path.join(output, 'winding.png') });
     await page.screenshot({ path: path.join(output, 'field-kit.png'), fullPage: true });

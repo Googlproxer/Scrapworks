@@ -25,6 +25,42 @@ Foundation tests exercise actual opening commands and production player/deposit/
 
 [Physics boundary regressions](../src/simulation/physics/physics-boundaries.test.ts) cover native/ECS configuration disagreement without replacing the active world, terrain/entity identity separation, elevated salvage overflow capture/continuation/pickup, and independent presentation collection invalidation. Native corruption fixtures edit detached bytes through Rapier's public API; they add no simulation mutation hooks. The renderer ground-item tests cover elevation, stable meshes, removal and skipped scans for unchanged arrays.
 
+## Waiting for asynchronous work
+
+Browser and Node suites, tooling tests, opt-in laboratory tests and acceptance probes were
+audited together for readiness polling. Subscribe before triggering an action when it can
+complete synchronously. Use the operation's promise, Angular signal/stability notifications,
+client lifecycle stream, focus event, worker reply or completed renderer frame as appropriate.
+The [state wait helpers](../src/testing/wait-for-state.ts) fail on unexpected terminal client
+states and release one-shot subscriptions. Regression tests cover synchronous re-entry,
+failure, completion and teardown.
+
+The [acceptance event helpers](acceptance/browser-events.ts) observe DOM mutations, completed
+engine frames and real worker request/reply exchanges. Worker activity acknowledgements are
+matched by request ID before pause checks; either listener can run first. These diagnostics
+exist only in the probe's browser/worker context. Success does not depend on an interval or
+sleep. Test-runner limits and standalone-probe watchdogs remain failure bounds for missing
+events, with listener cleanup on success, failure and renderer disposal.
+
+Time remains explicit where it is the behavior under test:
+
+- Notification expiry and worker transport timeout tests advance fake timers.
+- Session backpressure uses a controlled transport gate and the session's settled promise.
+- Zero-delay task barriers drain Babylon's deferred observer removal and RxJS error reporting.
+- Walk/sprint speed samples, brief turning taps and recording windows, winding gesture cadence,
+  keyboard repeat suppression, deliberate render stalls and relaxed opening pacing retain
+  their measured durations. They do not stand in for readiness signals.
+- Opening virtual-time mode advances bounded clock batches and yields to worker evaluation;
+  real-time opening waits are driven by worker replies. Deterministic simulation tests step
+  the simulation directly.
+- Laboratory correctness probes that test the autonomous worker clock and cancellation of
+  deliberately delayed work retain observation windows. Benchmark sampling durations and
+  performance-run watchdogs retain their measurement contracts.
+
+Playwright locator actionability and document/navigation events remain appropriate for UI
+and loading assertions. Negative pause/reload assertions observe an acknowledged boundary
+followed by subsequent renderer frames; a finite observation does not prove indefinite absence.
+
 ## Coverage
 
 `yarn test:coverage` runs the normal tooling suites plus both game environments and creates two reports. Use `yarn test:coverage:game` for Angular/Chromium and Node game coverage, or `yarn test:coverage:tools` for tooling coverage. Coverage is opt-in locally; ordinary test commands stay available. Both coverage commands keep the existing strict typechecks.

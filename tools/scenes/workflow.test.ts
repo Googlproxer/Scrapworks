@@ -13,8 +13,6 @@ import { projectRoot } from './inventory.ts';
 import { exportQueue, watchAuthoring } from './watch.ts';
 import { fixtureMarkers } from '../world/test-fixture.ts';
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 async function fixture(run: (root: string) => Promise<unknown>) {
   const parent = await fs.realpath(path.join(projectRoot, 'tmp'));
   const root = await fs.mkdtemp(path.join(parent, 'workflow-test-'));

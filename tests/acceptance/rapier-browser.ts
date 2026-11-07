@@ -1,3 +1,4 @@
+import { installBrowserEvents } from './browser-events.ts';
 /** Actual keyboard input against the worker-backed playable physics scene. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -5,12 +6,14 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { chromium } from 'playwright';
 import type { WorldDefinition } from '../../src/contracts/world.ts';
+import { installWorkerEvents, nextWorkerReply, workerVersion } from './browser-events.ts';
 
 const origin = process.argv[2] ?? 'http://127.0.0.1:4319';
 const output = path.resolve(process.argv[3] ?? 'tmp/rapier-browser');
 await fs.mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await installBrowserEvents(page);
 const errors: string[] = [];
 page.on('pageerror', (error) => errors.push(error.message));
 const inspect = () =>
@@ -37,19 +40,25 @@ try {
   await page.goto(origin);
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
-  await page.waitForFunction(
-    () =>
-      ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world()?.bodies
-        ?.length === 6,
+  await page.evaluate(() =>
+    window.testEvents.dom(
+      () =>
+        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world()?.bodies
+          ?.length === 6,
+    ),
   );
   assert.equal(page.workers().length, 1, 'One authoritative worker');
   const initial = await inspect();
+  const worker = page.workers()[0];
+  await installWorkerEvents(worker);
   await page.getByText('Debug drawings', { exact: true }).click();
   await page.getByLabel('Show debug drawings', { exact: true }).check();
-  await page.waitForFunction(
-    () =>
-      ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().tick >=
-      20,
+  await page.evaluate(() =>
+    window.testEvents.frame(
+      () =>
+        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().tick >=
+        20,
+    ),
   );
   const settled = await inspect();
   assert.equal(settled.meshes.length, 6);
@@ -61,14 +70,14 @@ try {
   await page.locator('canvas').focus();
   await page.keyboard.down('KeyW');
   try {
-    await page.waitForFunction(
-      () =>
-        ng
-          .getComponent(document.querySelector('app-game-page'))
-          .gameRuntimeService.world()
-          .bodies!.find((body) => body.id === 'physics-crate')!.position.z > 4.25,
-      undefined,
-      { timeout: 10000 },
+    await page.evaluate(() =>
+      window.testEvents.frame(
+        () =>
+          ng
+            .getComponent(document.querySelector('app-game-page'))
+            .gameRuntimeService.world()
+            .bodies!.find((body) => body.id === 'physics-crate')!.position.z > 4.25,
+      ),
     );
   } finally {
     await page.keyboard.up('KeyW');
@@ -76,21 +85,26 @@ try {
   const pushed = await inspect();
   assert(pushed.world.player.position.z > initial.world.player.position.z);
   await page.screenshot({ path: path.join(output, 'pushed.png'), fullPage: true });
+  const beforePause = await workerVersion(worker);
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.getByRole('button', { name: 'Resume game', exact: true }).waitFor();
-  await page.waitForTimeout(200);
+  await nextWorkerReply(worker, beforePause, 30000, false);
+  await page.evaluate(() => window.testEvents.frame());
   const paused = await inspect();
-  await page.waitForTimeout(300);
+  await page.evaluate(() => window.testEvents.frames(10));
   assert.deepEqual(
     (await inspect()).world,
     paused.world,
     'Pause freezes physics and gameplay together',
   );
   await page.getByRole('button', { name: 'Resume game', exact: true }).click();
-  await page.waitForFunction(
+  await page.evaluate(
     (tick) =>
-      ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().tick >
-      tick,
+      window.testEvents.frame(
+        () =>
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().tick >
+          tick,
+      ),
     paused.world.tick,
   );
   await page.addScriptTag({ path: createRequire(import.meta.url).resolve('axe-core/axe.min.js') });
@@ -106,19 +120,24 @@ try {
   await page.reload();
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
-  await page.waitForFunction(
-    () =>
-      ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world()?.bodies
-        ?.length === 6,
+  await page.evaluate(() =>
+    window.testEvents.dom(
+      () =>
+        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world()?.bodies
+          ?.length === 6,
+    ),
   );
   const beside = await inspect();
   assert(Math.abs(beside.world.player.position.x + 4.1) < 0.01);
   const sideContact = [];
   for (const tick of [80, 160]) {
-    await page.waitForFunction(
+    await page.evaluate(
       (target) =>
-        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().tick >=
-        target,
+        window.testEvents.frame(
+          () =>
+            ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world()
+              .tick >= target,
+        ),
       tick,
     );
     const state = await inspect();
@@ -132,10 +151,12 @@ try {
   await page.locator('canvas').focus();
   await page.keyboard.down('KeyS');
   try {
-    await page.waitForFunction(
-      () =>
-        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().player
-          .position.z < 0.5,
+    await page.evaluate(() =>
+      window.testEvents.frame(
+        () =>
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().player
+            .position.z < 0.5,
+      ),
     );
   } finally {
     await page.keyboard.up('KeyS');

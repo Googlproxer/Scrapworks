@@ -1,9 +1,11 @@
+import { installBrowserEvents } from './browser-events.ts';
 // Development integration probe. Uses Angular's debug access only in the local dev build.
 import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { Vector3, Matrix } from '@babylonjs/core';
 import assert from 'node:assert/strict';
+import { installWorkerEvents, nextWorkerReply, workerVersion } from './browser-events.ts';
 
 const origin = process.argv[2] ?? 'http://localhost:4317';
 const output = process.argv[3] ?? 'tmp/migration-browser';
@@ -17,6 +19,7 @@ try {
       deviceScaleFactor: scale,
     });
     const page = await context.newPage();
+    await installBrowserEvents(page);
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
 
@@ -69,18 +72,23 @@ try {
     await page.getByRole('dialog').waitFor({ state: 'hidden' });
     await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
     await page.getByText('Loading game…', { exact: true }).waitFor({ state: 'hidden' });
-    await page.waitForFunction(
-      () =>
-        !!document.querySelector('app-game-page') &&
-        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world() !==
-          null &&
-        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.isReady(),
+    await page.evaluate(() =>
+      window.testEvents.dom(
+        () =>
+          !!document.querySelector('app-game-page') &&
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world() !==
+            null &&
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.isReady(),
+      ),
     );
     await page.waitForLoadState('networkidle');
     const canvas = page.locator('canvas');
+    const worker = page.workers()[0];
+    await installWorkerEvents(worker);
     await canvas.focus();
-    await page.waitForTimeout(100);
+    await page.evaluate(() => window.testEvents.frame());
     const initial = await position();
+    // Deliberate input durations measure walk/sprint speed, rather than readiness.
     await page.keyboard.down('w');
     await page.waitForTimeout(1000);
     await page.keyboard.up('w');
@@ -102,27 +110,66 @@ try {
     await page.mouse.move(box.x + 750, box.y + 400, { steps: 12 });
     await page.mouse.up({ button: 'right' });
     await page.mouse.wheel(0, 200);
-    await page.waitForTimeout(350);
+    await page.evaluate(
+      (before) =>
+        window.testEvents.frame(() => {
+          const camera = ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService
+            .client.currentScene.activeCamera;
+          return (
+            Math.abs(camera.alpha - before.alpha) > 0.1 &&
+            Math.abs(camera.radius - before.radius) > 1
+          );
+        }),
+      beforeCamera,
+    );
     const afterCamera = await camera();
     console.log('camera', beforeCamera, afterCamera);
     assert(Math.abs(afterCamera.alpha - beforeCamera.alpha) > 0.1, 'right drag orbits');
     assert(Math.abs(afterCamera.radius - beforeCamera.radius) > 1, 'wheel zooms');
     assert.equal(afterCamera.fov, beforeCamera.fov);
     await page.keyboard.down('w');
-    await page.waitForTimeout(100);
+    await page.evaluate(() =>
+      window.testEvents.frame(
+        () =>
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().player
+            .moving,
+      ),
+    );
+    const beforePause = await workerVersion(worker);
     await page.keyboard.press('Escape');
     const dialog = page.getByRole('dialog');
     await dialog.waitFor();
+    await nextWorkerReply(worker, beforePause, 30000, false);
+    await page.evaluate(() => window.testEvents.frame());
     const paused = await state();
-    await page.waitForTimeout(300);
+    await page.evaluate(() => window.testEvents.frames(10));
     assert.equal((await state()).tick, paused.tick, 'modal pauses session');
     await page.getByRole('button', { name: 'Resume game', exact: true }).click();
     const resumed = await position();
-    await page.waitForTimeout(300);
+    const resumedTick = (await state()).tick;
+    await page.evaluate(
+      (tick) =>
+        window.testEvents.frame(
+          () =>
+            ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world()
+              .tick >=
+            tick + 4,
+        ),
+      resumedTick,
+    );
     assert(distance(resumed, await position()) < 0.001, 'held movement suppressed after resume');
     await page.keyboard.up('w');
     await page.keyboard.down('w');
-    await page.waitForTimeout(200);
+    await page.evaluate(
+      (before) =>
+        window.testEvents.frame(() => {
+          const position = ng
+            .getComponent(document.querySelector('app-game-page'))
+            .gameRuntimeService.world().player.position;
+          return Math.hypot(position.x - before.x, position.z - before.z) > 0.1;
+        }),
+      resumed,
+    );
     await page.keyboard.up('w');
     assert(distance(resumed, await position()) > 0.1, 'release and repress resumes movement');
     await page.getByRole('button', { name: 'Controls', exact: true }).click();
@@ -215,15 +262,17 @@ try {
     await page.getByRole('button', { name: 'Save controls', exact: true }).click();
     await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
     await page.getByText('Loading game…', { exact: true }).waitFor({ state: 'hidden' });
-    await page.waitForFunction(
-      () =>
-        !!document.querySelector('app-game-page') &&
-        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world() !==
-          null &&
-        ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.isReady(),
+    await page.evaluate(() =>
+      window.testEvents.dom(
+        () =>
+          !!document.querySelector('app-game-page') &&
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world() !==
+            null &&
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.isReady(),
+      ),
     );
     await canvas.focus();
-    await page.waitForTimeout(200);
+    await page.evaluate(() => window.testEvents.frame());
     // Project a known free cell through the actual authored camera to exercise CSS/display-scale picking.
     const target = await runtime(() => {
       const r = ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService;
@@ -246,13 +295,35 @@ try {
     });
     await page.mouse.move(target.x, target.y);
     await page.keyboard.press('b');
-    await page.waitForTimeout(100);
+    await page.evaluate(() =>
+      window.testEvents.dom(
+        () =>
+          document.querySelector('.game-help')?.textContent?.includes('Placement available') ??
+          false,
+      ),
+    );
     assert.match(await page.locator('.game-help').innerText(), /Placement available/);
     await page.mouse.click(target.x, target.y);
-    await page.waitForTimeout(150);
+    await page.evaluate(() =>
+      window.testEvents.frame(
+        () =>
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world()
+            .buildings.length === 1,
+      ),
+    );
     assert.equal((await state()).buildings.length, 1, 'developer fixture places via command');
     await page.mouse.click(target.x, target.y);
-    await page.waitForTimeout(100);
+    const placedTick = (await state()).tick;
+    await page.evaluate(
+      (tick) =>
+        window.testEvents.frame(
+          () =>
+            ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world()
+              .tick >=
+            tick + 2,
+        ),
+      placedTick,
+    );
     assert.equal((await state()).buildings.length, 1, 'occupied placement rejected');
     await page.keyboard.press('b');
     await page.screenshot({ path: path.join(output, `perspective-dpr${scale}.png`) });
@@ -266,7 +337,7 @@ try {
       c.orthoLeft = -800 * aspect;
       c.orthoRight = 800 * aspect;
     });
-    await page.waitForTimeout(150);
+    await page.evaluate(() => window.testEvents.frame());
     await page.screenshot({ path: path.join(output, `orthographic-comparison-dpr${scale}.png`) });
     await runtime(
       () =>
@@ -275,7 +346,17 @@ try {
         ).gameRuntimeService.client.currentScene.activeCamera.mode = 0),
     );
     await page.setViewportSize({ width: 640, height: 480 });
-    await page.waitForTimeout(200);
+    await page.evaluate(() =>
+      window.testEvents.frame(() => {
+        const engine = ng
+          .getComponent(document.querySelector('app-game-page'))
+          .gameRuntimeService.client.currentScene.getEngine();
+        return (
+          Math.abs(engine.getRenderWidth() / engine.getRenderHeight() - innerWidth / innerHeight) <
+          0.001
+        );
+      }),
+    );
     await page.screenshot({ path: path.join(output, `resize-dpr${scale}.png`) });
     await page.addScriptTag({ path: 'node_modules/axe-core/axe.min.js' });
     const axeViolations = await page.evaluate(async () =>

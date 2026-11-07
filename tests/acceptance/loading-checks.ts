@@ -4,6 +4,7 @@ import path from 'node:path';
 import type { Browser, Page } from 'playwright';
 import type axe from 'axe-core';
 import type { BuildMetadata } from '../../tools/shared.ts';
+import { installBrowserEvents } from './browser-events.ts';
 
 interface PaintProbe {
   fcp: number;
@@ -64,9 +65,7 @@ function startupChunks(metadata: BuildMetadata) {
 }
 
 async function menuReady(page: Page) {
-  await page.waitForFunction(
-    () => !!document.querySelector<HTMLButtonElement>('[data-play]:not(:disabled)'),
-  );
+  await page.getByRole('button', { name: 'Play Game!', exact: true }).click({ trial: true });
 }
 
 async function accessible(page: Page, source: string) {
@@ -131,6 +130,7 @@ export async function checkLoading(
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     try {
       const page = await context.newPage();
+      await installBrowserEvents(page);
       const errors: string[] = [];
       page.on('pageerror', (error) => errors.push(String(error)));
       const session = await context.newCDPSession(page);
@@ -169,8 +169,22 @@ export async function checkLoading(
       });
       const navigation = page.goto(url);
       await page.getByText('Starting Scrapworks…', { exact: true }).waitFor();
-      await page.waitForFunction(
-        () => performance.getEntriesByName('first-contentful-paint').length > 0,
+      await page.evaluate(
+        () =>
+          new Promise<void>((resolve, reject) => {
+            const watchdog = setTimeout(() => {
+              observer.disconnect();
+              reject(new Error('First-contentful-paint event was not delivered'));
+            }, 30000);
+            const observer = new PerformanceObserver((list) => {
+              if (list.getEntries().some((entry) => entry.name === 'first-contentful-paint')) {
+                clearTimeout(watchdog);
+                observer.disconnect();
+                resolve();
+              }
+            });
+            observer.observe({ type: 'paint', buffered: true });
+          }),
       );
       await accessible(page, axeSource);
       release();
@@ -206,7 +220,7 @@ export async function checkLoading(
         );
         assert(
           sample.rendererRequest > sample.fcp,
-          'The renderer module must be requested after first paint',
+          `The renderer module must be requested after first paint: ${JSON.stringify({ cpuRate, attempt, sample })}`,
         );
         if (cached)
           assert.equal(sample.rendererTransferSize, 0, 'Warm startup must use the cached renderer');

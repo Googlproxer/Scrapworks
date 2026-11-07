@@ -3,6 +3,12 @@ import type { RuntimeReply } from '../../src/contracts/simulation.ts';
 import type { EngineStore } from '@babylonjs/core';
 import { readJson, type BuildMetadata } from '../../tools/shared.ts';
 import { checkLoading } from './loading-checks.ts';
+import {
+  installBrowserEvents,
+  installWorkerEvents,
+  nextWorkerReply,
+  workerVersion,
+} from './browser-events.ts';
 
 interface RendererStats {
   meshes: number;
@@ -80,6 +86,7 @@ const server = http.createServer(async (request, response) => {
 await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+await installBrowserEvents(page, engineStoreChunk);
 if (renderDelayMs) {
   // Diagnostic mode delays only browser render callbacks. Input events, the worker
   // and authoritative simulation time are untouched. Preserve callback cancellation.
@@ -119,6 +126,7 @@ page.on('requestfailed', (request) =>
 );
 
 async function attachProbe(worker: Worker) {
+  await installWorkerEvents(worker);
   await worker.evaluate(() => {
     globalThis.productionProbe = { tick: 0, first: null, position: null };
     const scope = globalThis as unknown as {
@@ -143,11 +151,18 @@ async function attachProbe(worker: Worker) {
   });
 }
 
-const until = async (predicate: () => unknown | Promise<unknown>, message: string) => {
+const until = async (
+  worker: Worker,
+  predicate: (probe: typeof globalThis.productionProbe) => boolean,
+  message: string,
+) => {
   const deadline = performance.now() + 30000;
+  let version = await workerVersion(worker);
   while (performance.now() < deadline) {
-    if (await predicate()) return;
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    const probe = await worker.evaluate(() => globalThis.productionProbe);
+    if (predicate(probe)) return probe;
+    version = (await nextWorkerReply(worker, version, Math.max(1, deadline - performance.now())))
+      .version;
   }
   throw new Error(message);
 };
@@ -168,20 +183,14 @@ try {
     `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/worker-test/`,
   );
   await page.getByRole('button', { name: 'Play Game!', exact: true }).waitFor();
-  await until(
-    () => page.getByRole('button', { name: 'Play Game!', exact: true }).isEnabled(),
-    'Menu not ready',
-  );
+  await page.getByRole('button', { name: 'Play Game!', exact: true }).click({ trial: true });
   const created = page.waitForEvent('worker');
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
   const worker = await created;
   currentWorker = worker;
   assert(worker.url().includes('/worker-test/worker-'));
   await attachProbe(worker);
-  await until(
-    async () => (await worker.evaluate(() => globalThis.productionProbe)).tick >= 2,
-    'Production worker did not step',
-  );
+  await until(worker, (probe) => probe.tick >= 2, 'Production worker did not step');
   const initial = await worker.evaluate(() => globalThis.productionProbe);
   assert.equal(await page.getByText('Debug drawings', { exact: true }).count(), 0);
   assert.equal(await page.getByLabel('Show debug drawings', { exact: true }).count(), 0);
@@ -242,28 +251,35 @@ try {
   await page.keyboard.down('KeyW');
   let movingTick = initial.tick;
   try {
-    await until(async () => {
-      const probe = await worker.evaluate(() => globalThis.productionProbe);
-      movingTick = probe.tick;
-      return (
-        !!probe.position &&
-        !!initial.position &&
-        Math.hypot(probe.position.x - initial.position.x, probe.position.z - initial.position.z) >
-          0.05
-      );
-    }, 'Held keyboard input did not produce authoritative movement');
+    await until(
+      worker,
+      (probe) => {
+        movingTick = probe.tick;
+        return (
+          !!probe.position &&
+          !!initial.position &&
+          Math.hypot(probe.position.x - initial.position.x, probe.position.z - initial.position.z) >
+            0.05
+        );
+      },
+      'Held keyboard input did not produce authoritative movement',
+    );
   } finally {
     await page.keyboard.up('KeyW');
   }
-  await until(async () => {
-    const probe = await worker.evaluate(() => globalThis.productionProbe);
-    return probe.tick > movingTick && probe.moving === false;
-  }, 'Key release did not stop authoritative movement');
+  await until(
+    worker,
+    (probe) => {
+      return probe.tick > movingTick && probe.moving === false;
+    },
+    'Key release did not stop authoritative movement',
+  );
   const moved = await worker.evaluate(() => globalThis.productionProbe);
   let renderedMoved = await inspectRenderer();
-  await until(async () => {
+  const renderDeadline = performance.now() + 30000;
+  while (true) {
     renderedMoved = await inspectRenderer();
-    return (
+    if (
       !!moved.position &&
       'player' in renderedMoved &&
       !!renderedMoved.player &&
@@ -271,8 +287,13 @@ try {
         renderedMoved.player[0] - moved.position.x,
         renderedMoved.player[2] - moved.position.z,
       ) < 0.001
+    )
+      break;
+    assert(
+      performance.now() < renderDeadline,
+      'Rendered player did not converge to the completed worker position',
     );
-  }, 'Rendered player did not converge to the completed worker position');
+  }
   assert.notDeepEqual(moved.position, initial.position);
   assert(moved.position && 'player' in renderedMoved && renderedMoved.player);
   assert(
@@ -282,10 +303,11 @@ try {
     ) < 0.001,
   );
   stage = 'menu pause';
+  const beforePause = await workerVersion(worker);
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await page.waitForTimeout(150);
+  await nextWorkerReply(worker, beforePause, 30000, false);
   const paused = await worker.evaluate(() => globalThis.productionProbe);
-  await page.waitForTimeout(400);
+  await page.evaluate(() => window.testEvents.frames(12));
   assert.equal((await worker.evaluate(() => globalThis.productionProbe)).tick, paused.tick);
   await page.screenshot({ path: path.join(output, 'paused.png') });
   await page.getByRole('button', { name: 'Resume game', exact: true }).click();
@@ -299,22 +321,17 @@ try {
   );
   await page.getByRole('alert').waitFor();
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
-  await until(
-    () => page.getByRole('button', { name: 'Play Game!', exact: true }).isEnabled(),
-    'Graphics Retry not ready',
-  );
+  await page.getByRole('button', { name: 'Play Game!', exact: true }).click({ trial: true });
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
-  await until(
-    async () => (await worker.evaluate(() => globalThis.productionProbe)).tick > paused.tick,
-    'Retained worker did not resume',
-  );
+  await until(worker, (probe) => probe.tick > paused.tick, 'Retained worker did not resume');
   assert.equal(page.workers().length, 1);
   assert.equal(page.workers()[0], worker);
   const healthyRetry = await worker.evaluate(() => globalThis.productionProbe);
   assert.deepEqual(healthyRetry.position, moved.position);
   stage = 'worker failure and authored Retry';
+  const beforeCrashPause = await workerVersion(worker);
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await page.waitForTimeout(150);
+  await nextWorkerReply(worker, beforeCrashPause, 30000, false);
   // Error injection only in this diagnostic process. No authority or assets are edited.
   await worker.evaluate(() =>
     setTimeout(() => {
@@ -324,24 +341,19 @@ try {
   await page.getByRole('alert').filter({ hasText: 'Retry restarts' }).waitFor();
   const error = await page.getByRole('alert').textContent();
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
-  await until(
-    () => page.getByRole('button', { name: 'Play Game!', exact: true }).isEnabled(),
-    'Retry did not recreate renderer',
-  );
+  await page.getByRole('button', { name: 'Play Game!', exact: true }).click({ trial: true });
   const recreated = page.waitForEvent('worker');
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
   const fresh = await recreated;
   currentWorker = fresh;
   await attachProbe(fresh);
-  await until(
-    async () => (await fresh.evaluate(() => globalThis.productionProbe)).tick >= 1,
-    'Fresh worker not ready',
-  );
+  await until(fresh, (probe) => probe.tick >= 1, 'Fresh worker not ready');
   const restarted = await fresh.evaluate(() => globalThis.productionProbe);
   assert.deepEqual(restarted.first, initial.first);
   const targetsBefore = page.workers().length;
+  const workerClosed = fresh.waitForEvent('close');
   await page.goto('about:blank');
-  await page.waitForTimeout(100);
+  await workerClosed;
   assert.equal(page.workers().length, 0);
   await fs.writeFile(
     path.join(output, 'result.json'),

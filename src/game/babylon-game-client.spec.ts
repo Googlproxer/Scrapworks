@@ -8,9 +8,12 @@ import { Material } from '@babylonjs/core/Materials/material';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type { GameClientOptions } from '@game/client-api';
 import type { GameState } from '@contracts/game-state';
+import { waitForGameState } from '../testing/wait-for-state';
+import { fromBabylonObservable } from './lifecycle/from-babylon-observable';
 import type { LoadingStatus } from '@contracts/loading';
 import { defaultProfile, type BindingProfile } from '@contracts/input';
 import type { WorldView } from '@contracts/world';
+import { animationFrames, filter, firstValueFrom } from 'rxjs';
 import { GameSession } from '../../tools/testing/inline-game-session';
 import { loadEditorScene } from './assets/load-editor-scene';
 import { loadCharacter, type CharacterLoader } from './assets/load-character';
@@ -78,7 +81,7 @@ describe('BabylonGameClient in the browser', () => {
     expect(loading.at(-1)?.progress).toBe(1);
     expect(states).toHaveLength(phaseCount);
     expect(states.at(-1)?.phase).toBe('loading');
-    await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('ready');
+    await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'ready' });
     expect(loading.at(-1)).toBeNull();
     expect(loading.map((status) => status?.task)).toEqual(
       expect.arrayContaining([
@@ -98,8 +101,10 @@ describe('BabylonGameClient in the browser', () => {
     client.loading$.subscribe((status) => {
       if (status?.task === 'Loading world data…') client.destroy();
     });
+    const stopped = waitForGameState(client.state$, { sceneKey: null, phase: 'stopped' });
     client.setScene('Game');
-    await expect.poll(() => states.at(-1)?.phase).toBe('stopped');
+    await stopped;
+    expect(states.at(-1)?.phase).toBe('stopped');
     expect(fetchWorld).not.toHaveBeenCalled();
   });
 
@@ -127,10 +132,18 @@ describe('BabylonGameClient in the browser', () => {
       client.state$.subscribe((state) => {
         if (state.sceneKey === 'Game' && state.phase === phase) client.setScene('MainMenu');
       });
+      // Subscribe before starting the transition, including synchronous failure/re-entry.
+      const menuLoading = firstValueFrom(
+        client.state$.pipe(
+          filter((state) => state.sceneKey === 'MainMenu' && state.phase === 'loading'),
+        ),
+      );
       client.setScene('Game');
-      await expect
-        .poll(() => states.at(-1))
-        .toMatchObject({ sceneKey: 'MainMenu', phase: 'loading' });
+      expect(await menuLoading).toEqual({
+        phase: 'loading',
+        sceneKey: 'MainMenu',
+        errorMessage: null,
+      });
       expect(latest).toEqual({ task: 'Loading main menu…', progress: null });
       release();
       await waitForMenu();
@@ -199,9 +212,8 @@ describe('BabylonGameClient in the browser', () => {
   }
 
   async function waitForMenu() {
-    await expect
-      .poll(() => states.at(-1), { timeout: 30_000 })
-      .toEqual({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
+    const state = await waitForGameState(client.state$, { sceneKey: 'MainMenu', phase: 'ready' });
+    expect(state).toEqual({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
     return EngineStore.LastCreatedEngine!;
   }
 
@@ -222,8 +234,10 @@ describe('BabylonGameClient in the browser', () => {
     expect(engine.activeRenderLoops).toHaveLength(0);
     expect(scene.isDisposed).toBe(false);
     expect(engine.isDisposed).toBe(false);
+    const disposed = firstValueFrom(fromBabylonObservable(engine.onDisposeObservable));
     completeCleanup();
-    await expect.poll(() => engine.isDisposed).toBe(true);
+    await disposed;
+    expect(engine.isDisposed).toBe(true);
     expect(scene.isDisposed).toBe(true);
   });
 
@@ -232,6 +246,15 @@ describe('BabylonGameClient in the browser', () => {
     const promise = new Promise<AssetContainer>((complete) => (resolve = complete));
     loadSceneFn.mockReturnValueOnce(promise);
     return resolve;
+  }
+
+  function nextAssetDisposal(assets: AssetContainer): Promise<void> {
+    return new Promise((resolve) => {
+      vi.spyOn(assets, 'dispose').mockImplementationOnce(() => {
+        AssetContainer.prototype.dispose.call(assets);
+        resolve();
+      });
+    });
   }
 
   function observeInputPermission() {
@@ -319,7 +342,7 @@ describe('BabylonGameClient in the browser', () => {
     const observed = observeInputPermission();
     const engine = await waitForMenu();
     client.setScene('Game');
-    await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('ready');
+    await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'ready' });
     expect(observed.enabled()).toBe(true);
     const render = engine.activeRenderLoops[0];
     engine.stopRenderLoop();
@@ -509,7 +532,7 @@ describe('BabylonGameClient in the browser', () => {
       client.setScene('Game');
       expect(states.at(-1)?.phase).toBe('loading');
       expect(observed.enabled()).toBe(false);
-      await expect.poll(() => states.at(-1)?.phase).toBe('error');
+      await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'error' });
       expect(observed.enabled()).toBe(false);
       client.setScene('MainMenu');
       await waitForMenu();
@@ -529,24 +552,25 @@ describe('BabylonGameClient in the browser', () => {
     try {
       const engine = await waitForMenu();
       client.setScene('Game');
-      await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('ready');
+      await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'ready' });
       expect(observed.enabled()).toBe(true);
       expect(observed.canvas.tabIndex).toBe(0);
       client.setInputEnabled(false);
       expect(observed.enabled()).toBe(false);
 
       const scene = engine.scenes[0];
-      const frame = scene.getFrameId();
-      await expect.poll(() => scene.getFrameId()).toBeGreaterThan(frame);
+      await firstValueFrom(fromBabylonObservable(scene.onAfterRenderObservable));
       host.style.width = '0px';
-      await expect.poll(() => states.at(-1)?.phase).toBe('paused');
+      await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'paused' });
       expect(observed.enabled()).toBe(false);
       client.setScene('Game');
       expect(engine.scenes[0]).toBe(scene);
       expect(scene.isDisposed).toBe(false);
       expect(loadSceneFn).toHaveBeenCalledTimes(2);
+      // Leave ResizeObserver's delivery turn before changing its observed size again.
+      await firstValueFrom(animationFrames());
       host.style.width = '480px';
-      await expect.poll(() => states.at(-1)?.phase).toBe('ready');
+      await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'ready' });
       expect(engine.scenes[0]).toBe(scene);
       expect(observed.enabled()).toBe(false);
 
@@ -574,10 +598,12 @@ describe('BabylonGameClient in the browser', () => {
     expect(engine.scenes[0].getFrameId()).toBeGreaterThan(0);
     expect(engine.activeRenderLoops).toHaveLength(1);
     expect(host.querySelectorAll('canvas')).toHaveLength(1);
+    const resized = firstValueFrom(fromBabylonObservable(engine.onResizeObservable));
     host.style.width = '320px';
     host.style.height = '240px';
-    await expect.poll(() => engine.getRenderWidth()).toBe(320);
-    await expect.poll(() => engine.getRenderHeight()).toBe(240);
+    await resized;
+    expect(engine.getRenderWidth()).toBe(320);
+    expect(engine.getRenderHeight()).toBe(240);
     const renderCallback = engine.activeRenderLoops[0];
     const stopRenderLoop = vi.spyOn(engine, 'stopRenderLoop');
     client.destroy();
@@ -592,14 +618,14 @@ describe('BabylonGameClient in the browser', () => {
       hidden.mockReturnValue(true);
       document.dispatchEvent(new Event('visibilitychange'));
       client.setScene('Game');
-      await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('paused');
+      await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'paused' });
       const scene = engine.scenes[0];
       expect(scene.getFrameId()).toBe(0);
       expect(states.at(-1)?.sceneKey).toBe('Game');
 
       hidden.mockReturnValue(false);
       document.dispatchEvent(new Event('visibilitychange'));
-      await expect.poll(() => states.at(-1)?.phase).toBe('ready');
+      await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'ready' });
       expect(engine.scenes[0] === scene).toBe(true);
       expect(scene.getFrameId()).toBeGreaterThan(0);
       expect(loadSceneFn).toHaveBeenCalledTimes(2);
@@ -658,7 +684,7 @@ describe('BabylonGameClient in the browser', () => {
     client.setScene('Game');
     expect(states.at(-1)).toEqual({ phase: 'loading', sceneKey: 'Game', errorMessage: null });
     expect(menu.isDisposed).toBe(true);
-    await expect.poll(() => states.at(-1)?.phase, { timeout: 30000 }).toBe('ready');
+    await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'ready' });
     expect(states.at(-1)?.sceneKey).toBe('Game');
     expect(loadSceneFn).toHaveBeenCalledTimes(2);
     expect(engine.activeRenderLoops).toHaveLength(1);
@@ -702,9 +728,11 @@ describe('BabylonGameClient in the browser', () => {
     const engine = await waitForMenu();
     loadSceneFn.mockRejectedValueOnce(new Error('Missing authored scene'));
     client.setScene('Game');
-    await expect
-      .poll(() => states.at(-1))
-      .toEqual({ phase: 'error', sceneKey: 'Game', errorMessage: 'Missing authored scene' });
+    expect(await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'error' })).toEqual({
+      phase: 'error',
+      sceneKey: 'Game',
+      errorMessage: 'Missing authored scene',
+    });
     expect(engine.scenes).toHaveLength(0);
     client.setScene('MainMenu');
     await waitForMenu();
@@ -718,13 +746,11 @@ describe('BabylonGameClient in the browser', () => {
     startClient({}, undefined, characterLoader);
     const engine = await waitForMenu();
     client.setScene('Game');
-    await expect
-      .poll(() => states.at(-1))
-      .toEqual({
-        phase: 'error',
-        sceneKey: 'Game',
-        errorMessage: 'Missing character',
-      });
+    expect(await waitForGameState(client.state$, { sceneKey: 'Game', phase: 'error' })).toEqual({
+      phase: 'error',
+      sceneKey: 'Game',
+      errorMessage: 'Missing character',
+    });
     expect(characterLoader).toHaveBeenCalledOnce();
     expect(engine.scenes).toHaveLength(0);
     client.setScene('MainMenu');
@@ -735,18 +761,26 @@ describe('BabylonGameClient in the browser', () => {
   it('disposes a character that finishes loading after its client is destroyed', async () => {
     let complete!: (assets: AssetContainer) => void;
     const pending = new Promise<AssetContainer>((resolve) => (complete = resolve));
-    const characterLoader = vi.fn<CharacterLoader>(() => pending);
+    let started!: () => void;
+    const loading = new Promise<void>((resolve) => (started = resolve));
+    const characterLoader = vi.fn<CharacterLoader>(() => {
+      started();
+      return pending;
+    });
     startClient({}, undefined, characterLoader);
     const engine = await waitForMenu();
     client.setScene('Game');
-    await expect.poll(() => characterLoader.mock.calls.length).toBe(1);
+    await loading;
+    expect(characterLoader).toHaveBeenCalledOnce();
     const scene = engine.scenes[0];
     const assets = await fixture.loadCharacter(scene);
     const dispose = vi.spyOn(assets, 'dispose');
     client.destroy();
     dispose.mockClear(); // Scene disposal may already release unattached assets.
+    const disposed = nextAssetDisposal(assets);
     complete(assets);
-    await expect.poll(() => dispose.mock.calls.length).toBe(1);
+    await disposed;
+    expect(dispose).toHaveBeenCalledOnce();
     expect(scene.isDisposed).toBe(true);
     expect(engine.isDisposed).toBe(true);
     expect(states.at(-1)?.phase).toBe('stopped');
@@ -764,8 +798,10 @@ describe('BabylonGameClient in the browser', () => {
     client.destroy();
     // Babylon also disposes unattached containers with their scene.
     dispose.mockClear();
+    const disposed = nextAssetDisposal(assets);
     complete(assets);
-    await expect.poll(() => dispose.mock.calls.length).toBe(1);
+    await disposed;
+    expect(dispose).toHaveBeenCalledOnce();
     expect(scene.isDisposed).toBe(true);
     expect(engine.isDisposed).toBe(true);
     expect(engine.activeRenderLoops).toHaveLength(0);
@@ -788,8 +824,10 @@ describe('BabylonGameClient in the browser', () => {
     client.setScene('MainMenu');
     await waitForMenu();
     dispose.mockClear();
+    const disposed = nextAssetDisposal(assets);
     complete(assets);
-    await expect.poll(() => dispose.mock.calls.length).toBe(1);
+    await disposed;
+    expect(dispose).toHaveBeenCalledOnce();
     expect(states.at(-1)?.sceneKey).toBe('MainMenu');
     expect(engine.scenes).toHaveLength(1);
     expect(engine.scenes[0].isDisposed).toBe(false);
@@ -822,8 +860,7 @@ describe('BabylonGameClient in the browser', () => {
     });
     expect(engine.activeRenderLoops).toHaveLength(0);
     expect(scene.isDisposed).toBe(true);
-    const priorFrames = onActionFrame.mock.calls.length;
-    await expect.poll(() => onActionFrame.mock.calls.length).toBeGreaterThan(priorFrames);
+    await new Promise<void>((resolve) => onActionFrame.mockImplementationOnce(() => resolve()));
     expect(onActionFrame.mock.lastCall?.[0].context).toBe('ui');
     const priorLoads = loadSceneFn.mock.calls.length;
     client.setScene('MainMenu');

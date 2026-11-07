@@ -1,3 +1,4 @@
+import { installBrowserEvents } from './browser-events.ts';
 // Local development-only visual evidence; Angular debug access never ships in game code.
 import type { TurningSample } from '../../tools/browser-types.d.ts';
 import assert from 'node:assert/strict';
@@ -22,13 +23,16 @@ try {
     },
   });
   const page = await context.newPage();
+  await installBrowserEvents(page);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(origin);
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
-  await page.waitForFunction(() =>
-    ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.isReady(),
+  await page.evaluate(() =>
+    window.testEvents.dom(() =>
+      ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.isReady(),
+    ),
   );
   await page.waitForLoadState('networkidle');
   await page.locator('canvas').focus();
@@ -72,13 +76,32 @@ try {
       window.turningEvidence.phase = value;
     }, name);
 
-  await page.waitForTimeout(300);
+  const idleSettled = () =>
+    page.evaluate(() =>
+      window.testEvents.frame(() => {
+        const runtime = ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService;
+        const scene = runtime.client.currentScene;
+        const player = runtime.world().player;
+        const heading = scene.getTransformNodeByName('player-visual')!.rotation.y;
+        return (
+          !player.moving &&
+          Math.abs(
+            Math.atan2(Math.sin(heading - player.facing), Math.cos(heading - player.facing)),
+          ) < 0.01 &&
+          (scene.animationGroups.find((clip) => clip.name === 'Idle')?.animatables[0]?.weight ??
+            0) > 0.95
+        );
+      }),
+    );
+  await idleSettled();
+  // Tap durations and stationary recording windows below are the measured scenario.
+  // Readiness/settling itself is observed on completed renderer frames.
   await phase('right-tap');
   await page.keyboard.down('d');
   await page.waitForTimeout(80);
   await page.keyboard.up('d');
   await phase('right-settle');
-  await page.waitForTimeout(350);
+  await idleSettled();
   await page.screenshot({ path: path.join(output, 'standing-right.png') });
   await page.waitForTimeout(1300);
   await phase('left-tap');
@@ -86,7 +109,7 @@ try {
   await page.waitForTimeout(80);
   await page.keyboard.up('a');
   await phase('left-settle');
-  await page.waitForTimeout(350);
+  await idleSettled();
   await page.screenshot({ path: path.join(output, 'standing-left.png') });
   await page.waitForTimeout(2400);
   await phase('forward');
@@ -102,12 +125,21 @@ try {
   await phase('sprint');
   await page.keyboard.down('w');
   await page.keyboard.down('Shift');
-  await page.waitForTimeout(1000);
+  await page.evaluate(() =>
+    window.testEvents.frame(() => {
+      const runtime = ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService;
+      return (
+        runtime.world().player.sprinting &&
+        (runtime.client.currentScene.animationGroups.find((clip) => clip.name === 'Run')
+          ?.animatables[0]?.weight ?? 0) > 0.95
+      );
+    }),
+  );
   await page.screenshot({ path: path.join(output, 'sprinting.png') });
   await page.keyboard.up('Shift');
   await page.keyboard.up('w');
   await phase('final');
-  await page.waitForTimeout(500);
+  await idleSettled();
   const samples = await page.evaluate(() => {
     window.turningEvidence.running = false;
     return window.turningEvidence.samples;

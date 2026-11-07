@@ -1,5 +1,5 @@
 import type { RuntimeRequest, RuntimeReply } from '../contracts/simulation.ts';
-import { test } from 'vitest';
+import { test, vi } from 'vitest';
 import assert from 'node:assert/strict';
 const { WorkerSimulationPort } = await import('./worker-port.ts');
 const { GameSession } = await import('./game-session.ts');
@@ -49,25 +49,31 @@ const request = (id: number): RuntimeRequest => ({
 });
 
 test('worker timeout, message failure and disposal settle every outstanding request exactly once', async () => {
-  for (const reason of ['timeout', 'message', 'dispose', 'error']) {
-    const worker = new FakeWorker(),
-      port = new WorkerSimulationPort(worker as unknown as Worker);
-    port.timeoutMs = 5;
-    const failures = [];
-    port.subscribeFailure((error) => failures.push(error.message));
-    const pending = [1, 2, 3].map((id) => port.send(request(id)));
-    const outcomes = Promise.allSettled(pending);
-    if (reason === 'message') worker.dispatchEvent(new Event('messageerror'));
-    if (reason === 'dispose') port.dispose();
-    if (reason === 'error') worker.crash('crashed');
-    assert((await outcomes).every((result) => result.status === 'rejected'));
-    assert.equal(worker.terminated, 1);
-    assert.equal(failures.length, 1);
-    assert.deepEqual(worker.removed.sort(), ['error', 'message', 'messageerror']);
-    worker.dispatchEvent(new Event('messageerror'));
-    port.dispose();
-    assert.equal(worker.terminated, 1);
-    await assert.rejects(port.send(request(4)), /Disposed/);
+  vi.useFakeTimers();
+  try {
+    for (const reason of ['timeout', 'message', 'dispose', 'error']) {
+      const worker = new FakeWorker(),
+        port = new WorkerSimulationPort(worker as unknown as Worker);
+      port.timeoutMs = 5;
+      const failures = [];
+      port.subscribeFailure((error) => failures.push(error.message));
+      const pending = [1, 2, 3].map((id) => port.send(request(id)));
+      const outcomes = Promise.allSettled(pending);
+      if (reason === 'message') worker.dispatchEvent(new Event('messageerror'));
+      if (reason === 'dispose') port.dispose();
+      if (reason === 'error') worker.crash('crashed');
+      if (reason === 'timeout') await vi.advanceTimersByTimeAsync(port.timeoutMs);
+      assert((await outcomes).every((result) => result.status === 'rejected'));
+      assert.equal(worker.terminated, 1);
+      assert.equal(failures.length, 1);
+      assert.deepEqual(worker.removed.sort(), ['error', 'message', 'messageerror']);
+      worker.dispatchEvent(new Event('messageerror'));
+      port.dispose();
+      assert.equal(worker.terminated, 1);
+      await assert.rejects(port.send(request(4)), /Disposed/);
+    }
+  } finally {
+    vi.useRealTimers();
   }
 });
 test('an idle worker crash reaches the owning session without a pending request', async () => {

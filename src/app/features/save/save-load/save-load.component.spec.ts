@@ -2,6 +2,7 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { SaveService } from '../save.service';
 import { SaveLoadComponent } from './save-load.component';
+import { waitForSignal } from '../../../../testing/wait-for-state';
 
 describe('SaveLoadComponent', () => {
   let component: SaveLoadComponent;
@@ -12,7 +13,7 @@ describe('SaveLoadComponent', () => {
   beforeEach(async () => {
     saves = {
       import: vi.fn(async () => undefined),
-      loadAll: vi.fn(async () => [{ id: 1, name: 'Imported', value: 0.42 }]),
+      loadAll: vi.fn(async () => [{ id: 1, name: 'Existing', value: 0.1 }]),
     };
     await TestBed.configureTestingModule({
       imports: [SaveLoadComponent],
@@ -34,11 +35,12 @@ describe('SaveLoadComponent', () => {
   });
 
   it('reports a failed import and retains the last committed occupancy', async () => {
-    await expect.poll(() => component.busy()).toBe(false);
+    await waitForSignal(component.busy, (busy) => !busy, fixture.componentRef.injector);
     saves.import.mockRejectedValueOnce(new Error('Storage rejected the import'));
     await openPicker();
     select(new File(['[]'], 'failed.json'));
-    await expect.poll(() => component.error()).toBe('Storage rejected the import');
+    await waitForSignal(component.error, (error) => error !== null, fixture.componentRef.injector);
+    expect(component.error()).toBe('Storage rejected the import');
     expect(component.slots()[0].occupied).toBe(true);
     expect(saves.loadAll).toHaveBeenCalledTimes(1);
   });
@@ -52,16 +54,23 @@ describe('SaveLoadComponent', () => {
 
   async function openPicker() {
     const click = vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => undefined);
-    await expect.poll(() => component.busy()).toBe(false);
+    await waitForSignal(component.busy, (busy) => !busy, fixture.componentRef.injector);
     await component.import();
     fileInput = click.mock.contexts.at(-1) as HTMLInputElement;
   }
 
   it('imports the chosen file once and refreshes the displayed slots', async () => {
     await openPicker();
+    saves.loadAll.mockResolvedValueOnce([{ id: 1, name: 'Imported', value: 0.42 }]);
     select(new File(['{"value":0.42}'], 'save.json'));
     fileInput.dispatchEvent(new Event('change'));
-    await expect.poll(() => saves.loadAll.mock.calls.length).toBe(2);
+    await waitForSignal(
+      component.slots,
+      (slots) => slots[0].value === 0.42,
+      fixture.componentRef.injector,
+    );
+    await waitForSignal(component.busy, (busy) => !busy, fixture.componentRef.injector);
+    expect(saves.loadAll).toHaveBeenCalledTimes(2);
     expect(saves.import).toHaveBeenCalledExactlyOnceWith('{"value":0.42}');
     expect(component.slots()[0]).toMatchObject({ occupied: true, value: 0.42 });
   });

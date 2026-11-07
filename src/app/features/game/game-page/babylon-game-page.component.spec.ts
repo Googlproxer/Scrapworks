@@ -9,6 +9,8 @@ import { GAME_CLIENT_LOADER } from '../game-client-factory';
 import { GamePageComponent } from './game-page.component';
 import { SIMULATION_PORT_FACTORY } from '../simulation-port-factory';
 import { InlineSimulationPort } from '../../../../../tools/testing/inline-simulation-port';
+import { waitForSignal } from '../../../../testing/wait-for-state';
+import type { GameState } from '@contracts/game-state';
 
 describe('Babylon game page integration', () => {
   let fixture: ComponentFixture<GamePageComponent>;
@@ -34,10 +36,7 @@ describe('Babylon game page integration', () => {
     // The real page is inside App's main landmark.
     (fixture.nativeElement as HTMLElement).setAttribute('role', 'main');
     fixture.detectChanges();
-    await expect
-      .poll(() => fixture.componentInstance.gameRuntimeService.state(), { timeout: 15000 })
-      .toMatchObject({ phase: 'ready' });
-    fixture.detectChanges();
+    await waitForState('MainMenu', 'ready');
   });
 
   afterEach(() => {
@@ -50,6 +49,15 @@ describe('Babylon game page integration', () => {
     return [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
     ].find((element) => element.textContent?.trim() === label);
+  }
+
+  async function waitForState(sceneKey: GameState['sceneKey'], phase: GameState['phase']) {
+    await waitForSignal(
+      fixture.componentInstance.gameRuntimeService.state,
+      (state) => state.sceneKey === sceneKey && state.phase === phase,
+      fixture.componentRef.injector,
+    );
+    await fixture.whenStable();
   }
 
   async function expectAccessible() {
@@ -65,7 +73,7 @@ describe('Babylon game page integration', () => {
     await expectAccessible();
     button('Play Game!')!.click();
     expect(runtime.isLoading()).toBe(true);
-    await expect.poll(() => runtime.state().phase, { timeout: 30000 }).not.toBe('loading');
+    await waitForState('Game', 'ready');
     expect(runtime.errorMessage()).toBeNull();
     expect(runtime.isReady()).toBe(true);
     expect(runtime.currentSceneKey()).toBe('Game');
@@ -87,7 +95,7 @@ describe('Babylon game page integration', () => {
       LoadAssetContainerAsync('/scene/missing-game.babylon', scene),
     );
     button('Play Game!')!.click();
-    await expect.poll(() => runtime.state().phase, { timeout: 30_000 }).toBe('error');
+    await waitForState('Game', 'error');
     fixture.detectChanges();
     expect(
       (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent,
@@ -95,7 +103,7 @@ describe('Babylon game page integration', () => {
     expect(button('Play Game!')).toBeUndefined();
     await expectAccessible();
     button('Retry')!.click();
-    await expect.poll(() => runtime.isReady(), { timeout: 30_000 }).toBe(true);
+    await waitForState('MainMenu', 'ready');
     fixture.detectChanges();
     expect(previousEngine.isDisposed).toBe(true);
     expect(EngineStore.LastCreatedEngine).not.toBe(previousEngine);

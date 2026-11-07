@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { hasCode } from '../shared.ts';
 import type { ChildProcess } from 'node:child_process';
 import type { Browser } from 'playwright';
 import { spawn } from 'node:child_process';
@@ -8,6 +7,8 @@ import fs from 'node:fs/promises';
 import net from 'node:net';
 import path from 'node:path';
 import { chromium } from 'playwright';
+import { BehaviorSubject, filter, firstValueFrom, fromEvent, map, merge, timeout } from 'rxjs';
+import { installBrowserEvents } from '../../tests/acceptance/browser-events.ts';
 import { filesUnder, hash, projectRoot } from './inventory.ts';
 import { stopProcessTree } from './processes.ts';
 
@@ -20,19 +21,19 @@ const fixture = await fs.mkdtemp(path.join(temporary, 'workflow-browser-'));
 const logPath = path.join(reportDirectory, 'server.log');
 await fs.writeFile(logPath, '');
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const logEvents = new BehaviorSubject('');
 
-async function until(
-  check: () => unknown | Promise<unknown>,
-  description: string,
-  timeout = 90000,
-) {
-  const deadline = Date.now() + timeout;
-  while (Date.now() < deadline) {
-    if (await check()) return;
-    await sleep(200);
-  }
-  throw new Error(`Timed out: ${description}. See ${logPath}`);
+async function waitForLog(predicate: (log: string) => boolean) {
+  await firstValueFrom(
+    merge(
+      logEvents.pipe(filter(predicate)),
+      fromEvent(server!, 'exit').pipe(
+        map(() => {
+          throw new Error('Dev server exited: ' + logs.slice(-2000));
+        }),
+      ),
+    ).pipe(timeout({ first: 90000 })),
+  );
 }
 
 async function outputHashes() {
@@ -85,34 +86,16 @@ try {
     const text = chunk.toString();
     logs += text;
     appendFileSync(logPath, text);
+    logEvents.next(logs);
   };
 
   server.stdout!.on('data', recordLog);
   server.stderr!.on('data', recordLog);
-  await until(async () => {
-    if (server!.exitCode !== null || server!.signalCode !== null)
-      throw new Error(`Dev server exited: ${logs.slice(-2000)}`);
-    return new Promise((resolve, reject) => {
-      const socket = net.connect(port, '127.0.0.1');
-      socket.once('connect', () => {
-        socket.destroy();
-        resolve(true);
-      });
-      socket.once('error', (error) => {
-        socket.destroy();
-        if (hasCode(error, 'EACCES'))
-          reject(
-            new Error(
-              'Localhost access is blocked by the execution environment; run this browser probe with loopback access.',
-            ),
-          );
-        else resolve(false);
-      });
-    });
-  }, 'Angular listening socket');
+  await waitForLog((log) => log.includes('http://127.0.0.1:' + port));
   console.log('Workflow probe: initial export and Angular startup passed.');
   browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await installBrowserEvents(page);
   page.setDefaultNavigationTimeout(120000);
   let navigations = 0;
   const errors: string[] = [];
@@ -136,8 +119,11 @@ try {
   const config = JSON.parse(await fs.readFile(configFile, 'utf8'));
   config.clearColor = [0.1, 0.3, 0.2, 1];
   let previousNavigations = navigations;
+  const validReload = page.waitForEvent('framenavigated', {
+    predicate: (frame) => frame === page.mainFrame(),
+  });
   await fs.writeFile(configFile, JSON.stringify(config, null, 4));
-  await until(() => navigations > previousNavigations, 'reload after valid saved scene');
+  await validReload;
   await ready();
   assert.deepEqual(
     JSON.parse(await fs.readFile(path.join(fixture, 'public/scene/main-menu.babylon'), 'utf8'))
@@ -147,11 +133,8 @@ try {
   const beforeFailure = await outputHashes();
   previousNavigations = navigations;
   await fs.writeFile(configFile, '{ invalid saved JSON');
-  await until(
-    () => logs.includes('Export failed; last working scenes retained:'),
-    'visible export error',
-  );
-  await sleep(800);
+  await waitForLog((log) => log.includes('Export failed; last working scenes retained:'));
+  await page.evaluate(() => window.testEvents.frames(12));
   assert.equal(navigations, previousNavigations, 'Invalid save must not reload the browser');
   assert.deepEqual(
     await outputHashes(),
@@ -162,8 +145,11 @@ try {
     'Workflow probe: valid save reloaded; invalid save retained all output without reload.',
   );
   config.clearColor = [0.3, 0.2, 0.1, 1];
+  const correctedReload = page.waitForEvent('framenavigated', {
+    predicate: (frame) => frame === page.mainFrame(),
+  });
   await fs.writeFile(configFile, JSON.stringify(config, null, 4));
-  await until(() => navigations > previousNavigations, 'reload after corrected save');
+  await correctedReload;
   await ready();
   assert.deepEqual(
     JSON.parse(await fs.readFile(path.join(fixture, 'public/scene/main-menu.babylon'), 'utf8'))
@@ -203,12 +189,8 @@ try {
   await browser?.close();
   if (server && server!.exitCode === null && server!.signalCode === null) {
     await stopProcessTree(server);
-    await until(
-      () => server!.exitCode !== null || server!.signalCode !== null,
-      'dev server shutdown',
-      10000,
-    );
   }
+  logEvents.complete();
   const resolved = await fs.realpath(fixture);
   if (
     path.dirname(resolved) !== temporary ||

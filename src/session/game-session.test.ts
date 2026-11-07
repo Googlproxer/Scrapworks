@@ -1,7 +1,7 @@
 import { mutable } from '../../tools/shared.ts';
 import type { WorldCommand } from '../contracts/world.ts';
 import type { SimulationPort } from './port.ts';
-import type { RuntimeReply, SimulationCapture } from '../contracts/simulation.ts';
+import type { SimulationCapture } from '../contracts/simulation.ts';
 import type {
   PlayerMotor as PlayerMotorInstance,
   MovementIntent,
@@ -183,14 +183,14 @@ test('recursive advancement from a presentation hook fails after the reported ti
 test('in-flight work and elapsed time share five credits; pause acknowledgement stops further advancement', async () => {
   const runtime = new SimulationRuntime();
   let queue = Promise.resolve();
+  let release!: () => void;
+  const advanceGate = new Promise<void>((resolve) => (release = resolve));
   const port: SimulationPort = {
     send(request) {
-      const reply = queue.then(
-        () =>
-          new Promise<RuntimeReply>((resolve) =>
-            setTimeout(() => resolve(runtime.handle(request)), 2),
-          ),
-      );
+      const reply = queue.then(async () => {
+        if (request.operation === 'advance') await advanceGate;
+        return runtime.handle(request);
+      });
       queue = reply.then(() => undefined);
       return reply;
     },
@@ -204,10 +204,12 @@ test('in-flight work and elapsed time share five credits; pause acknowledgement 
   for (let i = 0; i < 20; i++) session.advance(1);
   assert.ok(session.maxPendingSteps <= 5);
   session.pause();
+  release();
   await session.settled();
   const tick = session.view.tick;
   assert.equal(tick, 5);
-  await new Promise((resolve) => setTimeout(resolve, 10));
+  session.advance(1);
+  await session.settled();
   assert.equal(session.view.tick, tick);
   session.pause(false);
   await session.settled();

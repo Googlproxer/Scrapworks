@@ -5,7 +5,7 @@ import { ControlsComponent } from '@app/features/controls/controls/controls.comp
 import type { GameClient, GameClientOptions } from '@game/client-api';
 import type { GameState } from '@contracts/game-state';
 import axe from 'axe-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, fromEvent } from 'rxjs';
 import { GAME_CLIENT_LOADER } from '../game-client-factory';
 import { GameRuntimeService } from '../game-runtime.service';
 import { GamePageComponent } from './game-page.component';
@@ -132,10 +132,12 @@ describe('GamePageComponent integration', () => {
     )!;
     expect(close.closest('[hidden]')).toBeNull();
     close.focus();
+    const restoredFocus = firstValueFrom(fromEvent(trigger, 'focus'));
     close.click();
     await fixture.whenStable();
     expect(trigger.closest('[hidden]')).toBeNull();
-    await expect.poll(() => document.activeElement).toBe(trigger);
+    await restoredFocus;
+    expect(document.activeElement).toBe(trigger);
   });
 
   it('opens Controls through the page button and restores focus on close', async () => {
@@ -160,7 +162,7 @@ describe('GamePageComponent integration', () => {
         'Controls',
       );
       expect(vi.mocked(client.setInputEnabled).mock.calls).toEqual([[true], [false]]);
-      await expect.poll(() => overlay.contains(document.activeElement)).toBe(true);
+      expect(overlay.contains(document.activeElement)).toBe(true);
 
       const accessibility = await axe.run(overlay);
       expect(

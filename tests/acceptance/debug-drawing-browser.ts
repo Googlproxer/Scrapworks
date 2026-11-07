@@ -1,3 +1,4 @@
+import { installBrowserEvents } from './browser-events.ts';
 /** Run against yarn dev; artifacts are local diagnostics, not authored scene content. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -10,10 +11,27 @@ const output = path.resolve(process.argv[3] ?? 'tmp/debug-drawing');
 await fs.mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await installBrowserEvents(page);
 const errors: string[] = [];
 const driverWarnings: string[] = [];
 const expectedFailures: string[] = [];
 const enabledCategories = [...Array<string>(9).fill('collision'), 'placement', 'transforms'];
+
+const waitForCategories = (count: number) =>
+  page.evaluate(
+    (expected) =>
+      window.testEvents.frame(() => {
+        const scene = ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService
+          .client.currentScene;
+        return (
+          scene
+            .getEngine()
+            ._virtualScenes.flatMap((layer) => layer.meshes)
+            .filter((mesh) => mesh.metadata?.debugDraw && mesh.isEnabled()).length === expected
+        );
+      }, 'debug drawing categories'),
+    count,
+  );
 
 async function openPanel(): Promise<void> {
   const details = page.locator('app-debug-draw-panel details');
@@ -75,16 +93,18 @@ try {
 
   assert.deepEqual((await inspect()).categories, []);
   await master.check();
-  await page.waitForFunction(() => {
-    const scene = ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.client
-      .currentScene;
-    return (
-      scene
-        .getEngine()
-        ._virtualScenes.flatMap((layer) => layer.meshes)
-        .filter((mesh) => mesh.metadata?.debugDraw && mesh.isEnabled()).length === 11
-    );
-  });
+  await page.evaluate(() =>
+    window.testEvents.frame(() => {
+      const scene = ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService
+        .client.currentScene;
+      return (
+        scene
+          .getEngine()
+          ._virtualScenes.flatMap((layer) => layer.meshes)
+          .filter((mesh) => mesh.metadata?.debugDraw && mesh.isEnabled()).length === 11
+      );
+    }),
+  );
   const enabled = await inspect();
   assert.deepEqual(enabled.categories, enabledCategories);
   assert.equal(enabled.canvases, 1);
@@ -106,14 +126,28 @@ try {
   await page.screenshot({ path: path.join(output, 'enabled.png'), fullPage: true });
 
   await page.getByLabel('collision', { exact: true }).uncheck();
-  await page.waitForTimeout(100);
+  await waitForCategories(2);
   assert.deepEqual((await inspect()).categories, ['placement', 'transforms']);
   await page.getByLabel('collision', { exact: true }).check();
   await page.locator('canvas').focus();
   await page.keyboard.down('KeyD');
-  await page.waitForTimeout(450);
+  await page.evaluate(
+    (x) =>
+      window.testEvents.frame(
+        () =>
+          ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().player
+            .position.x > x,
+      ),
+    enabled.player!.x,
+  );
   await page.keyboard.up('KeyD');
-  await page.waitForTimeout(150);
+  await page.evaluate(() =>
+    window.testEvents.frame(
+      () =>
+        !ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.world().player
+          .moving,
+    ),
+  );
   const moved = await inspect();
   assert(
     moved.player!.x > enabled.player!.x,
@@ -139,7 +173,7 @@ try {
     [],
   );
   await master.uncheck();
-  await page.waitForTimeout(100);
+  await waitForCategories(0);
   assert.deepEqual((await inspect()).categories, []);
   await master.check();
   await page.evaluate(() => {
@@ -152,7 +186,7 @@ try {
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
   await page.getByLabel('transforms', { exact: true }).waitFor();
   assert.equal(await master.isChecked(), true);
-  await page.waitForTimeout(150);
+  await waitForCategories(enabledCategories.length);
   assert.deepEqual((await inspect()).categories, enabledCategories);
 
   // Exercise the existing renderer-failure boundary without destroying GPU state in the probe.
@@ -167,7 +201,7 @@ try {
   await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
   await openPanel();
   await page.getByLabel('transforms', { exact: true }).waitFor();
-  await page.waitForTimeout(150);
+  await waitForCategories(enabledCategories.length);
   assert.equal(page.workers()[0], healthyWorker, 'Renderer Retry must retain the healthy worker');
   assert.equal(await master.isChecked(), true);
   assert.deepEqual((await inspect()).categories, enabledCategories);
@@ -188,7 +222,7 @@ try {
   );
   await openPanel();
   await page.getByLabel('transforms', { exact: true }).waitFor();
-  await page.waitForTimeout(150);
+  await waitForCategories(enabledCategories.length);
   assert.equal(await master.isChecked(), true);
   assert.deepEqual((await inspect()).categories, enabledCategories);
   await page.reload();
