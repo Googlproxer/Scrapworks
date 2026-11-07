@@ -65,7 +65,7 @@ function startupChunks(metadata: BuildMetadata) {
 }
 
 async function menuReady(page: Page) {
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click({ trial: true });
+  await page.getByRole('button', { name: 'New Game', exact: true }).click({ trial: true });
 }
 
 async function accessible(page: Page, source: string) {
@@ -275,7 +275,7 @@ export async function checkLoading(
         await gate;
         await route.continue();
       });
-      await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+      await page.getByRole('button', { name: 'New Game', exact: true }).click();
       await started;
       await covered(page);
       assert(
@@ -320,7 +320,7 @@ export async function checkLoading(
     await page.route('**/protagonist-v3.glb', (route) =>
       route.fulfill({ status: 404, body: 'Missing character fixture' }),
     );
-    await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+    await page.getByRole('button', { name: 'New Game', exact: true }).click();
     await page.getByRole('alert').waitFor();
     await covered(page);
     await page.getByRole('button', { name: 'Retry', exact: true }).waitFor();

@@ -10,6 +10,7 @@ import { GAME_CLIENT_LOADER } from '../game-client-factory';
 import { GameRuntimeService } from '../game-runtime.service';
 import { GamePageComponent } from './game-page.component';
 import { AFTER_PAINT } from '../../../shared/loading/after-paint';
+import { waitForSignal } from '../../../../testing/wait-for-state';
 
 describe('GamePageComponent integration', () => {
   let fixture: ComponentFixture<GamePageComponent>;
@@ -56,6 +57,12 @@ describe('GamePageComponent integration', () => {
     runtime = fixture.componentInstance.gameRuntimeService;
     (fixture.nativeElement as HTMLElement).style.cssText = 'width: 480px; height: 320px;';
     await fixture.whenStable();
+    await waitForSignal(
+      fixture.componentInstance.saves.status,
+      (status) => status.phase !== 'checking',
+      fixture.componentRef.injector,
+    );
+    await fixture.whenStable();
   });
 
   afterEach(() => {
@@ -67,7 +74,7 @@ describe('GamePageComponent integration', () => {
   function button() {
     return [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
-    ].find((element) => element.textContent?.trim() === 'Play Game!');
+    ].find((element) => element.textContent?.trim() === 'New Game');
   }
 
   it('exposes labelled debug switches with accessible native disclosure and category controls', async () => {
@@ -214,6 +221,7 @@ describe('GamePageComponent integration', () => {
     expect(button()?.disabled).toBe(false);
     button()?.click();
     button()?.click();
+    await fixture.whenStable();
     expect(client.setScene).toHaveBeenCalledExactlyOnceWith('Game');
     expect(runtime.isLoading()).toBe(true);
 

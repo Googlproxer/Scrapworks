@@ -28,7 +28,7 @@ try {
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(origin);
   await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'New Game', exact: true }).click();
   await page.evaluate(() =>
     window.testEvents.dom(() =>
       ng.getComponent(document.querySelector('app-game-page')).gameRuntimeService.isReady(),

@@ -22,6 +22,7 @@ export class UiService {
   private readonly gameRuntimeService = inject(GameRuntimeService);
   private readonly dialog = inject(Dialog);
   private readonly injector = inject(Injector);
+  private worldGeneration?: number;
 
   private readonly openDialogKeys = new Set<DialogKey>();
 
@@ -33,7 +34,13 @@ export class UiService {
       .subscribe((event) => this.openingFeedback.handle(event));
     effect(() => {
       const world = this.gameRuntimeService.world?.() ?? null;
-      untracked(() => this.openingFeedback.update(world));
+      if (this.gameRuntimeService.preparingSave?.()) return;
+      untracked(() => {
+        if (this.worldGeneration !== undefined && world?.worldGeneration !== this.worldGeneration)
+          this.notificationCenter.clear();
+        this.worldGeneration = world?.worldGeneration;
+        this.openingFeedback.update(world);
+      });
     });
     effect(() => {
       if (this.gameRuntimeService.errorMessage()) {

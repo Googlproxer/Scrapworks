@@ -1,8 +1,8 @@
 # Scrapworks Technical Design Document
 
-Updated 2 November 2026 for Milestone 3 opening implementation. Inventory, salvage, background Field Research, safe handcrafting and the requested MiniFab execute in the single simulation worker. Factory systems and gameplay persistence remain later work; migration and ECS performance evidence remain dated separately.
+Updated 8 November 2026 for Milestone 4 implementation. Schema-1 saves wrap version-3 world/physics data; SaveCoordinator, SaveRepository and prepared worker/renderer replacement implement the manual slot. The [local-save report](../reports/milestone-04/2026-11-08/README.md) records verification. Migration, opening and ECS performance evidence retain their dated scope.
 
-Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step simulation connect presentation to one authoritative ECS world. The opening loop is implemented; factory rules and versioned world saves remain planned. The [GDD](GDD.md) and [player progression design](player-progression.md) own gameplay rules; the [roadmap](../plans/README.md) orders implementation.
+Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step simulation connect presentation to one authoritative ECS world. The opening loop and versioned local saves are implemented; factory rules remain planned. The [GDD](GDD.md) and [player progression design](player-progression.md) own gameplay rules; the [roadmap](../plans/README.md) orders implementation.
 
 ## Agreed technical requirements
 
@@ -24,7 +24,7 @@ The [runtime architecture decision](../decisions/runtime-architecture.md) define
 | Authoring           | Babylon.js Editor 5.5.3          | Saved inputs export/reload automatically; validated marker metadata compiles into a plain world definition.                                                                            |
 | Client subscription | RxJS in main-thread `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                                                                                                           |
 | Gameplay            | Plain TypeScript                 | Private Miniplex authority, typed movement/opening commands, deterministic 20 Hz salvage/research/handcraft/MiniFab executors and detached views. Factory progression remains planned. |
-| Persistence         | Dexie / IndexedDB                | Test-data service/dialog only; no playable-world snapshot or round trip.                                                                                                               |
+| Persistence         | Dexie / IndexedDB                | Schema-1 manual gameplay slot, transaction/token checks, candidate worker/scene/UI restore and production IndexedDB reload acceptance. Separate controls/test stores.                  |
 
 The [cleanup record](../plans/3d-cleanup.md) defines current asset boundaries and retired-source recovery. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements.
 
@@ -227,12 +227,12 @@ flowchart TB
         ECS[OpeningSystem salvage handcraft MiniFab and research]
     end
 
-    subgraph Persistence[Planned gameplay persistence]
-        Saves[Planned gameplay save service]
-        Codec[Snapshot codec: validation and migrations]
+    subgraph Persistence[Local gameplay persistence]
+        Saves[SaveCoordinator and GameplaySaveService]
+        Codec[Schema one codec and candidate validation]
         Repository[SaveRepository interface]
         Local[(IndexedDB through Dexie)]
-        Files[JSON file backups]
+        Files[Future Milestone nine file backups]
     end
 
     Editor -->|saved layout| Compiler
@@ -254,15 +254,15 @@ flowchart TB
     Sim -->|publish completed state| Views
     Views -->|Angular signals| UI
     Views -->|render data| Scene
-    UI -->|save, load, import, export| Saves
-    Saves <-->|capture snapshot or restore world| Sim
-    Saves -->|encode or validate and migrate| Codec
+    UI -->|manual save load and delete| Saves
+    Saves <-->|capture and prepared session replacement| Facade
+    Saves -->|encode or validate| Codec
     Saves <-->|versioned snapshots| Repository
     Repository <-->|transactional slot storage| Local
-    Saves <-->|import and export| Files
+    Saves <-->|future import and export| Files
 ```
 
-Commands are checked and applied inside the simulation and completed state is published as detached views. Plain capture/validated fresh-runtime rebuild are implemented as infrastructure. The gameplay persistence branch remains planned. Their eventual implementation must await committed transactions, validate a separate candidate world and preserve the active session on failure. The existing test-data save dialog does not implement this branch.
+Commands are checked inside the worker and completed state is published as detached views. Manual gameplay persistence awaits committed transactions, validates a separate candidate world, prepares its scene/UI and preserves the active session on failure. File transfer remains Milestone 9; the developer test-data dialog stays isolated.
 
 A future cloud repository can implement `SaveRepository` . Accounts, synchronization, and conflict handling remain later work; they are not needed by the prototype simulation.
 
@@ -421,7 +421,7 @@ The narrow `PresentationBehavior` base connects an implemented optional `onGameT
 
 Continuous movement is sampled state. Discrete commands are captured once and queued until a tick consumes them, so catch-up cannot repeat a button press. Placement confirmation happens after the current frame's session advance and therefore targets a subsequent tick. Each authoritative step processes queued commands, advances player movement, increments the tick and publishes completed state. A failed step cannot expose partial state.
 
-The bridge distinguishes active gameplay input from active simulation. Focusing the field kit blocks movement/camera/selection but keeps simulation work running. The existing render callback remains the only frame source. Window focus/visibility loss, menus, binding capture, Inspector and renderer failure suspend simulation and clear transient actions. Intentional handcraft exits warn and suspend its unit; confirmed exit or forced interruption refunds that unit exactly once. MiniFab supplied work and research survive UI closure. Resumption cannot replay hidden or blocked time. A completed step is the future save-capture boundary; gameplay snapshot saving and offline production remain unimplemented.
+The bridge distinguishes active gameplay input from active simulation. Focusing the field kit blocks movement/camera/selection but keeps simulation work running. The existing render callback remains the only frame source. Window focus/visibility loss, menus, binding capture, Inspector and renderer failure suspend simulation and clear transient actions. Intentional handcraft exits warn and suspend its unit; confirmed exit or forced interruption refunds that unit exactly once. MiniFab supplied work and research survive UI closure. Resumption cannot replay hidden or blocked time. A completed step is the gameplay save boundary. Local manual saving is implemented; offline production is excluded.
 
 ## Persistent game state
 
@@ -437,15 +437,25 @@ Keep active gameplay state in memory. Save a versioned data snapshot containing:
 
 Store identifiers and data rather than Angular services, Babylon meshes/materials, scene handles, or Editor components. Recipe and technology definitions belong to the game content; saves reference their identifiers and record a compatible content version.
 
+The list above includes later gameplay. Milestone 4 persists only implemented state using the [field checklist](../plans/milestone-04-first-local-save.md#snapshot-field-checklist): exact bag slots/tool, deposits/piles including elevation, opening jobs/buffers/charge/rate allowance, research/history, clock/ID state and format-3 Rapier continuation. Stack limits, reach, recipe dependencies and base capacities remain immutable versioned content. Current gearing/capacity levels must remain zero until their upgrades are implemented. The internal SimulationCapture includes a transport ledger and pending commands; the durable save contains its completed SimulationSnapshot world payload, not that continuation envelope.
+
 ## Local storage and save operations
 
-Use the installed Dexie integration for IndexedDB persistence. The current service stores development test records; it has not yet proved a reload round trip or restored gameplay. Implement complete snapshots and a SaveRepository in Milestone 4, then periodic autosaves and retained revisions in Milestone 9.
+Use the installed Dexie integration for IndexedDB persistence. Developer test records and settings retain separate adapters. Milestone 4 implements SaveCoordinator and a gameplay-specific SaveRepository/database without changing either existing namespace. One manual slot stores its payload and metadata atomically; periodic autosaves and retained revisions follow in Milestone 9.
 
 Write each snapshot and its metadata together in a transaction. Report save success only after the write completes, and preserve the last successful revision if a later write fails. Avoid relying on a final save when the tab closes.
 
 ## Save format and loading
 
-Give saves stable identifiers, a schema version, a game or content version, and a saved timestamp. Validate a loaded or imported snapshot, migrate supported older schemas, and construct the restored world before replacing the active session. Unsupported newer versions or invalid data should leave the active world and existing saves intact.
+Give saves a durable-envelope schema, compatible content/physics versions, authored-world identity, stable runId, saved timestamp and committed write token. The current simulation worldId equals the authored definition ID; it is not a unique playthrough identity. Keep slot identity, run identity and session/renderer generations distinct. Run IDs and timestamps belong to application composition, outside deterministic simulation.
+
+Show Continue alongside New Game when committed slot metadata exists. Confirm before Load/New Game discards unsaved session progress or Save overwrites a different run; explicitly confirm deletion. New Game leaves the previous slot intact until saved. Continued simulation after a capture remains unsaved even if its asynchronous write later succeeds.
+
+Validate unknown loaded data and build a separate candidate worker, including matching authored definition and exact compatible Rapier native bytes/version. Await a complete publication and prepare presentation/UI before committing through GameSessionOwner. GameSession.hold() preserves the old session under a non-destructive load guard. Normal pause/clearInput interruption remains separate; initial restored activity acknowledgements preserve saved work until its first active step. Candidate/read/validation failure preserves the old job, inventory, world and pause/UI ownership.
+
+When a saved handcraft job exists, reopen Inventory & Crafting and resume its saved unit only after UI readiness and normal activity/visibility rules permit it. Do not repay inputs, refund that resumable unit or advance it invisibly. Fresh session counters, cleared movement/salvage/winding intent, reset elapsed clocks and rebuilt presentation mappings prevent command replay and offline progress. Background MiniFab/research retain their existing spending and exactly-once completion rules. Normal handcraft exit/forced-interruption behavior still applies after restoration.
+
+Milestone 4 initially supports one durable schema and rejects incompatible data without deleting it; older-schema migrations and file import follow in Milestone 9. A future supported migration operates on a copy before candidate construction. Unsupported versions or invalid data leave both the active world and existing saves intact.
 
 Database schema changes and game save migrations are separate concerns.
 
@@ -455,7 +465,7 @@ Provide JSON file export and import as a proposed backup and transfer option. Br
 
 ## Future cloud persistence
 
-Keep persistence behind a small save repository interface for listing, loading, saving, and deleting slots. Implement the local IndexedDB repository first. A future cloud repository can use the same versioned snapshot format, while accounts, synchronization, and conflicting revisions remain separate future work. This does not require a backend for the initial prototype.
+Keep persistence behind a small save repository interface for listing, loading, saving, and deleting slots. The local IndexedDB repository is implemented. A future cloud repository can use the same versioned snapshot format, while accounts, synchronization, and conflicting revisions remain separate future work. This does not require a backend for the initial prototype.
 
 ## Initial verification requirements
 

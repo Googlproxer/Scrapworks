@@ -29,6 +29,7 @@ describe('Field kit opening UI', () => {
     selection: signal<string | null>(null),
     fieldKitOpen: signal(true),
     workExitWarning: signal(false),
+    restoreRevision: signal(0),
     command: vi.fn<(command: OpeningCommand) => void>(),
     toggleFieldKit: vi.fn(),
     focusViewport: vi.fn(),
@@ -207,6 +208,14 @@ describe('Field kit opening UI', () => {
         revision: 1,
         states: { wind: { kind: 'vector2', value: { x: 0, y: 1 } } },
       });
+    expect(runtime.command).not.toHaveBeenCalled();
+    runtime.restoreRevision.update((value) => value + 1);
+    await fixture.whenStable();
+    emit({
+      context: 'ui',
+      revision: 2,
+      states: { wind: { kind: 'vector2', value: { x: 1, y: 0 } } },
+    });
     expect(runtime.command).not.toHaveBeenCalled();
     handle.blur();
     emit({

@@ -1,4 +1,12 @@
-import { Component, DestroyRef, ElementRef, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  inject,
+  signal,
+  effect,
+  untracked,
+} from '@angular/core';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { WindingTravel } from '@core/winding-travel';
 import { GameRuntimeService } from '../game-runtime.service';
@@ -19,6 +27,10 @@ export class WindingHandleComponent {
   public readonly angle = signal(-90);
 
   public constructor() {
+    effect(() => {
+      this.runtime.restoreRevision?.();
+      untracked(() => this.release());
+    });
     const document = this.element.nativeElement.ownerDocument;
     this.subscriptions.add(
       this.runtime.subscribeActions((frame) => {

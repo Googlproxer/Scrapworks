@@ -39,7 +39,7 @@ Completed before new salvage, research or crafting runtime implementation. The [
 - [x] Reuse PlayerMotor against ECS-held movement records and an owned collision index. Camera/player Toolkit scripts remain input/presentation bindings. Independent plain-object comparison, browser and real built-scene tests preserve movement, collision, picking, pause, catch-up, teardown and the development fixture.
 - [x] Keep eligibility, slot transactions, reservations, material values and work progression as plain reusable domain rules. Foundation fixtures prove conservation and priority. Future executors call these rules with their policies; those gameplay executors are not implemented here.
 - [x] Publish transferred 14-field numeric projections, stable ID/generation mappings, changed sets and bounded detached inspections through the session/WorldView boundary. Full resynchronization and query/index rebuild are tested. The actual production runtime passes the 100,000-entity normal budgets in the dated report.
-- [x] Define and validate plain component/resource capture and fresh-runtime rebuild, including IDs, work/reservations/held output, research/history, charge and continuation accounting. Uninterrupted and restored worlds agree for 1,000 further steps. Milestone 4 still owns IndexedDB slots, import UI and gameplay save delivery.
+- [x] Define and validate plain component/resource capture and fresh-runtime rebuild, including IDs, work/reservations/held output, research/history, charge and continuation accounting. Uninterrupted and restored worlds agree for 1,000 further steps. Milestone 4 owns manual IndexedDB slots and gameplay save delivery; file import remains Milestone 9.
 
 Step 0 is complete: actual production ECS/worker integration passes 94 desktop Chromium jobs with no failures/timeouts, 41 world tests and 288 application/renderer/accessibility tests. At 100,000 normal entities, worker median per-run compute/publication p95/p99 is 4.6/5.6 ms and observed receiving is 1.2/1.4 ms; all required normal paced gates pass. Actual built-scene movement, healthy renderer Retry, worker crash/fresh-world Retry, base path/CSP and teardown pass. Fully active, heavy-churn and 250,000-entity workloads exceed the normal budget. Target devices, physical input-to-photon and other engines remain later qualification; no later gameplay work receives implementation credit.
 
@@ -58,7 +58,7 @@ Step 0 is complete: actual production ECS/worker integration passes 94 desktop C
 - [x] Normalize diagonal movement so it is no faster than cardinal movement.
 - [x] Enforce map boundaries and occupied-cell collision with a 0.35 m player radius.
 - [x] Clear movement on focus loss, pause and teardown.
-- [ ] Clear movement/queued commands at the future gameplay world-replacement boundary. Deferred to Milestone 4; plain capture/rebuild and activity cancellation are already tested.
+- [x] Clear movement/queued commands at the gameplay world-replacement boundary. Implemented and verified by [Milestone 4](../reports/milestone-04/2026-11-08/README.md), without expanding Milestone 3's original scope.
 - [x] Display the animated protagonist and following camera without changing simulation positions.
 
 ## Step 3 Add manual salvage
@@ -163,12 +163,12 @@ Step 0 is complete: actual production ECS/worker integration passes 94 desktop C
 
 Record implementation notes here:
 
-| Date            | Observation or decision                                                             | Follow-up and status                                                                             |
-| --------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| 4 October 2026  | Presentation scaffold only; current source inspected.                               | See Current implementation above; unchecked gameplay requirements remain open.                   |
-| 23 October 2026 | Migration delivered animation, movement/collision, camera/picking and deposit data. | Manual salvage, crafting and inventory interaction remain pending; Phase 7 stops implementation. |
-| 27 October 2026 | Research-led crafting, opening pacing and Mini Fabricator direction agreed. | Move bootstrap field research into this milestone, preserve migration credits, and leave every new gameplay task unchecked. |
-| 27 October 2026 | Earlier scrap-only MiniFab acquisition; dedicated UI, free baseline and optional winding agreed. | Acquisition was superseded on 28 October; UI, baseline and winding remain agreed. |
+| Date            | Observation or decision                                                                                                                                        | Follow-up and status                                                                                                                                                 |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4 October 2026  | Presentation scaffold only; current source inspected.                                                                                                          | See Current implementation above; unchecked gameplay requirements remain open.                                                                                       |
+| 23 October 2026 | Migration delivered animation, movement/collision, camera/picking and deposit data.                                                                            | Manual salvage, crafting and inventory interaction remain pending; Phase 7 stops implementation.                                                                     |
+| 27 October 2026 | Research-led crafting, opening pacing and Mini Fabricator direction agreed.                                                                                    | Move bootstrap field research into this milestone, preserve migration credits, and leave every new gameplay task unchecked.                                          |
+| 27 October 2026 | Earlier scrap-only MiniFab acquisition; dedicated UI, free baseline and optional winding agreed.                                                               | Acquisition was superseded on 28 October; UI, baseline and winding remain agreed.                                                                                    |
 | 28 October 2026 | Safe handcrafting and component-led MiniFab tree agreed. UI exit warns/cancels unfinished work, preserving completed output and returning current ingredients. | Updated catalogue and Fibery database records; whiteboard layouts untouched. Inventory/salvage/tools and detailed balance are next; no runtime implementation added. |
 
 ## References and diagrams

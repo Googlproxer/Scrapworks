@@ -27,6 +27,7 @@
     "test:game": "tsc -p tests/tsconfig.json && tsc -p tests/support/tsconfig.reference.json && vitest run --config vitest.game.config.ts",
     "test:acceptance": "node tests/acceptance/production-browser.ts",
     "test:opening": "node tests/acceptance/opening-browser.ts",
+    "test:saves": "node tests/acceptance/save-browser.ts",
     "test:workflow": "node tools/scenes/check-dev-workflow.ts",
     "test:labs": "tsc -p tools/tsconfig.json && vitest run --config vitest.labs.config.ts",
     "test:coverage": "yarn test:coverage:tools && yarn test:coverage:game && yarn coverage:report",

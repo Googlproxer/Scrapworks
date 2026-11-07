@@ -60,7 +60,7 @@ page.on('console', (message) => {
 try {
   await page.goto(origin);
   await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'New Game', exact: true }).click();
   await openPanel();
   await page.getByLabel('transforms', { exact: true }).waitFor();
   const master = page.getByLabel('Show debug drawings', { exact: true });
@@ -181,9 +181,9 @@ try {
       .gameRuntimeService as unknown as { setScene(key: 'MainMenu'): void };
     runtime.setScene('MainMenu');
   });
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'New Game', exact: true }).waitFor();
   assert.deepEqual((await inspect()).categories, []);
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'Resume current game', exact: true }).click();
   await page.getByLabel('transforms', { exact: true }).waitFor();
   assert.equal(await master.isChecked(), true);
   await waitForCategories(enabledCategories.length);
@@ -198,7 +198,7 @@ try {
     engine.onContextLostObservable.notifyObservers(engine);
   });
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'Resume current game', exact: true }).click();
   await openPanel();
   await page.getByLabel('transforms', { exact: true }).waitFor();
   await waitForCategories(enabledCategories.length);
@@ -214,7 +214,7 @@ try {
   await page.getByRole('alert').waitFor();
   const freshWorker = page.waitForEvent('worker');
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'New Game', exact: true }).click();
   assert.notEqual(
     await freshWorker,
     healthyWorker,
@@ -226,7 +226,7 @@ try {
   assert.equal(await master.isChecked(), true);
   assert.deepEqual((await inspect()).categories, enabledCategories);
   await page.reload();
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'New Game', exact: true }).waitFor();
   await openPanel();
   assert.equal(await master.isChecked(), false);
   assert.deepEqual(errors, []);

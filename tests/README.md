@@ -2,12 +2,12 @@
 
 Game suites sit beside their production modules. `src/**/*.test.ts` suites run in Vitest's Node environment; `src/**/*.spec.ts` suites run through Angular in Chromium. This directory holds shared fixtures, the independent simulation oracle and browser acceptance probes that span multiple systems.
 
-| Location                   | Scope                                                                                                                                           |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Location                              | Scope                                                                                                                                           |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | [src/session/](../src/session/)       | Host scheduling, commands/capture continuation, completed hooks, worker transport and failure lifecycle.                                        |
 | [src/simulation/](../src/simulation/) | Authoritative movement, placement/collision, ECS storage/publication, inventory/work primitives, snapshot validation and reference equivalence. |
-| [support/](support/)       | Plain world fixtures and the independent simulation oracle.                                                                                     |
-| [acceptance/](acceptance/) | Real application flows against built or running development applications.                                                                       |
+| [support/](support/)                  | Plain world fixtures and the independent simulation oracle.                                                                                     |
+| [acceptance/](acceptance/)            | Real application flows against built or running development applications.                                                                       |
 
 ## Commands
 
@@ -102,17 +102,17 @@ The Rapier probe exercises the authored physics fixture through real keyboard in
 
 Audited 1 November 2026 by the implementation exercised and the assertions made, rather than the test filename. Six Node suites and three game acceptance probes moved out of `tools/`; compiler/export, tooling infrastructure and laboratory checks remain with their owners.
 
-| Previous path                             | Current game-test location                                                     | Behavior exercised                                                                                 |
-| ----------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `tools/world/game-session.test.ts`        | [src/session/game-session.test.ts](../src/session/game-session.test.ts)                   | Scheduling, command ordering/cancellation, asynchronous restoration and exactly-once continuation. |
-| `tools/world/worker-port.test.ts`         | [src/session/worker-port.test.ts](../src/session/worker-port.test.ts)                     | Production worker transport, errors/timeouts, disposal and failure delivery.                       |
-| `tools/world/ecs-foundation.test.ts`      | [src/simulation/ecs-runtime.test.ts](../src/simulation/ecs-runtime.test.ts)         | Production ECS/domain rules, capture/rebuild, publication/inspection and session integration.      |
-| `tools/world/simulation.test.ts`          | [src/simulation/simulation.test.ts](../src/simulation/simulation.test.ts)                 | Coordinates, initialization, movement, collision, pause and placement.                             |
-| `tools/world/reference.test.ts`           | [src/simulation/reference.test.ts](../src/simulation/reference.test.ts)                   | Production movement/placement equivalence with an independent plain-object oracle.                 |
-| `tools/world/world-geometry.test.ts`      | [src/simulation/world-geometry.test.ts](../src/simulation/world-geometry.test.ts)         | Live occupancy and safe snapshot geometry restoration.                                             |
-| `tools/world/production-browser.ts`       | [acceptance/production-browser.ts](acceptance/production-browser.ts)           | Built application/worker integration and lifecycle.                                                |
-| `tools/scenes/check-migration-browser.ts` | [acceptance/check-migration-browser.ts](acceptance/check-migration-browser.ts) | Development game UI, input, movement, placement and accessibility.                                 |
-| `tools/art/check-turning-browser.ts`      | [acceptance/check-turning-browser.ts](acceptance/check-turning-browser.ts)     | Character animation and heading behavior in the real game.                                         |
+| Previous path                             | Current game-test location                                                        | Behavior exercised                                                                                 |
+| ----------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `tools/world/game-session.test.ts`        | [src/session/game-session.test.ts](../src/session/game-session.test.ts)           | Scheduling, command ordering/cancellation, asynchronous restoration and exactly-once continuation. |
+| `tools/world/worker-port.test.ts`         | [src/session/worker-port.test.ts](../src/session/worker-port.test.ts)             | Production worker transport, errors/timeouts, disposal and failure delivery.                       |
+| `tools/world/ecs-foundation.test.ts`      | [src/simulation/ecs-runtime.test.ts](../src/simulation/ecs-runtime.test.ts)       | Production ECS/domain rules, capture/rebuild, publication/inspection and session integration.      |
+| `tools/world/simulation.test.ts`          | [src/simulation/simulation.test.ts](../src/simulation/simulation.test.ts)         | Coordinates, initialization, movement, collision, pause and placement.                             |
+| `tools/world/reference.test.ts`           | [src/simulation/reference.test.ts](../src/simulation/reference.test.ts)           | Production movement/placement equivalence with an independent plain-object oracle.                 |
+| `tools/world/world-geometry.test.ts`      | [src/simulation/world-geometry.test.ts](../src/simulation/world-geometry.test.ts) | Live occupancy and safe snapshot geometry restoration.                                             |
+| `tools/world/production-browser.ts`       | [acceptance/production-browser.ts](acceptance/production-browser.ts)              | Built application/worker integration and lifecycle.                                                |
+| `tools/scenes/check-migration-browser.ts` | [acceptance/check-migration-browser.ts](acceptance/check-migration-browser.ts)    | Development game UI, input, movement, placement and accessibility.                                 |
+| `tools/art/check-turning-browser.ts`      | [acceptance/check-turning-browser.ts](acceptance/check-turning-browser.ts)        | Character animation and heading behavior in the real game.                                         |
 
 Session and simulation suites are now colocated under `src/`; the cross-suite oracle, world fixture and strict oracle configuration stay in [support/](support/). Tooling and laboratory suites remain under `tools/` and now use Vitest:
 
@@ -121,12 +121,12 @@ Session and simulation suites are now colocated under `src/`; the cross-suite or
 | `tools/world/compile.test.ts`, `verify-export.test.ts`                                        | Marker compilation and exported-file validation; `test:tools` or focused `test:world`.                                |
 | `tools/scenes/retain-assets.test.ts`, `workflow.test.ts`                                      | Retention, export staging/rollback, watchers and recovery; `test:tools` or focused `test:export`.                     |
 | `tools/eslint/eslint-config.test.ts`, `explicit-member-accessibility.test.ts`                 | ESLint configuration and rule implementation; `test:tools` or focused `test:lint`.                                    |
-| [tools/coverage/report.test.ts](../tools/coverage/report.test.ts) | Source-map normalization, merging, exclusions, malformed inputs, stale-data cleanup and reports; `test:tools`. |
-| [tools/testing/typescript-resolution.test.ts](../tools/testing/typescript-resolution.test.ts) | Tests Vitest source-alias and native-package resolution; `test:tools`.                                  |
+| [tools/coverage/report.test.ts](../tools/coverage/report.test.ts)                             | Source-map normalization, merging, exclusions, malformed inputs, stale-data cleanup and reports; `test:tools`.        |
+| [tools/testing/typescript-resolution.test.ts](../tools/testing/typescript-resolution.test.ts) | Tests Vitest source-alias and native-package resolution; `test:tools`.                                                |
 | [tools/ecs-bench/verify-production.test.ts](../tools/ecs-bench/verify-production.test.ts)     | Tests build-metadata auditing, moved beside the audit tool from `tools/world/production-audit.test.ts`; `test:tools`. |
 | `tools/ecs-bench/protocol.test.ts`                                                            | Synthetic laboratory fixtures, scheduling, statistics and report/resume handling; opt-in ECS investigation checks.    |
 | `tools/simulation-worker-bench/protocol.test.ts`, `presentation.test.ts`                      | Laboratory protocol/credits and prototype wire codec; opt-in worker investigation checks.                             |
 
 `tools/scenes/check-dev-workflow.ts` remains a tooling integration check because it tests exporter/watcher reload and recovery. `tools/scenes/profile-browser.ts` remains a profiling/asset-audit tool; its application sanity assertions guard the measurements. Benchmark correctness drivers remain with their laboratories. These are distinct from the three relocated game acceptance probes.
 
-Normal CI runs coverage-enabled tooling, Node game and Chromium application suites, followed by `test:acceptance` and the independent workflow checks. `yarn test:labs` runs only the opt-in laboratory unit suites through Vitest; it launches no performance trials. Laboratory performance trials retain their explicit opt-in workflows.
+Normal CI runs coverage-enabled tooling, Node game and Chromium application suites, followed by `test:acceptance`, `test:saves` and the independent workflow checks. `yarn test:labs` runs only the opt-in laboratory unit suites through Vitest; it launches no performance trials. Laboratory performance trials retain their explicit opt-in workflows.

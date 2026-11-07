@@ -1,0 +1,8 @@
+<section aria-labelledby="save-confirm-title">
+  <h2 id="save-confirm-title">Confirm save action</h2>
+  <p>{{ message }}</p>
+  <div class="actions">
+    <button type="button" class="button" (click)="ref.close(false)">Keep current progress</button>
+    <button type="button" class="button" (click)="ref.close(true)">Confirm</button>
+  </div>
+</section>

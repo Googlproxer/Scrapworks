@@ -74,6 +74,9 @@ div.top-right {
   right: 1rem;
   z-index: 1;
 }
+div.top-right:has(app-gameplay-saves.expanded) {
+  z-index: 3;
+}
 
 div.top-centre {
   position: absolute;

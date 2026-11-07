@@ -11,6 +11,10 @@ flowchart LR
     Grid[Plain grid and placement rules]
     Model[Plain commands, tick contracts and detached WorldView]
     Settings[Controls settings IndexedDB adapter]
+    Saves[SaveCoordinator serial application operations]
+    Repository[SaveRepository interface]
+    Local[Gameplay IndexedDB adapter]
+    Snapshot[Schema one envelope and detached world physics data]
 
     Editor -->|compile layout| Compiler
     Compiler -->|validates and emits| Definition
@@ -22,6 +26,13 @@ flowchart LR
     Application -->|credits and commands| Worker
     Worker -->|sequential fixed steps| Simulation
     Angular -->|controls settings only| Settings
+    Angular -->|manual save and load| Saves
+    Saves -->|capture prepare and commit| Application
+    Saves -->|list read write delete| Repository
+    Repository -->|local implementation| Local
+    Saves -->|durable codec| Snapshot
+    Worker -->|candidate validation| Snapshot
+    Local -->|atomic payload and metadata| Snapshot
     Content -->|recipes eligibility and costs| Simulation
     Simulation -->|uses| Grid
     Simulation -->|uses| Model

@@ -1,6 +1,6 @@
 # Player progression and crafting
 
-Agreed direction recorded 27 October and revised 28 October 2026: safe handcrafting teaches materials/components before the MiniFab, with explicit UI-bound interruption and per-item refunds. The opening, power-free baseline and optional winding were implemented and verified on 2 November; later factory, upgrade and restoration branches remain design requirements. The [GDD](GDD.md) owns the overall game direction; the [TDD](TDD.md) owns technical rules, and the [roadmap](../plans/README.md) tracks implementation separately.
+Agreed direction recorded 27 October and revised 28 October 2026: safe handcrafting teaches materials/components before the MiniFab, with explicit UI-bound interruption and per-item refunds. The opening, power-free baseline and optional winding were implemented and verified on 2 November. The user settled the first local-save behavior on 8 November: Continue/New Game, visible handcraft resumption and confirmation before unsaved-progress loss or different-run overwrite. Gameplay saving is implemented in Milestone 4; later factory, upgrade and restoration branches remain planned. The [GDD](GDD.md) owns the overall game direction; the [TDD](TDD.md) owns technical rules, and the [roadmap](../plans/README.md) tracks implementation separately.
 
 ## Progression principles
 
@@ -29,16 +29,16 @@ The empty-handed start remains the baseline. The player earns the MiniFab throug
 
 ## Materials and early crafting tree
 
-| Material or item | Early source or recipe relationship | Long-term role |
-| --- | --- | --- |
-| Mixed scrap | Loose salvage initially; later extraction and dismantling | Shared starting material and recovery form |
-| Metal plates | Recovered/worked from scrap after research | Structural inputs to parts, equipment and later branches |
-| Recovered wire | Recovered from mixed scrap after research | Electrical inputs throughout later branches |
-| Mechanical parts | Made from plates | Inputs to tools, equipment and advanced assemblies |
-| Electrical parts | Made from plates and wire | Inputs to powered equipment and advanced assemblies |
-| Base MiniFab | Research after both assembly branches using mechanical/electrical parts; separately hand-assemble from plates, wire and both parts | First complex personal device; background crafting and eligible precursors |
-| Tools, equipment and MiniFab upgrades | Researched combinations of basic materials and parts | Better collection, MiniFab upgrades, power, extraction and factory construction |
-| Dedicated research craftables | Later manufactured combinations of earlier components | Feed scalable laboratory research |
+| Material or item                      | Early source or recipe relationship                                                                                                | Long-term role                                                                  |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Mixed scrap                           | Loose salvage initially; later extraction and dismantling                                                                          | Shared starting material and recovery form                                      |
+| Metal plates                          | Recovered/worked from scrap after research                                                                                         | Structural inputs to parts, equipment and later branches                        |
+| Recovered wire                        | Recovered from mixed scrap after research                                                                                          | Electrical inputs throughout later branches                                     |
+| Mechanical parts                      | Made from plates                                                                                                                   | Inputs to tools, equipment and advanced assemblies                              |
+| Electrical parts                      | Made from plates and wire                                                                                                          | Inputs to powered equipment and advanced assemblies                             |
+| Base MiniFab                          | Research after both assembly branches using mechanical/electrical parts; separately hand-assemble from plates, wire and both parts | First complex personal device; background crafting and eligible precursors      |
+| Tools, equipment and MiniFab upgrades | Researched combinations of basic materials and parts                                                                               | Better collection, MiniFab upgrades, power, extraction and factory construction |
+| Dedicated research craftables         | Later manufactured combinations of earlier components                                                                              | Feed scalable laboratory research                                               |
 
 These are recipe relationships, not finalized quantities, durations, stable content IDs or a deterministic recycler recipe list. Basic recovery must be possible before a powered recycler exists. Later pure iron, copper and other ores provide more targeted sources; they should feed the established component branches rather than make the opening components obsolete.
 
@@ -73,15 +73,15 @@ Accepted 28 October 2026 as initial design/playtest settings:
 
 ## Manual actions and automation
 
-| Activity | Player capability | Automation progression |
-| --- | --- | --- |
-| Gather loose scrap | Available without a crafted tool | Better researched tools, then extraction machinery |
-| Work tougher deposits | Research and craft the appropriate tools | Powered extraction; pure ore sources later |
+| Activity                           | Player capability                                                                 | Automation progression                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Gather loose scrap                 | Available without a crafted tool                                                  | Better researched tools, then extraction machinery                 |
+| Work tougher deposits              | Research and craft the appropriate tools                                          | Powered extraction; pure ore sources later                         |
 | Craft safe materials and equipment | Handcraft researched recipes while the crafting UI is open, using prepared inputs | MiniFab background/precursor work, then supplied fabrication lines |
-| Move materials | Carry and feed/collect within interaction reach | Direct machine connections, conveyors and sorting |
-| Research | Timed field research using carried materials | Faster dedicated laboratories; scale by adding labs |
-| Generate power and treat water | Construct, supply and configure equipment | Renewable generation, storage and continuous treatment |
-| Terraform | Research and establish greenhouses and supporting infrastructure | Green technology supports greening; pollution opposes it |
+| Move materials                     | Carry and feed/collect within interaction reach                                   | Direct machine connections, conveyors and sorting                  |
+| Research                           | Timed field research using carried materials                                      | Faster dedicated laboratories; scale by adding labs                |
+| Generate power and treat water     | Construct, supply and configure equipment                                         | Renewable generation, storage and continuous treatment             |
+| Terraform                          | Research and establish greenhouses and supporting infrastructure                  | Green technology supports greening; pollution opposes it           |
 
 Every researched assembly using safe components remains handcraftable, regardless of item tier or ingredient count. Liquids, hazardous materials/dangerous outputs and specialist treatment require suitable processes. Safe finished components may be assembled manually even if their original manufacture needed specialist machinery; safe research craftables are not arbitrarily factory-only. MiniFab compatibility still respects actual process requirements and must not invent unavailable precursors. Manual machine supply remains supported after conveyors.
 
@@ -94,6 +94,7 @@ Every researched assembly using safe components remains handcraftable, regardles
 - Example: after ten plates finish, leaving during plate eleven keeps the ten completed plates (except any already consumed by enabled research) and refunds plate eleven's scrap. Cancelling a mechanical part returns its reserved plates, rather than converting those inputs to scrap. This differs from dismantling a completed item.
 - Refunds/cancellations never add extraction/production history or undo completed units. Duplicate close/interruption commands cannot refund twice. Return the unfinished unit's original inputs before releasing exclusive ownership; no intervening inventory addition can take their former capacity, and consume-only research can only free space. The refund-to-ground scenario is excluded by this invariant. This manual ownership never grants automation an exclusive claim on player slots.
 - Abrupt UI teardown must enforce the same cancellation/refund invariant. Ordinary application suspension pauses simulation; it does not create background handcrafting. Restoring gameplay must not resume an unseen handcraft job.
+- For Milestone 4, saving during handcrafting preserves the current unit without closing its panel or invoking cancellation. Loading reopens Inventory & Crafting with the saved job before work can resume; retain its original inputs, remaining work and batch count. Normal stay/cancel and forced-interruption rules apply after restoration.
 - MiniFab work is separate: it can continue when its panel is closed or the player performs other work, subject to normal simulation pause/capacity rules.
 
 ## Mini Fabricator
@@ -178,11 +179,11 @@ Before implementation, specify the output catalog, probabilities, batch sizes, m
 
 General fabrication machines select recipes by input arity. Input arity means the number of distinct ingredient types, not the number of individual units or output types.
 
-| Machine | Supported recipe inputs | Explicit exclusions |
-| --- | --- | --- |
-| Basic Fabricator | Exactly one ingredient type | Two-, three- and four-input recipes |
-| Medium Fabricator | Exactly two ingredient types | One-, three- and four-input recipes |
-| Advanced Fabricator | Three or four ingredient types | One- and two-input recipes |
+| Machine             | Supported recipe inputs        | Explicit exclusions                 |
+| ------------------- | ------------------------------ | ----------------------------------- |
+| Basic Fabricator    | Exactly one ingredient type    | Two-, three- and four-input recipes |
+| Medium Fabricator   | Exactly two ingredient types   | One-, three- and four-input recipes |
+| Advanced Fabricator | Three or four ingredient types | One- and two-input recipes          |
 
 Higher tiers do not replace the lower tiers. Preserve useful roles for all three. The Mini Fabricator and recycler have their own rules and must not inherit these restrictions accidentally. Availability of each factory tier is staged through research; exact technology placement is not yet fixed.
 
@@ -204,7 +205,7 @@ Agreed 28 October 2026:
 - If materials needed for the next consumption event are unavailable, wait automatically without spending or granting unfunded work. Resume when available if Field Research is still enabled for that technology; missing stock does not switch the player's enable toggle off. Do not build up a backlog of unpaid work or burst-consume to catch up after a shortage.
 - Disabling Field Research stops all research withdrawals from the player bag. Laboratories may continue using their own supplied inputs. When enabled, Field Research can contribute from player inventory alongside laboratory research against the same technology requirements; materials and work must not be paid or credited twice. Detailed lab buffer/routing/rate coordination belongs to later integration.
 - Player commands and the current handcraft unit's input commitment take precedence over automatic research draws in a simulation step. The consume-only exception described in [inventory rules](#inventory-interaction-range-and-overflow) allows research during handcrafting without invalidating protected output/refund capacity. Other additions/transfers remain deferred; research can consume completed outputs still in the bag, so later batch units may lack stock.
-- Persist the active technology, enabled/manual-pause choice, each technology's consumed-material counts and work progress, and the state needed to resume a material wait without duplicate payment. UI state does not enable/disable research. On load, resolve any unseen handcraft cancellation/refund before research draws or other inventory writers resume; no offline progress is implied.
+- Persist the active technology, enabled/manual-pause choice, each technology's consumed-material counts and work progress, and the state needed to resume a material wait without duplicate payment. UI state does not enable/disable research. Milestone 4 reopens the crafting panel for a saved handcraft job before any work resumes; its inputs remain committed and protected. If a later interruption leaves handcraft UI absent, resolve its cancellation/refund before research draws or other inventory writers resume; no offline progress is implied.
 
 Retain cumulative production eligibility and material payment as separate concepts. Completed crafting and machine output count toward production history; use separate extraction history for raw-resource eligibility. Consuming a research item advances its technology's contribution ledger exactly once without reducing lifetime history. Moving existing items, collecting output and dismantling refunds do not increase either history. Crafting newly unlocked equipment has a separate cost; research grants no free equipment.
 

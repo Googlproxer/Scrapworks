@@ -11,6 +11,19 @@ describe('Notification lifetime and queue', () => {
     vi.useRealTimers();
   });
 
+  it('clears old-world visible, queued and timed notices while accepting notices from the new world', () => {
+    for (let i = 0; i < 7; i++) center.open({ message: 'Old world', timeout: 1000 });
+    center.clear();
+    expect(center.visible()).toEqual([]);
+    expect(center.queuedCount()).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
+    center.open({ message: 'New world', timeout: 1000 });
+    vi.advanceTimersByTime(999);
+    expect(center.visible()).toHaveLength(1);
+    vi.advanceTimersByTime(1);
+    expect(center.visible()).toEqual([]);
+  });
+
   it('shows five in FIFO order and promotes queued notices only after dismissal', () => {
     const refs = Array.from({ length: 7 }, (_, i) =>
       center.open({ message: `Notice ${i + 1}`, timeout: 0 }),

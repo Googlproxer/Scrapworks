@@ -12,6 +12,12 @@ import type {
 import type { BindingProfile } from '@contracts/input';
 import type { GameState, SceneKey } from '@contracts/game-state';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
+import type { WorldDefinition } from '@contracts/world';
+
+export interface PreparedWorld {
+  commit(): void;
+  dispose(): void;
+}
 
 /** Main-thread integration API. Deterministic contracts contain no reactive-library types. */
 export interface GameClientOptions {
@@ -36,4 +42,5 @@ export interface GameClient {
   setInputEnabled(on: boolean): void;
   setDebugDrawSettings(settings: DebugDrawSettings): void;
   toggleInspector(): Promise<void>;
+  prepareWorld?(definition: WorldDefinition, session: WorldSessionBridge): Promise<PreparedWorld>;
 }

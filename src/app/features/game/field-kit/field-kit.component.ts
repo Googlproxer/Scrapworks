@@ -1,4 +1,13 @@
-import { afterRenderEffect, Component, computed, ElementRef, inject, signal } from '@angular/core';
+import {
+  afterRenderEffect,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  signal,
+  effect,
+  untracked,
+} from '@angular/core';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 
 import { GameRuntimeService } from '../game-runtime.service';
@@ -6,6 +15,7 @@ import { InventoryPanelComponent } from './inventory-panel.component';
 import { HandcraftPanelComponent } from './handcraft-panel.component';
 import { MiniFabPanelComponent } from './minifab-panel.component';
 import { ResearchPanelComponent } from './research-panel.component';
+import { GameplaySaveService } from '../../save/gameplay-save.service';
 
 @Component({
   imports: [
@@ -20,6 +30,7 @@ import { ResearchPanelComponent } from './research-panel.component';
   templateUrl: './field-kit.component.html',
 })
 export class FieldKitComponent {
+  public readonly saves = inject(GameplaySaveService, { optional: true });
   public readonly runtime = inject(GameRuntimeService);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   public readonly opening = computed(() => this.runtime.world()?.opening);
@@ -51,10 +62,14 @@ export class FieldKitComponent {
   });
 
   public constructor() {
+    effect(() => {
+      this.runtime.restoreRevision?.();
+      untracked(() => this.activeTab.set('inventory'));
+    });
     afterRenderEffect(() => {
       if (this.runtime.workExitWarning())
         this.element.nativeElement.querySelector<HTMLButtonElement>('[data-stay]')?.focus();
-      else if (this.runtime.fieldKitOpen())
+      else if (this.runtime.fieldKitOpen() && (this.runtime.canFocusCrafting?.() ?? true))
         this.element.nativeElement.querySelector<HTMLElement>('[data-kit-heading]')?.focus();
     });
   }

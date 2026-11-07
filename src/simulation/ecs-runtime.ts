@@ -326,10 +326,10 @@ export class Simulation {
     if (this.endpoints.length > 2) this.endpoints.shift();
   }
 
-  public clearInput(): readonly OpeningEvent[] {
+  public clearInput(preserveWork = false): readonly OpeningEvent[] {
     check(!this.disposed, 'Disposed simulation');
     this.playerMotor.clearInput();
-    this.opening.interrupt();
+    if (!preserveWork) this.opening.interrupt();
     this.mark(this.ids.get(this.resources.playerId)!);
     return this.opening.drainEvents();
   }

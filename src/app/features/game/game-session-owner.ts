@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import type { WorldDefinition, WorldView } from '@contracts/world';
 import type { SessionEvent } from '@contracts/session-event';
+import type { SaveSnapshot } from '@contracts/save';
 import type { SimulationPortFactory } from '../../../session/port';
 import { GameSession } from '../../../session/game-session';
 
@@ -14,6 +15,8 @@ export class GameSessionOwner {
   private readonly eventSource = new Subject<SessionEvent>();
   private readonly failureSource = new Subject<Error>();
   private readonly worldValue = signal<WorldView | null>(null);
+  private readonly runValue = signal<string | null>(null);
+  public readonly runId = this.runValue.asReadonly();
   public readonly events$ = this.eventSource.asObservable();
   public readonly failures$ = this.failureSource.asObservable();
   public readonly world = this.worldValue.asReadonly();
@@ -44,6 +47,7 @@ export class GameSessionOwner {
           if (revision === this.revision) this.failureSource.next(error);
         },
       });
+      this.runValue.set(crypto.randomUUID());
       this.events = new Subscription();
       this.events.add(
         this.session.events$.subscribe((event) => {
@@ -61,6 +65,53 @@ export class GameSessionOwner {
     return view;
   }
 
+  public async prepare(
+    definition: WorldDefinition,
+    save: SaveSnapshot | null,
+  ): Promise<GameSession> {
+    const candidate = new GameSession(definition, {
+      portFactory: this.createPort,
+      developerFixture: this.developer,
+      freezeViews: this.developer,
+      playerSave: !!save,
+      capture: save
+        ? {
+            world: save.world,
+            ledger: { accepted: 0, applied: 0, cancelled: 0, lastApplied: 0 },
+            pending: [],
+          }
+        : undefined,
+      onFailure: (error) => {
+        if (this.session?.error === error) this.failureSource.next(error);
+      },
+    });
+    try {
+      await candidate.ready;
+      return candidate;
+    } catch (error) {
+      candidate.dispose();
+      throw error;
+    }
+  }
+
+  public commit(candidate: GameSession, runId: string): void {
+    if (!candidate.isReady) throw new Error('Restored simulation is not ready.');
+    const previous = this.session;
+    ++this.revision;
+    this.events.unsubscribe();
+    this.events = new Subscription();
+    this.session = candidate;
+    this.definitionValue = candidate.definition;
+    this.runValue.set(runId);
+    this.events.add(
+      candidate.events$.subscribe((event) => {
+        if (this.session === candidate) this.eventSource.next(event);
+      }),
+    );
+    this.pin(candidate.readView());
+    previous?.dispose();
+  }
+
   public disposeWorld(): void {
     ++this.revision;
     this.events.unsubscribe();
@@ -68,6 +119,7 @@ export class GameSessionOwner {
     this.session = undefined;
     this.definitionValue = undefined;
     this.worldValue.set(null);
+    this.runValue.set(null);
   }
 
   public destroy(): void {

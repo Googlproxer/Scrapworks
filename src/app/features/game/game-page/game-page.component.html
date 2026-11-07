@@ -52,12 +52,34 @@
         class="button"
         data-play
         [disabled]="
-          !gameRuntimeService.isReady() || gameRuntimeService.currentSceneKey() !== 'MainMenu'
+          saves.busy() ||
+          !gameRuntimeService.isReady() ||
+          gameRuntimeService.currentSceneKey() !== 'MainMenu'
         "
         (click)="startGame()"
       >
-        Play Game!
+        New Game
       </button>
+      @if (saves.status().slot) {
+        <button
+          type="button"
+          class="button"
+          (click)="saves.load()"
+          [disabled]="saves.busy() || !gameRuntimeService.isReady()"
+        >
+          Continue
+        </button>
+      }
+      @if (saves.hasSession()) {
+        <button
+          type="button"
+          class="button"
+          (click)="gameRuntimeService.setScene('Game')"
+          [disabled]="saves.busy() || !gameRuntimeService.isReady()"
+        >
+          Resume current game
+        </button>
+      }
     </div>
   }
   @if (developer && gameRuntimeService.state(); as state) {
@@ -67,6 +89,7 @@
   }
 
   <div class="top-right">
+    <app-gameplay-saves [compact]="true" />
     <div>
       <button class="button" type="button" (click)="openControls()">Controls</button>
       @if (gameRuntimeService.currentSceneKey() === 'Game') {
@@ -103,7 +126,7 @@
     <p class="paused-status" role="status">Game paused while the viewport is unavailable.</p>
   }
   @if (
-    gameRuntimeService.currentSceneKey() === 'Game' &&
+    (gameRuntimeService.currentSceneKey() === 'Game' || gameRuntimeService.preparingSave()) &&
     !gameRuntimeService.isBusy() &&
     !gameRuntimeService.errorMessage()
   ) {

@@ -39,7 +39,7 @@ const inspect = () =>
 try {
   await page.goto(origin);
   await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'New Game', exact: true }).click();
   await page.evaluate(() =>
     window.testEvents.dom(
       () =>
@@ -119,7 +119,7 @@ try {
   });
   await page.reload();
   await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'New Game', exact: true }).click();
   await page.evaluate(() =>
     window.testEvents.dom(
       () =>

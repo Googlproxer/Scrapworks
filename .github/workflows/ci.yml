@@ -87,6 +87,9 @@ jobs:
           yarn test:acceptance
           yarn test:acceptance --render-delay-ms=1000
 
+      - name: Verify gameplay saves through IndexedDB and page reload
+        run: yarn test:saves
+
       - name: Verify exported and built assets
         run: yarn assets:check --build
 
@@ -122,6 +125,7 @@ jobs:
             .vitest/
             tmp/production-worker-browser/
             tmp/opening-browser/
+            tmp/save-browser/
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7

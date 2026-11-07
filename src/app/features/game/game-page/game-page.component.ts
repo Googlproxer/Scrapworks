@@ -20,11 +20,15 @@ import { NotificationStackComponent } from '../../ui/notification-stack/notifica
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator/loading-indicator.component';
 import { LoadingScreenComponent } from '../../../shared/loading/loading-screen/loading-screen.component';
 import { MenuLogoComponent } from '../../../shared/loading/menu-logo/menu-logo.component';
+import { GameplaySaveService, GAMEPLAY_SAVE_REPOSITORY } from '../../save/gameplay-save.service';
+import { IndexedDbSaveRepository } from '../../../../persistence/indexeddb-save-repository';
+import { GameplaySavesComponent } from '../../save/gameplay-saves/gameplay-saves.component';
 
 @Component({
   imports: [
     JsonPipe,
     MenuLogoComponent,
+    GameplaySavesComponent,
     DebugDrawPanelComponent,
     FieldKitComponent,
     NotificationStackComponent,
@@ -34,7 +38,13 @@ import { MenuLogoComponent } from '../../../shared/loading/menu-logo/menu-logo.c
   selector: 'app-game-page',
   styleUrl: './game-page.component.scss',
   templateUrl: './game-page.component.html',
-  providers: [GameRuntimeService, UiService, UiInputAdapterService],
+  providers: [
+    GameRuntimeService,
+    UiService,
+    UiInputAdapterService,
+    GameplaySaveService,
+    { provide: GAMEPLAY_SAVE_REPOSITORY, useFactory: () => new IndexedDbSaveRepository() },
+  ],
 })
 export class GamePageComponent implements AfterViewInit, OnDestroy {
   private readonly rendererHost = viewChild.required<ElementRef<HTMLElement>>('rendererHost');
@@ -43,6 +53,7 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
   public readonly inputAdapter = inject(UiInputAdapterService);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   public readonly developer = !!environment.dev;
+  public readonly saves = inject(GameplaySaveService);
   private wasBusy = false;
 
   public constructor() {
@@ -76,7 +87,8 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
   }
 
   public startGame() {
-    this.gameRuntimeService.setScene('Game');
+    if (this.saves.busy()) return;
+    void this.saves.newGame();
   }
 
   public async openSaveDialog() {

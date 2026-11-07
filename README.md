@@ -18,7 +18,7 @@ The [migration plan](docs/plans/3d-migration.md) records the current integration
 | World presentation    | Babylon.js 9: rendering, camera, picking, animation, effects, and input adaptation.                                                              |
 | Scene authoring       | One Babylon.js Editor project in this repository. Attached scripts handle presentation and scene bindings.                                       |
 | Gameplay              | Strict TypeScript 6, independent of Angular, Babylon, the DOM, and storage. A plain world/session owns fixed-step movement and footprint checks. |
-| Saves                 | Versioned plain snapshots through Dexie/IndexedDB; currently a test-data experiment.                                                             |
+| Saves                 | Schema-1 manual local saves through Dexie/IndexedDB, with Continue, visible crafting resume and guarded world replacement.                       |
 | Tests                 | Vitest with Playwright/headless Chromium, plus separate lint-tooling checks.                                                                     |
 
 Keep gameplay rules and saved world state outside scene components. `GameClient` reports renderer lifecycle; it is not the world-state model.
@@ -35,7 +35,7 @@ yarn test:setup
 yarn dev
 ```
 
-Visit [localhost:4200](http://localhost:4200) and select Play Game; `/3d` is a compatibility redirect. Open `scrapworks.bjseditor` in Babylon.js Editor 5.5.2 to edit `assets/main-menu.scene` or `assets/game.scene` . Follow the [Editor/MCP setup guide](docs/plans/babylon-editor-setup.md) for authoring and workstation setup.
+Visit [localhost:4200](http://localhost:4200) and select New Game or Continue; `/3d` is a compatibility redirect. Open `scrapworks.bjseditor` in Babylon.js Editor 5.5.2 to edit `assets/main-menu.scene` or `assets/game.scene` . Follow the [Editor/MCP setup guide](docs/plans/babylon-editor-setup.md) for authoring and workstation setup.
 
 The development command exports scenes before starting Angular, then watches saved Editor inputs and attached presentation scripts. Save in the Editor to export and reload automatically. On Linux, Angular polls for changes every 500 ms so atomically replaced scene assets trigger a browser reload; an explicit `--poll` option overrides that interval. The authoring watcher still uses native filesystem events. Failed exports leave the last working scenes available and report the error in the terminal; correcting the save retries. See the [workflow validation](docs/reports/workflow/2026-10-23/README.md).
 

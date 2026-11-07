@@ -1,0 +1,55 @@
+<ng-template #content
+  ><section aria-label="Local gameplay save">
+    <div class="actions">
+      @if (saves.hasSession()) {
+        <button type="button" class="button" (click)="saves.save()" [disabled]="saves.busy()">
+          Save game
+        </button>
+        <button
+          type="button"
+          class="button"
+          (click)="saves.load()"
+          [disabled]="saves.busy() || !saves.status().slot"
+        >
+          Load game
+        </button>
+      }
+      @if (saves.status().slot) {
+        <button type="button" class="button" (click)="saves.delete()" [disabled]="saves.busy()">
+          Delete save
+        </button>
+      }
+      @if (saves.status().phase === 'error') {
+        <button type="button" class="button" (click)="saves.refresh()">Check save again</button>
+      }
+    </div>
+    @if (!compact()) {
+      <p role="status" aria-live="polite">{{ saves.status().message }}</p>
+    } @else {
+      <p>{{ saves.status().message }}</p>
+    }
+    @if (saves.hasSession()) {
+      <p>{{ saves.unsaved() ? 'Unsaved progress' : 'Progress saved' }}</p>
+    }
+    @if (saves.status().slot; as slot) {
+      <p>Manual slot · Last saved {{ saves.savedTime() }}</p>
+      <details>
+        <summary>Save details</summary>
+        <p>Saved run: {{ slot.runId }}</p>
+        <p>Current run: {{ saves.runId() ?? 'None' }}</p>
+      </details>
+    }
+    <small>This browser and website only. No offline production.</small>
+  </section></ng-template
+>
+@if (compact()) {
+  <details (toggle)="onToggle($event)">
+    <summary>Save &amp; load</summary>
+    <ng-container [ngTemplateOutlet]="content" />
+  </details>
+  <p class="compact-feedback" role="status" aria-live="polite" [title]="saves.status().message">
+    {{ saves.status().message }}
+  </p>
+} @else {
+  <ng-container [ngTemplateOutlet]="content" />
+}

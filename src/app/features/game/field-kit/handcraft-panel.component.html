@@ -12,7 +12,7 @@
     [disabled]="!!opening.state.handcraft"
   >
     @for (recipe of recipes; track recipe.id) {
-      <option [value]="recipe.id">
+      <option [value]="recipe.id" [selected]="recipeId() === recipe.id">
         {{ recipe.name }}{{ recipeUnlocked(recipe) ? '' : ' (research required)' }}
       </option>
     }
@@ -25,12 +25,13 @@
     (change)="chooseBatch($event)"
     [disabled]="!!opening.state.handcraft"
   >
-    <option [value]="1">1</option>
+    <option [value]="1" [selected]="batch() === 1">1</option>
+    @if (customBatch()) { <option [value]="batch()" selected>{{ batch() }}</option> }
     @if (recipe().outputs[0]?.item !== 'prybar' && recipe().id !== 'base-minifab') {
-      <option [value]="5">5</option>
-      <option [value]="10">10</option>
-      <option [value]="25">25</option>
-      <option [value]="100">100</option>
+      <option [value]="5" [selected]="batch() === 5">5</option>
+      <option [value]="10" [selected]="batch() === 10">10</option>
+      <option [value]="25" [selected]="batch() === 25">25</option>
+      <option [value]="100" [selected]="batch() === 100">100</option>
     }
   </select>
   <button

@@ -21,12 +21,12 @@ flowchart TB
         ECS[OpeningSystem salvage handcraft MiniFab and research]
     end
 
-    subgraph Persistence[Planned gameplay persistence]
-        Saves[Planned gameplay save service]
-        Codec[Snapshot codec: validation and migrations]
+    subgraph Persistence[Local gameplay persistence]
+        Saves[SaveCoordinator and GameplaySaveService]
+        Codec[Schema one codec and candidate validation]
         Repository[SaveRepository interface]
         Local[(IndexedDB through Dexie)]
-        Files[JSON file backups]
+        Files[Future Milestone nine file backups]
     end
 
     Editor -->|saved layout| Compiler
@@ -48,9 +48,9 @@ flowchart TB
     Sim -->|publish completed state| Views
     Views -->|Angular signals| UI
     Views -->|render data| Scene
-    UI -->|save, load, import, export| Saves
-    Saves <-->|capture snapshot or restore world| Sim
-    Saves -->|encode or validate and migrate| Codec
+    UI -->|manual save load and delete| Saves
+    Saves <-->|capture and prepared session replacement| Facade
+    Saves -->|encode or validate| Codec
     Saves <-->|versioned snapshots| Repository
     Repository <-->|transactional slot storage| Local
-    Saves <-->|import and export| Files
+    Saves <-->|future import and export| Files

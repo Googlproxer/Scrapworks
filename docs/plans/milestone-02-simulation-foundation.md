@@ -56,7 +56,7 @@ Typed commands cover salvage, inventory, research, handcrafting and the personal
 - [x] Neutralize effective movement on focus loss and ownership changes while retaining physical held state for release/centre suppression.
 - [x] Reset elapsed-time baseline and accumulator before resuming.
 - [x] Keep the latest completed detached view inspectable while paused.
-- [ ] Add gameplay snapshot capture of that completed state in Milestone 4.
+- [x] Add gameplay snapshot capture of that completed state in Milestone 4. See the [save implementation report](../reports/milestone-04/2026-11-08/README.md).
 - [x] Cancel owned frame callbacks and visibility/focus listeners on teardown.
 
 ## Step 6 Verify the foundation

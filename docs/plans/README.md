@@ -1,6 +1,6 @@
 # Scrapworks Implementation Plan
 
-Updated 2 November 2026 for the implemented Milestone 3 opening: inventory/salvage, five technologies and six recipes, background Field Research, safe handcrafting and the requested power-free MiniFab with optional winding. Verification and pacing evidence are in the [opening report](../reports/milestone-03/2026-11-02/README.md). Gameplay saves remain Milestone 4. Earlier migration and ECS qualification reports retain their dated scope.
+Updated 8 November 2026 for Milestone 4 implementation. One manual gameplay slot supports Continue/New Game, visible handcraft resumption, MiniFab/research/native-physics continuation and protection before losing unsaved progress or overwriting another run. The [save implementation report](../reports/milestone-04/2026-11-08/README.md) records verification. Earlier opening and migration evidence retain their dated scope; factories and later progression remain planned.
 
 Build a browser-first 3D game with Angular UI, Babylon presentation, Editor-authored layout, a plain TypeScript simulation, and local Dexie/IndexedDB snapshots. The [GDD](../design/GDD.md), [player progression decisions](../design/player-progression.md), [TDD](../design/TDD.md), and [Art Document](../art/README.md) own their respective requirements.
 
@@ -16,30 +16,30 @@ The [cleanup record](3d-cleanup.md) describes retired tools/assets and their rec
 
 The [production ECS/worker implementation plan](ecs-worker-implementation.md) established Step 0. Milestone 3 now executes the opening on that same authority and clock. Completed-tick hooks, authored-world Retry and plain capture/rebuild remain in place; gameplay persistence and factory executors remain later work.
 
-Manual salvage, recipe jobs, inventory interaction, research, machines, transport, restoration and gameplay saves remain unimplemented. Controls settings persisting through IndexedDB do not establish world saving.
+Manual salvage, recipe jobs, inventory interaction, background Field Research and the MiniFab are implemented. Factory machines/labs, transport and restoration remain later work. Gameplay saves have their own repository and real production IndexedDB acceptance; controls-settings and developer test-data storage remain separate.
 
 ## Milestones at a glance
 
 The [Fibery project tracker](fibery-tracking.md) provides the live task board, milestone hierarchy and current-design work view. Its initial import preserves the implementation credit and outstanding requirements below; it does not resume gameplay implementation.
 
-| Milestone                                                                           | Playable result                                                      | Current state                                                                                                                                                           |
-| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [1. Project and integration](milestone-01-project-and-integration.md)               | One reliable canvas and authored fixture                             | Complete for integration: reviewed changes committed; clean pinned-Yarn install and full CI pass. See [CI evidence](../reports/ci/2026-10-28/README.md).                |
-| [2. Simulation foundation](milestone-02-simulation-foundation.md)                   | A world advances and pauses predictably                              | Plain world/session, typed fixture command, detached views, 20 Hz clock and pause implemented and tested.                                                               |
-| [3. Character and manual opening](milestone-03-character-and-manual-opening.md)     | Find scrap, field-research tools/recipes and use the Mini Fabricator | Implemented and verified: empty-handed opening, inventory/salvage, timed research, safe handcrafting, MiniFab, winding and accessible UI. See the dated opening report. |
-| [4. First local save](milestone-04-first-local-save.md)                             | Restore Mini Fabricator and field research in progress               | Gameplay snapshots and restore unimplemented. Controls IndexedDB reload verified separately; old save dialog remains test data.                                         |
-| [5. Research](milestone-05-research.md)                                             | Expand the tree toward dedicated craftables and scalable labs        | Not started. Bootstrap research is implemented in Milestone 3; physical factory/lab integration follows in Milestone 6.                                                 |
-| [6. First working machines](milestone-06-first-working-machines.md)                 | Manually supply renewable-powered recycling, fabrication and labs    | Not started. Random recycler outputs, fabrication arity, extraction and full recovery are planned.                                                                      |
-| [7. Transport](milestone-07-transport.md)                                           | Automate direct supply and sort mixed recycler output                | Not started. Trains and loading/unloading stations are later-game work.                                                                                                 |
-| [8. Restoration and energy choices](milestone-08-restoration-and-energy-choices.md) | Research greenhouses and demonstrate peaceful terraforming           | Not started. Expanded weather/storage, optional coal and pollution mitigation remain planned.                                                                           |
-| [9. Save resilience](milestone-09-save-resilience.md)                               | Autosave, recover, and transfer progress                             | Unvalidated test-data import/export scaffold only.                                                                                                                      |
-| [10. Portfolio prototype](milestone-10-portfolio-prototype.md)                      | Complete, understandable small-map demo                              | Migration presentation, controls, production packaging and small-fixture profiling verified. Complete factory route and representative performance pending.             |
+| Milestone                                                                           | Playable result                                                       | Current state                                                                                                                                                           |
+| ----------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [1. Project and integration](milestone-01-project-and-integration.md)               | One reliable canvas and authored fixture                              | Complete for integration: reviewed changes committed; clean pinned-Yarn install and full CI pass. See [CI evidence](../reports/ci/2026-10-28/README.md).                |
+| [2. Simulation foundation](milestone-02-simulation-foundation.md)                   | A world advances and pauses predictably                               | Plain world/session, typed fixture command, detached views, 20 Hz clock and pause implemented and tested.                                                               |
+| [3. Character and manual opening](milestone-03-character-and-manual-opening.md)     | Find scrap, field-research tools/recipes and use the Mini Fabricator  | Implemented and verified: empty-handed opening, inventory/salvage, timed research, safe handcrafting, MiniFab, winding and accessible UI. See the dated opening report. |
+| [4. First local save](milestone-04-first-local-save.md)                             | Continue a saved opening with visible handcraft, MiniFab and research | Implemented: schema-1 manual slot, transactional storage, guarded worker/scene/UI replacement, visible craft resume and production browser acceptance.                  |
+| [5. Research](milestone-05-research.md)                                             | Expand the tree toward dedicated craftables and scalable labs         | Not started. Bootstrap research is implemented in Milestone 3; physical factory/lab integration follows in Milestone 6.                                                 |
+| [6. First working machines](milestone-06-first-working-machines.md)                 | Manually supply renewable-powered recycling, fabrication and labs     | Not started. Random recycler outputs, fabrication arity, extraction and full recovery are planned.                                                                      |
+| [7. Transport](milestone-07-transport.md)                                           | Automate direct supply and sort mixed recycler output                 | Not started. Trains and loading/unloading stations are later-game work.                                                                                                 |
+| [8. Restoration and energy choices](milestone-08-restoration-and-energy-choices.md) | Research greenhouses and demonstrate peaceful terraforming            | Not started. Expanded weather/storage, optional coal and pollution mitigation remain planned.                                                                           |
+| [9. Save resilience](milestone-09-save-resilience.md)                               | Autosave, recover, and transfer progress                              | Unvalidated test-data import/export scaffold only.                                                                                                                      |
+| [10. Portfolio prototype](milestone-10-portfolio-prototype.md)                      | Complete, understandable small-map demo                               | Migration presentation, controls, production packaging and small-fixture profiling verified. Complete factory route and representative performance pending.             |
 
 Use the linked milestone files as the detailed checklists rather than duplicating their tasks here. Keep one small authored map, adding one useful system at a time. Start empty-handed; accounts, cloud sync, remote control, combat, and a large technology tree remain deferred.
 
 ## Detailed milestone plans
 
-Milestones 2–3 received foundation work during migration. The 27 October design revision preserves that credit and moves the small timed field-research/recipe-unlock slice into Milestone 3, alongside onboarding, salvage and MiniFab crafting. The revised 28 October opening teaches safe handcrafting through tools, materials and mechanical/electrical parts before MiniFab research and four-ingredient hand assembly. Handcrafting ends on UI exit with a warning and an unfinished-unit refund. The MiniFab is presented beside inventory and always works without power; optional physical winding charges a local speed boost independently of factory electricity. Milestone 4 must save work, contributions, charge and distinct research/upgrade ownership. Milestone 5 expands the tree and lab rules; Milestone 6 integrates the renewable-powered placed factory, and Milestone 7 adds sorting and direct transport. Milestone 8 demonstrates researched greenhouse restoration without a fail state. Milestone 3 implementation and verification are recorded in the dated opening report; later milestones remain planned.
+Milestones 2–3 received foundation work during migration. The 27 October design revision preserves that credit and moves the small timed field-research/recipe-unlock slice into Milestone 3, alongside onboarding, salvage and MiniFab crafting. The revised 28 October opening teaches safe handcrafting through tools, materials and mechanical/electrical parts before MiniFab research and four-ingredient hand assembly. Handcrafting ends on UI exit with a warning and an unfinished-unit refund. The MiniFab is presented beside inventory and always works without power; optional physical winding charges a local speed boost independently of factory electricity. Milestone 4 saves work, contributions, charge and distinct research/upgrade ownership. Milestone 5 expands the tree and lab rules; Milestone 6 integrates the renewable-powered placed factory, and Milestone 7 adds sorting and direct transport. Milestone 8 demonstrates researched greenhouse restoration without a fail state. Milestone 3 and 4 implementation evidence is recorded in their dated reports; Milestones 5–10 remain planned.
 
 Opening targets are improved-tool research in about a minute and first player-requested automatic crafting within 15–20 minutes for relaxed new players or under five minutes for experienced players. Base components remain useful downstream. MiniFab acquisition/form/baseline power are settled; [later design and provisional balance](../design/player-progression.md#implementation-readiness-and-later-design-work) include provisional recipe costs/durations, later lab coordination, source-ore/liquid recovery details, recycler distribution and weather/restoration balance. Later MiniFab onboard solar/wind/coal, grid and inventory automation each need the related technology where applicable, separate MiniFab research and actual crafted upgrades. Grid waits for electricity; pure ores, trains and resource-configuration UI need explicit later slices.
 
@@ -73,7 +73,7 @@ scrapworks/
 
 Add simulation model/content/system modules as the next milestone needs them. Keep simulation, contracts, and core free of frameworks, renderers, storage, the DOM, and wall-clock reads. UI and scene adapters send commands and consume views; they do not own a second world.
 
-Editor markers compile into a versioned plain `WorldDefinition` for initial layout. `Simulation` owns private Miniplex component records and world resources; `GameState` describes renderer lifecycle. `GameSession` owns the accumulator and sampled movement. Gameplay coordinates use metres on X/Z, with centimetres converted at the Editor/presentation boundary. Plain validated captures and fresh-runtime rebuild are foundation infrastructure; no gameplay SaveRepository or save UI exists yet.
+Editor markers compile into a versioned plain `WorldDefinition` for initial layout. `Simulation` owns private Miniplex component records and world resources; `GameState` describes renderer lifecycle. `GameSession` owns the accumulator and sampled movement. Gameplay coordinates use metres on X/Z, with centimetres converted at the Editor/presentation boundary. Plain captures and fresh-runtime rebuild now support schema-1 gameplay saves through SaveRepository and the manual save UI.
 
 ## Suggested simulation schedule
 
@@ -111,11 +111,11 @@ Focus automated tests on rule invariants, conservation, research atomicity, save
 
 ## Additional implementation diagrams
 
-The [class diagram](../design/TDD.md#core-class-diagram) and [application overview](../design/TDD.md#application-system-interaction-diagram) describe current boundaries and future branches. The dependency/fixed-step diagrams show the implemented session and opening. Gameplay storage, labs and factory branches remain future design.
+The [class diagram](../design/TDD.md#core-class-diagram) and [application overview](../design/TDD.md#application-system-interaction-diagram) describe current boundaries and future branches. The dependency/fixed-step diagrams show the implemented session and opening. Manual gameplay storage is implemented; labs and factory branches remain future design.
 
 ### Module dependency diagram
 
-Runtime arrows mean imports or interface dependencies. The Editor-to-compiler-to-definition arrows show the build-time authoring path. Simulation depends only on plain layout data and shared grid rules; it never imports the Editor or renderer. Future gameplay persistence will add a repository boundary separately.
+Runtime arrows mean imports or interface dependencies. The Editor-to-compiler-to-definition arrows show the build-time authoring path. Simulation depends only on plain layout data and shared grid rules; it never imports the Editor or renderer. SaveCoordinator serializes operations through SaveRepository, while the candidate worker validates full gameplay/native state before application replacement.
 
 [SVG image](../diagrams/module-dependencies.svg) / [PNG image](../diagrams/module-dependencies.png) / [Mermaid source](../diagrams/src/module-dependencies.mmd)
 
@@ -133,6 +133,10 @@ flowchart LR
     Grid[Plain grid and placement rules]
     Model[Plain commands, tick contracts and detached WorldView]
     Settings[Controls settings IndexedDB adapter]
+    Saves[SaveCoordinator serial application operations]
+    Repository[SaveRepository interface]
+    Local[Gameplay IndexedDB adapter]
+    Snapshot[Schema one envelope and detached world physics data]
 
     Editor -->|compile layout| Compiler
     Compiler -->|validates and emits| Definition
@@ -144,6 +148,13 @@ flowchart LR
     Application -->|credits and commands| Worker
     Worker -->|sequential fixed steps| Simulation
     Angular -->|controls settings only| Settings
+    Angular -->|manual save and load| Saves
+    Saves -->|capture prepare and commit| Application
+    Saves -->|list read write delete| Repository
+    Repository -->|local implementation| Local
+    Saves -->|durable codec| Snapshot
+    Worker -->|candidate validation| Snapshot
+    Local -->|atomic payload and metadata| Snapshot
     Content -->|recipes eligibility and costs| Simulation
     Simulation -->|uses| Grid
     Simulation -->|uses| Model
@@ -152,7 +163,7 @@ flowchart LR
 
 ### Fixed step loop diagram
 
-Only completed steps publish lean presentation. The host uses the existing browser frame source, independently of physics. Completed-tick hooks run after pinning the latest publication and before submitting future credits. Worker execution is asynchronous; a render frame never waits for the new batch. Pause clears pending time/input and acknowledges bounded in-flight work. Plain capture/rebuild is infrastructure; gameplay saves and factory jobs remain future work.
+Only completed steps publish lean presentation. The host uses the existing browser frame source, independently of physics. Completed-tick hooks run after pinning the latest publication and before submitting future credits. Worker execution is asynchronous; a render frame never waits for the new batch. Pause clears pending time/input and acknowledges bounded in-flight work. Gameplay save/load holds preserve work for capture or rollback and discard elapsed credits on release. Factory jobs remain future work.
 
 [SVG image](../diagrams/fixed-step-loop.svg) / [PNG image](../diagrams/fixed-step-loop.png) / [Mermaid source](../diagrams/src/fixed-step-loop.mmd)
 
@@ -199,20 +210,20 @@ flowchart TB
 
 ### Save flow diagram
 
-Future design, not implemented. The worker capture request resolves with detached data at a completed boundary. Gameplay persistence remains future work. The detached snapshot will be written asynchronously while gameplay may continue. An unsuccessful transaction must leave the last committed revision available.
+Implemented for one manual slot; autosave and retained revisions arrive in Milestone 9. Requests bind to slot, run and session generation. Worker capture preserves handcraft and returns detached completed state without pending transport commands. Gameplay may continue during the atomic write; success applies only to the captured boundary. Failed writes retain the previous save.
 
 [SVG image](../diagrams/save-flow.svg) / [PNG image](../diagrams/save-flow.png) / [Mermaid source](../diagrams/src/save-flow.mmd)
 
 ```mermaid
 flowchart TB
-    Request[Manual save or autosave request]
-    Queue[Serialize operation for its bound slot and world]
-    Capture[Capture detached completed-step state]
-    Encode[Encode versioned snapshot and metadata]
-    Write[Write snapshot, metadata and revision transaction]
+    Request[Manual save bound to slot run and session generation]
+    Queue[Serialize and confirm a different-run overwrite]
+    Capture[Capture completed world without canceling handcraft]
+    Encode[Schema one metadata and world without pending commands]
+    Write[Compare slot token and commit payload with metadata]
     Commit{Transaction committed?}
     Success[Update last saved status and report success]
-    Failure[Keep last successful revision and report failure]
+    Failure[Keep previous committed save and report failure]
 
     Request -->|enqueue| Queue
     Queue -->|safe boundary| Capture
@@ -225,36 +236,33 @@ flowchart TB
 
 ### Load flow diagram
 
-Future design, not implemented. Load must pause gameplay and autosaves after earlier persistence work finishes. Failure must leave the old world intact. Success replaces the world only after a candidate has been fully validated and constructed. File import will use the same validation path before storing a new slot.
+Implemented for Continue and in-game Load. After any discard confirmation and earlier operations, a non-destructive hold preserves the old session. A separate worker validates gameplay/native state; a separate Babylon scene renders its first frame, and Angular stages the saved crafting panel. Only then does ownership change. Failure disposes the candidate and preserves the active world. Unsupported formats are rejected; migrations, autosave and transfer remain Milestone 9.
 
 [SVG image](../diagrams/load-flow.svg) / [PNG image](../diagrams/load-flow.png) / [Mermaid source](../diagrams/src/load-flow.mmd)
 
 ```mermaid
 flowchart TB
-    Request[Request load and suspend new autosaves]
-    Queue[Finish earlier persistence work and discard stale requests]
-    Pause[Pause simulation and gameplay command input]
+    Request[Continue or manual load request]
+    Queue[Finish earlier operations and confirm unsaved progress loss]
+    Pause[Hold credits and input without refunding active work]
     Read[Read chosen snapshot]
-    Version{Supported schema version?}
-    Migrate[Migrate a copy through supported versions]
-    Valid{Valid current state and content references?}
-    Build[Construct candidate world separately]
+    Version{Compatible schema content physics and authored definition?}
+    Valid{Candidate worker validates gameplay and native state?}
+    Build[Prepare separate scene first frame and visible crafting UI]
     Ready{Candidate constructed successfully?}
-    Swap[Replace world and bind slot; clear commands and reset clock]
+    Swap[Commit world and run identity then clear transient input]
     Publish[Rebuild published views and render data]
     Reject[Preserve current world and report rejection reason]
     Resume[Restore prior running or pause state and visibility rules]
-    Result[Report load result and restore autosave policy]
+    Result[Report result and restore focus ownership]
 
     Request -->|serialize| Queue
     Queue -->|ready| Pause
     Pause -->|read| Read
     Read -->|snapshot available| Version
     Read -->|missing or read error| Reject
-    Version -->|yes| Migrate
+    Version -->|yes| Valid
     Version -->|no| Reject
-    Migrate -->|migration completed| Valid
-    Migrate -->|migration error| Reject
     Valid -->|yes| Build
     Valid -->|no| Reject
     Build -->|result| Ready
@@ -304,4 +312,4 @@ flowchart TB
 
 ## Phase 7 stopping point
 
-Migration stopped at Phase 7 as recorded by the [23 October evidence](../reports/migration/2026-10-23/README.md). On 2 November the user separately authorized implementation of the complete Milestone 3 plan. The researched opening and MiniFab are now delivered; work stops before Milestone 4 gameplay saves and later factory systems.
+Migration stopped at Phase 7 as recorded by the [23 October evidence](../reports/migration/2026-10-23/README.md). On 2 November the user separately authorized the complete Milestone 3 implementation; the researched opening and MiniFab are delivered. On 8 November the user opened Milestone 4 with a current-state review and plan update. Its six save packages are implemented and locally verified; later factory systems remain outside that scope.

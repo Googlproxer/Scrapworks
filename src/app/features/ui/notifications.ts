@@ -109,6 +109,10 @@ export class NotificationCenter {
 
   public destroy(): void {
     this.destroyed = true;
+    this.clear();
+  }
+
+  public clear(): void {
     for (const id of this.lifetimes.keys()) this.stop(id);
     this.entries.set([]);
   }

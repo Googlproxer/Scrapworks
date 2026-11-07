@@ -164,6 +164,7 @@ type RequestData =
       definition: WorldDefinition;
       developerFixture?: boolean;
       capture?: SimulationCapture;
+      playerSave?: boolean;
     }
   | {
       operation: 'advance';
@@ -172,7 +173,12 @@ type RequestData =
       inputSequence?: number;
       commands?: SequencedCommand[];
     }
-  | { operation: 'activity'; active: boolean; commands?: SequencedCommand[] }
+  | {
+      operation: 'activity';
+      active: boolean;
+      commands?: SequencedCommand[];
+      preserveWork?: boolean;
+    }
   | { operation: 'watch' | 'inspect'; watch: string[] }
   | { operation: 'capture' | 'resync' | 'dispose' };
 
@@ -185,6 +191,8 @@ export type RuntimeRequestBody = CompleteFields<
   | 'definition'
   | 'developerFixture'
   | 'capture'
+  | 'playerSave'
+  | 'preserveWork'
   | 'steps'
   | 'active'
   | 'input'

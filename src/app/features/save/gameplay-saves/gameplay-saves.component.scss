@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  max-width: min(26rem, calc(100vw - 2rem));
+  color: #fff;
+}
+section {
+  padding: 0.65rem;
+  background: rgba(16, 25, 31, 0.96);
+  border: 1px solid #8ba0ad;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+p {
+  margin: 0.25rem 0;
+  overflow-wrap: anywhere;
+}
+small {
+  color: #d9e4eb;
+}
+summary {
+  padding: 0.35rem 0.6rem;
+  background: #19242b;
+  border: 1px solid #8ba0ad;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+.compact-feedback {
+  max-width: 18rem;
+  max-height: 2.5em;
+  overflow: hidden;
+  margin: 0.15rem 0;
+  font-size: 0.75rem;
+  background: #19242b;
+}
+.compact-feedback:empty {
+  display: none;
+}

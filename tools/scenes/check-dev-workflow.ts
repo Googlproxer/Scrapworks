@@ -94,7 +94,7 @@ try {
 
   const ready = async () => {
     await page.waitForLoadState('networkidle');
-    await page.getByRole('button', { name: /^Play Game/ }).click({ trial: true });
+    await page.getByRole('button', { name: /^New Game/ }).click({ trial: true });
     await page
       .getByRole('status')
       .filter({ hasText: 'Loading game…' })
@@ -144,8 +144,8 @@ try {
       .clearColor,
     config.clearColor,
   );
-  await page.getByRole('button', { name: /^Play Game/ }).click();
-  await page.getByRole('button', { name: /^Play Game/ }).waitFor({ state: 'hidden' });
+  await page.getByRole('button', { name: /^New Game/ }).click();
+  await page.getByRole('button', { name: /^New Game/ }).waitFor({ state: 'hidden' });
   await page.getByRole('status').filter({ hasText: 'Loading game…' }).waitFor({ state: 'hidden' });
   await page.waitForLoadState('networkidle');
   await page.evaluate(

@@ -27,6 +27,7 @@ export interface SessionOptions {
   freezeViews?: boolean;
   portFactory?: SimulationPortFactory;
   capture?: SimulationCapture;
+  playerSave?: boolean;
   onFailure?: (error: Error) => void;
 }
 
@@ -75,6 +76,7 @@ export class GameSession {
   private commands: SequencedCommand[] = [];
   private movement = { x: 0, z: 0, sprint: false };
   private inputSerial = 0;
+  private runtimePending = 0;
   private elapsed = 0;
   private outstanding = 0;
   private advancing?: Promise<void>;
@@ -89,6 +91,8 @@ export class GameSession {
   private paused = false;
   private disposed = false;
   private capturing = false;
+  private holds = 0;
+  private restoring = false;
   private captureCommands: SequencedCommand[] = [];
   private failure?: Error;
   private initialized = false;
@@ -98,6 +102,7 @@ export class GameSession {
 
   constructor(definition: WorldDefinition, options: SessionOptions = {}) {
     this.definition = definition;
+    this.restoring = !!options.playerSave;
     this.cache = new PresentationCache(options.freezeViews);
     this.options = { developerFixture: options.developerFixture, onFailure: options.onFailure };
     this.port = (options.portFactory ?? (() => new WorkerSimulationPort()))();
@@ -110,6 +115,7 @@ export class GameSession {
         definition,
         developerFixture: options.developerFixture,
         capture: options.capture,
+        playerSave: options.playerSave,
       });
       this.ready = Promise.resolve(result).then(
         () => {
@@ -154,6 +160,28 @@ export class GameSession {
     return this.inputSerial;
   }
 
+  public get hasPendingInput(): boolean {
+    return (
+      this.commands.length > 0 ||
+      this.captureCommands.length > 0 ||
+      this.outstanding > 0 ||
+      this.runtimePending > 0
+    );
+  }
+
+  /** Local credit barrier: preserve the worker's jobs, queues and paused state for rollback. */
+  public hold(): () => void {
+    this.holds++;
+    let released = false;
+    return () => {
+      if (released) return;
+      released = true;
+      this.holds--;
+      this.elapsed = 0;
+      this.movement = { x: 0, z: 0, sprint: false };
+    };
+  }
+
   public get view(): WorldView {
     const view: { -readonly [K in keyof WorldView]: WorldView[K] } = structuredClone(
       this.readView(),
@@ -180,6 +208,7 @@ export class GameSession {
     );
     check(reply.ok, reply.error ?? 'Simulation failed');
     this.nextCommand = Math.max(this.nextCommand, reply.ledger.accepted);
+    this.runtimePending = reply.ledger.accepted - reply.ledger.applied - reply.ledger.cancelled;
     this.appliedInput = reply.appliedInput;
     for (const ack of reply.acknowledgements) {
       this.acknowledgementValues.push(ack);
@@ -346,6 +375,7 @@ export class GameSession {
   public advance(seconds: number): void {
     if (
       this.paused ||
+      this.holds > 0 ||
       !Number.isFinite(seconds) ||
       seconds <= 0 ||
       !this.initialized ||
@@ -373,6 +403,7 @@ export class GameSession {
         inputSequence: ++this.inputSerial,
         commands,
       });
+      this.restoring = false;
       if (reply instanceof Promise)
         this.advancing = reply
           .then(() => undefined)
@@ -408,7 +439,12 @@ export class GameSession {
     this.commands = [];
     if (this.failed || this.disposed) return;
     try {
-      const result = this.request({ operation: 'activity', active: !this.paused, commands });
+      const result = this.request({
+        operation: 'activity',
+        active: !this.paused,
+        commands,
+        preserveWork: this.restoring,
+      });
       if (result instanceof Promise) void result.catch((error: unknown) => this.fail(error));
     } catch (error) {
       this.fail(error);
@@ -417,6 +453,7 @@ export class GameSession {
   }
 
   public setPaused(paused: boolean): void {
+    if (this.holds) return;
     if (this.paused === paused) return;
     this.paused = paused;
     this.activity();
@@ -427,15 +464,17 @@ export class GameSession {
   }
 
   public clearInput(): void {
+    if (this.holds) return;
     this.activity();
   }
 
   public resetTiming(): void {
+    if (this.holds) return;
     this.activity();
   }
 
   public enqueue(command: WorldCommand): number | null {
-    if (this.paused || this.failed || this.disposed) return null;
+    if (this.paused || this.holds || this.failed || this.disposed) return null;
     check(this.commands.length < MAX_PENDING_COMMANDS, 'Host command backpressure');
     const sequence = ++this.nextCommand;
     this.commands.push({ sequence, command: structuredClone(command) });

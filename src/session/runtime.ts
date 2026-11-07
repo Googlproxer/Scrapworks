@@ -15,6 +15,7 @@ import {
   requireInvariant as check,
 } from '@contracts/simulation';
 import { Simulation } from '@simulation/simulation';
+import { preparePlayerSave } from '@simulation/player-save';
 import { validWorldCommand } from '../contracts/world-command';
 
 function assertCommandBatch(commands: unknown): asserts commands is SequencedCommand[] {
@@ -34,6 +35,8 @@ function assertCommandBatch(commands: unknown): asserts commands is SequencedCom
 export function assertRequest(value: unknown): asserts value is RuntimeRequest {
   check(!!value && typeof value === 'object', 'Invalid session request');
   const r = value as Partial<RuntimeRequest>;
+  for (const key of ['playerSave', 'preserveWork'] as const)
+    check(r[key] === undefined || typeof r[key] === 'boolean', 'Invalid activity/restore policy');
   check(
     r.protocol === 2 &&
       Number.isSafeInteger(r.id) &&
@@ -55,9 +58,9 @@ export function assertRequest(value: unknown): asserts value is RuntimeRequest {
     'Unknown operation',
   );
   const fields: Record<RuntimeRequest['operation'], readonly string[]> = {
-    initialize: ['definition', 'developerFixture', 'capture'],
+    initialize: ['definition', 'developerFixture', 'capture', 'playerSave'],
     advance: ['steps', 'input', 'inputSequence', 'commands'],
-    activity: ['active', 'commands'],
+    activity: ['active', 'commands', 'preserveWork'],
     watch: ['watch'],
     inspect: ['watch'],
     capture: [],
@@ -221,7 +224,11 @@ export class SimulationRuntime {
           );
         }
         const next = new Simulation(r.definition, {
-          snapshot: r.capture?.world,
+          snapshot: r.capture
+            ? r.playerSave
+              ? preparePlayerSave(r.capture.world)
+              : r.capture.world
+            : undefined,
           developerFixture: r.developerFixture,
         });
         this.world?.dispose();
@@ -278,7 +285,8 @@ export class SimulationRuntime {
         this.input = { x: 0, z: 0, sprint: false };
         this.inputSequence = 0;
         if (!this.failed) {
-          for (const value of this.world.clearInput()) event(this.world.tick, value);
+          for (const value of this.world.clearInput(r.preserveWork === true))
+            event(this.world.tick, value);
           reply.packet = this.world.publish(this.watched);
         }
         return finish();

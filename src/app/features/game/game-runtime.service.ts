@@ -28,6 +28,11 @@ import { AFTER_PAINT } from '../../shared/loading/after-paint';
 import type { LoadingStatus } from '@contracts/loading';
 import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
+import type { SaveSnapshot } from '@contracts/save';
+import type { SaveBinding } from '../../../persistence/save-coordinator';
+import type { WorldSessionBridge } from '@contracts/game-client';
+import { assertWorldDefinition } from '@contracts/world';
+import { filter, firstValueFrom } from 'rxjs';
 
 @Service({ autoProvided: false })
 export class GameRuntimeService {
@@ -45,6 +50,17 @@ export class GameRuntimeService {
   private readonly injector = inject(Injector);
   private unsubscribe?: () => void;
   private readonly sessions = new GameSessionOwner(this.createSimulationPort, !!environment.dev);
+  private saveHolds = 0;
+  private readonly savePreview = signal<import('@contracts/world').WorldView | null>(null);
+  public readonly preparingSave = computed(() => this.savePreview() !== null);
+  private sessionBridge?: WorldSessionBridge;
+  private pendingSaveFocus?: {
+    readonly session: import('../../../session/game-session').GameSession;
+    readonly craft: boolean;
+  };
+  public readonly runId = this.sessions.runId;
+  private readonly restoreValue = signal(0);
+  public readonly restoreRevision = this.restoreValue.asReadonly();
   private readonly renderer = new RendererConnection();
   private readonly inputCoordinator = new GameInputCoordinator({
     clearInput: () => this.session?.clearInput(),
@@ -85,7 +101,7 @@ export class GameRuntimeService {
   public readonly isReady = computed(() => this.state().phase === 'ready');
   public readonly isLoading = computed(() => this.state().phase === 'loading');
   public readonly errorMessage = computed(() => this.state().errorMessage);
-  public readonly world = this.sessions.world;
+  public readonly world = computed(() => this.savePreview() ?? this.sessions.world());
   private readonly selectionValue = signal<WorldSelection>(null);
   public readonly selection = this.selectionValue.asReadonly();
   private readonly placementValue = signal<PlacementFeedback | null>(null);
@@ -210,6 +226,7 @@ export class GameRuntimeService {
         debugDrawSettings: this.debugDrawSettings(),
         actions: {
           dispatch: (frame) => {
+            if (this.saveHolds) return;
             if (generation !== this.generation || this.inspectorActive()) return;
             const revision = this.inputCoordinator.revision;
             if (frame.context === 'gameplay') {
@@ -234,6 +251,7 @@ export class GameRuntimeService {
         },
         session: {
           suspend: () => {
+            if (this.saveHolds) return;
             if (generation === this.generation) this.session?.setPaused(true);
           },
           initialize: (definition) => {
@@ -268,6 +286,7 @@ export class GameRuntimeService {
           },
           frame: (seconds, movement, sprint, active, simulationActive = active) => {
             if (!this.session) throw new Error('The world is not initialized.');
+            if (this.saveHolds) return this.sessions.pin(this.session.readView());
             if (generation !== this.generation) return this.session.readView();
             if (this.session.failed) {
               if (active) throw this.session.error;
@@ -284,6 +303,7 @@ export class GameRuntimeService {
             return this.sessions.pin(view);
           },
           completeFrame: () => {
+            if (this.saveHolds) return;
             const session = this.session;
             if (!session || generation !== this.generation) return;
             const revision = this.inputCoordinator.revision;
@@ -299,7 +319,7 @@ export class GameRuntimeService {
               session.advance(this.frameSeconds);
             this.frameSeconds = 0;
           },
-          isSimulationActive: () => this.simulationAllowed(),
+          isSimulationActive: () => !this.saveHolds && this.simulationAllowed(),
         },
         placement: environment.dev
           ? {
@@ -375,6 +395,7 @@ export class GameRuntimeService {
         }
       };
 
+      this.sessionBridge = options.session;
       const client = this.renderer.create(factory, options);
       if (this.disposed || generation !== this.generation) {
         client.destroy();
@@ -598,7 +619,7 @@ export class GameRuntimeService {
 
   private updateInputContext(): void {
     this.inputCoordinator.setContext(
-      this.inspectorActive()
+      this.inspectorActive() || this.saveHolds > 0
         ? null
         : !this.inputCoordinator.enabledRequested ||
             this.inputCoordinator.uiFocused ||
@@ -623,6 +644,7 @@ export class GameRuntimeService {
 
   private gameplayAllowed(): boolean {
     return (
+      !this.saveHolds &&
       this.inputCoordinator.enabledRequested &&
       !this.inputCoordinator.uiFocused &&
       !this.capturingBinding() &&
@@ -643,7 +665,8 @@ export class GameRuntimeService {
   }
 
   public command(command: OpeningCommand): import('@contracts/session-event').CommandSubmission {
-    if (!this.simulationAllowed() || !this.session) return { status: 'unavailable' };
+    if (this.saveHolds || !this.simulationAllowed() || !this.session)
+      return { status: 'unavailable' };
     this.session.setPaused(false);
     const sequence = this.session.enqueue(command);
     return sequence === null
@@ -681,5 +704,166 @@ export class GameRuntimeService {
 
   public handleUiPointer(input: { button: number; down: boolean }): boolean {
     return this.inputCoordinator.handlePointer(input);
+  }
+
+  public saveBinding(): SaveBinding | null {
+    this.world();
+    const session = this.session,
+      runId = this.runId();
+    return session?.isReady && runId
+      ? {
+          runId,
+          generation: session.generation,
+          version: session.publication,
+          pending: session.hasPendingInput,
+        }
+      : null;
+  }
+
+  public canFocusCrafting(): boolean {
+    return this.inputCoordinator.enabledRequested;
+  }
+
+  public holdForSave(): () => void {
+    this.saveHolds++;
+    this.frameSeconds = 0;
+    const release = this.session?.hold();
+    this.inputCoordinator.invalidate();
+    this.updateInputContext();
+    let ended = false;
+    return () => {
+      if (ended) return;
+      ended = true;
+      this.saveHolds--;
+      this.frameSeconds = 0;
+      this.inputCoordinator.invalidate();
+      this.updateInputContext();
+      release?.();
+      if (!this.saveHolds) this.focusPreparedWorld();
+    };
+  }
+
+  public async captureForSave() {
+    const session = this.session;
+    if (!session?.isReady) throw new Error('No ready game to save.');
+    const capture = await session.capture();
+    if (capture.world.entities.some((entity) => entity.kind === 'building'))
+      throw new Error('Remove development test buildings before saving this world.');
+    if (this.session !== session || this.disposed)
+      throw new Error('The game changed while saving.');
+    return capture.world;
+  }
+
+  public async replaceForSave(
+    save: SaveSnapshot | null,
+    stageUi: () => Promise<void>,
+  ): Promise<void> {
+    const client = this.client,
+      bridge = this.sessionBridge,
+      generation = this.generation;
+    if (!client || !bridge || !this.isReady())
+      throw new Error('Wait for the viewport to be ready before loading.');
+    if (!save && !this.session) {
+      const ready = firstValueFrom(
+        client.state$.pipe(
+          filter(
+            (state) =>
+              (state.sceneKey === 'Game' && state.phase === 'ready') ||
+              ['error', 'stopped'].includes(state.phase),
+          ),
+        ),
+      );
+      this.setScene('Game');
+      const state = await ready;
+      if (state.phase !== 'ready') throw new Error('The new game could not be prepared.');
+      return;
+    }
+    if (!client.prepareWorld) throw new Error('The viewport cannot prepare a restored world.');
+    const release = this.holdForSave();
+    let candidate: import('../../../session/game-session').GameSession | undefined;
+    let presentation: import('@game/client-api').PreparedWorld | undefined;
+    const previousKit = this.fieldKitOpen();
+    let committed = false;
+    try {
+      await this.session?.settled();
+      const response = await fetch(new URL('scene/worlds/game.json', document.baseURI));
+      if (!response.ok) throw new Error('The authored world could not be loaded.');
+      const definition: unknown = await response.json();
+      assertWorldDefinition(definition);
+      if (save && JSON.stringify(save.world.definition) !== JSON.stringify(definition))
+        throw new Error('This save uses an incompatible authored world.');
+      candidate = await this.sessions.prepare(definition, save);
+      const staged = candidate;
+      const stageBridge: WorldSessionBridge = {
+        ...bridge,
+        initialize: async () => undefined,
+        registerCompletedTickHandler: (handler, order) =>
+          staged.registerCompletedTickHandler(handler, order),
+        frame: (...args) => (committed ? bridge.frame(...args) : staged.readView()),
+        completeFrame: () => {
+          if (committed) bridge.completeFrame();
+        },
+        suspend: () => {
+          if (committed) bridge.suspend();
+        },
+        isSimulationActive: () => committed && bridge.isSimulationActive(),
+      };
+      presentation = await client.prepareWorld(definition, stageBridge);
+      if (this.disposed || generation !== this.generation || this.client !== client)
+        throw new Error('The viewport changed while loading.');
+      const craft = !!candidate.readView().opening?.state.handcraft;
+      this.savePreview.set(candidate.readView());
+      this.openingUi.restoreCrafting(craft);
+      this.restoreValue.update((value) => value + 1);
+      await stageUi();
+      if (this.disposed || generation !== this.generation || this.client !== client)
+        throw new Error('The viewport changed while preparing the crafting panel.');
+      // Both prepared owners are ready; no asynchronous work crosses this commit boundary.
+      presentation.commit();
+      if (this.disposed || generation !== this.generation || this.client !== client)
+        throw new Error('The viewport changed while committing the saved world.');
+      this.unsubscribeInspection?.();
+      this.unsubscribeInspection = undefined;
+      this.inspectionValue.set(null);
+      this.selectionValue.set(null);
+      this.placementValue.set(null);
+      this.sessions.commit(candidate, save?.runId ?? crypto.randomUUID());
+      this.savePreview.set(null);
+      this.inputCoordinator.setUiFocused(craft);
+      committed = true;
+      this.updateInputContext();
+      this.pendingSaveFocus = { session: candidate, craft };
+    } catch (error) {
+      if (!committed) {
+        this.savePreview.set(null);
+        presentation?.dispose();
+        candidate?.dispose();
+        this.openingUi.restoreCrafting(previousKit);
+      }
+      throw error;
+    } finally {
+      release();
+    }
+  }
+
+  private focusPreparedWorld(): void {
+    const pending = this.pendingSaveFocus;
+    this.pendingSaveFocus = undefined;
+    if (!pending || this.disposed || !this.inputCoordinator.enabledRequested) return;
+    afterNextRender(
+      () => {
+        if (
+          this.session !== pending.session ||
+          !this.isReady() ||
+          !this.inputCoordinator.enabledRequested ||
+          this.saveHolds
+        )
+          return;
+        if (pending.craft)
+          this.host?.ownerDocument.querySelector<HTMLElement>('[data-kit-heading]')?.focus();
+        else this.inputCoordinator.focus();
+      },
+      { injector: this.injector },
+    );
   }
 }

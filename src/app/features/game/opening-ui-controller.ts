@@ -27,6 +27,12 @@ export class OpeningUiController {
     this.fieldKitValue.set(false);
   }
 
+  public restoreCrafting(visible: boolean): void {
+    this.workExitContinuation = undefined;
+    this.warningValue.set(false);
+    this.fieldKitValue.set(visible);
+  }
+
   public salvageNearby(): void {
     const world = this.ports.world();
     if (!world) return;

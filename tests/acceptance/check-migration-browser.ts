@@ -70,7 +70,7 @@ try {
     await assertFocus(0, 'Save');
     await page.keyboard.press('Escape');
     await page.getByRole('dialog').waitFor({ state: 'hidden' });
-    await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+    await page.getByRole('button', { name: 'New Game', exact: true }).click();
     await page.getByText('Loading game…', { exact: true }).waitFor({ state: 'hidden' });
     await page.evaluate(() =>
       window.testEvents.dom(
@@ -260,7 +260,7 @@ try {
     }
     await page.getByRole('button', { name: 'Reset defaults', exact: true }).click();
     await page.getByRole('button', { name: 'Save controls', exact: true }).click();
-    await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+    await page.getByRole('button', { name: 'New Game', exact: true }).click();
     await page.getByText('Loading game…', { exact: true }).waitFor({ state: 'hidden' });
     await page.evaluate(() =>
       window.testEvents.dom(

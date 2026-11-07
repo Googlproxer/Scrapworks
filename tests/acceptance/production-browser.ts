@@ -182,10 +182,10 @@ try {
   await page.goto(
     `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/worker-test/`,
   );
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).waitFor();
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click({ trial: true });
+  await page.getByRole('button', { name: 'New Game', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'New Game', exact: true }).click({ trial: true });
   const created = page.waitForEvent('worker');
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'New Game', exact: true }).click();
   const worker = await created;
   currentWorker = worker;
   assert(worker.url().includes('/worker-test/worker-'));
@@ -321,8 +321,10 @@ try {
   );
   await page.getByRole('alert').waitFor();
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click({ trial: true });
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page
+    .getByRole('button', { name: 'Resume current game', exact: true })
+    .click({ trial: true });
+  await page.getByRole('button', { name: 'Resume current game', exact: true }).click();
   await until(worker, (probe) => probe.tick > paused.tick, 'Retained worker did not resume');
   assert.equal(page.workers().length, 1);
   assert.equal(page.workers()[0], worker);
@@ -341,9 +343,9 @@ try {
   await page.getByRole('alert').filter({ hasText: 'Retry restarts' }).waitFor();
   const error = await page.getByRole('alert').textContent();
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click({ trial: true });
+  await page.getByRole('button', { name: 'New Game', exact: true }).click({ trial: true });
   const recreated = page.waitForEvent('worker');
-  await page.getByRole('button', { name: 'Play Game!', exact: true }).click();
+  await page.getByRole('button', { name: 'New Game', exact: true }).click();
   const fresh = await recreated;
   currentWorker = fresh;
   await attachProbe(fresh);

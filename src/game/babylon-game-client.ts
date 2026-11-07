@@ -289,6 +289,99 @@ export class BabylonGameClient implements GameClient {
     this.attachCamera();
   }
 
+  /** Prepare assets, scripts and a real first frame while the existing scene remains owned. */
+  public async prepareWorld(
+    definition: WorldDefinition,
+    session: import('@contracts/game-client').WorldSessionBridge,
+  ): Promise<import('./client-api').PreparedWorld> {
+    const transition = this.transition;
+    const scene = new Scene(this.engine);
+    let assets: AssetContainer | undefined;
+    let world: WorldScene | undefined;
+    let committed = false;
+
+    const dispose = () => {
+      if (!committed) {
+        world?.dispose();
+        assets?.dispose();
+        scene.dispose();
+      }
+    };
+
+    const checkOwner = () => {
+      if (!this.isCurrentTransition(transition) || this.contextLost)
+        throw new Error('The viewport changed while preparing the saved world.');
+    };
+
+    try {
+      assets = await this.loadSceneFn(scene, 'Game');
+      checkOwner();
+      assets.addAllToScene();
+      world = await WorldScene.create(
+        scene,
+        definition,
+        {
+          session,
+          placement: this.options.placement,
+          developerFixture: this.options.developerFixture,
+          selection: this.selectionSource,
+          placementFeedback: this.placementSource,
+        },
+        this.loadCharacterFn,
+      );
+      checkOwner();
+      await scene.whenReadyAsync();
+      checkOwner();
+      world.beginFrame(
+        { context: null, revision: 0, states: {} },
+        0,
+        false,
+        { x: 0, y: 0 },
+        () => this.isCurrentTransition(transition),
+        false,
+      );
+      try {
+        scene.render();
+      } finally {
+        world.endFrame();
+      }
+      checkOwner();
+      if (!world.initialized) throw new Error('Saved world presentation did not initialize.');
+      return {
+        commit: () => {
+          checkOwner();
+          ++this.transition;
+          this.disposeCurrentScene();
+          this.currentScene = scene;
+          this.currentAssets = assets;
+          this.world = world;
+          this.definition = definition;
+          this.scenePrepared = true;
+          this.pointer = undefined;
+          this.clock.reset();
+          this.inputManager.clear();
+          const debug = debugDrawForScene(scene);
+          this.sceneDebug = debug;
+          debug.configure(
+            this.debugSettings,
+            () => this.currentScene === scene && this.canRender(),
+          );
+          this.unsubscribeDebug = debug.subscribe((status) => this.debugSource.next(status));
+          committed = true;
+          this.selectionSource.next(null);
+          this.placementSource.next(null);
+          this.stateSubject.next({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+          this.loadingSource.next(null);
+          this.reconcileActivity();
+        },
+        dispose,
+      };
+    } catch (error) {
+      dispose();
+      throw error;
+    }
+  }
+
   public async toggleInspector(): Promise<void> {
     if (this.inspectorActive) {
       await this.inspector.close();

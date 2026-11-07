@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, linkedSignal, untracked } from '@angular/core';
 import { OpeningPanel } from './opening-panel';
 
 @Component({
@@ -9,9 +9,16 @@ import { OpeningPanel } from './opening-panel';
   host: { role: 'region', 'aria-labelledby': 'craft-title' },
 })
 export class HandcraftPanelComponent extends OpeningPanel {
-  public readonly recipeId = signal('scrap-prybar');
+  public readonly recipeId = linkedSignal({
+    source: () => this.runtime.restoreRevision?.(),
+    computation: () => untracked(() => this.opening()?.state.handcraft?.recipe ?? 'scrap-prybar'),
+  });
 
-  public readonly batch = signal(1);
+  public readonly batch = linkedSignal({
+    source: () => this.runtime.restoreRevision?.(),
+    computation: () => untracked(() => this.opening()?.state.handcraft?.unitsLeft ?? 1),
+  });
+  public readonly customBatch = computed(() => ![1, 5, 10, 25, 100].includes(this.batch()));
 
   public readonly recipeResult = computed(() =>
     this.recipe().id === 'base-minifab'

@@ -3,8 +3,10 @@ import { Component, inject } from '@angular/core';
 import { ControlsComponent } from '../../controls/controls/controls.component';
 import { GameRuntimeService } from '../../game/game-runtime.service';
 import { UiService } from '../ui.service';
+import { GameplaySavesComponent } from '../../save/gameplay-saves/gameplay-saves.component';
 
 @Component({
+  imports: [GameplaySavesComponent],
   selector: 'app-game-menu',
   templateUrl: './game-menu.component.html',
   styleUrl: './game-menu.component.scss',
@@ -16,7 +18,9 @@ export class GameMenuComponent {
 
   public resume(): void {
     this.ref.close();
-    this.runtime.focusViewport();
+    if (this.runtime.fieldKitOpen())
+      document.querySelector<HTMLElement>('[data-kit-heading]')?.focus();
+    else this.runtime.focusViewport();
   }
 
   public controls(): void {

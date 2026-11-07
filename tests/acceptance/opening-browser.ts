@@ -89,7 +89,7 @@ let virtualAdvanceMs = 0;
 let lastProbe: Probe | null = null;
 try {
   await page.goto(`http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/`);
-  const play = page.getByRole('button', { name: 'Play Game!', exact: true });
+  const play = page.getByRole('button', { name: 'New Game', exact: true });
   await play.waitFor({ state: 'visible' });
   const created = page.waitForEvent('worker');
   await play.click();

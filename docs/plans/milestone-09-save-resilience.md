@@ -1,6 +1,6 @@
 # Milestone 9 Save resilience
 
-Updated 27 October 2026 for the agreed progression state. Status: file-transfer scaffold only. Prerequisite: [Milestone 8](milestone-08-restoration-and-energy-choices.md), building on [Milestone 4](milestone-04-first-local-save.md).
+Updated 8 November 2026 after Milestone 4. Status: manual gameplay save foundation implemented; resilience and gameplay file transfer remain planned. Prerequisite: [Milestone 8](milestone-08-restoration-and-energy-choices.md), building on [Milestone 4](milestone-04-first-local-save.md).
 
 Add autosaves, recoverable revisions, schema migrations, and downloadable backups. A failed write or invalid import must leave both the active world and the last good save usable. Accounts and cloud synchronization remain outside this prototype.
 
@@ -8,7 +8,7 @@ Add autosaves, recoverable revisions, schema migrations, and downloadable backup
 
 ## Current implementation
 
-The current save/load dialog can download test records and read a JSON file, and the Dexie scaffold has `export()`/`import()` methods. Import uses `JSON.parse` and `bulkPut` without a gameplay schema, migrations, validated candidate world, or recovery safeguards. Autosave, retained revisions, quota handling, and safe factory backups remain unimplemented; the first complete gameplay save in Milestone 4 is still a prerequisite.
+Milestone 4 implements one schema-1 manual slot through SaveRepository, atomic payload/metadata transactions, overwrite tokens, candidate worker/scene/UI restore, visible handcraft continuation and real production IndexedDB reload tests. Storage failures are surfaced and the last committed save is preserved. Autosave, retained revisions, schema migrations, gameplay import/export, persistent-storage requests and factory-state coverage remain this milestone's work. The isolated developer dialog's test-record transfer is not gameplay backup or resilience credit.
 
 ## Step 1 Audit the complete saved state
 
