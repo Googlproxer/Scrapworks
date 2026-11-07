@@ -7,10 +7,11 @@ import fs from 'node:fs/promises';
 import net from 'node:net';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { BehaviorSubject, filter, firstValueFrom, fromEvent, map, merge, timeout } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { installBrowserEvents } from '../../tests/acceptance/browser-events.ts';
 import { filesUnder, hash, projectRoot } from './inventory.ts';
 import { stopProcessTree } from './processes.ts';
+import { waitForProcessLog } from './process-log.ts';
 
 // Exercise the real watcher, CLI and Angular/Vite in an isolated project copy.
 // No live Editor scene or user-owned source is changed by this probe.
@@ -22,19 +23,6 @@ const logPath = path.join(reportDirectory, 'server.log');
 await fs.writeFile(logPath, '');
 
 const logEvents = new BehaviorSubject('');
-
-async function waitForLog(predicate: (log: string) => boolean) {
-  await firstValueFrom(
-    merge(
-      logEvents.pipe(filter(predicate)),
-      fromEvent(server!, 'exit').pipe(
-        map(() => {
-          throw new Error('Dev server exited: ' + logs.slice(-2000));
-        }),
-      ),
-    ).pipe(timeout({ first: 90000 })),
-  );
-}
 
 async function outputHashes() {
   const result: Record<string, string> = {};
@@ -91,7 +79,7 @@ try {
 
   server.stdout!.on('data', recordLog);
   server.stderr!.on('data', recordLog);
-  await waitForLog((log) => log.includes('http://127.0.0.1:' + port));
+  await waitForProcessLog(server, logEvents, origin + '/');
   console.log('Workflow probe: initial export and Angular startup passed.');
   browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -133,7 +121,7 @@ try {
   const beforeFailure = await outputHashes();
   previousNavigations = navigations;
   await fs.writeFile(configFile, '{ invalid saved JSON');
-  await waitForLog((log) => log.includes('Export failed; last working scenes retained:'));
+  await waitForProcessLog(server, logEvents, 'Export failed; last working scenes retained:');
   await page.evaluate(() => window.testEvents.frames(12));
   assert.equal(navigations, previousNavigations, 'Invalid save must not reload the browser');
   assert.deepEqual(
