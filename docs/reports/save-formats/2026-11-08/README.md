@@ -48,9 +48,10 @@ Changing only physics storage from a number array to `Uint8Array` reduced the ac
 
 - All five worlds × six formats passed actual IndexedDB round trips, exact field/native-byte comparison, restored worker initialization and native continuation checks.
 - The full pipeline used the real production repository for the object control, and matched token-check/transaction boundaries for alternatives. Candidate data returned to the current schema before existing validation and restoration.
-- Strict tools and game typechecks passed; 91 tooling tests and 121 game/session tests passed.
+- Strict tools and game typechecks passed; 90 tooling tests, 121 game/session tests and 366 Chromium application tests passed.
+- Normal and delayed-render production acceptance, plus IndexedDB reload/crafting/deletion/accessibility acceptance, passed after the startup fix described below.
 - Production build, source boundaries, worker/main dependency separation and route bundle checks passed. The codec dependency and benchmark code remain outside the shipped graph.
 
-The first hosted CI attempt exposed an existing loading-probe precision mismatch: an unrounded renderer request timestamp was compared strictly with Chromium's upward-rounded paint timestamp. The acceptance probe now accounts only for the documented 4 ms presentation bucket, with regression coverage for rejecting earlier buckets. Production loading code and the save implementation were not changed. Both native and delayed-render production acceptance runs passed locally after the probe correction.
+Hosted CI exposed an existing startup race: two animation frames allow a paint opportunity but do not guarantee first contentful paint has been presented. An initial precision-only probe correction proved insufficient on a repeated run and was removed. The startup scheduler now requires both the frame boundary and an observed first-contentful-paint event, with cancellation and unsupported-API fallback coverage. Acceptance retains the requirement that the renderer request occur at or after reported first paint. This loading fix is outside the benchmarked modules and does not change persistence or invalidate these measurements.
 
 The harness also supports larger sample counts, repeat runs and recording save-limit rejection without raising production limits. Follow-up measurements should vary world composition and hardware before making a production decision. Peak memory, frame hitches, cold-disk reads, crash durability and migration cost were not measured.

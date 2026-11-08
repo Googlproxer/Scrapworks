@@ -1,9 +1,40 @@
 import { afterNextRender, inject, InjectionToken, Injector } from '@angular/core';
-import { animationFrames, skip, Subscription, take } from 'rxjs';
+import {
+  animationFrames,
+  combineLatest,
+  filter,
+  fromEventPattern,
+  of,
+  skip,
+  Subscription,
+  take,
+} from 'rxjs';
 
 export type AfterPaint = (work: () => void) => () => void;
 
-/** Commit Angular's UI, then allow a paint between two animation-frame callbacks. */
+function firstContentfulPaint() {
+  if (
+    typeof PerformanceObserver === 'undefined' ||
+    !PerformanceObserver.supportedEntryTypes?.includes('paint') ||
+    performance.getEntriesByName('first-contentful-paint').length
+  )
+    return of(undefined);
+  return fromEventPattern<PerformanceObserverEntryList>(
+    (handler) => {
+      const observer = new PerformanceObserver((entries) => handler(entries));
+      observer.observe({ type: 'paint', buffered: true });
+      return observer;
+    },
+    (_handler, observer: PerformanceObserver) => observer.disconnect(),
+  ).pipe(
+    filter((entries) =>
+      entries.getEntries().some((entry) => entry.name === 'first-contentful-paint'),
+    ),
+    take(1),
+  );
+}
+
+/** Commit Angular's UI and allow a frame to paint; initial startup also waits for observed FCP. */
 export const AFTER_PAINT = new InjectionToken<AfterPaint>('AfterPaint', {
   providedIn: 'root',
   factory: () => {
@@ -12,7 +43,11 @@ export const AFTER_PAINT = new InjectionToken<AfterPaint>('AfterPaint', {
       const lifetime = new Subscription();
       const render = afterNextRender(
         () => {
-          lifetime.add(animationFrames().pipe(skip(1), take(1)).subscribe(work));
+          lifetime.add(
+            combineLatest([animationFrames().pipe(skip(1), take(1)), firstContentfulPaint()])
+              .pipe(take(1))
+              .subscribe(work),
+          );
         },
         { injector },
       );
