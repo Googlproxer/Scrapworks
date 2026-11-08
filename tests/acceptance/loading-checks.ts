@@ -5,6 +5,7 @@ import type { Browser, Page } from 'playwright';
 import type axe from 'axe-core';
 import type { BuildMetadata } from '../../tools/shared.ts';
 import { installBrowserEvents } from './browser-events.ts';
+import { canFollowReportedPaint } from './paint-timing.ts';
 
 interface PaintProbe {
   fcp: number;
@@ -219,8 +220,8 @@ export async function checkLoading(
           'FCP must precede WebGL initialization',
         );
         assert(
-          sample.rendererRequest > sample.fcp,
-          `The renderer module must be requested after first paint: ${JSON.stringify({ cpuRate, attempt, sample })}`,
+          canFollowReportedPaint(sample.rendererRequest, sample.fcp),
+          `The renderer request must follow first paint within its 4 ms reporting precision: ${JSON.stringify({ cpuRate, attempt, sample })}`,
         );
         if (cached)
           assert.equal(sample.rendererTransferSize, 0, 'Warm startup must use the cached renderer');

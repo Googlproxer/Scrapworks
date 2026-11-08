@@ -48,7 +48,9 @@ Changing only physics storage from a number array to `Uint8Array` reduced the ac
 
 - All five worlds × six formats passed actual IndexedDB round trips, exact field/native-byte comparison, restored worker initialization and native continuation checks.
 - The full pipeline used the real production repository for the object control, and matched token-check/transaction boundaries for alternatives. Candidate data returned to the current schema before existing validation and restoration.
-- Strict tools and game typechecks passed; 90 tooling tests and 121 game/session tests passed.
+- Strict tools and game typechecks passed; 91 tooling tests and 121 game/session tests passed.
 - Production build, source boundaries, worker/main dependency separation and route bundle checks passed. The codec dependency and benchmark code remain outside the shipped graph.
+
+The first hosted CI attempt exposed an existing loading-probe precision mismatch: an unrounded renderer request timestamp was compared strictly with Chromium's upward-rounded paint timestamp. The acceptance probe now accounts only for the documented 4 ms presentation bucket, with regression coverage for rejecting earlier buckets. Production loading code and the save implementation were not changed. Both native and delayed-render production acceptance runs passed locally after the probe correction.
 
 The harness also supports larger sample counts, repeat runs and recording save-limit rejection without raising production limits. Follow-up measurements should vary world composition and hardware before making a production decision. Peak memory, frame hitches, cold-disk reads, crash durability and migration cost were not measured.
