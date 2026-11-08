@@ -30,6 +30,8 @@ The Editor check also accepts `--list` to show tool definitions, or a tool name 
 
 ## ECS and worker investigations
 
+The [save-format benchmark](save-bench/README.md) compares the current object save with JSON, gzip, MessagePack and compact/binary layouts in an isolated persistent Chromium profile. Use `node tools/save-bench/cli.ts --smoke` for correctness and a small trial, or omit `--smoke` for the opening / 10k / 100k / 250k entity and physics matrix. It reports data save/load, validation, worker restore and browser-accounted size separately; the production save path stays unchanged. Small codec/fidelity regressions run in `test:tools`; timing trials remain opt-in.
+
 Use **Node 24.21.0**, the pinned Yarn install and Playwright's matching Chromium (`yarn test:setup`). These are opt-in experiments: normal CI runs no benchmark commands. Full measurements can take hours; keep them sequential and separate hosted-runner results from reference-desktop evidence. Reporting charts use the Python dependencies and environment options described in the laboratory guides.
 
 | Former package script  | Direct replacement                                  |

@@ -9,6 +9,7 @@ export default mergeConfig(
       include: [
         'tools/{architecture,build,coverage,eslint,scenes,world,testing}/**/*.test.ts',
         'tools/ecs-bench/verify-production.test.ts',
+        'tools/save-bench/**/*.test.ts',
       ],
       coverage: coverageOptions('tooling'),
     },

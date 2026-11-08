@@ -29,6 +29,8 @@ test('production graph permits Miniplex only in its independent worker', () => {
     'node_modules/vitest/dist/index.js',
     'node_modules/@vitest/runner/dist/index.js',
     'tools/simulation-worker-bench/production-fixture.ts',
+    'tools/save-bench/codecs.ts',
+    'node_modules/@msgpack/msgpack/dist.esm/index.mjs',
     'node_modules/bitecs/dist/index.js',
     'src/game/debug/draw/development-renderer.ts',
     'src/game/debug/draw/geometry.ts',

@@ -1,0 +1,3266 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "createdAt": "2026-11-08T02:21:16.105Z",
+  "revision": "144796793b873e63c2adf32e61e69944ff924fc7",
+  "worktree": " M package.json\n M tools/README.md\n M tools/architecture/check.ts\n M tools/ecs-bench/verify-production.test.ts\n M tools/ecs-bench/verify-production.ts\n M vitest.tools.config.ts\n M yarn.lock\n?? tools/save-bench/\n",
+  "source": {
+    "src/contracts/debug-draw.ts": "59ca38edeb219216470328353ce0e59c47e7351667afe85386c4b79c81cdb31c",
+    "src/contracts/game-client.ts": "80c22dced09979862d21c9430ab914e1a2301353b4df2cae9913f585182e4877",
+    "src/contracts/game-state.ts": "37a58bb5a6b646002071c2d15101173bbb98a4351bde8f685b0c70d42b197182",
+    "src/contracts/game-tick.ts": "12835af02959acca1b9cabf2b98a191866746f616bfb4fdb0b5c20b76645704f",
+    "src/contracts/input.ts": "3712c67a0e74e7c43638fa41b36328de7769035a23f7a2905532fde4defc5e56",
+    "src/contracts/loading.ts": "abf8b48cac8bc2a2b894547a33673256aacf33c82545dbd24ef52ba80bb98e7f",
+    "src/contracts/opening.ts": "3f60bfdd847a0ed5edf6cc92a17e3c934f86d1354d4daba9074b67a5359cc67f",
+    "src/contracts/physics.ts": "2f92a2c6eed7e21b01609a34b74a89b29610ad2d503d97d939bf507afa9a301d",
+    "src/contracts/readonly-data.ts": "70d35b9825fa18755848d86f19194c73f209333056cf0594c16acacb9c75fb41",
+    "src/contracts/save.ts": "331ce98fc427fce7e76c141c1e562eaa9d413bb2b524861c26a591009e721f0b",
+    "src/contracts/session-event.ts": "5b51670cc7fdbbe348249cbe573cae9cf42ce528b783fd344707f95e3081ccc4",
+    "src/contracts/simulation.ts": "a72283c24a42e9cdef233de8249ace865c014716207f1d1e5a7233959d91a71d",
+    "src/contracts/world-command.ts": "7fd7a6951aa099187a5e7fb9a60728360011abbdcaa7d9cb321d5e41f15af0ad",
+    "src/contracts/world.ts": "53cc7f0a07493c3c30c53c673447351a8b7f507186adf1b02bb2360dafa4dc93",
+    "src/simulation/capture.ts": "a6b5a7a84e3d531d6c0b9930198f1c81e239080350719a4b1c4e077c7892e0c5",
+    "src/simulation/domain/inventory.ts": "b408b738a4419c89f10b29ef76898621531b0aaa4dcc2359ff9f089887cf6a5d",
+    "src/simulation/domain/work.ts": "5a866137476ca0c525dc28c5ab49e6dda4e28071bdbb19fd181a714f105b8ccc",
+    "src/simulation/ecs-runtime.test.ts": "16b96e210c97e3bfb8e9e8d722f3fb59d88b2fb570f94c6e6adad400805e2d88",
+    "src/simulation/ecs-runtime.ts": "3df5d12f530e99e0c052d34482d197fab070288b564ecf8fb783f46a8cb9ad79",
+    "src/simulation/opening-capture.ts": "52850bab189075f577f28db0bb7f235f81ecd9a7af16b7373d3b694513de795e",
+    "src/simulation/opening-context.ts": "c2719709b2e8072b90e78fb676a5d2194b3253f28705a8cfbc7c09d910cc088c",
+    "src/simulation/opening.test.ts": "f6a567e9fc1780be171bb7248b8cced585ead7f94e9622cf88f69179ca7cbf33",
+    "src/simulation/opening.ts": "c5926f476329a22fcda0a66fbcbee9a04c61c7ef1c20a4b19361ca3e571ea474",
+    "src/simulation/physics/collision-definitions.ts": "5c6701b24249c077ad40ccca7d7d724377181953bfd8d6cd9394fbd3a0f42af6",
+    "src/simulation/physics/collision.test.ts": "1d6d86b776470b8b6d9da390683dc2502804a489a9c64d6f8261afbe90676279",
+    "src/simulation/physics/physics-boundaries.test.ts": "c5ed019723efc076d6ff84358d0d9bf21977dc042bb5144f05e9d66b85dffd09",
+    "src/simulation/physics/rapier.ts": "1a86dc4775f6399ae0bb65a3599bb13f07fffbbd28b6bd546a4326c2b597f4dc",
+    "src/simulation/physics/snapshot-validation.ts": "cc9e53358fef82657d6cdf22d1a92599ec54106892b24afc932cb5c0c86d08c5",
+    "src/simulation/physics/world-physics.test.ts": "2961306058f063f8f0664f3682d83dea90a1a55b623272f58ddb92574805749a",
+    "src/simulation/physics/world-physics.ts": "f3e6759087cce3e951034df1b715abb7056c419391f4c791999875778ed27ddf",
+    "src/simulation/placement.ts": "3bb838260c0eabd38920a96efdce4b0d53cc2b984fcc2d23ce6ef2ef203cbf79",
+    "src/simulation/player-motor.ts": "367373cbebef4b711c961d986b359076a0efc84b3bbcaea0fa3b8f0373ba5534",
+    "src/simulation/player-save.ts": "ac158d7341e101bfd5c38627381ff237ee2a026a2a973402d85cc5d51261ee53",
+    "src/simulation/reference.test.ts": "36ae0f2415f71e1d23fd0a48e36aaeadc86eed21ddaeb0dca8068c0343fbc4a8",
+    "src/simulation/simulation.spec.ts": "ad6304fa8b1eeaffa6a46f5e39daccafdf50da946a2dce24ca356ebbd3f3f766",
+    "src/simulation/simulation.test.ts": "a9a0af16cb0c18bd7e11ff3ba1f5ce944fa94b659df50d9422b50452757ef569",
+    "src/simulation/simulation.ts": "83e3b8cbbff36b448f0b70ce65aabc7fa68d615214d147c39ca86f1aa2db5159",
+    "src/simulation/world-geometry.test.ts": "d70b38975473d88bbb303cad7c2a18b3a907056a7dd89136ef0599f4105bd5c4",
+    "src/simulation/world-rules.ts": "914bc1cf9aa643ea42d3cdb85b2d2a2b4016673b82f38cbe0f8e92e8490baf0c",
+    "src/simulation/world-state.ts": "000e69bffccf5c74637d1752835cbf53697a00c2509b336771d7cb4e8a94587e",
+    "src/core/winding-travel.spec.ts": "585c21c074c8448e931aecbca6050065190ef4e28debb54325b299b3db9e7e6e",
+    "src/core/winding-travel.ts": "13a15b12ec218f916b444914f2fe3b9e8a71a83b3f95fb237c8e1c7f1314369b",
+    "src/core/world-collision.ts": "9a4cccb46fcbb8b2fe422746391f4a14f365b4a1ef8f66cc47d68f95f2323306",
+    "src/core/world-grid.ts": "6356a6989c0eb25c1f59d5299277df648d393c78d4284e95c66ffd1276e82140",
+    "src/session/freeze-presentation.ts": "66d3171ef411b42b3a255927ab9202e73f21569a7e894aca74815914d89b80f6",
+    "src/session/game-session.test.ts": "6c80648b0e6c6cf01877fed5e031c73b2b19e7d478fffe60c2516da62a4242a5",
+    "src/session/game-session.ts": "555600ccabbbfd000e257c8c33e5990d89f0a75ee1bd76263884ea61fd50dc5c",
+    "src/session/port.ts": "19097d2ea72df58af3e0aa0b90e20edfede39e79eb20cad02a984cd9ceece462",
+    "src/session/presentation-cache.ts": "1cdcba94576ecffd0ad1d4e3142b54c935471f700b1d9796d52ae9c45aaef8a6",
+    "src/session/runtime.ts": "9fc4c165421fcb7267bfffef3f5d3635592cdc4ba0f6db69c54962fcf13d68ae",
+    "src/session/worker-port.test.ts": "b6ef4681a6d75f52c693002f2419f1c9e092de344b680f95d307bf983484ce34",
+    "src/session/worker-port.ts": "f914bccb3de2d65faa951dc3125f8c672435b4408d18ef060bbe60429256af3c",
+    "src/persistence/gameplay-save.test.ts": "4b93cd385c9a35d72c2d1002009da58ae8f8f949e5025396dc2bc68c844a08c6",
+    "src/persistence/indexeddb-save-repository.spec.ts": "b2b661279093e0ac31ee49a24b5a8a0b4c63130bd6c154478044094ab240c309",
+    "src/persistence/indexeddb-save-repository.ts": "142ed6f59e3de9b1f56d7a2aed881585526e8c748e4070c850a424e0380c5f9d",
+    "src/persistence/memory-save-repository.ts": "882859010e23eb5b8612c3f7172540c55513105194b6a6ecaa54cbf27bbe0471",
+    "src/persistence/save-codec.ts": "30456f29457d73557e623529f8a5164fe19cb3572c99c0d3ad492c3801eef484",
+    "src/persistence/save-coordinator.ts": "c6aa532458305617c54d90e35d41528fef6d11306d570d3369aadb14462bade1",
+    "src/workers/simulation.worker.ts": "c67efb3ecdadc6956685604e62dbc6fe7625a594ca38fb6fbf7c13762367a102",
+    "src/content/opening.ts": "6c1f7520984611060a322f1dec3c1d2b9b8a53304c6ac09b0e2f34c5a1b7fd2f",
+    "tools/save-bench/browser.html": "95e2b2805109a044a815cade2bf32588a5a9dce94faca5533e6f97f343e6fb9e",
+    "tools/save-bench/browser.ts": "20c10eeb70ca8c2923aef4905ffabfc58f22a219958f785805e159491606d2a6",
+    "tools/save-bench/cli.ts": "e4177bbf17e4f17e1438026554082e374db6fc220a28530f6c025443b3c74d7e",
+    "tools/save-bench/codecs.ts": "34f21b06472106b86eaa63244294907ebfd410a9856f1d79196443c78296cce1",
+    "tools/save-bench/fixtures.ts": "4ab18b4f8af2f4be994d7515192432d5715e8dbdaa5b26d6bc8db9b3513f9b07",
+    "tools/save-bench/model.ts": "feec0fadf57537bd9922ed66ed31c3a6b617c24f663e81b0502cdea6a6a1b910",
+    "tools/save-bench/options.ts": "c015a0ef2ac806df20e50ce995e82358db88d16f78c66c42f758376c17028423",
+    "tools/save-bench/report.ts": "8aca7efbe96b98e8e2368a837b2a111e5e4696272815576e2779ae44e333be66",
+    "tools/save-bench/save-bench.test.ts": "6c2af25e3c55a80418c62680fa395f21028db47bf47fb62da9eda7c735425323",
+    "tools/save-bench/storage.ts": "77cdc2d8251d899ad6c2eb58d1820b474427babe3bc146ba0809305386a7e3a6",
+    "package.json": "90441d041b27f88c7bfda374d27f94c7a4b5824a6932654e45d5c4db7f19c0cc",
+    "yarn.lock": "05d00b4cfa323684245405d7053b1f88aff40e1fd25a4767f3ef5f367c89fbc7",
+    "tsconfig.json": "09bb26a5a6209db48c63bbf0f7eaca870d4da78e10231aea88b9e039a288c8cc",
+    "public/scene/worlds/game.json": "fa1f378c7ba31cc6c4ef8df30fbcd39b46e9970b4eef413705ccbbfb68249771"
+  },
+  "options": {
+    "smoke": false,
+    "populations": [
+      10000,
+      100000,
+      250000
+    ],
+    "samples": 5,
+    "warmups": 1,
+    "seed": 20261108,
+    "physicsBodies": 1000,
+    "output": "tmp/save-bench/scale-01"
+  },
+  "environment": {
+    "node": {
+      "node": "24.21.0",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.8",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.8",
+      "simdjson": "4.6.7",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026c",
+      "undici": "7.29.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.53",
+      "zlib": "1.3.2.1-motley-8002e91",
+      "zstd": "1.5.7"
+    },
+    "os": "win32 10.0.26300",
+    "cpu": "AMD Ryzen 9 7900X3D 12-Core Processor          ",
+    "logicalCpus": 24,
+    "memoryBytes": 68274266112,
+    "browser": "156.0.8078.4",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+    "profile": "tmp/save-bench/scale-01/profile-bccee52c-3821-4c24-9a8f-23b9ef50e16a",
+    "storage": "Persistent Chromium profile on local filesystem; default IndexedDB durability; warm cache reads"
+  },
+  "results": [
+    {
+      "name": "opening",
+      "synthetic": false,
+      "population": 8,
+      "kinds": {
+        "body": 6,
+        "player": 1,
+        "deposit": 1
+      },
+      "physicsBytes": 10786,
+      "jsonUtf8Bytes": 30542,
+      "sha256": "cc823208fde34061dc1cff37fe7ef21991eaec3d043877a59c12361a8adfc02f",
+      "hostGate": {
+        "accepted": true
+      },
+      "common": {
+        "captureMs": [
+          0.5999999940395355,
+          0.5,
+          0.6000000089406967,
+          0.5999999940395355,
+          0.5
+        ],
+        "validateAndCloneMs": [
+          0.9000000059604645,
+          0.8999999910593033,
+          0.8999999910593033,
+          0.9000000059604645,
+          1
+        ],
+        "cloneOnlyMs": [
+          0.8999999910593033,
+          0.7999999970197678,
+          0.9000000059604645,
+          0.9000000059604645,
+          0.7999999970197678
+        ]
+      },
+      "order": [
+        [
+          "current-object",
+          "json-gzip",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json"
+        ],
+        [
+          "json",
+          "binary-physics",
+          "compact-msgpack",
+          "json-gzip",
+          "msgpack",
+          "current-object"
+        ],
+        [
+          "current-object",
+          "json",
+          "json-gzip",
+          "binary-physics",
+          "msgpack",
+          "compact-msgpack"
+        ],
+        [
+          "json-gzip",
+          "compact-msgpack",
+          "json",
+          "current-object",
+          "msgpack",
+          "binary-physics"
+        ],
+        [
+          "json-gzip",
+          "binary-physics",
+          "current-object",
+          "json",
+          "compact-msgpack",
+          "msgpack"
+        ],
+        [
+          "json",
+          "current-object",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json-gzip"
+        ]
+      ],
+      "formats": [
+        {
+          "format": "current-object",
+          "label": "Current object / production repository",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 928,
+            "afterBytes": 66541,
+            "deltaBytes": 65613,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0,
+              "writeMs": 2.6000000089406967,
+              "readMs": 0.699999988079071,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 2.5,
+              "readMs": 0.5999999940395355,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 2.7999999970197678,
+              "readMs": 0.800000011920929,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 2.4000000059604645,
+              "readMs": 0.699999988079071,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 2.9000000059604645,
+              "readMs": 0.7000000029802322,
+              "decodeMs": 0
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 0.6000000089406967,
+              "saveRepositoryMs": 2.7000000029802322,
+              "saveTotalMs": 3.300000011920929,
+              "loadRepositoryMs": 1.5999999940395355,
+              "restoreWorkerMs": 65.29999999701977,
+              "loadTotalMs": 66.8999999910593
+            },
+            {
+              "captureMs": 0.5,
+              "saveRepositoryMs": 2.7000000029802322,
+              "saveTotalMs": 3.2000000029802322,
+              "loadRepositoryMs": 2,
+              "restoreWorkerMs": 66.09999999403954,
+              "loadTotalMs": 68.09999999403954
+            },
+            {
+              "captureMs": 0.699999988079071,
+              "saveRepositoryMs": 3.5,
+              "saveTotalMs": 4.199999988079071,
+              "loadRepositoryMs": 1.7000000029802322,
+              "restoreWorkerMs": 70.29999999701977,
+              "loadTotalMs": 72
+            },
+            {
+              "captureMs": 0.6000000089406967,
+              "saveRepositoryMs": 2.7999999970197678,
+              "saveTotalMs": 3.4000000059604645,
+              "loadRepositoryMs": 1.7000000029802322,
+              "restoreWorkerMs": 70.5,
+              "loadTotalMs": 72.20000000298023
+            },
+            {
+              "captureMs": 0.7999999970197678,
+              "saveRepositoryMs": 2.8999999910593033,
+              "saveTotalMs": 3.699999988079071,
+              "loadRepositoryMs": 1.6000000089406967,
+              "restoreWorkerMs": 70.59999999403954,
+              "loadTotalMs": 72.20000000298023
+            }
+          ]
+        },
+        {
+          "format": "json",
+          "label": "JSON string",
+          "wireBytes": 30542,
+          "storage": {
+            "beforeBytes": 67359,
+            "afterBytes": 98781,
+            "deltaBytes": 31422,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0.09999999403953552,
+              "writeMs": 1.9000000059604645,
+              "readMs": 0.3999999910593033,
+              "decodeMs": 0.10000000894069672
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 1.4000000059604645,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.09999999403953552
+            },
+            {
+              "encodeMs": 0.10000000894069672,
+              "writeMs": 1.0999999940395355,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 1.1000000089406967,
+              "readMs": 0.19999998807907104,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 0.10000000894069672,
+              "writeMs": 1.0999999940395355,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.10000000894069672
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 1,
+              "saveRepositoryMs": 2.3999999910593033,
+              "saveTotalMs": 3.3999999910593033,
+              "loadRepositoryMs": 1.1000000089406967,
+              "restoreWorkerMs": 75.8999999910593,
+              "loadTotalMs": 77
+            },
+            {
+              "captureMs": 0.7000000029802322,
+              "saveRepositoryMs": 1.7999999970197678,
+              "saveTotalMs": 2.5,
+              "loadRepositoryMs": 0.5,
+              "restoreWorkerMs": 67.6000000089407,
+              "loadTotalMs": 68.1000000089407
+            },
+            {
+              "captureMs": 0.5,
+              "saveRepositoryMs": 1.5,
+              "saveTotalMs": 2,
+              "loadRepositoryMs": 0.7999999970197678,
+              "restoreWorkerMs": 67.70000000298023,
+              "loadTotalMs": 68.5
+            },
+            {
+              "captureMs": 0.7999999970197678,
+              "saveRepositoryMs": 1.6000000089406967,
+              "saveTotalMs": 2.4000000059604645,
+              "loadRepositoryMs": 0.5999999940395355,
+              "restoreWorkerMs": 67,
+              "loadTotalMs": 67.59999999403954
+            },
+            {
+              "captureMs": 1.199999988079071,
+              "saveRepositoryMs": 2.800000011920929,
+              "saveTotalMs": 4,
+              "loadRepositoryMs": 0.699999988079071,
+              "restoreWorkerMs": 82.20000000298023,
+              "loadTotalMs": 82.8999999910593
+            }
+          ]
+        },
+        {
+          "format": "json-gzip",
+          "label": "JSON + browser gzip",
+          "wireBytes": 2615,
+          "storage": {
+            "beforeBytes": 99599,
+            "afterBytes": 103091,
+            "deltaBytes": 3492,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 1.2000000029802322,
+              "writeMs": 0.7999999970197678,
+              "readMs": 0.10000000894069672,
+              "decodeMs": 0.5
+            },
+            {
+              "encodeMs": 1.2999999970197678,
+              "writeMs": 0.9000000059604645,
+              "readMs": 0.09999999403953552,
+              "decodeMs": 0.5
+            },
+            {
+              "encodeMs": 1.2999999970197678,
+              "writeMs": 0.9000000059604645,
+              "readMs": 0.19999998807907104,
+              "decodeMs": 0.6000000089406967
+            },
+            {
+              "encodeMs": 1,
+              "writeMs": 0.7000000029802322,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.6000000089406967
+            },
+            {
+              "encodeMs": 1.2999999970197678,
+              "writeMs": 0.7000000029802322,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.5
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 0.5,
+              "saveRepositoryMs": 1.8999999910593033,
+              "saveTotalMs": 2.3999999910593033,
+              "loadRepositoryMs": 0.7000000029802322,
+              "restoreWorkerMs": 68.20000000298023,
+              "loadTotalMs": 68.90000000596046
+            },
+            {
+              "captureMs": 0.6000000089406967,
+              "saveRepositoryMs": 2.3999999910593033,
+              "saveTotalMs": 3,
+              "loadRepositoryMs": 0.7000000029802322,
+              "restoreWorkerMs": 68,
+              "loadTotalMs": 68.70000000298023
+            },
+            {
+              "captureMs": 0.5999999940395355,
+              "saveRepositoryMs": 2,
+              "saveTotalMs": 2.5999999940395355,
+              "loadRepositoryMs": 1.2000000029802322,
+              "restoreWorkerMs": 67.90000000596046,
+              "loadTotalMs": 69.1000000089407
+            },
+            {
+              "captureMs": 0.7000000029802322,
+              "saveRepositoryMs": 2.199999988079071,
+              "saveTotalMs": 2.8999999910593033,
+              "loadRepositoryMs": 1.1000000089406967,
+              "restoreWorkerMs": 76.09999999403954,
+              "loadTotalMs": 77.20000000298023
+            },
+            {
+              "captureMs": 0.5,
+              "saveRepositoryMs": 2.2000000029802322,
+              "saveTotalMs": 2.7000000029802322,
+              "loadRepositoryMs": 0.7999999970197678,
+              "restoreWorkerMs": 68.1000000089407,
+              "loadTotalMs": 68.90000000596046
+            }
+          ]
+        },
+        {
+          "format": "msgpack",
+          "label": "MessagePack / unchanged object layout",
+          "wireBytes": 16690,
+          "storage": {
+            "beforeBytes": 103909,
+            "afterBytes": 121479,
+            "deltaBytes": 17570,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0.20000000298023224,
+              "writeMs": 1,
+              "readMs": 0.3999999910593033,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 0.29999999701976776,
+              "writeMs": 1.7000000029802322,
+              "readMs": 0.20000000298023224,
+              "decodeMs": 0.09999999403953552
+            },
+            {
+              "encodeMs": 0.30000001192092896,
+              "writeMs": 1,
+              "readMs": 0.3999999910593033,
+              "decodeMs": 0.10000000894069672
+            },
+            {
+              "encodeMs": 0.20000000298023224,
+              "writeMs": 1.6000000089406967,
+              "readMs": 0.5,
+              "decodeMs": 0.09999999403953552
+            },
+            {
+              "encodeMs": 0.29999999701976776,
+              "writeMs": 1,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 0.4000000059604645,
+              "saveRepositoryMs": 1.699999988079071,
+              "saveTotalMs": 2.0999999940395355,
+              "loadRepositoryMs": 1.300000011920929,
+              "restoreWorkerMs": 66.79999999701977,
+              "loadTotalMs": 68.1000000089407
+            },
+            {
+              "captureMs": 0.7000000029802322,
+              "saveRepositoryMs": 1.4000000059604645,
+              "saveTotalMs": 2.1000000089406967,
+              "loadRepositoryMs": 1.199999988079071,
+              "restoreWorkerMs": 67.6000000089407,
+              "loadTotalMs": 68.79999999701977
+            },
+            {
+              "captureMs": 0.5999999940395355,
+              "saveRepositoryMs": 1.5,
+              "saveTotalMs": 2.0999999940395355,
+              "loadRepositoryMs": 1.2999999970197678,
+              "restoreWorkerMs": 65.40000000596046,
+              "loadTotalMs": 66.70000000298023
+            },
+            {
+              "captureMs": 0.5999999940395355,
+              "saveRepositoryMs": 1.7000000029802322,
+              "saveTotalMs": 2.2999999970197678,
+              "loadRepositoryMs": 1.2999999970197678,
+              "restoreWorkerMs": 86.20000000298023,
+              "loadTotalMs": 87.5
+            },
+            {
+              "captureMs": 0.7000000029802322,
+              "saveRepositoryMs": 1.7999999970197678,
+              "saveTotalMs": 2.5,
+              "loadRepositoryMs": 1.2000000029802322,
+              "restoreWorkerMs": 73.5,
+              "loadTotalMs": 74.70000000298023
+            }
+          ]
+        },
+        {
+          "format": "binary-physics",
+          "label": "Object + Uint8Array physics",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 122297,
+            "afterBytes": 140533,
+            "deltaBytes": 18236,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0.20000000298023224,
+              "writeMs": 1.0999999940395355,
+              "readMs": 0.4000000059604645,
+              "decodeMs": 0.09999999403953552
+            },
+            {
+              "encodeMs": 0.09999999403953552,
+              "writeMs": 1.2000000029802322,
+              "readMs": 0.7000000029802322,
+              "decodeMs": 0.09999999403953552
+            },
+            {
+              "encodeMs": 0.20000000298023224,
+              "writeMs": 1.0999999940395355,
+              "readMs": 0.5,
+              "decodeMs": 0.09999999403953552
+            },
+            {
+              "encodeMs": 0.3999999910593033,
+              "writeMs": 1.2999999970197678,
+              "readMs": 0.800000011920929,
+              "decodeMs": 0.09999999403953552
+            },
+            {
+              "encodeMs": 0.19999998807907104,
+              "writeMs": 1,
+              "readMs": 0.30000001192092896,
+              "decodeMs": 0.09999999403953552
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 0.5,
+              "saveRepositoryMs": 2.1000000089406967,
+              "saveTotalMs": 2.6000000089406967,
+              "loadRepositoryMs": 0.5999999940395355,
+              "restoreWorkerMs": 65.79999999701977,
+              "loadTotalMs": 66.3999999910593
+            },
+            {
+              "captureMs": 0.5999999940395355,
+              "saveRepositoryMs": 1.7000000029802322,
+              "saveTotalMs": 2.2999999970197678,
+              "loadRepositoryMs": 0.6000000089406967,
+              "restoreWorkerMs": 71.09999999403954,
+              "loadTotalMs": 71.70000000298023
+            },
+            {
+              "captureMs": 0.6000000089406967,
+              "saveRepositoryMs": 1.7000000029802322,
+              "saveTotalMs": 2.300000011920929,
+              "loadRepositoryMs": 0.699999988079071,
+              "restoreWorkerMs": 69.30000001192093,
+              "loadTotalMs": 70
+            },
+            {
+              "captureMs": 0.6000000089406967,
+              "saveRepositoryMs": 2.0999999940395355,
+              "saveTotalMs": 2.7000000029802322,
+              "loadRepositoryMs": 1.2000000029802322,
+              "restoreWorkerMs": 69.5,
+              "loadTotalMs": 70.70000000298023
+            },
+            {
+              "captureMs": 0.7999999970197678,
+              "saveRepositoryMs": 1.7000000029802322,
+              "saveTotalMs": 2.5,
+              "loadRepositoryMs": 0.5999999940395355,
+              "restoreWorkerMs": 70.20000000298023,
+              "loadTotalMs": 70.79999999701977
+            }
+          ]
+        },
+        {
+          "format": "compact-msgpack",
+          "label": "Compact components + binary physics / MessagePack",
+          "wireBytes": 15016,
+          "storage": {
+            "beforeBytes": 141351,
+            "afterBytes": 157244,
+            "deltaBytes": 15893,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0.5999999940395355,
+              "writeMs": 1.1000000089406967,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 0.29999999701976776,
+              "writeMs": 1,
+              "readMs": 0.4000000059604645,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 0.3999999910593033,
+              "writeMs": 1.1000000089406967,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.29999999701976776
+            },
+            {
+              "encodeMs": 0.4000000059604645,
+              "writeMs": 1.0999999940395355,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.4000000059604645
+            },
+            {
+              "encodeMs": 0.29999999701976776,
+              "writeMs": 1,
+              "readMs": 0.29999999701976776,
+              "decodeMs": 0.29999999701976776
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 0.5,
+              "saveRepositoryMs": 1.5,
+              "saveTotalMs": 2,
+              "loadRepositoryMs": 0.699999988079071,
+              "restoreWorkerMs": 66,
+              "loadTotalMs": 66.69999998807907
+            },
+            {
+              "captureMs": 0.5999999940395355,
+              "saveRepositoryMs": 1.6000000089406967,
+              "saveTotalMs": 2.2000000029802322,
+              "loadRepositoryMs": 0.699999988079071,
+              "restoreWorkerMs": 66.5,
+              "loadTotalMs": 67.19999998807907
+            },
+            {
+              "captureMs": 0.7000000029802322,
+              "saveRepositoryMs": 1.7000000029802322,
+              "saveTotalMs": 2.4000000059604645,
+              "loadRepositoryMs": 0.699999988079071,
+              "restoreWorkerMs": 69.5,
+              "loadTotalMs": 70.19999998807907
+            },
+            {
+              "captureMs": 0.7999999970197678,
+              "saveRepositoryMs": 1.9000000059604645,
+              "saveTotalMs": 2.7000000029802322,
+              "loadRepositoryMs": 0.7999999970197678,
+              "restoreWorkerMs": 80.09999999403954,
+              "loadTotalMs": 80.8999999910593
+            },
+            {
+              "captureMs": 0.7000000029802322,
+              "saveRepositoryMs": 2.0999999940395355,
+              "saveTotalMs": 2.7999999970197678,
+              "loadRepositoryMs": 0.7000000029802322,
+              "restoreWorkerMs": 70.20000000298023,
+              "loadTotalMs": 70.90000000596046
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "piles-10000",
+      "synthetic": true,
+      "population": 10000,
+      "kinds": {
+        "body": 6,
+        "pile": 9992,
+        "player": 1,
+        "deposit": 1
+      },
+      "physicsBytes": 16019,
+      "jsonUtf8Bytes": 2038070,
+      "sha256": "b8e424e06f6ae48f70a7b1cdbb776c0fa3292c82f136ec5943aca20c8915db12",
+      "hostGate": {
+        "accepted": true
+      },
+      "common": {
+        "captureMs": [
+          35.20000000298023,
+          38.900000005960464,
+          39.400000005960464,
+          39,
+          44.79999999701977
+        ],
+        "validateAndCloneMs": [
+          17.200000002980232,
+          17.899999991059303,
+          19.5,
+          18.899999991059303,
+          19.200000002980232
+        ],
+        "cloneOnlyMs": [
+          15.5,
+          13.799999997019768,
+          13.200000002980232,
+          14.900000005960464,
+          13.5
+        ]
+      },
+      "order": [
+        [
+          "current-object",
+          "json-gzip",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json"
+        ],
+        [
+          "json",
+          "binary-physics",
+          "compact-msgpack",
+          "json-gzip",
+          "msgpack",
+          "current-object"
+        ],
+        [
+          "current-object",
+          "json",
+          "json-gzip",
+          "binary-physics",
+          "msgpack",
+          "compact-msgpack"
+        ],
+        [
+          "json-gzip",
+          "compact-msgpack",
+          "json",
+          "current-object",
+          "msgpack",
+          "binary-physics"
+        ],
+        [
+          "json-gzip",
+          "binary-physics",
+          "current-object",
+          "json",
+          "compact-msgpack",
+          "msgpack"
+        ],
+        [
+          "json",
+          "current-object",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json-gzip"
+        ]
+      ],
+      "formats": [
+        {
+          "format": "current-object",
+          "label": "Current object / production repository",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 7008,
+            "afterBytes": 422021,
+            "deltaBytes": 415013,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0,
+              "writeMs": 31.599999994039536,
+              "readMs": 14.300000011920929,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 39,
+              "readMs": 15.200000002980232,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 33.1000000089407,
+              "readMs": 10.599999994039536,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 41.099999994039536,
+              "readMs": 10.400000005960464,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 33,
+              "readMs": 11.700000002980232,
+              "decodeMs": 0
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 39.099999994039536,
+              "saveRepositoryMs": 48.099999994039536,
+              "saveTotalMs": 87.19999998807907,
+              "loadRepositoryMs": 30.700000002980232,
+              "restoreWorkerMs": 196.79999999701977,
+              "loadTotalMs": 227.5
+            },
+            {
+              "captureMs": 37.900000005960464,
+              "saveRepositoryMs": 51.599999994039536,
+              "saveTotalMs": 89.5,
+              "loadRepositoryMs": 31,
+              "restoreWorkerMs": 191.1000000089407,
+              "loadTotalMs": 222.1000000089407
+            },
+            {
+              "captureMs": 38,
+              "saveRepositoryMs": 47.6000000089407,
+              "saveTotalMs": 85.6000000089407,
+              "loadRepositoryMs": 30.19999998807907,
+              "restoreWorkerMs": 200.6000000089407,
+              "loadTotalMs": 230.79999999701977
+            },
+            {
+              "captureMs": 37.8999999910593,
+              "saveRepositoryMs": 48.400000005960464,
+              "saveTotalMs": 86.29999999701977,
+              "loadRepositoryMs": 37.79999999701977,
+              "restoreWorkerMs": 195.70000000298023,
+              "loadTotalMs": 233.5
+            },
+            {
+              "captureMs": 39,
+              "saveRepositoryMs": 59.79999999701977,
+              "saveTotalMs": 98.79999999701977,
+              "loadRepositoryMs": 33.400000005960464,
+              "restoreWorkerMs": 210.59999999403954,
+              "loadTotalMs": 244
+            }
+          ]
+        },
+        {
+          "format": "json",
+          "label": "JSON string",
+          "wireBytes": 2038070,
+          "storage": {
+            "beforeBytes": 422852,
+            "afterBytes": 757659,
+            "deltaBytes": 334807,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 5.5999999940395355,
+              "writeMs": 10.5,
+              "readMs": 1.7999999970197678,
+              "decodeMs": 7.600000008940697
+            },
+            {
+              "encodeMs": 5.299999997019768,
+              "writeMs": 10.5,
+              "readMs": 2,
+              "decodeMs": 5.5
+            },
+            {
+              "encodeMs": 4.299999997019768,
+              "writeMs": 7.4000000059604645,
+              "readMs": 1.5,
+              "decodeMs": 5.899999991059303
+            },
+            {
+              "encodeMs": 4.300000011920929,
+              "writeMs": 6.799999997019768,
+              "readMs": 1.3999999910593033,
+              "decodeMs": 5.9000000059604645
+            },
+            {
+              "encodeMs": 5,
+              "writeMs": 7.200000002980232,
+              "readMs": 1.5999999940395355,
+              "decodeMs": 5.5
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 50.20000000298023,
+              "saveRepositoryMs": 49,
+              "saveTotalMs": 99.20000000298023,
+              "loadRepositoryMs": 38.79999999701977,
+              "restoreWorkerMs": 211.70000000298023,
+              "loadTotalMs": 250.5
+            },
+            {
+              "captureMs": 46,
+              "saveRepositoryMs": 29.099999994039536,
+              "saveTotalMs": 75.09999999403954,
+              "loadRepositoryMs": 24.200000002980232,
+              "restoreWorkerMs": 189.70000000298023,
+              "loadTotalMs": 213.90000000596046
+            },
+            {
+              "captureMs": 58.80000001192093,
+              "saveRepositoryMs": 44.69999998807907,
+              "saveTotalMs": 103.5,
+              "loadRepositoryMs": 38.900000005960464,
+              "restoreWorkerMs": 191.5,
+              "loadTotalMs": 230.40000000596046
+            },
+            {
+              "captureMs": 43.900000005960464,
+              "saveRepositoryMs": 33,
+              "saveTotalMs": 76.90000000596046,
+              "loadRepositoryMs": 25.19999998807907,
+              "restoreWorkerMs": 197.40000000596046,
+              "loadTotalMs": 222.59999999403954
+            },
+            {
+              "captureMs": 38.79999999701977,
+              "saveRepositoryMs": 31.400000005960464,
+              "saveTotalMs": 70.20000000298023,
+              "loadRepositoryMs": 23.5,
+              "restoreWorkerMs": 188.20000000298023,
+              "loadTotalMs": 211.70000000298023
+            }
+          ]
+        },
+        {
+          "format": "json-gzip",
+          "label": "JSON + browser gzip",
+          "wireBytes": 174956,
+          "storage": {
+            "beforeBytes": 758490,
+            "afterBytes": 934680,
+            "deltaBytes": 176190,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 24.80000001192093,
+              "writeMs": 4.5,
+              "readMs": 0.699999988079071,
+              "decodeMs": 10.600000008940697
+            },
+            {
+              "encodeMs": 26.299999997019768,
+              "writeMs": 4.600000008940697,
+              "readMs": 0.5999999940395355,
+              "decodeMs": 13.5
+            },
+            {
+              "encodeMs": 22.400000005960464,
+              "writeMs": 4.199999988079071,
+              "readMs": 0.7000000029802322,
+              "decodeMs": 10.799999997019768
+            },
+            {
+              "encodeMs": 21.900000005960464,
+              "writeMs": 4.199999988079071,
+              "readMs": 0.5,
+              "decodeMs": 9.800000011920929
+            },
+            {
+              "encodeMs": 25.5,
+              "writeMs": 5,
+              "readMs": 0.7000000029802322,
+              "decodeMs": 9.799999997019768
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 68.3999999910593,
+              "saveRepositoryMs": 64.30000001192093,
+              "saveTotalMs": 132.70000000298023,
+              "loadRepositoryMs": 41.69999998807907,
+              "restoreWorkerMs": 205.90000000596046,
+              "loadTotalMs": 247.59999999403954
+            },
+            {
+              "captureMs": 47.1000000089407,
+              "saveRepositoryMs": 55.3999999910593,
+              "saveTotalMs": 102.5,
+              "loadRepositoryMs": 43.900000005960464,
+              "restoreWorkerMs": 234,
+              "loadTotalMs": 277.90000000596046
+            },
+            {
+              "captureMs": 38.400000005960464,
+              "saveRepositoryMs": 55.79999999701977,
+              "saveTotalMs": 94.20000000298023,
+              "loadRepositoryMs": 26.400000005960464,
+              "restoreWorkerMs": 196.8999999910593,
+              "loadTotalMs": 223.29999999701977
+            },
+            {
+              "captureMs": 39.3999999910593,
+              "saveRepositoryMs": 46.900000005960464,
+              "saveTotalMs": 86.29999999701977,
+              "loadRepositoryMs": 25.299999997019768,
+              "restoreWorkerMs": 190.90000000596046,
+              "loadTotalMs": 216.20000000298023
+            },
+            {
+              "captureMs": 68,
+              "saveRepositoryMs": 54.599999994039536,
+              "saveTotalMs": 122.59999999403954,
+              "loadRepositoryMs": 26.799999997019768,
+              "restoreWorkerMs": 212.1000000089407,
+              "loadTotalMs": 238.90000000596046
+            }
+          ]
+        },
+        {
+          "format": "msgpack",
+          "label": "MessagePack / unchanged object layout",
+          "wireBytes": 1336756,
+          "storage": {
+            "beforeBytes": 935511,
+            "afterBytes": 1216558,
+            "deltaBytes": 281047,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 9.799999997019768,
+              "writeMs": 6.5,
+              "readMs": 1.2000000029802322,
+              "decodeMs": 9.5
+            },
+            {
+              "encodeMs": 8.5,
+              "writeMs": 6.199999988079071,
+              "readMs": 1.300000011920929,
+              "decodeMs": 9.399999991059303
+            },
+            {
+              "encodeMs": 9.100000008940697,
+              "writeMs": 7.5,
+              "readMs": 6.0999999940395355,
+              "decodeMs": 7.9000000059604645
+            },
+            {
+              "encodeMs": 9.5,
+              "writeMs": 6,
+              "readMs": 1.4000000059604645,
+              "decodeMs": 8.599999994039536
+            },
+            {
+              "encodeMs": 9.100000008940697,
+              "writeMs": 6.700000002980232,
+              "readMs": 1.3999999910593033,
+              "decodeMs": 9.700000002980232
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 38.099999994039536,
+              "saveRepositoryMs": 35.1000000089407,
+              "saveTotalMs": 73.20000000298023,
+              "loadRepositoryMs": 29.799999997019768,
+              "restoreWorkerMs": 212.29999999701977,
+              "loadTotalMs": 242.09999999403954
+            },
+            {
+              "captureMs": 38.1000000089407,
+              "saveRepositoryMs": 33.8999999910593,
+              "saveTotalMs": 72,
+              "loadRepositoryMs": 41.6000000089407,
+              "restoreWorkerMs": 188.59999999403954,
+              "loadTotalMs": 230.20000000298023
+            },
+            {
+              "captureMs": 41.099999994039536,
+              "saveRepositoryMs": 36,
+              "saveTotalMs": 77.09999999403954,
+              "loadRepositoryMs": 33.20000000298023,
+              "restoreWorkerMs": 186.79999999701977,
+              "loadTotalMs": 220
+            },
+            {
+              "captureMs": 37.599999994039536,
+              "saveRepositoryMs": 33.1000000089407,
+              "saveTotalMs": 70.70000000298023,
+              "loadRepositoryMs": 28.099999994039536,
+              "restoreWorkerMs": 199,
+              "loadTotalMs": 227.09999999403954
+            },
+            {
+              "captureMs": 37,
+              "saveRepositoryMs": 30.200000002980232,
+              "saveTotalMs": 67.20000000298023,
+              "loadRepositoryMs": 37.3999999910593,
+              "restoreWorkerMs": 236.1000000089407,
+              "loadTotalMs": 273.5
+            }
+          ]
+        },
+        {
+          "format": "binary-physics",
+          "label": "Object + Uint8Array physics",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 1217389,
+            "afterBytes": 1562913,
+            "deltaBytes": 345524,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0.5,
+              "writeMs": 32.900000005960464,
+              "readMs": 11.899999991059303,
+              "decodeMs": 0.30000001192092896
+            },
+            {
+              "encodeMs": 0.6000000089406967,
+              "writeMs": 30.69999998807907,
+              "readMs": 13,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 1,
+              "writeMs": 28.299999997019768,
+              "readMs": 13,
+              "decodeMs": 0.29999999701976776
+            },
+            {
+              "encodeMs": 0.3999999910593033,
+              "writeMs": 41.79999999701977,
+              "readMs": 13.700000002980232,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 0.5,
+              "writeMs": 35.900000005960464,
+              "readMs": 18.099999994039536,
+              "decodeMs": 0.29999999701976776
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 49.900000005960464,
+              "saveRepositoryMs": 64.8999999910593,
+              "saveTotalMs": 114.79999999701977,
+              "loadRepositoryMs": 30.200000002980232,
+              "restoreWorkerMs": 215.29999999701977,
+              "loadTotalMs": 245.5
+            },
+            {
+              "captureMs": 45.6000000089407,
+              "saveRepositoryMs": 49.8999999910593,
+              "saveTotalMs": 95.5,
+              "loadRepositoryMs": 33.5,
+              "restoreWorkerMs": 188.1000000089407,
+              "loadTotalMs": 221.6000000089407
+            },
+            {
+              "captureMs": 48.1000000089407,
+              "saveRepositoryMs": 55.099999994039536,
+              "saveTotalMs": 103.20000000298023,
+              "loadRepositoryMs": 28.600000008940697,
+              "restoreWorkerMs": 187,
+              "loadTotalMs": 215.6000000089407
+            },
+            {
+              "captureMs": 44.70000000298023,
+              "saveRepositoryMs": 46.599999994039536,
+              "saveTotalMs": 91.29999999701977,
+              "loadRepositoryMs": 28.5,
+              "restoreWorkerMs": 229.79999999701977,
+              "loadTotalMs": 258.29999999701977
+            },
+            {
+              "captureMs": 44,
+              "saveRepositoryMs": 45.79999999701977,
+              "saveTotalMs": 89.79999999701977,
+              "loadRepositoryMs": 43.80000001192093,
+              "restoreWorkerMs": 205.29999999701977,
+              "loadTotalMs": 249.1000000089407
+            }
+          ]
+        },
+        {
+          "format": "compact-msgpack",
+          "label": "Compact components + binary physics / MessagePack",
+          "wireBytes": 714113,
+          "storage": {
+            "beforeBytes": 1563744,
+            "afterBytes": 1797253,
+            "deltaBytes": 233509,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 12.5,
+              "writeMs": 6.200000002980232,
+              "readMs": 1.4000000059604645,
+              "decodeMs": 8.799999997019768
+            },
+            {
+              "encodeMs": 7.299999997019768,
+              "writeMs": 5.799999997019768,
+              "readMs": 1,
+              "decodeMs": 5.200000002980232
+            },
+            {
+              "encodeMs": 6.399999991059303,
+              "writeMs": 5.5999999940395355,
+              "readMs": 0.9000000059604645,
+              "decodeMs": 4.5
+            },
+            {
+              "encodeMs": 11.099999994039536,
+              "writeMs": 6.300000011920929,
+              "readMs": 1.0999999940395355,
+              "decodeMs": 6.4000000059604645
+            },
+            {
+              "encodeMs": 6.700000002980232,
+              "writeMs": 8.099999994039536,
+              "readMs": 1.1000000089406967,
+              "decodeMs": 4.700000002980232
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 53.79999999701977,
+              "saveRepositoryMs": 48.6000000089407,
+              "saveTotalMs": 102.40000000596046,
+              "loadRepositoryMs": 25.399999991059303,
+              "restoreWorkerMs": 239.5,
+              "loadTotalMs": 264.8999999910593
+            },
+            {
+              "captureMs": 42.29999999701977,
+              "saveRepositoryMs": 37.900000005960464,
+              "saveTotalMs": 80.20000000298023,
+              "loadRepositoryMs": 32.5,
+              "restoreWorkerMs": 195.40000000596046,
+              "loadTotalMs": 227.90000000596046
+            },
+            {
+              "captureMs": 38.599999994039536,
+              "saveRepositoryMs": 28,
+              "saveTotalMs": 66.59999999403954,
+              "loadRepositoryMs": 28.100000008940697,
+              "restoreWorkerMs": 197.09999999403954,
+              "loadTotalMs": 225.20000000298023
+            },
+            {
+              "captureMs": 41.29999999701977,
+              "saveRepositoryMs": 43.8999999910593,
+              "saveTotalMs": 85.19999998807907,
+              "loadRepositoryMs": 26.30000001192093,
+              "restoreWorkerMs": 202.5,
+              "loadTotalMs": 228.80000001192093
+            },
+            {
+              "captureMs": 41,
+              "saveRepositoryMs": 42.099999994039536,
+              "saveTotalMs": 83.09999999403954,
+              "loadRepositoryMs": 31.099999994039536,
+              "restoreWorkerMs": 200.40000000596046,
+              "loadTotalMs": 231.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "piles-100000",
+      "synthetic": true,
+      "population": 100000,
+      "kinds": {
+        "body": 6,
+        "pile": 99992,
+        "player": 1,
+        "deposit": 1
+      },
+      "physicsBytes": 16019,
+      "jsonUtf8Bytes": 20074901,
+      "sha256": "89dbbabc25a68a3140c4218aa2fd881010f20442b9507b1d04b07d6873c0d38e",
+      "hostGate": {
+        "accepted": true
+      },
+      "common": {
+        "captureMs": [
+          426.59999999403954,
+          545.6000000089407,
+          530.5999999940395,
+          413.1000000089407,
+          500.79999999701977
+        ],
+        "validateAndCloneMs": [
+          263.29999999701977,
+          212.29999999701977,
+          212.59999999403954,
+          237.09999999403954,
+          334.8999999910593
+        ],
+        "cloneOnlyMs": [
+          166.29999999701977,
+          157.90000000596046,
+          174.5,
+          193.29999999701977,
+          259.40000000596046
+        ]
+      },
+      "order": [
+        [
+          "current-object",
+          "json-gzip",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json"
+        ],
+        [
+          "json",
+          "binary-physics",
+          "compact-msgpack",
+          "json-gzip",
+          "msgpack",
+          "current-object"
+        ],
+        [
+          "current-object",
+          "json",
+          "json-gzip",
+          "binary-physics",
+          "msgpack",
+          "compact-msgpack"
+        ],
+        [
+          "json-gzip",
+          "compact-msgpack",
+          "json",
+          "current-object",
+          "msgpack",
+          "binary-physics"
+        ],
+        [
+          "json-gzip",
+          "binary-physics",
+          "current-object",
+          "json",
+          "compact-msgpack",
+          "msgpack"
+        ],
+        [
+          "json",
+          "current-object",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json-gzip"
+        ]
+      ],
+      "formats": [
+        {
+          "format": "current-object",
+          "label": "Current object / production repository",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 16934,
+            "afterBytes": 3465587,
+            "deltaBytes": 3448653,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0.09999999403953552,
+              "writeMs": 292.29999999701977,
+              "readMs": 116.79999999701977,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 300.29999999701977,
+              "readMs": 121.59999999403954,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 339.40000000596046,
+              "readMs": 108.8999999910593,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 305.8999999910593,
+              "readMs": 119.1000000089407,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 303.20000000298023,
+              "readMs": 113.79999999701977,
+              "decodeMs": 0
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 433.30000001192093,
+              "saveRepositoryMs": 633.1999999880791,
+              "saveTotalMs": 1066.5,
+              "loadRepositoryMs": 358.70000000298023,
+              "restoreWorkerMs": 1324.1000000089407,
+              "loadTotalMs": 1682.800000011921
+            },
+            {
+              "captureMs": 447.90000000596046,
+              "saveRepositoryMs": 645,
+              "saveTotalMs": 1092.9000000059605,
+              "loadRepositoryMs": 393.59999999403954,
+              "restoreWorkerMs": 1057.9000000059605,
+              "loadTotalMs": 1451.5
+            },
+            {
+              "captureMs": 404.20000000298023,
+              "saveRepositoryMs": 515.5,
+              "saveTotalMs": 919.7000000029802,
+              "loadRepositoryMs": 365.79999999701977,
+              "restoreWorkerMs": 1046.9000000059605,
+              "loadTotalMs": 1412.7000000029802
+            },
+            {
+              "captureMs": 485.20000000298023,
+              "saveRepositoryMs": 512,
+              "saveTotalMs": 997.2000000029802,
+              "loadRepositoryMs": 296.19999998807907,
+              "restoreWorkerMs": 1016.3000000119209,
+              "loadTotalMs": 1312.5
+            },
+            {
+              "captureMs": 400.3999999910593,
+              "saveRepositoryMs": 507.5,
+              "saveTotalMs": 907.8999999910593,
+              "loadRepositoryMs": 346.5,
+              "restoreWorkerMs": 1047.9000000059605,
+              "loadTotalMs": 1394.4000000059605
+            }
+          ]
+        },
+        {
+          "format": "json",
+          "label": "JSON string",
+          "wireBytes": 20074901,
+          "storage": {
+            "beforeBytes": 3466405,
+            "afterBytes": 6711360,
+            "deltaBytes": 3244955,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 47.599999994039536,
+              "writeMs": 35.79999999701977,
+              "readMs": 11.200000002980232,
+              "decodeMs": 48.79999999701977
+            },
+            {
+              "encodeMs": 38.20000000298023,
+              "writeMs": 38.900000005960464,
+              "readMs": 9.399999991059303,
+              "decodeMs": 46.900000005960464
+            },
+            {
+              "encodeMs": 43.70000000298023,
+              "writeMs": 39.29999999701977,
+              "readMs": 13.099999994039536,
+              "decodeMs": 47.6000000089407
+            },
+            {
+              "encodeMs": 37.80000001192093,
+              "writeMs": 37.5,
+              "readMs": 15.5,
+              "decodeMs": 48.5
+            },
+            {
+              "encodeMs": 37.79999999701977,
+              "writeMs": 39,
+              "readMs": 14.300000011920929,
+              "decodeMs": 47.19999998807907
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 425.30000001192093,
+              "saveRepositoryMs": 416.8999999910593,
+              "saveTotalMs": 842.2000000029802,
+              "loadRepositoryMs": 297.79999999701977,
+              "restoreWorkerMs": 1048.2000000029802,
+              "loadTotalMs": 1346
+            },
+            {
+              "captureMs": 410,
+              "saveRepositoryMs": 267.29999999701977,
+              "saveTotalMs": 677.2999999970198,
+              "loadRepositoryMs": 255.59999999403954,
+              "restoreWorkerMs": 1060.4000000059605,
+              "loadTotalMs": 1316
+            },
+            {
+              "captureMs": 443,
+              "saveRepositoryMs": 265.8999999910593,
+              "saveTotalMs": 708.8999999910593,
+              "loadRepositoryMs": 260.5,
+              "restoreWorkerMs": 1106.9000000059605,
+              "loadTotalMs": 1367.4000000059605
+            },
+            {
+              "captureMs": 451.8999999910593,
+              "saveRepositoryMs": 266.29999999701977,
+              "saveTotalMs": 718.1999999880791,
+              "loadRepositoryMs": 277.30000001192093,
+              "restoreWorkerMs": 1049.199999988079,
+              "loadTotalMs": 1326.5
+            },
+            {
+              "captureMs": 505,
+              "saveRepositoryMs": 265.30000001192093,
+              "saveTotalMs": 770.3000000119209,
+              "loadRepositoryMs": 257,
+              "restoreWorkerMs": 1042.7999999970198,
+              "loadTotalMs": 1299.7999999970198
+            }
+          ]
+        },
+        {
+          "format": "json-gzip",
+          "label": "JSON + browser gzip",
+          "wireBytes": 1695900,
+          "storage": {
+            "beforeBytes": 6712178,
+            "afterBytes": 8409285,
+            "deltaBytes": 1697107,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 215.20000000298023,
+              "writeMs": 51.6000000089407,
+              "readMs": 2.3999999910593033,
+              "decodeMs": 87.70000000298023
+            },
+            {
+              "encodeMs": 214.29999999701977,
+              "writeMs": 32.79999999701977,
+              "readMs": 1.9000000059604645,
+              "decodeMs": 96.79999999701977
+            },
+            {
+              "encodeMs": 201.3999999910593,
+              "writeMs": 8.799999997019768,
+              "readMs": 1.9000000059604645,
+              "decodeMs": 94.29999999701977
+            },
+            {
+              "encodeMs": 243.09999999403954,
+              "writeMs": 9,
+              "readMs": 1.9000000059604645,
+              "decodeMs": 91.40000000596046
+            },
+            {
+              "encodeMs": 198.09999999403954,
+              "writeMs": 7.300000011920929,
+              "readMs": 1.699999988079071,
+              "decodeMs": 73.80000001192093
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 460.90000000596046,
+              "saveRepositoryMs": 436.59999999403954,
+              "saveTotalMs": 897.5,
+              "loadRepositoryMs": 381.40000000596046,
+              "restoreWorkerMs": 1054.699999988079,
+              "loadTotalMs": 1436.0999999940395
+            },
+            {
+              "captureMs": 440.70000000298023,
+              "saveRepositoryMs": 386.40000000596046,
+              "saveTotalMs": 827.1000000089407,
+              "loadRepositoryMs": 290.19999998807907,
+              "restoreWorkerMs": 1282.800000011921,
+              "loadTotalMs": 1573
+            },
+            {
+              "captureMs": 406.40000000596046,
+              "saveRepositoryMs": 396.70000000298023,
+              "saveTotalMs": 803.1000000089407,
+              "loadRepositoryMs": 286.29999999701977,
+              "restoreWorkerMs": 1041.7000000029802,
+              "loadTotalMs": 1328
+            },
+            {
+              "captureMs": 441.3999999910593,
+              "saveRepositoryMs": 398.40000000596046,
+              "saveTotalMs": 839.7999999970198,
+              "loadRepositoryMs": 322.09999999403954,
+              "restoreWorkerMs": 1099,
+              "loadTotalMs": 1421.0999999940395
+            },
+            {
+              "captureMs": 473,
+              "saveRepositoryMs": 420.59999999403954,
+              "saveTotalMs": 893.5999999940395,
+              "loadRepositoryMs": 420.70000000298023,
+              "restoreWorkerMs": 1240.0999999940395,
+              "loadTotalMs": 1660.7999999970198
+            }
+          ]
+        },
+        {
+          "format": "msgpack",
+          "label": "MessagePack / unchanged object layout",
+          "wireBytes": 13260322,
+          "storage": {
+            "beforeBytes": 8410103,
+            "afterBytes": 11141660,
+            "deltaBytes": 2731557,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 67.6000000089407,
+              "writeMs": 32.3999999910593,
+              "readMs": 8.799999997019768,
+              "decodeMs": 144.6000000089407
+            },
+            {
+              "encodeMs": 74.59999999403954,
+              "writeMs": 34.79999999701977,
+              "readMs": 8.100000008940697,
+              "decodeMs": 111.59999999403954
+            },
+            {
+              "encodeMs": 75.5,
+              "writeMs": 35.20000000298023,
+              "readMs": 7.5999999940395355,
+              "decodeMs": 86.29999999701977
+            },
+            {
+              "encodeMs": 72.69999998807907,
+              "writeMs": 33.6000000089407,
+              "readMs": 7.899999991059303,
+              "decodeMs": 94
+            },
+            {
+              "encodeMs": 75.40000000596046,
+              "writeMs": 34.8999999910593,
+              "readMs": 8.299999997019768,
+              "decodeMs": 88.5
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 455,
+              "saveRepositoryMs": 385.79999999701977,
+              "saveTotalMs": 840.7999999970198,
+              "loadRepositoryMs": 312.5,
+              "restoreWorkerMs": 1145.5999999940395,
+              "loadTotalMs": 1458.0999999940395
+            },
+            {
+              "captureMs": 413.90000000596046,
+              "saveRepositoryMs": 332.59999999403954,
+              "saveTotalMs": 746.5,
+              "loadRepositoryMs": 330.09999999403954,
+              "restoreWorkerMs": 1137.5,
+              "loadTotalMs": 1467.5999999940395
+            },
+            {
+              "captureMs": 422.70000000298023,
+              "saveRepositoryMs": 313.70000000298023,
+              "saveTotalMs": 736.4000000059605,
+              "loadRepositoryMs": 283.09999999403954,
+              "restoreWorkerMs": 1058.7999999970198,
+              "loadTotalMs": 1341.8999999910593
+            },
+            {
+              "captureMs": 473.30000001192093,
+              "saveRepositoryMs": 322,
+              "saveTotalMs": 795.3000000119209,
+              "loadRepositoryMs": 299.69999998807907,
+              "restoreWorkerMs": 1088,
+              "loadTotalMs": 1387.699999988079
+            },
+            {
+              "captureMs": 429.40000000596046,
+              "saveRepositoryMs": 308.79999999701977,
+              "saveTotalMs": 738.2000000029802,
+              "loadRepositoryMs": 289.6000000089407,
+              "restoreWorkerMs": 1027,
+              "loadTotalMs": 1316.6000000089407
+            }
+          ]
+        },
+        {
+          "format": "binary-physics",
+          "label": "Object + Uint8Array physics",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 11142478,
+            "afterBytes": 14527077,
+            "deltaBytes": 3384599,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0.6000000089406967,
+              "writeMs": 324.20000000298023,
+              "readMs": 117,
+              "decodeMs": 0.29999999701976776
+            },
+            {
+              "encodeMs": 0.5999999940395355,
+              "writeMs": 305,
+              "readMs": 116.29999999701977,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 0.3999999910593033,
+              "writeMs": 312.1000000089407,
+              "readMs": 109.09999999403954,
+              "decodeMs": 0.29999999701976776
+            },
+            {
+              "encodeMs": 0.6000000089406967,
+              "writeMs": 301.3999999910593,
+              "readMs": 115.79999999701977,
+              "decodeMs": 0.30000001192092896
+            },
+            {
+              "encodeMs": 0.4000000059604645,
+              "writeMs": 282.59999999403954,
+              "readMs": 158.20000000298023,
+              "decodeMs": 0.29999999701976776
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 411.29999999701977,
+              "saveRepositoryMs": 520.0999999940395,
+              "saveTotalMs": 931.3999999910593,
+              "loadRepositoryMs": 313.6000000089407,
+              "restoreWorkerMs": 1138.5999999940395,
+              "loadTotalMs": 1452.2000000029802
+            },
+            {
+              "captureMs": 453.09999999403954,
+              "saveRepositoryMs": 542.5,
+              "saveTotalMs": 995.5999999940395,
+              "loadRepositoryMs": 333.20000000298023,
+              "restoreWorkerMs": 1056.6000000089407,
+              "loadTotalMs": 1389.800000011921
+            },
+            {
+              "captureMs": 432.6000000089407,
+              "saveRepositoryMs": 505.3999999910593,
+              "saveTotalMs": 938,
+              "loadRepositoryMs": 306.80000001192093,
+              "restoreWorkerMs": 1052,
+              "loadTotalMs": 1358.800000011921
+            },
+            {
+              "captureMs": 413.79999999701977,
+              "saveRepositoryMs": 544,
+              "saveTotalMs": 957.7999999970198,
+              "loadRepositoryMs": 329.59999999403954,
+              "restoreWorkerMs": 1020.4000000059605,
+              "loadTotalMs": 1350
+            },
+            {
+              "captureMs": 482.90000000596046,
+              "saveRepositoryMs": 505.29999999701977,
+              "saveTotalMs": 988.2000000029802,
+              "loadRepositoryMs": 310.70000000298023,
+              "restoreWorkerMs": 1132.0999999940395,
+              "loadTotalMs": 1442.7999999970198
+            }
+          ]
+        },
+        {
+          "format": "compact-msgpack",
+          "label": "Compact components + binary physics / MessagePack",
+          "wireBytes": 7057679,
+          "storage": {
+            "beforeBytes": 14527895,
+            "afterBytes": 16811875,
+            "deltaBytes": 2283980,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 75.3999999910593,
+              "writeMs": 20,
+              "readMs": 5.800000011920929,
+              "decodeMs": 67.8999999910593
+            },
+            {
+              "encodeMs": 85.20000000298023,
+              "writeMs": 25.69999998807907,
+              "readMs": 5.9000000059604645,
+              "decodeMs": 66.70000000298023
+            },
+            {
+              "encodeMs": 68.90000000596046,
+              "writeMs": 22.599999994039536,
+              "readMs": 6.4000000059604645,
+              "decodeMs": 62
+            },
+            {
+              "encodeMs": 75.70000000298023,
+              "writeMs": 23.899999991059303,
+              "readMs": 5.9000000059604645,
+              "decodeMs": 80.5
+            },
+            {
+              "encodeMs": 70.8999999910593,
+              "writeMs": 43,
+              "readMs": 5.300000011920929,
+              "decodeMs": 61.29999999701977
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 526.2000000029802,
+              "saveRepositoryMs": 451.90000000596046,
+              "saveTotalMs": 978.1000000089407,
+              "loadRepositoryMs": 289.20000000298023,
+              "restoreWorkerMs": 1288.7000000029802,
+              "loadTotalMs": 1577.9000000059605
+            },
+            {
+              "captureMs": 453.8999999910593,
+              "saveRepositoryMs": 285.30000001192093,
+              "saveTotalMs": 739.2000000029802,
+              "loadRepositoryMs": 252.79999999701977,
+              "restoreWorkerMs": 1072.0999999940395,
+              "loadTotalMs": 1324.8999999910593
+            },
+            {
+              "captureMs": 398.29999999701977,
+              "saveRepositoryMs": 312.29999999701977,
+              "saveTotalMs": 710.5999999940395,
+              "loadRepositoryMs": 321.90000000596046,
+              "restoreWorkerMs": 1057,
+              "loadTotalMs": 1378.9000000059605
+            },
+            {
+              "captureMs": 450.8999999910593,
+              "saveRepositoryMs": 301.20000000298023,
+              "saveTotalMs": 752.0999999940395,
+              "loadRepositoryMs": 257.29999999701977,
+              "restoreWorkerMs": 1080.300000011921,
+              "loadTotalMs": 1337.6000000089407
+            },
+            {
+              "captureMs": 426,
+              "saveRepositoryMs": 308.09999999403954,
+              "saveTotalMs": 734.0999999940395,
+              "loadRepositoryMs": 292.6000000089407,
+              "restoreWorkerMs": 1054.0999999940395,
+              "loadTotalMs": 1346.7000000029802
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "piles-250000",
+      "synthetic": true,
+      "population": 250000,
+      "kinds": {
+        "body": 6,
+        "pile": 249992,
+        "player": 1,
+        "deposit": 1
+      },
+      "physicsBytes": 16019,
+      "jsonUtf8Bytes": 50286275,
+      "sha256": "f60de9c36944a1e28e763d76d25d3cbcb0df3505712e1129ad7f1b70c557972f",
+      "hostGate": {
+        "accepted": true
+      },
+      "common": {
+        "captureMs": [
+          1258.5,
+          1111.7999999970198,
+          1589.5,
+          1185.9000000059605,
+          1177.2000000029802
+        ],
+        "validateAndCloneMs": [
+          552.7999999970198,
+          587.1000000089407,
+          781.1000000089407,
+          625.2000000029802,
+          581.5999999940395
+        ],
+        "cloneOnlyMs": [
+          446.80000001192093,
+          549.1999999880791,
+          530.8999999910593,
+          549.2999999970198,
+          414.1000000089407
+        ]
+      },
+      "order": [
+        [
+          "current-object",
+          "json-gzip",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json"
+        ],
+        [
+          "json",
+          "binary-physics",
+          "compact-msgpack",
+          "json-gzip",
+          "msgpack",
+          "current-object"
+        ],
+        [
+          "current-object",
+          "json",
+          "json-gzip",
+          "binary-physics",
+          "msgpack",
+          "compact-msgpack"
+        ],
+        [
+          "json-gzip",
+          "compact-msgpack",
+          "json",
+          "current-object",
+          "msgpack",
+          "binary-physics"
+        ],
+        [
+          "json-gzip",
+          "binary-physics",
+          "current-object",
+          "json",
+          "compact-msgpack",
+          "msgpack"
+        ],
+        [
+          "json",
+          "current-object",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json-gzip"
+        ]
+      ],
+      "formats": [
+        {
+          "format": "current-object",
+          "label": "Current object / production repository",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 18918,
+            "afterBytes": 8547170,
+            "deltaBytes": 8528252,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0,
+              "writeMs": 816,
+              "readMs": 296.6000000089407,
+              "decodeMs": 0.09999999403953552
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 762.3999999910593,
+              "readMs": 297.20000000298023,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 813.7000000029802,
+              "readMs": 308.1000000089407,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 867.8999999910593,
+              "readMs": 303.70000000298023,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 823.5999999940395,
+              "readMs": 314,
+              "decodeMs": 0
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 1200.0999999940395,
+              "saveRepositoryMs": 1418.5,
+              "saveTotalMs": 2618.5999999940395,
+              "loadRepositoryMs": 840.8000000119209,
+              "restoreWorkerMs": 2514.3999999910593,
+              "loadTotalMs": 3355.2000000029802
+            },
+            {
+              "captureMs": 1173.4000000059605,
+              "saveRepositoryMs": 1352.0999999940395,
+              "saveTotalMs": 2525.5,
+              "loadRepositoryMs": 878.0999999940395,
+              "restoreWorkerMs": 2790.300000011921,
+              "loadTotalMs": 3668.4000000059605
+            },
+            {
+              "captureMs": 1148.5999999940395,
+              "saveRepositoryMs": 1443,
+              "saveTotalMs": 2591.5999999940395,
+              "loadRepositoryMs": 830.9000000059605,
+              "restoreWorkerMs": 2528.8999999910593,
+              "loadTotalMs": 3359.7999999970198
+            },
+            {
+              "captureMs": 1157.9000000059605,
+              "saveRepositoryMs": 1376.2999999970198,
+              "saveTotalMs": 2534.2000000029802,
+              "loadRepositoryMs": 833.8999999910593,
+              "restoreWorkerMs": 2706.7000000029802,
+              "loadTotalMs": 3540.5999999940395
+            },
+            {
+              "captureMs": 1150.800000011921,
+              "saveRepositoryMs": 1308.5,
+              "saveTotalMs": 2459.300000011921,
+              "loadRepositoryMs": 852.0999999940395,
+              "restoreWorkerMs": 2530.7999999970198,
+              "loadTotalMs": 3382.8999999910593
+            }
+          ]
+        },
+        {
+          "format": "json",
+          "label": "JSON string",
+          "wireBytes": 50286275,
+          "storage": {
+            "beforeBytes": 8547988,
+            "afterBytes": 16644760,
+            "deltaBytes": 8096772,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 112.90000000596046,
+              "writeMs": 78.79999999701977,
+              "readMs": 22,
+              "decodeMs": 156.5
+            },
+            {
+              "encodeMs": 108.69999998807907,
+              "writeMs": 80.90000000596046,
+              "readMs": 22.799999997019768,
+              "decodeMs": 143.20000000298023
+            },
+            {
+              "encodeMs": 91.29999999701977,
+              "writeMs": 78.90000000596046,
+              "readMs": 20.899999991059303,
+              "decodeMs": 133.40000000596046
+            },
+            {
+              "encodeMs": 107.79999999701977,
+              "writeMs": 84.29999999701977,
+              "readMs": 22.599999994039536,
+              "decodeMs": 137.1000000089407
+            },
+            {
+              "encodeMs": 107.69999998807907,
+              "writeMs": 90.70000000298023,
+              "readMs": 29.600000008940697,
+              "decodeMs": 205
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 1142.2999999970198,
+              "saveRepositoryMs": 685.7999999970198,
+              "saveTotalMs": 1828.0999999940395,
+              "loadRepositoryMs": 841.7000000029802,
+              "restoreWorkerMs": 2534,
+              "loadTotalMs": 3375.7000000029802
+            },
+            {
+              "captureMs": 1159.5999999940395,
+              "saveRepositoryMs": 872.2000000029802,
+              "saveTotalMs": 2031.7999999970198,
+              "loadRepositoryMs": 705.5,
+              "restoreWorkerMs": 2502,
+              "loadTotalMs": 3207.5
+            },
+            {
+              "captureMs": 1088.3999999910593,
+              "saveRepositoryMs": 664.5,
+              "saveTotalMs": 1752.8999999910593,
+              "loadRepositoryMs": 676.6000000089407,
+              "restoreWorkerMs": 2579.8999999910593,
+              "loadTotalMs": 3256.5
+            },
+            {
+              "captureMs": 1154.8999999910593,
+              "saveRepositoryMs": 735.7000000029802,
+              "saveTotalMs": 1890.5999999940395,
+              "loadRepositoryMs": 737.2999999970198,
+              "restoreWorkerMs": 2715.800000011921,
+              "loadTotalMs": 3453.1000000089407
+            },
+            {
+              "captureMs": 1360.5999999940395,
+              "saveRepositoryMs": 687.5999999940395,
+              "saveTotalMs": 2048.199999988079,
+              "loadRepositoryMs": 1032,
+              "restoreWorkerMs": 2580.9000000059605,
+              "loadTotalMs": 3612.9000000059605
+            }
+          ]
+        },
+        {
+          "format": "json-gzip",
+          "label": "JSON + browser gzip",
+          "wireBytes": 4230595,
+          "storage": {
+            "beforeBytes": 16645578,
+            "afterBytes": 20877384,
+            "deltaBytes": 4231806,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 514.0999999940395,
+              "writeMs": 16.299999997019768,
+              "readMs": 4.9000000059604645,
+              "decodeMs": 240.20000000298023
+            },
+            {
+              "encodeMs": 479.79999999701977,
+              "writeMs": 22.799999997019768,
+              "readMs": 4.9000000059604645,
+              "decodeMs": 236
+            },
+            {
+              "encodeMs": 440.3999999910593,
+              "writeMs": 14.5,
+              "readMs": 6.800000011920929,
+              "decodeMs": 231.79999999701977
+            },
+            {
+              "encodeMs": 505.29999999701977,
+              "writeMs": 17.600000008940697,
+              "readMs": 9.399999991059303,
+              "decodeMs": 252.5
+            },
+            {
+              "encodeMs": 479.29999999701977,
+              "writeMs": 23.700000002980232,
+              "readMs": 4.799999997019768,
+              "decodeMs": 253.5
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 1190.2999999970198,
+              "saveRepositoryMs": 1025.9000000059605,
+              "saveTotalMs": 2216.2000000029802,
+              "loadRepositoryMs": 759.7999999970198,
+              "restoreWorkerMs": 2586.3999999910593,
+              "loadTotalMs": 3346.199999988079
+            },
+            {
+              "captureMs": 1274.0999999940395,
+              "saveRepositoryMs": 1009.4000000059605,
+              "saveTotalMs": 2283.5,
+              "loadRepositoryMs": 768.7999999970198,
+              "restoreWorkerMs": 2613.6000000089407,
+              "loadTotalMs": 3382.4000000059605
+            },
+            {
+              "captureMs": 1046.7999999970198,
+              "saveRepositoryMs": 967.5,
+              "saveTotalMs": 2014.2999999970198,
+              "loadRepositoryMs": 737.7999999970198,
+              "restoreWorkerMs": 2436.2999999970198,
+              "loadTotalMs": 3174.0999999940395
+            },
+            {
+              "captureMs": 1140.2000000029802,
+              "saveRepositoryMs": 1316.5,
+              "saveTotalMs": 2456.7000000029802,
+              "loadRepositoryMs": 803,
+              "restoreWorkerMs": 2500.7000000029802,
+              "loadTotalMs": 3303.7000000029802
+            },
+            {
+              "captureMs": 1192.1000000089407,
+              "saveRepositoryMs": 1016.2999999970198,
+              "saveTotalMs": 2208.4000000059605,
+              "loadRepositoryMs": 750.0999999940395,
+              "restoreWorkerMs": 2507,
+              "loadTotalMs": 3257.0999999940395
+            }
+          ]
+        },
+        {
+          "format": "msgpack",
+          "label": "MessagePack / unchanged object layout",
+          "wireBytes": 33282922,
+          "storage": {
+            "beforeBytes": 20878202,
+            "afterBytes": 27700709,
+            "deltaBytes": 6822507,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 248,
+              "writeMs": 78.59999999403954,
+              "readMs": 18.799999997019768,
+              "decodeMs": 239.90000000596046
+            },
+            {
+              "encodeMs": 188.09999999403954,
+              "writeMs": 75.20000000298023,
+              "readMs": 18.700000002980232,
+              "decodeMs": 219.5
+            },
+            {
+              "encodeMs": 210.70000000298023,
+              "writeMs": 79.90000000596046,
+              "readMs": 19.799999997019768,
+              "decodeMs": 223.29999999701977
+            },
+            {
+              "encodeMs": 210,
+              "writeMs": 75.5,
+              "readMs": 18.899999991059303,
+              "decodeMs": 250.30000001192093
+            },
+            {
+              "encodeMs": 214,
+              "writeMs": 77.19999998807907,
+              "readMs": 19.100000008940697,
+              "decodeMs": 246.5
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 1140.0999999940395,
+              "saveRepositoryMs": 806.7999999970198,
+              "saveTotalMs": 1946.8999999910593,
+              "loadRepositoryMs": 793.1000000089407,
+              "restoreWorkerMs": 2460.7999999970198,
+              "loadTotalMs": 3253.9000000059605
+            },
+            {
+              "captureMs": 1054,
+              "saveRepositoryMs": 764.2999999970198,
+              "saveTotalMs": 1818.2999999970198,
+              "loadRepositoryMs": 807.5,
+              "restoreWorkerMs": 2557.0999999940395,
+              "loadTotalMs": 3364.5999999940395
+            },
+            {
+              "captureMs": 1144.5,
+              "saveRepositoryMs": 787.2999999970198,
+              "saveTotalMs": 1931.7999999970198,
+              "loadRepositoryMs": 803.5,
+              "restoreWorkerMs": 2549.2999999970198,
+              "loadTotalMs": 3352.7999999970198
+            },
+            {
+              "captureMs": 1168.8999999910593,
+              "saveRepositoryMs": 937.7999999970198,
+              "saveTotalMs": 2106.699999988079,
+              "loadRepositoryMs": 786.2000000029802,
+              "restoreWorkerMs": 2510.4000000059605,
+              "loadTotalMs": 3296.6000000089407
+            },
+            {
+              "captureMs": 1152.8999999910593,
+              "saveRepositoryMs": 824.1000000089407,
+              "saveTotalMs": 1977,
+              "loadRepositoryMs": 888.7999999970198,
+              "restoreWorkerMs": 2490,
+              "loadTotalMs": 3378.7999999970198
+            }
+          ]
+        },
+        {
+          "format": "binary-physics",
+          "label": "Object + Uint8Array physics",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 27701527,
+            "afterBytes": 36165734,
+            "deltaBytes": 8464207,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0.5,
+              "writeMs": 801.4000000059605,
+              "readMs": 298.59999999403954,
+              "decodeMs": 0.29999999701976776
+            },
+            {
+              "encodeMs": 0.5,
+              "writeMs": 933.1000000089407,
+              "readMs": 284.8999999910593,
+              "decodeMs": 0.20000000298023224
+            },
+            {
+              "encodeMs": 0.6000000089406967,
+              "writeMs": 1004.3999999910593,
+              "readMs": 334.30000001192093,
+              "decodeMs": 0.19999998807907104
+            },
+            {
+              "encodeMs": 0.5,
+              "writeMs": 827.2999999970198,
+              "readMs": 298.80000001192093,
+              "decodeMs": 0.29999999701976776
+            },
+            {
+              "encodeMs": 0.5,
+              "writeMs": 811,
+              "readMs": 282.1000000089407,
+              "decodeMs": 0.19999998807907104
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 1223.5,
+              "saveRepositoryMs": 1461,
+              "saveTotalMs": 2684.5,
+              "loadRepositoryMs": 815.3000000119209,
+              "restoreWorkerMs": 2508.8999999910593,
+              "loadTotalMs": 3324.2000000029802
+            },
+            {
+              "captureMs": 1169.7999999970198,
+              "saveRepositoryMs": 1312.300000011921,
+              "saveTotalMs": 2482.1000000089407,
+              "loadRepositoryMs": 807.5,
+              "restoreWorkerMs": 2378.8999999910593,
+              "loadTotalMs": 3186.3999999910593
+            },
+            {
+              "captureMs": 1221.300000011921,
+              "saveRepositoryMs": 1308.7999999970198,
+              "saveTotalMs": 2530.1000000089407,
+              "loadRepositoryMs": 855.3999999910593,
+              "restoreWorkerMs": 2504.7000000029802,
+              "loadTotalMs": 3360.0999999940395
+            },
+            {
+              "captureMs": 1158,
+              "saveRepositoryMs": 1293,
+              "saveTotalMs": 2451,
+              "loadRepositoryMs": 865.3999999910593,
+              "restoreWorkerMs": 2728.300000011921,
+              "loadTotalMs": 3593.7000000029802
+            },
+            {
+              "captureMs": 1183.300000011921,
+              "saveRepositoryMs": 1522.5,
+              "saveTotalMs": 2705.800000011921,
+              "loadRepositoryMs": 824.6999999880791,
+              "restoreWorkerMs": 2530.2000000029802,
+              "loadTotalMs": 3354.8999999910593
+            }
+          ]
+        },
+        {
+          "format": "compact-msgpack",
+          "label": "Compact components + binary physics / MessagePack",
+          "wireBytes": 17780279,
+          "storage": {
+            "beforeBytes": 36166552,
+            "afterBytes": 41878942,
+            "deltaBytes": 5712390,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 208.20000000298023,
+              "writeMs": 56.3999999910593,
+              "readMs": 12.200000002980232,
+              "decodeMs": 181.40000000596046
+            },
+            {
+              "encodeMs": 174.29999999701977,
+              "writeMs": 52.099999994039536,
+              "readMs": 11.900000005960464,
+              "decodeMs": 177.5
+            },
+            {
+              "encodeMs": 177.5,
+              "writeMs": 48.20000000298023,
+              "readMs": 13.699999988079071,
+              "decodeMs": 167.80000001192093
+            },
+            {
+              "encodeMs": 270.3999999910593,
+              "writeMs": 73.29999999701977,
+              "readMs": 14.400000005960464,
+              "decodeMs": 184.70000000298023
+            },
+            {
+              "encodeMs": 202.3999999910593,
+              "writeMs": 57.70000000298023,
+              "readMs": 13.5,
+              "decodeMs": 179.5
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 1097.7999999970198,
+              "saveRepositoryMs": 945.8999999910593,
+              "saveTotalMs": 2043.699999988079,
+              "loadRepositoryMs": 690.7000000029802,
+              "restoreWorkerMs": 2503,
+              "loadTotalMs": 3193.7000000029802
+            },
+            {
+              "captureMs": 1089.5999999940395,
+              "saveRepositoryMs": 1018.5,
+              "saveTotalMs": 2108.0999999940395,
+              "loadRepositoryMs": 648.1000000089407,
+              "restoreWorkerMs": 2396.699999988079,
+              "loadTotalMs": 3044.7999999970198
+            },
+            {
+              "captureMs": 1088.5999999940395,
+              "saveRepositoryMs": 947.5999999940395,
+              "saveTotalMs": 2036.199999988079,
+              "loadRepositoryMs": 670.6000000089407,
+              "restoreWorkerMs": 2405.8999999910593,
+              "loadTotalMs": 3076.5
+            },
+            {
+              "captureMs": 1091.3999999910593,
+              "saveRepositoryMs": 804.3000000119209,
+              "saveTotalMs": 1895.7000000029802,
+              "loadRepositoryMs": 697.0999999940395,
+              "restoreWorkerMs": 2548.5999999940395,
+              "loadTotalMs": 3245.699999988079
+            },
+            {
+              "captureMs": 1131.9000000059605,
+              "saveRepositoryMs": 819,
+              "saveTotalMs": 1950.9000000059605,
+              "loadRepositoryMs": 722.1999999880791,
+              "restoreWorkerMs": 2569.2000000029802,
+              "loadTotalMs": 3291.3999999910593
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "physics-1000",
+      "synthetic": true,
+      "population": 1001,
+      "kinds": {
+        "body": 1000,
+        "player": 1
+      },
+      "physicsBytes": 642986,
+      "jsonUtf8Bytes": 2090785,
+      "sha256": "082c75fdd3a7a4da84fd4522b8c95c7d9ecd38dc0950c6bad3f0f2a70c1df9ae",
+      "hostGate": {
+        "accepted": true
+      },
+      "common": {
+        "captureMs": [
+          26.80000001192093,
+          28.69999998807907,
+          27.799999997019768,
+          25.19999998807907,
+          25.200000002980232
+        ],
+        "validateAndCloneMs": [
+          80.79999999701977,
+          65.5,
+          68.6000000089407,
+          64.5,
+          64.59999999403954
+        ],
+        "cloneOnlyMs": [
+          65,
+          59.30000001192093,
+          64.5,
+          60.400000005960464,
+          60
+        ]
+      },
+      "order": [
+        [
+          "current-object",
+          "json-gzip",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json"
+        ],
+        [
+          "json",
+          "binary-physics",
+          "compact-msgpack",
+          "json-gzip",
+          "msgpack",
+          "current-object"
+        ],
+        [
+          "current-object",
+          "json",
+          "json-gzip",
+          "binary-physics",
+          "msgpack",
+          "compact-msgpack"
+        ],
+        [
+          "json-gzip",
+          "compact-msgpack",
+          "json",
+          "current-object",
+          "msgpack",
+          "binary-physics"
+        ],
+        [
+          "json-gzip",
+          "binary-physics",
+          "current-object",
+          "json",
+          "compact-msgpack",
+          "msgpack"
+        ],
+        [
+          "json",
+          "current-object",
+          "binary-physics",
+          "compact-msgpack",
+          "msgpack",
+          "json-gzip"
+        ]
+      ],
+      "formats": [
+        {
+          "format": "current-object",
+          "label": "Current object / production repository",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 29575,
+            "afterBytes": 2792667,
+            "deltaBytes": 2763092,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 0,
+              "writeMs": 117,
+              "readMs": 58.79999999701977,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 118.5,
+              "readMs": 52.900000005960464,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 111.5,
+              "readMs": 51.900000005960464,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 112.1000000089407,
+              "readMs": 37.79999999701977,
+              "decodeMs": 0
+            },
+            {
+              "encodeMs": 0,
+              "writeMs": 110.1000000089407,
+              "readMs": 38.099999994039536,
+              "decodeMs": 0
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 36,
+              "saveRepositoryMs": 197.90000000596046,
+              "saveTotalMs": 233.90000000596046,
+              "loadRepositoryMs": 105,
+              "restoreWorkerMs": 276.5,
+              "loadTotalMs": 381.5
+            },
+            {
+              "captureMs": 27,
+              "saveRepositoryMs": 212.20000000298023,
+              "saveTotalMs": 239.20000000298023,
+              "loadRepositoryMs": 110.19999998807907,
+              "restoreWorkerMs": 280.1000000089407,
+              "loadTotalMs": 390.29999999701977
+            },
+            {
+              "captureMs": 39.70000000298023,
+              "saveRepositoryMs": 182,
+              "saveTotalMs": 221.70000000298023,
+              "loadRepositoryMs": 109.69999998807907,
+              "restoreWorkerMs": 286.1000000089407,
+              "loadTotalMs": 395.79999999701977
+            },
+            {
+              "captureMs": 26.5,
+              "saveRepositoryMs": 189.59999999403954,
+              "saveTotalMs": 216.09999999403954,
+              "loadRepositoryMs": 101.6000000089407,
+              "restoreWorkerMs": 272.8999999910593,
+              "loadTotalMs": 374.5
+            },
+            {
+              "captureMs": 35.5,
+              "saveRepositoryMs": 207.90000000596046,
+              "saveTotalMs": 243.40000000596046,
+              "loadRepositoryMs": 136.59999999403954,
+              "restoreWorkerMs": 274.5,
+              "loadTotalMs": 411.09999999403954
+            }
+          ]
+        },
+        {
+          "format": "json",
+          "label": "JSON string",
+          "wireBytes": 2090785,
+          "storage": {
+            "beforeBytes": 2793498,
+            "afterBytes": 2983555,
+            "deltaBytes": 190057,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 5.899999991059303,
+              "writeMs": 6.5,
+              "readMs": 1.300000011920929,
+              "decodeMs": 5
+            },
+            {
+              "encodeMs": 5.799999997019768,
+              "writeMs": 6.700000002980232,
+              "readMs": 1.5,
+              "decodeMs": 5.200000002980232
+            },
+            {
+              "encodeMs": 5.200000002980232,
+              "writeMs": 6.200000002980232,
+              "readMs": 2.0999999940395355,
+              "decodeMs": 4.299999997019768
+            },
+            {
+              "encodeMs": 5.299999997019768,
+              "writeMs": 8.399999991059303,
+              "readMs": 1.4000000059604645,
+              "decodeMs": 6.799999997019768
+            },
+            {
+              "encodeMs": 5.799999997019768,
+              "writeMs": 6.9000000059604645,
+              "readMs": 1.8999999910593033,
+              "decodeMs": 6.100000008940697
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 30.299999997019768,
+              "saveRepositoryMs": 87.70000000298023,
+              "saveTotalMs": 118,
+              "loadRepositoryMs": 22.799999997019768,
+              "restoreWorkerMs": 290.20000000298023,
+              "loadTotalMs": 313
+            },
+            {
+              "captureMs": 29.5,
+              "saveRepositoryMs": 81,
+              "saveTotalMs": 110.5,
+              "loadRepositoryMs": 23.5,
+              "restoreWorkerMs": 290.69999998807907,
+              "loadTotalMs": 314.19999998807907
+            },
+            {
+              "captureMs": 29.600000008940697,
+              "saveRepositoryMs": 76.70000000298023,
+              "saveTotalMs": 106.30000001192093,
+              "loadRepositoryMs": 24.599999994039536,
+              "restoreWorkerMs": 267.29999999701977,
+              "loadTotalMs": 291.8999999910593
+            },
+            {
+              "captureMs": 42,
+              "saveRepositoryMs": 85.5,
+              "saveTotalMs": 127.5,
+              "loadRepositoryMs": 23.600000008940697,
+              "restoreWorkerMs": 273.5,
+              "loadTotalMs": 297.1000000089407
+            },
+            {
+              "captureMs": 28.5,
+              "saveRepositoryMs": 78.8999999910593,
+              "saveTotalMs": 107.3999999910593,
+              "loadRepositoryMs": 24,
+              "restoreWorkerMs": 274,
+              "loadTotalMs": 298
+            }
+          ]
+        },
+        {
+          "format": "json-gzip",
+          "label": "JSON + browser gzip",
+          "wireBytes": 65507,
+          "storage": {
+            "beforeBytes": 2984386,
+            "afterBytes": 3051132,
+            "deltaBytes": 66746,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 18,
+              "writeMs": 3.9000000059604645,
+              "readMs": 0.5,
+              "decodeMs": 8.899999991059303
+            },
+            {
+              "encodeMs": 17.400000005960464,
+              "writeMs": 4.0999999940395355,
+              "readMs": 0.6000000089406967,
+              "decodeMs": 9.899999991059303
+            },
+            {
+              "encodeMs": 17.399999991059303,
+              "writeMs": 3.9000000059604645,
+              "readMs": 0.5,
+              "decodeMs": 8.700000002980232
+            },
+            {
+              "encodeMs": 18.299999997019768,
+              "writeMs": 4,
+              "readMs": 0.7000000029802322,
+              "decodeMs": 9.199999988079071
+            },
+            {
+              "encodeMs": 18.69999998807907,
+              "writeMs": 4.4000000059604645,
+              "readMs": 0.5999999940395355,
+              "decodeMs": 9.200000002980232
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 28.600000008940697,
+              "saveRepositoryMs": 100.79999999701977,
+              "saveTotalMs": 129.40000000596046,
+              "loadRepositoryMs": 25.399999991059303,
+              "restoreWorkerMs": 273.70000000298023,
+              "loadTotalMs": 299.09999999403954
+            },
+            {
+              "captureMs": 29.30000001192093,
+              "saveRepositoryMs": 88.59999999403954,
+              "saveTotalMs": 117.90000000596046,
+              "loadRepositoryMs": 36.20000000298023,
+              "restoreWorkerMs": 280.09999999403954,
+              "loadTotalMs": 316.29999999701977
+            },
+            {
+              "captureMs": 28.799999997019768,
+              "saveRepositoryMs": 92.79999999701977,
+              "saveTotalMs": 121.59999999403954,
+              "loadRepositoryMs": 25.299999997019768,
+              "restoreWorkerMs": 298.20000000298023,
+              "loadTotalMs": 323.5
+            },
+            {
+              "captureMs": 28.799999997019768,
+              "saveRepositoryMs": 88.20000000298023,
+              "saveTotalMs": 117,
+              "loadRepositoryMs": 27.299999997019768,
+              "restoreWorkerMs": 268.29999999701977,
+              "loadTotalMs": 295.59999999403954
+            },
+            {
+              "captureMs": 29.100000008940697,
+              "saveRepositoryMs": 91.3999999910593,
+              "saveTotalMs": 120.5,
+              "loadRepositoryMs": 27.299999997019768,
+              "restoreWorkerMs": 280.40000000596046,
+              "loadTotalMs": 307.70000000298023
+            }
+          ]
+        },
+        {
+          "format": "msgpack",
+          "label": "MessagePack / unchanged object layout",
+          "wireBytes": 1189512,
+          "storage": {
+            "beforeBytes": 3051963,
+            "afterBytes": 3181035,
+            "deltaBytes": 129072,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 13,
+              "writeMs": 5.799999997019768,
+              "readMs": 1.1000000089406967,
+              "decodeMs": 7.399999991059303
+            },
+            {
+              "encodeMs": 10.799999997019768,
+              "writeMs": 5.9000000059604645,
+              "readMs": 8.099999994039536,
+              "decodeMs": 16.099999994039536
+            },
+            {
+              "encodeMs": 10.799999997019768,
+              "writeMs": 5.9000000059604645,
+              "readMs": 0.8999999910593033,
+              "decodeMs": 7.5
+            },
+            {
+              "encodeMs": 16,
+              "writeMs": 5.799999997019768,
+              "readMs": 1.0999999940395355,
+              "decodeMs": 7.100000008940697
+            },
+            {
+              "encodeMs": 13.200000002980232,
+              "writeMs": 5.699999988079071,
+              "readMs": 1.300000011920929,
+              "decodeMs": 7.799999997019768
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 28.5,
+              "saveRepositoryMs": 102.30000001192093,
+              "saveTotalMs": 130.80000001192093,
+              "loadRepositoryMs": 96.69999998807907,
+              "restoreWorkerMs": 280.80000001192093,
+              "loadTotalMs": 377.5
+            },
+            {
+              "captureMs": 29.80000001192093,
+              "saveRepositoryMs": 91,
+              "saveTotalMs": 120.80000001192093,
+              "loadRepositoryMs": 81.5,
+              "restoreWorkerMs": 295,
+              "loadTotalMs": 376.5
+            },
+            {
+              "captureMs": 29.5,
+              "saveRepositoryMs": 93,
+              "saveTotalMs": 122.5,
+              "loadRepositoryMs": 78.40000000596046,
+              "restoreWorkerMs": 279,
+              "loadTotalMs": 357.40000000596046
+            },
+            {
+              "captureMs": 29.69999998807907,
+              "saveRepositoryMs": 95.90000000596046,
+              "saveTotalMs": 125.59999999403954,
+              "loadRepositoryMs": 73.09999999403954,
+              "restoreWorkerMs": 286.30000001192093,
+              "loadTotalMs": 359.40000000596046
+            },
+            {
+              "captureMs": 28.399999991059303,
+              "saveRepositoryMs": 82.6000000089407,
+              "saveTotalMs": 111,
+              "loadRepositoryMs": 74.8999999910593,
+              "restoreWorkerMs": 295.30000001192093,
+              "loadTotalMs": 370.20000000298023
+            }
+          ]
+        },
+        {
+          "format": "binary-physics",
+          "label": "Object + Uint8Array physics",
+          "wireBytes": null,
+          "storage": {
+            "beforeBytes": 3181866,
+            "afterBytes": 3362995,
+            "deltaBytes": 181129,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 12.599999994039536,
+              "writeMs": 16.100000008940697,
+              "readMs": 6,
+              "decodeMs": 8.099999994039536
+            },
+            {
+              "encodeMs": 15.200000002980232,
+              "writeMs": 14.200000002980232,
+              "readMs": 5.700000002980232,
+              "decodeMs": 8.599999994039536
+            },
+            {
+              "encodeMs": 17.200000002980232,
+              "writeMs": 18.299999997019768,
+              "readMs": 5.5,
+              "decodeMs": 10.100000008940697
+            },
+            {
+              "encodeMs": 17.900000005960464,
+              "writeMs": 13.599999994039536,
+              "readMs": 5.9000000059604645,
+              "decodeMs": 8.5
+            },
+            {
+              "encodeMs": 14.699999988079071,
+              "writeMs": 14.900000005960464,
+              "readMs": 5.5,
+              "decodeMs": 8
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 26.799999997019768,
+              "saveRepositoryMs": 134.40000000596046,
+              "saveTotalMs": 161.20000000298023,
+              "loadRepositoryMs": 31.299999997019768,
+              "restoreWorkerMs": 276.59999999403954,
+              "loadTotalMs": 307.8999999910593
+            },
+            {
+              "captureMs": 27,
+              "saveRepositoryMs": 96.29999999701977,
+              "saveTotalMs": 123.29999999701977,
+              "loadRepositoryMs": 31.299999997019768,
+              "restoreWorkerMs": 314,
+              "loadTotalMs": 345.29999999701977
+            },
+            {
+              "captureMs": 32.79999999701977,
+              "saveRepositoryMs": 93.29999999701977,
+              "saveTotalMs": 126.09999999403954,
+              "loadRepositoryMs": 39.5,
+              "restoreWorkerMs": 280.79999999701977,
+              "loadTotalMs": 320.29999999701977
+            },
+            {
+              "captureMs": 26.5,
+              "saveRepositoryMs": 92.29999999701977,
+              "saveTotalMs": 118.79999999701977,
+              "loadRepositoryMs": 44.20000000298023,
+              "restoreWorkerMs": 293,
+              "loadTotalMs": 337.20000000298023
+            },
+            {
+              "captureMs": 29.799999997019768,
+              "saveRepositoryMs": 97.6000000089407,
+              "saveTotalMs": 127.40000000596046,
+              "loadRepositoryMs": 32.599999994039536,
+              "restoreWorkerMs": 287.90000000596046,
+              "loadTotalMs": 320.5
+            }
+          ]
+        },
+        {
+          "format": "compact-msgpack",
+          "label": "Compact components + binary physics / MessagePack",
+          "wireBytes": 1031489,
+          "storage": {
+            "beforeBytes": 3363826,
+            "afterBytes": 3488609,
+            "deltaBytes": 124783,
+            "source": "StorageManager.estimate usageDetails.indexedDB"
+          },
+          "correctness": {
+            "exactRoundTrip": true,
+            "continuedTicks": 4
+          },
+          "stages": [
+            {
+              "encodeMs": 16.700000002980232,
+              "writeMs": 5.799999997019768,
+              "readMs": 1.1000000089406967,
+              "decodeMs": 11.5
+            },
+            {
+              "encodeMs": 18.899999991059303,
+              "writeMs": 5.5,
+              "readMs": 1.2000000029802322,
+              "decodeMs": 12.700000002980232
+            },
+            {
+              "encodeMs": 18,
+              "writeMs": 5.899999991059303,
+              "readMs": 1.1000000089406967,
+              "decodeMs": 9.899999991059303
+            },
+            {
+              "encodeMs": 20.099999994039536,
+              "writeMs": 6.200000002980232,
+              "readMs": 1.2000000029802322,
+              "decodeMs": 18.200000002980232
+            },
+            {
+              "encodeMs": 17.200000002980232,
+              "writeMs": 5.899999991059303,
+              "readMs": 1.1000000089406967,
+              "decodeMs": 11.200000002980232
+            }
+          ],
+          "pipeline": [
+            {
+              "captureMs": 34.8999999910593,
+              "saveRepositoryMs": 127.20000000298023,
+              "saveTotalMs": 162.09999999403954,
+              "loadRepositoryMs": 47,
+              "restoreWorkerMs": 297.40000000596046,
+              "loadTotalMs": 344.40000000596046
+            },
+            {
+              "captureMs": 27.799999997019768,
+              "saveRepositoryMs": 89.90000000596046,
+              "saveTotalMs": 117.70000000298023,
+              "loadRepositoryMs": 29.799999997019768,
+              "restoreWorkerMs": 294.5,
+              "loadTotalMs": 324.29999999701977
+            },
+            {
+              "captureMs": 28.299999997019768,
+              "saveRepositoryMs": 87.5,
+              "saveTotalMs": 115.79999999701977,
+              "loadRepositoryMs": 36.20000000298023,
+              "restoreWorkerMs": 294.40000000596046,
+              "loadTotalMs": 330.6000000089407
+            },
+            {
+              "captureMs": 34.599999994039536,
+              "saveRepositoryMs": 89.5,
+              "saveTotalMs": 124.09999999403954,
+              "loadRepositoryMs": 31.200000002980232,
+              "restoreWorkerMs": 269.90000000596046,
+              "loadTotalMs": 301.1000000089407
+            },
+            {
+              "captureMs": 27.099999994039536,
+              "saveRepositoryMs": 87.29999999701977,
+              "saveTotalMs": 114.3999999910593,
+              "loadRepositoryMs": 29.100000008940697,
+              "restoreWorkerMs": 293.69999998807907,
+              "loadTotalMs": 322.79999999701977
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import type { BuildMetadata } from '../shared.ts';
 const root = path.resolve(import.meta.dirname, '../..');
 const forbidden =
-  /(?:^|\/)(?:bitecs|koota|@lastolivegames\/becsy|@babylonjs-toolkit|tools\/(?:ecs-bench|simulation-worker-bench|game-bench|testing))(?:\/|$)/;
+  /(?:^|\/)(?:bitecs|koota|@lastolivegames\/becsy|@msgpack\/msgpack|@babylonjs-toolkit|tools\/(?:ecs-bench|simulation-worker-bench|game-bench|save-bench|testing))(?:\/|$)/;
 const authority =
   /(?:^|\/)(?:miniplex|@miniplex)(?:\/|$)|src\/(?:simulation\/(?:ecs-runtime|simulation)\.ts|session\/(?:runtime|inline-port|inline-game-session)\.ts)/;
 

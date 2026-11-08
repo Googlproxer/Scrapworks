@@ -22,7 +22,9 @@ for (const relative of (await fs.readdir(path.join(root, 'src'), { recursive: tr
         ts.isCallExpression(node.parent))
     ) {
       const imported = node.text;
-      if (/tools\/(?:testing|game-bench|ecs-bench|simulation-worker-bench)/.test(imported))
+      if (
+        /tools\/(?:testing|game-bench|ecs-bench|simulation-worker-bench|save-bench)/.test(imported)
+      )
         failures.push(`${filename}: laboratory import ${imported}`);
       if (
         deterministic &&
