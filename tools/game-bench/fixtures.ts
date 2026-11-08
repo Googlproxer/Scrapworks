@@ -74,7 +74,8 @@ export function commands(workload: Workload): WorldCommand[] {
     case 'opening-v2-salvage-research':
       return [
         { type: 'salvage', target: 'scrap' },
-        { type: 'research', technology: 'improvised-tools', enabled: true },
+        { type: 'research-queue', action: 'add', technology: 'improvised-tools' },
+        { type: 'research', enabled: true },
       ];
     case 'opening-v2-handcraft':
       return [

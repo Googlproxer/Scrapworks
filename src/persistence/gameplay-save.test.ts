@@ -195,7 +195,8 @@ test('a saved research material wait and ground pickup continue without repaymen
     work: 3,
     unlocked: false,
   };
-  player.opening!.fieldTechnology = 'improvised-tools';
+  player.opening!.researchQueue = ['improvised-tools'];
+  snapshot.resources.extractionTotals['scrap'] = 4;
   player.opening!.fieldEnabled = true;
   snapshot.entities.push({
     id: 'pile:1',
@@ -217,7 +218,7 @@ test('a saved research material wait and ground pickup continue without repaymen
   }
   assert.deepEqual(restored.capture(), source.capture());
   assert(restored.view.research.includes('improvised-tools'));
-  assert.deepEqual(restored.capture().resources.extractionTotals, {});
+  assert.deepEqual(restored.capture().resources.extractionTotals, { scrap: 4 });
   assert.equal(restored.view.inventory['scrap'] ?? 0, 0);
 });
 
@@ -477,4 +478,96 @@ test('observing an externally replaced slot invalidates the current saved marker
   assert(h.coordinator.dirty);
   assert.equal(h.coordinator.status.slot!.runId, 'another-run');
   assert.deepEqual(h.current().capture(), active);
+});
+
+function legacyEnvelope(source: Simulation, target: string | null = null) {
+  const current = envelope(source),
+    old = current.world;
+  const ids = new Set(OPENING_TECHNOLOGIES.slice(0, 5).map((technology) => technology.id));
+  old.resources.research = Object.fromEntries(
+    Object.entries(old.resources.research).filter(([id]) => ids.has(id)),
+  );
+  return {
+    ...current,
+    contentVersion: 'opening-1',
+    world: {
+      ...old,
+      contentVersion: 'opening-1',
+      entities: old.entities.map((entity) => {
+        if (!entity.opening) return entity;
+        const { researchQueue, ...opening } = entity.opening;
+        assert.equal(researchQueue.length, 0);
+        return { ...entity, opening: { ...opening, fieldTechnology: target } };
+      }),
+    },
+  };
+}
+
+test('compatible M4 saves preserve committed handcraft, MiniFab buffers, native state and identity without mutating storage', () => {
+  const source = simulation(true),
+    legacy = legacyEnvelope(source),
+    before = structuredClone(legacy);
+  const decoded = decodeSave(legacy),
+    migrated = preparePlayerSave(decoded.world);
+  assert.equal(migrated.contentVersion, 'research-1');
+  assert.deepEqual(migrated.physics, legacy.world.physics);
+  const player = migrated.entities.find((entity) => entity.kind === 'player')!;
+  assert.deepEqual(player.opening!.researchQueue, []);
+  assert.deepEqual(
+    player.opening!.handcraft,
+    legacy.world.entities.find((entity) => entity.kind === 'player')!.opening!.handcraft,
+  );
+  assert.equal(decoded.runId, legacy.runId);
+  assert.equal(decoded.token, legacy.token);
+  const restored = new Simulation(migrated.definition, { snapshot: migrated });
+  owned.push(restored);
+  for (let n = 0; n < 100; n++) {
+    source.step(still);
+    restored.step(still);
+  }
+  assert.deepEqual(restored.view.inventory, source.view.inventory);
+  assert.deepEqual(restored.capture().physics, source.capture().physics);
+  assert.deepEqual(legacy, before);
+});
+
+test('M4 active research becomes the sole queue head and continues partial paid work without repayment', () => {
+  const source = simulation(),
+    legacy = legacyEnvelope(source, 'improvised-tools');
+  legacy.world.resources.research['improvised-tools'] = {
+    consumed: { scrap: 2 },
+    work: 3.5,
+    unlocked: false,
+  };
+  legacy.world.resources.extractionTotals['scrap'] = 100;
+  const player = legacy.world.entities.find((entity) => entity.kind === 'player')!;
+  player.inventory!.slots[0] = { item: 'scrap', quantity: 2 };
+  player.opening!.fieldEnabled = true;
+  const before = structuredClone(legacy),
+    migrated = preparePlayerSave(decodeSave(legacy).world);
+  const restored = new Simulation(migrated.definition, { snapshot: migrated });
+  owned.push(restored);
+  assert.deepEqual(restored.view.opening!.state.researchQueue, ['improvised-tools']);
+  assert.equal(restored.view.opening!.ledgers['improvised-tools'].work, 3.5);
+  for (let n = 0; n < 60; n++) restored.step(still);
+  assert(restored.view.research.includes('improvised-tools'));
+  assert.equal(restored.view.inventory['scrap'] ?? 0, 0);
+  assert.equal(restored.view.opening!.ledgers['improvised-tools'].consumed['scrap'], 4);
+  assert.deepEqual(legacy, before);
+});
+
+test('legacy content cannot smuggle new technologies, kit stock or ambiguous queue state into the compatibility path', () => {
+  const source = simulation();
+  const newer = legacyEnvelope(source);
+  newer.world.resources.research['solar-power'] = { consumed: {}, work: 0, unlocked: false };
+  assert.throws(() => preparePlayerSave(decodeSave(newer).world), /legacy technology/);
+  const kit = legacyEnvelope(source);
+  kit.world.entities.find((entity) => entity.kind === 'player')!.inventory!.slots[0] = {
+    item: 'research-kit',
+    quantity: 1,
+  };
+  assert.throws(() => preparePlayerSave(decodeSave(kit).world), /legacy item/);
+  const malformed = legacyEnvelope(source);
+  const player = malformed.world.entities.find((entity) => entity.kind === 'player')!;
+  Object.assign(player.opening!, { researchQueue: [] });
+  assert.throws(() => preparePlayerSave(decodeSave(malformed).world), /legacy research state/);
 });

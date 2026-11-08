@@ -2,11 +2,13 @@ import type { SimulationSnapshot } from '@contracts/simulation';
 import { requireInvariant as check } from '@contracts/simulation';
 import { OPENING_CONTENT, OPENING_RECIPES, OPENING_TECHNOLOGIES } from '@content/opening';
 import { assertSnapshot } from './capture';
+import { upgradeOpeningSave } from './legacy-opening-save';
 
 /** Additional invariants for untrusted durable saves; internal laboratory captures remain separate. */
 export function preparePlayerSave(value: unknown): SimulationSnapshot {
-  assertSnapshot(value, OPENING_CONTENT);
-  const save = value;
+  const candidate = upgradeOpeningSave(value);
+  assertSnapshot(candidate, OPENING_CONTENT);
+  const save = candidate;
   const player = save.entities.find((entity) => entity.id === save.resources.playerId)!;
   const opening = player.opening!;
   const grid = save.definition.grid;
@@ -131,15 +133,10 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
       player.equipment!.tool === 'prybar' && research['improvised-tools']?.unlocked,
       'Invalid equipped tool.',
     );
-  if (opening.fieldTechnology)
-    check(
-      research[opening.fieldTechnology] &&
-        !research[opening.fieldTechnology].unlocked &&
-        OPENING_TECHNOLOGIES.find((tech) => tech.id === opening.fieldTechnology)!.requires.every(
-          (id) => research[id]?.unlocked,
-        ),
-      'Invalid active research.',
-    );
+  check(
+    opening.researchQueue.every((id) => !research[id]?.unlocked),
+    'Completed technology in research queue.',
+  );
   for (const job of [opening.handcraft, opening.minifab.job])
     if (job) {
       check(

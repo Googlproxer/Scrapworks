@@ -401,7 +401,9 @@ try {
       await page.getByRole('tab', { name: 'Research', exact: true }).click();
       // Optional reference itinerary includes reading/decision time, never a gameplay wait.
       if (relaxed) await page.waitForTimeout(40000);
-      await page.getByRole('button', { name: `Research ${name}`, exact: true }).click();
+      await page.getByRole('button', { name: `Queue ${name}`, exact: true }).click();
+      const enable = page.getByRole('button', { name: 'Enable field research', exact: true });
+      if (await enable.count()) await enable.click();
       await until((probe) => !!probe.opening.ledgers[id]?.unlocked, name);
       await mark(name);
     };

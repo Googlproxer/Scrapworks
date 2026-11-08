@@ -14,6 +14,7 @@ import type { InventoryData, ItemStack } from '@contracts/simulation';
 import type { CommandResult, WorldPosition } from '@contracts/world';
 import { available, planTransaction, transact } from './domain/inventory';
 import { handcraftBagOutput } from './domain/work';
+import { advanceResearch } from './domain/research';
 import type { OpeningContext, SimulationEntity } from './opening-context';
 
 const copy = (items: readonly ItemStack[]): ItemStack[] => items.map((item) => ({ ...item }));
@@ -42,7 +43,7 @@ export function newOpening(): OpeningData {
     handcraft: null,
     handcraftVisible: false,
     handcraftSuspended: false,
-    fieldTechnology: null,
+    researchQueue: [],
     fieldEnabled: false,
     moved: false,
     minifab: {
@@ -181,28 +182,36 @@ export class OpeningSystem {
         state.salvage = null;
         break;
       }
-      case 'research': {
-        const technology = OPENING_TECHNOLOGIES.find((entry) => entry.id === command.technology);
-        if (
-          command.technology &&
-          (!technology ||
-            !technology.requires.every((id) => this.context.resources.research[id]?.unlocked) ||
-            this.context.resources.research[command.technology]?.unlocked)
-        )
-          return this.result('locked');
-        if (
-          technology &&
-          !technology.eligibility.every((cost) => this.history(cost.item) >= cost.quantity)
-        )
-          return this.result('missing-input');
-        state.fieldTechnology = command.technology;
+      case 'research':
         state.fieldEnabled = command.enabled;
-        if (technology)
+        break;
+      case 'research-queue': {
+        const technology = OPENING_TECHNOLOGIES.find((entry) => entry.id === command.technology);
+        if (!technology) return this.result('invalid-request');
+        const index = state.researchQueue.indexOf(technology.id);
+        if (command.action === 'add') {
+          if (this.context.resources.research[technology.id]?.unlocked)
+            return this.result('locked');
+          if (index !== -1) return this.result('busy');
+          state.researchQueue.push(technology.id);
           this.context.resources.research[technology.id] ??= {
             consumed: {},
             work: 0,
             unlocked: false,
           };
+        } else {
+          if (
+            index === -1 ||
+            (command.action === 'move' &&
+              (!Number.isSafeInteger(command.index) ||
+                command.index < 0 ||
+                command.index >= state.researchQueue.length))
+          )
+            return this.result('invalid-request');
+          state.researchQueue.splice(index, 1);
+          if (command.action === 'move')
+            state.researchQueue.splice(command.index, 0, technology.id);
+        }
         break;
       }
       case 'handcraft-ui':
@@ -635,28 +644,16 @@ export class OpeningSystem {
 
   private research(delta: number): void {
     const state = this.state;
-    if (!state.fieldEnabled || !state.fieldTechnology) return;
-    const technology = OPENING_TECHNOLOGIES.find((entry) => entry.id === state.fieldTechnology)!;
-    const ledger = this.context.resources.research[technology.id];
-    if (!ledger || ledger.unlocked) return;
-    const cycles = Math.max(...technology.costs.map((cost) => cost.quantity));
-    const interval = technology.seconds / cycles;
-    const paid = Math.max(0, ...Object.values(ledger.consumed));
-    const bundle = technology.costs
-      .filter((cost) => (ledger.consumed[cost.item] ?? 0) < cost.quantity)
-      .map((cost) => ({ item: cost.item, quantity: 1 }));
-    if (!bundle.length || !bundle.every((cost) => available(this.bag, cost.item) >= cost.quantity))
-      return;
-    ledger.work = Math.min(technology.seconds, ledger.work + delta);
-    if (ledger.work + 1e-9 < (paid + 1) * interval) return;
-    if (!transact(this.bag, bundle, [], OPENING_CONTENT)) return;
-    for (const cost of bundle) ledger.consumed[cost.item] = (ledger.consumed[cost.item] ?? 0) + 1;
-    if (technology.costs.every((cost) => (ledger.consumed[cost.item] ?? 0) >= cost.quantity)) {
-      ledger.work = technology.seconds;
-      ledger.unlocked = true;
-      this.events.push({ kind: 'research-completed', technology: technology.id });
-      state.fieldTechnology = null;
-    }
+    const completed = advanceResearch(
+      state.researchQueue,
+      this.context.resources.research,
+      state.fieldEnabled
+        ? [{ id: 'player-field', kind: 'field', inventory: this.bag, rate: 1 }]
+        : [],
+      (item) => this.history(item),
+      delta,
+    );
+    if (completed) this.events.push({ kind: 'research-completed', technology: completed });
   }
 
   public step(delta: number): void {

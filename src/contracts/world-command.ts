@@ -29,9 +29,15 @@ export function validWorldCommand(value: unknown): value is WorldCommand {
     case 'equip':
       return command['item'] === null || id(command['item']);
     case 'research':
+      return typeof command['enabled'] === 'boolean' && command['technology'] === undefined;
+    case 'research-queue':
       return (
-        (command['technology'] === null || id(command['technology'])) &&
-        typeof command['enabled'] === 'boolean'
+        id(command['technology']) &&
+        (command['action'] === 'add' ||
+          command['action'] === 'remove' ||
+          (command['action'] === 'move' &&
+            Number.isSafeInteger(command['index']) &&
+            Number(command['index']) >= 0))
       );
     case 'handcraft-ui':
       return (

@@ -96,12 +96,19 @@ export class OpeningFeedback {
       this.researchWait = this.miniWait = '';
     }
     const technology = OPENING_TECHNOLOGIES.find(
-      (entry) => entry.id === opening.state.fieldTechnology,
+      (entry) => entry.id === opening.state.researchQueue[0],
     );
     const ledger = technology && opening.ledgers[technology.id];
     const waiting =
       opening.state.fieldEnabled &&
       technology &&
+      technology.requires.every((id) => opening.ledgers[id]?.unlocked) &&
+      technology.eligibility.every(
+        (cost) =>
+          (cost.item === 'scrap'
+            ? (opening.extracted[cost.item] ?? 0)
+            : (world.productionTotals[cost.item] ?? 0)) >= cost.quantity,
+      ) &&
       !ledger?.unlocked &&
       technology.costs.some(
         (cost) =>

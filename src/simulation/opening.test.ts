@@ -90,7 +90,7 @@ test('one fixed step retains simultaneous handcraft, research and MiniFab comple
   snapshot.resources.research[technology.id].consumed = Object.fromEntries(
     technology.costs.map((cost) => [cost.item, cost.quantity - 1]),
   );
-  opening.fieldTechnology = technology.id;
+  opening.researchQueue = [technology.id];
   opening.fieldEnabled = true;
   snapshot.resources.extractionTotals['scrap'] = 100;
   const simulation = new Simulation(definition, { snapshot });
@@ -111,8 +111,8 @@ test('one fixed step retains simultaneous handcraft, research and MiniFab comple
 
 test('opening catalogue is conserving, acyclic, explicit and excludes future free content', () => {
   assert.doesNotThrow(validateOpeningCatalogue);
-  assert.equal(Object.keys(OPENING_CONTENT.recipes).length, 6);
-  assert.equal(OPENING_CONTENT.technologies.length, 5);
+  assert.equal(Object.keys(OPENING_CONTENT.recipes).length, 7);
+  assert.equal(OPENING_CONTENT.technologies.length, 14);
   assert.equal(OPENING_CONTENT.recipes['recipe.charge_storage'], undefined);
   assert.equal(chargeCapacity(2), 135);
   assert.equal(turnsToFull(100), 1);
@@ -234,7 +234,7 @@ test('solid recovery does not erase research/history and a genuinely completed r
   command(sim, { type: 'dismantle', item: 'prybar' });
   assert.equal(sim.view.inventory['scrap'], 4);
   assert.equal(sim.view.productionTotals['prybar'], 1);
-  assert.equal(sim.view.research.length, 5);
+  assert.equal(sim.view.research.length, OPENING_TECHNOLOGIES.length);
   craftPrybar();
   assert.equal(sim.view.productionTotals['prybar'], 2);
 });
@@ -354,7 +354,8 @@ test('research consumes synchronized remaining-cost bundles, waits without debt,
     snapshot.resources.productionTotals = { plate: 4, wire: 6 };
     player(snapshot).inventory!.slots[0] = { item: 'plate', quantity: 4 };
   });
-  command(sim, { type: 'research', technology: 'electrical-assembly', enabled: true });
+  command(sim, { type: 'research-queue', action: 'add', technology: 'electrical-assembly' });
+  command(sim, { type: 'research', enabled: true });
   run(sim, 30);
   assert.equal(sim.view.inventory['plate'], 4);
   assert.equal(sim.view.opening!.ledgers['electrical-assembly'].work, 0);
@@ -364,19 +365,24 @@ test('research consumes synchronized remaining-cost bundles, waits without debt,
   run(supplied, 4);
   const ledger = supplied.view.opening!.ledgers['electrical-assembly'];
   assert.deepEqual(ledger.consumed, { plate: 1, wire: 1 });
-  command(supplied, { type: 'research', technology: 'electrical-assembly', enabled: false });
+  command(supplied, { type: 'research', enabled: false });
   const stopped = supplied.view.opening!.ledgers['electrical-assembly'];
   run(supplied, 30);
   assert.deepEqual(supplied.view.opening!.ledgers['electrical-assembly'], stopped);
-  command(supplied, { type: 'research', technology: null, enabled: true });
-  command(supplied, { type: 'research', technology: 'electrical-assembly', enabled: true });
+  command(supplied, {
+    type: 'research-queue',
+    action: 'remove',
+    technology: 'electrical-assembly',
+  });
+  command(supplied, { type: 'research-queue', action: 'add', technology: 'electrical-assembly' });
+  command(supplied, { type: 'research', enabled: true });
   run(supplied, 16);
   assert(supplied.view.research.includes('electrical-assembly'));
   assert.equal(supplied.view.inventory['plate'], undefined);
   assert.equal(supplied.view.inventory['wire'], undefined);
   assert.deepEqual(supplied.view.productionTotals, { plate: 4, wire: 6 });
   assert.equal(
-    command(supplied, { type: 'research', technology: 'electrical-assembly', enabled: true })
+    command(supplied, { type: 'research-queue', action: 'add', technology: 'electrical-assembly' })
       .reason,
     'locked',
   );
@@ -500,7 +506,7 @@ test('full-return dismantling is atomic, includes buffers and preserves research
   assert.equal(state(roomy).minifab.owned, false);
   assert.equal(command(roomy, { type: 'dismantle', item: 'minifab' }).reason, 'invalid-request');
   assert.equal(roomy.view.inventory['scrap'], 16);
-  assert.equal(roomy.view.research.length, 5);
+  assert.equal(roomy.view.research.length, OPENING_TECHNOLOGIES.length);
 });
 
 test('detached opening views, active work and rate budget survive capture/rebuild; malformed state is rejected', () => {
@@ -539,7 +545,8 @@ test('requested MiniFab stock precedes research while consume-only field work ru
   });
 
   priority.step(still, [
-    { type: 'research', technology: 'mechanical-assembly', enabled: true },
+    { type: 'research-queue', action: 'add', technology: 'mechanical-assembly' },
+    { type: 'research', enabled: true },
     { type: 'minifab', recipe: 'electrical-part', quantity: 1 },
   ]);
   assert(state(priority).minifab.job);
@@ -560,7 +567,8 @@ test('requested MiniFab stock precedes research while consume-only field work ru
     { type: 'handcraft-ui', visible: true },
     { type: 'craft', recipe: 'scrap-prybar', quantity: 1 },
     { type: 'minifab', recipe: 'metal-plate', quantity: 1 },
-    { type: 'research', technology: 'mechanical-assembly', enabled: true },
+    { type: 'research-queue', action: 'add', technology: 'mechanical-assembly' },
+    { type: 'research', enabled: true },
   ]);
   run(protectedWork, 3.75);
   assert(state(protectedWork).handcraft);
@@ -654,7 +662,8 @@ test('a completely empty world reaches the first unpowered automatic craft using
   };
 
   const research = (technology: string) => {
-    assert(command(sim, { type: 'research', technology, enabled: true }).accepted);
+    assert(command(sim, { type: 'research-queue', action: 'add', technology }).accepted);
+    assert(command(sim, { type: 'research', enabled: true }).accepted);
     until(() => sim.view.research.includes(technology), technology);
   };
 

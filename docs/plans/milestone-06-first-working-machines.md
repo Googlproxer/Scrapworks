@@ -6,6 +6,8 @@ Establish manually supplied renewable-powered recycling, fabrication and laborat
 
 [High-level plan](README.md) · [Next milestone](milestone-07-transport.md)
 
+The 8 November [Milestone 5 decisions](milestone-05-research.md#agreed-scope-and-decisions--8-november-2026) stage Basic/Medium fabrication, the Basic research kit and shared research queue/rules before this integration. Field Research and all labs follow the same single active queue head; labs consume only their own supplied buffers, and Field Research remains capable of every prototype technology. Queue edits, including removal/reordering of the current task, preserve all technology progress. This milestone owns the functioning coal-free industrial playthrough. Advanced fabrication and MiniFab upgrades remain later slices. This alignment is planning only; implementation has not started.
+
 ## Current implementation
 
 Recycler artwork is source/reference material. There are no simulation factory entities, construction/resource commands, power allocation, production buffers or machine/lab work. No new gameplay is implemented by this plan update.
@@ -50,7 +52,7 @@ Extend the [ECS foundation established in Milestone 3](../design/TDD.md#ecs-foun
 - [ ] General fabricators execute a selected unlocked recipe of their supported arity and reserve ingredients once.
 - [ ] Advance jobs using allocated power; preserve partial work and finished-but-blocked output until a full commit is possible.
 - [ ] Commit new output and lifetime production once. Extraction increases extraction history, not crafted output history; finite deposits decrease atomically.
-- [ ] Integrate dedicated research-craftable production and faster labs with Milestone 5's shared progress/payment rules; multiple labs scale useful throughput.
+- [ ] Integrate Basic research kit production through Medium fabrication and faster labs with Milestone 5's shared progress/payment/queue rules. Field Research and all labs follow the same single active queue head, using source-local stock. More supplied labs scale useful throughput without double payment or overshoot; queue edits retain technology contributions and completed/partial work and cannot redirect committed inputs/work to another technology.
 - [ ] Leave the Mini Fabricator inventory-driven upgrade out unless its separate unlock, min/max semantics and implementation scope have been agreed.
 - [ ] Design a useful advanced portable MiniFab role/consumable and relevant hazardous/liquid handling upgrades when advanced crafting is scoped; no concrete recipe or cost is approved yet.
 - [ ] Integrate any scoped MiniFab power upgrades only after their general technology, separate MiniFab research and actual crafting/application. Onboard solar/wind, polluting coal and grid boost never remove power-free baseline work; keep the Milestone 3 local charge mechanic independent until this integration exists.

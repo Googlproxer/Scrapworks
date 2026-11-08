@@ -70,7 +70,7 @@ export function assertOpening(
     'handcraft',
     'handcraftVisible',
     'handcraftSuspended',
-    'fieldTechnology',
+    'researchQueue',
     'fieldEnabled',
     'moved',
     'minifab',
@@ -78,9 +78,13 @@ export function assertOpening(
   for (const key of ['handcraftVisible', 'handcraftSuspended', 'fieldEnabled', 'moved'])
     check(typeof state[key] === 'boolean', 'Invalid opening flag');
   check(
-    state['fieldTechnology'] === null ||
-      OPENING_TECHNOLOGIES.some((technology) => technology.id === state['fieldTechnology']),
-    'Unknown field technology',
+    Array.isArray(state['researchQueue']) &&
+      state['researchQueue'].length <= OPENING_TECHNOLOGIES.length &&
+      new Set(state['researchQueue']).size === state['researchQueue'].length &&
+      state['researchQueue'].every((id) =>
+        OPENING_TECHNOLOGIES.some((technology) => technology.id === id),
+      ),
+    'Invalid research queue',
   );
   if (state['salvage'] !== null) {
     const task = record(state['salvage'], ['target', 'remaining']);

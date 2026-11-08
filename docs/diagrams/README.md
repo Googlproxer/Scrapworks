@@ -4,7 +4,7 @@ Updated 2 November 2026. The core class, application, module and frame diagrams 
 
 The [technical design](../design/TDD.md) and [implementation roadmap](../plans/README.md) contain the editable Mermaid blocks. Standalone sources are under [src/](src/), and matching SVG and PNG files are stored in this folder for GitHub preview and export.
 
-The factory, save and research diagrams remain future design; they do not imply those systems are implemented. Current acceptance and remaining work are recorded in the migration and milestone plans.
+The save diagrams describe implemented Milestone 4 behavior. The research transaction diagram now includes Milestone 5's one shared queue/head, retained ledgers, source-local paced payment and next-step queue advancement. Its plain lab rules are fixture-verified; physical factory/lab integration remains future work. Current acceptance and remaining work are recorded in the milestone plans.
 
 ## Regeneration
 

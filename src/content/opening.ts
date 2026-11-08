@@ -1,4 +1,10 @@
 import type { ContentDefinition, ItemStack } from '../contracts/simulation';
+import {
+  EQUIPMENT_BLUEPRINTS,
+  FIRST_FACTORY_TECHNOLOGIES,
+  RESEARCH_KIT_RECIPE,
+  RESEARCH_ROADMAP,
+} from './first-factory';
 
 export interface OpeningRecipe {
   id: string;
@@ -89,6 +95,7 @@ export const OPENING_RECIPES: readonly OpeningRecipe[] = [
     handcraft: true,
     minifab: false,
   },
+  RESEARCH_KIT_RECIPE,
 ];
 
 export const OPENING_TECHNOLOGIES: readonly OpeningTechnology[] = [
@@ -132,10 +139,11 @@ export const OPENING_TECHNOLOGIES: readonly OpeningTechnology[] = [
     eligibility: [stack('mechanical-part', 1), stack('electrical-part', 1)],
     seconds: 12,
   },
+  ...FIRST_FACTORY_TECHNOLOGIES,
 ];
 
 export const OPENING_CONTENT: ContentDefinition = {
-  version: 'opening-1',
+  version: 'research-1',
   items: {
     scrap: { stackLimit: 100, solidValue: 1 },
     plate: { stackLimit: 100, solidValue: 2 },
@@ -143,6 +151,7 @@ export const OPENING_CONTENT: ContentDefinition = {
     'mechanical-part': { stackLimit: 100, solidValue: 4 },
     'electrical-part': { stackLimit: 100, solidValue: 4 },
     prybar: { stackLimit: 1, solidValue: 4 },
+    'research-kit': { stackLimit: 50, solidValue: 8 },
   },
   recipes: Object.fromEntries(OPENING_RECIPES.map((recipe) => [recipe.id, recipe])),
   technologies: OPENING_TECHNOLOGIES.map((technology) => technology.id),
@@ -166,6 +175,7 @@ export const ITEM_NAMES: Readonly<Record<string, string>> = {
   'mechanical-part': 'Mechanical part',
   'electrical-part': 'Electrical part',
   prybar: 'Scrap prybar',
+  'research-kit': 'Basic research kit',
 };
 
 export const OPENING_SOURCE_IDS = {
@@ -176,6 +186,7 @@ export const OPENING_SOURCE_IDS = {
     'mechanical-part': 'recipe.mechanical',
     'electrical-part': 'recipe.electrical',
     'base-minifab': 'recipe.minifab',
+    'basic-research-kit': 'recipe.basic_research_kit',
   },
   technologies: {
     'improvised-tools': 'tech.improvised_tools',
@@ -183,6 +194,15 @@ export const OPENING_SOURCE_IDS = {
     'mechanical-assembly': 'tech.mechanical_assembly',
     'electrical-assembly': 'tech.electrical_assembly',
     'mini-fabrication': 'tech.mini_fabrication',
+    'electrical-engineering': 'future.electrical_engineering',
+    'solar-power': 'future.solar',
+    'wind-power': 'future.wind',
+    'mixed-recycling': 'future.recycling',
+    'basic-fabrication': 'future.basic_fabrication',
+    'medium-fabrication': 'future.medium_fabrication',
+    extraction: 'future.extraction',
+    'laboratory-research': 'future.laboratory',
+    'sorting-logistics': 'future.logistics',
   },
   items: {
     scrap: 'item.scrap',
@@ -191,6 +211,7 @@ export const OPENING_SOURCE_IDS = {
     'mechanical-part': 'item.mechanical',
     'electrical-part': 'item.electrical',
     prybar: 'item.prybar',
+    'research-kit': 'item.basic_research_kit',
   },
 } as const;
 
@@ -198,9 +219,6 @@ export const OPENING_SOURCE_IDS = {
 export const DEFERRED_CONTENT = [
   'recipe.crank_gearing',
   'recipe.charge_storage',
-  'future.laboratory',
-  'future.solar',
-  'future.wind',
   'future.minifab_coal',
 ] as const;
 
@@ -215,6 +233,27 @@ export function validateOpeningCatalogue(
   recipes = OPENING_RECIPES,
   technologies = OPENING_TECHNOLOGIES,
 ): void {
+  if (
+    new Set(recipes.map((recipe) => recipe.id)).size !== recipes.length ||
+    new Set(technologies.map((technology) => technology.id)).size !== technologies.length
+  )
+    throw new Error('Duplicate catalogue ID');
+  for (const technology of technologies) {
+    if (!Number.isFinite(technology.seconds) || technology.seconds <= 0 || !technology.costs.length)
+      throw new Error('Unpriced technology');
+    for (const costs of [technology.costs, technology.eligibility]) {
+      if (
+        new Set(costs.map((cost) => cost.item)).size !== costs.length ||
+        costs.some(
+          (cost) =>
+            !Object.hasOwn(OPENING_CONTENT.items, cost.item) ||
+            !Number.isSafeInteger(cost.quantity) ||
+            cost.quantity <= 0,
+        )
+      )
+        throw new Error('Invalid research costs');
+    }
+  }
   const visited = new Set<string>(),
     visiting = new Set<string>();
 
@@ -258,5 +297,44 @@ export function validateOpeningCatalogue(
 
     if (value(recipe.inputs) !== (recipe.id === 'base-minifab' ? 14 : value(recipe.outputs)))
       throw new Error('Opening recipe does not conserve material');
+  }
+
+  const unlocked = new Set<string>(),
+    materials = new Set(['scrap']);
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const technology of technologies)
+      if (
+        !unlocked.has(technology.id) &&
+        technology.requires.every((id) => unlocked.has(id)) &&
+        [...technology.costs, ...technology.eligibility].every((cost) => materials.has(cost.item))
+      ) {
+        unlocked.add(technology.id);
+        changed = true;
+      }
+    for (const recipe of recipes)
+      if (
+        unlocked.has(recipe.technology) &&
+        recipe.inputs.every((input) => materials.has(input.item))
+      )
+        for (const output of recipe.outputs)
+          if (!materials.has(output.item)) {
+            materials.add(output.item);
+            changed = true;
+          }
+  }
+  if (unlocked.size !== technologies.length)
+    throw new Error('Unreachable research cost or prerequisite');
+  for (const equipment of EQUIPMENT_BLUEPRINTS)
+    if (
+      !unlocked.has(equipment.technology) ||
+      equipment.inputs.some((input) => !materials.has(input.item))
+    )
+      throw new Error('Unreachable equipment construction');
+  const route = new Set(unlocked);
+  for (const entry of RESEARCH_ROADMAP) {
+    if (!entry.requires.every((id) => route.has(id))) throw new Error('Unreachable roadmap branch');
+    route.add(entry.id);
   }
 }

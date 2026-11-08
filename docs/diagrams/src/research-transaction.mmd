@@ -1,22 +1,25 @@
 flowchart TB
-    Phase[Field Research phase after manual work and MiniFab intake]
-    Active{Enabled with an eligible selected technology?}
-    Time[Accumulate bounded cycle time]
-    Stock{Complete next remaining-input bundle available?}
+    Edit[Add remove or reorder queue without erasing ledgers]
+    Phase[Research phase after manual work and MiniFab intake]
+    Active{One eligible queue head and enabled source?}
+    Time[Accumulate only supplied bounded cycle work]
+    Stock{Complete next bundle in this source inventory?}
     Wait[Retain partial cycle time and wait without debt]
     Due{Cycle interval reached?}
     Commit[Atomically consume one of each still-required input]
     Work[Record paid work and consumed contributions once]
     Complete{All materials and work complete?}
-    Unlock[Grant technology unlock once]
+    Unlock[Grant unlock once and remove completed head]
+    Next[Next head waits for the next simulation step]
     Publish[Publish detached progress or wait state]
 
-    Phase -->|check selection| Active
-    Active -->|yes| Time
+    Edit -->|authoritative command| Phase
+    Phase -->|check shared head| Active
+    Active -->|yes| Stock
     Active -->|no| Publish
-    Time -->|check inputs| Stock
     Stock -->|no| Wait
-    Stock -->|yes| Due
+    Stock -->|yes| Time
+    Time -->|bounded work| Due
     Wait -->|waiting| Publish
     Due -->|no| Publish
     Due -->|yes| Commit
@@ -24,4 +27,5 @@ flowchart TB
     Work -->|check totals| Complete
     Complete -->|yes| Unlock
     Complete -->|no| Publish
-    Unlock -->|completed technology| Publish
+    Unlock -->|advance queue| Next
+    Next -->|publish head and retained ledgers| Publish

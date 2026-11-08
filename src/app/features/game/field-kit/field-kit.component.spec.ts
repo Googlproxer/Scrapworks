@@ -89,14 +89,74 @@ describe('Field kit opening UI', () => {
     root.querySelector<HTMLButtonElement>('#research-tab')!.click();
     await fixture.whenStable();
     [...root.querySelectorAll('button')]
-      .find((button) => button.textContent?.trim() === 'Research Material recovery')!
+      .find((button) => button.textContent?.trim() === 'Queue Material recovery')!
       .click();
     expect(runtime.command).toHaveBeenLastCalledWith({
-      type: 'research',
+      type: 'research-queue',
+      action: 'add',
       technology: 'material-recovery',
-      enabled: true,
     });
     expect(world()).toEqual(before);
+  });
+
+  it('exposes one active queue, keyboard reorder/removal controls, retained progress and stable focus', async () => {
+    const view = editableView(world()!);
+    view.opening!.state.researchQueue = ['improvised-tools', 'material-recovery'];
+    view.opening!.state.fieldEnabled = true;
+    view.opening!.ledgers['improvised-tools'] = {
+      consumed: { scrap: 1 },
+      work: 2,
+      unlocked: false,
+    };
+    world.set(view);
+    const fixture = TestBed.createComponent(FieldKitComponent);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    root.querySelector<HTMLButtonElement>('#research-tab')!.click();
+    await fixture.whenStable();
+    expect(root.querySelector('.research-queue [role="status"]')?.textContent).toContain(
+      'Current: Improvised tools',
+    );
+    expect(root.querySelector('.research-queue .research-requirements')?.textContent).toContain(
+      '4 Mixed scrap',
+    );
+    expect(
+      root.querySelector('[aria-labelledby="technology-improvised-tools"] .research-requirements')
+        ?.textContent,
+    ).toContain('6 s fully supplied');
+    const move = root.querySelector<HTMLButtonElement>(
+      '[aria-label="Move down: Improvised tools"]',
+    )!;
+    move.focus();
+    move.click();
+    expect(runtime.command).toHaveBeenLastCalledWith({
+      type: 'research-queue',
+      action: 'move',
+      technology: 'improvised-tools',
+      index: 1,
+    });
+    expect(document.activeElement?.id).toBe('queue-title');
+    root
+      .querySelector<HTMLButtonElement>('[aria-label="Remove Improvised tools from queue"]')!
+      .click();
+    expect(runtime.command).toHaveBeenLastCalledWith({
+      type: 'research-queue',
+      action: 'remove',
+      technology: 'improvised-tools',
+    });
+    const updated = editableView(world()!);
+    updated.opening!.state.researchQueue = ['material-recovery'];
+    world.set(updated);
+    await fixture.whenStable();
+    expect(root.querySelector('.research-queue [role="status"]')?.textContent).toContain(
+      'Waiting for prerequisite technologies',
+    );
+    expect(
+      root.querySelector('[aria-labelledby="technology-improvised-tools"]')?.textContent,
+    ).toContain('Progress retained; queue to resume');
+    expect(world()!.opening!.ledgers['improvised-tools'].work).toBe(2);
+    expect(document.activeElement?.id).toBe('queue-title');
+    expect((await axe.run(root)).violations).toEqual([]);
   });
 
   it('traps exit confirmation focus and explains completed-item retention and original-input refunds', async () => {

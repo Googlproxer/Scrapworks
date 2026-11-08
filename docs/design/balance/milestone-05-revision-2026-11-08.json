@@ -1,0 +1,276 @@
+{
+  "date": "2026-11-08",
+  "contentVersion": "research-1",
+  "catalogueCounts": {
+    "items": 10,
+    "recipes": 9,
+    "ingredients": 17,
+    "technologies": 21,
+    "researchCosts": 31,
+    "total": 88,
+    "prerequisiteLinks": 33
+  },
+  "item": "a104de9a-f8fd-4f96-a52f-1549805d2a48",
+  "recipe": "73a9fc4b-d0a6-4fba-bc6f-0966e725d339",
+  "ingredients": [
+    "d4484c13-0662-4545-a39f-e47f4ce8eabe",
+    "cd501050-4bc4-43dc-aa01-825dda308130"
+  ],
+  "costs": [
+    "c100baed-20f5-4524-8089-fcee988a76ea",
+    "65edd848-f533-43be-9b90-314c48a5e4ea",
+    "95f41b5c-6f08-4cf0-b6c1-a348554b2c4d",
+    "7a9236db-b02e-4b7f-92d6-f331a1bb1f2e",
+    "7e227f96-eb85-4c36-a6f8-d80944e4ea48",
+    "b0c145c9-bc44-4724-86ca-67b76d6bb7ce",
+    "7578f3f7-6156-4143-8067-5a1ba37bc421",
+    "9c983cdf-0c72-4cf0-80c7-cc9cc29ab94e",
+    "e20ee431-37eb-4479-afdb-70cf9106099a",
+    "5956db90-844a-488a-a867-7d575974fb34",
+    "1edfb08f-f47e-44b4-8d8f-a50beb2deb38",
+    "39d505dd-0607-440c-863f-636e06a355df",
+    "204e156d-c074-4f19-8003-724a60f0c900",
+    "f2e00fb9-b5fa-420a-a08d-01d196d374ca",
+    "39e966fd-09a4-4fad-a227-e31400c7532b",
+    "8d585d38-142e-4afa-ac06-c460080240cd",
+    "b3218536-a545-4c7a-8206-c43382b7a277",
+    "d82385a5-9a44-4cb9-b51e-05383e91c83b",
+    "f2a10115-d36b-4ebe-ba3f-a963a627947f",
+    "fa11fe98-98c3-4cf5-97c8-b5c3ea8a31a6"
+  ],
+  "technologies": [
+    "4dc973fb-20fc-49ae-a910-6de8619fca8a",
+    "129e0a1b-0367-491c-8c08-0f12f3f9ef3a",
+    "37083479-87e4-4ede-b529-6d659eb709df",
+    "681a5f75-fe4f-4e06-9d27-224f6a8106ca",
+    "e29cf260-4f4e-4292-b0bf-8df21714149f",
+    "3e03ac68-db34-413e-bfdf-3c5b9b21c950",
+    "8303b4d1-11a8-413a-a603-8654ed4d025a",
+    "35ae82d5-2016-47d1-98d9-9c01ed76e87e",
+    "62912dc3-7e96-4262-83fc-ee87d9514810"
+  ],
+  "provisional": {
+    "kit": {
+      "id": "basic-research-kit",
+      "name": "Basic research kit",
+      "technology": "laboratory-research",
+      "inputs": [
+        {
+          "item": "mechanical-part",
+          "quantity": 1
+        },
+        {
+          "item": "electrical-part",
+          "quantity": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "research-kit",
+          "quantity": 1
+        }
+      ],
+      "seconds": 8,
+      "handcraft": true,
+      "minifab": true
+    },
+    "kitStackLimit": 50,
+    "kitSolidValue": 8,
+    "laboratory": {
+      "inputSlots": 4,
+      "rate": 4
+    },
+    "equipment": [
+      {
+        "id": "power-connection",
+        "name": "Power connection",
+        "technology": "electrical-engineering",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 1
+          },
+          {
+            "item": "wire",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "id": "solar-panel",
+        "name": "Solar panel",
+        "technology": "solar-power",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 4
+          },
+          {
+            "item": "wire",
+            "quantity": 2
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "id": "wind-turbine",
+        "name": "Wind turbine",
+        "technology": "wind-power",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 4
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 3
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "id": "recycler",
+        "name": "Mixed-output recycler",
+        "technology": "mixed-recycling",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 6
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 3
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "id": "basic-fabricator",
+        "name": "Basic Fabricator",
+        "technology": "basic-fabrication",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 4
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "id": "medium-fabricator",
+        "name": "Medium Fabricator",
+        "technology": "medium-fabrication",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 4
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 2
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "id": "extractor",
+        "name": "Extractor",
+        "technology": "extraction",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 4
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 3
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "id": "laboratory",
+        "name": "Laboratory",
+        "technology": "laboratory-research",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 4
+          },
+          {
+            "item": "wire",
+            "quantity": 2
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 2
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 3
+          }
+        ]
+      }
+    ]
+  },
+  "sourceIds": {
+    "recipes": {
+      "scrap-prybar": "recipe.prybar",
+      "metal-plate": "recipe.plate",
+      "recovered-wire": "recipe.wire",
+      "mechanical-part": "recipe.mechanical",
+      "electrical-part": "recipe.electrical",
+      "base-minifab": "recipe.minifab",
+      "basic-research-kit": "recipe.basic_research_kit"
+    },
+    "technologies": {
+      "improvised-tools": "tech.improvised_tools",
+      "material-recovery": "tech.material_recovery",
+      "mechanical-assembly": "tech.mechanical_assembly",
+      "electrical-assembly": "tech.electrical_assembly",
+      "mini-fabrication": "tech.mini_fabrication",
+      "electrical-engineering": "future.electrical_engineering",
+      "solar-power": "future.solar",
+      "wind-power": "future.wind",
+      "mixed-recycling": "future.recycling",
+      "basic-fabrication": "future.basic_fabrication",
+      "medium-fabrication": "future.medium_fabrication",
+      "extraction": "future.extraction",
+      "laboratory-research": "future.laboratory",
+      "sorting-logistics": "future.logistics"
+    },
+    "items": {
+      "scrap": "item.scrap",
+      "plate": "item.plate",
+      "wire": "item.wire",
+      "mechanical-part": "item.mechanical",
+      "electrical-part": "item.electrical",
+      "prybar": "item.prybar",
+      "research-kit": "item.basic_research_kit"
+    }
+  },
+  "verification": {
+    "technologyCostsAndPrerequisites": true,
+    "twentyCostRows": true,
+    "kitIngredientLinks": true,
+    "whiteboardsChanged": false
+  }
+}

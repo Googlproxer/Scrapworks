@@ -37,8 +37,14 @@ describe('Opening notifications', () => {
       feedback.handle({ ...rejected, id: 2 });
       expect(center.visible()).toHaveLength(1);
       expect(center.visible()[0].message).toContain('required materials');
-      view.opening!.state.fieldTechnology = 'improvised-tools';
       view.opening!.state.fieldEnabled = true;
+      view.opening!.state.researchQueue = ['material-recovery'];
+      feedback.update(view);
+      expect(center.visible().some((n) => n.key === 'research-wait')).toBe(false);
+      view.opening!.state.researchQueue = ['improvised-tools'];
+      feedback.update(view);
+      expect(center.visible().some((n) => n.key === 'research-wait')).toBe(false);
+      view.opening!.extracted = { scrap: 4 };
       feedback.update(view);
       expect(center.visible().some((n) => n.key === 'research-wait')).toBe(true);
       view.opening!.state.fieldEnabled = false;

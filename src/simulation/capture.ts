@@ -256,6 +256,14 @@ export function assertSnapshot(
         e['inventory'] as InventoryData,
         (e['equipment'] as { tool: string | null }).tool,
       );
+      check(
+        e['opening'].researchQueue.every(
+          (id) =>
+            !object(resources['research'])[id] ||
+            !object(object(resources['research'])[id])['unlocked'],
+        ),
+        'Completed technology in research queue',
+      );
     }
     if (e['deposit']) {
       const d = object(e['deposit'], ['kind', 'quantity']);

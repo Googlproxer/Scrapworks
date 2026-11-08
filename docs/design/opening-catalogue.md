@@ -79,9 +79,9 @@ Basic accepts exactly one input type, Medium exactly two, and Advanced three or 
 
 ## Bridge into the first factory
 
-This continuation checks reachability and is not extra Milestone 3 scope. Payments, equipment recipes and durations remain unspecified.
+Milestone 5 now implements this research continuation, with provisional payments, kit crafting and construction blueprints in the [research catalogue](research-catalogue.md). It adds no extra Milestone 3 scope. Physical machines and functioning labs remain Milestone 6.
 
-| Branch | Proposed prerequisite path | Capability gained |
+| Branch | Research prerequisite path | Capability gained |
 | --- | --- | --- |
 | Electrical engineering | Mechanical + Electrical assembly | Connections and renewable-generation research |
 | Solar power / Wind power | Electrical engineering; separate siblings | First generation choices, supporting a coal-free route |
@@ -89,10 +89,10 @@ This continuation checks reachability and is not extra Milestone 3 scope. Paymen
 | Basic fabrication | Mechanical assembly | Single-input fabrication |
 | Medium fabrication | Basic fabrication + Electrical assembly | Two-input fabrication |
 | Extraction | Mechanical assembly | Powered extraction |
-| Sorting and conveyors | Mixed recycling + Mechanical assembly | Direct transport, sorting and filters |
+| Sorting and conveyors | Mixed recycling + Mechanical assembly + Laboratory research | Kit-funded research for planned transport, sorting and filters |
 | Laboratory research | Medium fabrication + Electrical assembly | Scalable lab work and first dedicated research-craftable recipe |
 
-The first lab, first Medium Fabricator and laboratory research must be paid for with existing components rather than their own research craftables. Safe kit assembly can remain manual; labs provide scalable research throughput. Exact field/lab compatibility remains open. No required machine may need its own output to be unlocked/built. Advanced fabrication and trains remain later content.
+The first lab, first Medium Fabricator and laboratory/kit-recipe research use existing components rather than their own research craftables. The implemented **Basic research kit** is 1 mechanical + 1 electrical part, 8 seconds, solid value 8 and stack limit 50, safely handcraftable and MiniFab-compatible after laboratory research. These are provisional values; Medium automation remains Milestone 6. Field Research can complete every prototype technology, including kit-funded work. One active queue head is shared by all field/lab sources; add/remove/reorder any entry, including the current task, without losing contributions or completed/partial work. Plain fixtures prove local-buffer lab scaling without duplicate payment/overshoot. See the [accepted decisions](../plans/milestone-05-research.md#agreed-scope-and-decisions--8-november-2026) and [implementation evidence](../reports/milestone-05/2026-11-08/README.md). Physical labs, Advanced fabrication and trains retain their later scope.
 
 ## Material-value and pacing checks
 

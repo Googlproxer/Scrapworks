@@ -90,6 +90,9 @@ jobs:
       - name: Verify gameplay saves through IndexedDB and page reload
         run: yarn test:saves
 
+      - name: Verify research queue and legacy save continuation
+        run: yarn test:research
+
       - name: Verify exported and built assets
         run: yarn assets:check --build
 
@@ -126,6 +129,7 @@ jobs:
             tmp/production-worker-browser/
             tmp/opening-browser/
             tmp/save-browser/
+            tmp/research-browser/
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7

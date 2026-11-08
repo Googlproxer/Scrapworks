@@ -19,7 +19,7 @@ export interface OpeningData {
   handcraft: HandcraftJob | null;
   handcraftVisible: boolean;
   handcraftSuspended: boolean;
-  fieldTechnology: string | null;
+  researchQueue: string[];
   fieldEnabled: boolean;
   moved: boolean;
   minifab: {
@@ -57,7 +57,7 @@ export interface OpeningView {
       | null;
     readonly handcraftVisible: boolean;
     readonly handcraftSuspended: boolean;
-    readonly fieldTechnology: string | null;
+    readonly researchQueue: readonly string[];
     readonly fieldEnabled: boolean;
     readonly moved: boolean;
     readonly minifab: {
@@ -104,7 +104,9 @@ export type OpeningCommand =
   | { type: 'salvage'; target: string | null }
   | { type: 'pickup'; target: string }
   | { type: 'equip'; item: string | null }
-  | { type: 'research'; technology: string | null; enabled: boolean }
+  | { type: 'research'; enabled: boolean }
+  | { type: 'research-queue'; action: 'add' | 'remove'; technology: string }
+  | { type: 'research-queue'; action: 'move'; technology: string; index: number }
   | { type: 'handcraft-ui'; visible: boolean; suspended?: boolean }
   | { type: 'craft'; recipe: string; quantity: number }
   | { type: 'minifab'; recipe: string | null; quantity: number }
