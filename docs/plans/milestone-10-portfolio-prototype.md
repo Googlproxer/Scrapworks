@@ -1,6 +1,6 @@
 # Milestone 10 Portfolio prototype
 
-Updated 27 October 2026 for agreed progression and pacing. Status: migration presentation, UI and production checks remain verified; complete factory demo, persistence and representative performance pending. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
+Updated 8 November 2026 with the deferred save-performance review. Status: migration presentation, UI and production checks remain verified; complete factory demo, save resilience/transfer and representative performance pending. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
 
 Turn the working systems into an understandable small-map demo that can be shown in your portfolio. Prioritize a complete playable route, readable feedback, and reliable persistence before expanding the map or technology tree.
 
@@ -10,7 +10,7 @@ Turn the working systems into an understandable small-map demo that can be shown
 
 The 3D migration provides the Angular shell/menu/controls, animated protagonist, authored grid fixture, orbit/follow camera, selection/placement preview and stable lifecycle/input boundaries. The [23 October evidence](../reports/migration/2026-10-23/README.md) records 181 Chromium tests, 27 Node world/export tests, 30 lint-tooling checks, source lint/type checks, production build/export checks and actual browser flows at device pixel ratios 1 and 2. Tested UI states have zero axe violations; production routes have zero recorded browser errors or failed requests.
 
-The [production profile](../reports/migration/2026-10-23/performance.json) measures bundle/assets, requests and RAF intervals on the small migration scene. It is not target-hardware qualification, representative factory performance, a gameplay-save test or a completed objective route. Manual progression, research, automation, restoration, gameplay saves and portfolio balancing remain open.
+The [production profile](../reports/migration/2026-10-23/performance.json) measures bundle/assets, requests and RAF intervals on the small migration scene. It is not target-hardware qualification, representative factory performance, a gameplay-save test or a completed objective route. Milestones 3–4 now deliver the manual opening and manual gameplay saves; the complete factory route, expanded research/labs, automation, restoration, save resilience/transfer and portfolio balancing remain planned.
 
 ## Step 1 Prepare a consistent presentation
 
@@ -48,7 +48,11 @@ The [production profile](../reports/migration/2026-10-23/performance.json) measu
 
 ## Step 4 Measure and address performance
 
+The [8 November save-performance decision](milestone-09-save-resilience.md#save-performance-decision--8-november-2026) defers format optimization until the Milestone 9 review and this representative-factory checkpoint. Use the [initial comparison](../reports/save-formats/2026-11-08/README.md) as exploratory evidence. Performance benchmarks remain manual and outside CI; CI covers correctness and builds.
+
 - [ ] Measure rendering frame time, fixed-step cost, published-view cost, and save capture/write duration on a representative factory.
+- [ ] Revisit Milestone 9's save-performance findings with mixed operating factory/transport state and moving physics on intended hardware, including a lower-end device. Measure autosave responsiveness and separate capture, validation/copying, codec, IndexedDB and worker reconstruction costs.
+- [ ] Record whether the current save representation meets agreed prototype latency/responsiveness/storage budgets. Fix only demonstrated issues needed for the demo; explicitly carry broader format redesign beyond Milestone 10 when those budgets pass.
 - [x] Record small-fixture production asset/request sizes and stationary/movement RAF intervals with renderer/method metadata. This does not measure factory simulation/save cost or qualify target hardware.
 - [ ] Check whether Angular views update only when useful values change, rather than on every renderer frame.
 - [ ] Avoid unnecessary full-world copying outside snapshot capture and avoid recreating meshes/materials each frame.
@@ -111,11 +115,11 @@ The [production profile](../reports/migration/2026-10-23/performance.json) measu
 
 Record implementation notes here:
 
-| Date            | Observation or decision                                                             | Follow-up and status                                                                                                                                               |
-| --------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 4 October 2026  | Foundation only; current source inspected.                                          | See Current implementation above; unchecked gameplay requirements remain open.                                                                                     |
-| 23 October 2026 | Migration presentation/UI, production packaging and small-scene profiling verified. | Credits above apply to the migration fixture only. Full acceptance route, representative factory/target-hardware performance and portfolio release remain pending. |
-| 27 October 2026 | Progression, Mini Fabricator pacing, renewable-first industry and peaceful terraforming agreed. | Acceptance route updated as future work; existing migration checkmarks preserved. |
+| Date            | Observation or decision                                                                         | Follow-up and status                                                                                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 4 October 2026  | Foundation only; current source inspected.                                                      | See Current implementation above; unchecked gameplay requirements remain open.                                                                                     |
+| 23 October 2026 | Migration presentation/UI, production packaging and small-scene profiling verified.             | Credits above apply to the migration fixture only. Full acceptance route, representative factory/target-hardware performance and portfolio release remain pending. |
+| 27 October 2026 | Progression, Mini Fabricator pacing, renewable-first industry and peaceful terraforming agreed. | Acceptance route updated as future work; existing migration checkmarks preserved.                                                                                  |
 
 ## References and diagrams
 

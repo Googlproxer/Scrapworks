@@ -2,6 +2,12 @@
 
 The [isolated benchmark](../../../../tools/save-bench/README.md) passed all **30 format/world comparisons**, including full save/load at 250,000 entities. The production save implementation is unchanged. These results establish a reproducible comparison harness; they do not select a replacement format.
 
+## Follow-up decision — 8 November 2026
+
+The user deferred save-format optimization. Keep the current representation during Milestones 5–8 and continue extending/testing save correctness. Revisit autosave latency, main-thread responsiveness and retained-revision storage in [Milestone 9](../../../plans/milestone-09-save-resilience.md#save-performance-decision--8-november-2026), then qualify mixed operating factory/physics workloads and intended hardware in [Milestone 10](../../../plans/milestone-10-portfolio-prototype.md#step-4-measure-and-address-performance). Broader format redesign may remain deferred until after Milestone 10 if prototype budgets pass; bring forward only a demonstrated latency, responsiveness or storage issue. Binary physics remains an experimental candidate. Benchmarks stay manual and outside CI.
+
+## Measurement context
+
 Command:
 
 ```sh

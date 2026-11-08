@@ -10,6 +10,12 @@ Add autosaves, recoverable revisions, schema migrations, and downloadable backup
 
 Milestone 4 implements one schema-1 manual slot through SaveRepository, atomic payload/metadata transactions, overwrite tokens, candidate worker/scene/UI restore, visible handcraft continuation and real production IndexedDB reload tests. Storage failures are surfaced and the last committed save is preserved. Autosave, retained revisions, schema migrations, gameplay import/export, persistent-storage requests and factory-state coverage remain this milestone's work. The isolated developer dialog's test-record transfer is not gameplay backup or resilience credit.
 
+## Save-performance decision — 8 November 2026
+
+Save-format optimization is deferred. Keep the current object representation through Milestones 5–8 while extending snapshots and continuation tests for each new system. Revisit the [exploratory save-format results](../reports/save-formats/2026-11-08/README.md) here when introducing autosaves, retained revisions and migrations, then qualify representative factory performance in [Milestone 10 Step 4](milestone-10-portfolio-prototype.md#step-4-measure-and-address-performance). A broader format redesign may remain deferred until after Milestone 10 if the prototype meets its agreed performance and storage budgets.
+
+Review mixed operating worlds with realistic inventories, machine buffers, transport and moving physics. Separate capture, validation/copying, encoding, IndexedDB transactions and worker reconstruction; entity count alone does not describe the workload. Binary physics storage is a candidate for review, not an approved implementation. Bring a targeted optimization forward only for measured gameplay interruptions, unacceptable save/load latency or excessive revision storage. Keep representation changes behind the repository/codec and versioned migration boundaries. Performance benchmarks remain manual and outside CI; CI runs correctness tests and build checks.
+
 ## Step 1 Audit the complete saved state
 
 - [ ] Revisit the snapshot checklist for every field introduced through restoration.
@@ -17,6 +23,7 @@ Milestone 4 implements one schema-1 manual slot through SaveRepository, atomic p
 - [ ] Validate entity/content references, capacities, finite ranges, stable IDs, and next-ID state.
 - [ ] Confirm load reconstructs runtime indexes and renderer mappings rather than saving those objects.
 - [ ] Repeat continuation comparisons with a representative operating factory before adding recovery features.
+- [ ] Revisit the deferred save-format benchmark with representative mixed factory/physics state; record phase costs and whether the current representation should be retained or a specific bottleneck investigated.
 
 ## Step 2 Retain committed revisions
 
@@ -26,6 +33,7 @@ Milestone 4 implements one schema-1 manual slot through SaveRepository, atomic p
 - [ ] Keep a previous autosave revision available for recovery.
 - [ ] Let the player inspect/select a previous revision without overwriting the current one merely by opening the recovery UI.
 - [ ] Define how resumed play saves after recovery, preserving the previous revision until the retention policy permits removal.
+- [ ] Measure representative retained-revision storage before settling the retention policy; change encoding only if measured storage needs justify it.
 
 ## Step 3 Add autosave scheduling and operation safety
 
@@ -36,6 +44,7 @@ Milestone 4 implements one schema-1 manual slot through SaveRepository, atomic p
 - [ ] Pause the simulation for candidate loading and replacement, then restore the prior pause/visibility state.
 - [ ] Ensure a newer world session cannot be written by an old request or reported as saved by an old completion callback.
 - [ ] Show autosave success/failure without interrupting routine play; do not claim an in-flight write is committed.
+- [ ] Measure autosave capture/write latency and main-thread responsiveness during play; address disruptive pauses or excessive storage with a targeted change only when demonstrated.
 
 ## Step 4 Implement schema migrations
 
@@ -95,9 +104,10 @@ Milestone 4 implements one schema-1 manual slot through SaveRepository, atomic p
 
 Record implementation notes here:
 
-| Date           | Observation or decision                                | Follow-up and status                                                           |
-| -------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| 4 October 2026 | File-transfer scaffold only; current source inspected. | See Current implementation above; unchecked gameplay requirements remain open. |
+| Date            | Observation or decision                                         | Follow-up and status                                                                                                                                                          |
+| --------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4 October 2026  | File-transfer scaffold only; current source inspected.          | See Current implementation above; unchecked gameplay requirements remain open.                                                                                                |
+| 8 November 2026 | Save-format optimization deferred after exploratory benchmarks. | Review autosave/revision costs here, qualify the real factory in Milestone 10, and defer broader redesign beyond the prototype if budgets pass. Benchmarks remain outside CI. |
 
 ## References and diagrams
 
