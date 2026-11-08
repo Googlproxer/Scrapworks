@@ -12,9 +12,11 @@ import type { OpeningCommand, OpeningData, OpeningView } from '@contracts/openin
 import type { MiniFabStatus, OpeningEvent } from '@contracts/session-event';
 import type { InventoryData, ItemStack } from '@contracts/simulation';
 import type { CommandResult, WorldPosition } from '@contracts/world';
-import { available, planTransaction, transact } from './domain/inventory';
+import { available, planTransaction, transact, quantity } from './domain/inventory';
+import { emptyToolbar, TOOLBAR_SLOTS } from '@contracts/toolbar';
+import { isPlaceable } from '@content/factory';
 import { handcraftBagOutput } from './domain/work';
-import { advanceResearch } from './domain/research';
+import { advanceResearch, type ResearchSource } from './domain/research';
 import type { OpeningContext, SimulationEntity } from './opening-context';
 
 const copy = (items: readonly ItemStack[]): ItemStack[] => items.map((item) => ({ ...item }));
@@ -39,6 +41,7 @@ const take = (items: readonly ItemStack[], requested: readonly ItemStack[]): Ite
 
 export function newOpening(): OpeningData {
   return {
+    toolbar: emptyToolbar(),
     salvage: null,
     handcraft: null,
     handcraftVisible: false,
@@ -87,6 +90,7 @@ export class OpeningSystem {
 
   public constructor(context: OpeningContext) {
     this.context = context;
+    this.state.toolbar ??= emptyToolbar();
     validateOpeningCatalogue();
   }
 
@@ -135,6 +139,26 @@ export class OpeningSystem {
       target?.transform &&
       distance(target.transform.position, this.player.transform!.position) <= settings.reach;
     switch (command.type) {
+      case 'toolbar-assign':
+      case 'toolbar-select': {
+        const toolbar = state.toolbar!;
+        if (
+          !Number.isSafeInteger(command.slot) ||
+          command.slot < 0 ||
+          command.slot >= TOOLBAR_SLOTS
+        )
+          return this.result('invalid-request');
+        if (command.type === 'toolbar-select') toolbar.active = command.slot;
+        else {
+          if (
+            command.item !== null &&
+            (!isPlaceable(command.item) || quantity(this.bag, command.item) < 1)
+          )
+            return this.result('missing-input');
+          toolbar.slots[command.slot] = command.item;
+        }
+        break;
+      }
       case 'salvage':
         if (!command.target) {
           state.salvage = null;
@@ -642,21 +666,24 @@ export class OpeningSystem {
     }
   }
 
-  private research(delta: number): void {
+  private research(delta: number, labs: readonly ResearchSource[]): void {
     const state = this.state;
     const completed = advanceResearch(
       state.researchQueue,
       this.context.resources.research,
-      state.fieldEnabled
-        ? [{ id: 'player-field', kind: 'field', inventory: this.bag, rate: 1 }]
-        : [],
+      [
+        ...labs,
+        ...(state.fieldEnabled
+          ? [{ id: 'player-field', kind: 'field' as const, inventory: this.bag, rate: 1 }]
+          : []),
+      ],
       (item) => this.history(item),
       delta,
     );
     if (completed) this.events.push({ kind: 'research-completed', technology: completed });
   }
 
-  public step(delta: number): void {
+  public step(delta: number, factories: () => readonly ResearchSource[] = () => []): void {
     this.collisionChanged = false;
     this.state.minifab.windBudget = Math.min(
       180,
@@ -666,7 +693,7 @@ export class OpeningSystem {
     this.handcraft(delta);
     this.salvage(delta);
     this.minifab(delta);
-    this.research(delta);
+    this.research(delta, factories());
     this.context.mark(this.player, true);
   }
 

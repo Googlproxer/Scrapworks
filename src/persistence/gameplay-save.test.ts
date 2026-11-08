@@ -484,6 +484,7 @@ function legacyEnvelope(source: Simulation, target: string | null = null) {
   const current = envelope(source),
     old = current.world;
   const ids = new Set(OPENING_TECHNOLOGIES.slice(0, 5).map((technology) => technology.id));
+  delete old.resources.factory;
   old.resources.research = Object.fromEntries(
     Object.entries(old.resources.research).filter(([id]) => ids.has(id)),
   );
@@ -509,7 +510,7 @@ test('compatible M4 saves preserve committed handcraft, MiniFab buffers, native 
     before = structuredClone(legacy);
   const decoded = decodeSave(legacy),
     migrated = preparePlayerSave(decoded.world);
-  assert.equal(migrated.contentVersion, 'research-1');
+  assert.equal(migrated.contentVersion, 'factory-1');
   assert.deepEqual(migrated.physics, legacy.world.physics);
   const player = migrated.entities.find((entity) => entity.kind === 'player')!;
   assert.deepEqual(player.opening!.researchQueue, []);

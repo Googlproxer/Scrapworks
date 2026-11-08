@@ -14,14 +14,9 @@ import {
   nextWorkerReply,
   workerVersion,
 } from './browser-events.ts';
+import { checkFactoryRoute, type FactoryRouteProbe } from './factory-route.ts';
 
-interface Probe {
-  opening: OpeningView;
-  tick: number;
-  position: WorldPosition;
-  moving: boolean;
-  production: Record<string, number>;
-}
+type Probe = FactoryRouteProbe;
 const root = path.resolve(import.meta.dirname, '../..');
 const directory = path.join(root, 'dist/scrapworks/browser');
 const metadata = await readJson<BuildMetadata>(
@@ -34,14 +29,17 @@ const engineStoreChunk = Object.entries(metadata.outputs).find(([, output]) =>
 )?.[0];
 const relaxed = process.argv.includes('--relaxed');
 const virtualTime = process.argv.includes('--virtual-time');
+const factoryMode = process.argv.includes('--factory');
 assert(!(relaxed && virtualTime), 'The relaxed pacing reference requires real time');
 const output = path.join(
   root,
-  relaxed
-    ? 'tmp/opening-browser-relaxed'
-    : virtualTime
-      ? 'tmp/opening-browser/virtual-time'
-      : 'tmp/opening-browser',
+  factoryMode
+    ? 'tmp/factory-browser'
+    : relaxed
+      ? 'tmp/opening-browser-relaxed'
+      : virtualTime
+        ? 'tmp/opening-browser/virtual-time'
+        : 'tmp/opening-browser',
 );
 await fs.mkdir(output, { recursive: true });
 const server = http.createServer(async (request, response) => {
@@ -101,7 +99,11 @@ try {
       postMessage(message: RuntimeReply, transfer?: Transferable[]): void;
     };
     const send = scope.postMessage.bind(globalThis);
+    const buildings = new Map<string, import('../../src/contracts/world.ts').BuildingView>();
     scope.postMessage = (message, ...rest) => {
+      if (message.packet?.full) buildings.clear();
+      for (const mapping of message.packet?.mappings ?? [])
+        if (mapping.building) buildings.set(mapping.id, mapping.building);
       if (message.packet?.opening)
         scope.openingProbe = {
           opening: message.packet.opening,
@@ -109,6 +111,9 @@ try {
           position: message.packet.endpoints.at(-1)!.transform.position,
           moving: message.packet.endpoints.at(-1)!.transform.moving,
           production: message.packet.productionTotals,
+          factory: message.packet.factory,
+          buildings: [...buildings.values()],
+          details: message.packet.details,
         };
       return send(message, ...rest);
     };
@@ -119,7 +124,12 @@ try {
     );
     return lastProbe;
   };
-  const until = async (predicate: (probe: Probe) => boolean, label: string, timeout = 130000) => {
+  const until = async (
+    predicate: (probe: Probe) => boolean,
+    label: string,
+    timeout = 130000,
+    advanceMilliseconds = 250,
+  ) => {
     const deadline = performance.now() + timeout;
     let stamp: number | undefined;
     let advanced = 0;
@@ -138,9 +148,9 @@ try {
         if (virtualTime) {
           // One render callback can credit at most five real 50 ms worker steps.
           // A large jump would discard time; runFor would render all intervening frames.
-          await page.clock.fastForward(250);
-          advanced += 250;
-          virtualAdvanceMs += 250;
+          await page.clock.fastForward(advanceMilliseconds);
+          advanced += advanceMilliseconds;
+          virtualAdvanceMs += advanceMilliseconds;
           // Let real worker messages and host promise continuations run between batches.
           await worker.evaluate(() => undefined);
         } else {
@@ -572,6 +582,7 @@ try {
         2,
       ),
     );
+    if (factoryMode) await checkFactoryRoute({ page, read, until, craft, research, root, output });
   }
   assert.deepEqual(errors, []);
 } catch (error) {

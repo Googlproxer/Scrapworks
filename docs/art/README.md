@@ -14,6 +14,7 @@ Art projects, source assets, references and provenance are organised under the r
 - The retired [MPFB character experiment](../../art/README.md#recovering-retired-mpfb-sources) is recoverable from Git with its editable Blender/rigged GLB sources, licensing and original validation. Its source mesh statistics are distinct from the separately authored runtime model.
 - The current [editable protagonist source](../../art/characters/Protag/v3/Protag-v3.blend) and [rigged Mixamo archive](../../art/characters/Protag/v3/Protag_v3_rigged.zip) supply the [v3 runtime derivative](../../art/characters/Protag/v3/runtime/README.md). The active Game scene provides its neutral presentation binding. The complete mesh is retained at the user's request; polygon optimisation remains with the user. Earlier character sources are grouped under `art/characters/Protag/`.
 - World and machinery comparisons remain useful visual concepts. The [generation log](../../art/generation.json) and individual branding/UI records preserve exact provenance; historical reference inputs are identified by their recovery commit.
+- Milestone 6 uses seven original editable procedural machine silhouettes with flat materials, distinct ports/terminals and saved-topology wires. Their [source and provenance](../../art/machinery/runtime-prototypes.md) remain with the machinery references.
 
 ## Agreed visual direction
 

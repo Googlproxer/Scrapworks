@@ -38,6 +38,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 * It MUST pass all AXE checks.
 * It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+* Avoid preventable layout shifts throughout the UI. Reserve blank space for conditional content where practical, especially live status/progress/results, so controls stay anchored as state changes.
 
 ### Components
 

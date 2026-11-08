@@ -1,0 +1,201 @@
+{
+  "date": "2026-11-08",
+  "source": "src/content/factory.ts",
+  "capabilities": "Agreed M6 scope; numerical balance remains provisional",
+  "items": [
+    {
+      "id": "78a727af-34e0-4e3c-9a81-b1975f8fc05c",
+      "sourceId": "item.power_connection"
+    },
+    {
+      "id": "74a81c1c-9c20-42f6-a073-68fa5bbb220b",
+      "sourceId": "item.solar_panel"
+    },
+    {
+      "id": "1761d5ef-feda-42f1-b973-b17d8a49297b",
+      "sourceId": "item.wind_turbine"
+    },
+    {
+      "id": "ad6e696a-1b91-4970-bde1-1bff016154cc",
+      "sourceId": "item.recycler"
+    },
+    {
+      "id": "4d2d340a-f758-40de-a2a5-8616b96c8488",
+      "sourceId": "item.basic_fabricator"
+    },
+    {
+      "id": "aa29562a-963f-42a5-b4b9-403dca0edcc5",
+      "sourceId": "item.medium_fabricator"
+    },
+    {
+      "id": "d3390658-05d6-43dd-8d98-76a7f86bcef4",
+      "sourceId": "item.extractor"
+    },
+    {
+      "id": "c7721ddd-0c00-4e58-beab-a3850b7c0a62",
+      "sourceId": "item.laboratory"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "189b133d-185f-4b7e-8008-3672538a768c",
+      "sourceId": "recipe.power_connection"
+    },
+    {
+      "id": "cdd23296-af22-4b41-a00f-6a8f81f6ed14",
+      "sourceId": "recipe.solar_panel"
+    },
+    {
+      "id": "fa1b655c-1ddc-467e-9a7d-567abc150773",
+      "sourceId": "recipe.wind_turbine"
+    },
+    {
+      "id": "e0fe7794-be6a-4c0e-8130-ba507aaaa4fe",
+      "sourceId": "recipe.recycler"
+    },
+    {
+      "id": "e41a3081-a4a1-433a-869f-93ee672daf82",
+      "sourceId": "recipe.basic_fabricator"
+    },
+    {
+      "id": "174e24cb-83c9-4fe1-9f68-dafff849ce71",
+      "sourceId": "recipe.medium_fabricator"
+    },
+    {
+      "id": "70c5f4b0-a278-4432-879d-2f9726f09c9c",
+      "sourceId": "recipe.extractor"
+    },
+    {
+      "id": "de01afca-2059-48ec-984b-0ad04e04d410",
+      "sourceId": "recipe.laboratory"
+    }
+  ],
+  "ingredients": [
+    {
+      "id": "9feee456-813a-417b-bae2-6da8280a3612",
+      "sourceId": "ingredient.power_connection.plate"
+    },
+    {
+      "id": "4fa32f15-2807-42a4-abe4-2f0cdb37655d",
+      "sourceId": "ingredient.power_connection.wire"
+    },
+    {
+      "id": "b7e25d22-077b-4de2-a236-1a712fd595ad",
+      "sourceId": "ingredient.solar_panel.plate"
+    },
+    {
+      "id": "7e619153-aa4f-42ac-b66f-ce7480f1779c",
+      "sourceId": "ingredient.solar_panel.wire"
+    },
+    {
+      "id": "f46480ba-0a58-4570-a44d-0e0156fcbd79",
+      "sourceId": "ingredient.solar_panel.electrical_part"
+    },
+    {
+      "id": "53b200a8-0261-4884-a688-6bd7bd4fafab",
+      "sourceId": "ingredient.wind_turbine.plate"
+    },
+    {
+      "id": "b759bdf4-e082-467e-beca-717704881eae",
+      "sourceId": "ingredient.wind_turbine.mechanical_part"
+    },
+    {
+      "id": "dbd3f1a4-3f63-45eb-b886-ba058effd3a2",
+      "sourceId": "ingredient.wind_turbine.electrical_part"
+    },
+    {
+      "id": "f306d75b-2a11-45b5-b0de-907b6ecce070",
+      "sourceId": "ingredient.recycler.plate"
+    },
+    {
+      "id": "7dbcd604-074d-4138-ae1f-4163c1eaedeb",
+      "sourceId": "ingredient.recycler.mechanical_part"
+    },
+    {
+      "id": "d69292e5-1658-4f33-9d06-7f8453dbd96f",
+      "sourceId": "ingredient.recycler.electrical_part"
+    },
+    {
+      "id": "0a506afd-61a3-4991-953e-aa4d2a810bac",
+      "sourceId": "ingredient.basic_fabricator.plate"
+    },
+    {
+      "id": "4924c232-28c6-4ba2-8d36-f19f0fe4e92f",
+      "sourceId": "ingredient.basic_fabricator.mechanical_part"
+    },
+    {
+      "id": "11f7f6f8-3c8d-414d-87fd-466b48b5828b",
+      "sourceId": "ingredient.medium_fabricator.plate"
+    },
+    {
+      "id": "6ef2e78a-2469-49eb-a815-f525c94bcd0e",
+      "sourceId": "ingredient.medium_fabricator.mechanical_part"
+    },
+    {
+      "id": "4be7263f-c14d-4b8a-8a90-8d3ebc2d6f29",
+      "sourceId": "ingredient.medium_fabricator.electrical_part"
+    },
+    {
+      "id": "73a7d05b-99c9-4bfe-8b72-88db9c6e5d68",
+      "sourceId": "ingredient.extractor.plate"
+    },
+    {
+      "id": "3398101f-6f73-46f5-9f14-5df9e07c0183",
+      "sourceId": "ingredient.extractor.mechanical_part"
+    },
+    {
+      "id": "aac2e013-9d1b-45c4-91ec-c33181b6aaab",
+      "sourceId": "ingredient.extractor.electrical_part"
+    },
+    {
+      "id": "acff7773-adc0-40b0-8181-b3ee99502331",
+      "sourceId": "ingredient.laboratory.plate"
+    },
+    {
+      "id": "20aa21fe-093a-4733-9ac6-e8efd46c7935",
+      "sourceId": "ingredient.laboratory.wire"
+    },
+    {
+      "id": "d3b4652f-6a9b-4886-bd63-185ea45e4aef",
+      "sourceId": "ingredient.laboratory.mechanical_part"
+    },
+    {
+      "id": "dfabeb71-8af6-4621-bd69-13ea6a8fd340",
+      "sourceId": "ingredient.laboratory.electrical_part"
+    }
+  ],
+  "reconciliation": {
+    "catalogueRecords": 127,
+    "counts": {
+      "items": 18,
+      "recipes": 17,
+      "ingredients": 40,
+      "technologies": 21,
+      "researchCosts": 31
+    },
+    "prerequisiteLinks": 33,
+    "newEquipmentItems": 8,
+    "newEquipmentRecipes": 8,
+    "newIngredients": 23,
+    "numericalBalance": "Draft",
+    "equipmentCategoryAdded": true,
+    "runtimeCostsStacksValuesWorkAndTechnologyLinksReadBack": true,
+    "allEightItemsAndRecipesLinkedToDeliveryTask": "cd8200aa-5754-4697-8954-f1da4fa3126c",
+    "exactRecyclerRenewableExtractionAndLabNotesReadBack": true,
+    "continuationTechnologyNotesReconciled": 9,
+    "whiteboardsChanged": false
+  },
+  "settings": {
+    "cableReach": 12,
+    "daySeconds": 240,
+    "initialDaySeconds": 60,
+    "solarWatts": 600,
+    "windFloorWatts": 250,
+    "windVariableWatts": 250,
+    "recyclerSeconds": 8,
+    "recyclerInput": 8,
+    "recyclerWindow": 3,
+    "extractionSeconds": 2,
+    "extractionQuantity": 4
+  }
+}

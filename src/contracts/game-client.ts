@@ -53,8 +53,15 @@ export interface InspectorState {
 }
 
 export interface PlacementPort {
-  place(cell: GridCell, rotation: 0 | 1 | 2 | 3): void;
-  preview(cell: GridCell, rotation: 0 | 1 | 2 | 3): PlacementResult;
+  /** Missing only in the isolated legacy development-fixture presentation tests. */
+  current?(): {
+    readonly key: string;
+    readonly slot?: number;
+    readonly footprint: { readonly width: number; readonly depth: number };
+  } | null;
+  /** Power connections use an optional first-machine anchor; machines use one click. */
+  place(cell: GridCell, rotation: 0 | 1 | 2 | 3, anchor?: string): void;
+  preview(cell: GridCell, rotation: 0 | 1 | 2 | 3, anchor?: string): PlacementResult;
 }
 
 export interface ActionFrameSink {
@@ -69,4 +76,5 @@ export type WorldSelection =
 export interface PlacementFeedback {
   readonly valid: boolean;
   readonly reason: PlacementRejection | null;
+  readonly connection?: 'start' | 'end' | 'cancel';
 }

@@ -1,0 +1,58 @@
+@if (opening(); as opening) {
+  <section aria-labelledby="equipable-title">
+    <h3 id="equipable-title">Equipable</h3>
+    <h4>Tools</h4>
+    <p>
+      Equipped tool: {{ opening.tool ? name(opening.tool) : 'Bare hands' }}. Tools stay off the
+      toolbar.
+    </p>
+    @if (opening.tool) {
+      <button
+        type="button"
+        [disabled]="!!opening.state.handcraft"
+        (click)="runtime.command({ type: 'equip', item: null })"
+      >
+        Unequip tool
+      </button>
+    } @else if (amount('prybar')) {
+      <button type="button" (click)="runtime.command({ type: 'equip', item: 'prybar' })">
+        Equip prybar
+      </button>
+    }
+    <h4>Placeables</h4>
+    <p>
+      Assign a machine or power connection to a toolbar slot. Select that slot in the world, then
+      press B to build. R rotates machines. For power connections, click the first machine, then the
+      second; clicking the first cell again cancels. Only a completed placement spends an item.
+    </p>
+    <label for="assign-toolbar-slot">Toolbar slot</label>
+    <select id="assign-toolbar-slot" [formField]="fields.slot">
+      @for (slot of slots; track slot) {
+        <option [value]="'' + slot">
+          {{ slot + 1 }} ·
+          {{
+            opening.state.toolbar?.slots?.[slot]
+              ? name(opening.state.toolbar!.slots[slot]!)
+              : 'Empty'
+          }}
+        </option>
+      }
+    </select>
+    <ul>
+      @for (item of placeables(); track item.id) {
+        <li>
+          <span>{{ item.name }} · {{ amount(item.id) }} carried</span>
+          <button type="button" [disabled]="!amount(item.id)" (click)="assign(item.id)">
+            Assign {{ item.name }}
+          </button>
+        </li>
+      } @empty {
+        <li>Craft a machine or power connection to assign your first placeable.</li>
+      }
+    </ul>
+    <button type="button" (click)="assign(null)">Clear selected toolbar slot</button>
+    <p>
+      Assignments do not move or reserve items. A slot stays assigned when its bag stock runs out.
+    </p>
+  </section>
+}

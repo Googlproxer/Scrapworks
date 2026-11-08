@@ -1,12 +1,13 @@
 # Scrapworks documentation
 
-Updated 2 November 2026. Scrapworks is a browser-first 3D factory-restoration game. Angular owns UI; Babylon owns presentation; Editor markers own authored layout; the single plain-TypeScript simulation worker owns movement and the complete Milestone 3 opening. Factory progression and gameplay saves remain later work.
+Updated 8 November 2026. Scrapworks is a browser-first 3D factory-restoration game. Angular owns UI, Babylon presentation and Editor markers authored layout. The single plain-TypeScript worker owns movement, the opening and first factory. Local saves, shared research and Milestone 6's manually supplied renewable-powered factory are implemented and locally verified through the empty-handed production/save/reload route. Transport and restoration remain later work.
 
 ## Design and planning
 
 - [Game Design Document](design/GDD.md): opening, progression, environmental choices and prototype scope.
 - [Player progression](design/player-progression.md): agreed decisions, pacing, Mini Fabricator, research, recovery and open questions.
 - [Opening catalogue](design/opening-catalogue.md): agreed crafting/research order and UI-bound safe handcrafting, with provisional costs/timings and a checked bootstrap budget.
+- [First working factory catalogue](design/factory-catalogue.md): equipment, wired proportional power, bounded recycler outcomes, local buffers and bootstrap/recovery accounting.
 - [Fibery catalogue and trees](design/balance/README.md): connected databases, entity-linked crafting/research whiteboards and import receipt.
 - [Implementation roadmap](plans/README.md): ten milestones with verified groundwork and outstanding gameplay tasks.
 - [Fibery project tracking](plans/fibery-tracking.md): working task board, milestone hierarchy and current design decisions.
@@ -37,6 +38,6 @@ Saved markers compile into plain definitions and publish atomically with scene e
 
 Development debug drawings attach to scene objects through TypeScript or Editor scripts. Master/category controls, player placement/collision circles and authored player axes run on the main thread using completed presentation data. Production selects a no-op backend; debug geometry and renderer modules are excluded from its dependency graph.
 
-The [23 October migration evidence](reports/migration/2026-10-23/README.md) and later opening evidence have separate scopes. Controls preferences and the test-data save dialog do not implement gameplay saves. Milestone 3 includes plain detachable work/state and validation; Milestone 4 owns playable save/load. Machines, transport and restoration remain unimplemented.
+The [23 October migration evidence](reports/migration/2026-10-23/README.md) and later opening evidence have separate scopes. Controls preferences and the test-data save dialog remain separate from M4 gameplay save/load. M5 adds shared research; [M6 factory evidence](reports/milestone-06/2026-11-08/README.md) records completed local acceptance and manual profiling limits. Transport/restoration are unimplemented.
 
 Dated benchmark reports retain their original source links. [Source recovery](reports/source-recovery.json) records the exact Git revision, content hash and remote URL for intentionally retired sources. Documentation checks verify those source bytes from Git; shallow checkouts must fetch that recorded history. Historical reports and measurements remain unchanged.

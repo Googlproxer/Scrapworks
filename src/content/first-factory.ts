@@ -96,7 +96,7 @@ export interface EquipmentBlueprint {
   readonly inputs: readonly ItemStack[];
 }
 
-/** Reachability/cost definitions only. Placement, equipment jobs and power arrive in M6. */
+/** Construction inputs shared by researched paid assemblies and the factory runtime. */
 export const EQUIPMENT_BLUEPRINTS: readonly EquipmentBlueprint[] = [
   {
     id: 'power-connection',

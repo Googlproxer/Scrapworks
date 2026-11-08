@@ -15,6 +15,10 @@ import { debugDrawForScene } from '../debug/draw/debug-draw';
 import type { DevelopmentDebugDraw } from '../debug/draw/development-renderer';
 import { VertexBuffer } from '@babylonjs/core/Buffers/buffer';
 import { GameSession } from '../../../tools/testing/inline-game-session';
+import { cellCenter } from '@core/world-grid';
+import { machineAtCell, validatePowerConnection } from '@simulation/power-connection';
+import type { GridCell } from '@contracts/world';
+import type { LinesMesh } from '@babylonjs/core/Meshes/linesMesh';
 
 describe('WorldScene with the exported character and authored scene', () => {
   let fixture: AuthoredWorldFixture;
@@ -174,7 +178,7 @@ describe('WorldScene with the exported character and authored scene', () => {
     const collision = meshes.find((mesh) => mesh.metadata?.category === 'collision')!;
     const center = session.readView().player.position;
     const positions = ring.getVerticesData(VertexBuffer.PositionKind)!;
-    expect(positions[0]).toBeCloseTo(center.x * 100 + 300);
+    expect(positions[0]).toBeCloseTo(center.x * 100 + 200);
     expect(positions[1]).toBeCloseTo(1);
     expect(collision.getVerticesData(VertexBuffer.PositionKind)![0]).toBeCloseTo(
       center.x * 100 + 35,
@@ -272,6 +276,118 @@ describe('WorldScene with the exported character and authored scene', () => {
     expect(session.view.tick).toBe(5);
     expect(session.acknowledgements.length).toBeGreaterThan(0);
     expect(place).toHaveBeenCalledTimes(1);
+  });
+
+  function connectionFixture() {
+    const buildings = [
+      {
+        id: 'wire-a',
+        buildingId: 'wind-turbine' as const,
+        cell: { column: 5, row: 4 },
+        rotation: 1 as const,
+      },
+      {
+        id: 'wire-b',
+        buildingId: 'recycler' as const,
+        cell: { column: 4, row: 5 },
+        rotation: 0 as const,
+      },
+    ].map((b) => ({
+      ...b,
+      position: cellCenter(definition.grid, b.cell),
+      footprint: { width: 1, depth: 1 },
+    }));
+    const state = {
+      completed: view({
+        buildings,
+        player: {
+          position: { ...buildings[0].position, x: buildings[0].position.x - 1.5 },
+          facing: 0,
+          moving: false,
+          sprinting: false,
+        },
+      }),
+      cursor: buildings[0].cell as GridCell | null,
+      slot: 0,
+    };
+    vi.spyOn(bridge, 'frame').mockImplementation(() => state.completed);
+    vi.spyOn(world.selection, 'pick').mockImplementation(() => {
+      world.selection.cell = state.cursor;
+    });
+    placement.current = () => ({
+      key: 'power-connection',
+      slot: state.slot,
+      footprint: { width: 1, depth: 1 },
+    });
+    placement.preview = (cell, _rotation, anchor) =>
+      validatePowerConnection(
+        definition,
+        state.completed,
+        anchor ?? null,
+        machineAtCell(state.completed.buildings, cell)?.id ?? '',
+      );
+    const place = vi.spyOn(placement, 'place').mockImplementation(() => undefined);
+    const pressed = { kind: 'button', held: true, pressed: true, released: false } as const;
+    return { state, buildings, place, pressed };
+  }
+
+  it('previews a wire from the rotated first terminal to the targeted cell and connects only on the second valid click', () => {
+    const { state, buildings, place, pressed } = connectionFixture();
+    render(frame({ build: pressed, confirm: pressed }), 0);
+    expect(place).not.toHaveBeenCalled();
+    state.cursor = buildings[1].cell;
+    render(frame({}), 0);
+    const wire = scene.getMeshByName('power-connection-preview') as LinesMesh;
+    expect(wire.isEnabled()).toBe(true);
+    expect(wire.isPickable).toBe(false);
+    const points = wire.getVerticesData(VertexBuffer.PositionKind)!;
+    expect(points[0]).toBeCloseTo(buildings[0].position.x * 100 - 48);
+    expect(points[2]).toBeCloseTo(buildings[0].position.z * 100 + 48);
+    expect(points[6]).toBeCloseTo(buildings[1].position.x * 100 - 48);
+    expect(points[8]).toBeCloseTo(buildings[1].position.z * 100 - 48);
+    expect(wire.color.g).toBeCloseTo(0.8);
+    state.cursor = { column: 7, row: 7 }; // Empty cells still receive a preview, but cannot complete.
+    render(frame({ confirm: pressed }), 0);
+    expect(wire.color.r).toBeCloseTo(0.95);
+    expect(place).not.toHaveBeenCalled();
+    state.cursor = null;
+    render(frame({}), 0);
+    expect(wire.isEnabled()).toBe(false);
+    state.cursor = buildings[1].cell;
+    render(frame({ confirm: pressed }), 0);
+    expect(place).toHaveBeenCalledExactlyOnceWith(buildings[1].cell, 0, buildings[0].id);
+    expect(wire.isEnabled()).toBe(false);
+  });
+
+  it('cancels a repeated first cell without placing and clears anchors on UI, B, cancel, slot, generation and removal', () => {
+    const { state, buildings, place, pressed } = connectionFixture();
+    render(frame({ build: pressed, confirm: pressed }), 0);
+    render(frame({ confirm: pressed }), 0); // Same cell cancels the pending connection.
+    state.cursor = buildings[1].cell;
+    render(frame({ confirm: pressed }), 0);
+    expect(place).not.toHaveBeenCalled(); // The third click starts a fresh connection.
+    state.cursor = buildings[0].cell;
+    render(frame({}), 0);
+    expect(scene.getMeshByName('power-connection-preview')!.isEnabled()).toBe(true);
+    render(frame({}), 0, false); // UI ownership clears build mode and the first anchor.
+    expect(scene.getMeshByName('power-connection-preview')!.isEnabled()).toBe(false);
+    render(frame({ build: pressed, confirm: pressed }), 0);
+    render(frame({ build: pressed }), 0); // B exits.
+    state.cursor = buildings[1].cell;
+    render(frame({ build: pressed, confirm: pressed }), 0);
+    render(frame({ cancel: pressed }), 0);
+    state.cursor = buildings[0].cell;
+    render(frame({ build: pressed, confirm: pressed }), 0);
+    state.slot = 1; // Even another slot holding the same kind clears the anchor.
+    state.cursor = buildings[1].cell;
+    render(frame({ confirm: pressed }), 0);
+    state.completed = { ...state.completed, worldGeneration: 2 };
+    state.cursor = buildings[0].cell;
+    render(frame({ confirm: pressed }), 0);
+    state.completed = { ...state.completed, buildings: [buildings[1]] };
+    state.cursor = buildings[1].cell;
+    render(frame({ confirm: pressed }), 0);
+    expect(place).not.toHaveBeenCalled();
   });
 
   it('validates previews only during placement and when relevant completed data changes', () => {

@@ -58,10 +58,18 @@
     >
       <option [value]="1">1</option>
       @if (miniRecipe().id !== 'scrap-prybar') {
-        <option [value]="5">5</option>
-        <option [value]="10">10</option>
-        <option [value]="25">25</option>
-        <option [value]="100">100</option>
+        @if (batchLimit() >= 5) {
+          <option [value]="5">5</option>
+        }
+        @if (batchLimit() >= 10) {
+          <option [value]="10">10</option>
+        }
+        @if (batchLimit() >= 25) {
+          <option [value]="25">25</option>
+        }
+        @if (batchLimit() >= 100) {
+          <option [value]="100">100</option>
+        }
       }
     </select>
     <button

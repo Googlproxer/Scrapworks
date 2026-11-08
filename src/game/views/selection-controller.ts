@@ -48,7 +48,7 @@ export class SelectionController extends PresentationBehavior {
       return;
     }
     this.pick(this.frame.pointer.x, this.frame.pointer.y);
-    if (actionPressed(this.frame.input, 'interact'))
+    if (!this.frame.placing && actionPressed(this.frame.input, 'interact'))
       this.frame.options.selection.next(
         this.entity
           ? { kind: 'entity', id: this.entity }
@@ -66,6 +66,13 @@ export class SelectionController extends PresentationBehavior {
       : null;
     const entity = this.scene.pick(x, y, (mesh) => !!mesh.metadata?.worldEntity);
     this.entity = entity?.pickedMesh?.metadata?.worldEntity ?? null;
+    if (
+      this.frame.placing &&
+      this.frame.options.placement?.current?.()?.key === 'power-connection'
+    ) {
+      const machine = this.frame.view?.buildings.find((b) => b.id === this.entity);
+      if (machine) this.cell = machine.cell;
+    }
     this.selector.setEnabled(!!this.cell);
     if (this.cell) {
       const centre = cellCenter(this.definition.grid, this.cell);

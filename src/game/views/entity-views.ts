@@ -8,6 +8,7 @@ import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import { EntityView } from './entity-view';
 import type { WorldFrame } from './world-frame';
 import { PhysicsBodyViews } from './physics-body-views';
+import { powerTerminal, powerWirePoints } from './power-wire';
 
 export class EntityViews extends PresentationBehavior {
   private readonly entities = new Map<string, EntityView>();
@@ -17,6 +18,8 @@ export class EntityViews extends PresentationBehavior {
   private groundMaterial?: StandardMaterial;
   private groundViews: WorldView['ground'];
   private readonly physics: PhysicsBodyViews;
+  private wireKey = '';
+  private readonly wires = new Map<string, Mesh>();
 
   public constructor(
     node: TransformNode,
@@ -55,6 +58,7 @@ export class EntityViews extends PresentationBehavior {
       (view.publication !== undefined && view.publication !== this.publication + 1);
     this.publication = view.publication ?? -1;
     this.generation = view.worldGeneration ?? -1;
+    this.syncWires(view);
     this.syncGround(view);
     this.physics.sync(view, reset || !view.changes || view.changes.full);
     this.physics.present(this.frame.presentationActive ? this.frame.seconds : 0, view.stepSeconds);
@@ -107,6 +111,8 @@ export class EntityViews extends PresentationBehavior {
   }
 
   protected override onDestroy(): void {
+    for (const wire of this.wires.values()) wire.dispose();
+    this.wires.clear();
     this.physics.dispose();
     for (const entity of this.entities.values()) entity.dispose();
     this.entities.clear();
@@ -142,5 +148,38 @@ export class EntityViews extends PresentationBehavior {
         mesh.dispose();
         this.ground.delete(id);
       }
+  }
+
+  private syncWires(view: WorldView): void {
+    const edges = view.factory?.connections ?? [];
+    const positions = new Map(view.buildings.map((b) => [b.id, b]));
+    const key = JSON.stringify(
+      edges.map((e) => [
+        e.id,
+        positions.get(e.from)?.position,
+        positions.get(e.from)?.rotation,
+        positions.get(e.to)?.position,
+        positions.get(e.to)?.rotation,
+      ]),
+    );
+    if (key === this.wireKey) return;
+    this.wireKey = key;
+    for (const wire of this.wires.values()) wire.dispose();
+    this.wires.clear();
+    for (const edge of edges) {
+      const a = positions.get(edge.from),
+        b = positions.get(edge.to);
+      if (!a || !b) continue;
+      const wire = MeshBuilder.CreateLines(
+        `power:${edge.id}`,
+        {
+          points: powerWirePoints(powerTerminal(a), powerTerminal(b)),
+        },
+        this.scene,
+      );
+      wire.color = new Color3(0.88, 0.75, 0.42);
+      wire.isPickable = false;
+      this.wires.set(edge.id, wire);
+    }
   }
 }

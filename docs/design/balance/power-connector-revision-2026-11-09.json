@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-09",
+  "request": "Power connectors become toolbar placeables with two-click world wiring, a live wire preview and same-cell cancellation without consumption.",
+  "record": {
+    "id": "78a727af-34e0-4e3c-9a81-b1975f8fc05c",
+    "source": "item.power_connection",
+    "category": "Equipable",
+    "kind": "Placeables"
+  },
+  "previousCategory": "Component",
+  "categoryOptionPreserved": "198d8617-3882-4877-a7ea-f0426f448593",
+  "kindOptionPreserved": "7ea423d8-ea1e-4c23-a37c-66d0d4a55a5a",
+  "operation": {
+    "firstClick": "Choose a machine within 2 m; no stock movement or reservation",
+    "preview": "First rotated terminal to targeted cell, snapping to targeted machine terminal",
+    "secondClick": "Revalidate both machine IDs, topology, 12 m cable length, reach to either endpoint, research, active toolbar slot and bag stock; consume one connector only on success",
+    "sameCell": "Clear the first anchor without spending; remain in build mode",
+    "interruptions": "Clear on UI/input loss, B/Cancel, toolbar slot/world generation changes or anchor removal",
+    "saved": "Connector toolbar assignment and completed edges only; no draft anchors"
+  },
+  "catalogueRecords": 127,
+  "sourceIdsPreserved": true,
+  "balanceChanged": false,
+  "whiteboardsChanged": false
+}

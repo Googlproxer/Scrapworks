@@ -9,6 +9,7 @@ import type { OpeningData, OpeningView } from './opening';
 import type { OpeningEvent, RuntimeEvent } from './session-event';
 import type { ReadonlyData, EditableData } from './readonly-data';
 import type { PhysicsBodyDefinition, PhysicsSnapshot, WorldRotation } from './physics';
+import type { FactoryResources, FactorySummary, MachineData } from './factory';
 
 export type EntityKind = 'player' | 'deposit' | 'pile' | 'building' | 'body';
 
@@ -41,9 +42,11 @@ export interface EntityData {
   building?: EditableData<BuildingView>;
   opening?: OpeningData;
   physics?: EditableData<PhysicsBodyDefinition>;
+  machine?: MachineData;
 }
 
 export interface WorldResources {
+  factory?: FactoryResources;
   worldId: string;
   playerId: string;
   tick: number;
@@ -111,6 +114,7 @@ export interface PresentationPacket {
   research: string[];
   productionTotals: Record<string, number>;
   opening?: OpeningView;
+  factory?: FactorySummary;
   /** Slot/generation/quaternion for changed physics bodies only. Base entity rows stay lean. */
   rotations?: ArrayBuffer;
 }

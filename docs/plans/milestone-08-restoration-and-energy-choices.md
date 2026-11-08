@@ -1,6 +1,6 @@
 # Milestone 8 Restoration and energy choices
 
-Updated 27 October 2026. Status: not started. Prerequisite: [Milestone 7](milestone-07-transport.md); initial renewable generation is planned in Milestone 6.
+Updated 8 November 2026. Status: not started. Prerequisite: [Milestone 7](milestone-07-transport.md); Milestone 6 supplies initial renewable generation.
 
 Make researched greenhouses the source of peaceful terraforming. Solar/wind, storage and green technology support greening; optional high-output coal opposes it through pollution. Choices affect pace and difficulty without a fail state or research lockout. The [progression specification](../design/player-progression.md#energy-weather-and-terraforming) owns the agreed direction.
 
@@ -8,7 +8,7 @@ Make researched greenhouses the source of peaceful terraforming. Solar/wind, sto
 
 ## Current implementation
 
-World-progression artwork is reference material. There is no simulation daylight/weather, power economy, water, pollution, greenhouse/restoration state or objective. Milestone 6's renewable implementation is also still pending. This design update does not claim a working environmental loop.
+Milestone 6 implements simulation-owned daylight, variable wind with a positive floor, wired proportional power allocation and curtailment. World-progression artwork remains reference material. Event weather, batteries, water, pollution, greenhouses/restoration and objectives remain unimplemented; this milestone extends that renewable foundation.
 
 ## Step 1 Define content and the peaceful objective
 

@@ -491,6 +491,29 @@ describe('UiInputAdapterService', () => {
     expect(input).toHaveBeenCalledOnce();
   });
 
+  it('lets a controller change factory numeric fields and respects their native bounds', () => {
+    ui.activeElement = overlay;
+    const quantity = document.createElement('input');
+    quantity.type = 'number';
+    quantity.min = '1';
+    quantity.max = '2';
+    quantity.value = '1';
+    overlay.append(quantity);
+    const input = vi.fn();
+    quantity.addEventListener('input', input);
+    quantity.focus();
+    navigate(1, 0);
+    expect(quantity.value).toBe('2');
+    navigate(0, 0);
+    navigate(1, 0);
+    expect(quantity.value).toBe('2');
+    expect(input).toHaveBeenCalledTimes(1);
+    navigate(0, 0);
+    navigate(-1, 0);
+    expect(quantity.value).toBe('1');
+    expect(input).toHaveBeenCalledTimes(2);
+  });
+
   it('skips unavailable select options and does not fire changes beyond a native value boundary', () => {
     ui.activeElement = overlay;
     const select = overlay.querySelector('select')!;

@@ -9,6 +9,7 @@ export class WorldFrame {
   public input: ActionFrame = { context: null, revision: 0, states: {} };
   public seconds = 0;
   public active = false;
+  public placing = false;
   public simulationActive = false;
   public presentationActive = false;
   public view?: WorldView;

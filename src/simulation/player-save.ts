@@ -3,6 +3,8 @@ import { requireInvariant as check } from '@contracts/simulation';
 import { OPENING_CONTENT, OPENING_RECIPES, OPENING_TECHNOLOGIES } from '@content/opening';
 import { assertSnapshot } from './capture';
 import { upgradeOpeningSave } from './legacy-opening-save';
+import { assertFactoryResearch } from './factory-capture';
+import { emptyToolbar } from '@contracts/toolbar';
 
 /** Additional invariants for untrusted durable saves; internal laboratory captures remain separate. */
 export function preparePlayerSave(value: unknown): SimulationSnapshot {
@@ -29,6 +31,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
         'research',
         'productionTotals',
         'extractionTotals',
+        'factory',
       ].includes(key),
     ),
     'Unknown saved world resource.',
@@ -40,7 +43,10 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
       'transform',
       ...(entity.kind === 'player'
         ? ['inventory', 'equipment', 'opening']
-        : [entity.kind === 'body' ? 'physics' : entity.kind]),
+        : [
+            entity.kind === 'body' ? 'physics' : entity.kind,
+            ...(entity.kind === 'building' ? ['machine'] : []),
+          ]),
     ];
     check(
       Object.keys(entity).every((key) => allowed.includes(key)),
@@ -67,7 +73,10 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
       );
     }
     if (entity.kind === 'building')
-      check(false, 'Developer fixture buildings are not supported in player saves.');
+      check(
+        entity.machine && entity.building?.buildingId !== 'test-building',
+        'Developer fixture buildings are not supported in player saves.',
+      );
   }
   check(
     save.definition.deposits.every((deposit) =>
@@ -84,6 +93,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
   for (const key of Object.keys(save.resources.extractionTotals))
     check(key === 'scrap', 'Unknown extraction history item.');
   const research = save.resources.research;
+  assertFactoryResearch(save);
   for (const [id, ledger] of Object.entries(research)) {
     const technology = OPENING_TECHNOLOGIES.find((entry) => entry.id === id)!;
     check(
@@ -145,8 +155,12 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
       );
       jobs.add(job.id);
     }
-  for (const id of [...ids, ...jobs]) {
-    const suffix = /^(?:pile|building|opening-job):(\d+)$/.exec(id);
+  for (const id of [
+    ...ids,
+    ...jobs,
+    ...(save.resources.factory?.connections.map((c) => c.id) ?? []),
+  ]) {
+    const suffix = /^(?:pile|building|opening-job|connection)[-:](\d+)$/.exec(id);
     if (suffix)
       check(
         Number.isSafeInteger(Number(suffix[1])) && Number(suffix[1]) < save.resources.nextEntityId,
@@ -167,6 +181,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
     check(unlocked(opening.minifab.outputRecipe), 'Locked MiniFab output.');
   const copy = structuredClone(save),
     owner = copy.entities.find((entity) => entity.id === copy.resources.playerId)!;
+  owner.opening!.toolbar ??= emptyToolbar();
   owner.transform!.moving = owner.transform!.sprinting = false;
   owner.opening!.salvage = null;
   owner.opening!.handcraftVisible = !!owner.opening!.handcraft;

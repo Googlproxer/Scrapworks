@@ -131,11 +131,12 @@
     !gameRuntimeService.errorMessage()
   ) {
     <app-field-kit />
+    @if (!gameRuntimeService.fieldKitOpen()) { <app-placeable-toolbar /> }
     <div class="game-help" [hidden]="gameRuntimeService.fieldKitOpen()">
       <p>
         WASD / left stick to move · Shift / stick press to sprint · Right drag / right stick to
         orbit · F to hold salvage · G to toggle salvage · E / click ground items to pick up · Tab
-        for field kit · Escape for menu
+        for field kit · 1–8 selects a placeable · B builds · R rotates · Escape for menu
       </p>
       @if (gameRuntimeService.selectionLabel(); as selection) {
         <p aria-live="polite">{{ selection }}</p>
@@ -144,10 +145,6 @@
         <p aria-live="polite">{{ feedback }}</p>
       }
       @if (developer) {
-        <p>
-          Development fixture: B / Select toggles placement, R / right shoulder rotates, click /
-          south button places.
-        </p>
         @if (gameRuntimeService.world()?.bodies?.length) {
           <p>
             Physics test: push the brown crates and barrel. Watch the falling stack and blue moving

@@ -1,4 +1,5 @@
 import type { ContentDefinition, ItemStack } from '../contracts/simulation';
+import { EQUIPMENT_ITEMS, EQUIPMENT_RECIPES } from './factory';
 import {
   EQUIPMENT_BLUEPRINTS,
   FIRST_FACTORY_TECHNOLOGIES,
@@ -96,6 +97,7 @@ export const OPENING_RECIPES: readonly OpeningRecipe[] = [
     minifab: false,
   },
   RESEARCH_KIT_RECIPE,
+  ...EQUIPMENT_RECIPES,
 ];
 
 export const OPENING_TECHNOLOGIES: readonly OpeningTechnology[] = [
@@ -143,8 +145,9 @@ export const OPENING_TECHNOLOGIES: readonly OpeningTechnology[] = [
 ];
 
 export const OPENING_CONTENT: ContentDefinition = {
-  version: 'research-1',
+  version: 'factory-1',
   items: {
+    ...EQUIPMENT_ITEMS,
     scrap: { stackLimit: 100, solidValue: 1 },
     plate: { stackLimit: 100, solidValue: 2 },
     wire: { stackLimit: 100, solidValue: 1 },
@@ -169,6 +172,7 @@ export const OPENING_SETTINGS = Object.freeze({
 });
 
 export const ITEM_NAMES: Readonly<Record<string, string>> = {
+  ...Object.fromEntries(EQUIPMENT_BLUEPRINTS.map((b) => [b.id, b.name])),
   scrap: 'Mixed scrap',
   plate: 'Metal plate',
   wire: 'Recovered wire',
@@ -180,6 +184,9 @@ export const ITEM_NAMES: Readonly<Record<string, string>> = {
 
 export const OPENING_SOURCE_IDS = {
   recipes: {
+    ...Object.fromEntries(
+      EQUIPMENT_BLUEPRINTS.map((b) => [`assemble-${b.id}`, `recipe.${b.id.replaceAll('-', '_')}`]),
+    ),
     'scrap-prybar': 'recipe.prybar',
     'metal-plate': 'recipe.plate',
     'recovered-wire': 'recipe.wire',
@@ -205,6 +212,9 @@ export const OPENING_SOURCE_IDS = {
     'sorting-logistics': 'future.logistics',
   },
   items: {
+    ...Object.fromEntries(
+      EQUIPMENT_BLUEPRINTS.map((b) => [b.id, `item.${b.id.replaceAll('-', '_')}`]),
+    ),
     scrap: 'item.scrap',
     plate: 'item.plate',
     wire: 'item.wire',

@@ -1,0 +1,113 @@
+{
+  "date": "2026-11-08",
+  "baseRevision": "647b4f5",
+  "scope": "M6 toolbar/placement feedback",
+  "publication": "Local working tree; no new hosted CI",
+  "tests": {
+    "node": 154,
+    "chromium": 373,
+    "coverageEnabled": true,
+    "tooling": 90
+  },
+  "checks": {
+    "docs": true,
+    "diagramSources": 8,
+    "deterministicBoundaries": true,
+    "build": true,
+    "workerMainSeparation": true,
+    "strictTypes": true,
+    "lint": true,
+    "builtAssets": true
+  },
+  "fullRoute": {
+    "sharedLabs": true,
+    "rotation": 1,
+    "fieldDisabled": true,
+    "machines": 8,
+    "toolsExcluded": true,
+    "emptyHandedUi": true,
+    "axeDesktop": [],
+    "toolbarPlaceables": true,
+    "saveReload": true,
+    "axeMobile": [],
+    "passed": true,
+    "toolbarSaved": true,
+    "runId": "4eea570e-324b-4c65-9518-fcf526b44809",
+    "connections": 8
+  },
+  "finalBuildSmoke": {
+    "axeMobile": [],
+    "preparedFixture": true,
+    "axeDesktop": [],
+    "toolbarSaved": true,
+    "saveReload": true,
+    "passed": true
+  },
+  "production": {
+    "passed": true,
+    "errors": [],
+    "chunks": {
+      "main": "main-I7EKL4VL.js",
+      "route": "chunk-B5sONJMO.js",
+      "renderer": "chunk-DrBY2das.js",
+      "routeBytes": 443300,
+      "rendererBytes": 2893772
+    }
+  },
+  "manualSaves": {
+    "passed": true,
+    "errors": [],
+    "completedOnce": 1
+  },
+  "architecture": {
+    "baselineBytes": 13349796,
+    "routeBytes": 701577,
+    "mainInputs": 1864,
+    "workerInputs": 40
+  },
+  "taxonomy": "../../../../design/balance/toolbar-revision-2026-11-08.json",
+  "evidenceHashes": [
+    {
+      "file": "factory-desktop.png",
+      "sha256": "4e51af14b9533eb9258cab4dd4f1d8a58fe499cc50526d2438d7797a267f606b"
+    },
+    {
+      "file": "factory-mobile.png",
+      "sha256": "7f1f9910568d6fcbe5e84ba795380a50ce7ea971cfd2fea6c9d520fefe3b43fb"
+    },
+    {
+      "file": "factory-results.json",
+      "sha256": "62626f9c9435d668fa6b336879f09b2ef8f3962e0148b6f6163e66b21e1f8e29"
+    },
+    {
+      "file": "factory-world.png",
+      "sha256": "b9114fc133cc4f9ea5031a7d318c31cb97f4c1e42f3cad2cb3dda51fec769622"
+    },
+    {
+      "file": "toolbar-mobile-final.png",
+      "sha256": "0c03c1a6b3912344dcea206db4405f2c9e9e447025c76ed81389eac84cf6fdb4"
+    },
+    {
+      "file": "toolbar-mobile.png",
+      "sha256": "c9b40cc2206bca0b70b550a527edf7b97a6da9156647b794ec59f78236ba529d"
+    },
+    {
+      "file": "toolbar-world-final.png",
+      "sha256": "04c9d3758d4414169b3357f6dc9cf031f1124f08dee1493b4ca5c761a44ff7dc"
+    }
+  ],
+  "verifiedLocalDate": "2026-11-09",
+  "fibery": {
+    "completionChecksDone": 6,
+    "whiteboardsChanged": false,
+    "state": "Completed",
+    "implementationCriteria": 50,
+    "designCriteria": 5,
+    "milestone": "https://scrapworks.fibery.io/Project_Tracking/Milestone/6",
+    "tasksDone": 6,
+    "catalogueRecords": 127,
+    "readbackVerified": true,
+    "focusCleared": true,
+    "categoryOptionIdPreserved": true
+  }
+}

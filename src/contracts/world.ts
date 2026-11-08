@@ -1,5 +1,6 @@
 import type { OpeningCommand, OpeningRejection, OpeningView, GroundItemView } from './opening';
 import type { PhysicsBodyDefinition, PhysicsBodyView } from './physics';
+import type { FactoryCommand, FactorySummary, MachineKind } from './factory';
 
 /** Plain gameplay metres. X points east, Z north, Y up; model-forward is +Z. */
 export interface WorldPosition {
@@ -63,7 +64,7 @@ export interface WorldDefinition {
 }
 
 export interface BuildingView extends WorldEntityDefinition {
-  readonly buildingId: 'test-building';
+  readonly buildingId: 'test-building' | MachineKind;
   readonly cell: GridCell;
 }
 
@@ -74,6 +75,10 @@ export type PlacementRejection =
   | 'occupied'
   | 'player-overlap'
   | 'out-of-reach'
+  | 'machine-required'
+  | 'same-machine'
+  | 'cable-too-long'
+  | 'already-connected'
   | 'unavailable';
 
 export interface PlacementResult {
@@ -84,6 +89,7 @@ export interface PlacementResult {
 
 export type WorldCommand =
   | OpeningCommand
+  | FactoryCommand
   | {
       readonly type: 'place';
       readonly buildingId: 'test-building';
@@ -129,6 +135,7 @@ export interface WorldView {
   };
   readonly inventory: Readonly<Record<string, number>>;
   readonly opening?: OpeningView;
+  readonly factory?: FactorySummary;
   readonly ground?: readonly GroundItemView[];
   readonly equipment: readonly string[];
   readonly research: readonly string[];

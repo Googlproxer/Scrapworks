@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-08",
+  "request": "Equipment → Equipable; Tools equip to the player, Placeables use a saved toolbar and B builds the active slot; correct reach/overlap feedback.",
+  "categoryOptionRenamed": {
+    "id": "198d8617-3882-4877-a7ea-f0426f448593",
+    "from": "Equipment",
+    "to": "Equipable"
+  },
+  "kindField": "Scrapworks/Equipable Kind",
+  "kindOptions": ["Tools", "Placeables"],
+  "records": [
+    {
+      "id": "1606ceb7-4bef-4625-aa5b-d027b5eca4d2",
+      "source": "item.prybar",
+      "category": "Equipable",
+      "kind": "Tools"
+    },
+    {
+      "id": "1761d5ef-feda-42f1-b973-b17d8a49297b",
+      "source": "item.wind_turbine",
+      "category": "Equipable",
+      "kind": "Placeables"
+    },
+    {
+      "id": "4d2d340a-f758-40de-a2a5-8616b96c8488",
+      "source": "item.basic_fabricator",
+      "category": "Equipable",
+      "kind": "Placeables"
+    },
+    {
+      "id": "74a81c1c-9c20-42f6-a073-68fa5bbb220b",
+      "source": "item.solar_panel",
+      "category": "Equipable",
+      "kind": "Placeables"
+    },
+    {
+      "id": "78a727af-34e0-4e3c-9a81-b1975f8fc05c",
+      "source": "item.power_connection",
+      "category": "Component",
+      "kind": null
+    },
+    {
+      "id": "aa29562a-963f-42a5-b4b9-403dca0edcc5",
+      "source": "item.medium_fabricator",
+      "category": "Equipable",
+      "kind": "Placeables"
+    },
+    {
+      "id": "ad6e696a-1b91-4970-bde1-1bff016154cc",
+      "source": "item.recycler",
+      "category": "Equipable",
+      "kind": "Placeables"
+    },
+    {
+      "id": "c7721ddd-0c00-4e58-beab-a3850b7c0a62",
+      "source": "item.laboratory",
+      "category": "Equipable",
+      "kind": "Placeables"
+    },
+    {
+      "id": "d3390658-05d6-43dd-8d98-76a7f86bcef4",
+      "source": "item.extractor",
+      "category": "Equipable",
+      "kind": "Placeables"
+    }
+  ],
+  "toolbar": {
+    "slots": 8,
+    "stockOwnership": "bag only; assignments do not reserve or duplicate stock",
+    "keys": "1–8, controller D-pad left/right, B/Select, R/right shoulder",
+    "saveCompatibility": "Additive optional factory-1 player state; detached empty defaults for pre-toolbar saves"
+  },
+  "placement": {
+    "reach": 2,
+    "reachTarget": "nearest point of one-cell footprint",
+    "playerRadius": 0.35,
+    "machineCollision": {
+      "width": 1.2,
+      "depth": 1.2,
+      "height": 1.5
+    },
+    "debugRingReach": 2
+  },
+  "catalogueRecords": 127,
+  "sourceIdsPreserved": true,
+  "whiteboardsChanged": false
+}

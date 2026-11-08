@@ -57,6 +57,18 @@
         >
           Research
         </button>
+        <button
+          id="factory-tab"
+          type="button"
+          role="tab"
+          aria-controls="factory-panel"
+          [attr.aria-selected]="activeTab() === 'factory'"
+          [tabIndex]="activeTab() === 'factory' ? 0 : -1"
+          (keydown)="tabKey($event)"
+          (click)="selectTab('factory')"
+        >
+          Factory
+        </button>
       </div>
       <div
         id="inventory-panel"
@@ -79,6 +91,17 @@
         [hidden]="activeTab() !== 'research'"
       >
         <app-research-panel />
+      </div>
+      <div
+        id="factory-panel"
+        class="tab-panel"
+        role="tabpanel"
+        aria-labelledby="factory-tab"
+        [hidden]="activeTab() !== 'factory'"
+      >
+        @if (activeTab() === 'factory') {
+          <app-factory-panel />
+        }
       </div>
     </section>
   }

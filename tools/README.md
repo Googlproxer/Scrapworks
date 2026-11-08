@@ -61,6 +61,8 @@ See the [ECS laboratory](ecs-bench/README.md) and [simulation-worker laboratory]
 
 ## Alias removal and historical reports
 
+Milestone 6 adds `node tools/factory-bench.ts [output.json]` for manual current-runtime factory profiling. It measures real Miniplex/native Simulation stepping, bounded detail publication/inspection and capture/rebuild at 0/50/250/1,000 active/idle machines. The default output is `tmp/factory-bench/result.json`. It runs no renderer and makes no target-device FPS or pacing claim; do not add it to CI. See the [factory measurements](../docs/reports/milestone-06/2026-11-08/README.md#manual-factory-performance).
+
 The aliases above, plus `assets:audit`, `cleanup:audit` and `editor:mcp:check`, were removed from `package.json` on 1 November 2026. Dated reports preserve the commands and manifests used at their recorded revisions. On the current checkout, replace an old alias with its direct command above and retain its arguments; use the recorded source revision when reproducing an exact historical measurement.
 
 ## Production checks

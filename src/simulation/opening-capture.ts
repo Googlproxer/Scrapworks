@@ -9,6 +9,8 @@ import type { InventoryData } from '@contracts/simulation';
 import { requireInvariant as check } from '@contracts/simulation';
 import { planTransaction } from './domain/inventory';
 import { handcraftBagOutput } from './domain/work';
+import { TOOLBAR_SLOTS } from '@contracts/toolbar';
+import { isPlaceable } from '@content/factory';
 
 /** Validate the complete opening component before replacing a healthy authority. */
 export function assertOpening(
@@ -74,7 +76,20 @@ export function assertOpening(
     'fieldEnabled',
     'moved',
     'minifab',
+    'toolbar',
   ]);
+  if (state['toolbar'] !== undefined) {
+    const toolbar = record(state['toolbar'], ['slots', 'active']);
+    check(
+      Array.isArray(toolbar['slots']) &&
+        toolbar['slots'].length === TOOLBAR_SLOTS &&
+        toolbar['slots'].every((item) => item === null || isPlaceable(item)) &&
+        Number.isSafeInteger(toolbar['active']) &&
+        Number(toolbar['active']) >= 0 &&
+        Number(toolbar['active']) < TOOLBAR_SLOTS,
+      'Invalid placeable toolbar',
+    );
+  }
   for (const key of ['handcraftVisible', 'handcraftSuspended', 'fieldEnabled', 'moved'])
     check(typeof state[key] === 'boolean', 'Invalid opening flag');
   check(

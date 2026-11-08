@@ -26,12 +26,22 @@
     [disabled]="!!opening.state.handcraft"
   >
     <option [value]="1" [selected]="batch() === 1">1</option>
-    @if (customBatch()) { <option [value]="batch()" selected>{{ batch() }}</option> }
+    @if (customBatch()) {
+      <option [value]="batch()" selected>{{ batch() }}</option>
+    }
     @if (recipe().outputs[0]?.item !== 'prybar' && recipe().id !== 'base-minifab') {
-      <option [value]="5" [selected]="batch() === 5">5</option>
-      <option [value]="10" [selected]="batch() === 10">10</option>
-      <option [value]="25" [selected]="batch() === 25">25</option>
-      <option [value]="100" [selected]="batch() === 100">100</option>
+      @if (batchLimit() >= 5) {
+        <option [value]="5" [selected]="batch() === 5">5</option>
+      }
+      @if (batchLimit() >= 10) {
+        <option [value]="10" [selected]="batch() === 10">10</option>
+      }
+      @if (batchLimit() >= 25) {
+        <option [value]="25" [selected]="batch() === 25">25</option>
+      }
+      @if (batchLimit() >= 100) {
+        <option [value]="100" [selected]="batch() === 100">100</option>
+      }
     }
   </select>
   <button

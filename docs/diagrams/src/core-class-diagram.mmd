@@ -44,18 +44,36 @@ classDiagram
     class OpeningData {
         <<data>>
         salvage and handcraft jobs
-        field selection and enable state
+        shared research queue and field enable
         MiniFab request buffers charge
+        eight toolbar assignments and active slot
     }
     class FieldKitComponent {
-        inventory research crafting MiniFab
+        inventory research crafting MiniFab factory
         commands and detached signals
         accessible exit confirmation
+    }
+    class PlaceableToolbarComponent {
+        eight slots reference bag stock
+        selected placeable and build feedback
     }
     class MiniplexWorld {
         private native queries
         owned EntityData components
         stable ID and collision indexes
+    }
+    class FactorySystem {
+        construction and atomic local transfers
+        wired proportional power
+        seeded recycling fabrication extraction
+        supplied lab source preparation
+    }
+    class MachineData {
+        <<data>>
+        local input and output slots
+        committed job inputs and partial work
+        bounded pending result and history marker
+        random permutation cursor and state
     }
     class WorldResources {
         <<data>>
@@ -65,6 +83,7 @@ classDiagram
         research
         productionTotals
         extractionTotals
+        factory connections
     }
     class WorldDefinition {
         <<data>>
@@ -135,9 +154,14 @@ classDiagram
     GameSession "1" *-- "1" PresentationCache : completed publication
     Simulation "1" *-- "1" PlayerMotor : owns movement rules
     Simulation "1" *-- "1" OpeningSystem : owns opening executors
+    Simulation "1" *-- "1" FactorySystem : owns factory executors
+    MiniplexWorld "1" *-- "many" MachineData : building components
+    FactorySystem --> MachineData : mutate inside fixed step
+    OpeningSystem --> FactorySystem : ordered factory work before shared research
     MiniplexWorld "1" *-- "1" OpeningData : player component
     OpeningSystem --> OpeningData : mutate inside fixed step
     FieldKitComponent --> GameRuntimeService : sequenced opening requests
+    PlaceableToolbarComponent --> GameRuntimeService : slot selection and B build
     Simulation "1" *-- "1" MiniplexWorld : owns component records
     Simulation "1" *-- "1" WorldResources : owns global records
     Simulation ..> WorldDefinition : initializes world

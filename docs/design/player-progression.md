@@ -1,6 +1,6 @@
 # Player progression and crafting
 
-Agreed direction recorded 27 October and revised 28 October 2026: safe handcrafting teaches materials/components before the MiniFab, with explicit UI-bound interruption and per-item refunds. The opening, power-free baseline and optional winding were implemented and verified on 2 November. The user settled the first local-save behavior on 8 November: Continue/New Game, visible handcraft resumption and confirmation before unsaved-progress loss or different-run overwrite. Gameplay saving is implemented in Milestone 4; later factory, upgrade and restoration branches remain planned. The [GDD](GDD.md) owns the overall game direction; the [TDD](TDD.md) owns technical rules, and the [roadmap](../plans/README.md) tracks implementation separately.
+Agreed direction recorded 27 October and revised 28 October 2026: safe handcrafting teaches materials/components before the MiniFab, with explicit UI-bound interruption and per-item refunds. The opening, power-free baseline and optional winding were implemented and verified on 2 November. The user settled the first local-save behavior on 8 November: Continue/New Game, visible handcraft resumption and confirmation before unsaved-progress loss or different-run overwrite. Milestones 4–6 implement gameplay saving, shared research and the first manually supplied renewable-powered factory. Upgrades, transport and restoration remain later work. The [GDD](GDD.md) owns the overall game direction; the [TDD](TDD.md) owns technical rules, and the [roadmap](../plans/README.md) tracks implementation separately.
 
 ## Progression principles
 
@@ -177,6 +177,8 @@ The recycler processes mixed scrap into a random mix across its output catalog. 
 
 Before implementation, specify the output catalog, probabilities, batch sizes, material-value accounting, fairness/availability expectations and blocked-output behavior. The simulation must own a seeded random stream and save its state and already-selected pending output; reloading or a full buffer must not reroll results.
 
+Agreed 8 November 2026 for [Milestone 6](../plans/milestone-06-first-working-machines.md#agreed-scope-and-decisions--8-november-2026): the first recycler recovers **plates and wire**, leaving mechanical/electrical parts to fabrication. Use bounded seeded randomness that guarantees both materials within an explicitly defined batch window. When refined output falls short of the batch's solid input value, return the remainder as scrap: `2 × plates + wire + returned scrap = input scrap` for every outcome. Returned scrap is residual input, not fresh extraction/production. Save the shuffled sequence/cursor as well as random state and pending output. Weights, batch size, useful refined yield, work rate and maximum window remain provisional catalogue design before execution; conservation must hold per outcome, not only on average.
+
 General fabrication machines select recipes by input arity. Input arity means the number of distinct ingredient types, not the number of individual units or output types.
 
 | Machine             | Supported recipe inputs        | Explicit exclusions                 |
@@ -185,7 +187,9 @@ General fabrication machines select recipes by input arity. Input arity means th
 | Medium Fabricator   | Exactly two ingredient types   | One-, three- and four-input recipes |
 | Advanced Fabricator | Three or four ingredient types | One- and two-input recipes          |
 
-Higher tiers do not replace the lower tiers. Preserve useful roles for all three. The Mini Fabricator and recycler have their own rules and must not inherit these restrictions accidentally. Availability of each factory tier is staged through research; exact technology placement is not yet fixed.
+Higher tiers do not replace the lower tiers. Preserve useful roles for all three. The Mini Fabricator and recycler have their own rules and must not inherit these restrictions accidentally. Milestone 5 implements the Basic/Medium technology gates and eligibility rules; Milestone 6 delivers those two machines, while Advanced remains later work. General fabrication excludes the personal deterministic plate/wire recovery recipes. Safe equipment assembly remains handcraftable even when its arity exceeds the delivered factory tiers.
+
+Milestone 6 delivers solar panels, wind turbines, crafted wired power connections, the recycler, Basic/Medium Fabricators, scrap extractors and laboratories. Manually transfer materials between their local buffers. The first useful factory chain is scrap → recycler plates/wire → fabricated parts → Medium-fabricated Basic kits → supplied labs. Automatic material connections/conveyors/sorting belong to Milestone 7; batteries, coal, Advanced fabrication and MiniFab upgrades are outside this slice. Extractors use the existing finite scrap deposits; pure-ore content/provenance remains later work.
 
 ## Logistics and later transport
 
@@ -223,7 +227,7 @@ Agreed 8 November 2026 for [Milestone 5](../plans/milestone-05-research.md#agree
 - Milestone 5 extends research/catalogue/UI/save coverage and proves lab rules with plain fixtures. Milestone 6 supplies physical placement, power, buffer transfers and functioning labs; its acceptance owns the coal-free industrial playthrough.
 - Preserve compatible Milestone 4 saves where practical with a small explicit compatibility path, retaining stable identities, contributions/work, histories and jobs while defaulting only new state. General migration tooling remains Milestone 9 and save-format optimization stays deferred.
 
-Milestone 5 now implements the shared queue, paid continuation catalogue, Basic research kit, narrow save compatibility and plain lab fixtures. The [research catalogue](research-catalogue.md) records provisional balance/source coordination; the [implementation report](../reports/milestone-05/2026-11-08/README.md) records verification. Physical factory/lab integration remains Milestone 6.
+Milestone 5 implements the shared queue, paid continuation catalogue, Basic research kit, narrow save compatibility and plain lab fixtures. The [research catalogue](research-catalogue.md) records provisional balance/source coordination; its [implementation report](../reports/milestone-05/2026-11-08/README.md) retains that scope. Milestone 6 integrates physical machinery, power and local lab buffers; the [factory catalogue](factory-catalogue.md) records executable provisional values and the [factory report](../reports/milestone-06/2026-11-08/README.md) records verification.
 
 The proposed technology groups are material recovery, basic fabrication, renewable power, mixed recycling, extraction, sorting/logistics, industrial fabrication/research, storage, water treatment and greenhouse restoration. Coal/high-output polluting technologies and later pollution mitigation form optional branches. This is a dependency-planning outline, not a finalized catalog: audit that every research cost and required machine is obtainable through earlier unlocks.
 
@@ -240,6 +244,8 @@ Disassembly is one atomic player action: calculate the complete body-material re
 Use a material-origin/equivalence ledger across recipes, random recycling and recovery. No craft/dismantle loop may mint additional solid material value; recovering ore deliberately requires reprocessing. Completed re-crafts count as production, but dismantling and refunds add no history. Research-consumed materials remain an irreversible sink, with no cancellation/refund: investment/progress only moves forward and can be paused or switched. Liquid loss on disassembly is agreed at the concept level; exact liquid/fuel/water processes and later ore provenance remain future content work.
 
 ## Energy, weather and terraforming
+
+Agreed 8 November 2026 for Milestone 6: crafted explicit power connections form separate networks, with available power shared **proportionally across runnable demand**. Supplied machines slow together under shortage and retain partial work at zero power. Idle, disabled, missing-input and output-blocked consumers have no productive demand; a lab also needs an eligible shared queue head and its complete local next bundle. Apply power to the existing lab work rate without changing source-local payment or technology-owned partial work. Use simulation-owned daylight/variable wind with a defined positive floor and no Dunkelflaute events yet. There are no factory batteries in this slice: unused generation is curtailed rather than stored. Batteries, event weather and optional coal/pollution stay with Milestone 8; personal MiniFab winding/baseline are unchanged.
 
 - Solar and wind are the first power technologies. A complete green research path must be viable without researching or burning coal.
 - Solar generates only during daylight.
@@ -262,9 +268,9 @@ For Milestone 3, deliver the five core technologies and six opening recipes, inv
 
 Keep later design work with its owning content slice:
 
-- **Milestone 6:** physical lab/buffer/power integration, recycler probabilities/fairness and actual machine recipes/construction. Milestone 5 already supplies shared research coordination, Basic kits and provisional Basic/Medium construction blueprints. Existing safe-handcraft and research-payment rules remain settled.
+- **Milestone 6 balance:** physical labs, wired proportional power, bounded plate/wire recycling with scrap remainder, Basic/Medium fabrication and finite scrap extraction are implemented. The [factory catalogue](factory-catalogue.md) records provisional batch/energy/buffer/footprint/cable values and the paid bootstrap budget. Further pacing/balance follows playtesting; safe handcrafting, shared research payment and whole-return recovery remain settled.
 - **Later MiniFab upgrades:** actual gearing tiers, repeatable battery research staging/first-level material costs, buffer capacity, hazard/liquid modules, advanced portable recipes, fitting/removal, autonomous min/max targets and powered-source combinations. Their data can be accommodated now; they are not all Milestone 3 delivery requirements.
 - **Advanced materials:** source-ore equivalents, alternate-recipe provenance, exact liquid-loss behavior and fuel/water consumables. The opening uses the existing scrap-only solid-value ledger. Re-crafting adds completed production; recovery/transfers do not.
-- **Milestones 7–8:** first sorting/filter and overflow behavior, renewable curves/storage/Dunkelflaute parameters, greenhouse restoration/pollution rates and measurable small-map/world objectives. Preserve the peaceful coal-free path.
+- **Milestones 7–8:** first sorting/filter and overflow behavior, expanded weather/storage/Dunkelflaute parameters, greenhouse restoration/pollution rates and measurable small-map/world objectives. Milestone 6 owns the initial daylight/wind curves. Preserve the peaceful coal-free path.
 
 See the [Milestone 3 readiness and scope checklist](../plans/milestone-03-character-and-manual-opening.md#implementation-readiness-and-scope) for the implementation handoff. Record later changed decisions here without treating design or checklist completion as runtime evidence.

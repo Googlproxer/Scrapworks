@@ -9,11 +9,26 @@ describe('binding profiles', () => {
     old.contexts['gameplay']['move'] = [];
     delete old.contexts['gameplay']['salvage'];
     delete old.contexts['gameplay']['toggleSalvage'];
+    for (const name of [
+      'slot1',
+      'slot2',
+      'slot3',
+      'slot4',
+      'slot5',
+      'slot6',
+      'slot7',
+      'slot8',
+      'previousSlot',
+      'nextSlot',
+    ])
+      delete old.contexts['gameplay'][name];
     delete old.contexts['ui']['wind'];
     const upgraded = validateBindingProfile(old);
     expect(upgraded.contexts.gameplay.move).toEqual([]);
     expect(upgraded.contexts.gameplay.salvage).toEqual(defaultProfile.contexts.gameplay.salvage);
     expect(upgraded.contexts.ui.wind).toEqual(defaultProfile.contexts.ui.wind);
+    expect(upgraded.contexts.gameplay.slot1).toEqual(defaultProfile.contexts.gameplay.slot1);
+    expect(upgraded.contexts.gameplay.nextSlot).toEqual(defaultProfile.contexts.gameplay.nextSlot);
     expect(old.contexts['ui']['wind']).toBeUndefined();
   });
   it('copies caller-owned configuration and preserves intentionally unbound actions', () => {

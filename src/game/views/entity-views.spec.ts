@@ -52,6 +52,43 @@ const view = (partial: Partial<WorldView> = {}): WorldView => ({
 });
 
 describe('EntityViews completed publication changes', () => {
+  it('presents distinct machine geometry and wires from completed state and disposes removed connections', () => {
+    const a = { ...building('wind'), buildingId: 'wind-turbine' as const },
+      b = {
+        ...building('recycler'),
+        buildingId: 'recycler' as const,
+        position: { x: 5, y: 0, z: 3 },
+      };
+    frame.view = view({
+      buildings: [a, b],
+      changes: { full: true, upsertedIds: ['wind', 'recycler'], removedIds: [] },
+      factory: {
+        daylight: 1,
+        wind: 0.5,
+        available: 375,
+        requested: 120,
+        used: 120,
+        curtailed: 255,
+        connections: [{ id: 'wire', from: a.id, to: b.id }],
+      },
+    });
+    const before = JSON.stringify(frame.view);
+    views.pulse();
+    expect(scene.getMeshByName('wind:mast')).toBeTruthy();
+    expect(scene.getMeshByName('recycler:hopper')).toBeTruthy();
+    const wire = scene.getMeshByName('power:wire')!;
+    expect(wire).toBeTruthy();
+    expect(wire.isPickable).toBe(false);
+    expect(scene.getMeshByName('wind:mast')!.metadata.worldEntity).toBe('wind');
+    expect(JSON.stringify(frame.view)).toBe(before);
+    frame.view = {
+      ...frame.view,
+      publication: 5,
+      factory: { ...frame.view.factory!, connections: [] },
+    };
+    views.pulse();
+    expect(wire.isDisposed()).toBe(true);
+  });
   it('presents stable ground-item IDs, updates positions and disposes collected piles', () => {
     const item = { id: 'ground-1', item: 'scrap', quantity: 2, position: { x: 2, y: 0, z: 3 } };
     frame.view = view({ ground: [item] });

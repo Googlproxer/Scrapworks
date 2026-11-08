@@ -67,7 +67,7 @@ export function decodeSave(input: unknown): SaveSnapshot {
   );
   check(Number.isSafeInteger(save.tick) && Number(save.tick) >= 0, 'Invalid save tick.');
   check(
-    (save.contentVersion === OPENING_CONTENT.version || save.contentVersion === 'opening-1') &&
+    [OPENING_CONTENT.version, 'opening-1', 'research-1'].includes(save.contentVersion ?? '') &&
       save.world?.version === 3 &&
       save.world.contentVersion === save.contentVersion,
     'Unsupported save content or world version.',

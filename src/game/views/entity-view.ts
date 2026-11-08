@@ -7,6 +7,9 @@ import type { GridDefinition, WorldEntityDefinition } from '@contracts/world';
 import { entityCollider } from '@core/world-collision';
 import { attachDebugDraw } from '../debug/draw/debug-draw';
 import type { DebugAttachment } from '../debug/draw/types';
+import { machineGeometry } from './machine-geometry';
+import { isMachineKind } from '@content/factory';
+import type { BuildingView } from '@contracts/world';
 
 /** A scene resource owner, identified by a detached simulation entity ID. */
 export class EntityView {
@@ -23,23 +26,38 @@ export class EntityView {
     template?: AbstractMesh | null,
   ) {
     this.item = item;
-    this.mesh = building
-      ? MeshBuilder.CreateBox(
-          `entity:${item.id}`,
-          {
-            width: item.footprint.width * grid.metresPerCell * 100,
-            height: 120,
-            depth: item.footprint.depth * grid.metresPerCell * 100,
-          },
-          scene,
-        )
-      : (template?.clone(`entity:${item.id}`, null) ??
-        MeshBuilder.CreateBox(`entity:${item.id}`, { size: 150 }, scene));
+    const kind = (item as Partial<BuildingView>).buildingId;
     if (building) {
       this.material = new StandardMaterial(`building:${item.id}`, scene);
-      this.material.diffuseColor = new Color3(0.22, 0.29, 0.3);
+      const colours: Readonly<Record<string, string>> = {
+        'solar-panel': '#416d91',
+        'wind-turbine': '#d6d9c8',
+        recycler: '#b9854e',
+        'basic-fabricator': '#628a75',
+        'medium-fabricator': '#477d91',
+        extractor: '#ac9a54',
+        laboratory: '#6b9290',
+      };
+      this.material.diffuseColor = Color3.FromHexString(colours[kind ?? ''] ?? '#384a4d');
       this.material.specularColor = Color3.Black();
-      this.mesh.material = this.material;
+    }
+    this.mesh =
+      building && isMachineKind(kind)
+        ? machineGeometry(scene, kind, item.id, this.material!)
+        : building
+          ? MeshBuilder.CreateBox(
+              `entity:${item.id}`,
+              {
+                width: item.footprint.width * grid.metresPerCell * 100,
+                height: 120,
+                depth: item.footprint.depth * grid.metresPerCell * 100,
+              },
+              scene,
+            )
+          : (template?.clone(`entity:${item.id}`, null) ??
+            MeshBuilder.CreateBox(`entity:${item.id}`, { size: 150 }, scene));
+    if (building) {
+      this.mesh.material = this.material!;
     }
     this.mesh.metadata = { worldEntity: item.id };
     this.mesh.isPickable = true;

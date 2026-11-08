@@ -1,5 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { chargeCapacity } from '@content/opening';
+import { chargeCapacity, OPENING_CONTENT } from '@content/opening';
 import { OpeningPanel } from './opening-panel';
 
 import { minifabStatus } from '../../ui/opening-labels';
@@ -20,6 +20,9 @@ export class MiniFabPanelComponent extends OpeningPanel {
 
   public readonly miniRecipe = computed(() =>
     this.recipes.find((recipe) => recipe.id === this.miniRecipeId())!,
+  );
+  public readonly batchLimit = computed(
+    () => OPENING_CONTENT.items[this.miniRecipe().outputs[0].item].stackLimit,
   );
 
   public readonly capacity = computed(() =>

@@ -8,18 +8,29 @@ import type { SaveSnapshot } from '../../src/contracts/save.ts';
 import type { WorldDefinition } from '../../src/contracts/world.ts';
 import { installBrowserEvents } from './browser-events.ts';
 import { checkResearchRoute } from './research-route.ts';
+import { checkFactoryRoute, type FactoryRouteProbe } from './factory-route.ts';
+import type { RuntimeReply } from '../../src/contracts/simulation.ts';
+import { readJson, type BuildMetadata } from '../../tools/shared.ts';
 
 const researchMode = process.argv.includes('--research');
+const factoryMode = process.argv.includes('--factory-controls');
 
 const root = path.resolve(import.meta.dirname, '../..'),
   directory = path.join(root, 'dist/scrapworks/browser'),
-  output = path.join(root, researchMode ? 'tmp/research-browser' : 'tmp/save-browser');
+  output = path.join(
+    root,
+    factoryMode
+      ? 'tmp/factory-controls-browser'
+      : researchMode
+        ? 'tmp/research-browser'
+        : 'tmp/save-browser',
+  );
 await fs.mkdir(output, { recursive: true });
 // Isolated fixture preparation uses the real simulation and its alias resolution. No production mutation hooks.
 const modules = await createServer({
   configFile: false,
   resolve: { tsconfigPaths: true },
-  server: { middlewareMode: true },
+  server: { middlewareMode: true, hmr: false },
   logLevel: 'error',
 });
 let fixture: SaveSnapshot;
@@ -39,22 +50,37 @@ try {
   const initial = new Simulation(definition),
     snapshot = initial.capture();
   initial.dispose();
-  for (const technology of researchMode ? [] : OPENING_TECHNOLOGIES)
+  for (const technology of researchMode
+    ? []
+    : OPENING_TECHNOLOGIES.filter((t) => !factoryMode || t.id !== 'sorting-logistics'))
     snapshot.resources.research[technology.id] = {
       consumed: Object.fromEntries(technology.costs.map((cost) => [cost.item, cost.quantity])),
       work: technology.seconds,
       unlocked: true,
     };
   const player = snapshot.entities.find((entity) => entity.kind === 'player')!;
+  if (factoryMode) player.opening!.fieldEnabled = true;
   for (const [i, [item, quantity]] of (
-    (researchMode
-      ? [['scrap', 100]]
-      : [
-          ['plate', 2],
-          ['wire', 2],
-          ['mechanical-part', 1],
-          ['electrical-part', 1],
-        ]) as readonly (readonly [string, number])[]
+    (factoryMode
+      ? [
+          ['solar-panel', 1],
+          ['wind-turbine', 1],
+          ['recycler', 1],
+          ['basic-fabricator', 1],
+          ['medium-fabricator', 1],
+          ['extractor', 1],
+          ['laboratory', 2],
+          ['power-connection', 8],
+          ['scrap', 100],
+        ]
+      : researchMode
+        ? [['scrap', 100]]
+        : [
+            ['plate', 2],
+            ['wire', 2],
+            ['mechanical-part', 1],
+            ['electrical-part', 1],
+          ]) as readonly (readonly [string, number])[]
   ).entries())
     player.inventory!.slots[i] = { item, quantity };
   if (researchMode) {
@@ -67,7 +93,7 @@ try {
     player.opening!.researchQueue = ['improvised-tools'];
   }
   const prepared = new Simulation(definition, { snapshot });
-  if (!researchMode)
+  if (!researchMode && !factoryMode)
     prepared.step({ x: 0, z: 0, sprint: false }, [
       { type: 'handcraft-ui', visible: true },
       { type: 'craft', recipe: 'base-minifab', quantity: 1 },
@@ -123,7 +149,16 @@ const browser = await chromium.launch({ headless: true }),
   page = await context.newPage();
 const errors: string[] = [];
 page.on('pageerror', (error) => errors.push(String(error)));
-await installBrowserEvents(page);
+const metadata = await readJson<BuildMetadata>(
+  path.join(root, 'dist/scrapworks/browser-stats.json'),
+);
+const engineStoreChunk = Object.entries(metadata.outputs).find(([, output]) =>
+  Object.keys(output.inputs ?? {}).some((input) =>
+    input.replaceAll('\\', '/').endsWith('/Engines/engineStore.js'),
+  ),
+)?.[0];
+await installBrowserEvents(page, engineStoreChunk);
+if (factoryMode) await page.clock.install();
 const url = `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}`;
 async function readSlot(): Promise<SaveSnapshot | undefined> {
   return page.evaluate(async () => {
@@ -152,6 +187,7 @@ async function confirm(): Promise<void> {
   await page.getByRole('alertdialog').getByRole('button', { name: 'Confirm', exact: true }).click();
 }
 let stage = 'startup';
+let lastFactoryProbe: FactoryRouteProbe | undefined;
 try {
   await page.goto(url);
   await page.getByRole('button', { name: 'New Game', exact: true }).click({ trial: true });
@@ -162,6 +198,9 @@ try {
         world: {
           ...fixture.world,
           contentVersion: 'opening-1',
+          resources: Object.fromEntries(
+            Object.entries(fixture.world.resources).filter(([key]) => key !== 'factory'),
+          ),
           entities: fixture.world.entities.map((entity) => {
             if (!entity.opening) return entity;
             const { researchQueue, ...opening } = entity.opening;
@@ -192,7 +231,86 @@ try {
     }
   }, fixturePayload);
   await page.reload();
-  if (researchMode) {
+  if (factoryMode) {
+    stage = 'prepared factory controls';
+    const created = page.waitForEvent('worker');
+    await page.getByRole('button', { name: 'Continue', exact: true }).click();
+    const worker = await created;
+    await worker.evaluate(() => {
+      const scope = globalThis as unknown as {
+        factoryProbe?: FactoryRouteProbe;
+        postMessage(message: RuntimeReply, transfer?: Transferable[]): void;
+      };
+      const send = scope.postMessage.bind(globalThis),
+        buildings = new Map<string, import('../../src/contracts/world.ts').BuildingView>();
+      scope.postMessage = (message, ...rest) => {
+        if (message.packet?.full) buildings.clear();
+        for (const m of message.packet?.mappings ?? [])
+          if (m.building) buildings.set(m.id, m.building);
+        if (message.packet?.opening)
+          scope.factoryProbe = {
+            opening: message.packet.opening,
+            tick: message.packet.tick,
+            position: message.packet.endpoints.at(-1)!.transform.position,
+            moving: message.packet.endpoints.at(-1)!.transform.moving,
+            production: message.packet.productionTotals,
+            factory: message.packet.factory,
+            buildings: [...buildings.values()],
+            details: message.packet.details,
+          };
+        return send(message, ...rest);
+      };
+    });
+    const read = async () => {
+      lastFactoryProbe = await worker.evaluate(
+        () => (globalThis as unknown as { factoryProbe: FactoryRouteProbe }).factoryProbe,
+      );
+      return lastFactoryProbe;
+    };
+    const until = async (
+      predicate: (probe: FactoryRouteProbe) => boolean,
+      label: string,
+      timeout = 120000,
+      advanceMilliseconds = 250,
+    ) => {
+      const deadline = performance.now() + timeout,
+        stamp = await page.evaluate(() => Date.now());
+      let advanced = 0;
+      await page.clock.setFixedTime(stamp);
+      await page.clock.pauseAt(stamp);
+      try {
+        while (performance.now() < deadline) {
+          const p = await read();
+          if (p && predicate(p)) return p;
+          await page.clock.fastForward(advanceMilliseconds);
+          advanced += advanceMilliseconds;
+          await worker.evaluate(() => undefined);
+        }
+        throw Error('Factory controls timeout: ' + label + ' ' + JSON.stringify(await read()));
+      } finally {
+        await page.clock.setSystemTime(stamp + advanced);
+        await page.clock.resume();
+      }
+    };
+    await until((p) => p.tick > fixture.world.resources.tick, 'first factory tick');
+    await page.addScriptTag({ path: path.join(root, 'node_modules/axe-core/axe.min.js') });
+    await checkFactoryRoute({
+      page,
+      read,
+      until,
+      prepared: true,
+      root,
+      output,
+      craft: async () => {
+        throw Error('Unexpected fixture crafting');
+      },
+      research: async () => {
+        throw Error('Unexpected fixture research');
+      },
+    });
+    assert.deepEqual(errors, []);
+    console.log('Prepared factory UI controls, industry, shared labs, persistence and AXE passed.');
+  } else if (researchMode) {
     stage = 'shared research queue and M4 compatibility';
     await checkResearchRoute(page, readSlot, output, root);
     assert.deepEqual(errors, []);
@@ -348,7 +466,7 @@ try {
     .catch(() => undefined);
   await fs.writeFile(
     path.join(output, 'failure.json'),
-    JSON.stringify({ stage, error: String(error), errors }, null, 2),
+    JSON.stringify({ stage, error: String(error), errors, lastFactoryProbe }, null, 2),
   );
   throw new Error(`Save acceptance failed at ${stage}`, { cause: error });
 } finally {

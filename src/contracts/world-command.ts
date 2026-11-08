@@ -1,4 +1,6 @@
 import type { WorldCommand } from './world';
+import { isMachineKind, isPlaceable } from '@content/factory';
+import { TOOLBAR_SLOTS } from './toolbar';
 
 /** Validate untrusted worker input before touching a simulation. */
 export function validWorldCommand(value: unknown): value is WorldCommand {
@@ -10,6 +12,52 @@ export function validWorldCommand(value: unknown): value is WorldCommand {
   const batch = (v: unknown) => Number.isSafeInteger(v) && Number(v) >= 0 && Number(v) <= 100;
 
   switch (command['type']) {
+    case 'toolbar-assign':
+    case 'toolbar-select':
+      return (
+        Number.isSafeInteger(command['slot']) &&
+        Number(command['slot']) >= 0 &&
+        Number(command['slot']) < TOOLBAR_SLOTS &&
+        (command['type'] === 'toolbar-select' ||
+          command['item'] === null ||
+          isPlaceable(command['item']))
+      );
+    case 'factory-place-active':
+    case 'factory-place': {
+      const cell = command['cell'] as { column?: unknown; row?: unknown } | null;
+      return (
+        (command['type'] === 'factory-place-active' || isMachineKind(command['equipment'])) &&
+        !!cell &&
+        Number.isSafeInteger(cell.column) &&
+        Number.isSafeInteger(cell.row) &&
+        Number.isInteger(command['rotation']) &&
+        Number(command['rotation']) >= 0 &&
+        Number(command['rotation']) <= 3
+      );
+    }
+    case 'factory-configure':
+      return (
+        id(command['target']) &&
+        typeof command['enabled'] === 'boolean' &&
+        (command['recipe'] === null || id(command['recipe']))
+      );
+    case 'factory-transfer':
+      return (
+        id(command['target']) &&
+        id(command['item']) &&
+        ['input', 'output'].includes(String(command['buffer'])) &&
+        ['load', 'unload'].includes(String(command['direction'])) &&
+        Number.isSafeInteger(command['quantity']) &&
+        Number(command['quantity']) > 0
+      );
+    case 'factory-connect':
+    case 'factory-connect-active':
+      return id(command['from']) && id(command['to']);
+    case 'factory-disconnect':
+      return id(command['connection']);
+    case 'factory-collect-output':
+    case 'factory-dismantle':
+      return id(command['target']);
     case 'place': {
       const cell = command['cell'] as { column?: unknown; row?: unknown } | null;
       return (

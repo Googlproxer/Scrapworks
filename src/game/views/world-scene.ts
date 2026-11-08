@@ -17,7 +17,8 @@ import { SessionDriver } from './session-driver';
 import { WorldFrame } from './world-frame';
 import { attachDebugDraw, debugDrawForScene } from '../debug/draw/debug-draw';
 import type { DebugAttachment } from '../debug/draw/types';
-import { PLACEMENT_REACH, PLAYER_RADIUS } from '@simulation/world-rules';
+import { PLAYER_RADIUS } from '@simulation/world-rules';
+import { OPENING_SETTINGS } from '@content/opening';
 
 /** Composition only: native Babylon hooks invoke ordered behaviors during scene.render(). */
 export class WorldScene {
@@ -54,7 +55,7 @@ export class WorldScene {
         this.frame.isCurrent() ? this.frame.view : undefined,
       );
       for (const [category, radius, color] of [
-        ['placement', PLACEMENT_REACH, '#00ffff'],
+        ['placement', OPENING_SETTINGS.reach, '#00ffff'],
         ['collision', PLAYER_RADIUS, '#ff9900'],
       ] as const)
         this.debugAttachments.push(

@@ -84,6 +84,10 @@ yarn test:acceptance
 
 The [production acceptance probe](acceptance/production-browser.ts) checks the worker URL under a non-root base path, same-origin CSP, movement, menu pause, crash/Retry and teardown. Results remain in ignored `tmp/production-worker-browser/`.
 
+`yarn test:factory` extends the built empty-handed opening through paid factory research, equipment assembly, physical placement/wiring, mixed recycling, Basic/Medium production and two supplied shared-queue labs, then Save/page reload/Continue and desktop/mobile AXE. It uses Playwright's virtual clock and real physical-key/UI input, with no production mutation API, resource grants or injected saves. Timing is functional evidence, not a human pacing measurement. Results are in `tmp/factory-browser/`.
+
+For a faster UI diagnostic, `node tests/acceptance/save-browser.ts --factory-controls` runs the same industrial/control section from an explicitly prepared test save. That mode grants equipment only in isolated fixture setup; its receipt identifies `preparedFixture` and does not claim an empty-handed route. The [factory invariant tests](../src/simulation/factory.test.ts) cover bounded random yields, partial power, whole recovery and simultaneous factory/native/research continuation. Manual performance runs use `node tools/factory-bench.ts` and remain outside CI.
+
 These additional probes require a running development application and Angular's development debug access:
 
 ```sh

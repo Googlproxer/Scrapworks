@@ -15,6 +15,7 @@ import { InventoryPanelComponent } from './inventory-panel.component';
 import { HandcraftPanelComponent } from './handcraft-panel.component';
 import { MiniFabPanelComponent } from './minifab-panel.component';
 import { ResearchPanelComponent } from './research-panel.component';
+import { FactoryPanelComponent } from './factory-panel.component';
 import { GameplaySaveService } from '../../save/gameplay-save.service';
 
 @Component({
@@ -23,6 +24,7 @@ import { GameplaySaveService } from '../../save/gameplay-save.service';
     HandcraftPanelComponent,
     MiniFabPanelComponent,
     ResearchPanelComponent,
+    FactoryPanelComponent,
     CdkTrapFocus,
   ],
   selector: 'app-field-kit',
@@ -58,7 +60,7 @@ export class FieldKitComponent {
       return 'Hand-assemble your Mini Fabricator from plates, wire and both kinds of parts.';
     if (!this.runtime.world()?.productionTotals['plate'] || !opening.state.minifab.owned)
       return 'Request a MiniFab recipe. It makes compatible precursors and works while you explore.';
-    return 'Your MiniFab works without power. Request a recipe and keep gathering; winding gives an optional local speed boost.';
+    return 'Your MiniFab works without power. Research renewable power and recycling, then assign a crafted machine under Equipable. Select its toolbar slot and press B to build; use Factory to inspect and supply machines.';
   });
 
   public constructor() {
@@ -74,30 +76,28 @@ export class FieldKitComponent {
     });
   }
 
-  public readonly activeTab = signal<'inventory' | 'research'>('inventory');
+  public readonly activeTab = signal<'inventory' | 'research' | 'factory'>('inventory');
 
-  public selectTab(tab: 'inventory' | 'research'): void {
+  public selectTab(tab: 'inventory' | 'research' | 'factory'): void {
     if (tab === this.activeTab()) return;
     this.runtime.requestWorkExit(() => {
       this.runtime.command({ type: 'handcraft-ui', visible: false });
       this.activeTab.set(tab);
-      this.element.nativeElement
-        .querySelector<HTMLButtonElement>(tab === 'research' ? '#research-tab' : '#inventory-tab')
-        ?.focus();
+      this.element.nativeElement.querySelector<HTMLButtonElement>(`#${tab}-tab`)?.focus();
     });
   }
 
   public tabKey(event: KeyboardEvent): void {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
+    const tabs = ['inventory', 'research', 'factory'] as const;
+    const index = tabs.indexOf(this.activeTab());
     const tab =
       event.key === 'Home'
-        ? 'inventory'
+        ? tabs[0]
         : event.key === 'End'
-          ? 'research'
-          : this.activeTab() === 'inventory'
-            ? 'research'
-            : 'inventory';
+          ? tabs[2]
+          : tabs[(index + (event.key === 'ArrowRight' ? 1 : 2)) % tabs.length];
     this.selectTab(tab);
   }
 

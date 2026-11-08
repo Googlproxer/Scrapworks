@@ -297,6 +297,7 @@ export class PresentationCache {
       endpoints: packet.endpoints,
       inventory,
       ...(packet.opening ? { opening: structuredClone(packet.opening) } : {}),
+      ...(packet.factory ? { factory: structuredClone(packet.factory) } : {}),
       equipment: opening?.tool ? [opening.tool] : [],
       research: packet.research,
       productionTotals: packet.productionTotals,

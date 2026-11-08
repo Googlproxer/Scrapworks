@@ -37,6 +37,8 @@ import { WorldPhysics } from './physics/world-physics';
 import { TEST_BUILDING_FOOTPRINT, validatePlacement } from './placement';
 import { PlayerMotor, type MovementIntent } from './player-motor';
 import { FIXED_STEP_SECONDS } from './world-rules';
+import { FactorySystem } from './factory';
+import { isFactoryCommand } from '@contracts/factory';
 
 export type { MovementIntent } from './player-motor';
 
@@ -66,6 +68,7 @@ export class Simulation {
   private readonly pilesQuery = this.world.with('pile', 'transform');
   private readonly bodiesQuery = this.world.with('physics', 'transform');
   private readonly opening: OpeningSystem;
+  private readonly factory: FactorySystem;
   private readonly ids = new Map<string, SimulationEntity>();
   private readonly slots: (SimulationEntity | undefined)[] = [];
   private readonly generations: number[] = [];
@@ -172,6 +175,7 @@ export class Simulation {
         });
       }
     }
+    this.resources.factory ??= { connections: [] };
     const player = this.ids.get(this.resources.playerId);
     check(player?.transform, 'Missing player transform');
     check(player.opening, 'Missing opening component');
@@ -221,6 +225,17 @@ export class Simulation {
       },
     };
     this.opening = new OpeningSystem(this.context);
+    this.factory = new FactorySystem({
+      ...this.context,
+      definition: this.definition,
+      resources: this.resources,
+      machines: this.buildingsQuery.entities,
+      deposits: () => this.readDeposits(),
+      add: (data) => {
+        this.insert(data);
+      },
+      remove: (id) => this.remove(id),
+    });
     this.rememberPlayer();
   }
 
@@ -267,6 +282,7 @@ export class Simulation {
       building: data.building,
       opening: data.opening,
       physics: data.physics,
+      machine: data.machine,
     };
     this.world.add(entity);
     this.ids.set(entity.id, entity);
@@ -344,6 +360,11 @@ export class Simulation {
     const commandResults: CommandResult[] = [];
     try {
       for (const command of commands) {
+        if (isFactoryCommand(command)) {
+          commandResults.push(this.factory.command(command));
+          if (this.factory.collisionChanged) this.rebuildCollision();
+          continue;
+        }
         if (command.type !== 'place') {
           const result = this.opening.command(command);
           commandResults.push(result);
@@ -399,8 +420,8 @@ export class Simulation {
         previous.moving = !pose.sleeping;
         this.mark(entity);
       }
-      this.opening.step(FIXED_STEP_SECONDS);
-      if (this.opening.collisionChanged) this.rebuildCollision();
+      this.opening.step(FIXED_STEP_SECONDS, () => this.factory.step(FIXED_STEP_SECONDS));
+      if (this.opening.collisionChanged || this.factory.collisionChanged) this.rebuildCollision();
       this.mark(this.ids.get(this.resources.playerId)!);
       let physicalChange = false;
       for (const change of this.structural) {
@@ -441,6 +462,7 @@ export class Simulation {
       'building',
       'opening',
       'physics',
+      'machine',
     ] as const)
       if (e[key] !== undefined) Object.assign(data, { [key]: e[key] });
     return structuredClone(data);
@@ -520,6 +542,7 @@ export class Simulation {
         .map(([id]) => id),
       productionTotals: { ...this.resources.productionTotals },
       opening: this.opening.view(),
+      factory: this.factory.summary(),
       ...(rotations.length ? { rotations: new Float64Array(rotations).buffer } : {}),
     };
     // Retain bounded backing storage, release component references, and avoid
@@ -559,6 +582,7 @@ export class Simulation {
       player: structuredClone(player.transform!),
       inventory,
       opening: this.opening.view(),
+      factory: this.factory.summary(),
       ground: this.groundView(),
       equipment: player.equipment?.tool ? [player.equipment.tool] : [],
       research: Object.entries(this.resources.research)

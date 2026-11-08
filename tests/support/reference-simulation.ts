@@ -139,6 +139,7 @@ export class ReferenceSimulation {
     delete movementOnly.opening;
     delete movementOnly.ground;
     delete movementOnly.bodies;
+    delete movementOnly.factory;
     assert.deepEqual(canonical(movementOnly), canonical(this.view));
   }
 }

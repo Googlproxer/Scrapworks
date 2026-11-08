@@ -23,6 +23,7 @@ import { MenuLogoComponent } from '../../../shared/loading/menu-logo/menu-logo.c
 import { GameplaySaveService, GAMEPLAY_SAVE_REPOSITORY } from '../../save/gameplay-save.service';
 import { IndexedDbSaveRepository } from '../../../../persistence/indexeddb-save-repository';
 import { GameplaySavesComponent } from '../../save/gameplay-saves/gameplay-saves.component';
+import { PlaceableToolbarComponent } from '../placeable-toolbar/placeable-toolbar.component';
 
 @Component({
   imports: [
@@ -31,6 +32,7 @@ import { GameplaySavesComponent } from '../../save/gameplay-saves/gameplay-saves
     GameplaySavesComponent,
     DebugDrawPanelComponent,
     FieldKitComponent,
+    PlaceableToolbarComponent,
     NotificationStackComponent,
     LoadingIndicatorComponent,
     LoadingScreenComponent,

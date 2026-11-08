@@ -1,5 +1,6 @@
 import { Component, computed, linkedSignal, untracked } from '@angular/core';
 import { OpeningPanel } from './opening-panel';
+import { OPENING_CONTENT } from '@content/opening';
 
 @Component({
   selector: 'app-handcraft-panel',
@@ -19,6 +20,10 @@ export class HandcraftPanelComponent extends OpeningPanel {
     computation: () => untracked(() => this.opening()?.state.handcraft?.unitsLeft ?? 1),
   });
   public readonly customBatch = computed(() => ![1, 5, 10, 25, 100].includes(this.batch()));
+  public readonly batchLimit = computed(() => {
+    const output = this.recipe().outputs[0];
+    return output ? OPENING_CONTENT.items[output.item].stackLimit : 1;
+  });
 
   public readonly recipeResult = computed(() =>
     this.recipe().id === 'base-minifab'

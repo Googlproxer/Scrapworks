@@ -1,6 +1,6 @@
 # Scrapworks Implementation Plan
 
-Updated 8 November 2026 for the implemented Milestone 4 saves and Milestone 5 research queue/catalogue. One manual gameplay slot supports Continue/New Game, visible handcraft resumption, MiniFab/research/native-physics continuation and protection before losing unsaved progress or overwriting another run. The [save implementation report](../reports/milestone-04/2026-11-08/README.md) records verification. The [Milestone 5 decisions](milestone-05-research.md#agreed-scope-and-decisions--8-november-2026) define the implemented first-factory research slice, Basic research kit, shared queue, lab fixtures and narrow save compatibility; see the [research implementation report](../reports/milestone-05/2026-11-08/README.md). Earlier opening and migration evidence retain their dated scope; factories and later progression remain planned.
+Updated 8 November 2026 for the opening, manual saves, shared research and first working factory. Milestone 6 adds paid equipment, wired solar/wind, bounded mixed recycling, Basic/Medium fabrication, finite extraction and physical labs on the existing worker. Its [implementation report](../reports/milestone-06/2026-11-08/README.md) records current verification, manual profiling and final acceptance. The [save report](../reports/milestone-04/2026-11-08/README.md) and [research report](../reports/milestone-05/2026-11-08/README.md) retain their earlier scope. Transport, expanded weather/storage and restoration remain later work.
 
 Build a browser-first 3D game with Angular UI, Babylon presentation, Editor-authored layout, a plain TypeScript simulation, and local Dexie/IndexedDB snapshots. The [GDD](../design/GDD.md), [player progression decisions](../design/player-progression.md), [TDD](../design/TDD.md), and [Art Document](../art/README.md) own their respective requirements.
 
@@ -14,9 +14,9 @@ Core objects now use native presentation behaviors composed by `WorldScene`, wit
 
 The [cleanup record](3d-cleanup.md) describes retired tools/assets and their recovery sources. Fresh [authoring workflow validation](../reports/workflow/2026-10-23/README.md) verifies export/reload, failed-save retention and recovery.
 
-The [production ECS/worker implementation plan](ecs-worker-implementation.md) established Step 0. Milestone 3 now executes the opening on that same authority and clock. Completed-tick hooks, authored-world Retry and plain capture/rebuild remain in place; gameplay persistence and factory executors remain later work.
+The [production ECS/worker implementation plan](ecs-worker-implementation.md) established Step 0. Milestones 3–6 execute the opening and factory on that same authority and clock. Completed-tick hooks, authored-world Retry and plain capture/rebuild remain in place; Milestone 4 implements gameplay persistence.
 
-Manual salvage, recipe jobs, inventory interaction, background Field Research and the MiniFab are implemented. Factory machines/labs, transport and restoration remain later work. Gameplay saves have their own repository and real production IndexedDB acceptance; controls-settings and developer test-data storage remain separate.
+Manual salvage, recipe jobs, inventory interaction, background Field Research, the MiniFab and manually supplied factory machines/labs are implemented. Transport and restoration remain later work. Gameplay saves have their own repository and real production IndexedDB acceptance; controls-settings and developer test-data storage remain separate.
 
 ## Milestones at a glance
 
@@ -29,7 +29,7 @@ The [Fibery project tracker](fibery-tracking.md) provides the live task board, m
 | [3. Character and manual opening](milestone-03-character-and-manual-opening.md)     | Find scrap, field-research tools/recipes and use the Mini Fabricator  | Implemented and verified: empty-handed opening, inventory/salvage, timed research, safe handcrafting, MiniFab, winding and accessible UI. See the dated opening report. |
 | [4. First local save](milestone-04-first-local-save.md)                             | Continue a saved opening with visible handcraft, MiniFab and research | Implemented: schema-1 manual slot, transactional storage, guarded worker/scene/UI replacement, visible craft resume and production browser acceptance.                  |
 | [5. Research](milestone-05-research.md)                                             | Expand research, craft Basic research kits and edit a shared queue | Implemented and locally verified: 14 technologies/seven recipes, retained-progress queue, narrow M4 save compatibility, accessible UI and shared lab rule fixtures. Physical factories/labs follow in Milestone 6. |
-| [6. First working machines](milestone-06-first-working-machines.md)                 | Manually supply renewable-powered recycling, fabrication and labs     | Not started. Random recycler outputs, fabrication arity, extraction and full recovery are planned.                                                                      |
+| [6. First working machines](milestone-06-first-working-machines.md)                 | Manually supply renewable-powered recycling, fabrication and labs     | Complete and locally verified: empty-handed earned construction, wired proportional solar/wind power, bounded recycling, Basic/Medium fabrication, extraction, two shared-queue labs, full recovery and Save/reload/Continue. Batteries/coal remain M8. |
 | [7. Transport](milestone-07-transport.md)                                           | Automate direct supply and sort mixed recycler output                 | Not started. Trains and loading/unloading stations are later-game work.                                                                                                 |
 | [8. Restoration and energy choices](milestone-08-restoration-and-energy-choices.md) | Research greenhouses and demonstrate peaceful terraforming            | Not started. Expanded weather/storage, optional coal and pollution mitigation remain planned.                                                                           |
 | [9. Save resilience](milestone-09-save-resilience.md)                               | Autosave, recover, and transfer progress                              | Manual-save foundation delivered in Milestone 4; autosaves, revisions, migrations and gameplay transfer planned. Includes the deferred save-performance review.         |
@@ -41,9 +41,9 @@ Save-format optimization is deferred by the 8 November 2026 decision: keep the c
 
 ## Detailed milestone plans
 
-Milestones 2–3 received foundation work during migration. The 27 October design revision preserves that credit and moves the small timed field-research/recipe-unlock slice into Milestone 3, alongside onboarding, salvage and MiniFab crafting. The revised 28 October opening teaches safe handcrafting through tools, materials and mechanical/electrical parts before MiniFab research and four-ingredient hand assembly. Handcrafting ends on UI exit with a warning and an unfinished-unit refund. The MiniFab is presented beside inventory and always works without power; optional physical winding charges a local speed boost independently of factory electricity. Milestone 4 saves work, contributions, charge and distinct research/upgrade ownership. Milestone 5 expands the tree and lab rules; Milestone 6 integrates the renewable-powered placed factory, and Milestone 7 adds sorting and direct transport. Milestone 8 demonstrates researched greenhouse restoration without a fail state. Milestones 3–5 have dated implementation evidence; Milestones 6–10 remain planned.
+Milestones 2–3 received foundation work during migration. The 27 October design revision preserves that credit and moves the small timed field-research/recipe-unlock slice into Milestone 3, alongside onboarding, salvage and MiniFab crafting. The revised 28 October opening teaches safe handcrafting through tools, materials and mechanical/electrical parts before MiniFab research and four-ingredient hand assembly. Handcrafting ends on UI exit with a warning and an unfinished-unit refund. The MiniFab is presented beside inventory and always works without power; optional physical winding charges a local speed boost independently of factory electricity. Milestone 4 saves work, contributions, charge and distinct research/upgrade ownership. Milestone 5 expands the tree and lab rules; Milestone 6 integrates the renewable-powered placed factory, and Milestone 7 adds sorting and direct transport. Milestone 8 demonstrates researched greenhouse restoration without a fail state. Milestones 3–6 have implementation evidence; Milestones 7–10 retain their outstanding gameplay scope.
 
-Opening targets are improved-tool research in about a minute and first player-requested automatic crafting within 15–20 minutes for relaxed new players or under five minutes for experienced players. Base components remain useful downstream. MiniFab acquisition/form/baseline power are settled; [later design and provisional balance](../design/player-progression.md#implementation-readiness-and-later-design-work) include provisional recipe costs/durations, physical lab integration, source-ore/liquid recovery details, recycler distribution and weather/restoration balance. Later MiniFab onboard solar/wind/coal, grid and inventory automation each need the related technology where applicable, separate MiniFab research and actual crafted upgrades. Grid waits for electricity; pure ores, trains and resource-configuration UI need explicit later slices.
+Opening targets are improved-tool research in about a minute and first player-requested automatic crafting within 15–20 minutes for relaxed new players or under five minutes for experienced players. Base components remain useful downstream. MiniFab acquisition/form/baseline power are settled; [later design and provisional balance](../design/player-progression.md#implementation-readiness-and-later-design-work) include playtest refinement of recipe/recycler/renewable values, source-ore/liquid recovery details and weather/restoration balance. Later MiniFab onboard solar/wind/coal, grid and inventory automation each need the related technology where applicable, separate MiniFab research and actual crafted upgrades. Grid waits for electricity; pure ores, trains and resource-configuration UI need explicit later slices.
 
 ## Current code layout
 
@@ -79,20 +79,20 @@ Editor markers compile into a versioned plain `WorldDefinition` for initial layo
 
 ## Suggested simulation schedule
 
-The host pins the latest completed view, drains bounded completed-tick presentation notifications, then submits future credits. One dedicated worker executes commands, sequential domain work, PlayerMotor, structural commits and tick increment before lean publication. There is one 20 Hz accumulator, one in-flight advance and one shared five-step allowance; suspension cancels pending commands/input and discards hidden time. Scripts cannot change the tick they report. Stock spending is explicit manual/current handcraft, requested MiniFab, then Field Research policy; these opening executors are implemented. The factory schedule below remains a future recommendation.
+The host pins the latest completed view, drains bounded completed-tick presentation notifications, then submits future credits. There is one 20 Hz accumulator, one in-flight advance and one shared five-step allowance; suspension cancels pending commands/input and discards hidden time. Scripts cannot change the tick they report. The implemented worker order is commands/movement → handcraft/salvage → requested MiniFab → factory preparation/power/work → one shared lab/field research pass → structural commits/tick → lean publication. Manual/current handcraft and MiniFab commitments precede the field draw; labs pay only from their own buffers. The expanded schedule below stages later transport/environment phases.
 
 | Phase within one tick     | Responsibility                                                                                                                                        |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1. Commands and movement  | Validate salvage, crafting/device targets, research contributions, recovery and placement in order; apply sampled movement with fixed delta time      |
 | 2. Transport              | Move existing items and water with destination reservations; production output from this tick waits until the next transport phase                    |
-| 3. Production preparation | Establish eligible precursor/factory/lab jobs, reserve ingredients once, and calculate energy requests; retain any already-rolled recycler output     |
+| 3. Production preparation | Establish eligible factory jobs and reserve manufacturing ingredients once; labs check local bundles without upfront reservation; retain pending recycler output |
 | 4. Power                  | Generate energy, resolve storage and demand in stable order, and record actual fuel use and emissions                                                 |
 | 5. Production work        | Advance player/Mini Fabricator/factory work and funded field/lab research; commit output/history or completed unlock once, respecting capacity        |
 | 6. Environment            | Consume available greenhouse water and update pollution and restoration; freshly supplied resources are used according to this documented phase order |
 | 7. Time and objective     | Advance the simulation tick, saved daylight/weather/event state and peaceful terraforming checkpoint progress                                         |
 | 8. Publication            | Publish read-only views and supply any requested detached snapshot of the completed step                                                              |
 
-Power allocation should be deterministic, such as ordering competing consumers by stable machine ID. Decide whether a generator burns a whole fuel item into stored energy or advances a fuel job over time, and save that progress. Decide when batteries charge relative to consumer allocation. Exact quantities remain balance values, but these accounting rules must be explicit.
+Milestone 6 implements [proportional allocation](milestone-06-first-working-machines.md#agreed-scope-and-decisions--8-november-2026) across runnable demand in each explicitly wired network; stable ordering makes calculation deterministic. Unused generation is curtailed. Daylight/wind and real lab buffers are included; batteries, fuel/coal, event weather and environmental phases remain Milestone 8. That milestone must define fuel progress and battery charge/discharge ordering before implementing them. The table also spans later transport/environment work.
 
 ## Acceptance route and focused checks
 
@@ -113,7 +113,7 @@ Focus automated tests on rule invariants, conservation, research atomicity, save
 
 ## Additional implementation diagrams
 
-The [class diagram](../design/TDD.md#core-class-diagram) and [application overview](../design/TDD.md#application-system-interaction-diagram) describe current boundaries and future branches. The dependency/fixed-step diagrams show the implemented session and opening. Manual gameplay storage is implemented; labs and factory branches remain future design.
+The [class diagram](../design/TDD.md#core-class-diagram), [application overview](../design/TDD.md#application-system-interaction-diagram) and dependency/fixed-step diagrams describe the implemented session, opening, saves and first factory. Transport/environment branches remain future design.
 
 ### Module dependency diagram
 
@@ -130,8 +130,8 @@ flowchart LR
     Compiler[World definition compiler]
     Definition[Plain initial world definition]
     Application[GameRuntimeService and GameSession]
-    Simulation[Simulation PlayerMotor and OpeningSystem own world state]
-    Content[Versioned plain opening catalogue]
+    Simulation[Simulation PlayerMotor OpeningSystem and FactorySystem own world state]
+    Content[Versioned plain opening and factory catalogue]
     Grid[Plain grid and placement rules]
     Model[Plain commands, tick contracts and detached WorldView]
     Settings[Controls settings IndexedDB adapter]
@@ -165,7 +165,7 @@ flowchart LR
 
 ### Fixed step loop diagram
 
-Only completed steps publish lean presentation. The host uses the existing browser frame source, independently of physics. Completed-tick hooks run after pinning the latest publication and before submitting future credits. Worker execution is asynchronous; a render frame never waits for the new batch. Pause clears pending time/input and acknowledges bounded in-flight work. Gameplay save/load holds preserve work for capture or rollback and discard elapsed credits on release. Factory jobs remain future work.
+Only completed steps publish lean presentation. The host uses the existing browser frame source, independently of physics. Completed-tick hooks run after pinning the latest publication and before submitting future credits. Worker execution is asynchronous; a render frame never waits for the new batch. Pause clears pending time/input and acknowledges bounded in-flight work. Gameplay save/load holds preserve work for capture or rollback and discard elapsed credits on release, including partial factory jobs and pending results.
 
 [SVG image](../diagrams/fixed-step-loop.svg) / [PNG image](../diagrams/fixed-step-loop.png) / [Mermaid source](../diagrams/src/fixed-step-loop.mmd)
 
@@ -181,9 +181,9 @@ flowchart TB
     Available{Step available and no batch in flight?}
     Send[Submit one advance batch without waiting]
     Commands[Worker revalidates sequenced commands]
-    Systems[PlayerMotor handcraft salvage MiniFab then research]
+    Systems[PlayerMotor handcraft salvage MiniFab factory power and work then shared research]
     Commit[Commit structural changes and increment tick]
-    Publish[Transfer numeric deltas and bounded player opening state]
+    Publish[Transfer numeric deltas opening power and bounded machine details]
     Cache[Apply ordered versions and queue completed summaries]
     Present[Interpolate player and apply entity changes from pinned view]
     Feedback[Camera follow and selection and placement feedback]

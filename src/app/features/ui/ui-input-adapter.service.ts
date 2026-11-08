@@ -233,7 +233,11 @@ export class UiInputAdapterService {
         }
         return;
       }
-      if (active instanceof HTMLInputElement && active.type === 'range') {
+      if (
+        active instanceof HTMLInputElement &&
+        (active.type === 'range' || active.type === 'number') &&
+        active.step !== 'any'
+      ) {
         const previous = active.value;
         if (forward) active.stepUp();
         else active.stepDown();

@@ -39,9 +39,11 @@ function object(value: unknown): Record<string, unknown> {
 /** The explicit M4 content upgrade; normal snapshot/gameplay/native validation still follows. */
 export function upgradeOpeningSave(value: unknown): unknown {
   const original = object(value);
+  if (original['contentVersion'] === 'research-1') return upgradeResearchSave(original);
   if (original['contentVersion'] !== 'opening-1') return value;
   const copy = object(structuredClone(original)),
     resources = object(copy['resources']);
+  check(!Object.hasOwn(resources, 'factory'), 'Unexpected legacy factory resources');
   const ledgers = object(resources['research']);
   for (const [id, value] of Object.entries(ledgers)) {
     check(legacyTechnologies.has(id), 'Unknown legacy technology');
@@ -68,6 +70,10 @@ export function upgradeOpeningSave(value: unknown): unknown {
 
   for (const value of copy['entities']) {
     const entity = object(value);
+    check(
+      entity['kind'] !== 'building' && !Object.hasOwn(entity, 'machine'),
+      'Unexpected legacy machine',
+    );
     if (entity['inventory']) stacks(object(entity['inventory'])['slots']);
     if (entity['pile']) stacks([entity['pile']]);
     if (!entity['opening']) continue;
@@ -102,6 +108,57 @@ export function upgradeOpeningSave(value: unknown): unknown {
     delete opening['fieldTechnology'];
     opening['researchQueue'] = target === null ? [] : [target];
   }
+  copy['contentVersion'] = OPENING_CONTENT.version;
+  resources['factory'] = { connections: [] };
+  return copy;
+}
+
+/** Exact M5 namespace only: new equipment/components cannot masquerade as historical data. */
+function upgradeResearchSave(original: Record<string, unknown>): unknown {
+  const copy = object(structuredClone(original)),
+    resources = object(copy['resources']);
+  check(
+    copy['version'] === 3 && !Object.hasOwn(resources, 'factory'),
+    'Invalid M5 factory namespace',
+  );
+  const items = new Set([...legacyItems, 'research-kit']);
+  const recipes = new Set([...legacyRecipes, 'basic-research-kit']);
+
+  const stock = (value: unknown) => {
+    check(Array.isArray(value), 'Invalid M5 stock');
+    for (const stack of value)
+      if (stack !== null) check(items.has(String(object(stack)['item'])), 'Unknown M5 item');
+  };
+
+  for (const field of ['productionTotals', 'extractionTotals'])
+    for (const item of Object.keys(object(resources[field])))
+      check(
+        items.has(item) || (field === 'productionTotals' && item === 'minifab'),
+        'Unknown M5 history',
+      );
+  check(
+    Array.isArray(copy['entities']) && copy['entities'].length <= 250000,
+    'Invalid M5 entities',
+  );
+  for (const entry of copy['entities']) {
+    const e = object(entry);
+    check(e['kind'] !== 'building' && !Object.hasOwn(e, 'machine'), 'Unexpected M5 machine');
+    if (e['inventory']) stock(object(e['inventory'])['slots']);
+    if (e['pile']) stock([e['pile']]);
+    if (!e['opening']) continue;
+    const opening = object(e['opening']),
+      mini = object(opening['minifab']);
+    stock(mini['input']);
+    stock(mini['output']);
+    for (const job of [opening['handcraft'], mini['job'], mini['request']])
+      if (job !== null) check(recipes.has(String(object(job)['recipe'])), 'Unknown M5 recipe');
+    if (mini['outputRecipe'] !== null)
+      check(recipes.has(String(mini['outputRecipe'])), 'Unknown M5 output');
+  }
+  for (const ledger of Object.values(object(resources['research'])))
+    for (const item of Object.keys(object(object(ledger)['consumed'])))
+      check(items.has(item), 'Unknown M5 contribution');
+  resources['factory'] = { connections: [] };
   copy['contentVersion'] = OPENING_CONTENT.version;
   return copy;
 }

@@ -2,24 +2,6 @@
   <h3 id="bag-title">
     Inventory <span>{{ usedSlots() }}/24 slots</span>
   </h3>
-  <p>
-    Equipped tool: {{ opening.tool ? name(opening.tool) : 'Bare hands' }}. No weight or durability.
-  </p>
-  <div class="equipment-action">
-    @if (opening.tool) {
-      <button
-        type="button"
-        [disabled]="!!opening.state.handcraft"
-        (click)="runtime.command({ type: 'equip', item: null })"
-      >
-        Unequip tool
-      </button>
-    } @else if (amount('prybar')) {
-      <button type="button" (click)="runtime.command({ type: 'equip', item: 'prybar' })">
-        Equip prybar
-      </button>
-    }
-  </div>
   <ol class="bag" aria-label="Bag slots">
     @for (slot of opening.bag.slots; track $index) {
       <li [class.occupied]="!!slot">
@@ -33,6 +15,7 @@
       </li>
     }
   </ol>
+  <app-equipable-panel />
   <details>
     <summary>Recover materials</summary>
     <p>Disassembly returns solid material value. It needs room for the complete return.</p>

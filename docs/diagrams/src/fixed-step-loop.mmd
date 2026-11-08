@@ -9,9 +9,9 @@ flowchart TB
     Available{Step available and no batch in flight?}
     Send[Submit one advance batch without waiting]
     Commands[Worker revalidates sequenced commands]
-    Systems[PlayerMotor handcraft salvage MiniFab then research]
+    Systems[PlayerMotor handcraft salvage MiniFab factory power and work then shared research]
     Commit[Commit structural changes and increment tick]
-    Publish[Transfer numeric deltas and bounded player opening state]
+    Publish[Transfer numeric deltas opening power and bounded machine details]
     Cache[Apply ordered versions and queue completed summaries]
     Present[Interpolate player and apply entity changes from pinned view]
     Feedback[Camera follow and selection and placement feedback]

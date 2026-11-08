@@ -18,10 +18,14 @@ import type { InspectorState, UiKeyInput } from '@contracts/game-client';
 import type { GameState, SceneKey } from '@contracts/game-state';
 import type { ActionFrame, ButtonControl } from '@contracts/input';
 
-import type { OpeningCommand } from '@contracts/opening';
+import type { WorldCommand } from '@contracts/world';
+import type { EquipmentId } from '@contracts/factory';
+import { validateFactoryPlacement } from '@simulation/factory-placement';
+import { machineAtCell, validatePowerConnection } from '@simulation/power-connection';
 import type { Inspection } from '@contracts/simulation';
 import { environment } from '@environments/environment';
-import { validatePlacement } from '@simulation/placement';
+import { MACHINE_FOOTPRINT } from '@content/factory';
+import { TOOLBAR_SLOTS } from '@contracts/toolbar';
 import { ControlSettingsService } from '../controls/control-settings.service';
 import { GAME_CLIENT_LOADER, type GameClientFactory } from './game-client-factory';
 import { AFTER_PAINT } from '../../shared/loading/after-paint';
@@ -102,6 +106,11 @@ export class GameRuntimeService {
   public readonly isLoading = computed(() => this.state().phase === 'loading');
   public readonly errorMessage = computed(() => this.state().errorMessage);
   public readonly world = computed(() => this.savePreview() ?? this.sessions.world());
+  public readonly toolbar = computed(() => this.world()?.opening?.state.toolbar);
+  public readonly activePlaceable = computed(() => {
+    const toolbar = this.toolbar();
+    return toolbar?.slots[toolbar.active] ?? null;
+  });
   private readonly selectionValue = signal<WorldSelection>(null);
   public readonly selection = this.selectionValue.asReadonly();
   private readonly placementValue = signal<PlacementFeedback | null>(null);
@@ -109,15 +118,26 @@ export class GameRuntimeService {
   public readonly placementLabel = computed(() => {
     const feedback = this.placementFeedback();
     if (!feedback) return null;
-    if (feedback.valid) return 'Placement available';
+    if (feedback.valid) {
+      if (feedback.connection === 'cancel') return 'Click again to cancel this connection.';
+      if (feedback.connection === 'start') return 'Click a machine to start a power connection.';
+      if (feedback.connection === 'end') return 'Click to connect; first cell again cancels.';
+      return 'Placement available';
+    }
     return {
       'invalid-cell': 'Point at a world cell.',
       'out-of-bounds': 'Choose a cell inside the world.',
       terrain: 'This terrain cannot hold a building.',
       occupied: 'This space is occupied.',
-      'player-overlap': 'Move clear of the building footprint.',
-      'out-of-reach': 'Move closer to place here.',
-      unavailable: 'Placement is unavailable.',
+      'player-overlap': 'Move clear of the machine’s collision body.',
+      'out-of-reach': feedback.connection
+        ? 'Move within two metres of an endpoint.'
+        : 'Bring part of the footprint within two metres.',
+      'machine-required': 'Point at a placed machine.',
+      'same-machine': 'Choose a different machine.',
+      'cable-too-long': 'Power connections reach up to twelve metres.',
+      'already-connected': 'These machines are already connected.',
+      unavailable: 'Assign and select a carried placeable on the toolbar.',
     }[feedback.reason ?? 'unavailable'];
   });
   public readonly selectedEntityId = computed(() => {
@@ -241,6 +261,21 @@ export class GameRuntimeService {
                 else this.salvageNearby();
               }
               const inventory = frame.states['inventory'];
+              for (let slot = 0; slot < TOOLBAR_SLOTS; slot++) {
+                const action = frame.states[`slot${slot + 1}`];
+                if (action?.kind === 'button' && action.pressed) this.selectPlaceable(slot, false);
+              }
+              for (const [name, step] of [
+                ['previousSlot', -1],
+                ['nextSlot', 1],
+              ] as const) {
+                const action = frame.states[name];
+                if (action?.kind === 'button' && action.pressed)
+                  this.selectPlaceable(
+                    ((this.toolbar()?.active ?? 0) + step + TOOLBAR_SLOTS) % TOOLBAR_SLOTS,
+                    false,
+                  );
+              }
               if (inventory?.kind === 'button' && inventory.pressed) this.toggleFieldKit();
             }
             this.inputCoordinator.dispatch(
@@ -321,31 +356,46 @@ export class GameRuntimeService {
           },
           isSimulationActive: () => !this.saveHolds && this.simulationAllowed(),
         },
-        placement: environment.dev
-          ? {
-              place: (cell, rotation) => {
-                if (generation === this.generation && this.gameplayAllowed()) {
-                  this.session?.enqueue({
-                    type: 'place',
-                    cell,
-                    rotation,
-                    buildingId: 'test-building',
-                  });
-                }
-              },
-              preview: (cell, rotation) => {
-                if (generation !== this.generation || !this.session || !this.definition)
-                  return { valid: false, reason: 'unavailable', cells: [] };
-                return validatePlacement(
-                  this.definition,
-                  this.session.readView(),
-                  cell,
-                  rotation,
-                  !!environment.dev,
-                );
-              },
+        placement: {
+          current: () => {
+            const item = this.activePlaceable();
+            return item
+              ? { key: item, slot: this.toolbar()?.active, footprint: MACHINE_FOOTPRINT }
+              : null;
+          },
+          place: (cell, rotation, anchor) => {
+            if (generation === this.generation && this.gameplayAllowed()) {
+              if (this.activePlaceable() === 'power-connection') {
+                const view = this.session?.readView();
+                const target = view && machineAtCell(view.buildings, cell);
+                if (anchor && target)
+                  this.command({ type: 'factory-connect-active', from: anchor, to: target.id });
+                return;
+              }
+              this.command({
+                type: 'factory-place-active',
+                cell,
+                rotation,
+              });
             }
-          : undefined,
+          },
+          preview: (cell, rotation, anchor) => {
+            if (generation !== this.generation || !this.session || !this.definition)
+              return { valid: false, reason: 'unavailable', cells: [] };
+            const equipment = this.activePlaceable();
+            const view = this.session.readView();
+            if (!equipment || !(view.inventory[equipment] > 0))
+              return { valid: false, reason: 'unavailable', cells: [cell] };
+            if (equipment === 'power-connection')
+              return validatePowerConnection(
+                this.definition,
+                view,
+                anchor ?? null,
+                machineAtCell(view.buildings, cell)?.id ?? '',
+              );
+            return validateFactoryPlacement(this.definition, view, equipment, cell, rotation);
+          },
+        },
       };
 
       const onDebugDrawStatus = (status: DebugDrawStatus) => {
@@ -664,7 +714,7 @@ export class GameRuntimeService {
     );
   }
 
-  public command(command: OpeningCommand): import('@contracts/session-event').CommandSubmission {
+  public command(command: WorldCommand): import('@contracts/session-event').CommandSubmission {
     if (this.saveHolds || !this.simulationAllowed() || !this.session)
       return { status: 'unavailable' };
     this.session.setPaused(false);
@@ -674,8 +724,30 @@ export class GameRuntimeService {
       : { status: 'queued', sequence, generation: this.session.generation };
   }
 
+  public selectPlaceable(slot: number, returnToWorld = true): void {
+    this.command({ type: 'toolbar-select', slot });
+    if (returnToWorld) this.focusViewport();
+  }
+
+  public assignPlaceable(slot: number, item: EquipmentId | null): void {
+    this.command({ type: 'toolbar-assign', slot, item });
+  }
+
   public salvageNearby(): void {
     this.openingUi.salvageNearby();
+  }
+
+  public inspectFactory(id: string): void {
+    this.unsubscribeInspection?.();
+    this.unsubscribeInspection = undefined;
+    this.selectionValue.set(id ? { kind: 'entity', id } : null);
+    this.inspectionValue.set(null);
+    const generation = this.generation;
+    if (id && this.session)
+      this.unsubscribeInspection = this.session.subscribeDetails(id, (value) => {
+        if (generation === this.generation && this.selectedEntityId() === id)
+          this.inspectionValue.set(value);
+      });
   }
 
   public toggleFieldKit(): void {
@@ -747,7 +819,7 @@ export class GameRuntimeService {
     const session = this.session;
     if (!session?.isReady) throw new Error('No ready game to save.');
     const capture = await session.capture();
-    if (capture.world.entities.some((entity) => entity.kind === 'building'))
+    if (capture.world.entities.some((entity) => entity.building?.buildingId === 'test-building'))
       throw new Error('Remove development test buildings before saving this world.');
     if (this.session !== session || this.disposed)
       throw new Error('The game changed while saving.');

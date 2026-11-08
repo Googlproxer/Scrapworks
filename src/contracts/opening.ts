@@ -1,6 +1,8 @@
 import type { MiniFabStatus } from './session-event';
 import type { ItemStack } from './simulation';
 import type { WorldPosition } from './world';
+import type { ToolbarData } from './toolbar';
+import type { EquipmentId } from './factory';
 
 export interface CraftOperation {
   id: string;
@@ -15,6 +17,8 @@ export interface HandcraftJob extends CraftOperation {
 
 /** Simulation-owned player components. Inventory and research ledgers have one owner. */
 export interface OpeningData {
+  /** Absent only in compatible saves written before the placeable toolbar existed. */
+  toolbar?: ToolbarData;
   salvage: { target: string; remaining: number } | null;
   handcraft: HandcraftJob | null;
   handcraftVisible: boolean;
@@ -48,6 +52,10 @@ export interface GroundItemView {
 /** Small detached player projection; never serializes the ECS population. */
 export interface OpeningView {
   readonly state: {
+    readonly toolbar?: {
+      readonly slots: readonly (EquipmentId | null)[];
+      readonly active: number;
+    };
     readonly salvage: { readonly target: string; readonly remaining: number } | null;
     readonly handcraft:
       | (CraftOperationView & {
@@ -101,6 +109,8 @@ interface CraftOperationView {
 }
 
 export type OpeningCommand =
+  | { type: 'toolbar-assign'; slot: number; item: EquipmentId | null }
+  | { type: 'toolbar-select'; slot: number }
   | { type: 'salvage'; target: string | null }
   | { type: 'pickup'; target: string }
   | { type: 'equip'; item: string | null }

@@ -1,0 +1,58 @@
+<div
+  class="toolbar"
+  role="toolbar"
+  tabindex="-1"
+  aria-label="Placeable toolbar"
+  (keydown)="key($event)"
+>
+  @for (slot of slots(); track slot.index) {
+    <button
+      type="button"
+      [attr.data-slot]="slot.index"
+      [class.active]="active() === slot.index"
+      [attr.aria-pressed]="active() === slot.index"
+      [tabIndex]="active() === slot.index ? 0 : -1"
+      [attr.aria-description]="
+        'Slot ' +
+        (slot.index + 1) +
+        ': ' +
+        (slot.item ? names[slot.item] + ', ' + amount(slot.item) + ' carried' : 'Empty')
+      "
+      (click)="runtime.selectPlaceable(slot.index)"
+    >
+      <kbd>{{ slot.index + 1 }}</kbd>
+      <span class="item-name">{{ slot.item ? shortNames[slot.item] : 'Empty' }}</span>
+      <strong class="quantity">{{ slot.item ? amount(slot.item) : '—' }}</strong>
+    </button>
+  }
+</div>
+<div class="toolbar-help">
+  <p class="toolbar-caption" aria-live="polite">
+    @if (runtime.activePlaceable(); as item) {
+      <strong>{{ names[item] }}</strong>
+      ·
+      @if (runtime.placementFeedback()) {
+        @if (item === 'power-connection') {
+          Build mode · click two machines · first cell again cancels · B exits
+        } @else {
+          Build mode · R rotates · click places · B exits
+        }
+      } @else {
+        B to build
+      }
+    } @else {
+      Assign placeables in Inventory &amp; Crafting → Equipable. Select with 1–8 or controller
+      left/right.
+    }
+  </p>
+  <p class="toolbar-caption layout-reservation" aria-hidden="true">
+    Assign placeables in Inventory &amp; Crafting → Equipable. Select with 1–8 or controller
+    left/right.
+  </p>
+  <p class="toolbar-caption layout-reservation" aria-hidden="true">
+    Power connection · Build mode · click two machines · first cell again cancels · B exits
+  </p>
+  <p class="toolbar-caption layout-reservation" aria-hidden="true">
+    Mixed-output recycler · Build mode · R rotates · click places · B exits
+  </p>
+</div>

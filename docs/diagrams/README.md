@@ -1,10 +1,10 @@
 # Scrapworks diagrams
 
-Updated 2 November 2026. The core class, application, module and frame diagrams include the implemented OpeningSystem, versioned catalogue and detached player projection on the single worker. Movement/input ownership is distinct from simulation activity while the field kit is focused. The gameplay/research overview still includes explicitly later labs, factories, transport and environment systems. Mermaid blocks remain authoritative and their matching source/SVG/PNG artifacts are regenerated together.
+Updated 8 November 2026. The core class and application diagrams include the implemented OpeningSystem, FactorySystem, versioned catalogue, shared field/lab research and detached projections on the single worker. Movement/input ownership is distinct from simulation activity while the field kit is focused. Module/frame diagrams retain their earlier foundation scope; transport and environment systems remain later work. Mermaid blocks remain authoritative and their matching source/SVG/PNG artifacts are regenerated together.
 
 The [technical design](../design/TDD.md) and [implementation roadmap](../plans/README.md) contain the editable Mermaid blocks. Standalone sources are under [src/](src/), and matching SVG and PNG files are stored in this folder for GitHub preview and export.
 
-The save diagrams describe implemented Milestone 4 behavior. The research transaction diagram now includes Milestone 5's one shared queue/head, retained ledgers, source-local paced payment and next-step queue advancement. Its plain lab rules are fixture-verified; physical factory/lab integration remains future work. Current acceptance and remaining work are recorded in the milestone plans.
+The save diagrams describe implemented Milestone 4 behavior. The research transaction diagram includes Milestone 5's shared queue/head, retained ledgers, source-local paced payment and next-step advancement. The technical class/application diagrams now include M6 FactorySystem, machine buffers/jobs/history markers and powered lab-source preparation on the same worker. Transport/environment branches remain later work; current acceptance is recorded in the milestone plans.
 
 ## Regeneration
 

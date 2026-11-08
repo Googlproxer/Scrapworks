@@ -11,6 +11,8 @@ export interface ResearchSource {
   readonly inventory: InventoryData;
   /** Fully supplied work seconds per simulation second; omit disabled/unpowered sources. */
   readonly rate: number;
+  /** Ordered simulation accounting hook; reports accepted work, never attempted budget. */
+  readonly onWork?: (seconds: number) => void;
 }
 
 export function researchReady(
@@ -77,6 +79,7 @@ export function advanceResearch(
       const work = Math.min(budget, Math.max(0, boundary - ledger.work));
       ledgers[technology.id] = ledger;
       ledger.work = Math.min(boundary, ledger.work + work);
+      source.onWork?.(work);
       budget -= work;
       if (ledger.work + 1e-9 < boundary) break;
       if (!transact(source.inventory, bundle, [], OPENING_CONTENT)) break;

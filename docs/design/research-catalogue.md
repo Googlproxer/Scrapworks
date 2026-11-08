@@ -1,6 +1,6 @@
 # Milestone 5 research catalogue
 
-Implemented 8 November 2026. Quantities, durations, lab rates and construction costs below are **provisional playtest balance**. [Fibery](balance/README.md) owns connected authoring; the reviewed runtime data is [first-factory.ts](../../src/content/first-factory.ts), composed with the unchanged five-technology opening in [opening.ts](../../src/content/opening.ts). The implemented slice has 14 paid technologies and seven recipes. Physical factory equipment and labs remain Milestone 6; sorting/conveyor execution remains Milestone 7.
+Implemented 8 November 2026. Quantities, durations, lab rates and construction costs below are **provisional playtest balance**. [Fibery](balance/README.md) owns connected authoring; the reviewed runtime data is [first-factory.ts](../../src/content/first-factory.ts), composed with the five-technology opening in [opening.ts](../../src/content/opening.ts). Milestone 5 delivered 14 paid technologies and seven recipes. Milestone 6 adds eight paid equipment assemblies and physical factory/lab operation, bringing the runtime to 15 recipes; see the [factory catalogue](factory-catalogue.md). Sorting/conveyor execution remains Milestone 7.
 
 ## Paid continuation
 
@@ -24,7 +24,7 @@ The kit-funded Sorting and conveyors technology demonstrates the next research-c
 
 ## Construction blueprints
 
-These are separate, provisional construction costs displayed with the unlock. Research grants a blueprint, never a free object. These definitions establish bootstrap reachability; crafting/placing and operating the equipment is Milestone 6.
+These are separate, provisional construction costs displayed with the unlock. Research grants a blueprint, never a free object. Milestone 6 implements crafting, placement and operation using these costs.
 
 | Blueprint | Construction inputs |
 | --- | --- |
@@ -37,7 +37,9 @@ These are separate, provisional construction costs displayed with the unlock. Re
 | Extractor | 4 plates + 3 mechanical parts + 1 electrical part |
 | Laboratory | 4 plates + 2 wire + 2 mechanical parts + 3 electrical parts |
 
-The first Medium Fabricator, lab and their research/kit unlocks require only existing components. No machine needs its own output, research kit or coal to unlock/build itself. Safe assembly remains available by hand when physical equipment recipes are integrated. The catalogue validator audits technology/recipe cycles, unique IDs, positive priced work/costs, material conservation and resource/unlock reachability, including these construction inputs.
+The first Medium Fabricator, lab and their research/kit unlocks require only existing components. No machine needs its own output, research kit or coal to unlock/build itself. All eight equipment assemblies remain available by hand and through the MiniFab. The catalogue validator audits technology/recipe cycles, unique IDs, positive priced work/costs, material conservation and resource/unlock reachability, including these construction inputs.
+
+The [Milestone 6 implementation](../plans/milestone-06-first-working-machines.md) supplies all eight researched equipment types, Basic/Medium fabrication, scrap-only extraction and manually supplied labs. The [factory catalogue](factory-catalogue.md) and [Fibery receipt](balance/milestone-06-revision-2026-11-08.json) record work, stacks, footprints, buffers and power values. The recycler supplies bounded random plates/wire with solid-value scrap remainder; wired networks share power proportionally. Blueprint inputs, shared queue/payment semantics and safe handcrafting remain the same.
 
 ## Shared queue and source coordination
 
@@ -45,13 +47,13 @@ The player owns one ordered queue and every field/lab source follows its head. A
 
 All technology ledgers survive removal/reordering, including the current task. Re-adding resumes consumed-material investment, completed work and partial cycle time. Completion grants the unlock once, removes the head and stops research for that simulation step; remaining source time is discarded rather than spilling into another technology. Field enable/pause controls only bag contributions. The UI provides native keyboard-operable move/remove buttons, stable focus and text states alongside progress indicators.
 
-The plain [research rules](../../src/simulation/domain/research.ts) accept locally supplied workers. Provisional lab fixtures use **four input slots and 4× field work rate** each. Supplied labs are ordered by stable ID, then Field Research; application manual/current-handcraft commitments and requested MiniFab intake still happen before the field draw. Actual power and lab buffer transfers are deferred to Milestone 6; unpowered/disabled sources are omitted from the rule input.
+The plain [research rules](../../src/simulation/domain/research.ts) accept locally supplied workers. Physical labs use **four input slots and up to 4× field work rate** each, scaled by allocated power. Supplied labs are ordered by stable ID, then Field Research; application manual/current-handcraft commitments and requested MiniFab intake still happen before the field draw. Milestone 6 provides power and local buffer transfers; unpowered/disabled sources are omitted from the rule input.
 
 Each source must have the complete next one-of-each still-required bundle in its own inventory before contributing work. Missing inputs do not advance work or accrue debt; stock from multiple sources is never pooled. At the cycle boundary that source atomically pays the bundle and increments contributions once. Paid-in-full materials leave subsequent bundles. No upfront reservation exists in this slice: shared partial cycle work belongs to the technology, not a worker, and a subsequent supplied source may continue it while paying the next full bundle. Source/queue changes therefore cannot strand reserved materials or reassign paid investment. Extra supplied labs add useful work to the same ledger, bounded by the next material payment and final completion.
 
 ## Persistence and stable identities
 
-Content version is `research-1`; durable envelope schema 1, world snapshot 3 and physics format 3 remain unchanged. Queue order and every ledger, including unqueued technologies, are saved in plain owned state. The old independent `fieldTechnology` selector is replaced by `researchQueue`; there is no second target authority.
+Current content version is `factory-1`, following Milestone 5's `research-1`; durable envelope schema 1, world snapshot 3 and physics format 3 remain unchanged. Queue order and every ledger, including unqueued technologies, are saved in plain owned state. The old independent `fieldTechnology` selector is replaced by `researchQueue`; there is no second target authority. Known `research-1` saves gain empty factory topology on detached data before current validation.
 
 The worker supports the explicitly known Milestone 4 `opening-1` revision. It validates the old item/recipe/technology namespace, converts an unfinished active field target into the sole initial queue head, defaults an absent target to an empty queue and runs the current full gameplay/native validators. It retains existing IDs, run identity, stock, committed handcraft inputs, MiniFab buffers/charge, partial research and native physics. Conversion operates on detached data and does not rewrite the committed slot until Save. Unknown versions, malformed namespaces/queues and incompatible physics remain rejected with existing rollback protection. No time advances or inputs repay during conversion. General migrations remain Milestone 9 and save-format optimization remains deferred.
 

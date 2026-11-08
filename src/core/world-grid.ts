@@ -69,3 +69,17 @@ export function circleOverlapsCell(
   const nearestZ = Math.max(minZ, Math.min(position.z, minZ + grid.metresPerCell));
   return (position.x - nearestX) ** 2 + (position.z - nearestZ) ** 2 < radius ** 2;
 }
+
+/** Reach is measured to the closest part of a footprint, including corner approaches. */
+export function distanceToCell(
+  grid: GridDefinition,
+  position: WorldPosition,
+  cell: GridCell,
+): number {
+  const minX = grid.origin.x + cell.column * grid.metresPerCell;
+  const minZ = grid.origin.z + cell.row * grid.metresPerCell;
+  return Math.hypot(
+    Math.max(minX - position.x, 0, position.x - minX - grid.metresPerCell),
+    Math.max(minZ - position.z, 0, position.z - minZ - grid.metresPerCell),
+  );
+}

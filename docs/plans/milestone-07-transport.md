@@ -1,6 +1,6 @@
 # Milestone 7 Transport
 
-Updated 27 October 2026. Status: not started. Prerequisite: [Milestone 6](milestone-06-first-working-machines.md).
+Updated 8 November 2026. Status: not started. Prerequisite: [Milestone 6](milestone-06-first-working-machines.md).
 
 Automate extraction/recycler supply and sort the recycler's mixed random output into useful destinations. Use direct machine connections and a small conveyor/filter network. Preserve quantities and blocked contents through saves. [Trains and loading/unloading stations](../design/player-progression.md#logistics-and-later-transport) are later-game work, outside this milestone.
 
@@ -8,11 +8,11 @@ Automate extraction/recycler supply and sort the recycler's mixed random output 
 
 ## Current implementation
 
-There are no conveyor entities, port connections, saved items in transit, or transport phase. Neither the static Babylon rig nor the earlier 2D movement prototype implements item transport. Add transport after a working, inspectable recycler and its persistent buffers exist.
+Milestone 6 supplies the working inspectable mixed-output recycler, finite extractor, distinct fabrication tiers, local persistent buffers and manual transfers. Its explicit wires carry power only; model ports stage later material connections. There are no conveyor entities, material port connections, saved items in transit or transport phase. Extend that same worker/buffer authority with transport here.
 
 ## Step 1 Define transport content and topology
 
-- [ ] Add the conveyor equipment recipe and research gate to the small catalog, keeping the technology path reachable.
+- [ ] Reuse Milestone 5's kit-funded Sorting and conveyors technology. Add actual conveyor/sorting equipment recipes and items under that gate, keeping construction costs separate and the technology path reachable.
 - [ ] Define segment footprint, orientation, direction, capacity, and throughput in simulation units.
 - [ ] Define compatible machine input/output ports and allowed connection directions.
 - [ ] Add persistent segment IDs, connections, stored items, and any travel/progress values needed for continuation.
@@ -44,7 +44,7 @@ There are no conveyor entities, port connections, saved items in transit, or tra
 - [ ] Allow movement to resume when capacity becomes available without rebuilding the network.
 - [ ] Respect machine item/recipe compatibility when transferring into its input.
 - [ ] Preserve the recycler's completed-but-blocked job behavior while output transport frees capacity.
-- [ ] Sort mixed outputs without changing their types, quantities or already-rolled recycler result. Specify backpressure when one destination is full and fairness between supported outputs.
+- [ ] Sort Milestone 6's plates, wire and residual returned scrap without changing quantities or the already-rolled result. Define residual scrap return/overflow routing, backpressure when one destination is full and fairness between outputs; returned scrap earns no extraction/production history.
 - [ ] Keep all transport and manual collection out of cumulative production increments.
 - [ ] Define a conservation ledger covering inventories, machine buffers, job reservations, and conveyor contents for focused tests.
 

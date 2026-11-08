@@ -4,7 +4,7 @@ Scrapworks is a browser-first 3D factory-restoration game built with Angular and
 
 The [player progression design](docs/design/player-progression.md) records the planned research-led opening, Mini Fabricator, renewable-first industry and peaceful terraforming. These are design requirements; the implementation status remains in the [roadmap](docs/plans/README.md).
 
-Babylon.js is the sole world renderer and Babylon.js Editor owns scene/world-layout authoring. The single Miniplex worker now implements the Milestone 3 empty-handed opening: inventory/salvage, Field Research, safe handcrafting and a requested power-free MiniFab with optional winding. Factory systems and gameplay saving remain later milestones. See the [opening implementation report](docs/reports/milestone-03/2026-11-02/README.md).
+Babylon.js is the sole world renderer and Babylon.js Editor owns scene/world-layout authoring. The single Miniplex worker implements the empty-handed opening, manual local saves, shared research queue and first manually supplied factory: wired solar/wind, mixed recycling, Basic/Medium fabrication, scrap extraction and powered labs. See the [opening report](docs/reports/milestone-03/2026-11-02/README.md) and [factory implementation report](docs/reports/milestone-06/2026-11-08/README.md). Transport and restoration remain later milestones.
 
 Start with the [documentation index](docs/README.md), [3D cleanup record](docs/plans/3d-cleanup.md), and [implementation roadmap](docs/plans/README.md). Editable Blender projects, artwork, references and provenance are indexed in [art/](art/README.md); visual guidance remains in the [Art Document](docs/art/README.md).
 
@@ -61,6 +61,7 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 | `yarn test:labs`                   | Run opt-in laboratory unit tests through Vitest without performance trials.                                 |
 | `yarn test:world`                  | Run focused authored marker compilation and world-export validation tests.                                  |
 | `yarn test:acceptance`             | Exercise the built game worker, movement, pause, crash/Retry and teardown; build with `--stats-json` first. |
+| `yarn test:factory`                | Run the empty-handed built-UI factory, powered labs and saved continuation route with a virtual test clock. |
 | `yarn test:workflow`               | Verify dev reload/failure recovery in an isolated browser fixture.                                          |
 | `yarn test:watch`                  | Export scenes once, then watch application tests.                                                           |
 | `yarn test:setup`                  | Install the matching Playwright Chromium headless shell.                                                    |
