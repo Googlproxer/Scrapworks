@@ -82,6 +82,7 @@ jobs:
           node tools/ecs-bench/verify-production.ts
           node tools/architecture/bundle.ts
 
+      # Virtual/full gameplay playthroughs are local-only; never add them to CI (AGENTS.md).
       - name: Exercise the built simulation worker and failure Retry
         run: |
           yarn test:acceptance
@@ -92,9 +93,6 @@ jobs:
 
       - name: Verify research queue and legacy save continuation
         run: yarn test:research
-
-      - name: Verify the empty-handed first-factory route and saved continuation
-        run: yarn test:factory
 
       - name: Verify exported and built assets
         run: yarn assets:check --build
@@ -130,10 +128,8 @@ jobs:
             tmp/workflow-browser/
             .vitest/
             tmp/production-worker-browser/
-            tmp/opening-browser/
             tmp/save-browser/
             tmp/research-browser/
-            tmp/factory-browser/
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7

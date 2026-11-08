@@ -7,6 +7,10 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 * Avoid the `any` type; use `unknown` when type is uncertain
 * Prefer TypeScript (`.ts`) over JavaScript for all new repository tools where feasible. Use strict type checking and update callers, tests and documentation with any entry-point changes. Keep required JavaScript host/compatibility loaders minimal and document why they remain; use another language when the tool depends on its runtime or libraries.
 
+## CI runtime budget
+
+* Do NOT add virtual or full gameplay playthroughs to any CI/GitHub Actions workflow, including opening/factory routes or accelerated-clock variants. Keep these diagnostics local and manually invoked. CI runtime and cost are a hard user constraint; use focused unit/component tests and fixture-based integration checks for CI coverage.
+
 ## Event handling
 
 * Prefer RxJS for application-owned programmatic event handling: `fromEvent` for DOM/EventTarget events and `fromEventPattern` for SDK add/remove callbacks. Use the shared `fromBabylonObservable` adapter for Babylon observers so its extra `EventState` argument does not change the emitted value.

@@ -75,6 +75,8 @@ Normal CI collects coverage during its existing test runs, prints separate Game 
 
 ## Browser acceptance
 
+**CI runtime budget:** virtual and full gameplay playthroughs must never run in CI/GitHub Actions. Opening/factory routes, accelerated-clock variants and the prepared factory-controls route are local, manually invoked diagnostics only. The user cannot afford their hosted-runner time. Use focused unit/component tests and fixture-based integration checks in CI; see [AGENTS.md](../AGENTS.md#ci-runtime-budget).
+
 Built-worker acceptance requires a fresh production build and Playwright's installed Chromium:
 
 ```sh
