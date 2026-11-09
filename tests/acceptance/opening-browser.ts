@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
-import { chromium, type Worker } from 'playwright';
+import { chromium, firefox, type Worker } from 'playwright';
 import type { RuntimeReply } from '../../src/contracts/simulation.ts';
 import type { OpeningView } from '../../src/contracts/opening.ts';
 import type { WorldPosition } from '../../src/contracts/world.ts';
@@ -32,6 +32,7 @@ const engineStoreChunk = Object.entries(metadata.outputs).find(([, output]) =>
 )?.[0];
 const relaxed = process.argv.includes('--relaxed');
 const virtualTime = process.argv.includes('--virtual-time');
+const firefoxMode = process.argv.includes('--firefox');
 const resumeRestoration = process.argv
   .find((arg) => arg.startsWith('--resume-restoration='))
   ?.slice('--resume-restoration='.length);
@@ -67,6 +68,7 @@ const output = path.join(
           : virtualTime
             ? 'tmp/opening-browser/virtual-time'
             : 'tmp/opening-browser',
+  ...(firefoxMode ? ['firefox'] : []),
 );
 await fs.mkdir(output, { recursive: true });
 const server = http.createServer(async (request, response) => {
@@ -95,7 +97,9 @@ const server = http.createServer(async (request, response) => {
   }
 });
 await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
-const browser = await chromium.launch({ headless: true });
+const browser = await (firefoxMode ? firefox : chromium).launch({
+  headless: !process.argv.includes('--headed'),
+});
 const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 const page = await context.newPage();
 await installBrowserEvents(page, engineStoreChunk);

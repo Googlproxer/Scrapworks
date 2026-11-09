@@ -24,8 +24,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
-import { chromium } from 'playwright';
+import { chromium, firefox } from 'playwright';
 const root = path.resolve(import.meta.dirname, '../..');
+const firefoxMode = process.argv.includes('--firefox');
 const renderDelayMs = Number(
   process.argv.find((arg) => arg.startsWith('--render-delay-ms='))?.split('=')[1] ?? 0,
 );
@@ -37,6 +38,7 @@ const output = path.join(
   root,
   'tmp/production-worker-browser',
   renderDelayMs ? 'stalled-frames' : '',
+  ...(firefoxMode ? ['firefox'] : []),
 );
 await fs.mkdir(output, { recursive: true });
 const directory = path.join(root, 'dist/scrapworks/browser');
@@ -84,7 +86,7 @@ const server = http.createServer(async (request, response) => {
   }
 });
 await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
-const browser = await chromium.launch({ headless: true });
+const browser = await (firefoxMode ? firefox : chromium).launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 await installBrowserEvents(page, engineStoreChunk);
 if (renderDelayMs) {
@@ -168,14 +170,21 @@ const until = async (
 };
 
 try {
-  const loading = await checkLoading(
-    browser,
-    `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/worker-test/`,
-    metadata,
-    output,
-  );
+  const loading = firefoxMode
+    ? {
+        skipped:
+          'Chromium-specific CDP loading/throttling checks; Firefox runtime path below is exercised.',
+      }
+    : await checkLoading(
+        browser,
+        `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/worker-test/`,
+        metadata,
+        output,
+      );
   console.log(
-    'Production loading/paint, responsive images, accessibility, delayed assets and Retry passed:',
+    firefoxMode
+      ? 'Chromium-only CDP loading profile skipped; Firefox runtime acceptance follows:'
+      : 'Production loading/paint, responsive images, accessibility, delayed assets and Retry passed:',
     JSON.stringify(loading),
   );
   await page.bringToFront();

@@ -8,6 +8,7 @@ import {
   effect,
   untracked,
 } from '@angular/core';
+import { FIELD_MANUAL, GUIDE_STEPS, guideStep } from './opening-guide';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 
 import { GameRuntimeService } from '../game-runtime.service';
@@ -38,38 +39,15 @@ export class FieldKitComponent {
   public readonly opening = computed(() => this.runtime.world()?.opening);
 
   public readonly usedSlots = computed(() => this.opening()?.bag.slots.filter(Boolean).length ?? 0);
-  public readonly guidance = computed(() => {
-    const opening = this.opening();
-    if (!opening) return '';
-    if (!opening.state.moved)
-      return 'Move with your movement controls. Approach the scrap deposit; salvage works within two metres.';
-    if (!opening.ledgers['improvised-tools']?.unlocked)
-      return 'Collect four scrap, then start Improvised tools research. Gather more while research runs.';
-    if (!opening.tool)
-      return 'Handcraft a scrap prybar. Your first prybar equips automatically and triples salvage speed.';
-    if (!opening.ledgers['material-recovery']?.unlocked)
-      return 'Research Material recovery to handcraft plates and wire.';
-    if (
-      !opening.ledgers['mechanical-assembly']?.unlocked ||
-      !opening.ledgers['electrical-assembly']?.unlocked
-    )
-      return 'Research Mechanical and Electrical assembly. Handcraft their parts from plates and wire.';
-    if (!opening.ledgers['mini-fabrication']?.unlocked)
-      return 'Research Mini fabrication with one mechanical and one electrical part; construction needs its own materials.';
-    if (!opening.state.minifab.owned)
-      return 'Hand-assemble your Mini Fabricator from plates, wire and both kinds of parts.';
-    if (!this.runtime.world()?.productionTotals['plate'] || !opening.state.minifab.owned)
-      return 'Request a MiniFab recipe. It makes compatible precursors and works while you explore.';
-    if (!opening.ledgers['laboratory-research']?.unlocked)
-      return 'Your MiniFab works without power. Research renewable power and recycling, then assign a crafted machine under Equipable. Select its toolbar slot and press B to build; use Factory to inspect and supply machines.';
-    if (!opening.ledgers['storage']?.unlocked || !opening.ledgers['water-treatment']?.unlocked)
-      return 'Make Basic research kits for Energy storage and Water treatment. Field Research remains available without factory power. Coal is optional; take your time building a renewable water supply.';
-    if (!opening.ledgers['greenhouse']?.unlocked)
-      return 'Research Greenhouse restoration. Build an edge pump facing the lake, treatment and a tank; connect facing water ports in Factory. Batteries cover renewable shortages.';
-    if (this.runtime.world()?.factory?.environment?.completed)
-      return 'Every land and water cell reached full health. The restoration checkpoint is complete; keep experimenting, expanding and recovering the world at your own pace.';
-    return 'Supply greenhouses with power and clean piped water. Inspect health, weather and buffers in Factory. Restoration persists and spreads as nearby cells fill; shortages pause work and you can always recover.';
-  });
+  public readonly guide = computed(() => guideStep(this.runtime.world()));
+  public readonly guidance = computed(() => this.guide()[2]);
+  public readonly guideNumber = computed(() => GUIDE_STEPS.indexOf(this.guide()) + 1);
+  public readonly guideCollapsed = signal(false);
+  public readonly manual = FIELD_MANUAL;
+
+  public toggleGuide(): void {
+    this.guideCollapsed.update((value) => !value);
+  }
 
   public constructor() {
     effect(() => {
@@ -84,9 +62,9 @@ export class FieldKitComponent {
     });
   }
 
-  public readonly activeTab = signal<'inventory' | 'research' | 'factory'>('inventory');
+  public readonly activeTab = signal<'inventory' | 'research' | 'factory' | 'guide'>('inventory');
 
-  public selectTab(tab: 'inventory' | 'research' | 'factory'): void {
+  public selectTab(tab: 'inventory' | 'research' | 'factory' | 'guide'): void {
     if (tab === this.activeTab()) return;
     this.runtime.requestWorkExit(() => {
       this.runtime.command({ type: 'handcraft-ui', visible: false });
@@ -98,14 +76,14 @@ export class FieldKitComponent {
   public tabKey(event: KeyboardEvent): void {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
-    const tabs = ['inventory', 'research', 'factory'] as const;
+    const tabs = ['inventory', 'research', 'factory', 'guide'] as const;
     const index = tabs.indexOf(this.activeTab());
     const tab =
       event.key === 'Home'
         ? tabs[0]
         : event.key === 'End'
-          ? tabs[2]
-          : tabs[(index + (event.key === 'ArrowRight' ? 1 : 2)) % tabs.length];
+          ? tabs[tabs.length - 1]
+          : tabs[(index + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
     this.selectTab(tab);
   }
 

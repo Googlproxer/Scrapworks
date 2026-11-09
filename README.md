@@ -8,6 +8,8 @@ Babylon.js is the sole world renderer and Babylon.js Editor owns scene/world-lay
 
 Start with the [documentation index](docs/README.md), [3D cleanup record](docs/plans/3d-cleanup.md), and [implementation roadmap](docs/plans/README.md). Editable Blender projects, artwork, references and provenance are indexed in [art/](art/README.md); visual guidance remains in the [Art Document](docs/art/README.md).
 
+The [local portfolio handoff](docs/portfolio/README.md) explains the objective guide/field manual, controls, named runs/autosave/recovery/JSON transfer, static preview and portable Chromium/Firefox hardware diagnostic. It separates current-asset baseline evidence from later asset qualification and the user's pending human pacing playtest.
+
 ## Technology and ownership
 
 The [migration plan](docs/plans/3d-migration.md) records the current integration and validation work. At Phase 7, update milestone progress and stop; migration work does not authorize continuing the later gameplay milestones.

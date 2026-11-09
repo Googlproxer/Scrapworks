@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
-import { chromium } from 'playwright';
+import { chromium, firefox } from 'playwright';
 import { createServer } from 'vite';
 import type { SaveSnapshot } from '../../src/contracts/save.ts';
 import type { WorldDefinition } from '../../src/contracts/world.ts';
@@ -15,6 +15,7 @@ import type { RuntimeReply } from '../../src/contracts/simulation.ts';
 import { readJson, type BuildMetadata } from '../../tools/shared.ts';
 
 const researchMode = process.argv.includes('--research');
+const firefoxMode = process.argv.includes('--firefox');
 const factoryMode = process.argv.includes('--factory-controls');
 
 const root = path.resolve(import.meta.dirname, '../..'),
@@ -26,6 +27,7 @@ const root = path.resolve(import.meta.dirname, '../..'),
       : researchMode
         ? 'tmp/research-browser'
         : 'tmp/save-browser',
+    ...(firefoxMode ? ['firefox'] : []),
   );
 await fs.mkdir(output, { recursive: true });
 // Isolated fixture preparation uses the real simulation and its alias resolution. No production mutation hooks.
@@ -136,7 +138,7 @@ const server = http.createServer(async (request, response) => {
   }
 });
 await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
-const browser = await chromium.launch({ headless: true }),
+const browser = await (firefoxMode ? firefox : chromium).launch({ headless: true }),
   context = await browser.newContext({ viewport: { width: 1280, height: 900 } }),
   page = await context.newPage();
 const errors: string[] = [];

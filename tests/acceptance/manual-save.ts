@@ -25,9 +25,13 @@ export async function readManualSave(
   page: Page,
   runId?: string,
 ): Promise<SaveSnapshot | undefined> {
-  const selected = (await readSavedHistory(page))
-    .filter((m) => m.kind === 'manual' && (!runId || m.runId === runId))
-    .sort((a, b) => b.savedAt.localeCompare(a.savedAt) || b.sequence - a.sequence)[0];
+  const revisions = (await readSavedHistory(page)).filter((m) => m.kind === 'manual');
+  const selectedRun =
+    runId ?? revisions.sort((a, b) => b.savedAt.localeCompare(a.savedAt))[0]?.runId;
+  // Sequence is authoritative within a run, including when a resumed virtual clock moves back.
+  const selected = revisions
+    .filter((m) => m.runId === selectedRun)
+    .sort((a, b) => b.sequence - a.sequence)[0];
   if (!selected) return undefined;
   return page.evaluate(async (token) => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -106,12 +110,17 @@ export async function corruptNewestSave(page: Page): Promise<void> {
 
 /** A prior success message may remain visible while another save is queued. Observe its commit. */
 export async function saveThroughUi(page: Page): Promise<SaveSnapshot> {
-  const previous = (await readManualSave(page))?.token;
+  const previous = new Set((await readSavedHistory(page)).map((revision) => revision.token));
   await page.getByRole('button', { name: 'Save progress', exact: true }).click();
   const deadline = performance.now() + 30000;
   while (performance.now() < deadline) {
-    const saved = await readManualSave(page);
-    if (saved && saved.token !== previous) return saved;
+    const committed = (await readSavedHistory(page)).find(
+      (revision) => revision.kind === 'manual' && !previous.has(revision.token),
+    );
+    if (committed) {
+      const saved = await readManualSave(page, committed.runId);
+      if (saved) return saved;
+    }
     await page.waitForTimeout(50);
   }
   throw new Error(

@@ -689,6 +689,8 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     ids: saved.world.entities.filter((e) => e.machine).map((e) => e.id),
   };
   await page.reload();
+  // Placement rotation is renderer-local and resets on host recreation.
+  placementRotation = 0;
   await page.addScriptTag({ path: path.join(root, 'node_modules/axe-core/axe.min.js') });
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await open();

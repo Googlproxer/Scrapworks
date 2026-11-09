@@ -10,7 +10,7 @@ import { FactoryPanelComponent } from './factory-panel.component';
 import { GameRuntimeService } from '../game-runtime.service';
 import { editableView } from '../../../../testing/editable-view';
 import { RECYCLER_OUTCOMES } from '@content/factory';
-import type { FactoryJob } from '@contracts/factory';
+import type { FactoryJob, MachineData, MachineKind } from '@contracts/factory';
 import { GameSession } from '../../../../../tools/testing/inline-game-session';
 
 describe('Factory controls', () => {
@@ -51,6 +51,144 @@ describe('Factory controls', () => {
       providers: [{ provide: GameRuntimeService, useValue: runtime }],
     });
   });
+
+  function inspectMachine(kind: MachineKind, overrides: Partial<MachineData> = {}): void {
+    const view = editableView(world()!);
+    const building = {
+      id: 'advice-machine',
+      buildingId: kind,
+      position: { x: 3, y: 0, z: 1 },
+      cell: { column: 1, row: 0 },
+      footprint: { width: 1, depth: 1 },
+      rotation: 0 as const,
+    };
+    view.buildings = [building];
+    world.set(view);
+    selected.set(building.id);
+    inspection.set({
+      id: building.id,
+      tick: view.tick,
+      entity: {
+        id: building.id,
+        kind: 'building',
+        building,
+        machine: { ...newMachine(kind, building.id, null), ...overrides },
+      },
+    });
+  }
+
+  it.each(['solar-panel', 'wind-turbine'] as const)(
+    'describes healthy idle %s generation without asking for a recipe',
+    async (kind) => {
+      inspectMachine(kind);
+      const before = structuredClone(inspection());
+      const fixture = TestBed.createComponent(FactoryPanelComponent);
+      await fixture.whenStable();
+      const advice = (fixture.nativeElement as HTMLElement).querySelector('[data-machine-advice]')!;
+      expect(advice.textContent).toContain('generation');
+      expect(advice.textContent).not.toMatch(/recipe|input count/);
+      expect(runtime.command).not.toHaveBeenCalled();
+      expect(inspection()).toEqual(before);
+    },
+  );
+
+  it('updates lab recovery advice as the shared queue becomes eligible and supplied', async () => {
+    const machine = newMachine('laboratory', 'advice-machine', null);
+    machine.status = 'missing-input';
+    machine.input.slots[0] = { item: 'scrap', quantity: 8 };
+    inspectMachine('laboratory', machine);
+    const fixture = TestBed.createComponent(FactoryPanelComponent);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+
+    const advice = () => root.querySelector('[data-machine-advice]')!.textContent!;
+
+    expect(advice()).toContain('Queue a technology');
+    expect(advice()).not.toContain('Load the recipe');
+
+    const view = editableView(world()!);
+    view.opening!.state.researchQueue = ['material-recovery'];
+    world.set(view);
+    await fixture.whenStable();
+    expect(advice()).toContain('prerequisite');
+
+    view.opening!.ledgers['improvised-tools'] = { unlocked: true, work: 6, consumed: { scrap: 4 } };
+    world.set(editableView(view));
+    await fixture.whenStable();
+    expect(advice()).toContain('cumulative extraction');
+
+    view.opening!.extracted['scrap'] = 8;
+    world.set(editableView(view));
+    await fixture.whenStable();
+    expect(advice()).toContain('lab’s input buffer');
+
+    inspectMachine('laboratory', { ...machine, status: 'working' });
+    await fixture.whenStable();
+    expect(advice()).toContain('shared Research queue');
+    expect((await axe.run(root)).violations).toEqual([]);
+    expect(runtime.command).not.toHaveBeenCalled();
+  });
+
+  it.each(['greenhouse', 'water-treatment'] as const)(
+    'directs a starved %s to piped water instead of bag ingredients',
+    async (kind) => {
+      inspectMachine(kind, { status: 'missing-input' });
+      const fixture = TestBed.createComponent(FactoryPanelComponent);
+      await fixture.whenStable();
+      const advice = (fixture.nativeElement as HTMLElement).querySelector('[data-machine-advice]')!;
+      expect(advice.textContent).toContain('water');
+      expect(advice.textContent).not.toMatch(/recipe|bag/);
+    },
+  );
+
+  it('asks an unconfigured fabricator to select a recipe before loading inputs', async () => {
+    inspectMachine('basic-fabricator', { status: 'missing-input' });
+    const fixture = TestBed.createComponent(FactoryPanelComponent);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('[data-machine-advice]')!.textContent).toContain(
+      'Choose a researched recipe',
+    );
+    inspectMachine('basic-fabricator', { status: 'missing-input', recipe: 'metal-plate' });
+    await fixture.whenStable();
+    expect(root.querySelector('[data-machine-advice]')!.textContent).toContain(
+      'required materials',
+    );
+  });
+
+  it('keeps disable, power and water-buffer recovery ahead of normal equipment advice', async () => {
+    inspectMachine('water-pump', { status: 'blocked' });
+    const fixture = TestBed.createComponent(FactoryPanelComponent);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+
+    const advice = () => root.querySelector('[data-machine-advice]')!.textContent!;
+
+    expect(advice()).toContain('downstream water buffers');
+    inspectMachine('water-pump', { status: 'no-power' });
+    await fixture.whenStable();
+    expect(advice()).toContain('power connections');
+    inspectMachine('water-pump', { enabled: false, status: 'disabled' });
+    await fixture.whenStable();
+    expect(advice()).toContain('Enable this machine');
+    expect(runtime.command).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { kind: 'battery', text: 'stores surplus generation' },
+    { kind: 'pipe', text: 'facing water ports' },
+  ] as const)(
+    'explains passive $kind operation without manufacturing instructions',
+    async ({ kind, text }) => {
+      inspectMachine(kind);
+      const fixture = TestBed.createComponent(FactoryPanelComponent);
+      await fixture.whenStable();
+      const advice = (fixture.nativeElement as HTMLElement).querySelector('[data-machine-advice]')!;
+      expect(advice.textContent).toContain(text);
+      expect(advice.textContent).not.toMatch(/recipe|input count/);
+    },
+  );
+
   it('retains factory inspection and power feedback while directing construction to the toolbar', async () => {
     const fixture = TestBed.createComponent(FactoryPanelComponent);
     await fixture.whenStable();

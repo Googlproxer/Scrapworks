@@ -42,7 +42,16 @@ export async function checkResearchRoute(
   );
   await page.getByRole('button', { name: 'Queue Material recovery', exact: true }).click();
   const move = page.getByRole('button', { name: 'Move down: Improvised tools', exact: true });
+  await page.bringToFront();
+  // Queue acknowledgement is asynchronous. Focusing a still-disabled button is ignored
+  // in Firefox; wait for native actionability while keeping activation keyboard-only.
+  await move.click({ trial: true });
   await move.focus();
+  assert(await page.evaluate(() => document.hasFocus()), 'Research page must own keyboard focus');
+  assert(
+    await move.evaluate((element) => element === document.activeElement),
+    'Move control must own focus',
+  );
   await page.keyboard.press('Enter');
   await current.filter({ hasText: 'Waiting for prerequisite technologies' }).waitFor();
   assert.equal(

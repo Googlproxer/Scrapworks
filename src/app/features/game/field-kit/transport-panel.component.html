@@ -10,6 +10,11 @@
         <strong>{{ name(entity.building!.buildingId) }}</strong> · {{ transport.status }} ·
         {{ transport.units.length }} units stored.
       </p>
+      <p class="transport-advice">
+        If stock is waiting, check facing adjacent ports, destination recipe/filter and free buffer
+        space. A strict sorter keeps matched stock for its chosen route; other routes continue until
+        their own capacity fills. No power connection is needed.
+      </p>
       @if (entity.building!.buildingId === 'conveyor') {
         <label for="conveyor-path">Conveyor path</label>
         <select id="conveyor-path" [formField]="configFields.turn">
@@ -125,9 +130,20 @@
           <button
             type="button"
             [attr.data-material-edge]="c.id"
-            [attr.aria-label]="'Disconnect ' + endpoint(c.from) + ' ' + c.output + ' to ' + endpoint(c.to) + ' ' + c.input"
+            [attr.aria-label]="
+              'Disconnect ' +
+              endpoint(c.from) +
+              ' ' +
+              c.output +
+              ' to ' +
+              endpoint(c.to) +
+              ' ' +
+              c.input
+            "
             (click)="disconnect(c.id)"
-          >Disconnect</button>
+          >
+            Disconnect
+          </button>
         </li>
       } @empty {
         <li>No material connections.</li>

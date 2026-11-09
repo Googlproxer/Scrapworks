@@ -114,3 +114,7 @@ p {
     max-block-size: 12rem;
   }
 }
+:host .machine-advice {
+  min-height: 4.5em;
+  max-width: 70ch;
+}

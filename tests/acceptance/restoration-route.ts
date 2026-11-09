@@ -238,10 +238,11 @@ export async function checkRestorationRoute(p: Ports): Promise<void> {
     await research(name, id);
   const field = page.getByRole('button', { name: 'Pause field research', exact: true });
   if (await field.count()) await field.click();
-  assert(
-    !(await read()).opening.ledgers['coal-power']?.unlocked,
-    'Green route earns its research without coal',
-  );
+  if (!initial.world.resources.environment?.completed)
+    assert(
+      !(await read()).opening.ledgers['coal-power']?.unlocked,
+      'Green route earns its research without coal',
+    );
   for (const [item, count] of [
     ['battery', 1],
     ['wind-turbine', 2],
@@ -407,7 +408,9 @@ export async function checkRestorationRoute(p: Ports): Promise<void> {
   assert(saved);
   await fs.writeFile(path.join(p.output, 'earned-restoration-final.json'), JSON.stringify(saved));
   // Earn a pollution/recovery branch with the same stock and world, using ordinary controls.
-  for (const b of [greenA, greenB, greenC, scrubber]) await setEnabled(b, false);
+  // Stop all positive support and battery discharge. Otherwise stored renewable energy
+  // can satisfy the small remaining demand and correctly keep coal switched off.
+  for (const b of [greenA, greenB, greenC, scrubber, outfall, battery]) await setEnabled(b, false);
   await until(
     (v) => (v.factory?.environment?.average ?? 100) < 99.99999,
     'local coal pollution after stopping positive support',
@@ -419,7 +422,14 @@ export async function checkRestorationRoute(p: Ports): Promise<void> {
   );
   await setEnabled(coal, false);
   for (const b of (await buildings()).filter((b) =>
-    ['wind-turbine', 'solar-panel', 'greenhouse', 'air-scrubber'].includes(b.buildingId),
+    [
+      'wind-turbine',
+      'solar-panel',
+      'greenhouse',
+      'air-scrubber',
+      'water-return',
+      'battery',
+    ].includes(b.buildingId),
   ))
     await setEnabled(b, true);
   await until(

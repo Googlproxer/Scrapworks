@@ -6,6 +6,7 @@ import { defaultProfile } from '@contracts/input';
 import type { WorldView } from '@contracts/world';
 import type { OpeningCommand } from '@contracts/opening';
 import { Simulation } from '@simulation/simulation';
+import { OPENING_TECHNOLOGIES } from '@content/opening';
 import { GameRuntimeService } from '../game-runtime.service';
 import { editableView } from '../../../../testing/editable-view';
 import { FieldKitComponent } from './field-kit.component';
@@ -284,5 +285,42 @@ describe('Field kit opening UI', () => {
       states: { wind: { kind: 'vector2', value: { x: 1, y: 0 } } },
     });
     expect(runtime.command).not.toHaveBeenCalled();
+  });
+
+  it('derives advanced-run objectives without replaying the opening and keeps the manual keyboard accessible', async () => {
+    const view = editableView(world()!);
+    view.opening!.state.moved = false;
+    view.opening!.state.minifab.owned = true;
+    world.set(view);
+    runtime.fieldKitOpen.set(false);
+    const fixture = TestBed.createComponent(FieldKitComponent);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('[data-objective-title]')?.textContent).toContain(
+      'renewable workshop',
+    );
+    view.opening!.ledgers['laboratory-research'] = { unlocked: true, work: 45, consumed: {} };
+    world.set(editableView(view));
+    await fixture.whenStable();
+    expect(root.querySelector('.guide-copy')?.textContent).toContain(
+      OPENING_TECHNOLOGIES.find((technology) => technology.id === 'sorting-logistics')!.name,
+    );
+    const toggle = root.querySelector<HTMLButtonElement>('.guide-toggle')!;
+    toggle.click();
+    await fixture.whenStable();
+    expect(root.querySelector<HTMLElement>('#objective-copy')!.hidden).toBe(true);
+    toggle.click();
+    await fixture.whenStable();
+    expect(root.querySelector<HTMLElement>('#objective-copy')!.hidden).toBe(false);
+    runtime.fieldKitOpen.set(true);
+    await fixture.whenStable();
+    root
+      .querySelector<HTMLButtonElement>('#inventory-tab')!
+      .dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+    expect(document.activeElement?.id).toBe('guide-tab');
+    expect(root.querySelector('#guide-panel')?.textContent).toContain('Each browser profile');
+    expect((await axe.run(root)).violations).toEqual([]);
+    expect(world()).toEqual(view);
   });
 });

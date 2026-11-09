@@ -4,7 +4,20 @@
     [class.kit-open]="runtime.fieldKitOpen()"
     aria-label="Opening guidance"
   >
-    <p>{{ guidance() }}</p>
+    <button
+      type="button"
+      class="guide-toggle"
+      aria-controls="objective-copy"
+      [attr.aria-expanded]="!guideCollapsed()"
+      (click)="toggleGuide()"
+    >
+      {{ guideCollapsed() ? 'Show objective guide' : 'Hide objective guide' }}
+    </button>
+    <div id="objective-copy" [hidden]="guideCollapsed()">
+      <h2 data-objective-title aria-live="polite" aria-atomic="true">{{ guide()[1] }}</h2>
+      <p class="guide-copy">{{ guidance() }}</p>
+      <p class="guide-stage">Stage {{ guideNumber() }} of 9 · Restore every land and water cell.</p>
+    </div>
     <button
       type="button"
       (click)="runtime.toggleFieldKit()"
@@ -69,6 +82,35 @@
         >
           Factory
         </button>
+        <button
+          id="guide-tab"
+          type="button"
+          role="tab"
+          aria-controls="guide-panel"
+          [attr.aria-selected]="activeTab() === 'guide'"
+          [tabIndex]="activeTab() === 'guide' ? 0 : -1"
+          (keydown)="tabKey($event)"
+          (click)="selectTab('guide')"
+        >
+          Field manual
+        </button>
+      </div>
+      <div
+        id="guide-panel"
+        tabindex="0"
+        class="tab-panel manual-panel"
+        role="tabpanel"
+        aria-labelledby="guide-tab"
+        [hidden]="activeTab() !== 'guide'"
+      >
+        <h3>{{ guide()[1] }}</h3>
+        <p class="manual-objective">{{ guidance() }}</p>
+        @for (entry of manual; track entry.title) {
+          <section>
+            <h4>{{ entry.title }}</h4>
+            <p>{{ entry.text }}</p>
+          </section>
+        }
       </div>
       <div
         id="inventory-panel"

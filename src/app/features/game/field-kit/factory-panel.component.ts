@@ -19,6 +19,7 @@ import type { ItemStack } from '@contracts/simulation';
 import { OpeningPanel } from './opening-panel';
 import { TransportPanelComponent } from './transport-panel.component';
 import { EnvironmentPanelComponent } from './environment-panel.component';
+import { MACHINE_ADVICE, machineAdvice } from './machine-advice';
 
 @Component({
   imports: [FormField, NgTemplateOutlet, TransportPanelComponent, EnvironmentPanelComponent],
@@ -27,6 +28,8 @@ import { EnvironmentPanelComponent } from './environment-panel.component';
   templateUrl: './factory-panel.component.html',
 })
 export class FactoryPanelComponent extends OpeningPanel {
+  public readonly adviceExamples = Object.values(MACHINE_ADVICE);
+  public readonly nextAction = computed(() => machineAdvice(this.selected(), this.runtime.world()));
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
 
   public constructor() {

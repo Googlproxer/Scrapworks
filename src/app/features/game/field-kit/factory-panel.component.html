@@ -11,7 +11,9 @@
     <span class="power-value">{{ seconds(power.daylight * 100) }}</span
     >% · Wind
     <span class="power-value">{{
-      seconds((settings.windFloorWatts + settings.windVariableWatts * power.wind) * (power.windScale ?? 1))
+      seconds(
+        (settings.windFloorWatts + settings.windVariableWatts * power.wind) * (power.windScale ?? 1)
+      )
     }}</span>
     W per turbine. Generation <span class="power-value">{{ seconds(power.available) }}</span> W ·
     Demand <span class="power-value">{{ seconds(power.requested) }}</span> W · Used
@@ -55,6 +57,12 @@
         <button type="button" (click)="configure(!machine.enabled, machine.recipe)">
           {{ machine.enabled ? 'Disable machine' : 'Enable machine' }}
         </button>
+        <div class="stable-summary machine-advice">
+          @for (text of adviceExamples; track text) {
+            <p class="layout-reservation" aria-hidden="true">{{ text }}</p>
+          }
+          <p data-machine-advice>{{ nextAction() }}</p>
+        </div>
         <ng-template #workText let-job>
           Work: <span class="work-time">{{ seconds(job.remaining) }}</span> s remaining at full
           power. Committed ingredients: {{ materials(job.inputs) }}. Pending result:

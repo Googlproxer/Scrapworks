@@ -4,6 +4,8 @@ Updated 9 November 2026. Scrapworks is a browser-first 3D factory-restoration ga
 
 ## Design and planning
 
+- [Local portfolio handoff](portfolio/README.md): objective guide, controls, local artifact, resilient saves, portable Chromium/Firefox baseline and later human playtest.
+
 - [Game Design Document](design/GDD.md): opening, progression, environmental choices and prototype scope.
 - [Player progression](design/player-progression.md): agreed decisions, pacing, Mini Fabricator, research, recovery and open questions.
 - [Opening catalogue](design/opening-catalogue.md): agreed crafting/research order and UI-bound safe handcrafting, with provisional costs/timings and a checked bootstrap budget.
