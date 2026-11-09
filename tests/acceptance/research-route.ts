@@ -99,6 +99,7 @@ export async function checkResearchRoute(
   );
   assert.equal(finished.world.resources.research['improvised-tools'].work, 6);
   assert.equal(finished.world.resources.research['improvised-tools'].consumed['scrap'], 4);
+  assert.equal(finished.world.resources.research['material-recovery']?.unlocked ?? false, false);
   assert.deepEqual(
     finished.world.entities.find((entity) => entity.kind === 'player')!.opening!.researchQueue,
     ['material-recovery'],
@@ -107,7 +108,7 @@ export async function checkResearchRoute(
   const stock = bag.reduce((sum, item) => sum + (item?.item === 'scrap' ? item.quantity : 0), 0);
   assert.equal(
     stock + (finished.world.resources.research['material-recovery']?.consumed['scrap'] ?? 0),
-    98,
+    0,
   );
   await page.getByRole('button', { name: 'Pause field research', exact: true }).click();
   await page.addScriptTag({ path: path.join(root, 'node_modules/axe-core/axe.min.js') });
