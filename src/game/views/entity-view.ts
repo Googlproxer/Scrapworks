@@ -38,8 +38,22 @@ export class EntityView {
         'medium-fabricator': '#477d91',
         extractor: '#ac9a54',
         laboratory: '#6b9290',
+        'water-pump': '#648b9c',
+        pipe: '#729fa9',
+        'pipe-junction': '#729fa9',
+        'water-treatment': '#77a9b4',
+        'water-tank': '#688c9d',
+        'water-return': '#77a9b4',
+        greenhouse: '#72965b',
+        battery: '#a59554',
+        'coal-generator': '#53534c',
+        'air-scrubber': '#8fa98a',
       };
       this.material.diffuseColor = Color3.FromHexString(colours[kind ?? ''] ?? '#384a4d');
+      this.material.specularColor = Color3.Black();
+    } else if ('kind' in item && item.kind === 'coal') {
+      this.material = new StandardMaterial(`coal:${item.id}`, scene);
+      this.material.diffuseColor = Color3.FromHexString('#353831');
       this.material.specularColor = Color3.Black();
     }
     this.mesh =
@@ -57,8 +71,8 @@ export class EntityView {
             )
           : (template?.clone(`entity:${item.id}`, null) ??
             MeshBuilder.CreateBox(`entity:${item.id}`, { size: 150 }, scene));
-    if (building) {
-      this.mesh.material = this.material!;
+    if (this.material) {
+      this.mesh.material = this.material;
     }
     this.mesh.metadata = { worldEntity: item.id };
     this.mesh.isPickable = true;

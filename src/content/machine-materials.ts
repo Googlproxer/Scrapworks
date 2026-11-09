@@ -18,7 +18,8 @@ export function machineMaterials(
       input: ['scrap'],
       output: unique(RECYCLER_OUTCOMES.flatMap((r) => r.map((s) => s.item))),
     };
-  if (kind === 'extractor') return { input: [], output: ['scrap'] };
+  if (kind === 'extractor') return { input: [], output: ['scrap', 'coal'] };
+  if (kind === 'coal-generator') return { input: ['coal'], output: [] };
   if (kind === 'laboratory')
     return {
       input: unique(OPENING_TECHNOLOGIES.flatMap((t) => t.costs.map((s) => s.item))),

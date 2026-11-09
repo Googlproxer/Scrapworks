@@ -1,6 +1,6 @@
 # Scrapworks Game Design Document
 
-Updated 2 November 2026. The component-led MiniFab opening and UI-bound safe handcrafting are implemented in Milestone 3. Renewable-first industry and peaceful restoration remain agreed later direction. See the [opening evidence](../reports/milestone-03/2026-11-02/README.md); catalogue numbers remain provisional playtest balance.
+Reviewed 9 November 2026. The opening, local saves, shared research, renewable industry and item transport are implemented through Milestone 8; local acceptance is complete. The restoration/water/expanded-energy values are in the [numerical catalogue](restoration-catalogue.md). See the [roadmap](../plans/README.md) for dated evidence; catalogue numbers remain provisional playtest balance.
 
 Scrapworks is a web game about building an automated factory to terraform a damaged planet. The player balances industrial progress with the environmental impact of the machinery that enables it, in a peaceful experience without a fail state. This document records the overall gameplay direction; [Player progression and crafting](player-progression.md) records the detailed 27–28 October decisions and unresolved balance questions. Architecture and persistence are covered in the [Technical Design Document](TDD.md). Visual direction is covered in the [Art Document](../art/README.md).
 
@@ -22,21 +22,21 @@ Scrapworks is a web game about building an automated factory to terraform a dama
 - Later MiniFab solar/wind/coal/grid upgrades improve speed, with pollution from coal. Each requires the related general technology, separate MiniFab research and crafting the actual upgrade. Later upgrades add buffer capacity, hazardous/liquid handling and autonomous inventory-driven production with configurable input/output limits; initial per-request ingredient intake is already available. Nothing is granted for free by research alone.
 - Research uses basic extracted items, then crafted components, then dedicated manufactured research craftables. Field research takes time and is slower than scalable laboratories.
 - Research retains cumulative production eligibility and consumes material contributions while preserving history. Raw-resource eligibility uses separate extraction history. Payment and unlock/progress changes must occur exactly once.
-- Deposits are finite but very generous. Disassembly returns full embodied solid value: scrap-origin materials as scrap, other materials as source ores for full reprocessing. Liquids are lost; advanced equivalence/provenance details come later. Cancelled unfinished MiniFab work instead keeps original ingredients, discards partial work and retains items in its buffers if inventory is full. Replacement recipes must use the same input types while residue remains; exact same recipe may continue with uncleared output only if another result fits. Every completed re-craft adds production history; refunds/dismantling do not.
+- Deposits are finite but very generous. Disassembly returns full embodied solid value: scrap-origin materials as scrap, other materials as source ores for full reprocessing. Consumed process liquids remain spent; M8 returns unconsumed water to its original sources automatically. Advanced equivalence/provenance details come later. Cancelled unfinished MiniFab work instead keeps original ingredients, discards partial work and retains items in its buffers if inventory is full. Replacement recipes must use the same input types while residue remains; exact same recipe may continue with uncleared output only if another result fits. Every completed re-craft adds production history; refunds/dismantling do not.
 - Recycler output is a random mix that logistics must sort. General fabrication tiers accept exactly one, exactly two, or three/four ingredient types respectively; higher tiers cannot replace lower-arity machines.
-- Research unlocks greenhouses as the source of restoration. Green technology supports greening and pollution pushes back, without ending the run or locking out research and recovery.
+- Research unlocks greenhouses; greenhouses and other pollution-combating contributors improve local cell health. Polluters reduce nearby health, and positive influence can fully counteract them. Restoration expands outward as surrounding cells fill, without ending the run or locking out research and recovery.
 - The prototype saves and loads progress locally in the browser. Accounts and cloud saves are future possibilities.
 - Remote control is a future possibility as the factory expands. It is outside the early prototype scope.
 
 ## Proposed first playable milestone
 
-Use a small map containing generous scrap deposits, water, renewable-energy conditions and space for researched greenhouses and industry. Coal can support the optional polluting branch. These are world features, not starting possessions.
+The reviewed Milestone 8 map is 20 by 20 cells, with additional generous scrap deposits, one generous coal source and one connected eight-cell lake, plus space for researched greenhouses and industry. These are world features, not starting possessions; these features are authored and compiled into the current map.
 
 The loop is: collect scrap, conduct field research, unlock basic crafting and tools, use a Mini Fabricator, establish renewable-powered recycling/fabrication, sort and automate supply, scale laboratory research, and build greenhouses to spread restoration.
 
 The prototype introduces the Mini Fabricator, solar/wind, recycler, extraction, basic factory fabrication, sorting/conveyors, laboratories, storage, water treatment and researched greenhouse restoration. Coal is optional. Direct machine connections keep early logistics understandable. Exact recipes, capacities, weather parameters and timings remain to be designed; factory tiers and later upgrades are staged rather than all delivered in the opening.
 
-The overall goal is world terraforming. The prototype demonstrates recoverable greening on one small map; its measurable completion threshold remains open. The former mandatory coal opening and greenhouse-survival interval are superseded. Night and variable wind affect operations, but shortages do not create a fail state.
+The overall goal is world terraforming. The prototype checkpoint is 100% health across every land and water cell once, followed by continued play. Health persists without its original contributors but can be reduced by local pollution. The former mandatory coal opening and greenhouse-survival interval are superseded. Night and variable wind affect operations, but shortages do not create a fail state.
 
 ## Proposed opening progression
 
@@ -51,9 +51,17 @@ Every technology must be reachable through earlier abilities and unlocks. Avoid 
 
 ## Energy and environmental restoration
 
-Solar produces only during daylight. Wind fluctuates throughout the day but maintains a minimum output outside a Dunkelflaute event. Event behavior and storage balance remain open. A coal-free progression path must work. Coal offers much greater power as an optional trade-off; emissions slow or oppose greening, and later mitigation research reduces their impact.
+Solar produces only during daylight. Wind fluctuates throughout the day but maintains a minimum output outside a Dunkelflaute event. Bounded seeded events are forecast so players can prepare storage or reduce demand. Rain increases wind, lowers solar and drives most lake refill, with very slow refill outside rain. A coal-free progression path must work.
 
-Greenhouses require research and act as the source of restoration. Green technologies support greening while pollution pushes back. Show the relationship between industry, environment and restoration clearly. The player's choices determine the difficulty and pace; there are no planned antagonists or fail state, and pollution cannot block research or eventual recovery. Spatial spread, rates, possible regression and objective thresholds remain design work.
+Coal offers much greater power as an optional trade-off. It needs coal and water, accepts untreated water at higher emissions, and starts/stops slowly as base load. It may charge batteries. It stops only when forecast renewables can supply the grid and required charging; renewables are curtailed during coal transitions, with restart based on forecast need. Later mitigation reduces local environmental impact. Capacities, rates, forecasts and event parameters remain provisional numerical design.
+
+All land/water cells start at 0% health, clamped to 0–100%. Positive and negative local influences change persistent health over time. Contributors equally share the influence needed to fill a cell; excess positive influence extends the frontier outward. Cell propagation can run less frequently than normal simulation ticks.
+
+Connected lake cells share a cell-derived volume; edge pumps withdraw uniformly. Pipes feed treatment, tanks and machines, with splitting junctions and a configurable cardinal overflow direction. Available ordinary buffers fill before overflow; otherwise full systems stop their pumps. Returning treated water improves source health; fully healthy source water bypasses treatment cost. There is no pressure simulation or conveyor-water transport. Dismantling automatically returns unconsumed water to its original source(s), preserving exact attribution after mixing.
+
+Saves are tied to the exact authored map revision/content. A map change invalidates an old save; explain the incompatibility and do not attempt loading it. No deployed build or old-save migration requirement exists for this map revision. The [M8 plan](../plans/milestone-08-restoration-and-energy-choices.md) records these 9 November decisions, implementation and verification.
+
+Greenhouses require research and join other positive contributors in restoring surrounding cells. The player's choices determine the pace; there are no planned antagonists or fail state, and pollution cannot block research or eventual recovery. Frontier/health behavior, the all-cell checkpoint, rates, capacities and numerical influence rules are implemented; see the [restoration catalogue](restoration-catalogue.md). Numerical balance remains provisional.
 
 ## Research progression
 

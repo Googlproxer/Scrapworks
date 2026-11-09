@@ -14,6 +14,7 @@ import { isMachineKind } from '@content/factory';
 import { assertFactorySnapshot } from './factory-capture';
 import { isTransportKind } from '@content/transport';
 import { assertTransportSnapshot } from './transport-capture';
+import { assertEnvironmentSnapshot } from './environment-capture';
 
 const object = (v: unknown, keys?: readonly string[]): Record<string, unknown> => {
   check(!!v && typeof v === 'object' && !Array.isArray(v), 'Expected snapshot object');
@@ -273,7 +274,7 @@ export function assertSnapshot(
     }
     if (e['deposit']) {
       const d = object(e['deposit'], ['kind', 'quantity']);
-      check(d['kind'] === 'scrap', 'Unknown deposit');
+      check(['scrap', 'coal'].includes(String(d['kind'])), 'Unknown deposit');
       number(d['quantity'], true);
     }
     if (e['pile']) stack(e['pile'], content);
@@ -329,6 +330,7 @@ export function assertSnapshot(
   }
   const players = entities.filter((e) => e.kind === 'player');
   assertFactorySnapshot(value as SimulationSnapshot);
+  assertEnvironmentSnapshot(value as SimulationSnapshot);
   assertTransportSnapshot(value as SimulationSnapshot);
   const bodies = entities.filter((entity) => entity.kind === 'body');
   check(

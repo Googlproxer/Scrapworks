@@ -14,7 +14,9 @@ import type { OpeningTechnology } from '@content/opening';
 })
 export class ResearchPanelComponent extends OpeningPanel {
   private readonly queueHeading = viewChild<ElementRef<HTMLElement>>('queueHeading');
-  public readonly roadmap = RESEARCH_ROADMAP;
+  public readonly roadmap = RESEARCH_ROADMAP.filter(
+    (t) => !this.technologies.some((technology) => technology.id === t.id),
+  );
   public readonly labRate = RESEARCH_LAB_RULES.rate;
   public readonly queue = computed(() =>
     (this.opening()?.state.researchQueue ?? []).map((id) =>

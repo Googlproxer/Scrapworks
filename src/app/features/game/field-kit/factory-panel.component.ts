@@ -18,9 +18,10 @@ import type { FactoryCommand } from '@contracts/factory';
 import type { ItemStack } from '@contracts/simulation';
 import { OpeningPanel } from './opening-panel';
 import { TransportPanelComponent } from './transport-panel.component';
+import { EnvironmentPanelComponent } from './environment-panel.component';
 
 @Component({
-  imports: [FormField, NgTemplateOutlet, TransportPanelComponent],
+  imports: [FormField, NgTemplateOutlet, TransportPanelComponent, EnvironmentPanelComponent],
   selector: 'app-factory-panel',
   styleUrl: './factory-panel.component.scss',
   templateUrl: './factory-panel.component.html',
@@ -128,7 +129,14 @@ export class FactoryPanelComponent extends OpeningPanel {
         {
           remaining: this.settings.extractionSeconds,
           inputs: [],
-          outputs: [{ item: 'scrap', quantity: this.settings.extractionQuantity }],
+          outputs: [
+            {
+              item:
+                this.world()?.deposits.find((d) => d.id === this.selected()?.machine?.deposit)
+                  ?.kind ?? 'scrap',
+              quantity: this.settings.extractionQuantity,
+            },
+          ],
         },
       ];
     const recipe = this.selectedRecipe();
@@ -147,7 +155,8 @@ export class FactoryPanelComponent extends OpeningPanel {
         input: ['scrap'],
         output: unique(RECYCLER_OUTCOMES.flatMap((r) => r.map((s) => s.item))),
       };
-    if (kind === 'extractor') return { input: [], output: ['scrap'] };
+    if (kind === 'extractor') return { input: [], output: ['scrap', 'coal'] };
+    if (kind === 'coal-generator') return { input: ['coal'], output: [] };
     if (kind === 'laboratory')
       return {
         input: unique(this.technologies.flatMap((t) => t.costs.map((s) => s.item))),

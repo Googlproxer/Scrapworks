@@ -41,7 +41,8 @@ export function materialPorts(
     return { input: ['back'], output: [turn === 'straight' ? 'front' : turn] };
   if (kind === 'sorter') return { input: ['back'], output: ['left', 'right', 'front'] };
   if (kind === 'extractor') return { input: [], output: ['front'] };
-  if (kind === 'laboratory') return { input: MATERIAL_PORTS, output: [] };
+  if (kind === 'laboratory' || kind === 'coal-generator')
+    return { input: MATERIAL_PORTS, output: [] };
   if (kind === 'recycler' || kind === 'basic-fabricator' || kind === 'medium-fabricator')
     return { input: ['back', 'left', 'right'], output: ['front'] };
   return { input: [], output: [] };

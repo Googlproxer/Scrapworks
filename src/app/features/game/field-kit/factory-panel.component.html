@@ -1,4 +1,5 @@
 <h3 id="factory-title">Factory</h3>
+<app-environment-panel />
 <p>
   Assign factory machines under Inventory &amp; Crafting → Equipable, select a toolbar slot and
   press B to build. Feed and collect locally; connect power with crafted connections. Machines
@@ -10,7 +11,7 @@
     <span class="power-value">{{ seconds(power.daylight * 100) }}</span
     >% · Wind
     <span class="power-value">{{
-      seconds(settings.windFloorWatts + settings.windVariableWatts * power.wind)
+      seconds((settings.windFloorWatts + settings.windVariableWatts * power.wind) * (power.windScale ?? 1))
     }}</span>
     W per turbine. Generation <span class="power-value">{{ seconds(power.available) }}</span> W ·
     Demand <span class="power-value">{{ seconds(power.requested) }}</span> W · Used
@@ -38,7 +39,7 @@
       }
     </ul>
     <p>
-      Build with the active toolbar placeable in the world. Extractors need an unclaimed scrap
+      Build with the active toolbar placeable in the world. Extractors need an unclaimed resource
       deposit. Power cable reach: {{ settings.cableReach }} m.
     </p>
   </section>

@@ -2,6 +2,7 @@ import type { BuildingView, DepositDefinition, WorldDefinition } from '@contract
 import { cellCenter } from '@core/world-grid';
 import { entityCollider } from '@core/world-collision';
 import type { NamedCollider } from './world-physics';
+import { isPipe } from '@content/environment';
 
 /** Plain authored geometry and live occupancy; no native engine handles. */
 export function staticColliders(
@@ -12,7 +13,7 @@ export function staticColliders(
   const colliders: NamedCollider[] = [
     ...definition.blockers,
     ...deposits.filter((deposit) => deposit.quantity > 0),
-    ...buildings.filter((b) => b.buildingId !== 'conveyor'),
+    ...buildings.filter((b) => b.buildingId !== 'conveyor' && !isPipe(b.buildingId)),
   ].map((entity) => ({
     ...entityCollider(definition.grid, entity),
     source: 'entity',

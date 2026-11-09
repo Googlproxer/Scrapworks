@@ -10,6 +10,7 @@ export async function checkResearchRoute(
   readSlot: () => Promise<SaveSnapshot | undefined>,
   output: string,
   root: string,
+  contentVersion: string,
 ): Promise<void> {
   const openResearch = async () => {
     await page.getByRole('button', { name: /^Open field kit/ }).click();
@@ -57,7 +58,7 @@ export async function checkResearchRoute(
     .waitFor();
   const removed = await save(),
     owner = removed.world.entities.find((entity) => entity.kind === 'player')!;
-  assert.equal(removed.contentVersion, 'transport-1');
+  assert.equal(removed.contentVersion, contentVersion);
   assert.equal(removed.runId, 'fixture-run');
   assert.deepEqual(owner.opening!.researchQueue, ['material-recovery']);
   assert.deepEqual(removed.world.resources.research['improvised-tools'], {

@@ -22,6 +22,8 @@ import type { GameState } from '@contracts/game-state';
 import { GAME_CLIENT_LOADER, type GameClientLoader } from './game-client-factory';
 import { GameRuntimeService } from './game-runtime.service';
 import { AFTER_PAINT, type AfterPaint } from '../../shared/loading/after-paint';
+import { GameSessionOwner } from './game-session-owner';
+import type { SaveSnapshot } from '@contracts/save';
 
 describe('GameRuntimeService', () => {
   function createClient(connected: readonly ControllerInfo[] = []) {
@@ -568,6 +570,46 @@ describe('GameRuntimeService', () => {
     bridge.completeFrame!();
     return view;
   }
+
+  it('rejects a changed-map save before candidate worker/presentation construction and preserves the active world', async () => {
+    const { game, bridge } = await mountWorld();
+    await bridge.initialize(definition);
+    const before = render(bridge, 0, { x: 0, z: 0 }, false, true);
+    const world = await service.captureForSave();
+    world.definition.terrain[0] = 'grass';
+    const save: SaveSnapshot = {
+      schema: 1,
+      slot: 'manual-1',
+      runId: 'map-test',
+      token: 'map-test',
+      savedAt: '2026-11-09T00:00:00.000Z',
+      worldId: world.resources.worldId,
+      contentVersion: world.contentVersion,
+      tick: world.resources.tick,
+      world,
+    };
+    const prepare = vi.spyOn(GameSessionOwner.prototype, 'prepare');
+    const present = vi.fn(async () => {
+      throw Error('Presentation must not be constructed');
+    });
+    game.client.prepareWorld = present;
+    const stage = vi.fn(async () => undefined);
+    const fetchMap = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValue(new Response(JSON.stringify(definition), { status: 200 }));
+    try {
+      await expect(service.replaceForSave(save, stage)).rejects.toThrow(
+        'save is invalid because the map has changed',
+      );
+      expect(prepare).not.toHaveBeenCalled();
+      expect(present).not.toHaveBeenCalled();
+      expect(stage).not.toHaveBeenCalled();
+      expect(service.world()?.tick).toBe(before.tick);
+      expect(service.world()?.player).toEqual(before.player);
+    } finally {
+      fetchMap.mockRestore();
+    }
+  });
 
   it('pins the completed view before submitting the next authoritative batch', async () => {
     const { bridge } = await mountWorld();

@@ -323,7 +323,8 @@ export class OpeningSystem {
           state.minifab = newOpening().minifab;
         } else {
           const item = OPENING_CONTENT.items[command.item];
-          if (!item || command.item === 'scrap') return this.result('invalid-request');
+          if (!item || command.item === 'scrap' || command.item === 'coal')
+            return this.result('invalid-request');
           const equipped = this.player.equipment!.tool === command.item;
           if (
             !transact(
@@ -472,13 +473,14 @@ export class OpeningSystem {
     }
     task.remaining -= delta;
     if (task.remaining > 1e-9) return;
-    const count = this.fitting('scrap', 1);
-    if (count) transact(this.bag, [], [{ item: 'scrap', quantity: 1 }], OPENING_CONTENT);
+    const resource = target.deposit.kind;
+    const count = this.fitting(resource, 1);
+    if (count) transact(this.bag, [], [{ item: resource, quantity: 1 }], OPENING_CONTENT);
     else {
       const position = this.player.transform!.position;
       const pile = Array.from(this.context.piles).find(
         (entity) =>
-          entity.pile?.item === 'scrap' &&
+          entity.pile?.item === resource &&
           entity.transform &&
           pileDistance(position, entity.transform.position) <= settings.groundMergeRadius,
       );
@@ -489,14 +491,14 @@ export class OpeningSystem {
         this.context.add({
           id: this.id(),
           kind: 'pile',
-          pile: { item: 'scrap', quantity: 1 },
+          pile: { item: resource, quantity: 1 },
           transform: { position: { ...position }, facing: 0, moving: false, sprinting: false },
         });
       this.events.push({ kind: 'salvage-attention', reason: 'bag-full' });
     }
     target.deposit.quantity--;
-    this.context.resources.extractionTotals['scrap'] =
-      (this.context.resources.extractionTotals['scrap'] ?? 0) + 1;
+    this.context.resources.extractionTotals[resource] =
+      (this.context.resources.extractionTotals[resource] ?? 0) + 1;
     this.context.mark(target);
     task.remaining = this.salvageDuration();
     if (!target.deposit.quantity) {

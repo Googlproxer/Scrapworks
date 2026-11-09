@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { test } from 'vitest';
 import type { SessionEvent } from '../contracts/session-event.ts';
 import type { SimulationPort } from '../session/port.ts';
+import { authoredMapKey } from '../core/authored-map';
+import { preparePlayerSave } from './player-save';
 const { Simulation } = await import('./simulation.ts');
 const { SimulationRuntime } = await import('../session/runtime.ts');
 const { PresentationCache } = await import('../session/presentation-cache.ts');
@@ -59,6 +61,98 @@ test('opening capture continues deterministically for 1000 steps and inspections
   assert.notEqual(a.view.player.position.x, 123);
   a.dispose();
   b.dispose();
+});
+
+test('native restoration accepts reordered authored keys and preserves exact continuation', () => {
+  const original = new Simulation({
+    ...worldFixture(),
+    bodies: [
+      {
+        id: 'reorder-crate',
+        position: { x: -5, y: 0.5, z: 5 },
+        rotation: 0,
+        collision: { shape: 'box', width: 1, height: 1, depth: 1 },
+        motion: 'dynamic',
+        mass: 2,
+      },
+    ],
+  });
+  try {
+    original.step({ x: 0, z: 1, sprint: false });
+    const saved = original.capture();
+
+    const reverseKeys = (value: unknown): unknown => {
+      if (Array.isArray(value)) return value.map(reverseKeys);
+      if (value && typeof value === 'object')
+        return Object.fromEntries(
+          Object.entries(value)
+            .reverse()
+            .map(([key, child]) => [key, reverseKeys(child)]),
+        );
+      return value;
+    };
+
+    const reordered = reverseKeys(saved.definition) as typeof saved.definition;
+    assert.notEqual(JSON.stringify(reordered), JSON.stringify(saved.definition));
+    assert.equal(authoredMapKey(reordered), authoredMapKey(saved.definition));
+    const restored = new Simulation(reordered, { snapshot: saved });
+    try {
+      for (let i = 0; i < 20; i++) {
+        const input = { x: i % 2, z: 1, sprint: false };
+        original.step(input);
+        restored.step(input);
+      }
+      assert.deepEqual(restored.capture(), original.capture());
+      const continued = preparePlayerSave(restored.capture()),
+        reloaded = new Simulation(reordered, { snapshot: continued });
+      try {
+        assert.deepEqual(reloaded.capture(), continued);
+      } finally {
+        reloaded.dispose();
+      }
+    } finally {
+      restored.dispose();
+    }
+    const changed = structuredClone(reordered);
+    changed.terrain[0] = 'grass';
+    assert.throws(() => new Simulation(changed, { snapshot: saved }), /map has changed/);
+  } finally {
+    original.dispose();
+  }
+});
+
+test('invalid overflow directions are rejected before worker state or command ledgers change', () => {
+  const runtime = new SimulationRuntime();
+  const envelope = { protocol: 2, generation: 1, revision: 0 };
+  try {
+    assert(
+      runtime.handle({ ...envelope, id: 1, operation: 'initialize', definition: worldFixture() })
+        .ok,
+    );
+    const before = runtime.handle({ ...envelope, id: 2, operation: 'capture' });
+    assert(before.ok && before.capture);
+    assert.throws(
+      () =>
+        runtime.handle({
+          ...envelope,
+          id: 3,
+          operation: 'advance',
+          steps: 1,
+          commands: [
+            {
+              sequence: 1,
+              command: { type: 'fluid-overflow', target: 'junction', direction: ['east'] },
+            },
+          ],
+        }),
+      /Invalid command/,
+    );
+    const after = runtime.handle({ ...envelope, id: 3, operation: 'capture' });
+    assert(after.ok && after.capture);
+    assert.deepEqual(after.capture, before.capture);
+  } finally {
+    runtime.dispose();
+  }
 });
 
 test('real pickup removal and recycled slots preserve presentation generations', () => {

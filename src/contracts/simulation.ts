@@ -11,6 +11,7 @@ import type { ReadonlyData, EditableData } from './readonly-data';
 import type { PhysicsBodyDefinition, PhysicsSnapshot, WorldRotation } from './physics';
 import type { FactoryResources, FactorySummary, MachineData } from './factory';
 import type { TransportData } from './transport';
+import type { EnvironmentResources } from './environment';
 
 export type EntityKind = 'player' | 'deposit' | 'pile' | 'building' | 'body';
 
@@ -38,7 +39,7 @@ export interface EntityData {
   transform?: TransformData;
   inventory?: InventoryData;
   equipment?: { tool: string | null };
-  deposit?: { kind: 'scrap'; quantity: number };
+  deposit?: { kind: 'scrap' | 'coal'; quantity: number };
   pile?: ItemStack;
   building?: EditableData<BuildingView>;
   opening?: OpeningData;
@@ -48,6 +49,7 @@ export interface EntityData {
 }
 
 export interface WorldResources {
+  environment?: EnvironmentResources;
   factory?: FactoryResources;
   worldId: string;
   playerId: string;

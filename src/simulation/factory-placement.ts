@@ -16,6 +16,8 @@ import {
 import { OPENING_SETTINGS } from '@content/opening';
 import { PLAYER_RADIUS } from './world-rules';
 import { MACHINE_COLLISION } from '@content/factory';
+import { isPipe } from '@content/environment';
+import { portDirection } from '@content/transport';
 
 export function validateFactoryPlacement(
   definition: WorldDefinition,
@@ -41,8 +43,25 @@ export function validateFactoryPlacement(
     return fail('out-of-reach');
   const dx = Math.max(0, Math.abs(view.player.position.x - centre.x) - MACHINE_COLLISION.width / 2);
   const dz = Math.max(0, Math.abs(view.player.position.z - centre.z) - MACHINE_COLLISION.depth / 2);
-  if (equipment !== 'conveyor' && dx * dx + dz * dz < PLAYER_RADIUS * PLAYER_RADIUS - 1e-10)
+  if (
+    equipment !== 'conveyor' &&
+    !isPipe(equipment) &&
+    dx * dx + dz * dz < PLAYER_RADIUS * PLAYER_RADIUS - 1e-10
+  )
     return fail('player-overlap');
+  if (equipment === 'water-pump' || equipment === 'water-return') {
+    const d = portDirection({ rotation }, 'front');
+    const x = cell.column + d.column,
+      z = cell.row + d.row;
+    if (
+      x < 0 ||
+      z < 0 ||
+      x >= definition.grid.columns ||
+      z >= definition.grid.rows ||
+      definition.terrain[z * definition.grid.columns + x] !== 'water'
+    )
+      return fail('terrain');
+  }
   const deposits = view.deposits.filter((d) => {
     const anchor = worldToCell(definition.grid, d.position);
     return (

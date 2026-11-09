@@ -49,7 +49,7 @@ classDiagram
         eight toolbar assignments and active slot
     }
     class FieldKitComponent {
-        inventory research crafting MiniFab factory
+        inventory research crafting MiniFab factory environment
         commands and detached signals
         accessible exit confirmation
     }
@@ -68,6 +68,8 @@ classDiagram
         wired proportional power
         seeded recycling fabrication extraction
         supplied lab source preparation
+        EnvironmentSystem water and persistent health
+        EnergySystem forecast dispatch and actual work settlement
     }
     class MachineData {
         <<data>>
@@ -84,7 +86,8 @@ classDiagram
         research
         productionTotals
         extractionTotals
-        power and material connections and arbitration
+        power material and fluid connections
+        saved health source attribution weather and objective
     }
     class WorldDefinition {
         <<data>>

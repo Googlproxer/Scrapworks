@@ -1,5 +1,6 @@
 import type { ContentDefinition, ItemStack } from '../contracts/simulation';
 import { EQUIPMENT_ITEMS, EQUIPMENT_RECIPES } from './factory';
+import { ENVIRONMENT_TECHNOLOGIES } from './environment';
 import {
   EQUIPMENT_BLUEPRINTS,
   FIRST_FACTORY_TECHNOLOGIES,
@@ -142,13 +143,15 @@ export const OPENING_TECHNOLOGIES: readonly OpeningTechnology[] = [
     seconds: 12,
   },
   ...FIRST_FACTORY_TECHNOLOGIES,
+  ...ENVIRONMENT_TECHNOLOGIES,
 ];
 
 export const OPENING_CONTENT: ContentDefinition = {
-  version: 'transport-1',
+  version: 'restoration-1',
   items: {
     ...EQUIPMENT_ITEMS,
     scrap: { stackLimit: 100, solidValue: 1 },
+    coal: { stackLimit: 100, solidValue: 0 },
     plate: { stackLimit: 100, solidValue: 2 },
     wire: { stackLimit: 100, solidValue: 1 },
     'mechanical-part': { stackLimit: 100, solidValue: 4 },
@@ -174,6 +177,7 @@ export const OPENING_SETTINGS = Object.freeze({
 export const ITEM_NAMES: Readonly<Record<string, string>> = {
   ...Object.fromEntries(EQUIPMENT_BLUEPRINTS.map((b) => [b.id, b.name])),
   scrap: 'Mixed scrap',
+  coal: 'Coal',
   plate: 'Metal plate',
   wire: 'Recovered wire',
   'mechanical-part': 'Mechanical part',
@@ -210,12 +214,18 @@ export const OPENING_SOURCE_IDS = {
     extraction: 'future.extraction',
     'laboratory-research': 'future.laboratory',
     'sorting-logistics': 'future.logistics',
+    storage: 'tech.energy_storage',
+    'water-treatment': 'tech.water_treatment',
+    greenhouse: 'tech.greenhouse',
+    'coal-power': 'future.coal',
+    'pollution-mitigation': 'tech.pollution_mitigation',
   },
   items: {
     ...Object.fromEntries(
       EQUIPMENT_BLUEPRINTS.map((b) => [b.id, `item.${b.id.replaceAll('-', '_')}`]),
     ),
     scrap: 'item.scrap',
+    coal: 'item.coal',
     plate: 'item.plate',
     wire: 'item.wire',
     'mechanical-part': 'item.mechanical',

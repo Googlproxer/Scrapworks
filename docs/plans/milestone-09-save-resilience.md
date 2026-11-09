@@ -4,6 +4,8 @@ Updated 8 November 2026 after Milestone 4. Status: manual gameplay save foundati
 
 Add autosaves, recoverable revisions, schema migrations, and downloadable backups. A failed write or invalid import must leave both the active world and the last good save usable. Accounts and cloud synchronization remain outside this prototype.
 
+The 9 November [M8 save decision](milestone-08-restoration-and-energy-choices.md#agreed-scope-and-decisions--9-november-2026) binds saves to exact authored-map revision/content. No deployed build exists and M7/old-map saves need no migration. Notify the player and reject a changed-map save before candidate loading; do not use these future format migrations/imports to bypass map compatibility. Older-format migration fixtures, when implemented here, must remain on a compatible authored map unless that product policy is explicitly changed.
+
 [High-level plan](README.md) · [Next milestone](milestone-10-portfolio-prototype.md)
 
 ## Current implementation
@@ -49,6 +51,7 @@ Review mixed operating worlds with realistic inventories, machine buffers, trans
 ## Step 4 Implement schema migrations
 
 - [ ] Define supported save versions and sequential migration functions from older versions.
+- [ ] Enforce exact authored-map compatibility independently of save-format support. A format migration cannot silently transplant an old run onto a changed map; explain invalid-map saves before attempting candidate load.
 - [ ] Keep database schema upgrades separate from gameplay snapshot migrations.
 - [ ] Migrate a detached copy and never modify the stored source revision during validation.
 - [ ] Validate the migrated result against current state and content invariants before use.

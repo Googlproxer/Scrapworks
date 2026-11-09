@@ -13,6 +13,22 @@ export function validWorldCommand(value: unknown): value is WorldCommand {
   const batch = (v: unknown) => Number.isSafeInteger(v) && Number(v) >= 0 && Number(v) <= 100;
 
   switch (command['type']) {
+    case 'fluid-connect':
+      return (
+        id(command['from']) &&
+        id(command['to']) &&
+        isMaterialPort(command['output']) &&
+        isMaterialPort(command['input'])
+      );
+    case 'fluid-disconnect':
+      return id(command['connection']);
+    case 'fluid-overflow':
+      return (
+        id(command['target']) &&
+        (command['direction'] === null ||
+          (typeof command['direction'] === 'string' &&
+            ['north', 'east', 'south', 'west'].includes(command['direction'])))
+      );
     case 'transport-connect':
       return (
         id(command['from']) &&

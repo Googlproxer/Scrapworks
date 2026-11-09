@@ -48,7 +48,7 @@ export interface WorldEntityDefinition {
 }
 
 export interface DepositDefinition extends WorldEntityDefinition {
-  readonly kind: 'scrap';
+  readonly kind: 'scrap' | 'coal';
   readonly quantity: number;
 }
 
@@ -253,7 +253,7 @@ export function assertWorldDefinition(value: unknown): asserts value is WorldDef
         }
       }
       if (collection === 'deposits') {
-        if (entity['kind'] !== 'scrap') fail('unsupported deposit kind');
+        if (!['scrap', 'coal'].includes(String(entity['kind']))) fail('unsupported deposit kind');
         integer(entity['quantity'], 1, Number.MAX_SAFE_INTEGER);
       }
     }

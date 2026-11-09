@@ -1,8 +1,8 @@
 # Scrapworks Technical Design Document
 
-Updated 8 November 2026 for Milestone 6 implementation. Schema-1 saves wrap version-3 world/physics data with `factory-1` content; SaveCoordinator, SaveRepository and prepared worker/renderer replacement implement the manual slot. The [local-save report](../reports/milestone-04/2026-11-08/README.md) and [factory report](../reports/milestone-06/2026-11-08/README.md) record their verification. Migration, opening and ECS performance evidence retain their dated scope.
+Updated 9 November 2026 for Milestone 8 implementation. Schema-1 saves wrap version-3 world/physics data with `restoration-1` content; SaveCoordinator, SaveRepository and prepared worker/renderer replacement implement the manual slot. The [local-save report](../reports/milestone-04/2026-11-08/README.md) and [factory report](../reports/milestone-06/2026-11-08/README.md) record their verification. Migration, opening and ECS performance evidence retain their dated scope.
 
-Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step simulation connect presentation to one authoritative ECS world. The opening, local saves and first manually supplied factory execute in that world; Milestone 6 passes the empty-handed industrial route and saved continuation. The [factory catalogue](factory-catalogue.md) records actual provisional equipment/power/recycler values. The [GDD](GDD.md), [player progression design](player-progression.md) and [roadmap](../plans/README.md) retain their ownership.
+Scrapworks uses Angular for UI and Babylon.js with Babylon.js Editor for its 3D world. A plain authored-world definition and fixed-step simulation connect presentation to one authoritative ECS world. Opening, local saves, research, industry, transport and M8 water/restoration/energy execute in that world. The [factory catalogue](factory-catalogue.md) and [restoration catalogue](restoration-catalogue.md) record actual provisional values. The [GDD](GDD.md), [player progression design](player-progression.md) and [roadmap](../plans/README.md) retain their ownership.
 
 ## Agreed technical requirements
 
@@ -30,7 +30,7 @@ The [cleanup record](../plans/3d-cleanup.md) defines current asset boundaries an
 
 ## Technical structure diagrams
 
-The class diagram describes the implemented session, opening and factory. The application diagram includes transactional gameplay persistence. The gameplay overview also retains later transport/environment branches. Angular, Babylon and Editor objects remain outside authoritative plain records.
+The class diagram describes the implemented session, opening, factory and environment systems. The application diagram includes transactional gameplay persistence. The gameplay overview includes implemented transport/environment branches. Angular, Babylon and Editor objects remain outside authoritative plain records.
 
 ### Core class diagram
 
@@ -90,7 +90,7 @@ classDiagram
         eight toolbar assignments and active slot
     }
     class FieldKitComponent {
-        inventory research crafting MiniFab factory
+        inventory research crafting MiniFab factory environment
         commands and detached signals
         accessible exit confirmation
     }
@@ -109,6 +109,8 @@ classDiagram
         wired proportional power
         seeded recycling fabrication extraction
         supplied lab source preparation
+        EnvironmentSystem water and persistent health
+        EnergySystem forecast dispatch and actual work settlement
     }
     class MachineData {
         <<data>>
@@ -125,7 +127,8 @@ classDiagram
         research
         productionTotals
         extractionTotals
-        power and material connections and arbitration
+        power material and fluid connections
+        saved health source attribution weather and objective
     }
     class WorldDefinition {
         <<data>>
@@ -427,7 +430,7 @@ Production/extraction histories, per-technology consumed-material ledgers and wo
 
 ### Progression state and invariants
 
-The opening MiniFab, baseline charge/winding, M6 shared labs/wired factory/recycling and M7 direct transport/conveyors/sorting execute in the same simulation. Upgrade progression, later material branches and environment systems remain future requirements. All records remain plain and simulation-owned; Editor scripts and Angular views submit requests and consume projections. The [factory report](../reports/milestone-06/2026-11-08/README.md) and [transport report](../reports/milestone-07/2026-11-09/README.md) record verification and qualification limits.
+The opening MiniFab, baseline charge/winding, M6 shared labs/wired factory/recycling and M7 direct transport/conveyors/sorting execute in the same simulation. M8 adds paid environment utilities, weather and energy; upgrade progression and later material branches remain future requirements. All records remain plain and simulation-owned; Editor scripts and Angular views submit requests and consume projections. The [factory report](../reports/milestone-06/2026-11-08/README.md) and [transport report](../reports/milestone-07/2026-11-09/README.md) record verification and qualification limits.
 
 - MiniFab is a personal subsystem with a separate Angular panel beside inventory. Initial recipes must be researched and handcraftable; later crafted/researched modules can enable hazards/liquids. It follows both component branches and is hand-assembled without factory electricity. Plain state holds one requested target/batch, precursor plan, current operation/input buffer, completed output buffer, capacities, work and blocked reasons. Pull each complete operation at start from uncommitted inventory, optionally reuse output directly, and wait on stock shortages. Reject invalid/locked/cyclic chains without spending; share intermediates without hidden storage. Per-request intake is initial capability; autonomous min/max targets remain a later upgrade.
 - Baseline MiniFab work always progresses at 1x without power when ingredients/buffers allow. Initial local charge provides 60 active seconds at 2x speed, draining only during actual processing. Idle, paused, missing-stock, output-blocked and inventory-wait states spend no charge. Split steps at battery expiry/job completion, preserving inputs/work and using baseline speed for uncharged time. Five turns fill initially; gear T decreases toward one. Charge gain = capacity * abs(accepted angular travel degrees) / (360*T), capped at capacity, with concurrent work drain still applied. Unlimited capacity level n = 60*1.5^n boosted seconds, physical level-n cost = base recipe * 2^(n-1); stored charge is not refilled by capacity upgrades. Turns-to-full is independent of capacity. Tier costs/spacing and later source stacking remain future content.
@@ -439,6 +442,8 @@ The opening MiniFab, baseline charge/winding, M6 shared labs/wired factory/recyc
 - Dismantling completed buildings/items returns full embodied solid value as scrap for scrap-origin material or source ore for other material; source ores require full reprocessing. Liquids are lost, with exact future equivalence/provenance deferred until advanced materials exist. Research inputs are permanently consumed and never refundable. Every completed re-craft counts as production; recovery/refunds/transfers do not. MiniFab cancellation discards partial work and preserves original inputs; return to inventory or retain input/output buffers if blocked. While residue remains, replacement requires the same input types (quantities may differ), and output must clear before another recipe starts. Exact same cancelled recipe may start with uncleared output only if a full next result fits. Save cancellation recipe identity/input types and residual contents; never duplicate refunds or bypass restrictions on load.
 - Daylight, fluctuating wind, the non-event wind minimum and Dunkelflaute events derive from saved simulation time/weather state. Save any random state; do not read wall-clock time or use presentation randomness for gameplay decisions. Coal-free progression is required, and weather/pollution cannot create a permanent progression lockout.
 - Finite resource quantities are deliberately generous. Future resource configuration and train/loading-station systems remain outside the first prototype.
+
+The [9 November M8 plan](../plans/milestone-08-restoration-and-energy-choices.md#agreed-scope-and-decisions--9-november-2026) implements plain contracts: persistent 0–100% health on all land/water cells; signed local influences, fair saturation sharing and an expanding positive frontier at a lower deterministic cadence; connected lake sources with cell-derived capacity, rain-led refill, uniform edge pumping and treatment/return quality; pipes with even filling, splitting/cardinal overflow and exact source-attributed unconsumed-water return on dismantling; batteries and forecast-driven slow coal base load with coal/water inputs, renewable curtailment and higher untreated-water emissions. Returning unconsumed water is an explicit exception to process-liquid loss: consumed water/fuel remains spent, and solid recovery remains atomic. Save all budgets/cadence cursors, source quantities/quality/attribution, pipe/tank/process state, weather/PRNG, coal transitions/forecast decisions and charge needed for exact same-map continuation. Reaching 100% health on every map cell records the checkpoint once and permits continued play. Keep simulation authority in the existing worker; visuals neither move water nor advance restoration.
 
 ## Simulation timing and save boundaries
 
@@ -468,7 +473,7 @@ Keep active gameplay state in memory. Save a versioned data snapshot containing:
 
 Store identifiers and data rather than Angular services, Babylon meshes/materials, scene handles, or Editor components. Recipe and technology definitions belong to the game content; saves reference their identifiers and record a compatible content version.
 
-The list above includes later gameplay. Milestone 4 establishes the [opening field checklist](../plans/milestone-04-first-local-save.md#snapshot-field-checklist). M5 adds queue/unqueued research ledgers; M6 adds machine components/buffers/jobs, completed-result history markers, deposit claims, topology and recycler PRNG/permutation/cursor. M7 adds bounded transit units/progress, conveyor paths, strict sorter filters/lanes, directed material edges, cooldowns, last-item service and per-destination arbitration cursors. Daylight/wind derive from the saved simulation tick, with no independent wall clock. Content is `transport-1`; envelope/world/native representations remain schema 1/world 3/physics 3, with narrow detached validation/upgrades for known `opening-1`, `research-1` and `factory-1` data. Stack limits, reach, recipe dependencies and base capacities remain immutable content. Gearing/capacity levels stay zero until upgrades exist. The internal SimulationCapture includes a sequenced-command ledger and pending commands; the durable save contains its completed SimulationSnapshot world payload, not that continuation envelope. Save-format optimization is still deferred.
+The list above includes later gameplay. Milestone 4 establishes the [opening field checklist](../plans/milestone-04-first-local-save.md#snapshot-field-checklist). M5 adds queue/unqueued research ledgers; M6 adds machine components/buffers/jobs, completed-result history markers, deposit claims, topology and recycler PRNG/permutation/cursor. M7 adds bounded transit units/progress, conveyor paths, strict sorter filters/lanes, directed material edges, cooldowns, last-item service and per-destination arbitration cursors. Daylight/wind derive from the saved simulation tick, with no independent wall clock. Content is `restoration-1`; envelope/world/native representations remain schema 1/world 3/physics 3, with historical detached upgrades retained for known earlier fixtures. M8 requires the exact authored map; old-map saves are rejected before any candidate construction. Stack limits, reach, recipe dependencies and base capacities remain immutable content. Gearing/capacity levels stay zero until upgrades exist. The internal SimulationCapture includes a sequenced-command ledger and pending commands; the durable save contains its completed SimulationSnapshot world payload, not that continuation envelope. Save-format optimization is still deferred.
 
 ## Local storage and save operations
 
@@ -479,6 +484,8 @@ Write each snapshot and its metadata together in a transaction. Report save succ
 ## Save format and loading
 
 Give saves a durable-envelope schema, compatible content/physics versions, authored-world identity, stable runId, saved timestamp and committed write token. The current simulation worldId equals the authored definition ID; it is not a unique playthrough identity. Keep slot identity, run identity and session/renderer generations distinct. Run IDs and timestamps belong to application composition, outside deterministic simulation.
+
+For M8, the user requires strict authored-map binding: compare the save's exact authored-map revision/content with the current shipped map before constructing a candidate worker/scene. Any map change makes an older-map save invalid even if its world ID is unchanged. Report that incompatibility without attempting load or map repair; offer deliberate deletion/New Game and preserve an active world. There is no deployed build and M7/old-map saves need no migration. Use a stable revision/fingerprint of authored definition content, distinct from mutable resource depletion, health and run identity. Same-map saves must continue exactly. M9's future format migrations do not override map incompatibility without a separate product decision.
 
 Show Continue alongside New Game when committed slot metadata exists. Confirm before Load/New Game discards unsaved session progress or Save overwrites a different run; explicitly confirm deletion. New Game leaves the previous slot intact until saved. Continued simulation after a capture remains unsaved even if its asynchronous write later succeeds.
 

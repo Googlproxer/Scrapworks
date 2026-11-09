@@ -5,6 +5,7 @@ import type { ItemStack, SimulationSnapshot } from '@contracts/simulation';
 import { requireInvariant as check } from '@contracts/simulation';
 import { footprintCells, worldToCell } from '@core/world-grid';
 import { isTransportKind } from '@content/transport';
+import { isPipe } from '@content/environment';
 
 const record = (v: unknown, keys: readonly string[]): Record<string, unknown> => {
   check(
@@ -98,6 +99,7 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
       'requested',
       'allocated',
       'status',
+      'utility',
     ]);
     check(
       typeof machine.enabled === 'boolean' &&
@@ -108,8 +110,10 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
     check(
       building.footprint.width === 1 &&
         building.footprint.depth === 1 &&
-        JSON.stringify(building.collision) ===
-          JSON.stringify({ shape: 'box', width: 1.2, depth: 1.2, height: 1.5 }) &&
+        (isPipe(kind)
+          ? building.collision === undefined
+          : JSON.stringify(building.collision) ===
+            JSON.stringify({ shape: 'box', width: 1.2, depth: 1.2, height: 1.5 })) &&
         JSON.stringify(entity.transform?.position) === JSON.stringify(building.position),
       'Invalid machine geometry',
     );
@@ -196,7 +200,8 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
           job.remaining <= FACTORY_SETTINGS.extractionSeconds &&
           job.inputs.length === 0 &&
           job.outputs.length === 1 &&
-          job.outputs[0].item === 'scrap' &&
+          job.outputs[0].item ===
+            save.entities.find((e) => e.id === machine.deposit)!.deposit!.kind &&
           job.outputs[0].quantity <= FACTORY_SETTINGS.extractionQuantity,
         'Invalid extraction job',
       );

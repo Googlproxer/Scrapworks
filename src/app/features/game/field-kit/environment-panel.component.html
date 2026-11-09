@@ -1,0 +1,171 @@
+@if (environment(); as env) {
+  <section aria-labelledby="environment-title">
+    <h4 id="environment-title">Restoration, weather and water</h4>
+    <p class="stable-status" data-restoration-summary>
+      Health {{ seconds(env.average) }}% · {{ env.restored }}/{{ env.health.length }} cells fully
+      restored.
+      {{
+        env.completed
+          ? 'Restoration checkpoint complete — keep playing.'
+          : 'Restore every land and water cell to 100%.'
+      }}
+    </p>
+    <progress aria-label="Average environmental health" max="100" [value]="env.average"></progress>
+    <p class="stable-status" data-weather>
+      {{ forecast() }}. Rain refills lakes, increases wind and lowers solar.
+    </p>
+    <p>
+      A Dunkelflaute sharply reduces wind and solar. Stored energy or optional coal covers
+      shortages; work can safely wait.
+    </p>
+    <p class="stable-status">
+      Batteries {{ seconds(env.storedEnergy / 1000) }}/{{ seconds(env.storageCapacity / 1000) }} kJ
+      · Storage flow {{ env.batteryRate.toFixed(1) }} W (positive charges). Renewable generation
+      {{ seconds(env.renewableUsed) }}/{{ seconds(env.renewableAvailable) }} W · Coal
+      {{ seconds(env.coalUsed) }} W · Forecast minimum renewable
+      {{ seconds(env.forecastRenewable) }} W.
+    </p>
+    <p class="stable-status">
+      Restoration influence {{ seconds(env.restorationRate) }} health points/s · Local emissions
+      {{ seconds(env.pollutionRate) }} health points/s.
+    </p>
+    <ul>
+      @for (source of sourceRows(); track source.id) {
+        <li>
+          {{ source.id }} · {{ source.cells.length }} lake cells · {{ seconds(source.volume) }} L in
+          lake · {{ seconds(source.extracted - source.consumed - source.returned) }} L in
+          infrastructure · {{ seconds(source.consumed) }} L consumed · quality
+          {{ seconds(source.quality) }}%.
+        </li>
+      } @empty {
+        <li>No water source on this map.</li>
+      }
+    </ul>
+    <details (toggle)="toggleHealth($event)">
+      <summary>Inspect land and water cell health</summary>
+      @if (healthOpen()) {
+        <div class="health-table" tabindex="0" role="region" aria-label="Scrollable map health">
+          <table>
+            <caption>
+              Cell health by map row and column. W indicates water.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Row</th>
+                @for (column of healthColumns(); track column) {
+                  <th scope="col">{{ column }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of healthRows(); track $index; let index = $index) {
+                <tr>
+                  <th scope="row">{{ index + 1 }}</th>
+                  @for (cell of row; track $index) {
+                    <td>{{ seconds(cell.health) }}%{{ cell.water ? ' W' : '' }}</td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </details>
+    <p>
+      Health persists without support. Local pollution can reduce it; positive influence counters
+      pollution and spreads outward as cells fill. Water in dismantled infrastructure returns to its
+      original sources.
+    </p>
+    @if (selected(); as entity) {
+      @if (entity.machine?.utility; as utility) {
+        <h5>Water and energy inspection</h5>
+        <p class="stable-status" data-fluid-buffer>
+          Water {{ seconds(water().volume) }}/{{ seconds(water().capacity) }} L · quality
+          {{ seconds(water().quality) }}% · sources {{ water().sources }}. Charge
+          {{ seconds(utility.charge / 1000) }} kJ · Coal {{ utility.phase }}, transition
+          {{ seconds(utility.transition) }} s · Fuel remaining
+          {{ seconds(utility.fuelEnergy / 1000) }} kJ · Output {{ seconds(utility.generated) }} W.
+        </p>
+        @if (water().capacity) {
+          <p class="stable-status" data-hydraulic-status>{{ hydraulicStatus() }}</p>
+        }
+        @if (entity.building!.buildingId === 'water-treatment') {
+          <p>Clean source water passes through without treatment work or electricity cost.</p>
+        }
+        @if (entity.building!.buildingId === 'coal-generator') {
+          <p>
+            Supply coal and piped water. Untreated water increases local emissions. Coal starts and
+            stops slowly, supplies base load and may charge batteries.
+          </p>
+        }
+        @if (entity.building!.buildingId === 'pipe-junction') {
+          <fieldset>
+            <legend>Overflow direction (world cardinal)</legend>
+            <p>
+              Current: {{ utility.overflow ?? 'No overflow' }}. Ordinary routes fill before
+              overflow.
+            </p>
+            <button
+              type="button"
+              (click)="overflow(null)"
+              [attr.aria-pressed]="utility.overflow === null"
+            >
+              No overflow
+            </button>
+            @for (direction of directions; track direction) {
+              <button
+                type="button"
+                (click)="overflow(direction)"
+                [attr.aria-pressed]="utility.overflow === direction"
+              >
+                {{ direction }}
+              </button>
+            }
+          </fieldset>
+        }
+        @if (ports().output.length) {
+          <fieldset>
+            <legend>Connect a pipe output</legend>
+            <label for="fluid-output">Source port</label>
+            <select id="fluid-output" [formField]="fields.output">
+              @for (port of ports().output; track port) {
+                <option [value]="port">{{ port }}</option>
+              }
+            </select>
+            <label for="fluid-target">Destination</label>
+            <select id="fluid-target" [formField]="fields.target">
+              <option value="">Choose a neighbouring input</option>
+              @for (target of targets(); track target.id) {
+                <option [value]="target.id">
+                  {{ name(target.buildingId) }} · {{ target.cell.column + 1 }},
+                  {{ target.cell.row + 1 }}
+                </option>
+              }
+            </select>
+            <label for="fluid-input">Destination port</label>
+            <select id="fluid-input" [formField]="fields.input">
+              @for (port of targetPorts(); track port) {
+                <option [value]="port">{{ port }}</option>
+              }
+            </select>
+            <button type="button" [disabled]="!validLink()" (click)="connect()">
+              Connect water
+            </button>
+            <p class="stable-status">
+              Facing adjacent ports are required. Pipes carry water only; no pressure simulation.
+            </p>
+          </fieldset>
+        }
+        @for (edge of connections(); track edge.id) {
+          <p>
+            {{ edge.from }} {{ edge.output }} → {{ edge.to }} {{ edge.input }}
+            <button type="button" (click)="send({ type: 'fluid-disconnect', connection: edge.id })">
+              Disconnect water {{ edge.id }}
+            </button>
+          </p>
+        }
+      }
+    }
+    <p class="stable-status" role="status">{{ notice() }}</p>
+  </section>
+}

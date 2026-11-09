@@ -1,10 +1,10 @@
 # Scrapworks diagrams
 
-Updated 8 November 2026. The core class and application diagrams include the implemented OpeningSystem, FactorySystem, versioned catalogue, shared field/lab research and detached projections on the single worker. Movement/input ownership is distinct from simulation activity while the field kit is focused. Module/frame diagrams retain their earlier foundation scope; transport and environment systems remain later work. Mermaid blocks remain authoritative and their matching source/SVG/PNG artifacts are regenerated together.
+Updated 9 November 2026. The core class and application diagrams include the implemented opening, factory, transport and environment systems, versioned catalogue, shared field/lab research and detached projections on the single worker. Movement/input ownership is distinct from simulation activity while the field kit is focused. Module/frame diagrams include water/energy dispatch, actual-work settlement and lower-cadence health. Mermaid blocks remain authoritative and their matching source/SVG/PNG artifacts are regenerated together.
 
 The [technical design](../design/TDD.md) and [implementation roadmap](../plans/README.md) contain the editable Mermaid blocks. Standalone sources are under [src/](src/), and matching SVG and PNG files are stored in this folder for GitHub preview and export.
 
-The save diagrams describe implemented Milestone 4 behavior. The research transaction diagram includes Milestone 5's shared queue/head, retained ledgers, source-local paced payment and next-step advancement. The technical class/application diagrams now include M6 FactorySystem, machine buffers/jobs/history markers and powered lab-source preparation on the same worker. Transport/environment branches remain later work; current acceptance is recorded in the milestone plans.
+The save diagrams describe implemented Milestone 4 behavior with the current exact authored-map gate. The research transaction diagram includes Milestone 5's shared queue/head, retained ledgers, source-local paced payment and next-step advancement. The technical class/application diagrams include FactorySystem, machine buffers/jobs/history, powered labs and M8 water/health/weather/energy state on the same worker. Current acceptance is recorded in the milestone plans.
 
 ## Regeneration
 

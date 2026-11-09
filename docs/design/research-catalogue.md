@@ -20,7 +20,11 @@ Each listed payment also requires the same lifetime **produced** quantities. The
 
 Laboratory research also unlocks the Basic research kit recipe. Its recipe is **1 mechanical part + 1 electrical part → 1 kit in 8 seconds**. It is safe to handcraft or request from the power-free MiniFab, including automatic eligible precursors. Stack limit is 50 and solid value is 8 scrap, exactly its embodied inputs. Future Medium fabrication supports its two distinct ingredient types. Basic accepts exactly one input type; Medium exactly two; future Advanced three/four only. General fabrication cannot bypass mixed recycling by executing the personal plate/wire recovery recipes.
 
-The kit-funded Sorting and conveyors technology demonstrates the next research-cost stage. Its existing authoring identity `future.logistics` is preserved, with Laboratory research added as a prerequisite so kits are reachable first. Researching it exposes the planned capability; it does not add transport machinery.
+The kit-funded Sorting and conveyors technology demonstrates the next research-cost stage. Its existing authoring identity `future.logistics` is preserved, with Laboratory research added as a prerequisite so kits are reachable first. Milestone 7 implements its paid conveyors and sorter.
+
+## Restoration continuation
+
+M8 adds Energy storage, Water treatment, Greenhouse restoration, optional Coal power and Pollution mitigation with 4/6/8/4/6 Basic-kit costs and 50/60/80/50/60 field seconds. The [restoration catalogue](restoration-catalogue.md) records prerequisites, construction inputs and operating values. Coal retains its existing authoring identity; storage/water/greenhouse/mitigation have deliberate new identities. Research unlocks blueprints and never grants free machines.
 
 ## Construction blueprints
 
@@ -53,7 +57,7 @@ Each source must have the complete next one-of-each still-required bundle in its
 
 ## Persistence and stable identities
 
-Current content version is `factory-1`, following Milestone 5's `research-1`; durable envelope schema 1, world snapshot 3 and physics format 3 remain unchanged. Queue order and every ledger, including unqueued technologies, are saved in plain owned state. The old independent `fieldTechnology` selector is replaced by `researchQueue`; there is no second target authority. Known `research-1` saves gain empty factory topology on detached data before current validation.
+Current content version is `restoration-1`, following the factory/transport revisions; durable envelope schema 1, world snapshot 3 and physics format 3 remain unchanged. Queue order and every ledger, including unqueued technologies, are saved in plain owned state. The old independent `fieldTechnology` selector is replaced by `researchQueue`; there is no second target authority. M8 requires the exact current authored map and rejects changed-map saves before candidate preparation. No old-map migration is required.
 
 The worker supports the explicitly known Milestone 4 `opening-1` revision. It validates the old item/recipe/technology namespace, converts an unfinished active field target into the sole initial queue head, defaults an absent target to an empty queue and runs the current full gameplay/native validators. It retains existing IDs, run identity, stock, committed handcraft inputs, MiniFab buffers/charge, partial research and native physics. Conversion operates on detached data and does not rewrite the committed slot until Save. Unknown versions, malformed namespaces/queues and incompatible physics remain rejected with existing rollback protection. No time advances or inputs repay during conversion. General migrations remain Milestone 9 and save-format optimization remains deferred.
 
@@ -61,6 +65,6 @@ The nine continuation technologies reuse their recorded Fibery `future.*` Source
 
 ## Later branches
 
-The acyclic roadmap defines Advanced fabrication, energy storage, water treatment, greenhouse restoration, optional coal/mitigation and later MiniFab upgrade contracts. These records have no executable free research or placeholder machine commands. They remain unavailable until their owning content slice supplies actual costs/recipes. The green dependency route requires no coal. MiniFab upgrades retain separate research, physical crafting/application and eventual autonomous min/max input/output controls.
+Advanced fabrication and later MiniFab upgrades remain non-executable roadmap contracts until their own content slices supply costs/recipes. M8 implements paid energy storage, water treatment, greenhouse restoration and optional coal/mitigation; the green dependency route requires no coal. MiniFab upgrades retain separate research, physical crafting/application and eventual autonomous min/max input/output controls.
 
 See the [implementation report](../reports/milestone-05/2026-11-08/README.md) for verification and its limits.

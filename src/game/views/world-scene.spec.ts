@@ -186,7 +186,7 @@ describe('WorldScene with the exported character and authored scene', () => {
     expect(ring.scaling.x).toBe(1);
     // Draw the exact simulation shapes around the current authored box and capsule.
     const objectBounds = meshes.filter((mesh) => mesh.name.startsWith('debug:entity:'));
-    expect(objectBounds).toHaveLength(2);
+    expect(objectBounds).toHaveLength(definition.blockers.length + definition.deposits.length);
     for (const bounds of objectBounds) {
       const name = bounds.name.slice('debug:'.length, -':collision'.length);
       const object = scene.getMeshByName(name)!;

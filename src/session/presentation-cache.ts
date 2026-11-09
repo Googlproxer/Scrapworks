@@ -236,7 +236,7 @@ export class PresentationCache {
             footprint: mapping.deposit.footprint,
             rotation: mapping.deposit.rotation,
             ...(mapping.deposit.collision ? { collision: mapping.deposit.collision } : {}),
-            kind: 'scrap',
+            kind: mapping.deposit.kind,
             quantity: rows[at + 7],
           });
         if (mapping.building) this.buildings.set(mapping.id, { ...mapping.building, position });

@@ -27,6 +27,7 @@ import type {
 } from '@contracts/world';
 import { assertWorldDefinition } from '@contracts/world';
 import { cellCenter } from '@core/world-grid';
+import { assertSameAuthoredMap } from '@core/authored-map';
 import { World } from 'miniplex';
 import { assertSnapshot, ownContent } from './capture';
 import { emptyInventory } from './domain/inventory';
@@ -94,12 +95,9 @@ export class Simulation {
     this.content = ownContent(OPENING_CONTENT);
     if (options.snapshot) assertSnapshot(options.snapshot, this.content);
     assertWorldDefinition(definition);
-    check(
-      !options.snapshot ||
-        JSON.stringify(options.snapshot.definition) === JSON.stringify(definition),
-      'Restore definition mismatch',
-    );
-    this.definition = structuredClone(definition);
+    if (options.snapshot) assertSameAuthoredMap(options.snapshot.definition, definition);
+    // Keep saved authored records aligned with their immutable entity copies on later saves.
+    this.definition = structuredClone(options.snapshot?.definition ?? definition);
     this.authoredDeposits = new Map(
       this.definition.deposits.map((deposit) => [deposit.id, deposit]),
     );
@@ -157,7 +155,7 @@ export class Simulation {
             moving: false,
             sprinting: false,
           },
-          deposit: { kind: 'scrap', quantity: deposit.quantity },
+          deposit: { kind: deposit.kind, quantity: deposit.quantity },
         });
       for (const body of definition.bodies ?? []) {
         const angle = (body.rotation * Math.PI) / 2;
@@ -252,7 +250,7 @@ export class Simulation {
       ...(authored
         ? {
             deposit: {
-              kind: 'scrap' as const,
+              kind: e.deposit!.kind,
               footprint: { ...authored.footprint },
               rotation: authored.rotation,
               ...(authored.collision ? { collision: { ...authored.collision } } : {}),
@@ -422,6 +420,7 @@ export class Simulation {
         this.mark(entity);
       }
       this.opening.step(FIXED_STEP_SECONDS, () => this.factory.step(FIXED_STEP_SECONDS));
+      this.factory.finishStep(FIXED_STEP_SECONDS);
       if (this.opening.collisionChanged || this.factory.collisionChanged) this.rebuildCollision();
       this.mark(this.ids.get(this.resources.playerId)!);
       let physicalChange = false;

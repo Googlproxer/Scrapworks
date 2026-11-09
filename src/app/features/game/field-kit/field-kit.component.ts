@@ -60,7 +60,15 @@ export class FieldKitComponent {
       return 'Hand-assemble your Mini Fabricator from plates, wire and both kinds of parts.';
     if (!this.runtime.world()?.productionTotals['plate'] || !opening.state.minifab.owned)
       return 'Request a MiniFab recipe. It makes compatible precursors and works while you explore.';
-    return 'Your MiniFab works without power. Research renewable power and recycling, then assign a crafted machine under Equipable. Select its toolbar slot and press B to build; use Factory to inspect and supply machines.';
+    if (!opening.ledgers['laboratory-research']?.unlocked)
+      return 'Your MiniFab works without power. Research renewable power and recycling, then assign a crafted machine under Equipable. Select its toolbar slot and press B to build; use Factory to inspect and supply machines.';
+    if (!opening.ledgers['storage']?.unlocked || !opening.ledgers['water-treatment']?.unlocked)
+      return 'Make Basic research kits for Energy storage and Water treatment. Field Research remains available without factory power. Coal is optional; take your time building a renewable water supply.';
+    if (!opening.ledgers['greenhouse']?.unlocked)
+      return 'Research Greenhouse restoration. Build an edge pump facing the lake, treatment and a tank; connect facing water ports in Factory. Batteries cover renewable shortages.';
+    if (this.runtime.world()?.factory?.environment?.completed)
+      return 'Every land and water cell reached full health. The restoration checkpoint is complete; keep experimenting, expanding and recovering the world at your own pace.';
+    return 'Supply greenhouses with power and clean piped water. Inspect health, weather and buffers in Factory. Restoration persists and spreads as nearby cells fill; shortages pause work and you can always recover.';
   });
 
   public constructor() {

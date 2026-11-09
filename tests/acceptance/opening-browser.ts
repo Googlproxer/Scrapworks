@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
-import { chromium } from 'playwright';
+import { chromium, type Worker } from 'playwright';
 import type { RuntimeReply } from '../../src/contracts/simulation.ts';
 import type { OpeningView } from '../../src/contracts/opening.ts';
 import type { WorldPosition } from '../../src/contracts/world.ts';
@@ -16,6 +16,7 @@ import {
 } from './browser-events.ts';
 import { checkFactoryRoute, type FactoryRouteProbe } from './factory-route.ts';
 import type { SaveSnapshot } from '../../src/contracts/save.ts';
+import { saveThroughUi } from './manual-save.ts';
 
 type Probe = FactoryRouteProbe;
 const root = path.resolve(import.meta.dirname, '../..');
@@ -30,11 +31,27 @@ const engineStoreChunk = Object.entries(metadata.outputs).find(([, output]) =>
 )?.[0];
 const relaxed = process.argv.includes('--relaxed');
 const virtualTime = process.argv.includes('--virtual-time');
-const resumeTransport = process.argv
-  .find((arg) => arg.startsWith('--resume-transport='))
-  ?.slice('--resume-transport='.length);
-const transportMode = process.argv.includes('--transport') || !!resumeTransport;
-const factoryMode = process.argv.includes('--factory') || transportMode;
+const resumeRestoration = process.argv
+  .find((arg) => arg.startsWith('--resume-restoration='))
+  ?.slice('--resume-restoration='.length);
+const resumeTransport =
+  process.argv
+    .find((arg) => arg.startsWith('--resume-transport='))
+    ?.slice('--resume-transport='.length) ?? resumeRestoration;
+const restorationDirect = process.argv.includes('--restoration-direct');
+const restorationView = process.argv.includes('--restoration-view');
+assert(
+  !restorationView || resumeRestoration,
+  'Restoration review requires an earned --resume-restoration checkpoint',
+);
+const restorationMode =
+  process.argv.includes('--restoration') || !!resumeRestoration || restorationDirect;
+const transportMode = process.argv.includes('--transport') || !!resumeTransport || restorationMode;
+const factoryMode = process.argv.includes('--factory') || transportMode || restorationMode;
+assert(
+  !process.env['CI'] && !process.env['GITHUB_ACTIONS'],
+  'Full gameplay playthroughs are local/manual only and must not run in CI.',
+);
 assert(!(relaxed && virtualTime), 'The relaxed pacing reference requires real time');
 const output = path.join(
   root,
@@ -146,34 +163,60 @@ try {
   await play.waitFor({ state: 'visible' });
   const created = page.waitForEvent('worker');
   await play.click();
-  const worker = await created;
+  let worker = await created;
   await installWorkerEvents(worker);
-  await worker.evaluate(() => {
-    const scope = globalThis as unknown as {
-      openingProbe?: Probe;
-      postMessage(message: RuntimeReply, transfer?: Transferable[]): void;
-    };
-    const send = scope.postMessage.bind(globalThis);
-    const buildings = new Map<string, import('../../src/contracts/world.ts').BuildingView>();
-    scope.postMessage = (message, ...rest) => {
-      if (message.packet?.full) buildings.clear();
-      for (const mapping of message.packet?.mappings ?? [])
-        if (mapping.building) buildings.set(mapping.id, mapping.building);
-      if (message.packet?.opening)
-        scope.openingProbe = {
-          opening: message.packet.opening,
-          tick: message.packet.tick,
-          position: message.packet.endpoints.at(-1)!.transform.position,
-          moving: message.packet.endpoints.at(-1)!.transform.moving,
-          production: message.packet.productionTotals,
-          factory: message.packet.factory,
-          buildings: [...buildings.values()],
-          details: message.packet.details,
-        };
-      return send(message, ...rest);
-    };
+  const installProbe = async (target: Worker) =>
+    target.evaluate(() => {
+      const scope = globalThis as unknown as {
+        openingProbe?: Probe;
+        postMessage(message: RuntimeReply, transfer?: Transferable[]): void;
+      };
+      const send = scope.postMessage.bind(globalThis);
+      const buildings = new Map<string, import('../../src/contracts/world.ts').BuildingView>();
+      const slots = new Map<number, { id: string; generation: number }>();
+      scope.postMessage = (message, ...rest) => {
+        if (message.packet?.full) {
+          buildings.clear();
+          slots.clear();
+        }
+        const removed = new Float64Array(message.packet?.removed ?? new ArrayBuffer(0));
+        for (let at = 0; at < removed.length; at += 2) {
+          const old = slots.get(removed[at]);
+          if (old?.generation === removed[at + 1]) {
+            buildings.delete(old.id);
+            slots.delete(removed[at]);
+          }
+        }
+        for (const mapping of message.packet?.mappings ?? []) {
+          slots.set(mapping.slot, { id: mapping.id, generation: mapping.generation });
+          if (mapping.building) buildings.set(mapping.id, mapping.building);
+        }
+        if (message.packet?.opening)
+          scope.openingProbe = {
+            opening: message.packet.opening,
+            tick: message.packet.tick,
+            position: message.packet.endpoints.at(-1)!.transform.position,
+            moving: message.packet.endpoints.at(-1)!.transform.moving,
+            production: message.packet.productionTotals,
+            factory: message.packet.factory,
+            buildings: [...buildings.values()],
+            details: message.packet.details,
+          };
+        return send(message, ...rest);
+      };
+    });
+  await installProbe(worker);
+  let probeReady = Promise.resolve();
+  // Reload/Continue creates a new worker. Retain observation, never the retired worker handle.
+  page.on('worker', (current) => {
+    worker = current;
+    probeReady = (async () => {
+      await installWorkerEvents(current);
+      await installProbe(current);
+    })();
   });
   const read = async () => {
+    await probeReady;
     lastProbe = await worker.evaluate(
       () => (globalThis as unknown as { openingProbe: Probe }).openingProbe,
     );
@@ -185,6 +228,7 @@ try {
     timeout = 130000,
     advanceMilliseconds = 250,
   ) => {
+    await probeReady;
     const deadline = performance.now() + timeout;
     let stamp: number | undefined;
     let advanced = 0;
@@ -255,8 +299,8 @@ try {
     assert.deepEqual(initial.opening.ledgers, {});
   } else
     assert(
-      initial.opening.ledgers['sorting-logistics']?.unlocked,
-      'Resume requires an already-earned logistics unlock',
+      resumeRestoration || initial.opening.ledgers['sorting-logistics']?.unlocked,
+      'Transport resume requires an already-earned logistics unlock',
     );
   const inspectPresentation = (settleIdle = false) =>
     page.evaluate(
@@ -357,28 +401,67 @@ try {
   if (resumeTransport) {
     await page.addScriptTag({ path: path.join(root, 'node_modules/axe-core/axe.min.js') });
     await until((probe) => !!probe.opening && !!probe.buildings?.length, 'continue earned M6 save');
-    const craft = async (recipe: string, count: number) => {
-      await page.getByRole('tab', { name: 'Inventory & Crafting', exact: true }).click();
-      await page.getByLabel('Recipe', { exact: true }).selectOption(recipe);
-      await page.getByLabel('Batch size', { exact: true }).selectOption(String(count));
-      await page.getByRole('button', { name: `Handcraft ${count}`, exact: true }).click();
-      await until((p) => !!p.opening.state.handcraft, `start ${recipe}`, 5000);
-      await until((p) => !p.opening.state.handcraft, `finish ${recipe}`);
-      await page.getByText('No handcraft in progress', { exact: true }).waitFor();
-    };
-    await checkFactoryRoute({
-      page,
-      read,
-      until,
-      craft,
-      research: async () => {
-        throw Error('Resume must retain already-earned M6 research');
-      },
-      root,
-      output,
-      transport: true,
-      resumeTransport: true,
-    });
+    if (restorationView) {
+      assert((await read()).factory!.environment!.completed);
+      await page.getByRole('button', { name: /Open field kit/ }).click();
+      await page.getByRole('tab', { name: 'Factory', exact: true }).click();
+      const tank = page.getByRole('button', { name: /^Water tank ·/ }).first();
+      if (await tank.count()) {
+        await tank.click();
+        await page.locator('[data-fluid-buffer]').waitFor();
+      }
+      await page.getByText('Inspect land and water cell health', { exact: true }).click();
+      assert.deepEqual(await page.evaluate(async () => (await axe.run()).violations), []);
+      await page.screenshot({
+        path: path.join(output, 'restoration-review-desktop.png'),
+        fullPage: true,
+      });
+      await page.setViewportSize({ width: 390, height: 844 });
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+      assert.deepEqual(await page.evaluate(async () => (await axe.run()).violations), []);
+      await page.screenshot({
+        path: path.join(output, 'restoration-review-mobile.png'),
+        fullPage: true,
+      });
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.getByRole('button', { name: 'Close', exact: true }).click();
+      await page.screenshot({ path: path.join(output, 'restoration-world.png'), fullPage: true });
+      await fs.writeFile(
+        path.join(output, 'restoration-review.json'),
+        JSON.stringify({
+          passed: true,
+          checkpoint: resumeRestoration,
+          average: (await read()).factory!.environment!.average,
+          desktopAxe: [],
+          mobileAxe: [],
+        }),
+      );
+    } else {
+      const craft = async (recipe: string, count: number) => {
+        await page.getByRole('tab', { name: 'Inventory & Crafting', exact: true }).click();
+        await page.getByLabel('Recipe', { exact: true }).selectOption(recipe);
+        await page.getByLabel('Batch size', { exact: true }).selectOption(String(count));
+        await page.getByRole('button', { name: `Handcraft ${count}`, exact: true }).click();
+        await until((p) => !!p.opening.state.handcraft, `start ${recipe}`, 5000);
+        await until((p) => !p.opening.state.handcraft, `finish ${recipe}`);
+        await page.getByText('No handcraft in progress', { exact: true }).waitFor();
+      };
+      await checkFactoryRoute({
+        page,
+        read,
+        until,
+        craft,
+        research: async () => {
+          throw Error('Resume must retain already-earned M6 research');
+        },
+        root,
+        output,
+        transport: true,
+        resumeTransport: true,
+        resumeRestoration: !!resumeRestoration,
+        restoration: restorationMode,
+      });
+    }
   } else if (process.argv.includes('--ui-only')) {
     await verifyGameplayUi();
     // A real out-of-reach world action produces a notice while the kit is closed.
@@ -687,10 +770,28 @@ try {
         root,
         output,
         transport: transportMode,
+        restoration: restorationMode,
+        restorationDirect,
       });
   }
   assert.deepEqual(errors, []);
 } catch (error) {
+  // Preserve earned progress through the same public Save UI before closing a failed diagnostic.
+  if (factoryMode)
+    try {
+      const button = page.getByRole('button', { name: 'Save progress', exact: true });
+      if (!(await button.isVisible())) {
+        const openKit = page.getByRole('button', { name: /Open field kit/ });
+        if (await openKit.isVisible()) await openKit.click();
+      }
+      if (await button.isVisible())
+        await fs.writeFile(
+          path.join(output, 'earned-recovery-checkpoint.json'),
+          JSON.stringify(await saveThroughUi(page)),
+        );
+    } catch {
+      /* The original failure remains authoritative when storage itself is unavailable. */
+    }
   await page
     .screenshot({ path: path.join(output, 'failure.png'), fullPage: true })
     .catch(() => undefined);

@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'vitest';
 import {
-  OPENING_CONTENT,
   OPENING_RECIPES,
   OPENING_TECHNOLOGIES,
   validateOpeningCatalogue,
@@ -218,7 +217,7 @@ test('catalogue reaches paid renewable/factory research and handcraftable kits w
     )[1].reason,
     'locked',
   );
-  act(sim, ...OPENING_TECHNOLOGIES.slice(5).map((tech) => queue(tech.id)), {
+  act(sim, ...OPENING_TECHNOLOGIES.slice(5, 14).map((tech) => queue(tech.id)), {
     type: 'research',
     enabled: true,
   });
@@ -236,7 +235,7 @@ test('catalogue reaches paid renewable/factory research and handcraftable kits w
     sim.capture().entities.some((entity) => entity.kind === 'building'),
     false,
   );
-  assert.equal(OPENING_CONTENT.technologies.includes('coal-power'), false);
+  assert.equal(sim.view.research.includes('coal-power'), false);
   const saved = preparePlayerSave(sim.capture());
   assert.deepEqual(own(new Simulation(saved.definition, { snapshot: saved })).capture(), saved);
   for (const blueprint of EQUIPMENT_BLUEPRINTS)
@@ -246,7 +245,7 @@ test('catalogue reaches paid renewable/factory research and handcraftable kits w
 test('kit crafting works through power-free MiniFab precursors and factory fixtures enforce exact arity and unlocks', () => {
   const sim = prepared(true),
     snapshot = sim.capture();
-  for (const technology of OPENING_TECHNOLOGIES.slice(5, -1))
+  for (const technology of OPENING_TECHNOLOGIES.slice(5, 13))
     snapshot.resources.research[technology.id] = {
       consumed: Object.fromEntries(technology.costs.map((cost) => [cost.item, cost.quantity])),
       work: technology.seconds,
@@ -286,7 +285,7 @@ test('kit crafting works through power-free MiniFab precursors and factory fixtu
 test('saving concurrent partial kit jobs and queued kit-funded research preserves exact continued work and payment', () => {
   const sim = prepared(true),
     snapshot = sim.capture();
-  for (const technology of OPENING_TECHNOLOGIES.slice(5, -1))
+  for (const technology of OPENING_TECHNOLOGIES.slice(5, 13))
     snapshot.resources.research[technology.id] = {
       consumed: Object.fromEntries(technology.costs.map((cost) => [cost.item, cost.quantity])),
       work: technology.seconds,

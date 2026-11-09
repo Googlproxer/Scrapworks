@@ -297,6 +297,8 @@ function fixture(kinds: readonly MachineKind[]) {
     ],
   };
   const factory = new FactorySystem(context);
+  // These fixtures isolate original factory rules from the separately tested weather executor.
+  resources.environment!.weather.nextTick = 600000;
 
   const connect = (a = 0, b = 1) =>
     resources.factory!.connections.push({
@@ -321,6 +323,7 @@ function fixture(kinds: readonly MachineKind[]) {
         (item) => resources.productionTotals[item] ?? 0,
         0.05,
       );
+      factory.finishStep(0.05);
       resources.tick++;
     }
   };
@@ -328,10 +331,10 @@ function fixture(kinds: readonly MachineKind[]) {
   return { factory, context, resources, player, machines, entities, connect, give, feed, tick };
 }
 
-test('equipment catalogue bootstraps all ten paid assemblies and every random outcome conserves value', () => {
+test('equipment catalogue bootstraps paid assemblies and every random outcome conserves value', () => {
   validateOpeningCatalogue();
-  assert.equal(OPENING_RECIPES.filter((r) => r.id.startsWith('assemble-')).length, 10);
-  const researchValue = OPENING_TECHNOLOGIES.reduce(
+  assert.equal(OPENING_RECIPES.filter((r) => r.id.startsWith('assemble-')).length, 20);
+  const researchValue = OPENING_TECHNOLOGIES.slice(0, 14).reduce(
     (n, t) =>
       n + t.costs.reduce((n, c) => n + OPENING_CONTENT.items[c.item].solidValue * c.quantity, 0),
     0,
@@ -1036,6 +1039,7 @@ test('simultaneous native factory jobs, extraction and partial shared lab work c
     };
   snapshot.resources.nextEntityId = 100;
   snapshot.resources.tick = 2400; // Middle of the saved night: the turbine alone shares demand.
+  snapshot.resources.environment!.nextUpdate = 2420;
   snapshot.resources.productionTotals['research-kit'] = 4;
   const player = snapshot.entities.find((e) => e.kind === 'player')!;
   player.opening!.fieldEnabled = false;

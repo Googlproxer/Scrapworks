@@ -62,8 +62,8 @@ export class OpeningFeedback {
           title: 'Materials and capacity',
           message:
             event.reason === 'bag-full'
-              ? 'Bag full. Salvaged scrap is on the ground; pick it up when there is room.'
-              : 'Salvage stopped: move within two metres of a deposit with scrap remaining.',
+              ? 'Bag full. Salvaged resources are on the ground; pick them up when there is room.'
+              : 'Salvage stopped: move within two metres of a deposit with resources remaining.',
           tone: 'warning',
         });
         break;

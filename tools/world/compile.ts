@@ -13,6 +13,7 @@ export interface MarkerData {
   rows?: number;
   cellSizeCm?: number;
   terrainId?: string;
+  terrainCells?: { column: number; row: number; terrainId: string }[];
   resource?: string;
   quantity?: number;
   footprint?: { width: number; depth: number };
@@ -171,6 +172,16 @@ export function compileMarkers(nodes: readonly MarkerNode[]): WorldDefinition {
       : {}),
   });
 
+  const terrain: string[] = Array<string>(metadata.columns * metadata.rows).fill(metadata.terrainId);
+  const terrainCells = metadata.terrainCells ?? [];
+  if (!Array.isArray(terrainCells)) throw new Error('Invalid authored terrain cells');
+  const changed = new Set<number>();
+  for (const cell of terrainCells) {
+    if (!Number.isSafeInteger(cell.column) || !Number.isSafeInteger(cell.row) || cell.column < 0 || cell.row < 0 || cell.column >= metadata.columns || cell.row >= metadata.rows || !['soil','rock','grass','water'].includes(cell.terrainId)) throw new Error('Invalid authored terrain cell');
+    const index = cell.row * metadata.columns + cell.column;
+    if (changed.has(index)) throw new Error('Duplicate authored terrain cell');
+    changed.add(index); terrain[index] = cell.terrainId;
+  }
   const definition = {
     version: 1,
     id: metadata.id,
@@ -180,7 +191,7 @@ export function compileMarkers(nodes: readonly MarkerNode[]): WorldDefinition {
       rows: metadata.rows,
       metresPerCell: metadata.cellSizeCm / 100,
     },
-    terrain: Array(metadata.columns * metadata.rows).fill(metadata.terrainId),
+    terrain,
     spawn: toMetres(spawns[0]),
     deposits: markers
       .filter((node) => node.metadata.scrapworks.kind === 'Deposit')

@@ -1,5 +1,6 @@
 import type { OpeningRecipe, OpeningTechnology } from './opening';
 import type { ItemStack } from '../contracts/simulation';
+import { ENVIRONMENT_BLUEPRINTS } from './environment';
 
 const stack = (item: string, quantity: number): ItemStack => ({ item, quantity });
 
@@ -98,6 +99,7 @@ export interface EquipmentBlueprint {
 
 /** Construction inputs shared by researched paid assemblies and the factory runtime. */
 export const EQUIPMENT_BLUEPRINTS: readonly EquipmentBlueprint[] = [
+  ...ENVIRONMENT_BLUEPRINTS,
   {
     id: 'conveyor',
     name: 'Conveyor',
@@ -175,36 +177,6 @@ export const RESEARCH_ROADMAP = [
     name: 'Advanced fabrication',
     requires: ['medium-fabrication', 'laboratory-research'],
     note: 'Later slice: exactly three or four distinct inputs; lower tiers retain their roles.',
-  },
-  {
-    id: 'storage',
-    name: 'Energy storage',
-    requires: ['electrical-engineering'],
-    note: 'Later storage and renewable variability; costs are undecided.',
-  },
-  {
-    id: 'water-treatment',
-    name: 'Water treatment',
-    requires: ['laboratory-research', 'mixed-recycling'],
-    note: 'Later specialist liquid processing; costs are undecided.',
-  },
-  {
-    id: 'greenhouse',
-    name: 'Greenhouse restoration',
-    requires: ['water-treatment', 'storage'],
-    note: 'Later peaceful restoration on a coal-free path; costs are undecided.',
-  },
-  {
-    id: 'coal-power',
-    name: 'Coal power — optional',
-    requires: ['electrical-engineering'],
-    note: 'Optional high output with emissions; never required for green progression.',
-  },
-  {
-    id: 'pollution-mitigation',
-    name: 'Pollution mitigation — optional',
-    requires: ['coal-power', 'water-treatment'],
-    note: 'Later optional mitigation; never gates green technology.',
   },
   {
     id: 'minifab-upgrades',

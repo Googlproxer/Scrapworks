@@ -312,7 +312,7 @@ try {
     console.log('Prepared factory UI controls, industry, shared labs, persistence and AXE passed.');
   } else if (researchMode) {
     stage = 'shared research queue and M4 compatibility';
-    await checkResearchRoute(page, readSlot, output, root);
+    await checkResearchRoute(page, readSlot, output, root, fixture.contentVersion);
     assert.deepEqual(errors, []);
   } else {
     stage = 'continue saved handcraft';

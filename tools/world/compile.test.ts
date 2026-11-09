@@ -4,17 +4,19 @@ import { compileMarkers, compileWorld } from './compile.ts';
 import { fixtureMarkers } from './test-fixture.ts';
 import type { FixtureMarker } from './compile.ts';
 
-test('compiles saved authored markers into a plain finite 10x10 world', async () => {
+test('compiles saved authored markers into the finite 20x20 restoration world', async () => {
   const definition = await compileWorld(new URL('../../assets/game.scene', import.meta.url));
   assert.deepEqual(definition.grid, {
     origin: { x: -10, z: -10 },
-    columns: 10,
-    rows: 10,
+    columns: 20,
+    rows: 20,
     metresPerCell: 2,
   });
   assert.deepEqual(definition.spawn, { x: 1, y: 0, z: 1 });
-  assert.equal(definition.terrain.length, 100);
-  assert.equal(definition.deposits.length, 1);
+  assert.equal(definition.terrain.length, 400);
+  assert.equal(definition.terrain.filter(t => t === 'water').length, 8);
+  assert.equal(definition.deposits.length, 4);
+  assert.equal(definition.deposits.filter(d => d.kind === 'coal').length, 1);
   assert.equal(definition.blockers.length, 1);
   assert.equal(definition.bodies?.length, 6);
   assert.equal(definition.bodies.filter((body) => body.motion === 'dynamic').length, 5);

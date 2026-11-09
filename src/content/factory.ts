@@ -2,6 +2,15 @@ import type { EquipmentId, MachineKind } from '../contracts/factory';
 import type { OpeningRecipe } from './opening';
 import { EQUIPMENT_BLUEPRINTS } from './first-factory';
 import { isTransportKind } from './transport';
+import { UTILITIES } from './environment';
+import type { UtilityKind } from '../contracts/environment';
+
+const utilityMachines = Object.fromEntries(
+  Object.entries(UTILITIES).map(([id, value]) => [
+    id,
+    { watts: value.watts, inputSlots: id === 'coal-generator' ? 2 : 0, outputSlots: 0 },
+  ]),
+) as Record<UtilityKind, { watts: number; inputSlots: number; outputSlots: number }>;
 
 /** Provisional playtest values, using metres, watts, joules and simulation seconds. */
 export const FACTORY_SETTINGS = Object.freeze({
@@ -37,6 +46,7 @@ export const MACHINES: Readonly<
     }
   >
 > = Object.freeze({
+  ...utilityMachines,
   'solar-panel': { watts: 0, inputSlots: 0, outputSlots: 0 },
   'wind-turbine': { watts: 0, inputSlots: 0, outputSlots: 0 },
   recycler: { watts: 120, inputSlots: 2, outputSlots: 6 },
@@ -63,7 +73,7 @@ export const EQUIPMENT_ITEMS = Object.fromEntries(
   EQUIPMENT_BLUEPRINTS.map((b) => [
     b.id,
     {
-      stackLimit: b.id === 'power-connection' || b.id === 'conveyor' ? 20 : 5,
+      stackLimit: b.id === 'power-connection' || b.id === 'conveyor' || b.id === 'pipe' ? 20 : 5,
       solidValue: b.inputs.reduce((sum, s) => sum + values[s.item] * s.quantity, 0),
     },
   ]),
@@ -75,7 +85,7 @@ export const EQUIPMENT_RECIPES: readonly OpeningRecipe[] = EQUIPMENT_BLUEPRINTS.
   technology: b.technology,
   inputs: b.inputs,
   outputs: [{ item: b.id, quantity: 1 }],
-  seconds: b.id === 'power-connection' ? 3 : b.id === 'conveyor' ? 4 : 12,
+  seconds: b.id === 'power-connection' ? 3 : b.id === 'conveyor' || b.id === 'pipe' ? 4 : 12,
   handcraft: true,
   minifab: true,
 }));

@@ -1,0 +1,937 @@
+{
+  "date": "2026-11-09",
+  "status": "Implemented and locally verified; M8 Completed, seven packages Done",
+  "source": "docs/design/restoration-catalogue.md",
+  "preservedExistingRecords": true,
+  "counts": {
+    "Item": 32,
+    "Recipe": 29,
+    "Ingredient": 69,
+    "Technology": 25,
+    "Research Cost": 36
+  },
+  "prerequisiteLinks": 42,
+  "numericalBalance": "Draft",
+  "runtime": {
+    "blueprints": [
+      {
+        "id": "water-pump",
+        "name": "Water pump",
+        "technology": "water-treatment",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 4
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 2
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "id": "pipe",
+        "name": "Pipe",
+        "technology": "water-treatment",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "id": "pipe-junction",
+        "name": "Pipe junction",
+        "technology": "water-treatment",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 2
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "id": "water-treatment",
+        "name": "Water treatment",
+        "technology": "water-treatment",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 6
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 2
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "id": "water-tank",
+        "name": "Water tank",
+        "technology": "water-treatment",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 6
+          }
+        ]
+      },
+      {
+        "id": "water-return",
+        "name": "Water return",
+        "technology": "water-treatment",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 2
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "id": "greenhouse",
+        "name": "Greenhouse",
+        "technology": "greenhouse",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 8
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 3
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "id": "battery",
+        "name": "Grid battery",
+        "technology": "storage",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 4
+          },
+          {
+            "item": "wire",
+            "quantity": 4
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "id": "coal-generator",
+        "name": "Coal generator",
+        "technology": "coal-power",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 10
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 4
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "id": "air-scrubber",
+        "name": "Air scrubber",
+        "technology": "pollution-mitigation",
+        "inputs": [
+          {
+            "item": "plate",
+            "quantity": 6
+          },
+          {
+            "item": "mechanical-part",
+            "quantity": 2
+          },
+          {
+            "item": "electrical-part",
+            "quantity": 3
+          }
+        ]
+      }
+    ],
+    "technologies": [
+      {
+        "id": "storage",
+        "name": "Energy storage",
+        "requires": [
+          "electrical-engineering",
+          "laboratory-research"
+        ],
+        "costs": [
+          {
+            "item": "research-kit",
+            "quantity": 4
+          }
+        ],
+        "eligibility": [
+          {
+            "item": "research-kit",
+            "quantity": 4
+          }
+        ],
+        "seconds": 50
+      },
+      {
+        "id": "water-treatment",
+        "name": "Water treatment",
+        "requires": [
+          "laboratory-research",
+          "mixed-recycling"
+        ],
+        "costs": [
+          {
+            "item": "research-kit",
+            "quantity": 6
+          }
+        ],
+        "eligibility": [
+          {
+            "item": "research-kit",
+            "quantity": 6
+          }
+        ],
+        "seconds": 60
+      },
+      {
+        "id": "greenhouse",
+        "name": "Greenhouse restoration",
+        "requires": [
+          "water-treatment",
+          "storage"
+        ],
+        "costs": [
+          {
+            "item": "research-kit",
+            "quantity": 8
+          }
+        ],
+        "eligibility": [
+          {
+            "item": "research-kit",
+            "quantity": 8
+          }
+        ],
+        "seconds": 80
+      },
+      {
+        "id": "coal-power",
+        "name": "Coal power — optional",
+        "requires": [
+          "electrical-engineering",
+          "laboratory-research"
+        ],
+        "costs": [
+          {
+            "item": "research-kit",
+            "quantity": 4
+          }
+        ],
+        "eligibility": [
+          {
+            "item": "research-kit",
+            "quantity": 4
+          }
+        ],
+        "seconds": 50
+      },
+      {
+        "id": "pollution-mitigation",
+        "name": "Pollution mitigation — optional",
+        "requires": [
+          "coal-power",
+          "water-treatment"
+        ],
+        "costs": [
+          {
+            "item": "research-kit",
+            "quantity": 6
+          }
+        ],
+        "eligibility": [
+          {
+            "item": "research-kit",
+            "quantity": 6
+          }
+        ],
+        "seconds": 60
+      }
+    ],
+    "settings": {
+      "cadenceTicks": 20,
+      "sourceLitresPerCell": 1000,
+      "refillPerCell": 0.01,
+      "rainRefillPerCell": 1,
+      "pumpRate": 6,
+      "pipeRate": 8,
+      "treatmentRate": 4,
+      "returnRate": 4,
+      "greenhouseWater": 0.2,
+      "greenhouseInfluence": 40,
+      "scrubberInfluence": 24,
+      "returnInfluence": 4,
+      "coalWatts": 12000,
+      "coalJoules": 500000,
+      "coalWaterPerJoule": 0.0002,
+      "coalPollutionPerJoule": 0.0006,
+      "coalStartSeconds": 12,
+      "coalStopSeconds": 8,
+      "coalHoldSeconds": 10,
+      "forecastSeconds": 60,
+      "forecastLeadTicks": 600,
+      "batteryJoules": 120000,
+      "batteryWatts": 1200,
+      "batteryEfficiency": 0.95
+    },
+    "utilities": {
+      "water-pump": {
+        "watts": 60,
+        "litres": 12
+      },
+      "pipe": {
+        "watts": 0,
+        "litres": 12
+      },
+      "pipe-junction": {
+        "watts": 0,
+        "litres": 12
+      },
+      "water-treatment": {
+        "watts": 160,
+        "litres": 24
+      },
+      "water-tank": {
+        "watts": 0,
+        "litres": 200
+      },
+      "water-return": {
+        "watts": 0,
+        "litres": 12
+      },
+      "greenhouse": {
+        "watts": 180,
+        "litres": 12
+      },
+      "battery": {
+        "watts": 0,
+        "litres": 0
+      },
+      "coal-generator": {
+        "watts": 0,
+        "litres": 24
+      },
+      "air-scrubber": {
+        "watts": 120,
+        "litres": 0
+      }
+    }
+  },
+  "records": {
+    "Item": [
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/32",
+        "Stack": null,
+        "Id": "0238f3eb-990a-4bd7-b940-f0719e97c73e",
+        "Value": 0,
+        "Name": "Water",
+        "Inventory": false,
+        "Source": "item.water"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/22",
+        "Stack": 20,
+        "Id": "0302707e-84b0-48e0-9ef5-064c10e3d117",
+        "Value": 2,
+        "Name": "Pipe",
+        "Inventory": true,
+        "Source": "item.pipe"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/27",
+        "Stack": 5,
+        "Id": "1848fa8c-f32c-4987-954d-1d4d78590b34",
+        "Value": 40,
+        "Name": "Greenhouse",
+        "Inventory": true,
+        "Source": "item.greenhouse"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/21",
+        "Stack": 5,
+        "Id": "458f3095-61ab-4bf2-b9e3-1fb0c2633c2d",
+        "Value": 20,
+        "Name": "Water pump",
+        "Inventory": true,
+        "Source": "item.water_pump"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/30",
+        "Stack": 5,
+        "Id": "4ae04aa3-3491-4e76-8613-2a61b6cd688c",
+        "Value": 32,
+        "Name": "Air scrubber",
+        "Inventory": true,
+        "Source": "item.air_scrubber"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/31",
+        "Stack": 100,
+        "Id": "640f95e2-334a-4cf8-bef6-96428afd5f12",
+        "Value": 0,
+        "Name": "Coal",
+        "Inventory": true,
+        "Source": "item.coal"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/25",
+        "Stack": 5,
+        "Id": "698aa850-add3-4b13-88a0-a7cddc2af88a",
+        "Value": 12,
+        "Name": "Water tank",
+        "Inventory": true,
+        "Source": "item.water_tank"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/24",
+        "Stack": 5,
+        "Id": "6d6b07b7-b68d-4610-9a33-0b0e8294031e",
+        "Value": 28,
+        "Name": "Water treatment",
+        "Inventory": true,
+        "Source": "item.water_treatment"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/29",
+        "Stack": 5,
+        "Id": "88c3684c-c055-4932-b4e6-80405b224660",
+        "Value": 48,
+        "Name": "Coal generator",
+        "Inventory": true,
+        "Source": "item.coal_generator"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/26",
+        "Stack": 5,
+        "Id": "cca68682-c5b2-40dc-8ebc-36c7911787ab",
+        "Value": 8,
+        "Name": "Water return",
+        "Inventory": true,
+        "Source": "item.water_return"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/28",
+        "Stack": 5,
+        "Id": "db35a2fa-65b0-485a-b529-6c93749b615c",
+        "Value": 24,
+        "Name": "Grid battery",
+        "Inventory": true,
+        "Source": "item.battery"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Item/23",
+        "Stack": 5,
+        "Id": "e8b85f1d-422f-46de-b1f9-8830afe184b2",
+        "Value": 8,
+        "Name": "Pipe junction",
+        "Inventory": true,
+        "Source": "item.pipe_junction"
+      }
+    ],
+    "Recipe": [
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/25",
+        "Id": "24ce9d4f-bd0d-42a9-8d42-7a509baa4ce5",
+        "Output": "cca68682-c5b2-40dc-8ebc-36c7911787ab",
+        "Technology": "56be2c72-f84c-4d29-9581-c21afee624d0",
+        "Name": "Water return",
+        "Source": "recipe.water_return",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/26",
+        "Id": "5adf33d2-b9b7-4366-8d3b-2df0b95e2704",
+        "Output": "1848fa8c-f32c-4987-954d-1d4d78590b34",
+        "Technology": "b6c9145c-9a20-4cde-a977-2388b275cdd3",
+        "Name": "Greenhouse",
+        "Source": "recipe.greenhouse",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/24",
+        "Id": "696958a9-8dbd-4ca5-87ef-29ba77910506",
+        "Output": "698aa850-add3-4b13-88a0-a7cddc2af88a",
+        "Technology": "56be2c72-f84c-4d29-9581-c21afee624d0",
+        "Name": "Water tank",
+        "Source": "recipe.water_tank",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/27",
+        "Id": "6a8b8aeb-1ec8-4e9d-8869-76fa267fa1be",
+        "Output": "db35a2fa-65b0-485a-b529-6c93749b615c",
+        "Technology": "f87efc7f-85e6-4cd6-99cd-7f991c855c8c",
+        "Name": "Grid battery",
+        "Source": "recipe.battery",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/22",
+        "Id": "6e7a3164-a335-4bfc-8273-bd6346099fc5",
+        "Output": "e8b85f1d-422f-46de-b1f9-8830afe184b2",
+        "Technology": "56be2c72-f84c-4d29-9581-c21afee624d0",
+        "Name": "Pipe junction",
+        "Source": "recipe.pipe_junction",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/28",
+        "Id": "7ca048f2-c1f0-4ef1-8cd6-7668d5b0793d",
+        "Output": "88c3684c-c055-4932-b4e6-80405b224660",
+        "Technology": "5891c1c2-4324-4b59-856e-b0d1246530c6",
+        "Name": "Coal generator",
+        "Source": "recipe.coal_generator",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/23",
+        "Id": "80695485-de9b-44db-8c49-224fff037497",
+        "Output": "6d6b07b7-b68d-4610-9a33-0b0e8294031e",
+        "Technology": "56be2c72-f84c-4d29-9581-c21afee624d0",
+        "Name": "Water treatment",
+        "Source": "recipe.water_treatment",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/29",
+        "Id": "988f7eec-fd4a-49f2-897d-aa39da79edbc",
+        "Output": "4ae04aa3-3491-4e76-8613-2a61b6cd688c",
+        "Technology": "23036e88-d47f-4072-b2b6-fdd84abc0564",
+        "Name": "Air scrubber",
+        "Source": "recipe.air_scrubber",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/20",
+        "Id": "c9364a3f-497e-43d1-9a34-8e9c3417a855",
+        "Output": "458f3095-61ab-4bf2-b9e3-1fb0c2633c2d",
+        "Technology": "56be2c72-f84c-4d29-9581-c21afee624d0",
+        "Name": "Water pump",
+        "Source": "recipe.water_pump",
+        "Seconds": "12"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/21",
+        "Id": "e24a4f77-63a0-4ced-9d0d-69d4500e0451",
+        "Output": "0302707e-84b0-48e0-9ef5-064c10e3d117",
+        "Technology": "56be2c72-f84c-4d29-9581-c21afee624d0",
+        "Name": "Pipe",
+        "Source": "recipe.pipe",
+        "Seconds": "4"
+      }
+    ],
+    "Ingredient": [
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/48",
+        "Id": "216ed751-d8a3-4d5a-96aa-6a92a419d61e",
+        "Name": "Water pump — mechanical-part",
+        "Source": "ingredient.m8.water-pump.mechanical-part",
+        "Quantity": 2,
+        "Recipe": "c9364a3f-497e-43d1-9a34-8e9c3417a855",
+        "Item": "b7d8ec74-a2a3-4311-b37e-5ac91024673a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/50",
+        "Id": "27e1aeb5-2844-4d00-b706-965f0e5e4878",
+        "Name": "Pipe — plate",
+        "Source": "ingredient.m8.pipe.plate",
+        "Quantity": 1,
+        "Recipe": "e24a4f77-63a0-4ced-9d0d-69d4500e0451",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/63",
+        "Id": "3da311b5-e98c-4c74-aa36-85469844180e",
+        "Name": "Grid battery — wire",
+        "Source": "ingredient.m8.battery.wire",
+        "Quantity": 4,
+        "Recipe": "6a8b8aeb-1ec8-4e9d-8869-76fa267fa1be",
+        "Item": "459dea1e-3864-4b9e-93b4-16bfbc6acc4b"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/61",
+        "Id": "4f5ab4be-d27f-4572-b8d5-4a9cc7f8bf6c",
+        "Name": "Greenhouse — electrical-part",
+        "Source": "ingredient.m8.greenhouse.electrical-part",
+        "Quantity": 3,
+        "Recipe": "5adf33d2-b9b7-4366-8d3b-2df0b95e2704",
+        "Item": "ff18bb35-4282-46a4-a887-a896baf6a79a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/49",
+        "Id": "64ca9ed6-137f-4013-9cb4-155f0fd9dcda",
+        "Name": "Water pump — electrical-part",
+        "Source": "ingredient.m8.water-pump.electrical-part",
+        "Quantity": 1,
+        "Recipe": "c9364a3f-497e-43d1-9a34-8e9c3417a855",
+        "Item": "ff18bb35-4282-46a4-a887-a896baf6a79a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/54",
+        "Id": "6a07c545-526c-48f3-96db-6fd65a25cc22",
+        "Name": "Water treatment — mechanical-part",
+        "Source": "ingredient.m8.water-treatment.mechanical-part",
+        "Quantity": 2,
+        "Recipe": "80695485-de9b-44db-8c49-224fff037497",
+        "Item": "b7d8ec74-a2a3-4311-b37e-5ac91024673a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/62",
+        "Id": "779f0596-c82a-4891-96d0-28e4a9715e63",
+        "Name": "Grid battery — plate",
+        "Source": "ingredient.m8.battery.plate",
+        "Quantity": 4,
+        "Recipe": "6a8b8aeb-1ec8-4e9d-8869-76fa267fa1be",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/70",
+        "Id": "7874f58d-d7d2-4a33-ba62-cb85f745cd2d",
+        "Name": "Air scrubber — electrical-part",
+        "Source": "ingredient.m8.air-scrubber.electrical-part",
+        "Quantity": 3,
+        "Recipe": "988f7eec-fd4a-49f2-897d-aa39da79edbc",
+        "Item": "ff18bb35-4282-46a4-a887-a896baf6a79a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/47",
+        "Id": "9d14002e-87e2-45b0-b0fe-ead9ec0d62c1",
+        "Name": "Water pump — plate",
+        "Source": "ingredient.m8.water-pump.plate",
+        "Quantity": 4,
+        "Recipe": "c9364a3f-497e-43d1-9a34-8e9c3417a855",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/53",
+        "Id": "9ec46f03-0279-4316-aa2f-c8b8ac309e83",
+        "Name": "Water treatment — plate",
+        "Source": "ingredient.m8.water-treatment.plate",
+        "Quantity": 6,
+        "Recipe": "80695485-de9b-44db-8c49-224fff037497",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/67",
+        "Id": "9edaccd1-1bfc-4f0d-bdd2-abe3bda0fcf9",
+        "Name": "Coal generator — electrical-part",
+        "Source": "ingredient.m8.coal-generator.electrical-part",
+        "Quantity": 3,
+        "Recipe": "7ca048f2-c1f0-4ef1-8cd6-7668d5b0793d",
+        "Item": "ff18bb35-4282-46a4-a887-a896baf6a79a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/60",
+        "Id": "a96b14be-34c8-4a03-adb4-ba8ee0117205",
+        "Name": "Greenhouse — mechanical-part",
+        "Source": "ingredient.m8.greenhouse.mechanical-part",
+        "Quantity": 3,
+        "Recipe": "5adf33d2-b9b7-4366-8d3b-2df0b95e2704",
+        "Item": "b7d8ec74-a2a3-4311-b37e-5ac91024673a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/65",
+        "Id": "b4055605-726b-415b-a95e-935397fb50ea",
+        "Name": "Coal generator — plate",
+        "Source": "ingredient.m8.coal-generator.plate",
+        "Quantity": 10,
+        "Recipe": "7ca048f2-c1f0-4ef1-8cd6-7668d5b0793d",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/69",
+        "Id": "b47f75aa-be76-4566-a669-2507626bc949",
+        "Name": "Air scrubber — mechanical-part",
+        "Source": "ingredient.m8.air-scrubber.mechanical-part",
+        "Quantity": 2,
+        "Recipe": "988f7eec-fd4a-49f2-897d-aa39da79edbc",
+        "Item": "b7d8ec74-a2a3-4311-b37e-5ac91024673a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/52",
+        "Id": "c4ed9bd4-ac22-4a72-b6e9-1871e8328fe1",
+        "Name": "Pipe junction — mechanical-part",
+        "Source": "ingredient.m8.pipe-junction.mechanical-part",
+        "Quantity": 1,
+        "Recipe": "6e7a3164-a335-4bfc-8273-bd6346099fc5",
+        "Item": "b7d8ec74-a2a3-4311-b37e-5ac91024673a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/64",
+        "Id": "c85af1d0-e884-4f43-866a-54dcfefb9bf0",
+        "Name": "Grid battery — electrical-part",
+        "Source": "ingredient.m8.battery.electrical-part",
+        "Quantity": 3,
+        "Recipe": "6a8b8aeb-1ec8-4e9d-8869-76fa267fa1be",
+        "Item": "ff18bb35-4282-46a4-a887-a896baf6a79a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/51",
+        "Id": "c99c2f19-0112-49d7-bbd7-bb642c928da8",
+        "Name": "Pipe junction — plate",
+        "Source": "ingredient.m8.pipe-junction.plate",
+        "Quantity": 2,
+        "Recipe": "6e7a3164-a335-4bfc-8273-bd6346099fc5",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/55",
+        "Id": "d1216927-26ec-4dbb-8fb5-ce47c325dd1f",
+        "Name": "Water treatment — electrical-part",
+        "Source": "ingredient.m8.water-treatment.electrical-part",
+        "Quantity": 2,
+        "Recipe": "80695485-de9b-44db-8c49-224fff037497",
+        "Item": "ff18bb35-4282-46a4-a887-a896baf6a79a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/56",
+        "Id": "e374eb3a-7aea-4e33-ae42-0d558c2bcc56",
+        "Name": "Water tank — plate",
+        "Source": "ingredient.m8.water-tank.plate",
+        "Quantity": 6,
+        "Recipe": "696958a9-8dbd-4ca5-87ef-29ba77910506",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/58",
+        "Id": "e76bad8d-3b96-440b-9310-88febaef811d",
+        "Name": "Water return — mechanical-part",
+        "Source": "ingredient.m8.water-return.mechanical-part",
+        "Quantity": 1,
+        "Recipe": "24ce9d4f-bd0d-42a9-8d42-7a509baa4ce5",
+        "Item": "b7d8ec74-a2a3-4311-b37e-5ac91024673a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/59",
+        "Id": "ecb815a4-8264-44eb-a188-01e5058164a8",
+        "Name": "Greenhouse — plate",
+        "Source": "ingredient.m8.greenhouse.plate",
+        "Quantity": 8,
+        "Recipe": "5adf33d2-b9b7-4366-8d3b-2df0b95e2704",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/57",
+        "Id": "f20bcdaa-749b-492f-a299-6631f3913f8a",
+        "Name": "Water return — plate",
+        "Source": "ingredient.m8.water-return.plate",
+        "Quantity": 2,
+        "Recipe": "24ce9d4f-bd0d-42a9-8d42-7a509baa4ce5",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/66",
+        "Id": "fc1933f9-1bdd-460d-8185-893b5ed4a98a",
+        "Name": "Coal generator — mechanical-part",
+        "Source": "ingredient.m8.coal-generator.mechanical-part",
+        "Quantity": 4,
+        "Recipe": "7ca048f2-c1f0-4ef1-8cd6-7668d5b0793d",
+        "Item": "b7d8ec74-a2a3-4311-b37e-5ac91024673a"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/68",
+        "Id": "ffedb643-0ee6-44db-a1dd-5d3efb899d82",
+        "Name": "Air scrubber — plate",
+        "Source": "ingredient.m8.air-scrubber.plate",
+        "Quantity": 6,
+        "Recipe": "988f7eec-fd4a-49f2-897d-aa39da79edbc",
+        "Item": "ba8b1809-1192-4765-bc9c-b29e650ac518"
+      }
+    ],
+    "Technology": [
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/19",
+        "Id": "5891c1c2-4324-4b59-856e-b0d1246530c6",
+        "Name": "Coal power — optional",
+        "Source": "future.coal",
+        "Seconds": "50",
+        "Prereqs": [
+          {
+            "Id": "35ae82d5-2016-47d1-98d9-9c01ed76e87e",
+            "Source": "future.laboratory"
+          },
+          {
+            "Id": "4dc973fb-20fc-49ae-a910-6de8619fca8a",
+            "Source": "future.electrical_engineering"
+          }
+        ]
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/25",
+        "Id": "23036e88-d47f-4072-b2b6-fdd84abc0564",
+        "Name": "Pollution mitigation — optional",
+        "Source": "tech.pollution_mitigation",
+        "Seconds": "60",
+        "Prereqs": [
+          {
+            "Id": "5891c1c2-4324-4b59-856e-b0d1246530c6",
+            "Source": "future.coal"
+          },
+          {
+            "Id": "56be2c72-f84c-4d29-9581-c21afee624d0",
+            "Source": "tech.water_treatment"
+          }
+        ]
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/23",
+        "Id": "56be2c72-f84c-4d29-9581-c21afee624d0",
+        "Name": "Water treatment",
+        "Source": "tech.water_treatment",
+        "Seconds": "60",
+        "Prereqs": [
+          {
+            "Id": "35ae82d5-2016-47d1-98d9-9c01ed76e87e",
+            "Source": "future.laboratory"
+          },
+          {
+            "Id": "681a5f75-fe4f-4e06-9d27-224f6a8106ca",
+            "Source": "future.recycling"
+          }
+        ]
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/24",
+        "Id": "b6c9145c-9a20-4cde-a977-2388b275cdd3",
+        "Name": "Greenhouse restoration",
+        "Source": "tech.greenhouse",
+        "Seconds": "80",
+        "Prereqs": [
+          {
+            "Id": "56be2c72-f84c-4d29-9581-c21afee624d0",
+            "Source": "tech.water_treatment"
+          },
+          {
+            "Id": "f87efc7f-85e6-4cd6-99cd-7f991c855c8c",
+            "Source": "tech.energy_storage"
+          }
+        ]
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Technology/22",
+        "Id": "f87efc7f-85e6-4cd6-99cd-7f991c855c8c",
+        "Name": "Energy storage",
+        "Source": "tech.energy_storage",
+        "Seconds": "50",
+        "Prereqs": [
+          {
+            "Id": "35ae82d5-2016-47d1-98d9-9c01ed76e87e",
+            "Source": "future.laboratory"
+          },
+          {
+            "Id": "4dc973fb-20fc-49ae-a910-6de8619fca8a",
+            "Source": "future.electrical_engineering"
+          }
+        ]
+      }
+    ],
+    "Research Cost": [
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/35",
+        "Eligibility": 8,
+        "Payment": 8,
+        "Id": "0c9a3069-b132-464f-8333-56dfb3d5eac0",
+        "Technology": "b6c9145c-9a20-4cde-a977-2388b275cdd3",
+        "Name": "Greenhouse restoration — Basic research kits",
+        "Source": "cost.m8.greenhouse.research_kit",
+        "Item": "a104de9a-f8fd-4f96-a52f-1549805d2a48"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/33",
+        "Eligibility": 4,
+        "Payment": 4,
+        "Id": "0fc0fc3f-588e-4bb1-8f98-1984f265e67b",
+        "Technology": "f87efc7f-85e6-4cd6-99cd-7f991c855c8c",
+        "Name": "Energy storage — Basic research kits",
+        "Source": "cost.m8.storage.research_kit",
+        "Item": "a104de9a-f8fd-4f96-a52f-1549805d2a48"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/34",
+        "Eligibility": 6,
+        "Payment": 6,
+        "Id": "211a81ad-82d3-4a6d-8e84-65ffd298ca31",
+        "Technology": "56be2c72-f84c-4d29-9581-c21afee624d0",
+        "Name": "Water treatment — Basic research kits",
+        "Source": "cost.m8.water-treatment.research_kit",
+        "Item": "a104de9a-f8fd-4f96-a52f-1549805d2a48"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/37",
+        "Eligibility": 6,
+        "Payment": 6,
+        "Id": "c8324a4b-1b1a-4ed7-a97d-d5fb22d0f40a",
+        "Technology": "23036e88-d47f-4072-b2b6-fdd84abc0564",
+        "Name": "Pollution mitigation — optional — Basic research kits",
+        "Source": "cost.m8.pollution-mitigation.research_kit",
+        "Item": "a104de9a-f8fd-4f96-a52f-1549805d2a48"
+      },
+      {
+        "url": "https://scrapworks.fibery.io/Scrapworks/Research_Cost/36",
+        "Eligibility": 4,
+        "Payment": 4,
+        "Id": "f3c22fe0-6b76-4e7b-b475-da3e948c0df3",
+        "Technology": "5891c1c2-4324-4b59-856e-b0d1246530c6",
+        "Name": "Coal power — optional — Basic research kits",
+        "Source": "cost.m8.coal-power.research_kit",
+        "Item": "a104de9a-f8fd-4f96-a52f-1549805d2a48"
+      }
+    ]
+  },
+  "verification": {
+    "nodeTests": 197,
+    "chromiumTests": 390,
+    "toolingTests": 90,
+    "earnedRunId": "cdc729f7-37fb-4d8b-8732-3230e76c72f5",
+    "coalFreeCells": 400,
+    "completedTick": 84700,
+    "pollutionRecovered": true,
+    "dismantledWaterLitres": 281.0627511415465,
+    "continuedNativeSteps": 1000,
+    "desktopAxeViolations": 0,
+    "mobileAxeViolations": 0,
+    "ciWorkflowsChanged": false,
+    "hostedCiRun": false,
+    "report": "docs/reports/milestone-08/2026-11-09/README.md"
+  }
+}

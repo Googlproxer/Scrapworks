@@ -24,6 +24,7 @@ import { validateFactoryPlacement } from '@simulation/factory-placement';
 import { machineAtCell, validatePowerConnection } from '@simulation/power-connection';
 import type { Inspection } from '@contracts/simulation';
 import { environment } from '@environments/environment';
+import { assertSameAuthoredMap } from '@core/authored-map';
 import { MACHINE_FOOTPRINT } from '@content/factory';
 import { TOOLBAR_SLOTS } from '@contracts/toolbar';
 import { ControlSettingsService } from '../controls/control-settings.service';
@@ -862,8 +863,7 @@ export class GameRuntimeService {
       if (!response.ok) throw new Error('The authored world could not be loaded.');
       const definition: unknown = await response.json();
       assertWorldDefinition(definition);
-      if (save && JSON.stringify(save.world.definition) !== JSON.stringify(definition))
-        throw new Error('This save uses an incompatible authored world.');
+      if (save) assertSameAuthoredMap(save.world.definition, definition);
       candidate = await this.sessions.prepare(definition, save);
       const staged = candidate;
       const stageBridge: WorldSessionBridge = {

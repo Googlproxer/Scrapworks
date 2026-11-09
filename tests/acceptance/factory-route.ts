@@ -7,6 +7,7 @@ import type { OpeningView } from '../../src/contracts/opening.ts';
 import type { FactorySummary, MachineKind, PlaceableKind } from '../../src/contracts/factory.ts';
 import type { QuarterTurn } from '../../src/contracts/world.ts';
 import { checkTransportRoute } from './transport-route.ts';
+import { checkRestorationRoute } from './restoration-route.ts';
 import type { BuildingView, WorldPosition } from '../../src/contracts/world.ts';
 import { readManualSave, saveThroughUi } from './manual-save.ts';
 import type { OpeningRecipe } from '../../src/content/opening.ts';
@@ -26,8 +27,11 @@ export interface FactoryRouteProbe {
   details?: readonly Inspection[];
 }
 interface RoutePorts {
+  restoration?: boolean;
   transport?: boolean;
   resumeTransport?: boolean;
+  resumeRestoration?: boolean;
+  restorationDirect?: boolean;
   prepared?: boolean;
   page: Page;
   root: string;
@@ -342,6 +346,11 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
       ['laboratory', 2],
       ['power-connection', 8],
     ] as const) {
+      if (
+        ports.restorationDirect &&
+        !['solar-panel', 'wind-turbine', 'power-connection'].includes(item)
+      )
+        continue;
       await ensure(item, count);
       console.log(JSON.stringify({ factoryAssembled: item, count }));
     }
@@ -383,15 +392,18 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
         ? 6
         : kind === 'sorter'
           ? 5
-          : [
-              'wind-turbine',
-              'extractor',
-              'recycler',
-              'basic-fabricator',
-              'medium-fabricator',
-              'laboratory',
-              'solar-panel',
-            ].indexOf(kind);
+          : Math.max(
+              0,
+              [
+                'wind-turbine',
+                'extractor',
+                'recycler',
+                'basic-fabricator',
+                'medium-fabricator',
+                'laboratory',
+                'solar-panel',
+              ].indexOf(kind),
+            );
     const recipe = recipes.find((r) => r.id === `assemble-${kind}`)!;
     await page.getByLabel('Toolbar slot', { exact: true }).selectOption(String(slot));
     await page.getByRole('button', { name: `Assign ${recipe.name}`, exact: true }).click();
@@ -424,12 +436,12 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     placed.push({ id: b.id, kind, column, row });
     console.log(JSON.stringify({ factoryPlaced: kind, column, row }));
   };
-  if (!ports.resumeTransport)
+  if (!ports.resumeTransport && !ports.restorationDirect)
     for (const [kind, col, row, x, z] of placements) {
       await walk(x, z);
       await place(kind, col, row);
     }
-  if (!ports.resumeTransport) {
+  if (!ports.resumeTransport && !ports.restorationDirect) {
     await walk(7, -3);
     await walk(-5, -2.8);
     await place('solar-panel', 3, 5);
@@ -487,6 +499,33 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     assert.equal(amount(await read(), 'power-connection'), stock - 1);
     await page.keyboard.press('KeyB');
   };
+  if (ports.restorationDirect) {
+    await walk(-1, 0.8);
+    await place('wind-turbine', 5, 5);
+    await walk(-5, -3);
+    await place('solar-panel', 3, 5);
+    await wire('solar-panel', placed.find((b) => b.kind === 'wind-turbine')!.id);
+  }
+  if (ports.resumeRestoration || ports.restorationDirect) {
+    await checkRestorationRoute({
+      page,
+      read,
+      until,
+      craft,
+      research,
+      open,
+      close,
+      walk,
+      place,
+      wire,
+      recipes,
+      content,
+      definition: authored,
+      obstacles,
+      output,
+    });
+    return;
+  }
   // Connect the spare eighth edge at the solar source, then the star from the turbine.
   if (!ports.resumeTransport) {
     await wire('solar-panel', placed.find((b) => b.kind === 'recycler')!.id);
@@ -625,7 +664,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
   const readSlot = () => readManualSave(page);
   const saved = await saveThroughUi(page);
   assert(saved);
-  assert.equal(saved.contentVersion, 'transport-1');
+  assert.equal(saved.contentVersion, content.version);
   assert.equal(saved.world.entities.filter((e) => e.machine).length, transportProof ? 10 : 8);
   assert.equal(saved.world.resources.factory!.connections.length, transportProof ? 10 : 8);
   if (transportProof) {
@@ -673,9 +712,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
   assert.equal(page.workers().length, 1);
   await page.setViewportSize({ width: 390, height: 844 });
   if (transportProof)
-    await page
-      .getByLabel('Left output filter', { exact: true })
-      .scrollIntoViewIfNeeded();
+    await page.getByLabel('Left output filter', { exact: true }).scrollIntoViewIfNeeded();
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
   assert.deepEqual(await page.evaluate(async () => (await axe.run()).violations), []);
   await page.screenshot({ path: path.join(output, 'factory-mobile.png'), fullPage: true });
@@ -721,4 +758,22 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
       2,
     ),
   );
+  if (ports.restoration)
+    await checkRestorationRoute({
+      page,
+      read,
+      until,
+      craft,
+      research,
+      open,
+      close,
+      walk,
+      place,
+      wire,
+      recipes,
+      content,
+      definition: authored,
+      obstacles,
+      output,
+    });
 }

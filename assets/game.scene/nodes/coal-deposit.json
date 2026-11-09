@@ -1,0 +1,40 @@
+{
+  "name": "Coal Deposit",
+  "id": "coal-deposit",
+  "uniqueId": 900000020,
+  "type": "TransformNode",
+  "position": [
+    1900,
+    0,
+    1700
+  ],
+  "rotation": [
+    0,
+    0,
+    0
+  ],
+  "scaling": [
+    1,
+    1,
+    1
+  ],
+  "isEnabled": true,
+  "metadata": {
+    "scrapworks": {
+      "version": 1,
+      "kind": "Deposit",
+      "id": "coal-deposit-1",
+      "resource": "coal",
+      "quantity": 250000,
+      "footprint": {
+        "width": 1,
+        "depth": 1
+      },
+      "collision": {
+        "shape": "cylinder",
+        "radius": 25,
+        "height": 170
+      }
+    }
+  }
+}

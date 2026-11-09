@@ -31,6 +31,7 @@
     "test:research": "node tests/acceptance/save-browser.ts --research",
     "test:factory": "node tests/acceptance/opening-browser.ts --virtual-time --factory",
     "test:transport": "node tests/acceptance/opening-browser.ts --virtual-time --transport",
+    "test:restoration": "node tests/acceptance/opening-browser.ts --virtual-time --restoration",
     "test:workflow": "node tools/scenes/check-dev-workflow.ts",
     "test:labs": "tsc -p tools/tsconfig.json && vitest run --config vitest.labs.config.ts",
     "test:coverage": "yarn test:coverage:tools && yarn test:coverage:game && yarn coverage:report",

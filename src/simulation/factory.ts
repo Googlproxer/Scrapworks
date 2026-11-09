@@ -3,7 +3,6 @@ import {
   FACTORY_SETTINGS as settings,
   MACHINES,
   RECYCLER_OUTCOMES,
-  renewableFactors,
   isPlaceable,
   MACHINE_FOOTPRINT,
   MACHINE_COLLISION,
@@ -26,6 +25,11 @@ import { machineMaterials } from '@content/machine-materials';
 import { validatePowerConnection } from './power-connection';
 import { TransportSystem } from './transport';
 import { emptyTransport, isTransportKind } from '@content/transport';
+import { isUtilityKind, isPipe } from '@content/environment';
+import { newUtility, waterSpace } from './water';
+import { EnvironmentSystem } from './environment';
+import { EnergySystem } from './energy';
+import { weatherFactors } from './weather';
 
 export interface FactoryContext extends OpeningContext {
   readonly definition: WorldDefinition;
@@ -46,6 +50,7 @@ export function newMachine(kind: MachineKind, id: string, deposit: string | null
   let seed = 2166136261;
   for (const letter of id) seed = Math.imul(seed ^ letter.charCodeAt(0), 16777619) >>> 0;
   return {
+    ...(isUtilityKind(kind) ? { utility: newUtility() } : {}),
     enabled: true,
     recipe: null,
     deposit,
@@ -80,6 +85,8 @@ function nextOutcome(machine: MachineData): ItemStack[] {
 /** All stock, jobs and networks live on the existing ECS records. No clock or presentation APIs. */
 export class FactorySystem {
   private readonly transport: TransportSystem;
+  private readonly environment: EnvironmentSystem;
+  private readonly energy: EnergySystem;
   public collisionChanged = false;
   private energyUsed = 0;
   private available = 0;
@@ -87,6 +94,8 @@ export class FactorySystem {
 
   public constructor(private readonly context: FactoryContext) {
     this.transport = new TransportSystem(context);
+    this.environment = new EnvironmentSystem(context);
+    this.energy = new EnergySystem(context, this.environment);
   }
 
   private get bag() {
@@ -118,6 +127,12 @@ export class FactorySystem {
     const { player, resources, definition } = this.context;
     const machines = this.list();
     if (player.opening!.handcraft) return result('busy');
+    if (
+      command.type === 'fluid-connect' ||
+      command.type === 'fluid-disconnect' ||
+      command.type === 'fluid-overflow'
+    )
+      return this.environment.command(command);
     if (
       command.type === 'transport-connect' ||
       command.type === 'transport-disconnect' ||
@@ -173,7 +188,9 @@ export class FactorySystem {
           cell: { ...command.cell },
           rotation: command.rotation,
           footprint: { ...MACHINE_FOOTPRINT },
-          ...(command.equipment === 'conveyor' ? {} : { collision: { ...MACHINE_COLLISION } }),
+          ...(command.equipment === 'conveyor' || isPipe(command.equipment)
+            ? {}
+            : { collision: { ...MACHINE_COLLISION } }),
         },
         ...(isTransportKind(command.equipment)
           ? { transport: emptyTransport() }
@@ -245,6 +262,7 @@ export class FactorySystem {
         )
           return result('capacity');
         this.transport.detach(target.id);
+        this.environment.detach(target);
         this.context.remove(target.id);
         this.collisionChanged = true;
         this.context.mark(player, true);
@@ -330,6 +348,7 @@ export class FactorySystem {
           return result('capacity');
         this.state.connections = this.state.connections.filter((c) => !edges.includes(c));
         this.transport.detach(target.id);
+        this.environment.detach(target);
         this.context.remove(target.id);
         this.collisionChanged = true;
       }
@@ -361,10 +380,9 @@ export class FactorySystem {
   public step(delta: number): readonly ResearchSource[] {
     this.collisionChanged = false;
     this.transport.step();
+    this.environment.begin(delta);
     this.energyUsed = this.available = this.requested = 0;
-    const machines = this.list(),
-      { resources } = this.context;
-    const factors = renewableFactors(resources.tick);
+    const machines = this.list();
     const parents = new Map(machines.map((e) => [e.id, e.id]));
 
     const root = (id: string): string => {
@@ -378,34 +396,40 @@ export class FactorySystem {
         b = root(edge.to);
       if (a !== b) parents.set(b, a);
     }
-    const supplies = new Map<string, number>(),
-      demands = new Map<string, number>();
+    const demands = new Map<string, number>();
     for (const entity of machines) {
       const machine = entity.machine!,
         kind = entity.building!.buildingId as MachineKind,
         network = root(entity.id);
       machine.requested = machine.allocated = 0;
       machine.status = machine.enabled ? 'idle' : 'disabled';
-      let supply = 0;
-      if (machine.enabled && kind === 'solar-panel')
-        supply = settings.solarWatts * factors.daylight;
-      if (machine.enabled && kind === 'wind-turbine')
-        supply = settings.windFloorWatts + settings.windVariableWatts * factors.wind;
-      supplies.set(network, (supplies.get(network) ?? 0) + supply);
       if (!machine.enabled || !MACHINES[kind].watts) continue;
       if (machine.job?.remaining === 0 && !this.commit(entity)) {
         machine.status = 'blocked';
         continue;
       }
-      if (kind === 'laboratory') {
+      if (isUtilityKind(kind)) {
+        if (!this.environment.demand(entity)) {
+          machine.status =
+            kind === 'water-pump' && waterSpace(entity) < 1e-8 ? 'blocked' : 'missing-input';
+          continue;
+        }
+      } else if (kind === 'laboratory') {
         if (!this.labReady(machine)) {
           machine.status = 'missing-input';
           continue;
         }
       } else if (!machine.job && !this.prepare(entity)) continue;
-      machine.requested = MACHINES[kind].watts;
+      machine.requested = isUtilityKind(kind)
+        ? this.environment.demand(entity)
+        : MACHINES[kind].watts;
       demands.set(network, (demands.get(network) ?? 0) + machine.requested);
     }
+    const supplies = this.energy.plan(
+      machines,
+      new Map(machines.map((e) => [e.id, root(e.id)])),
+      delta,
+    );
     this.available = [...supplies.values()].reduce((a, b) => a + b, 0);
     this.requested = [...demands.values()].reduce((a, b) => a + b, 0);
     const labs: ResearchSource[] = [];
@@ -424,14 +448,21 @@ export class FactorySystem {
             inventory: machine.input,
             rate: RESEARCH_LAB_RULES.rate * fraction,
             onWork: (work) => {
-              this.energyUsed += (work / RESEARCH_LAB_RULES.rate) * machine.requested;
+              const joules = (work / RESEARCH_LAB_RULES.rate) * machine.requested;
+              this.energyUsed += joules;
+              this.energy.record(entity, joules);
               this.context.mark(entity, true);
             },
           });
-        else if (machine.job && fraction) {
+        else if (isUtilityKind(kind) && fraction) {
+          const joules = this.environment.work(entity, delta * fraction);
+          this.energyUsed += joules;
+          this.energy.record(entity, joules);
+        } else if (machine.job && fraction) {
           const work = Math.min(machine.job.remaining, delta * fraction);
           machine.job.remaining = Math.max(0, machine.job.remaining - work);
           this.energyUsed += work * machine.requested;
+          this.energy.record(entity, work * machine.requested);
           if (machine.job.remaining < 1e-9) {
             machine.job.remaining = 0;
             if (kind !== 'extractor') this.finishManufacture(entity);
@@ -459,7 +490,7 @@ export class FactorySystem {
         inputs: [],
         outputCommitted: false,
         outputs: [
-          { item: 'scrap', quantity: Math.min(settings.extractionQuantity, deposit.quantity) },
+          { item: deposit.kind, quantity: Math.min(settings.extractionQuantity, deposit.quantity) },
         ],
       };
       return true;
@@ -502,7 +533,7 @@ export class FactorySystem {
         machine.status = 'depleted';
         return true;
       }
-      job.outputs = [{ item: 'scrap', quantity: count }];
+      job.outputs = [{ item: deposit!.deposit!.kind, quantity: count }];
     }
     if (!transact(machine.output, [], job.outputs, OPENING_CONTENT)) return false;
     for (const stack of job.outputs) {
@@ -530,16 +561,22 @@ export class FactorySystem {
   }
 
   public summary(): FactorySummary {
-    const factors = renewableFactors(this.context.resources.tick);
+    const factors = weatherFactors(this.environment.state.weather, this.context.resources.tick);
     const used = this.energyUsed / 0.05;
     return {
+      environment: this.environment.summary(),
       transport: this.transport.summary(),
       ...factors,
       available: this.available,
       requested: this.requested,
       used,
-      curtailed: Math.max(0, this.available - used),
+      curtailed: Math.max(0, this.environment.renewableAvailable - this.environment.renewableUsed),
       connections: this.state.connections.map((c) => ({ ...c })),
     };
+  }
+
+  public finishStep(delta: number): void {
+    this.energy.settle(delta);
+    this.environment.finish();
   }
 }

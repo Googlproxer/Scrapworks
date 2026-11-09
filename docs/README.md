@@ -1,6 +1,6 @@
 # Scrapworks documentation
 
-Updated 8 November 2026. Scrapworks is a browser-first 3D factory-restoration game. Angular owns UI, Babylon presentation and Editor markers authored layout. The single plain-TypeScript worker owns movement, the opening and first factory. Local saves, shared research and Milestone 6's manually supplied renewable-powered factory are implemented and locally verified through the empty-handed production/save/reload route. Transport and restoration remain later work.
+Updated 9 November 2026. Scrapworks is a browser-first 3D factory-restoration game. Angular owns UI, Babylon presentation and Editor markers authored layout. The single plain-TypeScript worker owns movement, the opening and first factory. Local saves, shared research and Milestone 6's manually supplied renewable-powered factory are implemented and locally verified through the empty-handed production/save/reload route. Transport, restoration, water, weather, batteries and optional coal are implemented; Milestone 8 local acceptance is complete.
 
 ## Design and planning
 
@@ -8,6 +8,7 @@ Updated 8 November 2026. Scrapworks is a browser-first 3D factory-restoration ga
 - [Player progression](design/player-progression.md): agreed decisions, pacing, Mini Fabricator, research, recovery and open questions.
 - [Opening catalogue](design/opening-catalogue.md): agreed crafting/research order and UI-bound safe handcrafting, with provisional costs/timings and a checked bootstrap budget.
 - [First working factory catalogue](design/factory-catalogue.md): equipment, wired proportional power, bounded recycler outcomes, local buffers and bootstrap/recovery accounting.
+- [Restoration catalogue](design/restoration-catalogue.md): paid water/greenhouse/storage/coal equipment, numerical dispatch, weather, conservation and health rules.
 - [Fibery catalogue and trees](design/balance/README.md): connected databases, entity-linked crafting/research whiteboards and import receipt.
 - [Implementation roadmap](plans/README.md): ten milestones with verified groundwork and outstanding gameplay tasks.
 - [Fibery project tracking](plans/fibery-tracking.md): working task board, milestone hierarchy and current design decisions.
@@ -32,12 +33,12 @@ Updated 8 November 2026. Scrapworks is a browser-first 3D factory-restoration ga
 
 ## Verified implementation
 
-Babylon is the sole renderer at `/`; `/3d` redirects to it. Angular owns menus, Controls, loading/errors and Retry. The Game scene supplies a 10 by 10 fixture, world markers, camera and neutral character binding. The plain simulation owns fixed-step movement, collision and development-fixture placement; new worlds have empty inventory, equipment and research.
+Babylon is the sole renderer at `/`; `/3d` redirects to it. Angular owns menus, Controls, loading/errors and Retry. The Game scene supplies a 20 by 20 map with a connected eight-cell lake, three generous scrap deposits and a coal deposit, world markers, camera and neutral character binding. The plain simulation owns fixed-step movement, collision and development-fixture placement; new worlds have empty inventory, equipment and research.
 
 Saved markers compile into plain definitions and publish atomically with scene exports. `yarn dev` watches saved inputs and retains the last working export on failure. The host session supplies the sole 20 Hz clock to one private Miniplex worker. Its [foundation qualification](reports/ecs-worker-implementation/2026-10-30/README.md) remains dated evidence; the [Milestone 3 report](reports/milestone-03/2026-11-02/README.md) records the new inventory/salvage/research/handcraft/MiniFab loop, accessible UI and empty-handed opening route. Milestone 6 extends the same runtime with factories.
 
 Development debug drawings attach to scene objects through TypeScript or Editor scripts. Master/category controls, player placement/collision circles and authored player axes run on the main thread using completed presentation data. Production selects a no-op backend; debug geometry and renderer modules are excluded from its dependency graph.
 
-The [23 October migration evidence](reports/migration/2026-10-23/README.md) and later opening evidence have separate scopes. Controls preferences and the test-data save dialog remain separate from M4 gameplay save/load. M5 adds shared research; [M6 factory evidence](reports/milestone-06/2026-11-08/README.md) records completed local acceptance and manual profiling limits. Transport/restoration are unimplemented.
+The [23 October migration evidence](reports/migration/2026-10-23/README.md) and later opening evidence have separate scopes. Controls preferences and the test-data save dialog remain separate from M4 gameplay save/load. M5 adds shared research; [M6 factory evidence](reports/milestone-06/2026-11-08/README.md) records completed local acceptance and manual profiling limits. M7 transport and M8 environment/energy extend the same authoritative worker; see the [restoration catalogue](design/restoration-catalogue.md).
 
 Reports, screenshots, benchmark measurements and verification receipts under `docs/reports/` stay local and are ignored by Git. Report links in the documentation refer to optional local evidence and are excluded from repository link checks. Keep durable implementation and design decisions in tracked guides; do not commit report artifacts.

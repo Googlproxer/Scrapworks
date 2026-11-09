@@ -32,6 +32,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
         'productionTotals',
         'extractionTotals',
         'factory',
+        'environment',
       ].includes(key),
     ),
     'Unknown saved world resource.',
@@ -67,6 +68,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
       const original = save.definition.deposits.find((deposit) => deposit.id === entity.id);
       check(
         original &&
+          entity.deposit.kind === original.kind &&
           entity.deposit.quantity <= original.quantity &&
           JSON.stringify(original.position) === JSON.stringify(p),
         'Invalid saved deposit.',
@@ -91,7 +93,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
       'Unknown production history item.',
     );
   for (const key of Object.keys(save.resources.extractionTotals))
-    check(key === 'scrap', 'Unknown extraction history item.');
+    check(key === 'scrap' || key === 'coal', 'Unknown extraction history item.');
   const research = save.resources.research;
   assertFactoryResearch(save);
   for (const [id, ledger] of Object.entries(research)) {
@@ -160,8 +162,9 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
     ...jobs,
     ...(save.resources.factory?.connections.map((c) => c.id) ?? []),
     ...(save.resources.factory?.transport?.connections.map((c) => c.id) ?? []),
+    ...(save.resources.environment?.connections.map((c) => c.id) ?? []),
   ]) {
-    const suffix = /^(?:pile|building|opening-job|connection|material)[-:](\d+)$/.exec(id);
+    const suffix = /^(?:pile|building|opening-job|connection|material|fluid)[-:](\d+)$/.exec(id);
     if (suffix)
       check(
         Number.isSafeInteger(Number(suffix[1])) && Number(suffix[1]) < save.resources.nextEntityId,

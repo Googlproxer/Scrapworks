@@ -1,0 +1,40 @@
+{
+  "name": "scrap-deposit-north",
+  "id": "scrap-deposit-north",
+  "uniqueId": 900000022,
+  "type": "TransformNode",
+  "position": [
+    -500,
+    0,
+    1900
+  ],
+  "rotation": [
+    0,
+    0,
+    0
+  ],
+  "scaling": [
+    1,
+    1,
+    1
+  ],
+  "isEnabled": true,
+  "metadata": {
+    "scrapworks": {
+      "version": 1,
+      "kind": "Deposit",
+      "id": "scrap-deposit-3",
+      "resource": "scrap",
+      "quantity": 250000,
+      "footprint": {
+        "width": 1,
+        "depth": 1
+      },
+      "collision": {
+        "shape": "cylinder",
+        "radius": 25,
+        "height": 170
+      }
+    }
+  }
+}

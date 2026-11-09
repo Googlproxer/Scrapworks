@@ -111,8 +111,8 @@ test('one fixed step retains simultaneous handcraft, research and MiniFab comple
 
 test('opening catalogue is conserving, acyclic, explicit and excludes future free content', () => {
   assert.doesNotThrow(validateOpeningCatalogue);
-  assert.equal(Object.keys(OPENING_CONTENT.recipes).length, 17);
-  assert.equal(OPENING_CONTENT.technologies.length, 14);
+  assert.equal(Object.keys(OPENING_CONTENT.recipes).length, 27);
+  assert.equal(OPENING_CONTENT.technologies.length, 19);
   assert.equal(OPENING_CONTENT.recipes['recipe.charge_storage'], undefined);
   assert.equal(chargeCapacity(2), 135);
   assert.equal(turnsToFull(100), 1);

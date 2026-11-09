@@ -4,6 +4,7 @@ import type { Scene } from '@babylonjs/core/scene';
 import type { Material } from '@babylonjs/core/Materials/material';
 import type { PlaceableKind } from '@contracts/factory';
 import { isTransportKind, materialPorts, portDirection } from '@content/transport';
+import { isPipe, fluidPorts } from '@content/environment';
 
 /** Original editable procedural prototype silhouettes; centimetres, presentation only. */
 export function machineGeometry(
@@ -14,7 +15,11 @@ export function machineGeometry(
 ): Mesh {
   const root = MeshBuilder.CreateBox(
     `entity:${id}`,
-    { width: 110, height: kind === 'conveyor' ? 10 : 40, depth: kind === 'conveyor' ? 180 : 110 },
+    {
+      width: 110,
+      height: kind === 'conveyor' || isPipe(kind) ? 10 : 40,
+      depth: kind === 'conveyor' ? 180 : 110,
+    },
     scene,
   );
   root.material = material;
@@ -55,6 +60,42 @@ export function machineGeometry(
   };
 
   switch (kind) {
+    case 'pipe':
+    case 'pipe-junction':
+      cylinder('water-pipe', 22, 180, 0, 15, 0).rotation.x = Math.PI / 2;
+      if (kind === 'pipe-junction')
+        cylinder('split-pipe', 22, 180, 0, 15, 0).rotation.z = Math.PI / 2;
+      break;
+    case 'water-pump':
+      cylinder('pump-motor', 55, 70, 0, 50, 0);
+      box('lake-intake', 25, 25, 100, 0, 15, 70);
+      break;
+    case 'water-return':
+      cylinder('return-mouth', 45, 80, 0, 20, 60).rotation.x = Math.PI / 2;
+      break;
+    case 'water-treatment':
+      cylinder('filter-left', 35, 100, -25, 60, 0);
+      cylinder('filter-right', 35, 100, 25, 60, 0);
+      break;
+    case 'water-tank':
+      cylinder('reservoir', 95, 120, 0, 70, 0);
+      break;
+    case 'battery':
+      box('battery-bank', 95, 90, 70, 0, 60, 0);
+      box('positive-terminal', 20, 15, 20, 25, 115, 0);
+      break;
+    case 'coal-generator':
+      box('boiler', 100, 90, 100, 0, 60, 0);
+      cylinder('chimney', 30, 120, 30, 130, 0);
+      break;
+    case 'greenhouse':
+      box('greenhouse-frame', 100, 95, 110, 0, 60, 0);
+      box('roof-ridge', 20, 25, 115, 0, 120, 0);
+      break;
+    case 'air-scrubber':
+      cylinder('air-filter', 80, 120, 0, 70, 0);
+      box('fan-housing', 90, 20, 90, 0, 140, 0);
+      break;
     case 'conveyor':
       for (let i = -2; i <= 2; i++)
         cylinder(`roller-${i}`, 14, 100, 0, 8, i * 30).rotation.z = Math.PI / 2;
@@ -110,7 +151,7 @@ export function machineGeometry(
       break;
   }
   // Distinct port shapes and an asymmetric outlet preserve orientation without relying on colour.
-  if (!isTransportKind(kind)) cylinder('power-terminal', 12, 25, -48, 35, -48);
+  if (!isTransportKind(kind) && !isPipe(kind)) cylinder('power-terminal', 12, 25, -48, 35, -48);
   const ports = materialPorts(kind);
   for (const direction of ['input', 'output'] as const)
     for (const port of ports[direction]) {
@@ -124,6 +165,14 @@ export function machineGeometry(
         0,
         d.row * 65,
       );
+    }
+  const fluids = fluidPorts(kind);
+  for (const direction of ['input', 'output'] as const)
+    for (const port of fluids[direction]) {
+      const d = portDirection({ rotation: 0 }, port);
+      cylinder(`water-${direction}-${port}`, 18, 25, d.column * 70, 15, d.row * 70).rotation[
+        d.column ? 'z' : 'x'
+      ] = Math.PI / 2;
     }
   for (const part of [root, ...root.getChildMeshes()]) {
     part.metadata = { worldEntity: id };

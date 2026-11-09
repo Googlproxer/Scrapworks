@@ -67,4 +67,6 @@ The aliases above, plus `assets:audit`, `cleanup:audit` and `editor:mcp:check`, 
 
 ## Production checks
 
+`node tools/restoration-bench.ts <earned-M8-save.json>` profiles the current 400-cell world, attributed fluid/energy state, fixed steps, publications, capture/rebuild and exact branch continuation. It is manually invoked and rejects CI/GitHub Actions. Output defaults to `tmp/restoration-bench/result.json`; see [local M8 evidence](../docs/reports/milestone-08/2026-11-09/README.md). Full gameplay remains in the guarded local [acceptance routes](../tests/README.md).
+
 The production dependency audit, `node tools/ecs-bench/verify-production.ts`, inspects build metadata rather than running benchmarks; its adjacent regression runs in `test:tools`. Main CI also runs `test:game` and `yarn test:acceptance` (`tests/acceptance/production-browser.ts`) for real built-worker acceptance. The [root development commands](../README.md#development-commands) list the package scripts.
