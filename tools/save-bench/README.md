@@ -1,6 +1,6 @@
 # Save-format benchmark
 
-This isolated browser experiment compares the Milestone 4 save representation with alternative layouts and codecs. It does not change the gameplay save schema, repository, database or loading path. MessagePack is a pinned development dependency; production dependency checks reject both it and this tool in the application build.
+This isolated browser experiment compares the current plain-object save representation with alternative layouts and codecs. Its fixtures now use the M9 schema-2 envelope; production pipeline samples append distinct revisions with the real per-run concurrency/retention rules. Alternative codec stages retain an isolated single-row control, so their storage/stage figures do not measure M9 retained-history cost. It never changes a player's gameplay database or loading path. MessagePack remains a development dependency excluded from production bundles. Benchmarks reject CI/GitHub Actions and run only locally/manual.
 
 ## Running
 
@@ -49,11 +49,11 @@ The opening case comes from `public/scene/worlds/game.json`. Synthetic entity ca
 
 Each format is encoded, committed to IndexedDB, read back and decoded. A strict comparison checks all keys, values, array lengths and native bytes. A fresh production simulation worker then restores it and must match the reference capture after four fixed ticks. The measured full pipeline also checks continuation on its first measured sample. These checks run outside timings. Unit regressions cover fixture determinism, concurrent work, codec fidelity/native continuation, invalid codec input, CLI constraints, statistics and blocked-result reporting.
 
-The unchanged host validator is measured separately. If it rejects a larger fixture, the report records the reason and full save/load values are **blocked for all candidates**. Codec/storage measurements and isolated core continuation still run. This distinguishes a representation comparison from the current application's supported save limits.
+The current host validator is measured separately. If it rejects a larger fixture, the report records the reason and full save/load values are **blocked for all candidates**. Codec/storage measurements and isolated core continuation still run. This distinguishes a representation comparison from the current application's supported save limits.
 
 ## Timing and size boundaries
 
-- **Full Save:** settled production worker capture, host ownership/validation, candidate encoding and read-before-write token checking through IndexedDB transaction completion. The object control uses the real production repository. The other adapters use the same Dexie schema, row metadata, token check and committed transaction boundary.
+- **Full Save:** settled production worker capture, host ownership/validation, candidate encoding and read-before-write token checking through IndexedDB transaction completion. The object control uses the real production repository, including revision append/retention. Other adapters use the isolated single-row codec control; do not attribute their timings or storage to the M9 history implementation.
 - **Full Load:** committed IndexedDB read, decoding, current host validation/clone and metadata agreement, then a fresh production `GameSession` worker ready with its initial publication. This includes worker startup, worker-side player-save validation, native physics restoration and host publication application.
 - **Independent stages:** encoding, transaction write, transaction read and decoding. Common diagnostics separately measure real worker capture, host validation with its required clone, and `structuredClone` alone. Stage measurements are not summed to produce full pipeline values.
 - **Excluded:** fixture construction, database opening, correctness checks, disposal, Angular dialogs, Babylon scene/assets and rendered-frame readiness. This is the complete data persistence/session path, not the entire visible game transition. Read timings use a warm browser cache, and default IndexedDB transaction durability is retained.

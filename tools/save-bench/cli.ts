@@ -12,6 +12,9 @@ import type { CaseSpec } from './browser.ts';
 import { parseOptions } from './options.ts';
 import { report } from './report.ts';
 
+if (process.env['CI'] || process.env['GITHUB_ACTIONS'])
+  throw new Error('Save performance benchmarks are local/manual only.');
+
 if (process.argv.includes('--help')) {
   console.log(`Save-format benchmark (isolated persistent Chromium profile; production saves unchanged)
 node tools/save-bench/cli.ts [--smoke] [--samples N] [--warmups N]

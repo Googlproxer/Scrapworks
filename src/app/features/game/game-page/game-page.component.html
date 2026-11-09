@@ -89,9 +89,8 @@
   }
 
   <div class="top-right">
-    <app-gameplay-saves [compact]="true" />
     <div>
-      <button class="button" type="button" (click)="openControls()">Controls</button>
+      <button class="button" type="button" data-controls (click)="openControls()">Controls</button>
       @if (gameRuntimeService.currentSceneKey() === 'Game') {
         <button class="button" type="button" (click)="inputAdapter.openMenu()">Menu</button>
       }
@@ -110,6 +109,7 @@
         </button>
       }
     </div>
+    <app-gameplay-saves [compact]="true" />
     @if (developer && gameRuntimeService.debugDrawStatus().available) {
       <app-debug-draw-panel />
     }
@@ -131,7 +131,9 @@
     !gameRuntimeService.errorMessage()
   ) {
     <app-field-kit />
-    @if (!gameRuntimeService.fieldKitOpen()) { <app-placeable-toolbar /> }
+    @if (!gameRuntimeService.fieldKitOpen()) {
+      <app-placeable-toolbar />
+    }
     <div class="game-help" [hidden]="gameRuntimeService.fieldKitOpen()">
       <p>
         WASD / left stick to move · Shift / stick press to sprint · Right drag / right stick to

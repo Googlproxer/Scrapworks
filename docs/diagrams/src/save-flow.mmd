@@ -1,12 +1,12 @@
 flowchart TB
-    Request[Manual save bound to slot run and session generation]
-    Queue[Serialize and confirm a different-run overwrite]
+    Request[Manual save or due active-time autosave bound to run and session]
+    Queue[Explicit actions before one coalesced autosave]
     Capture[Capture completed world without canceling handcraft]
-    Encode[Schema one metadata and world without pending commands]
-    Write[Compare slot token and commit payload with metadata]
+    Encode[Schema two identity map and world without pending commands]
+    Write[Compare run head then append payload metadata and retention atomically]
     Commit{Transaction committed?}
     Success[Update last saved status and report success]
-    Failure[Keep previous committed save and report failure]
+    Failure[Keep prior revisions and report failure without stale retry]
 
     Request -->|enqueue| Queue
     Queue -->|safe boundary| Capture

@@ -1,3 +1,5 @@
+import { readManualSave, readSavedHistory, seedSave, corruptNewestSave } from './manual-save.ts';
+import { saveFixture } from '../support/save-fixture.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import http from 'node:http';
@@ -101,17 +103,7 @@ try {
   const world = prepared.capture();
   prepared.dispose();
   preparePlayerSave(world);
-  fixture = {
-    schema: 1,
-    slot: 'manual-1',
-    token: 'fixture-token',
-    runId: 'fixture-run',
-    worldId: definition.id,
-    contentVersion: world.contentVersion,
-    savedAt: new Date().toISOString(),
-    tick: world.resources.tick,
-    world,
-  };
+  fixture = saveFixture(world, 'fixture-run', 'fixture-token', new Date().toISOString());
 } finally {
   await modules.close();
 }
@@ -161,24 +153,7 @@ await installBrowserEvents(page, engineStoreChunk);
 if (factoryMode) await page.clock.install();
 const url = `http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}`;
 async function readSlot(): Promise<SaveSnapshot | undefined> {
-  return page.evaluate(async () => {
-    const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const request = indexedDB.open('ScrapworksGameplaySaves');
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-    try {
-      return await new Promise<SaveSnapshot | undefined>((resolve, reject) => {
-        const transaction = db.transaction('slots', 'readonly'),
-          request = transaction.objectStore('slots').get('manual-1');
-        transaction.oncomplete = () =>
-          resolve((request.result as { payload?: SaveSnapshot } | undefined)?.payload);
-        transaction.onerror = () => reject(transaction.error);
-      });
-    } finally {
-      db.close();
-    }
-  });
+  return readManualSave(page);
 }
 async function waitMessage(message: string): Promise<void> {
   await page.getByRole('status').filter({ hasText: message }).waitFor();
@@ -212,24 +187,7 @@ try {
         },
       }
     : fixture;
-  await page.evaluate(async (save) => {
-    const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const request = indexedDB.open('ScrapworksGameplaySaves');
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-    try {
-      await new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction('slots', 'readwrite');
-        const { world: _world, ...metadata } = save;
-        transaction.objectStore('slots').put({ slot: 'manual-1', metadata, payload: save });
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(transaction.error);
-      });
-    } finally {
-      db.close();
-    }
-  }, fixturePayload);
+  await seedSave(page, fixturePayload);
   await page.reload();
   if (factoryMode) {
     stage = 'prepared factory controls';
@@ -346,7 +304,10 @@ try {
     );
     stage = 'pause menu load and confirmations';
     await page.getByRole('button', { name: 'Menu', exact: true }).click();
-    await page.getByRole('dialog').getByRole('button', { name: 'Load game', exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'Load selected revision', exact: true })
+      .click();
     const needsConfirmation = await Promise.race([
       page
         .getByRole('alertdialog')
@@ -366,7 +327,7 @@ try {
       .filter({ hasText: 'Game loaded.' })
       .waitFor();
     await page.getByRole('button', { name: 'Resume game', exact: true }).click();
-    stage = 'new run and different-run overwrite';
+    stage = 'new named run preserves previous run';
     await page.getByRole('button', { name: 'Menu', exact: true }).click();
     await page.getByRole('button', { name: 'Main menu', exact: true }).click();
     await page.getByRole('button', { name: 'New Game', exact: true }).click();
@@ -382,15 +343,38 @@ try {
     assert.equal((await readSlot())!.runId, fixture.runId);
     await page.getByText('Save & load', { exact: true }).click();
     await page.getByRole('button', { name: 'Save game', exact: true }).click();
-    await page
-      .getByRole('alertdialog')
-      .getByRole('button', { name: 'Keep current progress', exact: true })
-      .click();
-    assert.equal((await readSlot())!.runId, fixture.runId);
-    await page.getByRole('button', { name: 'Save game', exact: true }).click();
-    await confirm();
     await waitMessage('Game saved.');
     assert.notEqual((await readSlot())!.runId, fixture.runId);
+    assert.equal((await readManualSave(page, fixture.runId))!.runId, fixture.runId);
+    stage = 'M9 JSON backup, repeated import and deliberate activation';
+    const panel = page.locator('.top-right app-gameplay-saves');
+    const downloading = page.waitForEvent('download');
+    await panel.getByRole('button', { name: 'Export selected revision', exact: true }).click();
+    const download = await downloading;
+    const backupPath = path.join(output, 'm9-backup.json');
+    await download.saveAs(backupPath);
+    const backup = await readJson<SaveSnapshot>(backupPath);
+    assert.equal(backup.schema, 2);
+    assert(download.suggestedFilename().startsWith('scrapworks-'));
+    const importedRuns: string[] = [];
+    for (let n = 0; n < 2; n++) {
+      await panel.locator('input[type=file]').setInputFiles(backupPath);
+      await waitMessage('Backup validated.');
+      await panel.locator('[data-save-import-name]').fill(`Imported checkpoint ${n + 1}`);
+      await panel.getByRole('button', { name: 'Import as new run', exact: true }).click();
+      await waitMessage('Backup imported as a new run.');
+      const saved = (await readManualSave(page))!;
+      importedRuns.push(saved.runId);
+      assert.deepEqual(saved.world, backup.world);
+      assert.deepEqual(saved.origin, { runId: backup.runId, token: backup.token });
+    }
+    assert.notEqual(importedRuns[0], importedRuns[1]);
+    assert.equal(new Set((await readSavedHistory(page)).map((m) => m.runId)).size, 4);
+    await panel.getByRole('button', { name: 'Load selected revision', exact: true }).click();
+    await confirm();
+    await waitMessage('Game loaded.');
+    await panel.getByRole('button', { name: 'Save game', exact: true }).click();
+    await waitMessage('Game saved.');
     assert.equal(page.workers().length, 1);
     stage = 'accessibility';
     await page.addScriptTag({ path: path.join(root, 'node_modules/axe-core/axe.min.js') });
@@ -399,47 +383,36 @@ try {
     assert.deepEqual(await page.evaluate(async () => (await axe.run()).violations), []);
     await page.screenshot({ path: path.join(output, 'restored-mobile.png'), fullPage: true });
     stage = 'corrupt slot preserves metadata and does not trap startup';
-    await page.evaluate(async () => {
-      const db = await new Promise<IDBDatabase>((resolve, reject) => {
-        const request = indexedDB.open('ScrapworksGameplaySaves');
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-      try {
-        await new Promise<void>((resolve, reject) => {
-          const transaction = db.transaction('slots', 'readwrite'),
-            store = transaction.objectStore('slots'),
-            request = store.get('manual-1');
-          request.onsuccess = () => {
-            const row = request.result as {
-              slot: string;
-              metadata: unknown;
-              payload: Record<string, unknown>;
-            };
-            row.payload['schema'] = 999;
-            store.put(row);
-          };
-          transaction.oncomplete = () => resolve();
-          transaction.onerror = () => reject(transaction.error);
-        });
-      } finally {
-        db.close();
-      }
-    });
+    await corruptNewestSave(page);
     await page.reload();
     await page.getByRole('button', { name: 'Continue', exact: true }).click();
-    await page.getByRole('status').filter({ hasText: 'Unsupported save schema' }).waitFor();
+    await page.getByRole('status').filter({ hasText: 'newer unsupported format' }).waitFor();
     await page.getByRole('button', { name: 'New Game', exact: true }).click({ trial: true });
     assert.equal(await page.getByRole('button', { name: 'Continue', exact: true }).count(), 1);
     await page.getByText('Save & load', { exact: true }).click();
+    stage = 'M9 recover previous revision without erasing damaged newest';
+    const damaged = (await readSavedHistory(page))
+      .filter((m) => m.runId === importedRuns[1])
+      .sort((a, b) => b.sequence - a.sequence)[0];
+    const previous = (await readSavedHistory(page)).find(
+      (m) => m.runId === damaged.runId && m.sequence < damaged.sequence,
+    )!;
+    await panel.locator('[data-save-revision]').selectOption(previous.token);
+    await panel.getByRole('button', { name: 'Load selected revision', exact: true }).click();
+    await waitMessage('Game loaded.');
+    assert((await readSavedHistory(page)).some((m) => m.token === damaged.token));
+    await panel.getByRole('button', { name: 'Save game', exact: true }).click();
+    await waitMessage('Game saved.');
+    assert.equal((await readManualSave(page, damaged.runId))!.recoveredFrom, previous.token);
     stage = 'delete slot and verify full reload';
-    await page.getByRole('button', { name: 'Delete save', exact: true }).click();
+    await page.getByRole('button', { name: 'Delete saved run', exact: true }).click();
     await confirm();
-    await waitMessage('Save deleted.');
-    assert.equal(await readSlot(), undefined);
+    await waitMessage('Saved data deleted.');
+    assert(!(await readSavedHistory(page)).some((m) => m.runId === damaged.runId));
+    assert.equal((await readManualSave(page, fixture.runId))!.runId, fixture.runId);
     await page.reload();
     await page.getByRole('button', { name: 'New Game', exact: true }).click({ trial: true });
-    assert.equal(await page.getByRole('button', { name: 'Continue', exact: true }).count(), 0);
+    assert.equal(await page.getByRole('button', { name: 'Continue', exact: true }).count(), 1);
     assert.deepEqual(errors, []);
     await fs.writeFile(
       path.join(output, 'results.json'),

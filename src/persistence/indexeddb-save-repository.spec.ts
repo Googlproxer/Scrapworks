@@ -1,7 +1,8 @@
+import { saveFixture } from '../../tests/support/save-fixture.ts';
 import { Dexie } from 'dexie';
 import { Simulation } from '@simulation/ecs-runtime';
 import { worldFixture } from '../../tests/support/world-fixture';
-import { MANUAL_SLOT, type SaveSnapshot } from '@contracts/save';
+import type { SaveSnapshot } from '@contracts/save';
 import { IndexedDbSaveRepository } from './indexeddb-save-repository';
 import { SaveConflictError } from './memory-save-repository';
 import { expectConsoleMessage } from '../testing/console-policy';
@@ -21,17 +22,7 @@ describe('Gameplay IndexedDB transactions', () => {
     const sim = new Simulation(worldFixture());
     try {
       const world = sim.capture();
-      return {
-        slot: MANUAL_SLOT,
-        schema: 1,
-        runId: 'run-a',
-        token: crypto.randomUUID(),
-        savedAt: new Date().toISOString(),
-        worldId: world.resources.worldId,
-        contentVersion: world.contentVersion,
-        tick: world.resources.tick,
-        world,
-      };
+      return saveFixture(world, 'run-a', crypto.randomUUID(), new Date().toISOString());
     } finally {
       sim.dispose();
     }
@@ -66,8 +57,8 @@ describe('Gameplay IndexedDB transactions', () => {
     const { name, adapter } = repository(),
       previous = snapshot();
     await adapter.save(previous, null);
-    const changed = snapshot();
-    vi.spyOn(IDBObjectStore.prototype, 'put').mockImplementationOnce(() => {
+    const changed = { ...snapshot(), sequence: 2, previousToken: previous.token };
+    vi.spyOn(IDBObjectStore.prototype, 'add').mockImplementationOnce(() => {
       throw new DOMException('Injected quota failure', 'QuotaExceededError');
     });
     await expect(adapter.save(changed, previous.token)).rejects.toThrow();
@@ -84,7 +75,7 @@ describe('Gameplay IndexedDB transactions', () => {
     const raw = new Dexie(name);
     await raw.open();
     try {
-      await raw.table('slots').update(MANUAL_SLOT, { payload: { schema: 999 } });
+      await raw.table('payloads').update(save.token, { payload: { schema: 999 } });
     } finally {
       raw.close();
     }
@@ -94,6 +85,13 @@ describe('Gameplay IndexedDB transactions', () => {
     expect(await adapter.list()).toEqual([]);
   });
   it('reports denied storage access and rejects work after lifecycle close', async () => {
+    expectConsoleMessage(
+      'trace',
+      expect.objectContaining({
+        name: 'DatabaseClosedError',
+        message: expect.stringContaining('Denied'),
+      }),
+    );
     const { adapter } = repository();
     vi.spyOn(IDBFactory.prototype, 'open').mockImplementationOnce(() => {
       throw new DOMException('Denied', 'SecurityError');
@@ -101,5 +99,116 @@ describe('Gameplay IndexedDB transactions', () => {
     await expect(adapter.list()).rejects.toThrow();
     adapter.close();
     await expect(adapter.load()).rejects.toThrow(/closed/);
+  });
+
+  it('rolls back appended payload, metadata, head and retention deletion together', async () => {
+    const { adapter } = repository();
+    let previous: SaveSnapshot | undefined;
+    for (let n = 1; n <= 3; n++) {
+      const next = { ...snapshot(), sequence: n, previousToken: previous?.token ?? null };
+      await adapter.save(next, previous?.token ?? null);
+      previous = next;
+    }
+    const before = await adapter.list();
+    const next = { ...snapshot(), sequence: 4, previousToken: previous!.token };
+    expectConsoleMessage(
+      'trace',
+      expect.objectContaining({
+        name: 'AbortError',
+        message: expect.stringContaining('Injected prune abort'),
+      }),
+    );
+    vi.spyOn(IDBObjectStore.prototype, 'delete').mockImplementationOnce(() => {
+      throw new DOMException('Injected prune abort', 'AbortError');
+    });
+    await expect(adapter.save(next, previous!.token)).rejects.toThrow();
+    expect(await adapter.list()).toEqual(before);
+    expect(await adapter.load(next.token)).toBeUndefined();
+    for (const revision of before)
+      expect((await adapter.load(revision.token))?.token).toBe(revision.token);
+    await adapter.save(next, previous!.token);
+    expect((await adapter.list()).map((m) => m.sequence)).toEqual([4, 3, 2]);
+  });
+
+  it('retains independent per-run histories and detects a stale run deletion', async () => {
+    const { name, adapter } = repository();
+    const world = snapshot().world;
+    let previous: SaveSnapshot | undefined;
+    for (let n = 1; n <= 12; n++) {
+      const kind = n % 2 ? ('auto' as const) : ('manual' as const);
+      const next = {
+        ...saveFixture(world, 'run-a', `revision-${n}`),
+        kind,
+        slot: `run-a/${kind}`,
+        sequence: n,
+        previousToken: previous?.token ?? null,
+      };
+      await adapter.save(next, previous?.token ?? null);
+      previous = next;
+    }
+    const before = await adapter.list();
+    expect(before.filter((m) => m.kind === 'auto')).toHaveLength(5);
+    expect(before.filter((m) => m.kind === 'manual')).toHaveLength(3);
+    const other = repository(name).adapter;
+    const next = {
+      ...saveFixture(world, 'run-a', 'racing-revision'),
+      sequence: 13,
+      previousToken: previous!.token,
+    };
+    await other.save(next, previous!.token);
+    await expect(
+      adapter.delete(
+        previous!.token,
+        'run',
+        before.map((m) => m.token),
+      ),
+    ).rejects.toBeInstanceOf(SaveConflictError);
+    await adapter.save(saveFixture(world, 'run-b', 'another-run'), null);
+    expect(new Set((await adapter.list()).map((m) => m.runId)).size).toBe(2);
+    await expect(adapter.delete(next.token, 'revision')).rejects.toThrow(/latest/);
+  });
+
+  it('upgrades the database without deleting or claiming support for pre-M9 payloads', async () => {
+    const name = 'gameplay-save-test-' + crypto.randomUUID();
+    const old = new Dexie(name);
+    old.version(1).stores({ slots: '&slot' });
+    await old
+      .table('slots')
+      .put({ slot: 'manual-1', payload: { schema: 1 }, metadata: { token: 'legacy' } });
+    old.close();
+    const { adapter } = repository(name);
+    expect(await adapter.legacy()).toBe(true);
+    expect(await adapter.list()).toEqual([]);
+    await adapter.save(snapshot(), null);
+    await adapter.deleteLegacy();
+    expect(await adapter.legacy()).toBe(false);
+    expect(await adapter.list()).toHaveLength(1);
+  });
+
+  it('closes a blocked upgrade boundary so a rejected operation cannot later perform a write', async () => {
+    expectConsoleMessage(
+      'warn',
+      expect.stringContaining('blocked by other connection holding version'),
+    );
+    expectConsoleMessage(
+      'warn',
+      expect.stringContaining('Closing db now to resume the delete request.'),
+    );
+    const name = 'gameplay-save-test-' + crypto.randomUUID();
+    const old = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open(name, 1);
+      request.onupgradeneeded = () =>
+        request.result.createObjectStore('slots', { keyPath: 'slot' });
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const { adapter } = repository(name);
+    try {
+      await expect(adapter.save(snapshot(), null)).rejects.toThrow(/blocked/);
+      old.close();
+      await expect(adapter.save(snapshot(), null)).rejects.toThrow(/closed/);
+    } finally {
+      old.close();
+    }
   });
 });

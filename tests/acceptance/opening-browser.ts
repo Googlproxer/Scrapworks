@@ -1,3 +1,4 @@
+import { saveFixture } from '../support/save-fixture.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import http from 'node:http';
@@ -16,7 +17,7 @@ import {
 } from './browser-events.ts';
 import { checkFactoryRoute, type FactoryRouteProbe } from './factory-route.ts';
 import type { SaveSnapshot } from '../../src/contracts/save.ts';
-import { saveThroughUi } from './manual-save.ts';
+import { saveThroughUi, seedSave } from './manual-save.ts';
 
 type Probe = FactoryRouteProbe;
 const root = path.resolve(import.meta.dirname, '../..');
@@ -118,42 +119,15 @@ try {
       path.resolve(root, resumeTransport),
     );
     const save: SaveSnapshot =
-      'schema' in source
+      'schema' in source && source.schema === 2
         ? source
-        : {
-            slot: 'manual-1',
-            schema: 1,
-            runId: source.runId,
-            token: 'local-earned-transport-continuation',
-            savedAt: new Date().toISOString(),
-            worldId: source.world.definition.id,
-            contentVersion: source.world.contentVersion,
-            tick: source.world.resources.tick,
-            world: source.world,
-          };
-    await page.evaluate(async (payload) => {
-      const db = await new Promise<IDBDatabase>((resolve, reject) => {
-        const r = indexedDB.open('ScrapworksGameplaySaves');
-        r.onupgradeneeded = () => r.result.createObjectStore('slots', { keyPath: 'slot' });
-        r.onsuccess = () => resolve(r.result);
-        r.onerror = () => reject(r.error);
-      });
-      try {
-        await new Promise<void>((resolve, reject) => {
-          const tx = db.transaction('slots', 'readwrite');
-          const { world, ...metadata } = payload;
-          tx.objectStore('slots').put({
-            slot: 'manual-1',
-            metadata,
-            payload: { ...metadata, world },
-          });
-          tx.oncomplete = () => resolve();
-          tx.onerror = () => reject(tx.error);
-        });
-      } finally {
-        db.close();
-      }
-    }, save);
+        : saveFixture(
+            source.world,
+            source.runId,
+            'local-earned-transport-continuation',
+            new Date().toISOString(),
+          );
+    await seedSave(page, save);
     await page.reload();
   }
   const play = page.getByRole('button', {

@@ -1,9 +1,9 @@
 flowchart TB
-    Request[Continue or manual load request]
+    Request[Continue chosen revision or deliberately activate imported run]
     Queue[Finish earlier operations and confirm unsaved progress loss]
-    Pause[Hold credits and input without refunding active work]
+    Pause[Suspend autosaves and hold input without refunding active work]
     Read[Read chosen snapshot]
-    Version{Compatible schema content physics and authored definition?}
+    Version{Supported M9 schema and exact map native and content compatibility?}
     Valid{Candidate worker validates gameplay and native state?}
     Build[Prepare separate scene first frame and visible crafting UI]
     Ready{Candidate constructed successfully?}

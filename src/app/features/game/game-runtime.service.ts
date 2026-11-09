@@ -918,6 +918,18 @@ export class GameRuntimeService {
     }
   }
 
+  /** Gameplay/native preflight without changing active simulation or presentation ownership. */
+  public async validateForSave(save: SaveSnapshot): Promise<void> {
+    const response = await fetch(new URL('scene/worlds/game.json', document.baseURI));
+    if (!response.ok) throw new Error('The authored world could not be loaded.');
+    const definition: unknown = await response.json();
+    assertWorldDefinition(definition);
+    assertSameAuthoredMap(save.world.definition, definition);
+    const candidate = await this.sessions.prepare(definition, save);
+    candidate.dispose();
+    if (this.disposed) throw new Error('The game page closed during backup validation.');
+  }
+
   private focusPreparedWorld(): void {
     const pending = this.pendingSaveFocus;
     this.pendingSaveFocus = undefined;

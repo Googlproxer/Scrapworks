@@ -1,3 +1,4 @@
+import { saveFixture } from '../../tests/support/save-fixture.ts';
 import assert from 'node:assert/strict';
 import { afterEach, test, vi } from 'vitest';
 import { Simulation } from '../simulation/ecs-runtime';
@@ -6,10 +7,12 @@ import { GameSession } from '../session/game-session';
 import { InlineSimulationPort } from '../../tools/testing/inline-simulation-port';
 import { worldFixture } from '../../tests/support/world-fixture';
 import { OPENING_CONTENT, OPENING_TECHNOLOGIES } from '../content/opening';
-import { MANUAL_SLOT, type SaveSnapshot } from '../contracts/save';
+import type { SaveSnapshot } from '../contracts/save';
 import { decodeSave } from './save-codec';
 import { MemorySaveRepository, SaveConflictError } from './memory-save-repository';
 import { SaveCoordinator, type SaveBinding, type SaveHost } from './save-coordinator';
+import { migrateEnvelope } from './save-migrations';
+import { parseBackup } from './save-codec';
 
 const still = { x: 0, z: 0, sprint: false };
 const owned: { dispose(): void }[] = [];
@@ -44,17 +47,7 @@ function simulation(work = false): Simulation {
 
 function envelope(sim: Simulation, runId = 'run-a', token = 'token-a'): SaveSnapshot {
   const world = sim.capture();
-  return {
-    slot: MANUAL_SLOT,
-    schema: 1,
-    runId,
-    token,
-    savedAt: '2026-11-08T00:00:00.000Z',
-    worldId: world.resources.worldId,
-    contentVersion: world.contentVersion,
-    tick: world.resources.tick,
-    world,
-  };
+  return saveFixture(world, runId, token, '2026-11-08T00:00:00.000Z');
 }
 
 function harness(repository = new MemorySaveRepository(), approve = true) {
@@ -73,6 +66,10 @@ function harness(repository = new MemorySaveRepository(), approve = true) {
       };
     },
     capture: async () => sim.capture(),
+    validate: async (save) => {
+      const candidate = new Simulation(sim.definition, { snapshot: preparePlayerSave(save.world) });
+      candidate.dispose();
+    },
     replace: async (save) => {
       const snapshot = save ? preparePlayerSave(save.world) : undefined;
       const candidate = new Simulation(sim.definition, { snapshot });
@@ -393,7 +390,7 @@ test('stale queued save cannot overwrite the slot after New Game, and New Game r
   assert.equal(h.holds(), 0);
 });
 
-test('confirmation cancel preserves unsaved world; overwrite and delete require current committed token', async () => {
+test('confirmation cancel preserves unsaved world; different named runs never overwrite each other', async () => {
   const h = harness(new MemorySaveRepository(), false);
   await h.coordinator.save();
   h.tick();
@@ -405,10 +402,10 @@ test('confirmation cancel preserves unsaved world; overwrite and delete require 
   assert(await h.repository.load());
   assert.equal(h.confirm.mock.calls.length, 2);
   const newer = envelope(h.current(), 'other-run', 'other-token');
-  await h.repository.save(newer, (await h.repository.load())!.token);
+  await h.repository.save(newer, null);
   await h.coordinator.save();
-  assert.equal((await h.repository.load())!.runId, 'other-run');
-  assert.equal(h.confirm.mock.calls.length, 3);
+  assert.equal((await h.repository.load(newer.token))!.runId, 'other-run');
+  assert.equal(h.confirm.mock.calls.length, 2);
   await assert.rejects(h.repository.save(newer, 'obsolete'), SaveConflictError);
 });
 
@@ -462,22 +459,262 @@ test('read/delete failures and an externally removed slot preserve the active jo
   await h.coordinator.load();
   assert.equal(h.coordinator.status.slot, null);
   assert(h.coordinator.dirty);
-  assert.match(h.coordinator.status.message, /empty/);
+  assert.match(h.coordinator.status.message, /no longer available/);
   assert.deepEqual(h.current().capture(), active);
   assert.equal(h.holds(), 0);
 });
 
-test('observing an externally replaced slot invalidates the current saved marker without changing the world', async () => {
+test('observing a cross-tab run commit invalidates the saved marker and blocks obsolete captures', async () => {
   const h = harness(new MemorySaveRepository(), false);
   await h.coordinator.save();
   assert.equal(h.coordinator.dirty, false);
   const old = (await h.repository.load())!;
-  await h.repository.save(envelope(h.current(), 'another-run', 'another-token'), old.token);
+  await h.repository.save(
+    {
+      ...envelope(h.current(), old.runId, 'another-token'),
+      sequence: old.sequence + 1,
+      previousToken: old.token,
+    },
+    old.token,
+  );
   const active = h.current().capture();
   await h.coordinator.save();
   assert(h.coordinator.dirty);
-  assert.equal(h.coordinator.status.slot!.runId, 'another-run');
+  assert.match(h.coordinator.status.message, /another tab/);
+  assert.equal((await h.repository.load())!.token, 'another-token');
   assert.deepEqual(h.current().capture(), active);
+});
+
+test('first autosave needs no manual checkpoint and histories independently retain five autosaves and three manual revisions', async () => {
+  const h = harness();
+  h.coordinator.name = 'Waterworks';
+  h.coordinator.advanceActive(119);
+  await h.coordinator.refresh();
+  assert.equal((await h.repository.list()).length, 0);
+  h.coordinator.advanceActive(1);
+  await h.coordinator.refresh();
+  await h.coordinator.settled();
+  assert.equal((await h.repository.load())!.kind, 'auto');
+  for (let n = 0; n < 9; n++) {
+    h.tick();
+    await h.coordinator.save();
+    h.tick();
+    h.coordinator.advanceActive(120);
+    await h.coordinator.refresh();
+    await h.coordinator.settled();
+  }
+  const revisions = await h.repository.list();
+  assert.equal(revisions.filter((r) => r.kind === 'manual').length, 3);
+  assert.equal(revisions.filter((r) => r.kind === 'auto').length, 5);
+  assert(revisions.every((r) => r.name === 'Waterworks'));
+  const tokens = revisions.map((r) => r.token);
+  h.coordinator.advanceActive(120);
+  await h.coordinator.refresh();
+  await h.coordinator.settled();
+  assert.deepEqual(
+    (await h.repository.list()).map((r) => r.token),
+    tokens,
+  );
+});
+
+test('recovery inspects without writing then appends from the latest head with the selected source recorded', async () => {
+  const h = harness();
+  await h.coordinator.save();
+  const first = (await h.repository.load())!;
+  h.tick();
+  await h.coordinator.save();
+  const newest = (await h.repository.load())!;
+  h.coordinator.select(first.token);
+  assert.equal((await h.repository.list()).length, 2);
+  await h.coordinator.load();
+  assert.deepEqual(await h.repository.load(first.token), first);
+  assert.equal((await h.repository.list()).length, 2);
+  h.tick();
+  await h.coordinator.save();
+  const recovered = (await h.repository.load())!;
+  assert.equal(recovered.previousToken, newest.token);
+  assert.equal(recovered.recoveredFrom, first.token);
+  assert.equal(recovered.sequence, newest.sequence + 1);
+  assert.deepEqual(await h.repository.load(newest.token), newest);
+});
+
+test('deleting the revision currently represented by a paused recovered session clears its saved marker', async () => {
+  const h = harness();
+  await h.coordinator.save();
+  const first = (await h.repository.load())!;
+  h.tick();
+  await h.coordinator.save();
+  await h.coordinator.load(first.token);
+  assert.equal(h.coordinator.dirty, false);
+  await h.coordinator.delete('revision');
+  assert(h.coordinator.dirty);
+  assert.equal((await h.repository.list()).length, 1);
+});
+
+test('automatic requests coalesce behind a slow write and New Game cancels them before capture', async () => {
+  const h = harness();
+  let finish!: () => void, entered!: () => void;
+  const gate = new Promise<void>((r) => {
+    finish = r;
+  });
+  const writing = new Promise<void>((r) => {
+    entered = r;
+  });
+  const write = h.repository.save.bind(h.repository);
+  vi.spyOn(h.repository, 'save').mockImplementationOnce(async (...args) => {
+    entered();
+    await gate;
+    await write(...args);
+  });
+  const capture = vi.spyOn(h.host, 'capture');
+  const saving = h.coordinator.save();
+  await writing;
+  for (let n = 0; n < 10; n++) {
+    h.tick();
+    h.coordinator.advanceActive(120);
+  }
+  const replacing = h.coordinator.newGame();
+  finish();
+  await Promise.all([saving, replacing]);
+  assert.equal(capture.mock.calls.length, 1);
+  assert.equal((await h.repository.list()).length, 1);
+  assert.equal(h.host.binding()!.runId, 'run-new');
+  h.coordinator.advanceActive(120);
+  await h.coordinator.refresh();
+  await h.coordinator.settled();
+  assert.equal(new Set((await h.repository.list()).map((m) => m.runId)).size, 2);
+});
+
+test('JSON inspection and repeated imports preserve play, create distinct runs and retain exact native state', async () => {
+  const h = harness();
+  await h.coordinator.save();
+  const source = (await h.repository.load())!,
+    active = h.current().capture();
+  const backup = JSON.stringify(source);
+  const replace = vi.spyOn(h.host, 'replace');
+  await h.coordinator.inspect(backup);
+  assert.equal((await h.repository.list()).length, 1);
+  assert.equal(replace.mock.calls.length, 0);
+  await h.coordinator.import('Imported waterworks');
+  const first = h.coordinator.status.slot!;
+  await h.coordinator.inspect(backup);
+  await h.coordinator.import('Second copy');
+  const second = h.coordinator.status.slot!;
+  assert.notEqual(first.runId, second.runId);
+  assert.notEqual(source.runId, first.runId);
+  assert.deepEqual(h.current().capture(), active);
+  const imported = (await h.repository.load(second.token))!;
+  assert.deepEqual(imported.origin, { runId: source.runId, token: source.token });
+  assert.deepEqual(imported.world, source.world);
+  h.tick();
+  h.coordinator.advanceActive(120);
+  await h.coordinator.settled();
+  assert.equal(h.coordinator.status.slot!.token, second.token);
+  await h.coordinator.load(second.token);
+  assert.equal(h.host.binding()!.runId, second.runId);
+});
+
+test('invalid backups clear the previous inspection and preserve active state and all committed revisions', async () => {
+  const h = harness();
+  await h.coordinator.save();
+  const saved = (await h.repository.load())!,
+    active = h.current().capture();
+  await h.coordinator.inspect(JSON.stringify(saved));
+  for (const bad of [
+    '{',
+    JSON.stringify({ ...saved, schema: 999 }),
+    JSON.stringify({ ...saved, schema: 1 }),
+    JSON.stringify({
+      ...saved,
+      world: { ...saved.world, physics: { ...saved.world.physics, bytes: [1] } },
+    }),
+  ]) {
+    await h.coordinator.inspect(bad);
+    assert.equal(h.coordinator.status.phase, 'error');
+    assert.equal(h.coordinator.status.inspected, null);
+    await h.coordinator.import('Invalid');
+    assert.deepEqual(await h.repository.load(), saved);
+    assert.deepEqual(h.current().capture(), active);
+  }
+});
+
+test('emergency backups work with denied storage without marking current progress committed', async () => {
+  const h = harness();
+  h.coordinator.name = '   ';
+  vi.spyOn(h.repository, 'list').mockRejectedValue(new Error('Storage denied'));
+  await h.coordinator.refresh();
+  const before = h.current().capture();
+  const backup = await h.coordinator.backup();
+  assert(backup);
+  assert.deepEqual(parseBackup(JSON.stringify(backup)).world, before);
+  assert.deepEqual(h.current().capture(), before);
+  assert(h.coordinator.dirty);
+  assert.equal(h.coordinator.status.slot, null);
+  await h.coordinator.newGame();
+  assert.equal(h.host.binding()!.runId, 'run-new');
+  assert.equal(h.coordinator.status.message, 'New game started.');
+});
+
+test('a conflict while deleting another run does not block saving the active run', async () => {
+  const h = harness();
+  await h.coordinator.save();
+  const other = envelope(h.current(), 'other-run', 'other-1');
+  await h.repository.save(other, null);
+  await h.coordinator.refresh();
+  h.coordinator.select(other.token);
+  await h.repository.save(
+    { ...other, token: 'other-2', sequence: 2, previousToken: other.token },
+    other.token,
+  );
+  await h.coordinator.delete();
+  assert.equal(h.coordinator.status.phase, 'error');
+  h.tick();
+  await h.coordinator.save();
+  assert.equal(h.coordinator.status.message, 'Game saved.');
+});
+
+test('candidate staging and world replacement cannot schedule a stale-session autosave', async () => {
+  const h = harness();
+  await h.coordinator.save();
+  h.tick();
+  const replace = h.host.replace.bind(h.host);
+  vi.spyOn(h.host, 'replace').mockImplementationOnce(async (save) => {
+    h.coordinator.advanceActive(10000);
+    await replace(save);
+  });
+  await h.coordinator.load();
+  await h.coordinator.settled();
+  assert.equal(h.coordinator.status.message, 'Game loaded.');
+  assert.equal((await h.repository.list()).length, 1);
+});
+
+test('deleting an active run does not recreate it automatically until a deliberate manual save', async () => {
+  const h = harness();
+  await h.coordinator.save();
+  await h.coordinator.delete();
+  h.tick();
+  h.coordinator.advanceActive(120);
+  await h.coordinator.refresh();
+  assert.equal((await h.repository.list()).length, 0);
+  await h.coordinator.save();
+  assert.equal((await h.repository.load())!.sequence, 1);
+});
+
+test('synthetic migration contracts are sequential, detached and never promise pre-M9 compatibility', () => {
+  const source = { schema: 2, work: 5 };
+  const migrated = migrateEnvelope(source, 2, 4, [
+    { from: 2, to: 3, migrate: (value) => ({ ...(value as object), schema: 3, marker: true }) },
+    { from: 3, to: 4, migrate: (value) => ({ ...(value as object), schema: 4 }) },
+  ]);
+  assert.deepEqual(migrated, { schema: 4, work: 5, marker: true });
+  assert.deepEqual(source, { schema: 2, work: 5 });
+  assert.throws(() => migrateEnvelope(source, 2, 4, []), /sequential/);
+  assert.throws(
+    () => migrateEnvelope(source, 2, 3, [{ from: 2, to: 3, migrate: () => ({ schema: 9 }) }]),
+    /invalid version/,
+  );
+  assert.throws(() => migrateEnvelope({ schema: 1 }), /pre-M9/);
+  assert.throws(() => migrateEnvelope({ schema: 999 }), /newer unsupported/);
 });
 
 function legacyEnvelope(source: Simulation, target: string | null = null) {

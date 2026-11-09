@@ -1,3 +1,4 @@
+import { saveFixture } from '../../tests/support/save-fixture.ts';
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'vitest';
 import type { WorldDefinition, WorldCommand } from '../contracts/world';
@@ -977,17 +978,9 @@ test('native same-map saves retain attributed water, partial weather, batteries,
   const original = own(new Simulation(state.definition, { snapshot: state }));
   for (let n = 0; n < 7; n++) original.step(still);
   const saved = preparePlayerSave(
-    decodeSave({
-      schema: 1,
-      slot: 'manual-1',
-      runId: 'm8-fixture',
-      token: 'm8-fixture',
-      savedAt: '2026-11-09T00:00:00.000Z',
-      contentVersion: OPENING_CONTENT.version,
-      worldId: state.definition.id,
-      tick: original.capture().resources.tick,
-      world: original.capture(),
-    }).world,
+    decodeSave(
+      saveFixture(original.capture(), 'm8-fixture', 'm8-fixture', '2026-11-09T00:00:00.000Z'),
+    ).world,
   );
   const restored = own(new Simulation(saved.definition, { snapshot: saved }));
   for (let n = 0; n < 200; n++) {

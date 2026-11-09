@@ -1,3 +1,4 @@
+import { saveFixture } from '../../tests/support/save-fixture.ts';
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'vitest';
 import { FACTORY_SETTINGS, RECYCLER_OUTCOMES } from '../content/factory';
@@ -27,17 +28,8 @@ import { emptyToolbar } from '../contracts/toolbar';
 import { validatePowerConnection } from './power-connection';
 
 const durableWorld = (world: SimulationSnapshot) =>
-  decodeSave({
-    slot: 'manual-1',
-    schema: 1,
-    runId: 'factory-test',
-    token: 'factory-test-token',
-    savedAt: '2026-11-08T00:00:00.000Z',
-    worldId: world.resources.worldId,
-    contentVersion: world.contentVersion,
-    tick: world.resources.tick,
-    world,
-  }).world;
+  decodeSave(saveFixture(world, 'factory-test', 'factory-test-token', '2026-11-08T00:00:00.000Z'))
+    .world;
 
 test('factory reach uses the nearest footprint and player overlap uses the real collision radius', () => {
   const definition = { ...worldFixture(), blockers: [], deposits: [] },

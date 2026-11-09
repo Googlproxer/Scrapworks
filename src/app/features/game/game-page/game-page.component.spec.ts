@@ -151,7 +151,7 @@ describe('GamePageComponent integration', () => {
     states.next({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
     await fixture.whenStable();
     const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
-      '.top-right button',
+      '[data-controls]',
     )!;
     const dialogs = TestBed.inject(Dialog);
     try {
@@ -194,7 +194,7 @@ describe('GamePageComponent integration', () => {
     await fixture.whenStable();
     const dialogs = TestBed.inject(Dialog);
     (fixture.nativeElement as HTMLElement)
-      .querySelector<HTMLButtonElement>('.top-right button')!
+      .querySelector<HTMLButtonElement>('[data-controls]')!
       .click();
     await fixture.whenStable();
     expect(dialogs.openDialogs).toHaveLength(1);
@@ -302,7 +302,7 @@ describe('GamePageComponent integration', () => {
     expect(document.activeElement).toBe(canvas);
     expect(getComputedStyle(indicator).display).toBe('block');
 
-    page.querySelector<HTMLButtonElement>('.top-right button')!.focus();
+    page.querySelector<HTMLButtonElement>('[data-controls]')!.focus();
     expect(getComputedStyle(indicator).display).toBe('none');
   });
 });

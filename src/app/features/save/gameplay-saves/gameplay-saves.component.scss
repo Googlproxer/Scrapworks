@@ -2,6 +2,9 @@
   display: block;
   max-width: min(26rem, calc(100vw - 2rem));
   color: #fff;
+  font:
+    14px / 1.5 system-ui,
+    sans-serif;
 }
 section {
   padding: 0.65rem;
@@ -9,6 +12,9 @@ section {
   border: 1px solid #8ba0ad;
   border-radius: 0.4rem;
   font-size: 0.8rem;
+  max-height: var(--gameplay-save-max-height, min(78vh, 48rem));
+  overflow: auto;
+  scrollbar-gutter: stable;
 }
 .actions {
   display: flex;
@@ -37,6 +43,47 @@ summary {
   font-size: 0.75rem;
   background: #19242b;
 }
-.compact-feedback:empty {
-  display: none;
+fieldset {
+  margin: 0 0 0.7rem;
+  padding: 0.5rem;
+  border: 1px solid #8ba0ad;
+  min-width: 0;
+}
+label,
+small {
+  display: block;
+  margin: 0.35rem 0;
+}
+input,
+select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 2.5rem;
+  margin: 0.2rem 0 0.45rem;
+  color: #fff;
+  background: #19242b;
+  border: 1px solid #8ba0ad;
+  border-radius: 0.25rem;
+}
+.status,
+.import-preview,
+.storage-status,
+.revision-detail {
+  min-height: 4.5em;
+  max-height: 4.5em;
+  overflow: auto;
+}
+.progress {
+  min-height: 1.5em;
+}
+.compact-feedback {
+  min-height: 2.5em;
+}
+.button {
+  min-height: 2.5rem;
+}
+:focus-visible {
+  outline: 2px solid #f7db8b;
+  outline-offset: 2px;
 }

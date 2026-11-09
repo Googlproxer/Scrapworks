@@ -1,5 +1,5 @@
 import { Dexie, type Table } from 'dexie';
-import { MANUAL_SLOT, type SaveMetadata } from '../../src/contracts/save';
+import type { SaveMetadata } from '../../src/contracts/save';
 import { decodeMetadata } from '../../src/persistence/save-codec';
 
 interface Row {
@@ -8,7 +8,8 @@ interface Row {
   payload: unknown;
 }
 
-/** The same row shape, read-before-write token check and transaction completion as production. */
+const MANUAL_SLOT = 'benchmark-single-row';
+/** Isolated single-row codec control. Production M9 revision retention is measured separately. */
 export class BenchmarkStore {
   private readonly db: Dexie;
   private readonly slots: Table<Row, string>;

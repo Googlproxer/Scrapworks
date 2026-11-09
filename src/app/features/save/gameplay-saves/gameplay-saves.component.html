@@ -1,47 +1,195 @@
-<ng-template #content
-  ><section aria-label="Local gameplay save">
-    <div class="actions">
-      @if (saves.hasSession()) {
-        <button type="button" class="button" (click)="saves.save()" [disabled]="saves.busy()">
+<ng-template #content>
+  <section aria-label="Local gameplay saves">
+    <p
+      class="status"
+      tabindex="0"
+      [attr.role]="compact() ? null : 'status'"
+      [attr.aria-live]="compact() ? null : 'polite'"
+    >
+      {{ saves.status().message }}
+    </p>
+    <p class="progress">
+      {{
+        saves.hasSession()
+          ? saves.unsaved()
+            ? 'Unsaved progress'
+            : 'Progress saved'
+          : 'Choose a saved run or start a New Game.'
+      }}
+    </p>
+    <fieldset [disabled]="saves.busy()">
+      <legend>Current game</legend>
+      <label [attr.for]="id + '-run-name'">Run name for next save</label>
+      <input [id]="id + '-run-name'" data-save-run-name type="text" [formField]="nameForm.name" />
+      <div class="actions">
+        <button
+          type="button"
+          class="button"
+          (click)="saves.save()"
+          [disabled]="!saves.hasSession() || nameForm().invalid()"
+        >
           Save game
         </button>
         <button
           type="button"
           class="button"
-          (click)="saves.load()"
-          [disabled]="saves.busy() || !saves.status().slot"
+          (click)="saves.download()"
+          [disabled]="!saves.hasSession()"
         >
-          Load game
+          Download current progress
         </button>
-      }
-      @if (saves.status().slot) {
-        <button type="button" class="button" (click)="saves.delete()" [disabled]="saves.busy()">
-          Delete save
+      </div>
+      <small
+        >Autosaves every 2 minutes of active play. Paused and hidden games do not advance. Keeps 5
+        autosaves and 3 manual revisions per run.</small
+      >
+    </fieldset>
+    <fieldset [disabled]="saves.busy()">
+      <legend>Saved runs and recovery</legend>
+      <label [attr.for]="id + '-run'">Saved run</label>
+      <select
+        [id]="id + '-run'"
+        data-save-run
+        [value]="saves.status().slot?.runId ?? ''"
+        (change)="chooseRun($event)"
+        [disabled]="!saves.runs().length"
+      >
+        @if (!saves.runs().length) {
+          <option value="">No saved runs</option>
+        }
+        @for (run of saves.runs(); track run.runId) {
+          <option [value]="run.runId">{{ run.name }} · {{ run.savedAt | date: 'short' }}</option>
+        }
+      </select>
+      <label [attr.for]="id + '-revision'">Revision to inspect or recover</label>
+      <select
+        [id]="id + '-revision'"
+        data-save-revision
+        [value]="saves.status().slot?.token ?? ''"
+        (change)="chooseRevision($event)"
+        [disabled]="!saves.history().length"
+      >
+        @if (!saves.history().length) {
+          <option value="">No revisions</option>
+        }
+        @for (revision of saves.history(); track revision.token) {
+          <option [value]="revision.token">
+            {{ revision.kind === 'auto' ? 'Autosave' : 'Manual' }} {{ revision.sequence }} ·
+            {{ revision.savedAt | date: 'short' }}
+          </option>
+        }
+      </select>
+      <p class="revision-detail">
+        {{
+          saves.status().slot
+            ? 'Selecting history does not replace your current game.'
+            : 'Save a game or import a backup to start a history.'
+        }}
+      </p>
+      <div class="actions">
+        <button
+          type="button"
+          class="button"
+          (click)="saves.load()"
+          [disabled]="!saves.status().slot"
+        >
+          Load selected revision
         </button>
-      }
-      @if (saves.status().phase === 'error') {
-        <button type="button" class="button" (click)="saves.refresh()">Check save again</button>
+        <button
+          type="button"
+          class="button"
+          (click)="saves.download(saves.status().slot?.token)"
+          [disabled]="!saves.status().slot"
+        >
+          Export selected revision
+        </button>
+        <button
+          type="button"
+          class="button"
+          (click)="saves.delete('revision')"
+          [disabled]="!canDeleteRevision()"
+        >
+          Delete older revision
+        </button>
+        <button
+          type="button"
+          class="button"
+          (click)="saves.delete()"
+          [disabled]="!saves.status().slot"
+        >
+          Delete saved run
+        </button>
+        <button type="button" class="button" (click)="saves.refresh()">Check saves again</button>
+      </div>
+    </fieldset>
+    <fieldset [disabled]="saves.busy()">
+      <legend>Restore a JSON backup</legend>
+      <label [attr.for]="id + '-import'">Choose backup to validate</label>
+      <input
+        [id]="id + '-import'"
+        data-save-import
+        type="file"
+        accept=".json,application/json"
+        (change)="chooseFile($event)"
+      />
+      <p class="import-preview" tabindex="0">
+        @if (saves.status().inspected; as file) {
+          Valid backup: {{ file.name }} · {{ file.savedAt | date: 'short' }}
+        } @else {
+          Choosing a file never replaces play or existing saves.
+        }
+      </p>
+      <label [attr.for]="id + '-import-name'">New imported run name</label>
+      <input
+        [id]="id + '-import-name'"
+        data-save-import-name
+        type="text"
+        [formField]="importForm.name"
+      />
+      <button
+        type="button"
+        class="button"
+        (click)="saves.import()"
+        [disabled]="!saves.status().inspected || importForm().invalid()"
+      >
+        Import as new run
+      </button>
+      <small>After importing, use Load selected revision when you are ready to play it.</small>
+    </fieldset>
+    <details>
+      <summary>Browser storage and backups</summary>
+      <p>
+        This browser profile and website origin only. Clearing site data removes local saves.
+        Download JSON backups and restore them through the file chooser above.
+      </p>
+      <div class="actions">
+        <button type="button" class="button" (click)="saves.checkStorage()">
+          Check storage capacity
+        </button>
+        <button type="button" class="button" (click)="saves.checkStorage(true)">
+          Request persistent storage
+        </button>
+      </div>
+      <p class="storage-status" role="status" tabindex="0">{{ saves.storageMessage() }}</p>
+    </details>
+    <div class="legacy">
+      @if (saves.status().legacy) {
+        <p>
+          Older saves are incompatible with this version. They have been kept until you choose to
+          delete them. You can start a New Game.
+        </p>
+        <button
+          type="button"
+          class="button"
+          (click)="saves.deleteLegacy()"
+          [disabled]="saves.busy()"
+        >
+          Delete incompatible older saves
+        </button>
       }
     </div>
-    @if (!compact()) {
-      <p role="status" aria-live="polite">{{ saves.status().message }}</p>
-    } @else {
-      <p>{{ saves.status().message }}</p>
-    }
-    @if (saves.hasSession()) {
-      <p>{{ saves.unsaved() ? 'Unsaved progress' : 'Progress saved' }}</p>
-    }
-    @if (saves.status().slot; as slot) {
-      <p>Manual slot · Last saved {{ saves.savedTime() }}</p>
-      <details>
-        <summary>Save details</summary>
-        <p>Saved run: {{ slot.runId }}</p>
-        <p>Current run: {{ saves.runId() ?? 'None' }}</p>
-      </details>
-    }
-    <small>This browser and website only. No offline production.</small>
-  </section></ng-template
->
+  </section>
+</ng-template>
 @if (compact()) {
   <details (toggle)="onToggle($event)">
     <summary>Save &amp; load</summary>

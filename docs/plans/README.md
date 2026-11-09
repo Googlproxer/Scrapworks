@@ -1,6 +1,6 @@
 # Scrapworks Implementation Plan
 
-Updated 9 November 2026 after [Milestone 8 completion](milestone-08-restoration-and-energy-choices.md): persistent local restoration, water, forecast weather, batteries, optional coal and strict map-bound saves are implemented and locally verified on the existing worker. The [numerical catalogue](../design/restoration-catalogue.md) and [local report](../reports/milestone-08/2026-11-09/README.md) record actual values, verification and limits. Milestones 1–7 retain their completed credit and dated reports. Changes are uncommitted and not qualified by a new hosted CI run.
+Updated 9 November 2026 after Milestone 9 completion: named runs, active-time autosaves, retained revision recovery, validated JSON transfer and browser-storage resilience are implemented and locally verified. M1–M8 retain their completed credit; [M9 evidence](../reports/milestone-09/2026-11-09/README.md) records checks and measurements. Changes are uncommitted; no new hosted CI or deployment is claimed.
 
 Build a browser-first 3D game with Angular UI, Babylon presentation, Editor-authored layout, a plain TypeScript simulation, and local Dexie/IndexedDB snapshots. The [GDD](../design/GDD.md), [player progression decisions](../design/player-progression.md), [TDD](../design/TDD.md), and [Art Document](../art/README.md) own their respective requirements.
 
@@ -32,7 +32,7 @@ The [Fibery project tracker](fibery-tracking.md) provides the live task board, m
 | [6. First working machines](milestone-06-first-working-machines.md)                 | Manually supply renewable-powered recycling, fabrication and labs     | Complete and locally verified: empty-handed earned construction, wired proportional solar/wind power, bounded recycling, Basic/Medium fabrication, extraction, two shared-queue labs, full recovery and Save/reload/Continue. Batteries/coal remain M8. |
 | [7. Transport](milestone-07-transport.md)                                           | Automate direct supply and sort mixed recycler output                 | Complete and locally verified: paid power-free conveyors/sorter, directed neighbouring ports, fair bounded transfers, strict blocked destinations, full recovery, exact continuation, earned recycler/fabrication/scrap-return UI route and desktop/mobile AXE. |
 | [8. Restoration and energy choices](milestone-08-restoration-and-energy-choices.md) | Restore every land/water cell on the expanded map                     | Implemented: persistent fair-frontier health, rain-fed lake/pipes, slow forecast-driven coal/batteries, a 20 by 20 map and strict map-bound saves. Complete and locally verified. |
-| [9. Save resilience](milestone-09-save-resilience.md)                               | Autosave, recover, and transfer progress                              | Manual-save foundation delivered in Milestone 4; autosaves, revisions, migrations and gameplay transfer planned. Includes the deferred save-performance review.         |
+| [9. Save resilience](milestone-09-save-resilience.md) | Name runs, autosave, recover and transfer progress | Complete and locally verified: 2-active-minute autosaves, 5 autosave/3 manual revisions per run, corrupt-head recovery, safe JSON import/export, storage-failure backup and schema-2 compatibility from M9 onward. Exact map binding retained. |
 | [10. Portfolio prototype](milestone-10-portfolio-prototype.md)                      | Complete, understandable small-map demo                               | Migration presentation, controls, production packaging and small-fixture profiling verified. Complete factory route and representative performance pending.             |
 
 Use the linked milestone files as the detailed checklists rather than duplicating their tasks here. Keep one small authored map, adding one useful system at a time. Start empty-handed; accounts, cloud sync, remote control, combat, and a large technology tree remain deferred.
@@ -41,7 +41,7 @@ Save-format optimization is deferred by the 8 November 2026 decision: keep the c
 
 ## Detailed milestone plans
 
-Milestones 2–3 received foundation work during migration. The 27 October design revision preserves that credit and moves the small timed field-research/recipe-unlock slice into Milestone 3, alongside onboarding, salvage and MiniFab crafting. The revised 28 October opening teaches safe handcrafting through tools, materials and mechanical/electrical parts before MiniFab research and four-ingredient hand assembly. Handcrafting ends on UI exit with a warning and an unfinished-unit refund. The MiniFab is presented beside inventory and always works without power; optional physical winding charges a local speed boost independently of factory electricity. Milestone 4 saves work, contributions, charge and distinct research/upgrade ownership. Milestone 5 expands the tree and lab rules; Milestone 6 integrates the renewable-powered placed factory, and Milestone 7 adds sorting and direct transport. Milestone 8 demonstrates researched greenhouse restoration without a fail state. Milestones 3–7 have completed implementation evidence. M8 is implemented with local acceptance complete; M9–10 retain their outstanding scope.
+Milestones 2–3 received foundation work during migration. The 27 October design revision preserves that credit and moves the small timed field-research/recipe-unlock slice into Milestone 3, alongside onboarding, salvage and MiniFab crafting. The revised 28 October opening teaches safe handcrafting through tools, materials and mechanical/electrical parts before MiniFab research and four-ingredient hand assembly. Handcrafting ends on UI exit with a warning and an unfinished-unit refund. The MiniFab is presented beside inventory and always works without power; optional physical winding charges a local speed boost independently of factory electricity. Milestone 4 saves work, contributions, charge and distinct research/upgrade ownership. Milestone 5 expands the tree and lab rules; Milestone 6 integrates the renewable-powered placed factory, and Milestone 7 adds sorting and direct transport. Milestone 8 demonstrates researched greenhouse restoration without a fail state. Milestones 3–7 have completed implementation evidence. M8 and M9 are implemented with local acceptance complete; M10 retains its outstanding portfolio/target-device scope.
 
 Opening targets are improved-tool research in about a minute and first player-requested automatic crafting within 15–20 minutes for relaxed new players or under five minutes for experienced players. Base components remain useful downstream. MiniFab acquisition/form/baseline power are settled; [later design and provisional balance](../design/player-progression.md#implementation-readiness-and-later-design-work) include playtest refinement of recipe/recycler/renewable values, source-ore/liquid recovery details and weather/restoration balance. Later MiniFab onboard solar/wind/coal, grid and inventory automation each need the related technology where applicable, separate MiniFab research and actual crafted upgrades. Grid waits for electricity; pure ores, trains and resource-configuration UI need explicit later slices.
 
@@ -212,20 +212,20 @@ flowchart TB
 
 ### Save flow diagram
 
-Implemented for one manual slot; autosave and retained revisions arrive in Milestone 9. Requests bind to slot, run and session generation. Worker capture preserves handcraft and returns detached completed state without pending transport commands. Gameplay may continue during the atomic write; success applies only to the captured boundary. Failed writes retain the previous save.
+Implemented for named manual/autosave histories in Milestone 9. Requests bind to run/slot/session, explicit actions precede one coalesced autosave, and completed capture preserves handcraft. One transaction checks the run head, appends immutable data and applies independent 5-autosave/3-manual retention. Only committed progress receives success; conflicts/aborts preserve prior data. JSON emergency export uses a validated capture without requiring storage.
 
 [SVG image](../diagrams/save-flow.svg) / [PNG image](../diagrams/save-flow.png) / [Mermaid source](../diagrams/src/save-flow.mmd)
 
 ```mermaid
 flowchart TB
-    Request[Manual save bound to slot run and session generation]
-    Queue[Serialize and confirm a different-run overwrite]
+    Request[Manual save or due active-time autosave bound to run and session]
+    Queue[Explicit actions before one coalesced autosave]
     Capture[Capture completed world without canceling handcraft]
-    Encode[Schema one metadata and world without pending commands]
-    Write[Compare slot token and commit payload with metadata]
+    Encode[Schema two identity map and world without pending commands]
+    Write[Compare run head then append payload metadata and retention atomically]
     Commit{Transaction committed?}
     Success[Update last saved status and report success]
-    Failure[Keep previous committed save and report failure]
+    Failure[Keep prior revisions and report failure without stale retry]
 
     Request -->|enqueue| Queue
     Queue -->|safe boundary| Capture
@@ -238,17 +238,17 @@ flowchart TB
 
 ### Load flow diagram
 
-Implemented for Continue and in-game Load. After any discard confirmation and earlier operations, a non-destructive hold preserves the old session. A separate worker validates gameplay/native state; a separate Babylon scene renders its first frame, and Angular stages the saved crafting panel. Only then does ownership change. Failure disposes the candidate and preserves the active world. Unsupported formats are rejected; migrations, autosave and transfer remain Milestone 9.
+Implemented for Continue and in-game Load. After any discard confirmation and earlier operations, a non-destructive hold preserves the old session. A separate worker validates gameplay/native state; a separate Babylon scene renders its first frame, and Angular stages the saved crafting panel. Only then does ownership change. Failure disposes the candidate and preserves the active world. Schema support and exact map/native compatibility are checked independently. Imported files are preflighted and committed as new local runs before a separate deliberate activation uses this path.
 
 [SVG image](../diagrams/load-flow.svg) / [PNG image](../diagrams/load-flow.png) / [Mermaid source](../diagrams/src/load-flow.mmd)
 
 ```mermaid
 flowchart TB
-    Request[Continue or manual load request]
+    Request[Continue chosen revision or deliberately activate imported run]
     Queue[Finish earlier operations and confirm unsaved progress loss]
-    Pause[Hold credits and input without refunding active work]
+    Pause[Suspend autosaves and hold input without refunding active work]
     Read[Read chosen snapshot]
-    Version{Compatible schema content physics and authored definition?}
+    Version{Supported M9 schema and exact map native and content compatibility?}
     Valid{Candidate worker validates gameplay and native state?}
     Build[Prepare separate scene first frame and visible crafting UI]
     Ready{Candidate constructed successfully?}

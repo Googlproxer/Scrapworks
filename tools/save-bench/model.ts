@@ -74,7 +74,7 @@ export interface FormatResult {
   };
   readonly correctness: { readonly exactRoundTrip: true; readonly continuedTicks: number };
   readonly stages: readonly StageSample[];
-  /** Null means the unchanged production host gate rejected this fixture. */
+  /** Null means the current production host gate rejected this fixture. */
   readonly pipeline: readonly PipelineSample[] | null;
 }
 

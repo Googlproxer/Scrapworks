@@ -1,6 +1,6 @@
 # Milestone 10 Portfolio prototype
 
-Updated 8 November 2026 with the deferred save-performance review. Status: migration presentation, UI and production checks remain verified; complete factory demo, save resilience/transfer and representative performance pending. Prerequisite: [Milestone 9](milestone-09-save-resilience.md).
+Updated 9 November 2026 after Milestone 9 completion. Status: existing presentation/UI, complete M3–M8 gameplay and M9 save resilience/transfer are locally verified; portfolio polish, human balancing and representative target-device performance remain pending. Prerequisite: [Milestone 9](milestone-09-save-resilience.md), now complete.
 
 Turn the working systems into an understandable small-map demo that can be shown in your portfolio. Prioritize a complete playable route, readable feedback, and reliable persistence before expanding the map or technology tree.
 
@@ -10,7 +10,7 @@ Turn the working systems into an understandable small-map demo that can be shown
 
 The 3D migration provides the Angular shell/menu/controls, animated protagonist, authored grid fixture, orbit/follow camera, selection/placement preview and stable lifecycle/input boundaries. The [23 October evidence](../reports/migration/2026-10-23/README.md) records 181 Chromium tests, 27 Node world/export tests, 30 lint-tooling checks, source lint/type checks, production build/export checks and actual browser flows at device pixel ratios 1 and 2. Tested UI states have zero axe violations; production routes have zero recorded browser errors or failed requests.
 
-The [production profile](../reports/migration/2026-10-23/performance.json) measures bundle/assets, requests and RAF intervals on the small migration scene. It is not target-hardware qualification, representative factory performance, a gameplay-save test or a completed objective route. Milestones 3–6 deliver the opening, manual saves, shared research and first manually supplied factory/labs; the [factory report](../reports/milestone-06/2026-11-08/README.md) records local integration and manual compute measurements. Transport, restoration, save resilience/transfer, portfolio balancing and target-device qualification remain planned.
+The [production profile](../reports/migration/2026-10-23/performance.json) measures bundle/assets, requests and RAF intervals on the small migration scene. It is not target-hardware qualification, representative factory performance, a gameplay-save test or a completed objective route. Milestones 3–6 deliver the opening, manual saves, shared research and first manually supplied factory/labs; the [factory report](../reports/milestone-06/2026-11-08/README.md) records local integration and manual compute measurements. M7–M8 subsequently deliver transport/restoration and M9 adds named runs, autosaves/recovery and JSON transfer, with local verification. Portfolio balancing and target-device qualification remain this milestone’s work.
 
 ## Step 1 Prepare a consistent presentation
 

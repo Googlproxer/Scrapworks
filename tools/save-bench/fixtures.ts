@@ -1,22 +1,13 @@
+import { saveFixture } from '../../tests/support/save-fixture.ts';
 import type { WorldDefinition } from '../../src/contracts/world';
 import type { SimulationSnapshot } from '../../src/contracts/simulation';
-import { MANUAL_SLOT, type SaveSnapshot } from '../../src/contracts/save';
+import type { SaveSnapshot } from '../../src/contracts/save';
 import { Simulation } from '../../src/simulation/ecs-runtime';
 import { OPENING_TECHNOLOGIES } from '../../src/content/opening';
 import { preparePlayerSave } from '../../src/simulation/player-save';
 
 export function envelope(world: SimulationSnapshot): SaveSnapshot {
-  return {
-    schema: 1,
-    slot: MANUAL_SLOT,
-    runId: 'benchmark-run',
-    token: 'benchmark-token',
-    savedAt: '2026-11-08T00:00:00.000Z',
-    worldId: world.resources.worldId,
-    contentVersion: world.contentVersion,
-    tick: world.resources.tick,
-    world,
-  };
+  return saveFixture(world, 'benchmark-run', 'benchmark-token', '2026-11-08T00:00:00.000Z');
 }
 
 /** Deterministic existing production shapes; no future factory components or invented native bytes. */

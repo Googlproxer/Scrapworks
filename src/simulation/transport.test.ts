@@ -1,3 +1,4 @@
+import { saveFixture } from '../../tests/support/save-fixture.ts';
 import { SCRAP_RETURN_ROUTE, TRANSPORT_CONVEYOR_COUNT } from '../../tests/support/transport-layout';
 import assert from 'node:assert/strict';
 import { test } from 'vitest';
@@ -685,17 +686,7 @@ test('native capture/codec/Continue preserve partial transit and reject corrupt 
     capture.resources.factory!.transport!.cursors[segments[1].id] = 'material:3';
 
     const durable = (world: SimulationSnapshot) =>
-      decodeSave({
-        slot: 'manual-1',
-        schema: 1,
-        runId: 'transport-test',
-        token: 'token',
-        savedAt: '2026-11-09T00:00:00.000Z',
-        worldId: world.definition.id,
-        contentVersion: world.contentVersion,
-        tick: world.resources.tick,
-        world,
-      }).world;
+      decodeSave(saveFixture(world, 'transport-test', 'token', '2026-11-09T00:00:00.000Z')).world;
 
     const prepared = preparePlayerSave(durable(capture)),
       a = new Simulation(f.definition, { snapshot: prepared });

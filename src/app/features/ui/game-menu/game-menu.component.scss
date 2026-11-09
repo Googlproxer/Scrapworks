@@ -1,6 +1,11 @@
 :host {
   display: block;
-  padding: 24px;
+  padding: 16px;
+  max-height: calc(100dvh - 2rem);
+  max-width: calc(100vw - 2rem);
+  box-sizing: border-box;
+  overflow: auto;
+  --gameplay-save-max-height: min(42rem, calc(100dvh - 15rem));
   border: 1px solid #9db2a9;
   border-radius: 12px;
   background: #172020;
@@ -15,5 +20,13 @@ h2 {
   margin: 0 0 12px;
 }
 .button {
-  width: 200px;
+  width: auto;
+  margin: 0;
+}
+.menu-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }

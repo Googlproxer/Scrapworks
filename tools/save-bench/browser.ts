@@ -3,6 +3,7 @@ import type { SimulationSnapshot } from '../../src/contracts/simulation';
 import { GameSession } from '../../src/session/game-session';
 import { WorkerSimulationPort } from '../../src/session/worker-port';
 import { IndexedDbSaveRepository } from '../../src/persistence/indexeddb-save-repository';
+import { Dexie } from 'dexie';
 import { decodeMetadata, decodeSave, saveMetadata } from '../../src/persistence/save-codec';
 import { formats, assertExact, type SaveFormat } from './codecs';
 import { fixture, envelope } from './fixtures';
@@ -92,8 +93,18 @@ async function pipeline(
   const saveStart = performance.now();
   const save = envelope((await source.capture()).world);
   const capturedAt = performance.now();
-  if (state.production) await state.production.save(save, save.token);
-  else {
+  if (state.production) {
+    const previous = (await state.production.list())[0];
+    await state.production.save(
+      {
+        ...save,
+        token: crypto.randomUUID(),
+        sequence: (previous?.sequence ?? 0) + 1,
+        previousToken: previous?.token ?? null,
+      },
+      previous?.token ?? null,
+    );
+  } else {
     const validated = decodeSave(save);
     await state.store.write(saveMetadata(validated), await state.format.encode(validated));
   }
@@ -187,7 +198,7 @@ export async function runSaveBenchCase(
         format,
         store,
         ...(format.id === 'current-object'
-          ? { production: new IndexedDbSaveRepository(name) }
+          ? { production: new IndexedDbSaveRepository(name + '-production') }
           : {}),
         result: {
           format: format.id,
@@ -263,6 +274,7 @@ export async function runSaveBenchCase(
     source.dispose();
     for (const state of states) {
       state.production?.close();
+      if (state.production) await Dexie.delete(state.store.name + '-production');
       await state.store.delete();
     }
   }

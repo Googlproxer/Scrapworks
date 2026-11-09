@@ -1,3 +1,4 @@
+import { saveFixture } from '../../../../../tests/support/save-fixture.ts';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { EngineStore } from '@babylonjs/core/Engines/engineStore';
 import { LoadAssetContainerAsync } from '@babylonjs/core/Loading/sceneLoader';
@@ -15,7 +16,7 @@ import { GameplaySaveService, GAMEPLAY_SAVE_REPOSITORY } from '../../save/gamepl
 import { MemorySaveRepository } from '../../../../persistence/memory-save-repository';
 import { Simulation } from '@simulation/ecs-runtime';
 import { OPENING_TECHNOLOGIES } from '@content/opening';
-import { MANUAL_SLOT, type SaveSnapshot } from '@contracts/save';
+import type { SaveSnapshot } from '@contracts/save';
 import { Dialog } from '@angular/cdk/dialog';
 import { fromBabylonObservable } from '@game/lifecycle/from-babylon-observable';
 import { lastValueFrom, take } from 'rxjs';
@@ -117,17 +118,12 @@ describe('Babylon game page integration', () => {
     ]);
     const world = prepared.capture();
     prepared.dispose();
-    const save: SaveSnapshot = {
-      slot: MANUAL_SLOT,
-      schema: 1,
-      runId: crypto.randomUUID(),
-      token: crypto.randomUUID(),
-      savedAt: new Date().toISOString(),
-      worldId: world.resources.worldId,
-      contentVersion: world.contentVersion,
-      tick: world.resources.tick,
+    const save: SaveSnapshot = saveFixture(
       world,
-    };
+      crypto.randomUUID(),
+      crypto.randomUUID(),
+      new Date().toISOString(),
+    );
     await fixture.componentRef.injector.get(GAMEPLAY_SAVE_REPOSITORY).save(save, null);
     await fixture.componentRef.injector.get(GameplaySaveService).refresh();
     await fixture.whenStable();

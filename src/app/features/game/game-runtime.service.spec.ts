@@ -1,3 +1,4 @@
+import { saveFixture } from '../../../../tests/support/save-fixture.ts';
 import { clientNotifications } from '../../../testing/game-ports';
 import '../../../testing/readonly-contracts';
 import { finalize } from 'rxjs';
@@ -577,17 +578,12 @@ describe('GameRuntimeService', () => {
     const before = render(bridge, 0, { x: 0, z: 0 }, false, true);
     const world = await service.captureForSave();
     world.definition.terrain[0] = 'grass';
-    const save: SaveSnapshot = {
-      schema: 1,
-      slot: 'manual-1',
-      runId: 'map-test',
-      token: 'map-test',
-      savedAt: '2026-11-09T00:00:00.000Z',
-      worldId: world.resources.worldId,
-      contentVersion: world.contentVersion,
-      tick: world.resources.tick,
+    const save: SaveSnapshot = saveFixture(
       world,
-    };
+      'map-test',
+      'map-test',
+      '2026-11-09T00:00:00.000Z',
+    );
     const prepare = vi.spyOn(GameSessionOwner.prototype, 'prepare');
     const present = vi.fn(async () => {
       throw Error('Presentation must not be constructed');
@@ -596,8 +592,12 @@ describe('GameRuntimeService', () => {
     const stage = vi.fn(async () => undefined);
     const fetchMap = vi
       .spyOn(globalThis, 'fetch')
-      .mockResolvedValue(new Response(JSON.stringify(definition), { status: 200 }));
+      .mockImplementation(async () => new Response(JSON.stringify(definition), { status: 200 }));
     try {
+      await expect(service.validateForSave(save)).rejects.toThrow(
+        'save is invalid because the map has changed',
+      );
+      expect(prepare).not.toHaveBeenCalled();
       await expect(service.replaceForSave(save, stage)).rejects.toThrow(
         'save is invalid because the map has changed',
       );

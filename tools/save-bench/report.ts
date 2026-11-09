@@ -13,7 +13,7 @@ export function report(fixtures: readonly FixtureResult[]): string {
     '',
     'Storage deltas are browser-accounted estimates for one row after an empty database is open. They are not exact disk-file sizes. Wire bytes are exact encoded payload bytes (JSON uses UTF-8); native objects have no portable wire size.',
     '',
-    'Full Save includes the real worker capture and committed repository write. Full Load includes the repository read, validation and a fresh production worker ready with its first publication. Babylon/Angular scene restoration, confirmation dialogs, database opening and asset loading are excluded. The current-object full pipeline calls the unchanged production repository.',
+    'Full Save includes the real worker capture and committed repository write. Full Load includes the repository read, validation and a fresh production worker ready with its first publication. Babylon/Angular scene restoration, confirmation dialogs, database opening and asset loading are excluded. The current-object full pipeline calls the real M9 append/retention repository; alternative codecs retain an isolated single-row control.',
     '',
     'Stage timings are independent diagnostics and must not be added to the full pipeline. Warmups and correctness checks are excluded. Codec order is shuffled reproducibly each round. Fresh workers include startup; IndexedDB reads are warm browser-cache reads. No forced GC or performance thresholds.',
     '',
