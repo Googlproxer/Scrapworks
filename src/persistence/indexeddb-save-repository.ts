@@ -69,8 +69,12 @@ export class IndexedDbSaveRepository implements SaveRepository {
   }
 
   public async list() {
-    return this.access(async () =>
-      orderedRevisions((await this.revisions.toArray()).map(decodeMetadata)),
+    // Standalone Dexie readonly queries resolve on request success, before transaction completion.
+    // Keep lifecycle close/delete safe by settling only after the native read has finished.
+    return this.access(() =>
+      this.db.transaction('r', this.revisions, async () =>
+        orderedRevisions((await this.revisions.toArray()).map(decodeMetadata)),
+      ),
     );
   }
 
@@ -138,7 +142,9 @@ export class IndexedDbSaveRepository implements SaveRepository {
   }
 
   public async legacy(): Promise<boolean> {
-    return this.access(async () => (await this.slots.count()) > 0);
+    return this.access(() =>
+      this.db.transaction('r', this.slots, async () => (await this.slots.count()) > 0),
+    );
   }
 
   public async deleteLegacy(): Promise<void> {

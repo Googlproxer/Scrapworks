@@ -1,5 +1,6 @@
 import { saveFixture } from '../../tests/support/save-fixture.ts';
 import { Dexie } from 'dexie';
+import { fromEvent, Subscription, take } from 'rxjs';
 import { Simulation } from '@simulation/ecs-runtime';
 import { worldFixture } from '../../tests/support/world-fixture';
 import type { SaveSnapshot } from '@contracts/save';
@@ -46,6 +47,44 @@ describe('Gameplay IndexedDB transactions', () => {
     expect(await reopened.list()).toEqual([]);
     expect(await reopened.load()).toBeUndefined();
   });
+
+  it.each(['list', 'legacy'] as const)(
+    'waits for the native %s read transaction to complete before allowing lifecycle close',
+    async (method) => {
+      const { name, adapter } = repository();
+      const transactions: IDBTransaction[] = [];
+      const completed = new Set<IDBTransaction>();
+      const lifetime = new Subscription();
+      const original = IDBDatabase.prototype.transaction;
+      vi.spyOn(IDBDatabase.prototype, 'transaction').mockImplementation(function (
+        this: IDBDatabase,
+        ...args: Parameters<IDBDatabase['transaction']>
+      ) {
+        const transaction = original.apply(this, args);
+        if (this.name === name && transaction.mode === 'readonly') {
+          transactions.push(transaction);
+          lifetime.add(
+            fromEvent(transaction, 'complete')
+              .pipe(take(1))
+              .subscribe(() => completed.add(transaction)),
+          );
+        }
+        return transaction;
+      });
+      try {
+        await adapter.save(snapshot(), null);
+        transactions.length = 0;
+        completed.clear();
+        await adapter[method]();
+        expect(transactions).toHaveLength(1);
+        expect(completed.has(transactions[0])).toBe(true);
+      } finally {
+        lifetime.unsubscribe();
+      }
+      adapter.close();
+    },
+  );
+
   it('rolls back an aborted replacement and rejects stale overwrites from another tab', async () => {
     expectConsoleMessage(
       'trace',
@@ -85,18 +124,11 @@ describe('Gameplay IndexedDB transactions', () => {
     expect(await adapter.list()).toEqual([]);
   });
   it('reports denied storage access and rejects work after lifecycle close', async () => {
-    expectConsoleMessage(
-      'trace',
-      expect.objectContaining({
-        name: 'DatabaseClosedError',
-        message: expect.stringContaining('Denied'),
-      }),
-    );
     const { adapter } = repository();
     vi.spyOn(IDBFactory.prototype, 'open').mockImplementationOnce(() => {
       throw new DOMException('Denied', 'SecurityError');
     });
-    await expect(adapter.list()).rejects.toThrow();
+    await expect(adapter.list()).rejects.toThrow(/Denied/);
     adapter.close();
     await expect(adapter.load()).rejects.toThrow(/closed/);
   });
