@@ -99,6 +99,18 @@ export interface EquipmentBlueprint {
 /** Construction inputs shared by researched paid assemblies and the factory runtime. */
 export const EQUIPMENT_BLUEPRINTS: readonly EquipmentBlueprint[] = [
   {
+    id: 'conveyor',
+    name: 'Conveyor',
+    technology: 'sorting-logistics',
+    inputs: [stack('plate', 1), stack('mechanical-part', 1)],
+  },
+  {
+    id: 'sorter',
+    name: 'Sorter',
+    technology: 'sorting-logistics',
+    inputs: [stack('plate', 2), stack('mechanical-part', 1), stack('electrical-part', 1)],
+  },
+  {
     id: 'power-connection',
     name: 'Power connection',
     technology: 'electrical-engineering',

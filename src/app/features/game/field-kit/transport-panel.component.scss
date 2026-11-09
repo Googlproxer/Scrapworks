@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  color: #e4ebe6;
+}
+label,
+select {
+  display: block;
+}
+select {
+  width: 100%;
+  box-sizing: border-box;
+  margin-block: 0.25rem 0.75rem;
+  padding: 8px;
+  color: #f1f5f3;
+  background: #182c24;
+  border: 1px solid #a2b8ad;
+  font: inherit;
+}
+button {
+  margin: 4px 6px 4px 0;
+  padding: 8px 12px;
+  color: #f1f5f3;
+  background: #223d31;
+  border: 1px solid #a2b8ad;
+  border-radius: 4px;
+  font: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+:is(button, select):focus-visible {
+  outline: 3px solid #66d5dc;
+  outline-offset: 2px;
+}
+.transport-feedback {
+  min-height: 4.5em;
+}
+.transport-status {
+  min-height: 2.5em;
+  font-variant-numeric: tabular-nums;
+}
+.lane-contents {
+  min-height: 4.5em;
+}
+.lane-contents li {
+  min-block-size: 6lh;
+}
+li {
+  overflow-wrap: anywhere;
+}

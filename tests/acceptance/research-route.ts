@@ -57,7 +57,7 @@ export async function checkResearchRoute(
     .waitFor();
   const removed = await save(),
     owner = removed.world.entities.find((entity) => entity.kind === 'player')!;
-  assert.equal(removed.contentVersion, 'factory-1');
+  assert.equal(removed.contentVersion, 'transport-1');
   assert.equal(removed.runId, 'fixture-run');
   assert.deepEqual(owner.opening!.researchQueue, ['material-recovery']);
   assert.deepEqual(removed.world.resources.research['improvised-tools'], {

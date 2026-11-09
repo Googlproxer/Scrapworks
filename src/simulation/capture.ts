@@ -12,6 +12,8 @@ import { assertPhysicsBodyDefinition } from '@contracts/world';
 import { RAPIER_VERSION } from '@contracts/physics';
 import { isMachineKind } from '@content/factory';
 import { assertFactorySnapshot } from './factory-capture';
+import { isTransportKind } from '@content/transport';
+import { assertTransportSnapshot } from './transport-capture';
 
 const object = (v: unknown, keys?: readonly string[]): Record<string, unknown> => {
   check(!!v && typeof v === 'object' && !Array.isArray(v), 'Expected snapshot object');
@@ -187,6 +189,7 @@ export function assertSnapshot(
           'opening',
           'physics',
           'machine',
+          'transport',
         ].includes(key),
       ),
       'Unknown component',
@@ -289,7 +292,9 @@ export function assertSnapshot(
       const cell = object(b['cell'], ['column', 'row']);
       check(
         b['id'] === id &&
-          (b['buildingId'] === 'test-building' || isMachineKind(b['buildingId'])) &&
+          (b['buildingId'] === 'test-building' ||
+            isMachineKind(b['buildingId']) ||
+            isTransportKind(b['buildingId'])) &&
           Number.isInteger(b['rotation']) &&
           Number(b['rotation']) >= 0 &&
           Number(b['rotation']) <= 3,
@@ -324,6 +329,7 @@ export function assertSnapshot(
   }
   const players = entities.filter((e) => e.kind === 'player');
   assertFactorySnapshot(value as SimulationSnapshot);
+  assertTransportSnapshot(value as SimulationSnapshot);
   const bodies = entities.filter((entity) => entity.kind === 'body');
   check(
     bodies.length === (definition.bodies?.length ?? 0) &&

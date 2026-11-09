@@ -1,0 +1,138 @@
+@if (selected(); as entity) {
+  <section aria-labelledby="material-transport-title">
+    <h5 id="material-transport-title">Material transport</h5>
+    <p>
+      Power-free · 2 units/s per connection. Ports face the neighbouring cell and rotate with the
+      building. Connections move local stock only.
+    </p>
+    @if (entity.transport; as transport) {
+      <p class="transport-status">
+        <strong>{{ name(entity.building!.buildingId) }}</strong> · {{ transport.status }} ·
+        {{ transport.units.length }} units stored.
+      </p>
+      @if (entity.building!.buildingId === 'conveyor') {
+        <label for="conveyor-path">Conveyor path</label>
+        <select id="conveyor-path" [formField]="configFields.turn">
+          @for (turn of turns; track turn) {
+            <option [value]="turn">{{ turn }}</option>
+          }
+        </select>
+        <p>
+          Back input → {{ config().turn === 'straight' ? 'front' : config().turn }} output.
+          Disconnect the old output before changing its side. Held units stay on this belt.
+        </p>
+      } @else {
+        <p>
+          Back input → left/right exact-item filters; front is unmatched. Matched items wait for
+          their own route. Each route holds four units; shared upstream capacity can eventually
+          fill.
+        </p>
+        <label for="sorter-left">Left output filter</label>
+        <select id="sorter-left" [formField]="configFields.left">
+          <option value="">No filter</option>
+          @for (item of items; track item) {
+            <option [value]="item">{{ name(item) }}</option>
+          }
+        </select>
+        <label for="sorter-right">Right output filter</label>
+        <select id="sorter-right" [formField]="configFields.right">
+          <option value="">No filter</option>
+          @for (item of items; track item) {
+            <option [value]="item">{{ name(item) }}</option>
+          }
+        </select>
+        <p class="transport-feedback">
+          {{
+            validFilters()
+              ? 'Drain or collect held units before changing filters.'
+              : 'Choose different item filters for the two outputs.'
+          }}
+        </p>
+      }
+      <button type="button" [disabled]="!validFilters()" (click)="configure()">
+        Apply transport configuration
+      </button>
+      <ul class="lane-contents">
+        @for (lane of laneContents(); track lane.lane) {
+          @if (entity.building!.buildingId === 'sorter' || lane.lane === 0) {
+            <li>
+              {{
+                entity.building!.buildingId === 'conveyor'
+                  ? 'Belt'
+                  : lane.lane === 0
+                    ? 'Left'
+                    : lane.lane === 1
+                      ? 'Right'
+                      : 'Unmatched'
+              }}: {{ lane.count }}/{{ settings.capacity }} · {{ lane.items }}
+            </li>
+          }
+        }
+      </ul>
+      <button
+        type="button"
+        [disabled]="!transport.units.length"
+        (click)="send({ type: 'transport-collect', target: entity.id })"
+      >
+        Collect all conveyed items
+      </button>
+      <button type="button" (click)="send({ type: 'factory-dismantle', target: entity.id })">
+        Dismantle transport
+      </button>
+      <p>
+        Recovery needs room for all intact contents and the body's embodied scrap. A rejected
+        request leaves everything in place.
+      </p>
+    }
+    @if (ports().output.length) {
+      <label for="material-output">Source output port</label>
+      <select id="material-output" [formField]="linkFields.output">
+        @for (port of ports().output; track port) {
+          <option [value]="port">{{ port }}</option>
+        }
+      </select>
+      <label for="material-destination">Destination</label>
+      <select id="material-destination" [formField]="linkFields.target">
+        <option value="">Choose a neighbouring input</option>
+        @for (target of targets(); track target.id) {
+          <option [value]="target.id">
+            {{ name(target.buildingId) }} · {{ target.cell.column + 1 }},
+            {{ target.cell.row + 1 }}
+          </option>
+        }
+      </select>
+      <label for="material-input">Destination input port</label>
+      <select id="material-input" [formField]="linkFields.input">
+        @for (port of inputs(); track port) {
+          <option [value]="port">{{ port }}</option>
+        }
+      </select>
+      <p class="transport-feedback" role="status">
+        {{ link().output }} → {{ link().input }}:
+        {{
+          linkProblem() ??
+            'Facing adjacent free ports. Item compatibility is checked when transferring.'
+        }}
+      </p>
+      <button type="button" [disabled]="!validLink()" (click)="connect()">
+        Connect material ports
+      </button>
+    }
+    <ul>
+      @for (c of connections(); track c.id) {
+        <li>
+          {{ endpoint(c.from) }} {{ c.output }} → {{ endpoint(c.to) }} {{ c.input }}
+          <button
+            type="button"
+            [attr.data-material-edge]="c.id"
+            [attr.aria-label]="'Disconnect ' + endpoint(c.from) + ' ' + c.output + ' to ' + endpoint(c.to) + ' ' + c.input"
+            (click)="disconnect(c.id)"
+          >Disconnect</button>
+        </li>
+      } @empty {
+        <li>No material connections.</li>
+      }
+    </ul>
+    <p class="transport-feedback" role="status">{{ notice() }}</p>
+  </section>
+}

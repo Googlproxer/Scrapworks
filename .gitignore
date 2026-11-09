@@ -6,6 +6,9 @@
 /out-tsc
 /bazel-out
 
+# Local reports and verification evidence
+/docs/reports/
+
 # Node
 /node_modules
 /.yarn/install-state.gz

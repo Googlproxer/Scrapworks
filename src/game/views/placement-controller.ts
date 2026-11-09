@@ -10,6 +10,7 @@ import { PresentationBehavior } from '../lifecycle/presentation-behavior';
 import type { SelectionController } from './selection-controller';
 import type { WorldFrame } from './world-frame';
 import { isMachineKind } from '@content/factory';
+import { isTransportKind } from '@content/transport';
 import { machineGeometry } from './machine-geometry';
 import type { GridCell } from '@contracts/world';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
@@ -94,15 +95,20 @@ export class PlacementController extends PresentationBehavior {
     }
     if (geometryKey !== this.geometryKey) {
       this.preview.dispose();
-      this.preview = isMachineKind(geometryKey)
-        ? machineGeometry(this.scene, geometryKey, 'placement-preview', this.material!)
-        : geometryKey === 'power-connection'
-          ? MeshBuilder.CreateSphere('placement-preview', { diameter: 30, segments: 8 }, this.scene)
-          : MeshBuilder.CreateBox(
-              'placement-preview',
-              { width: 400, height: 120, depth: 200 },
-              this.scene,
-            );
+      this.preview =
+        isMachineKind(geometryKey) || isTransportKind(geometryKey)
+          ? machineGeometry(this.scene, geometryKey, 'placement-preview', this.material!)
+          : geometryKey === 'power-connection'
+            ? MeshBuilder.CreateSphere(
+                'placement-preview',
+                { diameter: 30, segments: 8 },
+                this.scene,
+              )
+            : MeshBuilder.CreateBox(
+                'placement-preview',
+                { width: 400, height: 120, depth: 200 },
+                this.scene,
+              );
       this.preview.name = 'placement-preview';
       this.preview.material = this.material!;
       for (const mesh of [this.preview, ...this.preview.getChildMeshes()]) mesh.isPickable = false;

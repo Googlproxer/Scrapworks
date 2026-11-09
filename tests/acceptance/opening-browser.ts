@@ -15,6 +15,7 @@ import {
   workerVersion,
 } from './browser-events.ts';
 import { checkFactoryRoute, type FactoryRouteProbe } from './factory-route.ts';
+import type { SaveSnapshot } from '../../src/contracts/save.ts';
 
 type Probe = FactoryRouteProbe;
 const root = path.resolve(import.meta.dirname, '../..');
@@ -29,17 +30,25 @@ const engineStoreChunk = Object.entries(metadata.outputs).find(([, output]) =>
 )?.[0];
 const relaxed = process.argv.includes('--relaxed');
 const virtualTime = process.argv.includes('--virtual-time');
-const factoryMode = process.argv.includes('--factory');
+const resumeTransport = process.argv
+  .find((arg) => arg.startsWith('--resume-transport='))
+  ?.slice('--resume-transport='.length);
+const transportMode = process.argv.includes('--transport') || !!resumeTransport;
+const factoryMode = process.argv.includes('--factory') || transportMode;
 assert(!(relaxed && virtualTime), 'The relaxed pacing reference requires real time');
 const output = path.join(
   root,
-  factoryMode
-    ? 'tmp/factory-browser'
-    : relaxed
-      ? 'tmp/opening-browser-relaxed'
-      : virtualTime
-        ? 'tmp/opening-browser/virtual-time'
-        : 'tmp/opening-browser',
+  resumeTransport
+    ? 'tmp/transport-browser-resume'
+    : transportMode
+      ? 'tmp/transport-browser'
+      : factoryMode
+        ? 'tmp/factory-browser'
+        : relaxed
+          ? 'tmp/opening-browser-relaxed'
+          : virtualTime
+            ? 'tmp/opening-browser/virtual-time'
+            : 'tmp/opening-browser',
 );
 await fs.mkdir(output, { recursive: true });
 const server = http.createServer(async (request, response) => {
@@ -87,7 +96,53 @@ let virtualAdvanceMs = 0;
 let lastProbe: Probe | null = null;
 try {
   await page.goto(`http://127.0.0.1:${(server.address() as import('node:net').AddressInfo).port}/`);
-  const play = page.getByRole('button', { name: 'New Game', exact: true });
+  if (resumeTransport) {
+    const source = await readJson<SaveSnapshot | { runId: string; world: SaveSnapshot['world'] }>(
+      path.resolve(root, resumeTransport),
+    );
+    const save: SaveSnapshot =
+      'schema' in source
+        ? source
+        : {
+            slot: 'manual-1',
+            schema: 1,
+            runId: source.runId,
+            token: 'local-earned-transport-continuation',
+            savedAt: new Date().toISOString(),
+            worldId: source.world.definition.id,
+            contentVersion: source.world.contentVersion,
+            tick: source.world.resources.tick,
+            world: source.world,
+          };
+    await page.evaluate(async (payload) => {
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const r = indexedDB.open('ScrapworksGameplaySaves');
+        r.onupgradeneeded = () => r.result.createObjectStore('slots', { keyPath: 'slot' });
+        r.onsuccess = () => resolve(r.result);
+        r.onerror = () => reject(r.error);
+      });
+      try {
+        await new Promise<void>((resolve, reject) => {
+          const tx = db.transaction('slots', 'readwrite');
+          const { world, ...metadata } = payload;
+          tx.objectStore('slots').put({
+            slot: 'manual-1',
+            metadata,
+            payload: { ...metadata, world },
+          });
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      } finally {
+        db.close();
+      }
+    }, save);
+    await page.reload();
+  }
+  const play = page.getByRole('button', {
+    name: resumeTransport ? 'Continue' : 'New Game',
+    exact: true,
+  });
   await play.waitFor({ state: 'visible' });
   const created = page.waitForEvent('worker');
   await play.click();
@@ -194,9 +249,15 @@ try {
   };
   await until((probe) => probe.tick > 0, 'first completed tick');
   const initial = await read();
-  assert(initial.opening.bag.slots.every((slot) => slot === null));
-  assert.equal(initial.opening.tool, null);
-  assert.deepEqual(initial.opening.ledgers, {});
+  if (!resumeTransport) {
+    assert(initial.opening.bag.slots.every((slot) => slot === null));
+    assert.equal(initial.opening.tool, null);
+    assert.deepEqual(initial.opening.ledgers, {});
+  } else
+    assert(
+      initial.opening.ledgers['sorting-logistics']?.unlocked,
+      'Resume requires an already-earned logistics unlock',
+    );
   const inspectPresentation = (settleIdle = false) =>
     page.evaluate(
       async ({ file, settleIdle }) => {
@@ -293,7 +354,32 @@ try {
       ),
     );
   };
-  if (process.argv.includes('--ui-only')) {
+  if (resumeTransport) {
+    await page.addScriptTag({ path: path.join(root, 'node_modules/axe-core/axe.min.js') });
+    await until((probe) => !!probe.opening && !!probe.buildings?.length, 'continue earned M6 save');
+    const craft = async (recipe: string, count: number) => {
+      await page.getByRole('tab', { name: 'Inventory & Crafting', exact: true }).click();
+      await page.getByLabel('Recipe', { exact: true }).selectOption(recipe);
+      await page.getByLabel('Batch size', { exact: true }).selectOption(String(count));
+      await page.getByRole('button', { name: `Handcraft ${count}`, exact: true }).click();
+      await until((p) => !!p.opening.state.handcraft, `start ${recipe}`, 5000);
+      await until((p) => !p.opening.state.handcraft, `finish ${recipe}`);
+      await page.getByText('No handcraft in progress', { exact: true }).waitFor();
+    };
+    await checkFactoryRoute({
+      page,
+      read,
+      until,
+      craft,
+      research: async () => {
+        throw Error('Resume must retain already-earned M6 research');
+      },
+      root,
+      output,
+      transport: true,
+      resumeTransport: true,
+    });
+  } else if (process.argv.includes('--ui-only')) {
     await verifyGameplayUi();
     // A real out-of-reach world action produces a notice while the kit is closed.
     await page.locator('canvas').focus();
@@ -425,6 +511,7 @@ try {
       await page.getByRole('button', { name: `Handcraft ${count}`, exact: true }).click();
       await until((probe) => !!probe.opening.state.handcraft, `start ${recipe}`, 5000);
       await until((probe) => !probe.opening.state.handcraft, `finish ${recipe}`);
+      await page.getByText('No handcraft in progress', { exact: true }).waitFor();
     };
     await research('Improvised tools', 'improvised-tools');
     await craft('scrap-prybar', 1);
@@ -469,8 +556,16 @@ try {
     const handle = page.getByRole('button', { name: 'Wind MiniFab handle', exact: true });
     await handle.focus();
     for (const key of ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp']) {
+      const beforeKeyTick = (await read()).tick;
       await page.keyboard.press(key);
-      await page.evaluate(() => window.testEvents.frame());
+      // A quarter turn needs 125 ms at the actual 720 degrees/s contract.
+      // Render-frame waits alone can outrun the worker's winding budget on a fast machine.
+      await until(
+        (probe) => probe.tick >= beforeKeyTick + 3,
+        'keyboard winding cadence',
+        5000,
+        150,
+      );
     }
     await until(
       (probe) => probe.opening.state.minifab.charge > 11.9,
@@ -582,7 +677,17 @@ try {
         2,
       ),
     );
-    if (factoryMode) await checkFactoryRoute({ page, read, until, craft, research, root, output });
+    if (factoryMode)
+      await checkFactoryRoute({
+        page,
+        read,
+        until,
+        craft,
+        research,
+        root,
+        output,
+        transport: transportMode,
+      });
   }
   assert.deepEqual(errors, []);
 } catch (error) {

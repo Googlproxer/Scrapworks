@@ -1,22 +1,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const failures: string[] = [];
 let links = 0;
-// Dated reports remain unchanged when implementation sources are intentionally retired.
-// Only these recorded, source-verified historical links resolve through Git recovery.
-const recovery = JSON.parse(
-  fs.readFileSync(path.join(root, 'docs/reports/source-recovery.json'), 'utf8'),
-) as {
-  report: string;
-  sources: Record<string, { revision: string; sha256: string; url: string }>;
-};
+let localReportLinks = 0;
+const reports = path.join(root, 'docs/reports');
+
+function isLocalReport(file: string): boolean {
+  const relative = path.relative(reports, file);
+  return (
+    relative === '' ||
+    (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))
+  );
+}
 
 function walk(directory: string): string[] {
+  if (isLocalReport(directory)) return [];
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const target = path.join(directory, entry.name);
     if (entry.name === 'node_modules' || entry.name === '__pycache__') return [];
@@ -59,31 +60,12 @@ function check(file: string, raw: string) {
   const [name, fragment] = href.split('#');
   const target = name ? path.resolve(path.dirname(file), name) : file;
   links++;
+  // Reports are optional local evidence, absent from fresh checkouts and CI.
+  if (isLocalReport(target)) {
+    localReportLinks++;
+    return;
+  }
   if (!fs.existsSync(target)) {
-    const original = recovery.sources[path.relative(root, target).replaceAll('\\', '/')];
-    if (
-      path.relative(root, file).replaceAll('\\', '/') === recovery.report &&
-      original &&
-      /^[a-f0-9]{40}$/.test(original.revision) &&
-      /^[a-f0-9]{64}$/.test(original.sha256) &&
-      original.url ===
-        `https://github.com/googlproxer/scrapworks/blob/${original.revision}/${path.relative(root, target).replaceAll('\\', '/')}`
-    ) {
-      try {
-        const source = execFileSync(
-          'git',
-          ['show', `${original.revision}:${path.relative(root, target).replaceAll('\\', '/')}`],
-          { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] },
-        );
-        if (createHash('sha256').update(source).digest('hex') === original.sha256) return;
-      } catch {
-        /* Missing history is a failure, never an unchecked exemption. */
-      }
-      failures.push(
-        `${path.relative(root, file)}: historical source/hash unavailable for ${raw}; fetch the recorded Git history`,
-      );
-      return;
-    }
     failures.push(`${path.relative(root, file)}: missing ${raw}`);
     return;
   }
@@ -139,7 +121,7 @@ for (const [document, names] of diagramSets) {
 
 console.log(
   JSON.stringify(
-    { documents: files.length, localLinks: links, diagramSources: 8, failures },
+    { documents: files.length, localLinks: links, localReportLinks, diagramSources: 8, failures },
     null,
     2,
   ),

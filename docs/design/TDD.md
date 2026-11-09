@@ -105,6 +105,7 @@ classDiagram
     }
     class FactorySystem {
         construction and atomic local transfers
+        TransportSystem directed material phase
         wired proportional power
         seeded recycling fabrication extraction
         supplied lab source preparation
@@ -124,7 +125,7 @@ classDiagram
         research
         productionTotals
         extractionTotals
-        factory connections
+        power and material connections and arbitration
     }
     class WorldDefinition {
         <<data>>
@@ -249,7 +250,7 @@ flowchart TB
         State[(Private Miniplex components and resources)]
         Content[Versioned checked-in opening catalogue]
         ECS[OpeningSystem salvage handcraft MiniFab and research]
-        Factory[FactorySystem construction power production and lab sources]
+        Factory[FactorySystem with TransportSystem before power production and lab sources]
     end
 
     subgraph Persistence[Local gameplay persistence]
@@ -342,7 +343,7 @@ The dependency arrows do not prescribe tick order. Actual M6 order is validated 
 
 ### Opening and factory state
 
-The player ECS entity owns the 24-slot bag, separate tool slot and `OpeningData` component, including eight stock-referencing toolbar assignments and the active index. Tools stay equipped separately; Placeables use the toolbar/B world-build path. `OpeningSystem` executes personal work and the shared research pass; `FactorySystem` owns placed-machine preparation, power, production and lab sources in that same fixed step. Both use shared atomic slot transaction rules. Active-slot placement is sequenced/validated in the worker; previews are advisory and use the same nearest-footprint reach/actual-body overlap rules as execution. Ground piles have stable-ID entities/native queries; research ledgers, histories, time, ID allocation and power edges remain world resources. The composed [opening catalogue](../../src/content/opening.ts) contains 14 technologies/fifteen recipes, including [first-factory research](../../src/content/first-factory.ts) and [equipment definitions](../../src/content/factory.ts), separate contribution/eligibility costs and stable Source IDs. Fibery/import receipts are not runtime dependencies. Numeric deltas and bounded player/selected-machine projections avoid serializing the ECS population each frame. Plain capture/rebuild and gameplay storage include opening and factory state. Optional pre-toolbar `factory-1` state receives detached empty defaults, while existing control profiles retain rebindings when new toolbar actions are added.
+The player ECS entity owns the 24-slot bag, separate tool slot and `OpeningData` component, including eight stock-referencing toolbar assignments and the active index. Tools stay equipped separately; Placeables use the toolbar/B world-build path. `OpeningSystem` executes personal work and the shared research pass; `FactorySystem` owns placed-machine preparation, power, production and lab sources in that same fixed step. Its plain `TransportSystem` executes phase-start/reserved transfers before factory work. All use shared atomic stock transactions. Active-slot placement is sequenced/validated in the worker; previews are advisory and use the same nearest-footprint reach/actual-body overlap rules as execution. Ground piles have stable-ID entities/native queries; research ledgers, histories, time, ID allocation, power and material edges remain world resources. The composed [opening catalogue](../../src/content/opening.ts) contains 14 technologies/seventeen recipes, including [first-factory research](../../src/content/first-factory.ts), [equipment definitions](../../src/content/factory.ts) and [transport rules](transport-catalogue.md), separate contribution/eligibility costs and stable Source IDs. Fibery/import receipts are not runtime dependencies. Numeric deltas, bounded detail subscriptions and at most twelve unit projections per sorter avoid publishing machine inventories every render frame. Plain capture/rebuild and gameplay storage include opening, factory and transport state. Known pre-transport saves receive detached compatibility handling, while existing control profiles retain rebindings when toolbar actions are added.
 
 ### Handcrafting cancellation boundary
 
@@ -426,7 +427,7 @@ Production/extraction histories, per-technology consumed-material ledgers and wo
 
 ### Progression state and invariants
 
-The opening MiniFab, baseline charge/winding and M6 shared labs, wired factory power and recycler rules execute in the same simulation. Upgrade progression and later material/environment branches remain future requirements. All records remain plain and simulation-owned; Editor scripts and Angular views submit requests and consume projections. The [factory implementation report](../reports/milestone-06/2026-11-08/README.md) records completed checks and qualification limits.
+The opening MiniFab, baseline charge/winding, M6 shared labs/wired factory/recycling and M7 direct transport/conveyors/sorting execute in the same simulation. Upgrade progression, later material branches and environment systems remain future requirements. All records remain plain and simulation-owned; Editor scripts and Angular views submit requests and consume projections. The [factory report](../reports/milestone-06/2026-11-08/README.md) and [transport report](../reports/milestone-07/2026-11-09/README.md) record verification and qualification limits.
 
 - MiniFab is a personal subsystem with a separate Angular panel beside inventory. Initial recipes must be researched and handcraftable; later crafted/researched modules can enable hazards/liquids. It follows both component branches and is hand-assembled without factory electricity. Plain state holds one requested target/batch, precursor plan, current operation/input buffer, completed output buffer, capacities, work and blocked reasons. Pull each complete operation at start from uncommitted inventory, optionally reuse output directly, and wait on stock shortages. Reject invalid/locked/cyclic chains without spending; share intermediates without hidden storage. Per-request intake is initial capability; autonomous min/max targets remain a later upgrade.
 - Baseline MiniFab work always progresses at 1x without power when ingredients/buffers allow. Initial local charge provides 60 active seconds at 2x speed, draining only during actual processing. Idle, paused, missing-stock, output-blocked and inventory-wait states spend no charge. Split steps at battery expiry/job completion, preserving inputs/work and using baseline speed for uncharged time. Five turns fill initially; gear T decreases toward one. Charge gain = capacity * abs(accepted angular travel degrees) / (360*T), capped at capacity, with concurrent work drain still applied. Unlimited capacity level n = 60*1.5^n boosted seconds, physical level-n cost = base recipe * 2^(n-1); stored charge is not refilled by capacity upgrades. Turns-to-full is independent of capacity. Tier costs/spacing and later source stacking remain future content.
@@ -467,7 +468,7 @@ Keep active gameplay state in memory. Save a versioned data snapshot containing:
 
 Store identifiers and data rather than Angular services, Babylon meshes/materials, scene handles, or Editor components. Recipe and technology definitions belong to the game content; saves reference their identifiers and record a compatible content version.
 
-The list above includes later gameplay. Milestone 4 establishes the [opening field checklist](../plans/milestone-04-first-local-save.md#snapshot-field-checklist). M5 adds queue/unqueued research ledgers; M6 adds machine components/buffers/jobs, completed-result history markers, deposit claims, topology and recycler PRNG/permutation/cursor. Daylight/wind derive from the saved simulation tick, with no independent wall clock. Content is `factory-1`; envelope/world/native representations remain schema 1/world 3/physics 3, with narrow detached validation/upgrades for known `opening-1` and `research-1` data. Stack limits, reach, recipe dependencies and base capacities remain immutable content. Gearing/capacity levels stay zero until upgrades exist. The internal SimulationCapture includes a transport ledger and pending commands; the durable save contains its completed SimulationSnapshot world payload, not that continuation envelope. Save-format optimization is still deferred.
+The list above includes later gameplay. Milestone 4 establishes the [opening field checklist](../plans/milestone-04-first-local-save.md#snapshot-field-checklist). M5 adds queue/unqueued research ledgers; M6 adds machine components/buffers/jobs, completed-result history markers, deposit claims, topology and recycler PRNG/permutation/cursor. M7 adds bounded transit units/progress, conveyor paths, strict sorter filters/lanes, directed material edges, cooldowns, last-item service and per-destination arbitration cursors. Daylight/wind derive from the saved simulation tick, with no independent wall clock. Content is `transport-1`; envelope/world/native representations remain schema 1/world 3/physics 3, with narrow detached validation/upgrades for known `opening-1`, `research-1` and `factory-1` data. Stack limits, reach, recipe dependencies and base capacities remain immutable content. Gearing/capacity levels stay zero until upgrades exist. The internal SimulationCapture includes a sequenced-command ledger and pending commands; the durable save contains its completed SimulationSnapshot world payload, not that continuation envelope. Save-format optimization is still deferred.
 
 ## Local storage and save operations
 

@@ -17,9 +17,10 @@ import { machineMaterials } from '@content/machine-materials';
 import type { FactoryCommand } from '@contracts/factory';
 import type { ItemStack } from '@contracts/simulation';
 import { OpeningPanel } from './opening-panel';
+import { TransportPanelComponent } from './transport-panel.component';
 
 @Component({
-  imports: [FormField, NgTemplateOutlet],
+  imports: [FormField, NgTemplateOutlet, TransportPanelComponent],
   selector: 'app-factory-panel',
   styleUrl: './factory-panel.component.scss',
   templateUrl: './factory-panel.component.html',
@@ -68,7 +69,8 @@ export class FactoryPanelComponent extends OpeningPanel {
   );
   public readonly selected = computed(() => {
     const detail = this.runtime.inspection();
-    return detail?.id === this.runtime.selectedEntityId() && detail.entity.machine
+    return detail?.id === this.runtime.selectedEntityId() &&
+      (detail.entity.machine || detail.entity.transport)
       ? detail.entity
       : null;
   });

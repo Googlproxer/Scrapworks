@@ -4,11 +4,14 @@ import path from 'node:path';
 import { createServer } from 'vite';
 import type { Page } from 'playwright';
 import type { OpeningView } from '../../src/contracts/opening.ts';
-import type { FactorySummary, MachineKind } from '../../src/contracts/factory.ts';
+import type { FactorySummary, MachineKind, PlaceableKind } from '../../src/contracts/factory.ts';
+import type { QuarterTurn } from '../../src/contracts/world.ts';
+import { checkTransportRoute } from './transport-route.ts';
 import type { BuildingView, WorldPosition } from '../../src/contracts/world.ts';
-import type { SaveSnapshot } from '../../src/contracts/save.ts';
+import { readManualSave, saveThroughUi } from './manual-save.ts';
 import type { OpeningRecipe } from '../../src/content/opening.ts';
-import type { Inspection } from '../../src/contracts/simulation.ts';
+import type { Inspection, ContentDefinition } from '../../src/contracts/simulation.ts';
+import type { WorldDefinition } from '../../src/contracts/world.ts';
 import type { EngineStore } from '@babylonjs/core';
 import type { BuildMetadata } from '../../tools/shared.ts';
 
@@ -23,6 +26,8 @@ export interface FactoryRouteProbe {
   details?: readonly Inspection[];
 }
 interface RoutePorts {
+  transport?: boolean;
+  resumeTransport?: boolean;
   prepared?: boolean;
   page: Page;
   root: string;
@@ -48,12 +53,13 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     logLevel: 'error',
   });
   let recipes: readonly OpeningRecipe[];
+  let content: ContentDefinition;
   try {
-    recipes = (
-      (await modules.ssrLoadModule(
-        '/src/content/opening.ts',
-      )) as typeof import('../../src/content/opening.ts')
-    ).OPENING_RECIPES;
+    const catalogue = (await modules.ssrLoadModule(
+      '/src/content/opening.ts',
+    )) as typeof import('../../src/content/opening.ts');
+    recipes = catalogue.OPENING_RECIPES;
+    content = catalogue.OPENING_CONTENT;
   } finally {
     await modules.close();
   }
@@ -68,10 +74,59 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     ),
   )?.[0];
   assert(engineChunk, 'Production EngineStore export for read-only camera projection');
-  const pointAt = async (x: number, z: number) => {
+  const authored = JSON.parse(
+    await fs.readFile(path.join(root, 'public/scene/worlds/game.json'), 'utf8'),
+  ) as WorldDefinition;
+  const obstacles = async () => {
+    const bodies = await page.evaluate(async (file) => {
+      const module: Record<string, unknown> = await import(new URL(file, document.baseURI).href);
+      const store = Object.values(module).find(
+        (value): value is typeof EngineStore =>
+          typeof value === 'function' && 'LastCreatedEngine' in value && 'Instances' in value,
+      );
+      return store!
+        .LastCreatedEngine!.scenes.at(-1)!
+        .meshes.filter((m) => m.name.startsWith('physics:'))
+        .map((m) => {
+          const b = m.getBoundingInfo().boundingBox;
+          return {
+            minX: b.minimumWorld.x / 100,
+            maxX: b.maximumWorld.x / 100,
+            minZ: b.minimumWorld.z / 100,
+            maxZ: b.maximumWorld.z / 100,
+          };
+        });
+    }, engineChunk);
+    for (const body of authored.bodies ?? [])
+      if (body.travel) {
+        const s = body.collision,
+          half =
+            s.shape === 'box' ? { x: s.width / 2, z: s.depth / 2 } : { x: s.radius, z: s.radius };
+        bodies.push({
+          minX:
+            body.position.x -
+            half.x +
+            (body.travel.axis === 'x' ? Math.min(0, body.travel.distance) : 0),
+          maxX:
+            body.position.x +
+            half.x +
+            (body.travel.axis === 'x' ? Math.max(0, body.travel.distance) : 0),
+          minZ:
+            body.position.z -
+            half.z +
+            (body.travel.axis === 'z' ? Math.min(0, body.travel.distance) : 0),
+          maxZ:
+            body.position.z +
+            half.z +
+            (body.travel.axis === 'z' ? Math.max(0, body.travel.distance) : 0),
+        });
+      }
+    return bodies;
+  };
+  const pointAt = async (x: number, z: number, entityId?: string) => {
     for (let attempt = 0; attempt < 12; attempt++) {
       const point = await page.evaluate(
-        async ({ file, x, z }) => {
+        async ({ file, x, z, entityId, attempt }) => {
           const module: Record<string, unknown> = await import(
             new URL(file, document.baseURI).href
           );
@@ -82,12 +137,20 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
           const engine = store!.LastCreatedEngine!,
             scene = engine.scenes.at(-1)!,
             camera = scene.activeCamera!;
+          const entity = entityId ? scene.getMeshByName(`entity:${entityId}`) : null;
+          const candidates = entity
+            ? [entity, ...entity.getChildMeshes()]
+                .map((mesh) => mesh.getBoundingInfo().boundingBox.centerWorld)
+                .sort((a, b) => b.y - a.y)
+            : [];
+          const candidate = candidates[attempt % candidates.length];
           const m = scene.getTransformMatrix().m,
-            worldX = x * 100,
-            worldZ = z * 100,
-            w = worldX * m[3] + worldZ * m[11] + m[15],
-            clipX = (worldX * m[0] + worldZ * m[8] + m[12]) / w,
-            clipY = (worldX * m[1] + worldZ * m[9] + m[13]) / w,
+            worldX = candidate?.x ?? x * 100,
+            worldY = candidate?.y ?? 0,
+            worldZ = candidate?.z ?? z * 100,
+            w = worldX * m[3] + worldY * m[7] + worldZ * m[11] + m[15],
+            clipX = (worldX * m[0] + worldY * m[4] + worldZ * m[8] + m[12]) / w,
+            clipY = (worldX * m[1] + worldY * m[5] + worldZ * m[9] + m[13]) / w,
             viewport = camera.viewport.toGlobal(engine.getRenderWidth(), engine.getRenderHeight()),
             canvas = engine.getRenderingCanvas()!.getBoundingClientRect();
           return {
@@ -101,7 +164,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
                 engine.getRenderHeight(),
           };
         },
-        { file: engineChunk, x, z },
+        { file: engineChunk, x, z, entityId, attempt },
       );
       await page.mouse.move(point.x, point.y);
       await page.evaluate(() => window.testEvents.frames(2));
@@ -166,7 +229,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     );
   };
   await page.setViewportSize({ width: 1280, height: 900 });
-  if (!ports.prepared) {
+  if (!ports.prepared && !ports.resumeTransport) {
     // Return to the opening deposit before building; gather every material through normal salvage.
     await walk(-1.2, 1);
     await page.keyboard.press('KeyG');
@@ -296,19 +359,39 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     ['laboratory', 8, 7, 5, 1.2],
     ['laboratory', 9, 7, 7, 1.2],
   ] as const;
-  const placed: { id: string; kind: MachineKind; column: number; row: number }[] = [];
-  const place = async (kind: MachineKind, column: number, row: number) => {
+  const placed: { id: string; kind: PlaceableKind; column: number; row: number }[] = [];
+  if (ports.resumeTransport)
+    for (const b of (await read()).buildings ?? [])
+      if (b.buildingId !== 'test-building')
+        placed.push({
+          id: b.id,
+          kind: b.buildingId,
+          column: b.cell.column + 1,
+          row: b.cell.row + 1,
+        });
+  let placementRotation = 0;
+  const place = async (
+    kind: PlaceableKind,
+    column: number,
+    row: number,
+    rotation: QuarterTurn = kind === 'wind-turbine' ? 1 : 0,
+  ) => {
     await open('Inventory & Crafting');
     const before = (await read()).buildings?.length ?? 0;
-    const slot = [
-      'wind-turbine',
-      'extractor',
-      'recycler',
-      'basic-fabricator',
-      'medium-fabricator',
-      'laboratory',
-      'solar-panel',
-    ].indexOf(kind);
+    const slot =
+      kind === 'conveyor'
+        ? 6
+        : kind === 'sorter'
+          ? 5
+          : [
+              'wind-turbine',
+              'extractor',
+              'recycler',
+              'basic-fabricator',
+              'medium-fabricator',
+              'laboratory',
+              'solar-panel',
+            ].indexOf(kind);
     const recipe = recipes.find((r) => r.id === `assemble-${kind}`)!;
     await page.getByLabel('Toolbar slot', { exact: true }).selectOption(String(slot));
     await page.getByRole('button', { name: `Assign ${recipe.name}`, exact: true }).click();
@@ -320,25 +403,37 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     await page.keyboard.press(`Digit${slot + 1}`);
     await until((p) => p.opening.state.toolbar?.active === slot, 'active toolbar slot committed');
     await page.keyboard.press('KeyB');
-    if (kind === 'wind-turbine') await page.keyboard.press('KeyR');
+    for (let turn = 0; turn < (rotation - placementRotation + 4) % 4; turn++) {
+      await page.keyboard.press('KeyR');
+      await page.evaluate(() => window.testEvents.frames(2));
+    }
+    placementRotation = rotation;
     const pointer = await pointAt(column * 2 - 11, row * 2 - 11);
     await page.getByText('Placement available', { exact: true }).waitFor();
     await page.mouse.click(pointer.x, pointer.y);
     const p = await until((p) => (p.buildings?.length ?? 0) === before + 1, `place ${kind}`);
     const b = p.buildings!.find((b) => b.cell.column === column - 1 && b.cell.row === row - 1)!;
     assert.equal(b.buildingId, kind);
+    assert.equal(
+      b.rotation,
+      rotation,
+      'Each rotation press must cross a sampled frame before placement',
+    );
     if (kind === 'wind-turbine') assert.equal(b.rotation, 1);
     await page.keyboard.press('KeyB');
     placed.push({ id: b.id, kind, column, row });
     console.log(JSON.stringify({ factoryPlaced: kind, column, row }));
   };
-  for (const [kind, col, row, x, z] of placements) {
-    await walk(x, z);
-    await place(kind, col, row);
+  if (!ports.resumeTransport)
+    for (const [kind, col, row, x, z] of placements) {
+      await walk(x, z);
+      await place(kind, col, row);
+    }
+  if (!ports.resumeTransport) {
+    await walk(7, -3);
+    await walk(-5, -2.8);
+    await place('solar-panel', 3, 5);
   }
-  await walk(7, -3);
-  await walk(-5, -2.8);
-  await place('solar-panel', 3, 5);
   const select = async (kind: MachineKind, index = 0) => {
     const m = placed.filter((b) => b.kind === kind)[index];
     await open();
@@ -368,7 +463,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     const count = (await read()).factory?.connections.length ?? 0;
     const stock = amount(await read(), 'power-connection');
     await page.keyboard.press('KeyB');
-    const first = await pointAt(source.column * 2 - 11, source.row * 2 - 11);
+    const first = await pointAt(source.column * 2 - 11, source.row * 2 - 11, source.id);
     await page.getByText('Click a machine to start a power connection.', { exact: true }).waitFor();
     await page.mouse.click(first.x, first.y);
     await page.getByText('Click again to cancel this connection.', { exact: true }).waitFor();
@@ -382,7 +477,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
       await page.mouse.click(first.x, first.y);
       await page.getByText('Click again to cancel this connection.', { exact: true }).waitFor();
     }
-    const second = await pointAt(target.column * 2 - 11, target.row * 2 - 11);
+    const second = await pointAt(target.column * 2 - 11, target.row * 2 - 11, target.id);
     await page.getByText('Click to connect; first cell again cancels.', { exact: true }).waitFor();
     assert.equal(amount(await read(), 'power-connection'), stock);
     if (count === 0)
@@ -393,13 +488,15 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     await page.keyboard.press('KeyB');
   };
   // Connect the spare eighth edge at the solar source, then the star from the turbine.
-  await wire('solar-panel', placed.find((b) => b.kind === 'recycler')!.id);
-  await walk(-5, -3);
-  await walk(1, -3);
-  await walk(1, 1.2);
-  await walk(-1, 0.8);
-  for (const target of placed.filter((b) => b.kind !== 'wind-turbine'))
-    await wire('wind-turbine', target.id);
+  if (!ports.resumeTransport) {
+    await wire('solar-panel', placed.find((b) => b.kind === 'recycler')!.id);
+    await walk(-5, -3);
+    await walk(1, -3);
+    await walk(1, 1.2);
+    await walk(-1, 0.8);
+    for (const target of placed.filter((b) => b.kind !== 'wind-turbine'))
+      await wire('wind-turbine', target.id);
+  }
   const load = async (item: string, count: number) => {
     const before = amount(await read(), item);
     await page.getByLabel('Material', { exact: true }).selectOption(item);
@@ -407,131 +504,145 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     await page.getByRole('button', { name: 'Load input from bag', exact: true }).click();
     await until((p) => amount(p, item) === before - count, 'local transfer processed');
   };
-  await select('recycler');
-  await walk(-1, 1.2);
-  await select('recycler');
-  await load('scrap', 80);
-  const refined = async (item: string, min: number) => {
-    await page.getByLabel('Transfer quantity', { exact: true }).fill('1');
-    while (amount(await read(), item) < min) {
-      const collect = page.getByRole('button', {
-        name: `Collect ${item === 'plate' ? 'Metal plate' : 'Recovered wire'} from output`,
-        exact: true,
-      });
+  if (!ports.resumeTransport) {
+    await select('recycler');
+    await walk(-1, 1.2);
+    await select('recycler');
+    await load('scrap', 80);
+    const refined = async (item: string, min: number) => {
+      await page.getByLabel('Transfer quantity', { exact: true }).fill('1');
+      while (amount(await read(), item) < min) {
+        const collect = page.getByRole('button', {
+          name: `Collect ${item === 'plate' ? 'Metal plate' : 'Recovered wire'} from output`,
+          exact: true,
+        });
+        await until(
+          (p) =>
+            !!p.details?.some((d) =>
+              d.entity.machine?.output.slots.some((s) => s?.item === item && s.quantity > 0),
+            ),
+          `recycler output ${item}`,
+        );
+        const before = amount(await read(), item);
+        await collect.click();
+        await until((p) => amount(p, item) === before + 1, 'collection committed to bag');
+      }
+    };
+    // Refined machine output, rather than personal recovery, supplies the industrial demonstration.
+    const oldPlate = amount(await read(), 'plate'),
+      oldWire = amount(await read(), 'wire');
+    await refined('plate', oldPlate + 12);
+    await refined('wire', oldWire + 8);
+    const configure = async (recipe: string) => {
+      await page.getByLabel('Fabrication recipe', { exact: true }).selectOption(recipe);
+      await page.getByRole('button', { name: 'Set recipe', exact: true }).click();
       await until(
-        (p) =>
-          !!p.details?.some((d) =>
-            d.entity.machine?.output.slots.some((s) => s?.item === item && s.quantity > 0),
-          ),
-        `recycler output ${item}`,
+        (p) => !!p.details?.some((d) => d.entity.machine?.recipe === recipe),
+        'recipe committed',
       );
+    };
+    const collectFour = async (item: string, label: string) => {
+      await page.getByLabel('Transfer quantity', { exact: true }).fill('1');
       const before = amount(await read(), item);
-      await collect.click();
-      await until((p) => amount(p, item) === before + 1, 'collection committed to bag');
+      while (amount(await read(), item) < before + 4) {
+        const button = page.getByRole('button', {
+          name: `Collect ${label} from output`,
+          exact: true,
+        });
+        await until(
+          (p) =>
+            !!p.details?.some((d) =>
+              d.entity.machine?.output.slots.some((s) => s?.item === item && s.quantity > 0),
+            ),
+          `fabricated output ${item}`,
+        );
+        const previous = amount(await read(), item);
+        await button.click();
+        await until((p) => amount(p, item) === previous + 1, 'fabricated output committed to bag');
+      }
+    };
+    await walk(1, 1.2);
+    await select('basic-fabricator');
+    await configure('mechanical-part');
+    await load('plate', 8);
+    await collectFour('mechanical-part', 'Mechanical part');
+    await walk(3, 1.2);
+    await select('medium-fabricator');
+    await configure('electrical-part');
+    await load('plate', 4);
+    await load('wire', 8);
+    await collectFour('electrical-part', 'Electrical part');
+    await page.getByRole('button', { name: 'Disable machine', exact: true }).click();
+    const pauseTick = (await read()).tick;
+    await until((p) => p.tick > pauseTick, 'medium stopped');
+    await configure('basic-research-kit');
+    await page.getByRole('button', { name: 'Enable machine', exact: true }).click();
+    await load('mechanical-part', 4);
+    await load('electrical-part', 4);
+    await collectFour('research-kit', 'Basic research kit');
+    for (const [index, x] of [
+      [0, 5],
+      [1, 7],
+    ] as const) {
+      await walk(x, 1.2);
+      await select('laboratory', index);
+      await load('research-kit', 2);
     }
-  };
-  // Refined machine output, rather than personal recovery, supplies the industrial demonstration.
-  const oldPlate = amount(await read(), 'plate'),
-    oldWire = amount(await read(), 'wire');
-  await refined('plate', oldPlate + 12);
-  await refined('wire', oldWire + 8);
-  const configure = async (recipe: string) => {
-    await page.getByLabel('Fabrication recipe', { exact: true }).selectOption(recipe);
-    await page.getByRole('button', { name: 'Set recipe', exact: true }).click();
+    await open('Research');
+    await page.getByRole('button', { name: 'Queue Sorting and conveyors', exact: true }).click();
     await until(
-      (p) => !!p.details?.some((d) => d.entity.machine?.recipe === recipe),
-      'recipe committed',
+      (p) => !!p.opening.ledgers['sorting-logistics']?.unlocked,
+      'two powered supplied labs complete shared research',
     );
-  };
-  const collectFour = async (item: string, label: string) => {
-    await page.getByLabel('Transfer quantity', { exact: true }).fill('1');
-    const before = amount(await read(), item);
-    while (amount(await read(), item) < before + 4) {
-      const button = page.getByRole('button', {
-        name: `Collect ${label} from output`,
-        exact: true,
-      });
-      await until(
-        (p) =>
-          !!p.details?.some((d) =>
-            d.entity.machine?.output.slots.some((s) => s?.item === item && s.quantity > 0),
-          ),
-        `fabricated output ${item}`,
-      );
-      const previous = amount(await read(), item);
-      await button.click();
-      await until((p) => amount(p, item) === previous + 1, 'fabricated output committed to bag');
-    }
-  };
-  await walk(1, 1.2);
-  await select('basic-fabricator');
-  await configure('mechanical-part');
-  await load('plate', 8);
-  await collectFour('mechanical-part', 'Mechanical part');
-  await walk(3, 1.2);
-  await select('medium-fabricator');
-  await configure('electrical-part');
-  await load('plate', 4);
-  await load('wire', 8);
-  await collectFour('electrical-part', 'Electrical part');
-  await page.getByRole('button', { name: 'Disable machine', exact: true }).click();
-  const pauseTick = (await read()).tick;
-  await until((p) => p.tick > pauseTick, 'medium stopped');
-  await configure('basic-research-kit');
-  await page.getByRole('button', { name: 'Enable machine', exact: true }).click();
-  await load('mechanical-part', 4);
-  await load('electrical-part', 4);
-  await collectFour('research-kit', 'Basic research kit');
-  for (const [index, x] of [
-    [0, 5],
-    [1, 7],
-  ] as const) {
-    await walk(x, 1.2);
-    await select('laboratory', index);
-    await load('research-kit', 2);
+    assert.equal((await read()).opening.state.fieldEnabled, false);
+    assert.equal((await read()).opening.ledgers['sorting-logistics'].consumed['research-kit'], 4);
+    console.log(JSON.stringify({ factorySharedLabResearch: true, fieldDisabled: true }));
   }
-  await open('Research');
-  await page.getByRole('button', { name: 'Queue Sorting and conveyors', exact: true }).click();
-  await until(
-    (p) => !!p.opening.ledgers['sorting-logistics']?.unlocked,
-    'two powered supplied labs complete shared research',
-  );
-  assert.equal((await read()).opening.state.fieldEnabled, false);
-  assert.equal((await read()).opening.ledgers['sorting-logistics'].consumed['research-kit'], 4);
-  console.log(JSON.stringify({ factorySharedLabResearch: true, fieldDisabled: true }));
+  const transportProof = ports.transport
+    ? await checkTransportRoute({
+        page,
+        read,
+        until,
+        craft,
+        open,
+        close,
+        walk,
+        place,
+        wire,
+        recipes,
+        content,
+        obstacles,
+        output,
+        resumed: ports.resumeTransport,
+      })
+    : undefined;
   await open();
   await page.screenshot({ path: path.join(output, 'factory-desktop.png'), fullPage: true });
   assert.deepEqual(await page.evaluate(async () => (await axe.run()).violations), []);
   await close();
   await page.screenshot({ path: path.join(output, 'factory-world.png'), fullPage: true });
   await open();
-  const readSlot = () =>
-    page.evaluate(async () => {
-      const db = await new Promise<IDBDatabase>((resolve, reject) => {
-        const r = indexedDB.open('ScrapworksGameplaySaves');
-        r.onsuccess = () => resolve(r.result);
-        r.onerror = () => reject(r.error);
-      });
-      try {
-        return await new Promise<SaveSnapshot | undefined>((resolve, reject) => {
-          const tx = db.transaction('slots', 'readonly'),
-            r = tx.objectStore('slots').get('manual-1');
-          tx.oncomplete = () => resolve(r.result?.payload as SaveSnapshot | undefined);
-          tx.onerror = () => reject(tx.error);
-        });
-      } finally {
-        db.close();
-      }
-    });
-  await page.getByRole('button', { name: 'Save progress', exact: true }).click();
-  await page.getByRole('status').filter({ hasText: 'Game saved.' }).waitFor();
-  const saved = await readSlot();
+  const readSlot = () => readManualSave(page);
+  const saved = await saveThroughUi(page);
   assert(saved);
-  assert.equal(saved.contentVersion, 'factory-1');
-  assert.equal(saved.world.entities.filter((e) => e.machine).length, 8);
-  assert.equal(saved.world.resources.factory!.connections.length, 8);
+  assert.equal(saved.contentVersion, 'transport-1');
+  assert.equal(saved.world.entities.filter((e) => e.machine).length, transportProof ? 10 : 8);
+  assert.equal(saved.world.resources.factory!.connections.length, transportProof ? 10 : 8);
+  if (transportProof) {
+    assert.equal(saved.world.entities.filter((e) => e.transport).length, 20);
+    assert(
+      saved.world.entities
+        .find((e) => e.id === transportProof.sorter)!
+        .transport!.units.some((u) => u.lane === 0),
+    );
+  }
   const savedToolbar = saved.world.entities.find((e) => e.opening)!.opening!.toolbar;
-  assert(savedToolbar && savedToolbar.slots.filter(Boolean).length === 8);
+  assert(
+    savedToolbar &&
+      (ports.resumeTransport
+        ? savedToolbar.slots.filter(Boolean).length >= 5
+        : savedToolbar.slots.filter(Boolean).length === 8),
+  );
   assert.equal(savedToolbar.slots[7], 'power-connection');
   const beforeReload = {
     runId: saved.runId,
@@ -546,9 +657,26 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     .getByRole('button', { name: /^Laboratory ·/ })
     .first()
     .waitFor();
-  assert.equal(await page.locator('[aria-labelledby="machines-title"] button').count(), 8);
+  assert.equal(
+    await page.locator('[aria-labelledby="machines-title"] button').count(),
+    saved.world.entities.filter((e) => e.building).length,
+  );
+  if (transportProof) {
+    await page.getByRole('button', { name: 'Sorter · 5, 8', exact: true }).click();
+    await page.getByLabel('Left output filter', { exact: true }).waitFor();
+    assert.equal(
+      await page.getByLabel('Left output filter', { exact: true }).inputValue(),
+      'plate',
+    );
+    await page.getByText(/Left: 4\/4/).waitFor();
+  }
   assert.equal(page.workers().length, 1);
   await page.setViewportSize({ width: 390, height: 844 });
+  if (transportProof)
+    await page
+      .getByLabel('Left output filter', { exact: true })
+      .scrollIntoViewIfNeeded();
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
   assert.deepEqual(await page.evaluate(async () => (await axe.run()).violations), []);
   await page.screenshot({ path: path.join(output, 'factory-mobile.png'), fullPage: true });
   const loaded = await readSlot();
@@ -568,11 +696,13 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     JSON.stringify(
       {
         passed: true,
-        emptyHandedUi: !ports.prepared,
+        emptyHandedUi: !ports.prepared && !ports.resumeTransport,
+        resumedEarnedM6Save: !!ports.resumeTransport,
         preparedFixture: !!ports.prepared,
         provisionalBootstrapGathered: ports.prepared ? 0 : 550,
-        machines: 8,
-        connections: 8,
+        machines: transportProof ? 10 : 8,
+        connections: transportProof ? 10 : 8,
+        transport: transportProof,
         sharedLabResearch: true,
         fieldDisabled: true,
         saveReload: true,

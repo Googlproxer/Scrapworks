@@ -5,7 +5,7 @@ import { preparePlayerSave } from '../simulation/player-save';
 import { GameSession } from '../session/game-session';
 import { InlineSimulationPort } from '../../tools/testing/inline-simulation-port';
 import { worldFixture } from '../../tests/support/world-fixture';
-import { OPENING_TECHNOLOGIES } from '../content/opening';
+import { OPENING_CONTENT, OPENING_TECHNOLOGIES } from '../content/opening';
 import { MANUAL_SLOT, type SaveSnapshot } from '../contracts/save';
 import { decodeSave } from './save-codec';
 import { MemorySaveRepository, SaveConflictError } from './memory-save-repository';
@@ -510,7 +510,7 @@ test('compatible M4 saves preserve committed handcraft, MiniFab buffers, native 
     before = structuredClone(legacy);
   const decoded = decodeSave(legacy),
     migrated = preparePlayerSave(decoded.world);
-  assert.equal(migrated.contentVersion, 'factory-1');
+  assert.equal(migrated.contentVersion, OPENING_CONTENT.version);
   assert.deepEqual(migrated.physics, legacy.world.physics);
   const player = migrated.entities.find((entity) => entity.kind === 'player')!;
   assert.deepEqual(player.opening!.researchQueue, []);

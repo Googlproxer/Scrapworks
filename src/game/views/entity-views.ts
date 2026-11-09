@@ -9,6 +9,7 @@ import { EntityView } from './entity-view';
 import type { WorldFrame } from './world-frame';
 import { PhysicsBodyViews } from './physics-body-views';
 import { powerTerminal, powerWirePoints } from './power-wire';
+import { TransportViews } from './transport-views';
 
 export class EntityViews extends PresentationBehavior {
   private readonly entities = new Map<string, EntityView>();
@@ -18,6 +19,7 @@ export class EntityViews extends PresentationBehavior {
   private groundMaterial?: StandardMaterial;
   private groundViews: WorldView['ground'];
   private readonly physics: PhysicsBodyViews;
+  private readonly transport: TransportViews;
   private wireKey = '';
   private readonly wires = new Map<string, Mesh>();
 
@@ -28,6 +30,7 @@ export class EntityViews extends PresentationBehavior {
   ) {
     super(node, node.getScene(), frame.scriptOptions, 'EntityViews');
     this.physics = new PhysicsBodyViews(this.scene);
+    this.transport = new TransportViews(this.scene);
     for (const name of ['obstacle', 'player-placeholder'])
       this.scene.getMeshByName(name)?.setEnabled(false);
     this.sync({ deposits: definition.deposits, buildings: [] });
@@ -59,6 +62,7 @@ export class EntityViews extends PresentationBehavior {
     this.publication = view.publication ?? -1;
     this.generation = view.worldGeneration ?? -1;
     this.syncWires(view);
+    this.transport.sync(view);
     this.syncGround(view);
     this.physics.sync(view, reset || !view.changes || view.changes.full);
     this.physics.present(this.frame.presentationActive ? this.frame.seconds : 0, view.stepSeconds);
@@ -114,6 +118,7 @@ export class EntityViews extends PresentationBehavior {
     for (const wire of this.wires.values()) wire.dispose();
     this.wires.clear();
     this.physics.dispose();
+    this.transport.dispose();
     for (const entity of this.entities.values()) entity.dispose();
     this.entities.clear();
     for (const mesh of this.ground.values()) mesh.dispose();

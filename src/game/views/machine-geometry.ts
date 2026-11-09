@@ -2,16 +2,21 @@ import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
 import type { Mesh } from '@babylonjs/core/Meshes/mesh';
 import type { Scene } from '@babylonjs/core/scene';
 import type { Material } from '@babylonjs/core/Materials/material';
-import type { MachineKind } from '@contracts/factory';
+import type { PlaceableKind } from '@contracts/factory';
+import { isTransportKind, materialPorts, portDirection } from '@content/transport';
 
 /** Original editable procedural prototype silhouettes; centimetres, presentation only. */
 export function machineGeometry(
   scene: Scene,
-  kind: MachineKind,
+  kind: PlaceableKind,
   id: string,
   material: Material,
 ): Mesh {
-  const root = MeshBuilder.CreateBox(`entity:${id}`, { width: 110, height: 40, depth: 110 }, scene);
+  const root = MeshBuilder.CreateBox(
+    `entity:${id}`,
+    { width: 110, height: kind === 'conveyor' ? 10 : 40, depth: kind === 'conveyor' ? 180 : 110 },
+    scene,
+  );
   root.material = material;
 
   const box = (
@@ -50,6 +55,17 @@ export function machineGeometry(
   };
 
   switch (kind) {
+    case 'conveyor':
+      for (let i = -2; i <= 2; i++)
+        cylinder(`roller-${i}`, 14, 100, 0, 8, i * 30).rotation.z = Math.PI / 2;
+      break;
+    case 'sorter':
+      box('sorting-housing', 90, 75, 85, 0, 45, 0);
+      cylinder('separator', 55, 25, 0, 95, 0);
+      box('left-chute', 55, 20, 35, -65, 15, 0);
+      box('right-chute', 55, 20, 35, 65, 15, 0);
+      box('unmatched-chute', 35, 20, 55, 0, 15, 65);
+      break;
     case 'solar-panel': {
       box('support', 15, 80, 15, 0, 50, 0);
       const panel = box('solar-array', 140, 8, 100, 0, 90, 0);
@@ -94,11 +110,21 @@ export function machineGeometry(
       break;
   }
   // Distinct port shapes and an asymmetric outlet preserve orientation without relying on colour.
-  cylinder('power-terminal', 12, 25, -48, 35, -48);
-  if (!['solar-panel', 'wind-turbine'].includes(kind)) {
-    box('input-port', 35, 18, 20, 0, 0, -65);
-    box('output-port', 45, 18, 25, 0, 0, 65);
-  }
+  if (!isTransportKind(kind)) cylinder('power-terminal', 12, 25, -48, 35, -48);
+  const ports = materialPorts(kind);
+  for (const direction of ['input', 'output'] as const)
+    for (const port of ports[direction]) {
+      const d = portDirection({ rotation: 0 }, port);
+      box(
+        `${direction}-port-${port}`,
+        d.column ? 20 : 35,
+        18,
+        d.row ? 20 : 35,
+        d.column * 65,
+        0,
+        d.row * 65,
+      );
+    }
   for (const part of [root, ...root.getChildMeshes()]) {
     part.metadata = { worldEntity: id };
     part.isPickable = true;

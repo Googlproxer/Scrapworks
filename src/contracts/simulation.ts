@@ -10,6 +10,7 @@ import type { OpeningEvent, RuntimeEvent } from './session-event';
 import type { ReadonlyData, EditableData } from './readonly-data';
 import type { PhysicsBodyDefinition, PhysicsSnapshot, WorldRotation } from './physics';
 import type { FactoryResources, FactorySummary, MachineData } from './factory';
+import type { TransportData } from './transport';
 
 export type EntityKind = 'player' | 'deposit' | 'pile' | 'building' | 'body';
 
@@ -43,6 +44,7 @@ export interface EntityData {
   opening?: OpeningData;
   physics?: EditableData<PhysicsBodyDefinition>;
   machine?: MachineData;
+  transport?: TransportData;
 }
 
 export interface WorldResources {

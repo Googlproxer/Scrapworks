@@ -9,6 +9,7 @@ import { attachDebugDraw } from '../debug/draw/debug-draw';
 import type { DebugAttachment } from '../debug/draw/types';
 import { machineGeometry } from './machine-geometry';
 import { isMachineKind } from '@content/factory';
+import { isTransportKind } from '@content/transport';
 import type { BuildingView } from '@contracts/world';
 
 /** A scene resource owner, identified by a detached simulation entity ID. */
@@ -42,7 +43,7 @@ export class EntityView {
       this.material.specularColor = Color3.Black();
     }
     this.mesh =
-      building && isMachineKind(kind)
+      building && (isMachineKind(kind) || isTransportKind(kind))
         ? machineGeometry(scene, kind, item.id, this.material!)
         : building
           ? MeshBuilder.CreateBox(

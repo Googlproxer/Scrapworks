@@ -4,7 +4,7 @@ import {
   MACHINES,
   RECYCLER_OUTCOMES,
   renewableFactors,
-  isMachineKind,
+  isPlaceable,
   MACHINE_FOOTPRINT,
   MACHINE_COLLISION,
 } from '@content/factory';
@@ -24,6 +24,8 @@ import type { OpeningContext, SimulationEntity } from './opening-context';
 import { validateFactoryPlacement } from './factory-placement';
 import { machineMaterials } from '@content/machine-materials';
 import { validatePowerConnection } from './power-connection';
+import { TransportSystem } from './transport';
+import { emptyTransport, isTransportKind } from '@content/transport';
 
 export interface FactoryContext extends OpeningContext {
   readonly definition: WorldDefinition;
@@ -77,12 +79,15 @@ function nextOutcome(machine: MachineData): ItemStack[] {
 
 /** All stock, jobs and networks live on the existing ECS records. No clock or presentation APIs. */
 export class FactorySystem {
+  private readonly transport: TransportSystem;
   public collisionChanged = false;
   private energyUsed = 0;
   private available = 0;
   private requested = 0;
 
-  public constructor(private readonly context: FactoryContext) {}
+  public constructor(private readonly context: FactoryContext) {
+    this.transport = new TransportSystem(context);
+  }
 
   private get bag() {
     return this.context.player.inventory!;
@@ -113,10 +118,18 @@ export class FactorySystem {
     const { player, resources, definition } = this.context;
     const machines = this.list();
     if (player.opening!.handcraft) return result('busy');
+    if (
+      command.type === 'transport-connect' ||
+      command.type === 'transport-disconnect' ||
+      command.type === 'transport-configure' ||
+      command.type === 'transport-collect'
+    )
+      return this.transport.command(command);
     if (command.type === 'factory-place-active') {
       const toolbar = player.opening!.toolbar;
       const equipment = toolbar?.slots[toolbar.active];
-      if (!isMachineKind(equipment)) return result('invalid-request');
+      if (!isPlaceable(equipment) || equipment === 'power-connection')
+        return result('invalid-request');
       return this.command({
         type: 'factory-place',
         equipment,
@@ -131,7 +144,7 @@ export class FactorySystem {
         definition,
         {
           player: player.transform!,
-          buildings: machines.map((e) => e.building!),
+          buildings: [...this.context.machines].flatMap((e) => (e.building ? [e.building] : [])),
           deposits: this.context.deposits(),
         },
         command.equipment,
@@ -160,9 +173,11 @@ export class FactorySystem {
           cell: { ...command.cell },
           rotation: command.rotation,
           footprint: { ...MACHINE_FOOTPRINT },
-          collision: { ...MACHINE_COLLISION },
+          ...(command.equipment === 'conveyor' ? {} : { collision: { ...MACHINE_COLLISION } }),
         },
-        machine: newMachine(command.equipment, id, deposit),
+        ...(isTransportKind(command.equipment)
+          ? { transport: emptyTransport() }
+          : { machine: newMachine(command.equipment, id, deposit) }),
       });
       this.collisionChanged = true;
     } else if (command.type === 'factory-connect' || command.type === 'factory-connect-active') {
@@ -212,6 +227,29 @@ export class FactorySystem {
       this.state.connections = this.state.connections.filter((c) => c !== connection);
     } else {
       const target = this.context.get(command.target);
+      if (target?.transport && command.type === 'factory-dismantle') {
+        if (!this.near(target)) return result('out-of-reach');
+        if (
+          !transact(
+            this.bag,
+            [],
+            [
+              {
+                item: 'scrap',
+                quantity: OPENING_CONTENT.items[target.building!.buildingId].solidValue,
+              },
+              ...target.transport.units.map((u) => ({ item: u.item, quantity: 1 })),
+            ],
+            OPENING_CONTENT,
+          )
+        )
+          return result('capacity');
+        this.transport.detach(target.id);
+        this.context.remove(target.id);
+        this.collisionChanged = true;
+        this.context.mark(player, true);
+        return result();
+      }
       if (!target?.machine || !this.near(target)) return result('out-of-reach');
       const machine = target.machine,
         kind = target.building!.buildingId as MachineKind;
@@ -291,6 +329,7 @@ export class FactorySystem {
         )
           return result('capacity');
         this.state.connections = this.state.connections.filter((c) => !edges.includes(c));
+        this.transport.detach(target.id);
         this.context.remove(target.id);
         this.collisionChanged = true;
       }
@@ -321,6 +360,7 @@ export class FactorySystem {
 
   public step(delta: number): readonly ResearchSource[] {
     this.collisionChanged = false;
+    this.transport.step();
     this.energyUsed = this.available = this.requested = 0;
     const machines = this.list(),
       { resources } = this.context;
@@ -493,6 +533,7 @@ export class FactorySystem {
     const factors = renewableFactors(this.context.resources.tick);
     const used = this.energyUsed / 0.05;
     return {
+      transport: this.transport.summary(),
       ...factors,
       available: this.available,
       requested: this.requested,

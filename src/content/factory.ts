@@ -1,6 +1,7 @@
 import type { EquipmentId, MachineKind } from '../contracts/factory';
 import type { OpeningRecipe } from './opening';
 import { EQUIPMENT_BLUEPRINTS } from './first-factory';
+import { isTransportKind } from './transport';
 
 /** Provisional playtest values, using metres, watts, joules and simulation seconds. */
 export const FACTORY_SETTINGS = Object.freeze({
@@ -49,7 +50,7 @@ export const isMachineKind = (id: unknown): id is MachineKind =>
   typeof id === 'string' && Object.hasOwn(MACHINES, id);
 
 export const isPlaceable = (id: unknown): id is EquipmentId =>
-  id === 'power-connection' || isMachineKind(id);
+  id === 'power-connection' || isMachineKind(id) || isTransportKind(id);
 
 const values: Readonly<Record<string, number>> = {
   plate: 2,
@@ -62,7 +63,7 @@ export const EQUIPMENT_ITEMS = Object.fromEntries(
   EQUIPMENT_BLUEPRINTS.map((b) => [
     b.id,
     {
-      stackLimit: b.id === 'power-connection' ? 20 : 5,
+      stackLimit: b.id === 'power-connection' || b.id === 'conveyor' ? 20 : 5,
       solidValue: b.inputs.reduce((sum, s) => sum + values[s.item] * s.quantity, 0),
     },
   ]),
@@ -74,7 +75,7 @@ export const EQUIPMENT_RECIPES: readonly OpeningRecipe[] = EQUIPMENT_BLUEPRINTS.
   technology: b.technology,
   inputs: b.inputs,
   outputs: [{ item: b.id, quantity: 1 }],
-  seconds: b.id === 'power-connection' ? 3 : 12,
+  seconds: b.id === 'power-connection' ? 3 : b.id === 'conveyor' ? 4 : 12,
   handcraft: true,
   minifab: true,
 }));

@@ -283,6 +283,7 @@ export class Simulation {
       opening: data.opening,
       physics: data.physics,
       machine: data.machine,
+      transport: data.transport,
     };
     this.world.add(entity);
     this.ids.set(entity.id, entity);
@@ -463,6 +464,7 @@ export class Simulation {
       'opening',
       'physics',
       'machine',
+      'transport',
     ] as const)
       if (e[key] !== undefined) Object.assign(data, { [key]: e[key] });
     return structuredClone(data);

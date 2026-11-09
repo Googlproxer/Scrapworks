@@ -4,6 +4,7 @@ import { OPENING_CONTENT, OPENING_RECIPES } from '@content/opening';
 import type { ItemStack, SimulationSnapshot } from '@contracts/simulation';
 import { requireInvariant as check } from '@contracts/simulation';
 import { footprintCells, worldToCell } from '@core/world-grid';
+import { isTransportKind } from '@content/transport';
 
 const record = (v: unknown, keys: readonly string[]): Record<string, unknown> => {
   check(
@@ -55,7 +56,7 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
     (id) => save.resources.research[id].unlocked,
   );
   const occupied = new Set<string>();
-  if (machines.length)
+  if (machines.length || save.entities.some((e) => e.transport))
     for (const e of [
       ...save.definition.blockers,
       ...save.entities.flatMap((e) => (e.building ? [e.building] : [])),
@@ -75,7 +76,12 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
     }
   for (const entity of save.entities) {
     if (entity.building?.buildingId !== undefined && entity.building.buildingId !== 'test-building')
-      check(entity.machine, 'Missing machine component');
+      check(
+        isTransportKind(entity.building.buildingId)
+          ? entity.transport && !entity.machine
+          : entity.machine && !entity.transport,
+        'Missing/invalid building component',
+      );
     if (!entity.machine) continue;
     const kind = entity.building?.buildingId;
     check(entity.kind === 'building' && isMachineKind(kind), 'Invalid machine owner');
@@ -209,7 +215,7 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
     check(!machines.length, 'Missing factory resources');
     return;
   }
-  record(save.resources.factory, ['connections']);
+  record(save.resources.factory, ['connections', 'transport']);
   const edges = save.resources.factory.connections;
   check(Array.isArray(edges) && edges.length <= 250000, 'Invalid power graph');
   const ids = new Set(save.entities.map((e) => e.id)),
@@ -240,10 +246,12 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
 }
 
 export function assertFactoryResearch(save: SimulationSnapshot): void {
-  for (const e of save.entities.filter((e) => e.machine)) {
+  for (const e of save.entities.filter((e) => e.machine || e.transport)) {
     const blueprint = EQUIPMENT_BLUEPRINTS.find((b) => b.id === e.building!.buildingId)!;
     check(save.resources.research[blueprint.technology]?.unlocked, 'Unresearched saved equipment');
   }
   if (save.resources.factory?.connections.length)
     check(save.resources.research['electrical-engineering']?.unlocked, 'Unresearched saved wiring');
+  if (save.resources.factory?.transport?.connections.length)
+    check(save.resources.research['sorting-logistics']?.unlocked, 'Unresearched material topology');
 }

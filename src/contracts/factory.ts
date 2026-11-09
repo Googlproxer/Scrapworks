@@ -1,5 +1,11 @@
 import type { InventoryData, ItemStack } from './simulation';
 import type { GridCell, QuarterTurn } from './world';
+import type {
+  TransportCommand,
+  TransportKind,
+  TransportResources,
+  TransportSummary,
+} from './transport';
 
 export type EquipmentId =
   | 'power-connection'
@@ -9,9 +15,12 @@ export type EquipmentId =
   | 'basic-fabricator'
   | 'medium-fabricator'
   | 'extractor'
-  | 'laboratory';
+  | 'laboratory'
+  | TransportKind;
 
-export type MachineKind = Exclude<EquipmentId, 'power-connection'>;
+export type PlaceableKind = Exclude<EquipmentId, 'power-connection'>;
+
+export type MachineKind = Exclude<EquipmentId, 'power-connection' | TransportKind>;
 
 export interface FactoryJob {
   recipe: string;
@@ -43,9 +52,11 @@ export interface PowerConnection {
 
 export interface FactoryResources {
   connections: PowerConnection[];
+  transport?: TransportResources;
 }
 
 export interface FactorySummary {
+  readonly transport?: TransportSummary;
   readonly daylight: number;
   readonly wind: number;
   readonly available: number;
@@ -56,8 +67,9 @@ export interface FactorySummary {
 }
 
 export type FactoryCommand =
+  | TransportCommand
   | { type: 'factory-place-active'; cell: GridCell; rotation: QuarterTurn }
-  | { type: 'factory-place'; equipment: MachineKind; cell: GridCell; rotation: QuarterTurn }
+  | { type: 'factory-place'; equipment: PlaceableKind; cell: GridCell; rotation: QuarterTurn }
   | { type: 'factory-configure'; target: string; enabled: boolean; recipe: string | null }
   | { type: 'factory-collect-output'; target: string }
   | {
@@ -74,5 +86,5 @@ export type FactoryCommand =
   | { type: 'factory-dismantle'; target: string };
 
 export function isFactoryCommand(command: { readonly type: string }): command is FactoryCommand {
-  return command.type.startsWith('factory-');
+  return command.type.startsWith('factory-') || command.type.startsWith('transport-');
 }

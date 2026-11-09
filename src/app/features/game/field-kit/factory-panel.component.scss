@@ -13,6 +13,11 @@
 section {
   min-width: 0;
 }
+.machine-list {
+  max-block-size: min(42vh, 24rem);
+  overflow: auto;
+  padding-block: 4px;
+}
 .machine-summary > * {
   display: block;
 }
@@ -104,5 +109,8 @@ p {
 @media (max-width: 650px) {
   .factory-layout {
     grid-template-columns: 1fr;
+  }
+  .machine-list {
+    max-block-size: 12rem;
   }
 }

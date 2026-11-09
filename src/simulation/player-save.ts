@@ -45,7 +45,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
         ? ['inventory', 'equipment', 'opening']
         : [
             entity.kind === 'body' ? 'physics' : entity.kind,
-            ...(entity.kind === 'building' ? ['machine'] : []),
+            ...(entity.kind === 'building' ? ['machine', 'transport'] : []),
           ]),
     ];
     check(
@@ -74,7 +74,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
     }
     if (entity.kind === 'building')
       check(
-        entity.machine && entity.building?.buildingId !== 'test-building',
+        (entity.machine || entity.transport) && entity.building?.buildingId !== 'test-building',
         'Developer fixture buildings are not supported in player saves.',
       );
   }
@@ -159,8 +159,9 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
     ...ids,
     ...jobs,
     ...(save.resources.factory?.connections.map((c) => c.id) ?? []),
+    ...(save.resources.factory?.transport?.connections.map((c) => c.id) ?? []),
   ]) {
-    const suffix = /^(?:pile|building|opening-job|connection)[-:](\d+)$/.exec(id);
+    const suffix = /^(?:pile|building|opening-job|connection|material)[-:](\d+)$/.exec(id);
     if (suffix)
       check(
         Number.isSafeInteger(Number(suffix[1])) && Number(suffix[1]) < save.resources.nextEntityId,

@@ -12,7 +12,7 @@ export function staticColliders(
   const colliders: NamedCollider[] = [
     ...definition.blockers,
     ...deposits.filter((deposit) => deposit.quantity > 0),
-    ...buildings,
+    ...buildings.filter((b) => b.buildingId !== 'conveyor'),
   ].map((entity) => ({
     ...entityCollider(definition.grid, entity),
     source: 'entity',

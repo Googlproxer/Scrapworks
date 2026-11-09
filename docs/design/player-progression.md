@@ -195,6 +195,14 @@ Milestone 6 delivers solar panels, wind turbines, crafted wired power connection
 
 Use direct machine input/output connections and conveyors initially. Sorting mixed recycler output belongs in the initial logistics design; a plan that defers all sorting does not satisfy this progression. Choose the first filter/sorter and overflow rules before implementing transport.
 
+Agreed 9 November 2026 for [Milestone 7](../plans/milestone-07-transport.md#agreed-scope-and-decisions--9-november-2026):
+
+- Use a **separate crafted placeable sorter**, with one input, configurable item outputs and an unmatched-item output.
+- Use **strict destinations**: a matched item waits when its route is full or disconnected and never automatically diverts into the unmatched output. Other routes continue while their own capacity and bounded sorter storage permit. Finite shared upstream capacity can eventually back up; no hidden storage or unlimited bypass is implied. Returned scrap can be explicitly routed back into the recycler alongside extractor supply.
+- **Conveyors, sorters and direct material connections need no electricity** in this slice. They still obey finite simulation-time throughput and stop on pause/suspension. Production machines and laboratories retain their existing wired-power requirements.
+
+Milestone 7 implements facing adjacent material ports, individual-unit transit capacities, deterministic fair merging, full recovery and exact saved continuation. The [transport catalogue](transport-catalogue.md) owns paid assemblies, two exact-item outputs plus unmatched, four units per lane, ten-tick travel and two units/s connections; numerical balance remains provisional. The [implementation report](../reports/milestone-07/2026-11-09/README.md) records earned automation, strict blocked routing, native continuation and desktop/mobile acceptance. Trains and the remaining systems below retain their later scope.
+
 Trains are a later-game direction and require loading/unloading stations. They are not part of the first small-map prototype or a reason to add train systems to the initial conveyor milestone.
 
 ## Research progression

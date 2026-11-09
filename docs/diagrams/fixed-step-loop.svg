@@ -176,11 +176,11 @@
 <!-- Systems -->
 <g id="node11" class="node">
 <title>Systems</title>
-<path fill="#dbeafe" stroke="#64748b" stroke-width="1.1" d="M584.01,-511.2C584.01,-511.2 402.55,-511.2 402.55,-511.2 396.55,-511.2 390.55,-505.2 390.55,-499.2 390.55,-499.2 390.55,-434.4 390.55,-434.4 390.55,-428.4 396.55,-422.4 402.55,-422.4 402.55,-422.4 584.01,-422.4 584.01,-422.4 590.01,-422.4 596.01,-428.4 596.01,-434.4 596.01,-434.4 596.01,-499.2 596.01,-499.2 596.01,-505.2 590.01,-511.2 584.01,-511.2"/>
+<path fill="#dbeafe" stroke="#64748b" stroke-width="1.1" d="M583.61,-511.2C583.61,-511.2 402.94,-511.2 402.94,-511.2 396.94,-511.2 390.94,-505.2 390.94,-499.2 390.94,-499.2 390.94,-434.4 390.94,-434.4 390.94,-428.4 396.94,-422.4 402.94,-422.4 402.94,-422.4 583.61,-422.4 583.61,-422.4 589.61,-422.4 595.61,-428.4 595.61,-434.4 595.61,-434.4 595.61,-499.2 595.61,-499.2 595.61,-505.2 589.61,-511.2 583.61,-511.2"/>
 <text xml:space="preserve" text-anchor="middle" x="493.28" y="-487.8" font-family="Arial,sans-serif" font-size="14.00">PlayerMotor handcraft</text>
-<text xml:space="preserve" text-anchor="middle" x="493.28" y="-471" font-family="Arial,sans-serif" font-size="14.00">salvage MiniFab factory</text>
-<text xml:space="preserve" text-anchor="middle" x="493.28" y="-454.2" font-family="Arial,sans-serif" font-size="14.00">power and work then shared</text>
-<text xml:space="preserve" text-anchor="middle" x="493.28" y="-437.4" font-family="Arial,sans-serif" font-size="14.00">research</text>
+<text xml:space="preserve" text-anchor="middle" x="493.28" y="-471" font-family="Arial,sans-serif" font-size="14.00">salvage MiniFab transport</text>
+<text xml:space="preserve" text-anchor="middle" x="493.28" y="-454.2" font-family="Arial,sans-serif" font-size="14.00">factory power and work then</text>
+<text xml:space="preserve" text-anchor="middle" x="493.28" y="-437.4" font-family="Arial,sans-serif" font-size="14.00">shared research</text>
 </g>
 <!-- Commands&#45;&gt;Systems -->
 <g id="edge10" class="edge">
@@ -206,17 +206,17 @@
 <!-- Publish -->
 <g id="node13" class="node">
 <title>Publish</title>
-<path fill="#dbeafe" stroke="#64748b" stroke-width="1.1" d="M447.42,-224.8C447.42,-224.8 265.13,-224.8 265.13,-224.8 259.13,-224.8 253.13,-218.8 253.13,-212.8 253.13,-212.8 253.13,-164.8 253.13,-164.8 253.13,-158.8 259.13,-152.8 265.13,-152.8 265.13,-152.8 447.42,-152.8 447.42,-152.8 453.42,-152.8 459.42,-158.8 459.42,-164.8 459.42,-164.8 459.42,-212.8 459.42,-212.8 459.42,-218.8 453.42,-224.8 447.42,-224.8"/>
-<text xml:space="preserve" text-anchor="middle" x="356.28" y="-201.4" font-family="Arial,sans-serif" font-size="14.00">Transfer numeric deltas</text>
-<text xml:space="preserve" text-anchor="middle" x="356.28" y="-184.6" font-family="Arial,sans-serif" font-size="14.00">opening power and bounded</text>
-<text xml:space="preserve" text-anchor="middle" x="356.28" y="-167.8" font-family="Arial,sans-serif" font-size="14.00">machine details</text>
+<path fill="#dbeafe" stroke="#64748b" stroke-width="1.1" d="M435.23,-224.8C435.23,-224.8 269.32,-224.8 269.32,-224.8 263.32,-224.8 257.32,-218.8 257.32,-212.8 257.32,-212.8 257.32,-164.8 257.32,-164.8 257.32,-158.8 263.32,-152.8 269.32,-152.8 269.32,-152.8 435.23,-152.8 435.23,-152.8 441.23,-152.8 447.23,-158.8 447.23,-164.8 447.23,-164.8 447.23,-212.8 447.23,-212.8 447.23,-218.8 441.23,-224.8 435.23,-224.8"/>
+<text xml:space="preserve" text-anchor="middle" x="352.28" y="-201.4" font-family="Arial,sans-serif" font-size="14.00">Transfer numeric deltas</text>
+<text xml:space="preserve" text-anchor="middle" x="352.28" y="-184.6" font-family="Arial,sans-serif" font-size="14.00">opening power transit and</text>
+<text xml:space="preserve" text-anchor="middle" x="352.28" y="-167.8" font-family="Arial,sans-serif" font-size="14.00">bounded entity details</text>
 </g>
 <!-- Commit&#45;&gt;Publish -->
 <g id="edge12" class="edge">
 <title>Commit&#45;&gt;Publish</title>
-<path fill="none" stroke="#64748b" d="M461.57,-295.73C443.27,-277.32 418.64,-252.54 397.8,-231.57"/>
-<polygon fill="#64748b" stroke="#64748b" points="399.68,-229.74 392.54,-226.28 395.96,-233.45 399.68,-229.74"/>
-<text xml:space="preserve" text-anchor="middle" x="479.11" y="-257.1" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">after bounded batch</text>
+<path fill="none" stroke="#64748b" d="M460.76,-295.73C441.82,-277.24 416.31,-252.33 394.78,-231.3"/>
+<polygon fill="#64748b" stroke="#64748b" points="396.82,-229.62 389.62,-226.26 393.15,-233.38 396.82,-229.62"/>
+<text xml:space="preserve" text-anchor="middle" x="477.35" y="-257.1" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">after bounded batch</text>
 </g>
 <!-- Cache -->
 <g id="node14" class="node">
@@ -228,11 +228,11 @@
 <!-- Publish&#45;&gt;Cache -->
 <g id="edge13" class="edge">
 <title>Publish&#45;&gt;Cache</title>
-<path fill="none" stroke="#64748b" d="M300.04,-152.27C256.39,-124.69 196.42,-86.81 154.4,-60.26"/>
-<polygon fill="#64748b" stroke="#64748b" points="156.05,-58.2 148.31,-56.42 153.25,-62.64 156.05,-58.2"/>
-<text xml:space="preserve" text-anchor="middle" x="295.04" y="-113.9" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">message handler</text>
-<text xml:space="preserve" text-anchor="middle" x="295.04" y="-100.7" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">without scene</text>
-<text xml:space="preserve" text-anchor="middle" x="295.04" y="-87.5" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">callbacks</text>
+<path fill="none" stroke="#64748b" d="M296.93,-152.27C254.06,-124.75 195.2,-86.97 153.86,-60.43"/>
+<polygon fill="#64748b" stroke="#64748b" points="155.36,-58.27 147.63,-56.43 152.52,-62.69 155.36,-58.27"/>
+<text xml:space="preserve" text-anchor="middle" x="292.68" y="-113.9" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">message handler</text>
+<text xml:space="preserve" text-anchor="middle" x="292.68" y="-100.7" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">without scene</text>
+<text xml:space="preserve" text-anchor="middle" x="292.68" y="-87.5" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">callbacks</text>
 </g>
 <!-- Cache&#45;&gt;Pin -->
 <g id="edge14" class="edge">
@@ -272,7 +272,7 @@
 <!-- Draw&#45;&gt;Frame -->
 <g id="edge20" class="edge">
 <title>Draw&#45;&gt;Frame</title>
-<path fill="none" stroke="#64748b" d="M355.07,-347.07C361.57,-348.48 368.01,-349.87 374.28,-351.2 482.29,-374.1 545.57,-334.42 612.28,-422.4 652.69,-475.7 717.1,-799.61 682.28,-975.6 605.98,-1361.18 489.59,-1448.11 207.28,-1721.6 182.69,-1745.42 152.44,-1769.89 130.04,-1787.2"/>
+<path fill="none" stroke="#64748b" d="M355.07,-347.07C361.57,-348.48 368.01,-349.87 374.28,-351.2 481.87,-374.01 544.91,-334.7 611.28,-422.4 650.66,-474.44 717.19,-799.17 682.28,-975.6 605.98,-1361.18 489.59,-1448.11 207.28,-1721.6 182.69,-1745.42 152.44,-1769.89 130.04,-1787.2"/>
 <polygon fill="#64748b" stroke="#64748b" points="128.62,-1784.99 124.27,-1791.64 131.82,-1789.15 128.62,-1784.99"/>
 <text xml:space="preserve" text-anchor="middle" x="683.5" y="-1138.3" font-family="Arial,sans-serif" font-size="11.00" fill="#334155">next callback</text>
 </g>

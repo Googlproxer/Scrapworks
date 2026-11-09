@@ -145,7 +145,7 @@ export const OPENING_TECHNOLOGIES: readonly OpeningTechnology[] = [
 ];
 
 export const OPENING_CONTENT: ContentDefinition = {
-  version: 'factory-1',
+  version: 'transport-1',
   items: {
     ...EQUIPMENT_ITEMS,
     scrap: { stackLimit: 100, solidValue: 1 },

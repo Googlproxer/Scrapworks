@@ -328,9 +328,9 @@ function fixture(kinds: readonly MachineKind[]) {
   return { factory, context, resources, player, machines, entities, connect, give, feed, tick };
 }
 
-test('equipment catalogue bootstraps all eight paid assemblies and every random outcome conserves value', () => {
+test('equipment catalogue bootstraps all ten paid assemblies and every random outcome conserves value', () => {
   validateOpeningCatalogue();
-  assert.equal(OPENING_RECIPES.filter((r) => r.id.startsWith('assemble-')).length, 8);
+  assert.equal(OPENING_RECIPES.filter((r) => r.id.startsWith('assemble-')).length, 10);
   const researchValue = OPENING_TECHNOLOGIES.reduce(
     (n, t) =>
       n + t.costs.reduce((n, c) => n + OPENING_CONTENT.items[c.item].solidValue * c.quantity, 0),
@@ -845,7 +845,7 @@ test('known M5 saves upgrade detached and reject invented new equipment in the h
   delete snapshot.resources.factory;
   const before = structuredClone(snapshot),
     upgraded = preparePlayerSave(durableWorld(snapshot));
-  assert.equal(upgraded.contentVersion, 'factory-1');
+  assert.equal(upgraded.contentVersion, OPENING_CONTENT.version);
   assert.deepEqual(snapshot, before);
   assert.deepEqual(upgraded.physics, snapshot.physics);
   snapshot.entities.find((e) => e.inventory)!.inventory!.slots[0] = {

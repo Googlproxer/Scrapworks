@@ -19,6 +19,7 @@ const relative = (file: string) => path.relative(root, file).split(path.sep).joi
 const generated = [
   'public/scene/',
   'src/scripts.ts',
+  'src/scene-registrations.ts',
   'tmp/',
   'dist/',
   'node_modules/',
@@ -26,6 +27,7 @@ const generated = [
   '.vitest/',
   '.bjseditor/',
   'coverage/',
+  'docs/reports/',
   'out-tsc/',
   'assets/.export-cache.json',
   'assets/.assets-cache.json',

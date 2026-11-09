@@ -22,7 +22,7 @@
 <div class="factory-layout">
   <section aria-labelledby="machines-title">
     <h4 id="machines-title">Machines</h4>
-    <ul>
+    <ul class="machine-list">
       @for (b of machines(); track b.id) {
         <li>
           <button
@@ -228,6 +228,7 @@
           Dismantle machine
         </button>
       }
+      <app-transport-panel />
     } @else {
       <p>
         Select a placed machine here or in the world. Walk within two metres to configure, transfer

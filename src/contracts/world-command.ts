@@ -1,6 +1,7 @@
 import type { WorldCommand } from './world';
-import { isMachineKind, isPlaceable } from '@content/factory';
+import { isPlaceable } from '@content/factory';
 import { TOOLBAR_SLOTS } from './toolbar';
+import { isMaterialPort, isConveyorTurn } from '@content/transport';
 
 /** Validate untrusted worker input before touching a simulation. */
 export function validWorldCommand(value: unknown): value is WorldCommand {
@@ -12,6 +13,25 @@ export function validWorldCommand(value: unknown): value is WorldCommand {
   const batch = (v: unknown) => Number.isSafeInteger(v) && Number(v) >= 0 && Number(v) <= 100;
 
   switch (command['type']) {
+    case 'transport-connect':
+      return (
+        id(command['from']) &&
+        id(command['to']) &&
+        isMaterialPort(command['output']) &&
+        isMaterialPort(command['input'])
+      );
+    case 'transport-disconnect':
+      return id(command['connection']);
+    case 'transport-collect':
+      return id(command['target']);
+    case 'transport-configure':
+      return (
+        id(command['target']) &&
+        isConveyorTurn(command['turn']) &&
+        Array.isArray(command['filters']) &&
+        command['filters'].length === 2 &&
+        command['filters'].every((v) => v === null || id(v))
+      );
     case 'toolbar-assign':
     case 'toolbar-select':
       return (
@@ -26,7 +46,8 @@ export function validWorldCommand(value: unknown): value is WorldCommand {
     case 'factory-place': {
       const cell = command['cell'] as { column?: unknown; row?: unknown } | null;
       return (
-        (command['type'] === 'factory-place-active' || isMachineKind(command['equipment'])) &&
+        (command['type'] === 'factory-place-active' ||
+          (isPlaceable(command['equipment']) && command['equipment'] !== 'power-connection')) &&
         !!cell &&
         Number.isSafeInteger(cell.column) &&
         Number.isSafeInteger(cell.row) &&

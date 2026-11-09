@@ -9,7 +9,7 @@ node tools/cleanup/audit-repository.ts --output tmp/cleanup/repository.json
 node tools/cleanup/audit-repository.ts --require-tracked
 ```
 
-The audit reads Git with optional index locks disabled and verifies that HEAD/index hashes stay unchanged. It checks authored art, Editor assets, application sources, tools, docs and root configuration for accidental ignores, and checks that generated outputs/caches are ignored and absent from the index. It prints counts and writes detailed source paths when `--output` is supplied.
+The audit reads Git with optional index locks disabled and verifies that HEAD/index hashes stay unchanged. It checks authored art, Editor assets, application sources, tools, docs and root configuration for accidental ignores, and checks that generated outputs/caches and local reports are ignored and absent from the index. It prints counts and writes detailed source paths when `--output` is supplied.
 
 Untracked inputs are listed for review without making the ordinary audit fail. `--require-tracked` also fails when authored sources/tools/docs are untracked, so it is a deliberate post-review gate. The tool never stages, commits or deletes files. It does not establish clean dependency installation, asset licence rights or successful runtime cutover; use the [user checklist](../../docs/plans/3d-implementation-checklist.md) for those remaining steps.
 
@@ -33,6 +33,6 @@ node tools/cleanup/check-docs.ts
 
 ```
 
-The checker includes repository documentation and all `art/` and `tools/` Markdown. It validates local Markdown links and heading anchors and compares eight standalone Mermaid sources with the authoritative blocks in the TDD and roadmap. Fenced examples are excluded from link scanning.
+The checker includes repository documentation and all `art/` and `tools/` Markdown. It validates local Markdown links and heading anchors and compares eight standalone Mermaid sources with the authoritative blocks in the TDD and roadmap. Fenced examples are excluded from link scanning. Reports under `docs/reports/` and links to those optional local artifacts are excluded, so validation works without local reports on fresh checkouts and CI.
 
 After changing diagrams, run both commands in [the diagram regeneration guide](../../docs/diagrams/README.md), inspect the images, and rerun the checker. The checker does not fetch external URLs or prove that a documented feature is implemented.

@@ -39,6 +39,41 @@ function object(value: unknown): Record<string, unknown> {
 /** The explicit M4 content upgrade; normal snapshot/gameplay/native validation still follows. */
 export function upgradeOpeningSave(value: unknown): unknown {
   const original = object(value);
+  if (original['contentVersion'] === 'factory-1') {
+    const copy = object(structuredClone(original));
+
+    const newContent = new Set(['conveyor', 'sorter', 'assemble-conveyor', 'assemble-sorter']);
+
+    const rejectContent = (id: unknown): void => {
+      check(!newContent.has(String(id)), 'Unknown M6 transport content');
+    };
+
+    // Inspect content references, not arbitrary authored world/entity IDs with the same spelling.
+    const rejectNew = (value: unknown, field = ''): void => {
+      if (Array.isArray(value)) {
+        for (const entry of value) {
+          if (field === 'slots' && typeof entry === 'string') rejectContent(entry);
+          rejectNew(entry);
+        }
+      } else if (value && typeof value === 'object') {
+        check(!Object.hasOwn(value, 'transport'), 'Unexpected M6 transport state');
+        for (const [key, entry] of Object.entries(value)) {
+          if (['item', 'buildingId', 'recipe', 'outputRecipe'].includes(key)) rejectContent(entry);
+          if (
+            ['productionTotals', 'extractionTotals', 'consumed'].includes(key) &&
+            entry &&
+            typeof entry === 'object'
+          )
+            Object.keys(entry).forEach(rejectContent);
+          rejectNew(entry, key);
+        }
+      }
+    };
+
+    rejectNew(copy);
+    copy['contentVersion'] = OPENING_CONTENT.version;
+    return copy;
+  }
   if (original['contentVersion'] === 'research-1') return upgradeResearchSave(original);
   if (original['contentVersion'] !== 'opening-1') return value;
   const copy = object(structuredClone(original)),

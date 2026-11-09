@@ -1,4 +1,4 @@
-import type { MachineKind } from '@contracts/factory';
+import type { PlaceableKind } from '@contracts/factory';
 import type {
   GridCell,
   PlacementResult,
@@ -20,7 +20,7 @@ import { MACHINE_COLLISION } from '@content/factory';
 export function validateFactoryPlacement(
   definition: WorldDefinition,
   view: Pick<WorldView, 'player' | 'buildings' | 'deposits'>,
-  equipment: MachineKind,
+  equipment: PlaceableKind,
   cell: GridCell,
   rotation: QuarterTurn,
 ): PlacementResult {
@@ -41,7 +41,8 @@ export function validateFactoryPlacement(
     return fail('out-of-reach');
   const dx = Math.max(0, Math.abs(view.player.position.x - centre.x) - MACHINE_COLLISION.width / 2);
   const dz = Math.max(0, Math.abs(view.player.position.z - centre.z) - MACHINE_COLLISION.depth / 2);
-  if (dx * dx + dz * dz < PLAYER_RADIUS * PLAYER_RADIUS - 1e-10) return fail('player-overlap');
+  if (equipment !== 'conveyor' && dx * dx + dz * dz < PLAYER_RADIUS * PLAYER_RADIUS - 1e-10)
+    return fail('player-overlap');
   const deposits = view.deposits.filter((d) => {
     const anchor = worldToCell(definition.grid, d.position);
     return (

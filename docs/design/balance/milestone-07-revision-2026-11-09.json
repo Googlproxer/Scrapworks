@@ -1,0 +1,126 @@
+{
+  "date": "2026-11-09",
+  "baseRevision": "a283356c102b67a04fb0a5f54dbc870b8edbea42",
+  "source": "docs/design/transport-catalogue.md",
+  "contentVersion": "transport-1",
+  "concepts": "User selected separate sorter, strict destinations with independent bounded route service, and power-free transport.",
+  "items": [
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Item/20",
+      "name": "Sorter",
+      "value": 12,
+      "state": "Draft",
+      "source": "item.sorter",
+      "id": "5cb94fc2-de14-4533-8782-630ab85edd2c",
+      "stack": 5
+    },
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Item/19",
+      "name": "Conveyor",
+      "value": 6,
+      "state": "Draft",
+      "source": "item.conveyor",
+      "id": "a22e417c-238f-4bee-a7fd-9e447ff116bc",
+      "stack": 20
+    }
+  ],
+  "recipes": [
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/19",
+      "work": "12",
+      "state": "Draft",
+      "source": "recipe.sorter",
+      "output": "item.sorter",
+      "summary": "1 × Electrical part + 1 × Mechanical part + 2 × Metal plate",
+      "technology": "future.logistics",
+      "id": "ae689210-1ec4-4238-9bd9-b3fbc3e43cca",
+      "quantity": 1
+    },
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Recipe/18",
+      "work": "4",
+      "state": "Draft",
+      "source": "recipe.conveyor",
+      "output": "item.conveyor",
+      "summary": "1 × Mechanical part + 1 × Metal plate",
+      "technology": "future.logistics",
+      "id": "fe265d45-e3a5-41fb-8f6f-bf6ad178bfd3",
+      "quantity": 1
+    }
+  ],
+  "ingredients": [
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/44",
+      "recipe": "recipe.sorter",
+      "item": "item.plate",
+      "source": "ingredient.sorter.plate",
+      "id": "7df9a25a-8769-4638-bc68-8b50b7ca90ed",
+      "quantity": 2
+    },
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/43",
+      "recipe": "recipe.conveyor",
+      "item": "item.mechanical",
+      "source": "ingredient.conveyor.mechanical",
+      "id": "83c51c94-ed7f-4d14-b4b8-2c61c0d34a8f",
+      "quantity": 1
+    },
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/45",
+      "recipe": "recipe.sorter",
+      "item": "item.mechanical",
+      "source": "ingredient.sorter.mechanical",
+      "id": "ad3dd5a7-d2ec-4c10-a451-26fc17a78223",
+      "quantity": 1
+    },
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/46",
+      "recipe": "recipe.sorter",
+      "item": "item.electrical",
+      "source": "ingredient.sorter.electrical",
+      "id": "efc789b5-d37d-4893-b4d1-919b23502d9a",
+      "quantity": 1
+    },
+    {
+      "url": "https://scrapworks.fibery.io/Scrapworks/Ingredient/42",
+      "recipe": "recipe.conveyor",
+      "item": "item.plate",
+      "source": "ingredient.conveyor.plate",
+      "id": "f4caed55-d98a-41dd-9889-cdf3d44e8bc7",
+      "quantity": 1
+    }
+  ],
+  "preservedLogistics": {
+    "url": "https://scrapworks.fibery.io/Scrapworks/Technology/15",
+    "payment": "4 × Basic research kit",
+    "work": "60",
+    "source": "future.logistics",
+    "id": "62912dc3-7e96-4262-83fc-ee87d9514810",
+    "prerequisites": [
+      {
+        "id": "35ae82d5-2016-47d1-98d9-9c01ed76e87e"
+      },
+      {
+        "id": "681a5f75-fe4f-4e06-9d27-224f6a8106ca"
+      },
+      {
+        "id": "d4311b16-e2ab-4601-9e84-023273d78312"
+      }
+    ]
+  },
+  "catalogueCounts": {
+    "items": 20,
+    "recipes": 19,
+    "ingredients": 45,
+    "technologies": 21,
+    "researchCosts": 31,
+    "prerequisiteLinks": 33
+  },
+  "verification": {
+    "sourceIdsUnique": true,
+    "formulasReadBack": true,
+    "numericWorkflow": "Draft",
+    "newRecords": 9,
+    "whiteboardsUnchanged": true
+  }
+}

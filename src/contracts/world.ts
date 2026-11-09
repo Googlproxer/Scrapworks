@@ -1,6 +1,6 @@
 import type { OpeningCommand, OpeningRejection, OpeningView, GroundItemView } from './opening';
 import type { PhysicsBodyDefinition, PhysicsBodyView } from './physics';
-import type { FactoryCommand, FactorySummary, MachineKind } from './factory';
+import type { FactoryCommand, FactorySummary, PlaceableKind } from './factory';
 
 /** Plain gameplay metres. X points east, Z north, Y up; model-forward is +Z. */
 export interface WorldPosition {
@@ -64,7 +64,7 @@ export interface WorldDefinition {
 }
 
 export interface BuildingView extends WorldEntityDefinition {
-  readonly buildingId: 'test-building' | MachineKind;
+  readonly buildingId: 'test-building' | PlaceableKind;
   readonly cell: GridCell;
 }
 
