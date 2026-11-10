@@ -193,7 +193,9 @@ try {
   );
   await page.getByRole('button', { name: 'New Game', exact: true }).waitFor();
   await page.getByRole('button', { name: 'New Game', exact: true }).click({ trial: true });
-  const created = page.waitForEvent('worker');
+  const created = page.workers()[0]
+    ? Promise.resolve(page.workers()[0])
+    : page.waitForEvent('worker');
   await page.getByRole('button', { name: 'New Game', exact: true }).click();
   const worker = await created;
   currentWorker = worker;

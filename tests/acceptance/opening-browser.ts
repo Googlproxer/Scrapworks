@@ -139,7 +139,9 @@ try {
     exact: true,
   });
   await play.waitFor({ state: 'visible' });
-  const created = page.waitForEvent('worker');
+  const created = page.workers()[0]
+    ? Promise.resolve(page.workers()[0])
+    : page.waitForEvent('worker');
   await play.click();
   let worker = await created;
   await installWorkerEvents(worker);

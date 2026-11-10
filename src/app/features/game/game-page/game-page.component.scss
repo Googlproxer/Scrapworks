@@ -59,6 +59,37 @@ div.centre {
   max-width: calc(100% - 32px);
   transform: translateX(-50%);
   z-index: 1;
+  text-align: center;
+}
+
+.centre .preload-status {
+  box-sizing: border-box;
+  width: min(24rem, calc(100vw - 32px));
+  min-height: 2.8em;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f1f5f3;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+@media (max-height: 400px) {
+  div.centre {
+    top: auto;
+    bottom: 0.5rem;
+  }
+
+  .centre .button {
+    width: 84px;
+    margin: 4px;
+  }
+
+  .centre .preload-status {
+    min-height: 1.4em;
+    margin-top: 0;
+  }
 }
 
 div.top-left {

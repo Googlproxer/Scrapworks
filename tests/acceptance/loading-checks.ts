@@ -246,14 +246,6 @@ export async function checkLoading(
       const page = await context.newPage();
       const errors: string[] = [];
       page.on('pageerror', (error) => errors.push(String(error)));
-      await page.goto(url);
-      await menuReady(page);
-      assert(
-        await page
-          .getByRole('img', { name: 'Scrapworks', exact: true })
-          .evaluate((image) => (image as HTMLImageElement).currentSrc.endsWith('/logo-320.webp')),
-      );
-
       let release = () => undefined as void;
 
       let requested = () => undefined as void;
@@ -275,6 +267,11 @@ export async function checkLoading(
         await gate;
         await route.continue();
       });
+      await page.goto(url);
+      await menuReady(page);
+      // Install routes before navigation: character/worker requests can begin at the menu.
+      assert.equal(await page.locator('app-loading-screen').count(), 0);
+      await accessible(page, axeSource);
       await page.getByRole('button', { name: 'New Game', exact: true }).click();
       await started;
       await covered(page);
@@ -315,11 +312,11 @@ export async function checkLoading(
   const context = await browser.newContext({ viewport: { width: 320, height: 240 } });
   try {
     const page = await context.newPage();
-    await page.goto(url);
-    await menuReady(page);
     await page.route('**/protagonist-v3.glb', (route) =>
       route.fulfill({ status: 404, body: 'Missing character fixture' }),
     );
+    await page.goto(url);
+    await menuReady(page);
     await page.getByRole('button', { name: 'New Game', exact: true }).click();
     await page.getByRole('alert').waitFor();
     await covered(page);

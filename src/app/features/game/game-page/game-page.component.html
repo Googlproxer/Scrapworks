@@ -80,6 +80,9 @@
           Resume current game
         </button>
       }
+      <p class="preload-status" role="status" aria-live="polite" aria-atomic="true">
+        {{ gameRuntimeService.preloadMessage() }}
+      </p>
     </div>
   }
   @if (developer && gameRuntimeService.state(); as state) {

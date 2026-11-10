@@ -13,6 +13,7 @@ import type { BindingProfile } from '@contracts/input';
 import type { GameState, SceneKey } from '@contracts/game-state';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
 import type { WorldDefinition } from '@contracts/world';
+import type { StartupResources } from './startup-resources';
 
 export interface PreparedWorld {
   commit(): void;
@@ -27,6 +28,8 @@ export interface GameClientOptions {
   readonly bindings?: BindingProfile;
   readonly developerFixture?: boolean;
   readonly debugDrawSettings?: DebugDrawSettings;
+  readonly resources?: StartupResources;
+  readonly onMenuReady?: () => void;
 }
 
 export interface GameClient {
@@ -42,5 +45,9 @@ export interface GameClient {
   setInputEnabled(on: boolean): void;
   setDebugDrawSettings(settings: DebugDrawSettings): void;
   toggleInspector(): Promise<void>;
-  prepareWorld?(definition: WorldDefinition, session: WorldSessionBridge): Promise<PreparedWorld>;
+  prepareWorld?(
+    definition: WorldDefinition,
+    session: WorldSessionBridge,
+    ready?: Promise<void>,
+  ): Promise<PreparedWorld>;
 }

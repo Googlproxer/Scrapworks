@@ -1,5 +1,10 @@
 /// <reference lib="webworker" />
 import type { RuntimeReply } from '../contracts/simulation';
+import {
+  isBootstrapMessage,
+  isBootstrapVersion,
+  SIMULATION_READY,
+} from '../contracts/worker-bootstrap';
 
 // Install the message boundary before loading the asynchronous WASM dependency.
 // Module evaluation must not leave early initialize messages without a listener.
@@ -17,6 +22,14 @@ function fatal(error: unknown): void {
 
 void ready.catch(fatal);
 addEventListener('message', (event: MessageEvent<unknown>) => {
+  if (isBootstrapMessage(event.data, 'simulation-warmup')) {
+    if (!isBootstrapVersion(event.data)) {
+      fatal(new Error('Invalid simulation bootstrap version'));
+      return;
+    }
+    void ready.then(() => postMessage(SIMULATION_READY)).catch(fatal);
+    return;
+  }
   void ready
     .then((runtime) => {
       if (failed) return;

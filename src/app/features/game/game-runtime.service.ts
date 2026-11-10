@@ -1,4 +1,5 @@
 import { GameSessionOwner } from './game-session-owner';
+import { GameStartupResources } from './game-startup-resources';
 import { RendererConnection } from './renderer-connection';
 import { GameInputCoordinator } from './game-input-coordinator';
 import { OpeningUiController } from './opening-ui-controller';
@@ -36,7 +37,6 @@ import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
 import type { SaveSnapshot } from '@contracts/save';
 import type { SaveBinding } from '../../../persistence/save-coordinator';
 import type { WorldSessionBridge } from '@contracts/game-client';
-import { assertWorldDefinition } from '@contracts/world';
 import { filter, firstValueFrom } from 'rxjs';
 
 @Service({ autoProvided: false })
@@ -55,6 +55,20 @@ export class GameRuntimeService {
   private readonly injector = inject(Injector);
   private unsubscribe?: () => void;
   private readonly sessions = new GameSessionOwner(this.createSimulationPort, !!environment.dev);
+  private readonly resources = new GameStartupResources();
+  private cancelPreloadPaint?: () => void;
+  private preloadStarted = false;
+  public readonly preloadMessage = computed(() => {
+    const data = this.resources.status(),
+      worker = this.sessions.warmState();
+    if (data.character === 'failed' || data.definition === 'failed' || worker === 'failed')
+      return 'Some data will load when you start.';
+    return data.character === 'ready' &&
+      data.definition === 'ready' &&
+      ['ready', 'claimed'].includes(worker)
+      ? 'Game data downloaded.'
+      : 'Preparing game data…';
+  });
   private saveHolds = 0;
   private saveConfirmationInputs = 0;
   private readonly savePreview = signal<import('@contracts/world').WorldView | null>(null);
@@ -214,10 +228,12 @@ export class GameRuntimeService {
       this.unmount();
       failures.unsubscribe();
       this.sessions.destroy();
+      this.resources.dispose();
     });
   }
 
   public mount(host: HTMLElement): void {
+    if (this.resources.configure(host.ownerDocument.baseURI)) this.preloadStarted = false;
     if (this.disposed || (this.host === host && (this.client || this.isLoading()))) return;
     this.unmount();
     const generation = this.renderer.begin(host);
@@ -243,6 +259,8 @@ export class GameRuntimeService {
   private mountClient(host: HTMLElement, generation: number, factory: GameClientFactory): void {
     try {
       const options: GameClientOptions = {
+        resources: this.resources,
+        onMenuReady: () => this.preloadMenu(generation),
         bindings: this.settings.profile(),
         developerFixture: !!environment.dev,
         debugDrawSettings: this.debugDrawSettings(),
@@ -520,6 +538,8 @@ export class GameRuntimeService {
   }
 
   public unmount(): void {
+    this.cancelPreloadPaint?.();
+    this.cancelPreloadPaint = undefined;
     if (!this.host && !this.client) return;
     this.cancelPaint?.();
     this.cancelPaint = undefined;
@@ -551,6 +571,26 @@ export class GameRuntimeService {
       }
       this.stateValue.set({ phase: 'stopped', sceneKey: null, errorMessage: null });
     }
+  }
+
+  private preloadMenu(generation: number): void {
+    if (this.preloadStarted || this.cancelPreloadPaint) return;
+    this.cancelPreloadPaint = this.afterPaint(() => {
+      this.cancelPreloadPaint = undefined;
+      if (
+        this.preloadStarted ||
+        this.disposed ||
+        generation !== this.generation ||
+        this.currentSceneKey() !== 'MainMenu' ||
+        !this.host ||
+        this.host.ownerDocument.hidden ||
+        this.session
+      )
+        return;
+      this.preloadStarted = true;
+      this.resources.preload();
+      this.sessions.prewarm();
+    });
   }
 
   public setScene(key: SceneKey): void {
@@ -856,6 +896,13 @@ export class GameRuntimeService {
       generation = this.generation;
     if (!client || !bridge || !this.isReady())
       throw new Error('Wait for the viewport to be ready before loading.');
+    // Selection owns startup from this point, even if the menu's paint callback
+    // has not run yet. Continue must not race it into creating another idle port.
+    this.cancelPreloadPaint?.();
+    this.cancelPreloadPaint = undefined;
+    this.preloadStarted = true;
+    this.resources.preload();
+    this.sessions.prewarm();
     if (!save && !this.session) {
       const ready = firstValueFrom(
         client.state$.pipe(
@@ -877,21 +924,24 @@ export class GameRuntimeService {
     let presentation: import('@game/client-api').PreparedWorld | undefined;
     const previousKit = this.fieldKitOpen();
     let committed = false;
+    let cancelled = false;
     try {
       await this.session?.settled();
-      const response = await fetch(new URL('scene/worlds/game.json', document.baseURI));
-      if (!response.ok) throw new Error('The authored world could not be loaded.');
-      const definition: unknown = await response.json();
-      assertWorldDefinition(definition);
+      const definition = await this.resources.definition(true);
       if (save) assertSameAuthoredMap(save.world.definition, definition);
-      candidate = await this.sessions.prepare(definition, save);
-      const staged = candidate;
+      const ready = this.sessions.prepare(definition, save).then((value) => {
+        if (cancelled || this.disposed || generation !== this.generation) {
+          value.dispose();
+          throw new Error('The game changed while preparing its simulation.');
+        }
+        candidate = value;
+      });
       const stageBridge: WorldSessionBridge = {
         ...bridge,
         initialize: async () => undefined,
         registerCompletedTickHandler: (handler, order) =>
-          staged.registerCompletedTickHandler(handler, order),
-        frame: (...args) => (committed ? bridge.frame(...args) : staged.readView()),
+          candidate!.registerCompletedTickHandler(handler, order),
+        frame: (...args) => (committed ? bridge.frame(...args) : candidate!.readView()),
         completeFrame: () => {
           if (committed) bridge.completeFrame();
         },
@@ -900,11 +950,19 @@ export class GameRuntimeService {
         },
         isSimulationActive: () => committed && bridge.isSimulationActive(),
       };
-      presentation = await client.prepareWorld(definition, stageBridge);
+      const rendering = client.prepareWorld(definition, stageBridge, ready).then((value) => {
+        if (cancelled || this.disposed || generation !== this.generation) {
+          value.dispose();
+          throw new Error('The viewport changed while preparing game assets.');
+        }
+        return value;
+      });
+      [, presentation] = await Promise.all([ready, rendering]);
       if (this.disposed || generation !== this.generation || this.client !== client)
         throw new Error('The viewport changed while loading.');
-      const craft = !!candidate.readView().opening?.state.handcraft;
-      this.savePreview.set(candidate.readView());
+      const staged = candidate!;
+      const craft = !!staged.readView().opening?.state.handcraft;
+      this.savePreview.set(staged.readView());
       this.openingUi.restoreCrafting(craft);
       this.restoreValue.update((value) => value + 1);
       await stageUi();
@@ -919,13 +977,14 @@ export class GameRuntimeService {
       this.inspectionValue.set(null);
       this.selectionValue.set(null);
       this.placementValue.set(null);
-      this.sessions.commit(candidate, save?.runId ?? crypto.randomUUID());
+      this.sessions.commit(staged, save?.runId ?? crypto.randomUUID());
       this.savePreview.set(null);
       this.inputCoordinator.setUiFocused(craft);
       committed = true;
       this.updateInputContext();
-      this.pendingSaveFocus = { session: candidate, craft };
+      this.pendingSaveFocus = { session: staged, craft };
     } catch (error) {
+      cancelled = true;
       if (!committed) {
         this.savePreview.set(null);
         presentation?.dispose();
@@ -940,12 +999,9 @@ export class GameRuntimeService {
 
   /** Gameplay/native preflight without changing active simulation or presentation ownership. */
   public async validateForSave(save: SaveSnapshot): Promise<void> {
-    const response = await fetch(new URL('scene/worlds/game.json', document.baseURI));
-    if (!response.ok) throw new Error('The authored world could not be loaded.');
-    const definition: unknown = await response.json();
-    assertWorldDefinition(definition);
+    const definition = await this.resources.definition(true);
     assertSameAuthoredMap(save.world.definition, definition);
-    const candidate = await this.sessions.prepare(definition, save);
+    const candidate = await this.sessions.prepare(definition, save, 'validation');
     candidate.dispose();
     if (this.disposed) throw new Error('The game page closed during backup validation.');
   }

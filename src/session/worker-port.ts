@@ -1,6 +1,11 @@
 import type { RuntimeReply, RuntimeRequest } from '@contracts/simulation';
 import type { SimulationPort } from './port';
 import { fromEvent, ReplaySubject, Subscription } from 'rxjs';
+import {
+  isBootstrapMessage,
+  isBootstrapVersion,
+  SIMULATION_WARMUP,
+} from '../contracts/worker-bootstrap';
 
 export class WorkerSimulationPort implements SimulationPort {
   private worker?: Worker;
@@ -16,6 +21,12 @@ export class WorkerSimulationPort implements SimulationPort {
     }
   >();
   public timeoutMs = 15000;
+  private bootstrap?: {
+    readonly promise: Promise<void>;
+    readonly resolve: () => void;
+    readonly reject: (error: Error) => void;
+    readonly timer: ReturnType<typeof setTimeout>;
+  };
 
   constructor(
     worker = new Worker(new URL('../workers/simulation.worker', import.meta.url), {
@@ -27,6 +38,17 @@ export class WorkerSimulationPort implements SimulationPort {
     this.worker = worker;
     this.subscriptions.add(
       fromEvent<MessageEvent<RuntimeReply>>(worker, 'message').subscribe((event) => {
+        if (isBootstrapMessage(event.data, 'simulation-ready')) {
+          if (!isBootstrapVersion(event.data)) {
+            this.fail(new Error('Invalid simulation bootstrap version'));
+            return;
+          }
+          if (this.bootstrap) {
+            clearTimeout(this.bootstrap.timer);
+            this.bootstrap.resolve();
+          }
+          return;
+        }
         const begin = observeReceipt ? performance.now() : 0;
         const reply = event.data;
         const pending = this.pending.get(reply.id);
@@ -48,6 +70,29 @@ export class WorkerSimulationPort implements SimulationPort {
         this.fail(new Error('Simulation worker reply could not be decoded')),
       ),
     );
+  }
+
+  public warmup(): Promise<void> {
+    if (this.failure) return Promise.reject(this.failure);
+    if (this.bootstrap) return this.bootstrap.promise;
+    let resolve!: () => void;
+    let reject!: (error: Error) => void;
+    const promise = new Promise<void>((yes, no) => {
+      resolve = yes;
+      reject = no;
+    });
+    const timer = setTimeout(
+      () => this.fail(new Error('Simulation bootstrap timed out')),
+      this.timeoutMs,
+    );
+    this.bootstrap = { promise, resolve, reject, timer };
+    void promise.catch(() => undefined);
+    try {
+      this.worker!.postMessage(SIMULATION_WARMUP);
+    } catch (error) {
+      this.fail(error instanceof Error ? error : new Error(String(error)));
+    }
+    return promise;
   }
 
   public send(request: RuntimeRequest): Promise<RuntimeReply> {
@@ -75,6 +120,10 @@ export class WorkerSimulationPort implements SimulationPort {
   private fail(error: Error): void {
     if (this.failure) return;
     this.failure = error;
+    if (this.bootstrap) {
+      clearTimeout(this.bootstrap.timer);
+      this.bootstrap.reject(error);
+    }
     this.subscriptions.unsubscribe();
     this.worker?.terminate();
     this.worker = undefined;

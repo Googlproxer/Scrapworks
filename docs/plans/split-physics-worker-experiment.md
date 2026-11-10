@@ -1,6 +1,6 @@
 # Split physics worker experiment plan
 
-Recorded 10 November 2026. Status: **planned; no prototype, new latency baseline or qualification results yet**. This plan defines a local experiment. Production keeps its existing single simulation worker until a separate implementation decision follows the results.
+Recorded 10 November 2026. Coordination update: **a separate agent is running this experiment**, as confirmed by the user. That agent owns progress/results and will reconcile the [data preloading changes](game-data-preloading.md) with the experiment's findings. Both efforts proceed in parallel; this plan's protocol does not itself establish a production architecture decision.
 
 ## Purpose and decision
 

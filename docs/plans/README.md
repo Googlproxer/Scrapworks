@@ -16,7 +16,9 @@ The [cleanup record](3d-cleanup.md) describes retired tools/assets and their rec
 
 The [production ECS/worker implementation plan](ecs-worker-implementation.md) established Step 0. Milestones 3–6 execute the opening and factory on that same authority and clock. Completed-tick hooks, authored-world Retry and plain capture/rebuild remain in place; Milestone 4 implements gameplay persistence.
 
-The [split physics worker experiment plan](split-physics-worker-experiment.md) defines a proposed local comparison against the current player controller: causal input-to-render latency, separately scaled simulation/physics workloads, coherent saves and lifecycle/overload checks. No split-worker implementation or qualification is claimed; production retains its current worker architecture pending the experiment and a separate decision.
+The [game data preloading implementation](game-data-preloading.md) warms the existing worker and downloads character/world data during the usable main menu, then overlaps simulation and presentation preparation after selection. It uses byte-source preloading with a reserved, non-blocking readiness status. The implementation record includes ownership boundaries and the separate experiment's reconciliation handoff.
+
+The [split physics worker experiment](split-physics-worker-experiment.md) is being run by a separate agent, which will reconcile the preload changes with its findings. It compares controller latency, separately scaled simulation/physics workloads, coherent saves and lifecycle/overload behavior. Both efforts proceed in parallel; the preload plan uses the current architecture as its reference and does not predetermine the experiment's outcome.
 
 Manual salvage, recipe jobs, inventory interaction, background Field Research, the MiniFab, factory machines/labs and M7 transport/sorting are implemented. M8 restoration, water, weather, storage and optional coal are implemented; local acceptance is complete. Gameplay saves have their own repository and real production IndexedDB acceptance; controls settings remain separate.
 

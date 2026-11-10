@@ -168,6 +168,37 @@ describe('BabylonGameClient in the browser', () => {
     expect(latest).toBe(current);
   });
 
+  it('loads candidate presentation while simulation readiness is pending, then releases a failed sibling', async () => {
+    startClient();
+    const engine = await waitForMenu();
+    const active = engine.scenes[0];
+    let fail!: (error: Error) => void;
+    const ready = new Promise<void>((_resolve, reject) => {
+      fail = reject;
+    });
+    let parsed!: () => void;
+    const characterParsed = new Promise<void>((resolve) => {
+      parsed = resolve;
+    });
+    let stagedAssets: AssetContainer | undefined;
+    loadSceneFn.mockImplementationOnce(async (scene) => {
+      stagedAssets = await fixture.loadScene(scene);
+      parsed();
+      return stagedAssets;
+    });
+    const pending = client.prepareWorld(fixture.definition(), menuClientOptions().session, ready);
+    await characterParsed;
+    const dispose = vi.spyOn(stagedAssets!, 'dispose');
+    fail(new Error('Simulation failed to initialize'));
+    await expect(pending).rejects.toThrow('Simulation failed');
+    // A character parser already in flight must release its late result too.
+    await firstValueFrom(animationFrames());
+    expect(dispose).toHaveBeenCalledOnce();
+    expect(engine.scenes).toContain(active);
+    expect(active.isDisposed).toBe(false);
+    expect(states.at(-1)).toMatchObject({ phase: 'ready', sceneKey: 'MainMenu' });
+  });
+
   it('rolls back the renderer and subscriptions when resize observation cannot be registered', () => {
     const error = new Error('Resize observation unavailable');
     const enginesBefore = EngineStore.Instances.length;

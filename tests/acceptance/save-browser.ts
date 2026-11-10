@@ -195,7 +195,9 @@ try {
   await page.reload();
   if (factoryMode) {
     stage = 'prepared factory controls';
-    const created = page.waitForEvent('worker');
+    const created = page.workers()[0]
+      ? Promise.resolve(page.workers()[0])
+      : page.waitForEvent('worker');
     await page.getByRole('button', { name: 'Continue', exact: true }).click();
     const worker = await created;
     await worker.evaluate(() => {
@@ -332,6 +334,12 @@ try {
       .waitFor();
     await page.getByRole('button', { name: 'Resume game', exact: true }).click();
     stage = 'new named run preserves previous run';
+    // Establish unsaved progress explicitly instead of relying on a simulation tick
+    // occurring between two UI clicks (faster loading can leave a clean session).
+    const otherSlot = page.locator('.toolbar button[aria-pressed="false"]').first();
+    const slotIndex = await otherSlot.getAttribute('data-slot');
+    await otherSlot.click();
+    await page.locator(`.toolbar button[data-slot="${slotIndex}"][aria-pressed="true"]`).waitFor();
     await page.getByRole('button', { name: 'Menu', exact: true }).click();
     await page.getByRole('button', { name: 'Main menu', exact: true }).click();
     await page.getByRole('button', { name: 'New Game', exact: true }).click();

@@ -87,11 +87,13 @@ describe('GameRuntimeService', () => {
   let service: GameRuntimeService;
   let loader: ReturnType<typeof vi.fn<GameClientLoader>>;
   let paint: ReturnType<typeof vi.fn<AfterPaint>>;
+  let createPort: ReturnType<typeof vi.fn<() => InlineSimulationPort>>;
   let settings: { profile: ReturnType<typeof signal<BindingProfile>> };
 
   beforeEach(() => {
     factory = vi.fn<(host: HTMLElement, options?: GameClientOptions) => GameClient>();
     loader = vi.fn(async () => factory);
+    createPort = vi.fn(() => new InlineSimulationPort());
     paint = vi.fn((work) => {
       work();
       return () => undefined;
@@ -100,7 +102,7 @@ describe('GameRuntimeService', () => {
     TestBed.configureTestingModule({
       providers: [
         GameRuntimeService,
-        { provide: SIMULATION_PORT_FACTORY, useValue: () => new InlineSimulationPort() },
+        { provide: SIMULATION_PORT_FACTORY, useValue: createPort },
         { provide: GAME_CLIENT_LOADER, useValue: loader },
         { provide: AFTER_PAINT, useValue: paint },
         { provide: ControlSettingsService, useValue: settings },
@@ -608,6 +610,47 @@ describe('GameRuntimeService', () => {
       expect(service.world()?.player).toEqual(before.player);
     } finally {
       fetchMap.mockRestore();
+    }
+  });
+
+  it('adopts one worker when Continue beats the queued menu preload callback', async () => {
+    const game = createClient();
+    factory.mockReturnValueOnce(game.client);
+    await mount(document.createElement('div'));
+    game.emit({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
+    let queued!: () => void;
+    const cancel = vi.fn();
+    paint.mockImplementationOnce((work) => {
+      queued = work;
+      return cancel;
+    });
+    currentOptions().onMenuReady!();
+    const source = new GameSession(definition, { portFactory: () => new InlineSimulationPort() });
+    await source.ready;
+    const save = saveFixture((await source.capture()).world);
+    source.dispose();
+    const request = vi
+      .spyOn(globalThis, 'fetch')
+      .mockImplementation(async (url) =>
+        String(url).endsWith('.json')
+          ? Response.json(definition)
+          : new Response(new Uint8Array([1])),
+      );
+    game.client.prepareWorld = async (_definition, _bridge, ready) => {
+      // Deliver the canceled callback after the candidate has claimed its port,
+      // while presentation and simulation preparation still overlap.
+      queued();
+      await ready;
+      return { commit: () => undefined, dispose: () => undefined };
+    };
+    try {
+      const activation = service.replaceForSave(save, async () => undefined);
+      await activation;
+      expect(cancel).toHaveBeenCalledOnce();
+      expect(createPort).toHaveBeenCalledOnce();
+      expect(service.runId()).toBe(save.runId);
+    } finally {
+      request.mockRestore();
     }
   });
 

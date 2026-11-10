@@ -293,30 +293,78 @@ export class BabylonGameClient implements GameClient {
   public async prepareWorld(
     definition: WorldDefinition,
     session: import('@contracts/game-client').WorldSessionBridge,
+    ready: Promise<void> = Promise.resolve(),
   ): Promise<import('./client-api').PreparedWorld> {
     const transition = this.transition;
     const scene = new Scene(this.engine);
     let assets: AssetContainer | undefined;
+    let character: AssetContainer | undefined;
     let world: WorldScene | undefined;
     let committed = false;
+    let cancelled = false;
+    let loaded = false;
+    let released = false;
+
+    const release = () => {
+      if (!cancelled || !loaded || released || committed) return;
+      released = true;
+      world?.dispose();
+      character?.dispose();
+      assets?.dispose();
+      scene.dispose();
+    };
 
     const dispose = () => {
-      if (!committed) {
-        world?.dispose();
-        assets?.dispose();
-        scene.dispose();
-      }
+      if (committed) return;
+      cancelled = true;
+      release();
     };
 
     const checkOwner = () => {
-      if (!this.isCurrentTransition(transition) || this.contextLost)
+      if (
+        cancelled ||
+        !this.isCurrentTransition(transition) ||
+        this.contextLost ||
+        scene.isDisposed
+      )
         throw new Error('The viewport changed while preparing the saved world.');
     };
 
-    try {
-      assets = await this.loadSceneFn(scene, 'Game');
+    const loading = (async () => {
+      this.reportLoading('Loading game scene…');
+      checkOwner();
+      assets = await this.loadSceneFn(scene, 'Game', (progress) => {
+        if (!cancelled && this.isCurrentTransition(transition))
+          this.reportLoading('Loading game scene…', progress);
+      });
       checkOwner();
       assets.addAllToScene();
+      this.reportLoading('Loading character…');
+      checkOwner();
+      const camera = scene.activeCamera;
+      character = await this.loadCharacterAssets(scene, (progress) => {
+        if (!cancelled && this.isCurrentTransition(transition))
+          this.reportLoading('Loading character…', progress);
+      });
+      scene.activeCamera = camera;
+      checkOwner();
+    })();
+    void loading.then(
+      () => {
+        loaded = true;
+        release();
+      },
+      () => {
+        loaded = true;
+        dispose();
+      },
+    );
+
+    try {
+      await Promise.all([loading, ready]);
+      checkOwner();
+      const preparedCharacter = character!;
+      character = undefined;
       world = await WorldScene.create(
         scene,
         definition,
@@ -327,7 +375,7 @@ export class BabylonGameClient implements GameClient {
           selection: this.selectionSource,
           placementFeedback: this.placementSource,
         },
-        this.loadCharacterFn,
+        async () => preparedCharacter,
       );
       checkOwner();
       await scene.whenReadyAsync();
@@ -350,7 +398,7 @@ export class BabylonGameClient implements GameClient {
       return {
         commit: () => {
           checkOwner();
-          ++this.transition;
+          const committedTransition = ++this.transition;
           this.disposeCurrentScene();
           this.currentScene = scene;
           this.currentAssets = assets;
@@ -371,6 +419,7 @@ export class BabylonGameClient implements GameClient {
           this.selectionSource.next(null);
           this.placementSource.next(null);
           this.stateSubject.next({ phase: 'ready', sceneKey: 'Game', errorMessage: null });
+          if (!this.isCurrentTransition(committedTransition)) return;
           this.loadingSource.next(null);
           this.reconcileActivity();
         },
@@ -409,6 +458,7 @@ export class BabylonGameClient implements GameClient {
   private async loadScene(key: SceneKey, transition: number): Promise<void> {
     const scene = new Scene(this.engine);
     this.currentScene = scene;
+    let character: AssetContainer | undefined;
     try {
       const debug = debugDrawForScene(scene);
       this.sceneDebug = debug;
@@ -423,34 +473,53 @@ export class BabylonGameClient implements GameClient {
       const sceneTask = key === 'Game' ? 'Loading game scene…' : 'Loading main menu…';
       this.reportLoading(sceneTask);
       if (!this.isCurrentTransition(transition)) return;
-      const assets = await this.loadSceneFn(scene, key, (progress) => {
+      const sceneLoading = this.loadSceneFn(scene, key, (progress) => {
         if (this.isCurrentTransition(transition)) this.reportLoading(sceneTask, progress);
       });
+      const presentation = sceneLoading.then(async (assets) => {
+        if (!this.isCurrentTransition(transition)) {
+          assets.dispose();
+          return;
+        }
+        this.currentAssets = assets;
+        assets.addAllToScene();
+        if (key === 'Game') {
+          this.reportLoading('Loading character…');
+          if (!this.isCurrentTransition(transition)) return;
+          const camera = scene.activeCamera;
+          const loadedCharacter = await this.loadCharacterAssets(scene, (progress) => {
+            if (this.isCurrentTransition(transition))
+              this.reportLoading('Loading character…', progress);
+          });
+          if (!this.isCurrentTransition(transition)) {
+            loadedCharacter.dispose();
+            return;
+          }
+          character = loadedCharacter;
+          scene.activeCamera = camera;
+        }
+      });
+      const simulation =
+        key === 'Game'
+          ? Promise.resolve().then(async () => {
+              this.reportLoading('Loading world data…');
+              if (!this.isCurrentTransition(transition)) return;
+              const definition = await this.loadDefinition();
+              if (!this.isCurrentTransition(transition)) return;
+              this.reportLoading('Starting simulation…');
+              if (!this.isCurrentTransition(transition)) return;
+              await this.options.session.initialize(definition);
+              return definition;
+            })
+          : Promise.resolve(undefined);
+      const [, definition] = await Promise.all([presentation, simulation]);
       if (!this.isCurrentTransition(transition)) {
-        assets.dispose();
+        character?.dispose();
         return;
       }
-      this.currentAssets = assets;
-      assets.addAllToScene();
-      if (key === 'Game') {
-        const abort = new AbortController();
-        this.worldAbort = abort;
-        this.reportLoading('Loading world data…');
-        if (!this.isCurrentTransition(transition)) return;
-        const response = await fetch(
-          new URL('scene/worlds/game.json', this.ownerDocument.baseURI),
-          { signal: abort.signal },
-        );
-        if (!response.ok) throw new Error(`World definition failed to load (${response.status}).`);
-        const definition: unknown = await response.json();
-        assertWorldDefinition(definition);
-        if (!this.isCurrentTransition(transition)) return;
-        this.reportLoading('Starting simulation…');
-        if (!this.isCurrentTransition(transition)) return;
-        await this.options.session.initialize(definition);
-        if (!this.isCurrentTransition(transition)) return;
-        this.reportLoading('Loading character…');
-        if (!this.isCurrentTransition(transition)) return;
+      if (definition && character) {
+        const preparedCharacter = character;
+        character = undefined;
         const world = await WorldScene.create(
           scene,
           definition,
@@ -461,11 +530,7 @@ export class BabylonGameClient implements GameClient {
             selection: this.selectionSource,
             placementFeedback: this.placementSource,
           },
-          (owner) =>
-            this.loadCharacterFn(owner, (progress) => {
-              if (this.isCurrentTransition(transition))
-                this.reportLoading('Loading character…', progress);
-            }),
+          async () => preparedCharacter,
         );
         if (!this.isCurrentTransition(transition)) {
           world.dispose();
@@ -484,7 +549,41 @@ export class BabylonGameClient implements GameClient {
       this.clock.reset();
       this.reconcileActivity();
     } catch (error) {
+      character?.dispose();
       if (this.isCurrentTransition(transition)) this.reportError(error);
+    }
+  }
+
+  private async loadDefinition(): Promise<WorldDefinition> {
+    if (this.options.resources) return this.options.resources.definition(true);
+    const abort = new AbortController();
+    this.worldAbort = abort;
+    const response = await fetch(new URL('scene/worlds/game.json', this.ownerDocument.baseURI), {
+      signal: abort.signal,
+    });
+    if (!response.ok) throw new Error(`World definition failed to load (${response.status}).`);
+    const definition: unknown = await response.json();
+    assertWorldDefinition(definition);
+    return definition;
+  }
+
+  private async loadCharacterAssets(
+    scene: Scene,
+    onProgress?: (value: number) => void,
+  ): Promise<AssetContainer> {
+    const resources = this.options.resources;
+    const source = await resources?.character();
+    if (scene.isDisposed) throw new Error('Character owner was disposed.');
+    try {
+      const character = await this.loadCharacterFn(scene, onProgress, source);
+      if (scene.isDisposed) {
+        character.dispose();
+        throw new Error('Character owner was disposed.');
+      }
+      return character;
+    } catch (error) {
+      if (!scene.isDisposed) resources?.invalidateCharacter();
+      throw error;
     }
   }
 
@@ -659,6 +758,7 @@ export class BabylonGameClient implements GameClient {
       if (state.phase !== 'ready') this.stateSubject.next({ ...state, phase: 'ready' });
       if (this.isCurrentTransition(transition) && this.loadingSource.value !== null)
         this.loadingSource.next(null);
+      if (state.phase !== 'ready' && state.sceneKey === 'MainMenu') this.options.onMenuReady?.();
     } catch (error) {
       if (!(error instanceof FrameOwnershipChanged) && this.isCurrentTransition(transition))
         this.reportError(error);

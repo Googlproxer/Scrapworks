@@ -5,6 +5,7 @@ const { WorkerSimulationPort } = await import('./worker-port.ts');
 const { GameSession } = await import('./game-session.ts');
 const { SimulationRuntime } = await import('./runtime.ts');
 import { worldFixture } from '../../tests/support/world-fixture.ts';
+import { SIMULATION_READY, SIMULATION_WARMUP } from '../contracts/worker-bootstrap.ts';
 const definition = worldFixture();
 
 class FakeWorker extends EventTarget {
@@ -113,4 +114,51 @@ test('worker failure notification respects unsubscribe and replays the terminal 
   assert.deepEqual(removed, []);
   assert.equal(received.length, 1);
   assert.deepEqual(late, received);
+});
+
+test('warmup is shared, sends no world initialization, and waits for versioned readiness', async () => {
+  const worker = new FakeWorker();
+  const port = new WorkerSimulationPort(worker as unknown as Worker);
+  const ready = port.warmup();
+  assert.equal(port.warmup(), ready);
+  assert.deepEqual(worker.requests, [SIMULATION_WARMUP]);
+  let settled = false;
+  void ready.then(() => {
+    settled = true;
+  });
+  await Promise.resolve();
+  assert.equal(settled, false);
+  worker.dispatchEvent(new MessageEvent('message', { data: SIMULATION_READY }));
+  await ready;
+  assert.equal(settled, true);
+  assert.equal(worker.terminated, 0);
+  port.dispose();
+});
+
+test('bootstrap failure, timeout and disposal reject readiness and terminate once', async () => {
+  vi.useFakeTimers();
+  try {
+    for (const reason of ['version', 'timeout', 'dispose', 'error']) {
+      const worker = new FakeWorker();
+      const port = new WorkerSimulationPort(worker as unknown as Worker);
+      port.timeoutMs = 5;
+      const ready = port.warmup();
+      const rejected = assert.rejects(ready);
+      if (reason === 'version')
+        worker.dispatchEvent(
+          new MessageEvent('message', {
+            data: { ...SIMULATION_READY, version: 999 },
+          }),
+        );
+      if (reason === 'timeout') await vi.advanceTimersByTimeAsync(5);
+      if (reason === 'dispose') port.dispose();
+      if (reason === 'error') worker.crash('bootstrap crash');
+      await rejected;
+      await assert.rejects(port.warmup());
+      port.dispose();
+      assert.equal(worker.terminated, 1);
+    }
+  } finally {
+    vi.useRealTimers();
+  }
 });
