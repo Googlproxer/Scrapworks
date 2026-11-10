@@ -73,7 +73,7 @@ jobs:
         run: yarn test --configuration=coverage
 
       - name: Build production application
-        run: yarn build --stats-json
+        run: yarn build:prod:stats
 
       # Inspect the production build graph only; this does not run benchmarks.
       - name: Enforce production worker/main dependency separation

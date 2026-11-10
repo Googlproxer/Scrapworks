@@ -45,7 +45,7 @@ The [23 October migration evidence](../reports/migration/2026-10-23/README.md) r
 - [x] Keep the implemented simulation free of renderer and storage dependencies.
 - [x] Demonstrate a real IndexedDB controls-settings reload independently of gameplay saves. This does not validate world persistence.
 - [x] Implement plain `WorldState`, typed placement commands, and fixed-step behavior in Milestone 2.
-      Versioned gameplay snapshots are delivered separately by [Milestone 4](milestone-04-first-local-save.md). Test records and a save dialog do not establish world persistence or block this integration milestone.
+      Versioned gameplay snapshots are delivered separately by [Milestone 4](milestone-04-first-local-save.md) and do not block this integration milestone.
 
 ## Completion checks
 

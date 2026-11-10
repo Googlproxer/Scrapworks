@@ -44,7 +44,7 @@ The version-controlled [scene feature catalogue](../../tools/scenes/scene-featur
 
 ## Persistence and measurements
 
-The developer Save/Load utility retains its existing records and is loaded only through the development entry point. Imports are validated, writes awaited, failures visible and occupancy refreshed after committed success. It does not reference GameSession, capture, world replacement, live inventory or research. [Milestone 4](../plans/milestone-04-first-local-save.md) will build on its storage/dialog experience while introducing repository, codec, capture and replacement boundaries for gameplay persistence.
+Gameplay persistence uses repository, codec, capture and candidate replacement boundaries established by [Milestone 4](../plans/milestone-04-first-local-save.md) and extended by [Milestone 9](../plans/milestone-09-save-resilience.md). Controls settings retain their separate adapter.
 
 Historical synthetic reports remain laboratory evidence. [Current-game benchmarks](../../tools/game-bench/README.md) use real production captures/schemas and gameplay commands. Their distinct workload identifiers and end-to-end timings cannot be compared directly with the retired synthetic processor timings. Full benchmark runs remain opt-in.
 

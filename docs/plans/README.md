@@ -16,7 +16,7 @@ The [cleanup record](3d-cleanup.md) describes retired tools/assets and their rec
 
 The [production ECS/worker implementation plan](ecs-worker-implementation.md) established Step 0. Milestones 3–6 execute the opening and factory on that same authority and clock. Completed-tick hooks, authored-world Retry and plain capture/rebuild remain in place; Milestone 4 implements gameplay persistence.
 
-Manual salvage, recipe jobs, inventory interaction, background Field Research, the MiniFab, factory machines/labs and M7 transport/sorting are implemented. M8 restoration, water, weather, storage and optional coal are implemented; local acceptance is complete. Gameplay saves have their own repository and real production IndexedDB acceptance; controls-settings and developer test-data storage remain separate.
+Manual salvage, recipe jobs, inventory interaction, background Field Research, the MiniFab, factory machines/labs and M7 transport/sorting are implemented. M8 restoration, water, weather, storage and optional coal are implemented; local acceptance is complete. Gameplay saves have their own repository and real production IndexedDB acceptance; controls settings remain separate.
 
 ## Milestones at a glance
 

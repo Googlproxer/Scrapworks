@@ -47,7 +47,7 @@ Preserve the seven existing Fibery identities and original step numbers. The del
 
 Existing research, machine, environment and save controls retain M3–M9 credit. This package teaches and refines them.
 
-- [x] Keep fixture diagnostics, IDs, construction test controls and test-data saving outside the production game UI.
+- [x] Keep fixture diagnostics, IDs and construction test controls outside the production game UI.
 - [x] Check implemented menu/controls keyboard focus, input ownership and accessibility; tested migration UI states pass axe.
 - [x] Add compact dismissible/reopenable next-objective guidance: movement → scrap → field research/tools → components → MiniFab → renewable factory/labs → transport/sorting → water/greenhouses → 400-cell restoration. Derive completion from authoritative gameplay; loading an advanced run must not force completed tutorial actions again.
 - [x] Explain UI-bound handcrafting/refunds, separate research/unlock/equipment ownership, MiniFab precursors/buffers and its inventory-side panel. Optional pointer/controller winding has accessible alternatives; depletion never stops baseline crafting.

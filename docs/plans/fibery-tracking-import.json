@@ -1074,7 +1074,7 @@
       "sourceSection": "Step 4 Keep storage and gameplay evidence separate",
       "target": "milestone.04.step.01.open",
       "reason": "Gameplay snapshots belong to Milestone 4.",
-      "criteria": "- [ ] Implement versioned gameplay snapshots in Milestone 4; test records and a save dialog do not establish world persistence."
+      "criteria": "- [ ] Implement versioned gameplay snapshots in Milestone 4."
     },
     {
       "sourceId": "milestone.02.step.01.open",

@@ -24,10 +24,6 @@ await fs.mkdir(screenshotDirectory, { recursive: true });
 const assertProductionUi = async (page: Page) => {
   const result = {
     diagnosticPanels: await page.locator('.top-left pre').count(),
-    saveTestButtons: await page
-      .getByRole('button', { name: /^(Open Test Save Dialog|Save Game|Load Game|Save|Load)$/i })
-      .count(),
-    saveTestDialogs: await page.locator('app-save-load').count(),
     fixtureInstructions: await page.getByText(/Development fixture:/).count(),
   };
   if (Object.values(result).some(Boolean))
@@ -108,7 +104,7 @@ const auditProductionAssets = async () => {
     }),
   );
   const stats = await fs
-    .readFile(path.join(directory, '../stats.json'), 'utf8')
+    .readFile(path.join(directory, '../browser-stats.json'), 'utf8')
     .then(JSON.parse)
     .catch(() => null);
   const result = {

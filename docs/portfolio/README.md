@@ -44,7 +44,7 @@ From the repository root, use the pinned Yarn version and lockfile:
 ```powershell
 corepack enable
 yarn install --immutable
-yarn build --stats-json
+yarn build:prod:stats
 node tools/portfolio/serve.ts --directory dist/scrapworks/browser --port 4173
 ```
 
@@ -58,7 +58,7 @@ Copy/clone the source and install locked dependencies on the later machine. Inst
 
 ```powershell
 node node_modules/playwright/cli.js install chromium firefox
-yarn build --stats-json
+yarn build:prod:stats
 node tools/portfolio/run.ts --browser all --headed --output docs/reports/milestone-10/my-device
 ```
 

@@ -12,11 +12,11 @@ import { TestBed } from '@angular/core/testing';
 import { GameRuntimeService } from '../game/game-runtime.service';
 import { UiService } from './ui.service';
 
-const TEST_SLOT = new InjectionToken<number>('UI dialog test slot');
+const TEST_VALUE = new InjectionToken<number>('UI dialog test value');
 
-@Component({ selector: 'app-test-dialog', template: '<p>Save dialog test content</p>' })
+@Component({ selector: 'app-test-dialog', template: '<p>Dialog test content</p>' })
 class TestDialog {
-  public readonly slot = inject(TEST_SLOT, { optional: true });
+  public readonly value = inject(TEST_VALUE, { optional: true });
 }
 
 @Component({ selector: 'app-alternate-dialog', template: '<p>Alternative dialog test content</p>' })
@@ -56,7 +56,7 @@ describe('UiService', () => {
   });
 
   it('blocks input until its dialog closes', () => {
-    service.openUIDialog('save-dialog', TestDialog);
+    service.openUIDialog('controls', TestDialog);
     expect(dialog.openDialogs).toHaveLength(1);
     expect(dialog.openDialogs[0].componentInstance).toBeInstanceOf(TestDialog);
     expect(setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
@@ -67,17 +67,17 @@ describe('UiService', () => {
   });
 
   it('prevents duplicate dialogs for a key', () => {
-    service.openUIDialog('save-dialog', TestDialog);
-    service.openUIDialog('save-dialog', AlternateDialog);
+    service.openUIDialog('controls', TestDialog);
+    service.openUIDialog('controls', AlternateDialog);
     expect(dialog.openDialogs).toHaveLength(1);
     expect(dialog.openDialogs[0].componentInstance).toBeInstanceOf(TestDialog);
     expect(setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
   });
 
   it('releases the key so another component type can be opened after closing', () => {
-    service.openUIDialog('save-dialog', TestDialog);
-    dialog.openDialogs[0].close('saved');
-    service.openUIDialog('save-dialog', AlternateDialog);
+    service.openUIDialog('controls', TestDialog);
+    dialog.openDialogs[0].close('closed');
+    service.openUIDialog('controls', AlternateDialog);
     expect(dialog.openDialogs).toHaveLength(1);
     expect(dialog.openDialogs[0].componentInstance).toBeInstanceOf(AlternateDialog);
     dialog.openDialogs[0].close();
@@ -85,18 +85,18 @@ describe('UiService', () => {
   });
 
   it('passes data and typed provider callbacks independently of the component type', () => {
-    service.openUIDialog<TestDialog, { slot: number }>('save-dialog', TestDialog, {
-      data: { slot: 7 },
-      ariaLabel: 'Save test',
+    service.openUIDialog<TestDialog, { value: number }>('controls', TestDialog, {
+      data: { value: 7 },
+      ariaLabel: 'Dialog test',
       providers: (dialogRef, config) => {
-        expect(dialogRef.config.ariaLabel).toBe('Save test');
-        return [{ provide: TEST_SLOT, useValue: config.data?.slot }];
+        expect(dialogRef.config.ariaLabel).toBe('Dialog test');
+        return [{ provide: TEST_VALUE, useValue: config.data?.value }];
       },
     });
 
     expect(dialog.openDialogs).toHaveLength(1);
     expect(dialog.openDialogs[0].componentInstance).toBeInstanceOf(TestDialog);
-    expect((dialog.openDialogs[0].componentInstance as TestDialog).slot).toBe(7);
+    expect((dialog.openDialogs[0].componentInstance as TestDialog).value).toBe(7);
   });
 
   it('blocks before opening and releases a failed reservation so the key can be retried', () => {
@@ -105,11 +105,11 @@ describe('UiService', () => {
       throw new Error('Dialog construction failed');
     });
 
-    service.openUIDialog('save-dialog', TestDialog);
+    service.openUIDialog('controls', TestDialog);
     expect(dialog.openDialogs).toHaveLength(0);
     expect(setInputEnabled.mock.calls).toEqual([[false], [true]]);
 
-    service.openUIDialog('save-dialog', TestDialog);
+    service.openUIDialog('controls', TestDialog);
     expect(dialog.openDialogs).toHaveLength(1);
     expect(setInputEnabled).toHaveBeenLastCalledWith(false);
     dialog.openDialogs[0].close();
@@ -119,7 +119,7 @@ describe('UiService', () => {
   it.each(['escape', 'backdrop'] as const)(
     'releases input once when dismissed through %s',
     (method) => {
-      service.openUIDialog('save-dialog', TestDialog);
+      service.openUIDialog('controls', TestDialog);
       const ref = dialog.openDialogs[0];
 
       if (method === 'escape') {
@@ -145,7 +145,7 @@ describe('UiService', () => {
   it('closes only its owned dialogs on destruction and completes their close subscriptions', () => {
     const owner = createEnvironmentInjector([UiService], TestBed.inject(EnvironmentInjector));
     try {
-      owner.get(UiService).openUIDialog('save-dialog', TestDialog);
+      owner.get(UiService).openUIDialog('controls', TestDialog);
       const owned = dialog.openDialogs[0];
       const other = dialog.open(AlternateDialog);
       const closed = vi.fn();

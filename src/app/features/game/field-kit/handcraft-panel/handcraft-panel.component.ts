@@ -1,12 +1,12 @@
 import { Component, computed, linkedSignal, untracked } from '@angular/core';
-import { OpeningPanel } from './opening-panel';
+import { OpeningPanel } from '../opening-panel';
 import { OPENING_CONTENT } from '@content/opening';
 
 @Component({
   selector: 'app-handcraft-panel',
   imports: [],
   templateUrl: './handcraft-panel.component.html',
-  styleUrl: './field-kit.component.scss',
+  styleUrl: '../field-kit.component.scss',
   host: { role: 'region', 'aria-labelledby': 'craft-title' },
 })
 export class HandcraftPanelComponent extends OpeningPanel {

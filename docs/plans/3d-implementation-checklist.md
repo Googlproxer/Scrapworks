@@ -8,7 +8,7 @@ Preserve active authoring, source art and provenance. The [cleanup record](3d-cl
 
 ## Integration checks
 
-- Verify one default Babylon route plus the `/3d` redirect, Angular menu/title/loading/errors and the explicit test-save label.
+- Verify one default Babylon route plus the `/3d` redirect, Angular menu/title/loading/errors.
 - Verify focus/modal ownership, custom controls, pause/visibility/zero-size behavior, context loss/Retry, late-load disposal and independent-host teardown.
 - Verify the authored 10 by 10 fixture, centimetre/metre conversion, parent transforms, cell boundaries and quarter-turn footprints. Malformed saved markers must retain the previous scene/world publication.
 - Verify deterministic movement, diagonal speed, collision, empty starting possessions, camera-relative input, ground/entity picking, animated character presentation and placement feedback. Free test placement is a developer fixture only.
@@ -18,7 +18,7 @@ Preserve active authoring, source art and provenance. The [cleanup record](3d-cl
 
 ```sh
 yarn scenes:export
-yarn build
+yarn build:prod:stats
 yarn test
 yarn lint
 yarn test:lint

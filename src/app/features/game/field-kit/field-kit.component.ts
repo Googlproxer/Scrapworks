@@ -12,11 +12,11 @@ import { FIELD_MANUAL, GUIDE_STEPS, guideStep } from './opening-guide';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 
 import { GameRuntimeService } from '../game-runtime.service';
-import { InventoryPanelComponent } from './inventory-panel.component';
-import { HandcraftPanelComponent } from './handcraft-panel.component';
-import { MiniFabPanelComponent } from './minifab-panel.component';
-import { ResearchPanelComponent } from './research-panel.component';
-import { FactoryPanelComponent } from './factory-panel.component';
+import { InventoryPanelComponent } from './inventory-panel/inventory-panel.component';
+import { HandcraftPanelComponent } from './handcraft-panel/handcraft-panel.component';
+import { MiniFabPanelComponent } from './minifab-panel/minifab-panel.component';
+import { ResearchPanelComponent } from './research-panel/research-panel.component';
+import { FactoryPanelComponent } from './factory-panel/factory-panel.component';
 import { GameplaySaveService } from '../../save/gameplay-save.service';
 
 @Component({

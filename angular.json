@@ -36,6 +36,9 @@
           },
           "configurations": {
             "production": {
+              "optimization": true,
+              "sourceMap": false,
+              "extractLicenses": true,
               "outputHashing": "all"
             },
             "development": {
@@ -54,10 +57,6 @@
                 {
                   "replace": "src/game/debug/draw/backend.ts",
                   "with": "src/game/debug/draw/backend.development.ts"
-                },
-                {
-                  "replace": "src/app/features/save/developer-save-dialog.ts",
-                  "with": "src/app/features/save/developer-save-dialog.development.ts"
                 }
               ]
             }

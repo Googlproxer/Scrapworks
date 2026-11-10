@@ -82,7 +82,7 @@ Normal CI collects coverage during its existing test runs, prints separate Game 
 Built-worker acceptance requires a fresh production build and Playwright's installed Chromium:
 
 ```sh
-yarn build --stats-json
+yarn build:prod:stats
 yarn test:acceptance
 ```
 

@@ -3,7 +3,7 @@ import { form, FormField } from '@angular/forms/signals';
 import { EQUIPMENT_BLUEPRINTS } from '@content/first-factory';
 import { isPlaceable } from '@content/factory';
 import { TOOLBAR_SLOTS } from '@contracts/toolbar';
-import { OpeningPanel } from './opening-panel';
+import { OpeningPanel } from '../opening-panel';
 
 @Component({
   selector: 'app-equipable-panel',

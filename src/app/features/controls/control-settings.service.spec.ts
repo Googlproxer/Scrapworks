@@ -6,17 +6,11 @@ import { ControlSettingsService } from './control-settings.service';
 
 describe('ControlSettingsService persistence', () => {
   let settingsDatabase: Dexie;
-  let savesDatabase: Dexie;
 
   beforeEach(async () => {
     settingsDatabase = new Dexie('ScrapworksSettings');
     settingsDatabase.version(1).stores({ preferences: 'key' });
     await settingsDatabase.table('preferences').clear();
-    savesDatabase = new Dexie('GameSaveDatabase');
-    savesDatabase.version(1).stores({ testData: '++id, name, value' });
-    await savesDatabase
-      .table('testData')
-      .put({ id: 98123, name: 'control-settings-isolation', value: 42 });
     TestBed.configureTestingModule({ providers: [ControlSettingsService] });
   });
 
@@ -24,9 +18,7 @@ describe('ControlSettingsService persistence', () => {
     vi.restoreAllMocks();
     TestBed.resetTestingModule();
     await settingsDatabase.table('preferences').clear();
-    await savesDatabase.table('testData').delete(98123);
     settingsDatabase.close();
-    savesDatabase.close();
   });
 
   function changedProfile(): BindingProfile {
@@ -51,14 +43,10 @@ describe('ControlSettingsService persistence', () => {
       );
   }
 
-  it('writes controls, reloads them through a fresh service and preserves legacy save records', async () => {
+  it('writes controls and reloads them through a fresh service', async () => {
     const first = TestBed.inject(ControlSettingsService);
     await first.ready;
     expect(await first.save(changedProfile())).toBe(true);
-    expect(await savesDatabase.table('testData').get(98123)).toMatchObject({
-      name: 'control-settings-isolation',
-      value: 42,
-    });
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({ providers: [ControlSettingsService] });
     const reloaded = TestBed.inject(ControlSettingsService);

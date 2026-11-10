@@ -14,7 +14,7 @@ The 9 November [M8 save decision](milestone-08-restoration-and-energy-choices.md
 
 World 3/physics 3, content `restoration-1` and exact Rapier 0.21.0 remain unchanged. Schema 2 is the first guaranteed M9 format; schema 1 is unsupported. The detached sequential pipeline has a current identity path and labelled synthetic migration tests, without manufacturing an older M9 format. Exact shipped-map comparison precedes worker/scene construction for loading and import preflight. Existing M3–M8 validators/captures remain the gameplay authority; renderer indexes, held input and session command transport are not persisted as runtime objects.
 
-SaveCoordinator schedules every 120 seconds of completed active simulation time, skipping unchanged boundaries and holding during replacement. Explicit requests precede one coalesced autosave; stale sessions and cross-tab conflicts cannot overwrite a newer head. Recovery and JSON inspection are non-destructive, imports create distinct runs and activation uses the existing candidate worker/scene/UI rollback path. Validated emergency downloads work without IndexedDB. Accessible controls reserve status space and keep pause actions reachable. The isolated developer test-record dialog remains separate.
+SaveCoordinator schedules every 120 seconds of completed active simulation time, skipping unchanged boundaries and holding during replacement. Explicit requests precede one coalesced autosave; stale sessions and cross-tab conflicts cannot overwrite a newer head. Recovery and JSON inspection are non-destructive, imports create distinct runs and activation uses the existing candidate worker/scene/UI rollback path. Validated emergency downloads work without IndexedDB. Accessible controls reserve status space and keep pause actions reachable.
 
 ## Agreed scope and decisions — 9 November 2026
 
@@ -86,7 +86,7 @@ Review mixed operating worlds with realistic inventories, machine buffers, trans
 - [x] Report parse, unsupported-version, validation, and storage failures clearly.
 - [x] Make importing and activating a run deliberate actions so inspecting a file cannot unexpectedly replace play.
 - [x] Verify exported/imported continuation, including research, transit, fuel, water, and restoration progress.
-- [x] Provide an emergency JSON download of a freshly captured, fully validated completed state when IndexedDB is unavailable or full. It must not require a successful database write or falsely mark browser progress as committed. Normal export identifies the chosen committed revision and excludes unrelated settings/developer data.
+- [x] Provide an emergency JSON download of a freshly captured, fully validated completed state when IndexedDB is unavailable or full. It must not require a successful database write or falsely mark browser progress as committed. Normal export identifies the chosen committed revision and excludes unrelated settings data.
 
 ## Step 6 Handle browser storage limits
 

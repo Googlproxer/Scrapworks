@@ -9,7 +9,7 @@ node tools/scenes/export.ts
 node tools/scenes/check-export.ts
 ```
 
-`yarn dev` runs the [development coordinator](dev.ts); `yarn build` and `yarn test` run the export wrapper once before Angular. Use these commands rather than the raw Editor CLI for deployment. A raw CLI pack or Editor export can repopulate unused generated library copies; the check detects that, and the wrapper reapplies the policy.
+`yarn dev` runs the [development coordinator](dev.ts); `yarn build`, `yarn build:prod` and `yarn test` run the export wrapper once before Angular. `yarn build` selects development; use `yarn build:prod` for deployment. Both build commands accept a `:stats` suffix. Use these commands rather than the raw Editor CLI. A raw CLI pack or Editor export can repopulate unused generated library copies; the check detects that, and the wrapper reapplies the policy.
 
 The wrapper copies authored inputs into an isolated project under ignored `tmp/scene-export/` and runs the official CLI there. It checks scene dependencies and the physics workaround, filters unused generated library copies, then publishes changed files and the generated registry. Publication preserves Angular's watched directories, installs dependencies before scene entry points, removes obsolete generated files and restores previous files on failure. An unchanged registry is not rewritten. Original Editor/library inputs remain intact. The upstream CLI still processes the entire library; staging adds temporary disk/copy cost and does not provide incremental packing.
 

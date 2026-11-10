@@ -4,7 +4,7 @@ import type { MaterialPort } from '@contracts/transport';
 import type { CardinalDirection, FluidCommand } from '@contracts/environment';
 import { facingPorts } from '@content/transport';
 import { ENVIRONMENT_SETTINGS, UTILITIES, isUtilityKind, fluidPorts } from '@content/environment';
-import { OpeningPanel } from './opening-panel';
+import { OpeningPanel } from '../opening-panel';
 
 @Component({
   imports: [FormField],

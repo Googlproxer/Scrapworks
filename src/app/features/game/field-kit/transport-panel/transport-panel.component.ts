@@ -5,7 +5,7 @@ import { OPENING_CONTENT } from '@content/opening';
 import type { ConveyorTurn, MaterialPort } from '@contracts/transport';
 import type { FactoryCommand } from '@contracts/factory';
 import { materialConnectionProblem } from '@simulation/transport';
-import { OpeningPanel } from './opening-panel';
+import { OpeningPanel } from '../opening-panel';
 
 @Component({
   imports: [FormField],

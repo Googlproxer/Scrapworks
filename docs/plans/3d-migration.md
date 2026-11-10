@@ -58,7 +58,7 @@ The compiler and authoring schema are documented in [tools/world](../../tools/wo
 - [x] Separate requested ownership from effective gameplay/UI/suspended context. Poll controllers in menus and block held buttons/sticks until release/centre after context changes or rebinding.
 - [x] Add scoped Angular navigation, activation and cancellation while preserving native text editing/navigation, preventing duplicate activation and restoring dialog focus.
 - [x] Deliver Controls with button/directional alternatives, stick choice/deadzones, conflict feedback, reset defaults and standalone Ctrl/Alt/Tab capture. Escape remains an unconditional exit.
-- [x] Persist validated bindings in the separate `ScrapworksSettings` Dexie database. Existing test-save data is untouched. Controller selection applies immediately; binding edits apply on Save.
+- [x] Persist validated bindings in the separate `ScrapworksSettings` Dexie database. Controller selection applies immediately; binding edits apply on Save.
 - [x] Handle captured mouse release outside/after dialogs, suppress the capture click, and preserve controller selection across dialog reopen and renderer Retry.
 - [x] Complete resettable frame timing, explicit/ref-counted browser activity, hidden/zero-size pause, paused same-scene handling, accessible status, partial-construction cleanup and context-loss recovery.
 
@@ -96,7 +96,7 @@ The [asset record](../../art/characters/protagonist-runtime-v2/README.md) contai
 ## Phase 6 Cutover and cleanup
 
 - [x] Make `/` canonical Babylon and `/3d` a redirect. Remove obsolete Boot/Preloader contract values and migrate behavior tests.
-- [x] Move title imagery to Angular and retain loading/error/Retry. Add Controls and in-game menu access; hide diagnostic state, focus indicator and test-save UI in production.
+- [x] Move title imagery to Angular and retain loading/error/Retry. Add Controls and in-game menu access; hide diagnostic state and the focus indicator in production.
 - [x] Keep all production Angular templates in separate HTML files; inline templates are confined to tests.
 - [x] Remove obsolete public sprites, duplicate static character, generated Tiled export, star/template files and unused event/title runtime code after reference checks.
 - [x] Preserve active source art and retain retired scene sources in Git commit `6cd9f6f`, with [recovery instructions](../../assets/README.md#recovering-retired-scene-sources). The historical terrain atlas and old production tooling were subsequently retired in the [28 October cleanup](3d-cleanup.md).
@@ -112,7 +112,7 @@ The [asset record](../../art/characters/protagonist-runtime-v2/README.md) contai
 | 1 Project and integration  | Babylon routing, authored fixture, export, lifecycle/input, Controls persistence, production packaging    | Integration complete after [28 October full CI](../reports/ci/2026-10-28/README.md). Target-hardware benchmarking remains in Milestone 10. |
 | 2 Simulation foundation    | Plain state/views/commands, empty initialization, deterministic 20 Hz session, bounded catch-up and pause | Expansion when actual gameplay systems arrive; gameplay-save codec                                                                         |
 | 3 Character/manual opening | Coordinates, movement, picking, collisions, locomotion and deposit data                                   | Salvage, manual crafting, inventory gameplay and their UI/interaction animations                                                           |
-| 4 First local save         | Existing test-data scaffold retained; separate Controls DB verified                                       | Gameplay snapshots, reload/continuation and restore                                                                                        |
+| 4 First local save         | Separate Controls DB verified                                                                             | Gameplay snapshots, reload/continuation and restore                                                                                        |
 | 5 Research                 | No gameplay credit                                                                                        | Cumulative-production/payment/unlock behavior                                                                                              |
 | 6 Machines                 | Development placement validates footprints only                                                           | Real machines, crafting costs, power and production                                                                                        |
 | 7 Transport                | No gameplay credit                                                                                        | Conveyors, water and transfer accounting                                                                                                   |

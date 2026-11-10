@@ -45,31 +45,6 @@ try {
     await page.goto(origin + '/3d');
     await page.waitForLoadState('networkidle');
     assert.equal(new URL(page.url()).pathname, '/');
-    // The existing Save/Load test UI supplies a real two-dimensional button layout.
-    await page.getByRole('button', { name: 'Open Test Save Dialog', exact: true }).click();
-    const saveRows = page.getByRole('dialog').locator('tbody tr');
-    await saveRows.first().getByRole('button', { name: 'Save', exact: true }).focus();
-
-    const assertFocus = async (row: number, name: string) =>
-      assert.equal(
-        await saveRows
-          .nth(row)
-          .getByRole('button', { name, exact: true })
-          .evaluate((element) => element === document.activeElement),
-        true,
-        `focus ${name} in row ${row + 1}`,
-      );
-
-    await page.keyboard.press('ArrowDown', { delay: 70 });
-    await assertFocus(1, 'Save');
-    await page.keyboard.press('ArrowRight', { delay: 70 });
-    await assertFocus(1, 'Load');
-    await page.keyboard.press('ArrowUp', { delay: 70 });
-    await assertFocus(0, 'Load');
-    await page.keyboard.press('ArrowLeft', { delay: 70 });
-    await assertFocus(0, 'Save');
-    await page.keyboard.press('Escape');
-    await page.getByRole('dialog').waitFor({ state: 'hidden' });
     await page.getByRole('button', { name: 'New Game', exact: true }).click();
     await page.getByText('Loading game…', { exact: true }).waitFor({ state: 'hidden' });
     await page.evaluate(() =>
@@ -378,7 +353,6 @@ try {
       heldRelease: true,
       ctrlTabAltCapture: true,
       settingsReload: true,
-      spatialSaveLoadNavigation: true,
       controlTabsAndLabels: true,
       independentDeadzones: true,
       controlsAxe: [],

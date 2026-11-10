@@ -16,10 +16,10 @@ import { OPENING_CONTENT } from '@content/opening';
 import { machineMaterials } from '@content/machine-materials';
 import type { FactoryCommand } from '@contracts/factory';
 import type { ItemStack } from '@contracts/simulation';
-import { OpeningPanel } from './opening-panel';
-import { TransportPanelComponent } from './transport-panel.component';
-import { EnvironmentPanelComponent } from './environment-panel.component';
-import { MACHINE_ADVICE, machineAdvice } from './machine-advice';
+import { OpeningPanel } from '../opening-panel';
+import { TransportPanelComponent } from '../transport-panel/transport-panel.component';
+import { EnvironmentPanelComponent } from '../environment-panel/environment-panel.component';
+import { MACHINE_ADVICE, machineAdvice } from '../machine-advice';
 
 @Component({
   imports: [FormField, NgTemplateOutlet, TransportPanelComponent, EnvironmentPanelComponent],

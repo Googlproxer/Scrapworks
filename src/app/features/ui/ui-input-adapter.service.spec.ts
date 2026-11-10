@@ -1,11 +1,8 @@
-import { DialogRef } from '@angular/cdk/dialog';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { fromEvent } from 'rxjs';
 import type { ActionFrame, ActionState } from '@contracts/input';
 import { GameRuntimeService } from '../game/game-runtime.service';
-import { SaveLoadComponent } from '../save/save-load/save-load.component';
-import { SaveService } from '../save/save.service';
 import { UiInputAdapterService } from './ui-input-adapter.service';
 import { UiService } from './ui.service';
 
@@ -69,13 +66,10 @@ describe('UiInputAdapterService', () => {
     };
     ui = { activeElement: null, openUIDialog: vi.fn(), closeTopDialog: vi.fn(() => false) };
     await TestBed.configureTestingModule({
-      imports: [SaveLoadComponent],
       providers: [
         UiInputAdapterService,
         { provide: GameRuntimeService, useValue: runtime },
         { provide: UiService, useValue: ui },
-        { provide: SaveService, useValue: {} },
-        { provide: DialogRef, useValue: { close: vi.fn() } },
       ],
     }).compileComponents();
     adapter = TestBed.inject(UiInputAdapterService);
@@ -241,36 +235,6 @@ describe('UiInputAdapterService', () => {
     navigate(0, 0);
     navigate(0, 1);
     expect(document.activeElement).toBe(second);
-  });
-
-  it('moves through the rendered Save/Load table by column and row instead of DOM order', async () => {
-    const fixture = TestBed.createComponent(SaveLoadComponent);
-    await fixture.whenStable();
-    overlay.replaceChildren(fixture.nativeElement as HTMLElement);
-    ui.activeElement = overlay;
-    const rows = [...overlay.querySelectorAll('tbody tr')].map((row) => [
-      ...row.querySelectorAll<HTMLButtonElement>('button'),
-    ]);
-
-    const move = (x: number, y: number) => {
-      navigate(0, 0);
-      navigate(x, y);
-    };
-
-    rows[0][0].focus();
-    move(0, -1);
-    expect(document.activeElement).toBe(rows[1][0]);
-    move(1, 0);
-    expect(document.activeElement).toBe(rows[1][1]);
-    move(0, -1);
-    expect(document.activeElement).toBe(rows[2][1]);
-    move(0, 1);
-    expect(document.activeElement).toBe(rows[1][1]);
-    move(-1, 0);
-    expect(document.activeElement).toBe(rows[1][0]);
-    move(-1, 0);
-    expect(document.activeElement).toBe(rows[1][0]);
-    fixture.destroy();
   });
 
   it('uses live layout when controls reflow and never wraps to the opposite edge', () => {

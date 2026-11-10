@@ -1,5 +1,5 @@
 import { Component, computed, ElementRef, viewChild } from '@angular/core';
-import { OpeningPanel } from './opening-panel';
+import { OpeningPanel } from '../opening-panel';
 import { EQUIPMENT_BLUEPRINTS, RESEARCH_LAB_RULES, RESEARCH_ROADMAP } from '@content/first-factory';
 import type { OpeningCommand } from '@contracts/opening';
 

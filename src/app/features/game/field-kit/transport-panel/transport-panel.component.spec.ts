@@ -5,8 +5,8 @@ import type { Inspection } from '@contracts/simulation';
 import type { WorldView } from '@contracts/world';
 import { Simulation } from '@simulation/simulation';
 import { emptyTransport } from '@content/transport';
-import { editableView } from '../../../../testing/editable-view';
-import { GameRuntimeService } from '../game-runtime.service';
+import { editableView } from '../../../../../testing/editable-view';
+import { GameRuntimeService } from '../../game-runtime.service';
 import { TransportPanelComponent } from './transport-panel.component';
 
 describe('Transport inspection', () => {

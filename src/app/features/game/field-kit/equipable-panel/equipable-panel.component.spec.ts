@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import axe from 'axe-core';
 import { EquipablePanelComponent } from './equipable-panel.component';
-import { GameRuntimeService } from '../game-runtime.service';
+import { GameRuntimeService } from '../../game-runtime.service';
 import { Simulation } from '@simulation/simulation';
-import { editableView } from '../../../../testing/editable-view';
+import { editableView } from '../../../../../testing/editable-view';
 
 describe('Equipable inventory', () => {
   it('keeps tools equipped separately and assigns placeables without moving stock or leaving handcraft UI', async () => {

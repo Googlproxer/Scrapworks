@@ -5,8 +5,8 @@ import type { Inspection } from '@contracts/simulation';
 import type { WorldView } from '@contracts/world';
 import { Simulation } from '@simulation/simulation';
 import { newMachine } from '@simulation/factory';
-import { editableView } from '../../../../testing/editable-view';
-import { GameRuntimeService } from '../game-runtime.service';
+import { editableView } from '../../../../../testing/editable-view';
+import { GameRuntimeService } from '../../game-runtime.service';
 import { EnvironmentPanelComponent } from './environment-panel.component';
 
 describe('Environmental inspection', () => {

@@ -6,9 +6,10 @@
   "scripts": {
     "ng": "ng",
     "dev": "node tools/scenes/dev.ts",
-    "build": "node tools/build/build.ts",
+    "build": "node tools/build/build.ts --configuration development",
     "build:stats": "yarn build --stats-json",
-    "build:prod": "yarn build --configuration production",
+    "build:prod": "node tools/build/build.ts --configuration production",
+    "build:prod:stats": "yarn build:prod --stats-json",
     "test": "yarn scenes:export && ng test --watch=false",
     "test:unit": "yarn scenes:export && ng test --configuration=unit --watch=false",
     "test:renderer": "yarn scenes:export && ng test --configuration=renderer --watch=false",

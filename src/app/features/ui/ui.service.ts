@@ -12,7 +12,7 @@ import {
 import { OpeningFeedback } from './opening-feedback';
 import { UiDialogRegistry } from './ui-dialog-registry';
 
-export type DialogKey = 'save-dialog' | 'controls' | 'game-menu';
+export type DialogKey = 'controls' | 'game-menu';
 
 @Service({ autoProvided: false })
 export class UiService {

@@ -24,7 +24,7 @@ The [runtime architecture decision](../decisions/runtime-architecture.md) define
 | Authoring           | Babylon.js Editor 5.5.3          | Saved inputs export/reload automatically; validated marker metadata compiles into a plain world definition.                                                                            |
 | Client subscription | RxJS in main-thread `GameClient` | Per-client replay, unsubscribe, mounting and asynchronous transition guards.                                                                                                           |
 | Gameplay            | Plain TypeScript                 | Private Miniplex authority, typed movement/opening/factory commands, deterministic 20 Hz personal work, wired power, recycling/fabrication/extraction and one shared field/lab research pass, with detached views. |
-| Persistence         | Dexie / IndexedDB                | Schema-1 manual gameplay slot, transaction/token checks, candidate worker/scene/UI restore and production IndexedDB reload acceptance. Separate controls/test stores.                  |
+| Persistence         | Dexie / IndexedDB                | Schema-1 manual gameplay slot, transaction/token checks, candidate worker/scene/UI restore and production IndexedDB reload acceptance. Separate controls settings store.                  |
 
 The [cleanup record](../plans/3d-cleanup.md) defines current asset boundaries and retired-source recovery. The [Editor setup guide](../plans/babylon-editor-setup.md) owns export/MCP commands. The [Art Document](../art/README.md) owns camera and visual-production requirements.
 
@@ -294,7 +294,7 @@ flowchart TB
     Saves <-->|future import and export| Files
 ```
 
-Commands are checked inside the worker and completed state is published as detached views. Manual gameplay persistence awaits committed transactions, validates a separate candidate world, prepares its scene/UI and preserves the active session on failure. File transfer remains Milestone 9; the developer test-data dialog stays isolated.
+Commands are checked inside the worker and completed state is published as detached views. Manual gameplay persistence awaits committed transactions, validates a separate candidate world, prepares its scene/UI and preserves the active session on failure. Milestone 9 adds JSON file transfer and recovery.
 
 A future cloud repository can implement `SaveRepository` . Accounts, synchronization, and conflict handling remain later work; they are not needed by the prototype simulation.
 
@@ -477,7 +477,7 @@ Milestone 4 establishes the [opening field checklist](../plans/milestone-04-firs
 
 ## Local storage and save operations
 
-Use the installed Dexie integration for IndexedDB persistence. Developer test records and settings retain separate adapters. M9 extends M4's SaveCoordinator and gameplay-specific repository to named runs and immutable revisions. Dexie database version 2 separates run heads, revision metadata and payloads, retaining the legacy slots table until deliberate deletion. Metadata listing remains usable when a payload is corrupt. No settings/developer namespace changes are required.
+Use the installed Dexie integration for IndexedDB persistence. Controls settings retain their separate adapter. M9 extends M4's SaveCoordinator and gameplay-specific repository to named runs and immutable revisions. Dexie database version 2 separates run heads, revision metadata and payloads, retaining the legacy slots table until deliberate deletion. Metadata listing remains usable when a payload is corrupt. Settings namespaces remain unchanged.
 
 The [9 November M9 decisions](../plans/milestone-09-save-resilience.md#agreed-scope-and-decisions--9-november-2026) are implemented: autosaves run every 2 minutes of completed active simulation time, skip unchanged boundaries and suspend while paused/hidden/held, without catch-up or offline progress. Each run retains its latest 5 autosaves and 3 manual revisions, including the heads. One run-wide expected token protects both kinds across tabs; append, head update and bounded pruning are one transaction. Explicit requests precede one coalesced automatic request. Recovery loads an immutable source; subsequent saves append from the latest head with recovered-source provenance. Active run deletion suspends its autosaves until a deliberate manual Save. See the [operation rules](save-resilience.md#commit-recovery-and-operation-rules).
 

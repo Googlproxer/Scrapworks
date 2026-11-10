@@ -7,11 +7,11 @@ import { Simulation } from '@simulation/simulation';
 import { OPENING_TECHNOLOGIES } from '@content/opening';
 import { newMachine } from '@simulation/factory';
 import { FactoryPanelComponent } from './factory-panel.component';
-import { GameRuntimeService } from '../game-runtime.service';
-import { editableView } from '../../../../testing/editable-view';
+import { GameRuntimeService } from '../../game-runtime.service';
+import { editableView } from '../../../../../testing/editable-view';
 import { RECYCLER_OUTCOMES } from '@content/factory';
 import type { FactoryJob, MachineData, MachineKind } from '@contracts/factory';
-import { GameSession } from '../../../../../tools/testing/inline-game-session';
+import { GameSession } from '../../../../../../tools/testing/inline-game-session';
 
 describe('Factory controls', () => {
   const definition = {

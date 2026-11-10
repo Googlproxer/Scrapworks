@@ -1,15 +1,15 @@
 import { Component, computed, signal } from '@angular/core';
 import { chargeCapacity, OPENING_CONTENT } from '@content/opening';
-import { OpeningPanel } from './opening-panel';
+import { OpeningPanel } from '../opening-panel';
 
-import { minifabStatus } from '../../ui/opening-labels';
-import { WindingHandleComponent } from '../winding-handle/winding-handle.component';
+import { minifabStatus } from '../../../ui/opening-labels';
+import { WindingHandleComponent } from '../../winding-handle/winding-handle.component';
 
 @Component({
   selector: 'app-minifab-panel',
   imports: [WindingHandleComponent],
   templateUrl: './minifab-panel.component.html',
-  styleUrl: './field-kit.component.scss',
+  styleUrl: '../field-kit.component.scss',
   host: { role: 'region', 'aria-labelledby': 'minifab-title' },
 })
 export class MiniFabPanelComponent extends OpeningPanel {

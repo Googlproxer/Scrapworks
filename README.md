@@ -48,7 +48,10 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 | Command                            | Purpose                                                                                                     |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `yarn dev`                         | Export scenes, start Angular, and watch saved authoring changes.                                            |
-| `yarn build`                       | Export scenes, create a production build, and generate Brotli sidecars.                                     |
+| `yarn build`                       | Export scenes and create a development build with source maps and developer tools.                        |
+| `yarn build:stats`                 | Create the development build and its `browser-stats.json` for analysis.                                    |
+| `yarn build:prod`                  | Export scenes and create an optimized production build for deployment.                                   |
+| `yarn build:prod:stats`            | Create the production build and its `browser-stats.json` for analysis.                                     |
 | `yarn scenes:export`               | Pack saved Editor inputs into generated browser assets and the script registry.                             |
 | `yarn test`                        | Export scenes and run the Chromium application suite once.                                                  |
 | `yarn test:unit`                   | Run Chromium UI, input/capture and Inspector ownership tests without creating Babylon engines.              |
@@ -62,7 +65,7 @@ In a development build, select **Inspector** to load the [Babylon.js Inspector](
 | `yarn coverage:report`             | Regenerate reports and print both totals from collected results.                                            |
 | `yarn test:labs`                   | Run opt-in laboratory unit tests through Vitest without performance trials.                                 |
 | `yarn test:world`                  | Run focused authored marker compilation and world-export validation tests.                                  |
-| `yarn test:acceptance`             | Exercise the built game worker, movement, pause, crash/Retry and teardown; build with `--stats-json` first. |
+| `yarn test:acceptance`             | Exercise the built game worker, movement, pause, crash/Retry and teardown; run `yarn build:prod:stats` first. |
 | `yarn test:factory`                | Run the empty-handed built-UI factory, powered labs and saved continuation route with a virtual test clock. |
 | `yarn test:workflow`               | Verify dev reload/failure recovery in an isolated browser fixture.                                          |
 | `yarn test:watch`                  | Export scenes once, then watch application tests.                                                           |
@@ -133,12 +136,16 @@ ESLint Stylistic requires a blank line around functions, interfaces, multiline t
 ## Production build
 
 ```sh
-yarn build
+yarn build:prod
 ```
 
-The static browser application is written to `dist/scrapworks/browser/`. Configure the host to serve `index.html` for application routes. The [export policy](tools/scenes/export-policy.json) retains live public assets and scene-declared dependencies; original character projects remain outside deployment. See [migration production evidence](docs/reports/migration/2026-10-23/README.md) and [retired-source recovery](docs/plans/3d-cleanup.md#recovery). Record fresh measurements when changing production assets.
+The production configuration enables optimization (minification, tree-shaking and dead-code elimination), hashes output filenames, extracts licenses and disables source maps. Development builds use `yarn build`, retaining source maps, Inspector and debug drawing support with optimization disabled. Both modes write the static browser application to `dist/scrapworks/browser/`, replacing the previous build. Use `--output-path <directory>` to keep builds separately.
 
-All package build commands generate smaller Brotli-compressed files alongside the originals (`main-*.js.br`, worker chunks, CSS, HTML and compressible scene/model assets). Images and existing compressed files are skipped. `yarn build --stats-json` still forwards options to Angular; `--output-path` is supported. The build uses Node's built-in Brotli encoder at quality 11 and adds no runtime dependency. To regenerate sidecars for an existing build, run `node tools/build/compress.ts` (or pass a browser-output directory).
+Use `yarn build:stats` for development analysis or `yarn build:prod:stats` for production analysis. Angular writes `dist/scrapworks/browser-stats.json`, outside the deployable `browser/` directory; a custom output path moves it to `<directory>/browser-stats.json`.
+
+Configure the host to serve `index.html` for application routes. The [export policy](tools/scenes/export-policy.json) retains live public assets and scene-declared dependencies; original character projects remain outside deployment. See [migration production evidence](docs/reports/migration/2026-10-23/README.md) and [retired-source recovery](docs/plans/3d-cleanup.md#recovery). Record fresh measurements when changing production assets.
+
+All package build commands generate smaller Brotli-compressed files alongside the originals (`main-*.js.br`, worker chunks, CSS, HTML and compressible scene/model assets). Images and existing compressed files are skipped. Extra arguments still pass through to Angular, including `--output-path`. The build uses Node's built-in Brotli encoder at quality 11 and adds no runtime dependency. To regenerate sidecars for an existing build, run `node tools/build/compress.ts` (or pass a browser-output directory).
 
 Upload the originals and their `.br` sidecars together. When hosting is chosen, configure content negotiation to serve the `.br` sibling for requests accepting Brotli, with `Content-Encoding: br`, `Vary: Accept-Encoding`, and the original file's content type. Keep the original URL in the application and fall back to the original file for other clients. Generating sidecars does not configure a web server or change `yarn dev`.
 

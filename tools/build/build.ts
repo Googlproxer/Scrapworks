@@ -1,6 +1,6 @@
-import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import path from 'node:path';
 import { compressBuild, printCompression } from './compress.ts';
 
 const root = path.resolve(import.meta.dirname, '../..');
@@ -29,5 +29,6 @@ if (!help && !process.exitCode) {
     else if (args[index].startsWith('--output-path='))
       output = args[index].slice('--output-path='.length);
   }
+  console.log(`Compressing build output in ${path.resolve(root, output, 'browser')}...`);
   printCompression(await compressBuild(path.resolve(root, output, 'browser')));
 }

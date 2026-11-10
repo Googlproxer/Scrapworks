@@ -15,7 +15,7 @@ Deliver one manual local save slot for the implemented opening, including MiniFa
 | Session capture       | [GameSession.capture()](../../src/session/game-session.ts) settles in-flight work. Its internal SimulationCapture also contains command ledger/pending commands.                                                                                    | Save only completed world state; discard pending input/commands and initialize a new session ledger on player load.                                             |
 | Physics               | [Rapier continuation](../../tools/world/README.md#physics-ownership-and-continuation) uses format-3 native state, stable body identity and vertical velocity with pinned Rapier 0.21.0.                                                             | Preserve native contact/stack continuation; reject incompatible formats/engines before replacing the active session.                                            |
 | Application ownership | [GameSessionOwner](../../src/app/features/game/game-session-owner.ts) creates/disposes worlds; renderer Retry can retain a healthy session. initialize() clears input/timing, and normal pause/input clearing interrupts handcrafting.              | Add candidate preparation and guarded replacement; the existing initialize/dispose path cannot provide failure-safe load or handcraft resumption unchanged.     |
-| Storage and UI        | [Developer SaveService](../../src/app/features/save/save.service.ts) commits validated test records in GameSaveDatabase. Controls have separate IndexedDB settings; the production pause menu has no gameplay saving.                               | Introduce a gameplay repository/database and production UI. Preserve settings and isolate or rename the developer utility rather than reinterpreting test rows. |
+| Storage and UI        | Controls have separate IndexedDB settings; the production pause menu had no gameplay saving at review time.                                                                                                                                         | Introduce a gameplay repository/database and production UI while preserving settings.                                                                       |
 
 Before implementation, baseline checks on 8 November: strict game-suite and independent-reference TypeScript checks, all **106 Node simulation/session tests** and all **356 Angular/renderer/accessibility tests** pass; the documentation check passes. These establish the current opening/capture baseline, not gameplay IndexedDB acceptance.
 
@@ -57,7 +57,7 @@ Use the existing plain capture schema as the world payload. The durable envelope
 
 - [x] Define SaveRepository operations to list slot metadata, save, load and delete the one manual slot; keep plain contracts separate from the browser adapter.
 - [x] Add an in-memory adapter for deterministic orchestration/failure tests and a Dexie/IndexedDB adapter for browser storage, composed at the application boundary.
-- [x] Use a gameplay-specific database/table namespace. Preserve controls settings and developer test data; rename the existing developer SaveService if needed to make gameplay orchestration ownership clear.
+- [x] Use a gameplay-specific database/table namespace and preserve controls settings.
 - [x] Write payload and metadata atomically; resolve success only after transaction commit. A failed replacement write must leave the previous committed save loadable.
 - [x] Use a committed write token for overwrite checks and status, without implementing retained revision history. Recheck the slot token/run within the transaction so a changed slot requires refreshed confirmation rather than silently overwriting a different run.
 - [x] Surface missing/unavailable storage, blocked database upgrades, denied access, aborted transactions and quota failures. A list/read failure is not an empty slot; release database connections on teardown.
@@ -87,7 +87,7 @@ Use the existing plain capture schema as the world payload. The durable envelope
 ## Step 5 Add the manual save interface
 
 - [x] Replace the startup Play action with New Game and conditional Continue; distinguish retained-session resume from creating a new run. Show checking/error/empty/available slot states without blocking New Game on a storage error.
-- [x] Add production Save/Load/Delete controls and a save action usable while the crafting panel is active. Keep the developer test-data dialog isolated from this flow.
+- [x] Add production Save/Load/Delete controls and a save action usable while the crafting panel is active.
 - [x] Show active run/slot, last committed save time, current unsaved state and operation feedback. Loading/deleting a missing slot gives a clear result.
 - [x] Confirm only when unsaved progress would be discarded by Load/New Game, or a different run would be overwritten by Save; explicitly confirm deletion. Starting a new run leaves the committed slot intact.
 - [x] Make operations usable while paused and handle failed Continue without trapping the player. Restore focus and dialog/input ownership correctly after success, cancellation or error.
@@ -133,7 +133,7 @@ Delivered in six existing packages: **M04.1** durable contract/worker normalizat
 - Full untrusted gameplay validation and intent normalization stay in `src/simulation/player-save.ts` inside the worker; the main graph imports no simulation implementation.
 - GameSession holds preserve work; GameSessionOwner prepares/commits a candidate. Babylon prepares an independent scene and first frame; Angular stages saved crafting UI before replacement.
 - Save progress is available in the active field-kit header. Save/load/delete also live in the compact toolbar and pause menu. Startup offers New Game, conditional Continue and retained-session Resume separately.
-- Native winding samples, stale notices, old input/commands and selection do not cross world replacement. Developer placement buildings are explicitly rejected before saving; controls and test records retain their own stores.
+- Native winding samples, stale notices, old input/commands and selection do not cross world replacement. Developer placement buildings are explicitly rejected before saving; controls retain their own store.
 - Unsupported schemas/content/physics/layouts are retained and rejected. Autosave, migrations, retained revisions and transfer remain Milestone 9.
 
 ## References and diagrams

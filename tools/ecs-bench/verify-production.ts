@@ -50,12 +50,6 @@ export function verifyMetadata(metadata: BuildMetadata) {
       if (/src\/testing\/|\.(?:spec|test)\.ts$|node_modules\/(?:vitest|@vitest)\//.test(input))
         throw new Error(`Test support entered production: ${input}`);
       if (
-        /src\/app\/features\/save\/(?:save-load\/|save\.service\.ts|schema\.ts|developer-save-dialog\.development\.ts)/.test(
-          input,
-        )
-      )
-        throw new Error(`Developer save utility entered production: ${input}`);
-      if (
         /src\/game\/debug\/inspector-loader\.development\.ts|node_modules\/@babylonjs\/inspector\//.test(
           input,
         )
