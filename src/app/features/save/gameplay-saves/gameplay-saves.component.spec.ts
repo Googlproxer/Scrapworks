@@ -9,6 +9,8 @@ import { GameRuntimeService } from '../../game/game-runtime.service';
 import { GAMEPLAY_SAVE_REPOSITORY, GameplaySaveService } from '../gameplay-save.service';
 import { GameplaySavesComponent } from './gameplay-saves.component';
 import { waitForSignal } from '../../../../testing/wait-for-state';
+import { Dialog } from '@angular/cdk/dialog';
+import { firstValueFrom } from 'rxjs';
 
 describe('Gameplay run history and backup controls', () => {
   async function setup() {
@@ -21,6 +23,7 @@ describe('Gameplay run history and backup controls', () => {
       runId,
       saveBinding: () => ({ runId: runId(), generation: 1, version: view().tick, pending: false }),
       holdForSave: () => () => undefined,
+      holdForSaveConfirmation: () => () => undefined,
       captureForSave: async () => simulation.capture(),
       validateForSave: vi.fn(async (): Promise<void> => undefined),
       replaceForSave: vi.fn(async () => undefined),
@@ -94,6 +97,48 @@ describe('Gameplay run history and backup controls', () => {
       await h.saves.checkStorage();
       expect(h.saves.storageMessage()).toContain('check failed');
       expect(h.saves.busy()).toBe(false);
+    } finally {
+      h.fixture.destroy();
+      h.simulation.dispose();
+    }
+  });
+
+  it('shows unreadable revisions alongside usable history and requires confirmation before cleanup', async () => {
+    const h = await setup();
+    let damaged = true;
+    try {
+      await h.saves.save();
+      const healthy = await h.repository.load();
+      vi.spyOn(h.repository, 'catalog').mockImplementation(async () => ({
+        revisions: await h.repository.list(),
+        issues: damaged
+          ? [{ id: 'broken', label: 'Revision broken', message: 'Unsupported save format.' }]
+          : [],
+      }));
+      const remove = vi.spyOn(h.repository, 'deleteDamaged').mockImplementation(async () => {
+        damaged = false;
+      });
+      await h.saves.refresh();
+      await h.fixture.whenStable();
+      const root = h.fixture.nativeElement as HTMLElement;
+      expect(root.textContent).toContain('Unreadable saved revisions');
+      expect(root.textContent).toContain('Unsupported save format.');
+      expect(h.saves.history()).toHaveLength(1);
+      expect((await axe.run(root)).violations).toEqual([]);
+      const dialog = TestBed.inject(Dialog);
+      let opened = firstValueFrom(dialog.afterOpened);
+      let request = h.saves.deleteDamaged('broken');
+      (await opened).close(false);
+      await request;
+      expect(remove).not.toHaveBeenCalled();
+      opened = firstValueFrom(dialog.afterOpened);
+      request = h.saves.deleteDamaged('broken');
+      (await opened).close(true);
+      await request;
+      await h.fixture.whenStable();
+      expect(remove).toHaveBeenCalledExactlyOnceWith('broken');
+      expect(h.saves.status().issues).toEqual([]);
+      expect(await h.repository.load()).toEqual(healthy);
     } finally {
       h.fixture.destroy();
       h.simulation.dispose();

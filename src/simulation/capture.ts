@@ -15,6 +15,7 @@ import { assertFactorySnapshot } from './factory-capture';
 import { isTransportKind } from '@content/transport';
 import { assertTransportSnapshot } from './transport-capture';
 import { assertEnvironmentSnapshot } from './environment-capture';
+import { sameData } from '@core/data-equality';
 
 const object = (v: unknown, keys?: readonly string[]): Record<string, unknown> => {
   check(!!v && typeof v === 'object' && !Array.isArray(v), 'Expected snapshot object');
@@ -243,10 +244,7 @@ export function assertSnapshot(
         'Invalid physics component owner',
       );
       const source = s['definition'].bodies?.find((body) => body.id === id);
-      check(
-        source && JSON.stringify(source) === JSON.stringify(e['physics']),
-        'Physics definition mismatch',
-      );
+      check(source && sameData(source, e['physics']), 'Physics definition mismatch');
     }
     if (e['inventory']) inventory(e['inventory'], content);
     if (e['equipment']) {

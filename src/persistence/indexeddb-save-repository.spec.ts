@@ -133,6 +133,64 @@ describe('Gameplay IndexedDB transactions', () => {
     await expect(adapter.load()).rejects.toThrow(/closed/);
   });
 
+  it.each([{ name: '' }, { schema: 999 }, { savedAt: undefined }])(
+    'isolates damaged metadata, preserves healthy export and deletes only the chosen unreadable revision: %j',
+    async (damage) => {
+      const { name, adapter } = repository();
+      const healthy = snapshot();
+      await adapter.save(healthy, null);
+      const raw = new Dexie(name);
+      await raw.open();
+      try {
+        const token = 'damaged-revision';
+        await raw
+          .table('revisions')
+          .put({ ...healthy, ...damage, runId: 'damaged-run', slot: 'damaged-run/manual', token });
+        await raw.table('payloads').put({ token, payload: { kept: true } });
+        const catalog = await adapter.catalog();
+        expect(catalog.revisions.map((revision) => revision.token)).toEqual([healthy.token]);
+        expect(catalog.issues).toHaveLength(1);
+        expect(catalog.issues[0].message).not.toBe('');
+        expect(await adapter.load(healthy.token)).toEqual(healthy);
+        expect(await raw.table('payloads').get(token)).toBeDefined();
+        expect((await adapter.catalog()).issues[0].id).toBe(catalog.issues[0].id);
+        await adapter.deleteDamaged(catalog.issues[0].id);
+        expect(await raw.table('revisions').get(token)).toBeUndefined();
+        expect(await raw.table('payloads').get(token)).toBeUndefined();
+        expect(await adapter.catalog()).toEqual({ revisions: catalog.revisions, issues: [] });
+        expect(await adapter.load(healthy.token)).toEqual(healthy);
+      } finally {
+        raw.close();
+      }
+    },
+  );
+
+  it('keeps a concurrently repaired revision and repairs a deliberately deleted corrupt run head atomically', async () => {
+    const { name, adapter } = repository();
+    const first = snapshot();
+    const next = { ...first, token: 'next-revision', sequence: 2, previousToken: first.token };
+    await adapter.save(first, null);
+    await adapter.save(next, first.token);
+    const raw = new Dexie(name);
+    await raw.open();
+    try {
+      await raw.table('revisions').update(next.token, { name: '' });
+      const damaged = (await adapter.catalog()).issues[0];
+      await raw.table('revisions').update(next.token, { name: next.name });
+      await expect(adapter.deleteDamaged(damaged.id)).rejects.toBeInstanceOf(SaveConflictError);
+      expect(await adapter.load(next.token)).toEqual(next);
+      await raw.table('revisions').update(next.token, { name: '' });
+      const issue = (await adapter.catalog()).issues[0];
+      await adapter.deleteDamaged(issue.id);
+      const resumed = { ...next, token: 'resumed-revision' };
+      await adapter.save(resumed, first.token);
+      expect(await adapter.load(resumed.token)).toEqual(resumed);
+      expect(await adapter.load(first.token)).toEqual(first);
+    } finally {
+      raw.close();
+    }
+  });
+
   it('rolls back appended payload, metadata, head and retention deletion together', async () => {
     const { adapter } = repository();
     let previous: SaveSnapshot | undefined;

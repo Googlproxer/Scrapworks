@@ -10,6 +10,7 @@ import {
   type NotificationRef,
 } from './notifications';
 import { OpeningFeedback } from './opening-feedback';
+import { UiDialogRegistry } from './ui-dialog-registry';
 
 export type DialogKey = 'save-dialog' | 'controls' | 'game-menu';
 
@@ -22,6 +23,7 @@ export class UiService {
   private readonly gameRuntimeService = inject(GameRuntimeService);
   private readonly dialog = inject(Dialog);
   private readonly injector = inject(Injector);
+  private readonly dialogRegistry = inject(UiDialogRegistry);
   private worldGeneration?: number;
 
   private readonly openDialogKeys = new Set<DialogKey>();
@@ -80,6 +82,7 @@ export class UiService {
         ...config,
       });
       this.openDialogs.add(dialog);
+      this.dialogRegistry.register(dialog);
 
       dialog.closed.pipe(take(1)).subscribe(() => {
         this.openDialogKeys.delete(key);
@@ -94,9 +97,7 @@ export class UiService {
   }
 
   public closeTopDialog(): boolean {
-    const top = [...this.openDialogs].at(-1);
-    top?.close();
-    return !!top;
+    return this.dialogRegistry.closeTop();
   }
 
   public openNotification(options: NotificationOptions): NotificationRef {
@@ -116,7 +117,6 @@ export class UiService {
   }
 
   public get activeElement(): HTMLElement | null {
-    const top = [...this.openDialogs].at(-1) as DialogRef | undefined;
-    return top?.overlayRef.overlayElement ?? null;
+    return this.dialogRegistry.activeElement;
   }
 }

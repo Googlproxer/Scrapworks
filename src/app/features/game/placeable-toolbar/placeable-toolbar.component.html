@@ -21,7 +21,9 @@
       (click)="runtime.selectPlaceable(slot.index)"
     >
       <kbd>{{ slot.index + 1 }}</kbd>
-      <span class="item-name">{{ slot.item ? shortNames[slot.item] : 'Empty' }}</span>
+      <span class="item-name">{{
+        slot.item ? (shortNames[slot.item] ?? names[slot.item]) : 'Empty'
+      }}</span>
       <strong class="quantity">{{ slot.item ? amount(slot.item) : '—' }}</strong>
     </button>
   }

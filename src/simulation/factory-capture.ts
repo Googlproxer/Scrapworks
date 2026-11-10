@@ -6,6 +6,7 @@ import { requireInvariant as check } from '@contracts/simulation';
 import { footprintCells, worldToCell } from '@core/world-grid';
 import { isTransportKind } from '@content/transport';
 import { isPipe } from '@content/environment';
+import { sameData } from '@core/data-equality';
 
 const record = (v: unknown, keys: readonly string[]): Record<string, unknown> => {
   check(
@@ -24,8 +25,11 @@ const record = (v: unknown, keys: readonly string[]): Record<string, unknown> =>
 
 const finite = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v >= 0;
 
-const signature = (items: readonly ItemStack[]) =>
-  JSON.stringify([...items].sort((a, b) => a.item.localeCompare(b.item)));
+const sameStock = (left: readonly ItemStack[], right: readonly ItemStack[]) =>
+  sameData(
+    [...left].sort((a, b) => a.item.localeCompare(b.item)),
+    [...right].sort((a, b) => a.item.localeCompare(b.item)),
+  );
 
 function stock(value: unknown, slots?: number): void {
   const items = slots === undefined ? value : record(value, ['slots'])['slots'];
@@ -112,9 +116,8 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
         building.footprint.depth === 1 &&
         (isPipe(kind)
           ? building.collision === undefined
-          : JSON.stringify(building.collision) ===
-            JSON.stringify({ shape: 'box', width: 1.2, depth: 1.2, height: 1.5 })) &&
-        JSON.stringify(entity.transform?.position) === JSON.stringify(building.position),
+          : sameData(building.collision, { shape: 'box', width: 1.2, depth: 1.2, height: 1.5 })) &&
+        sameData(entity.transform?.position, building.position),
       'Invalid machine geometry',
     );
     stock(machine.input, MACHINES[kind].inputSlots);
@@ -187,11 +190,12 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
       check(
         job.recipe === 'recycle-scrap' &&
           job.remaining <= FACTORY_SETTINGS.recyclerSeconds &&
-          signature(job.inputs) ===
-            signature([{ item: 'scrap', quantity: FACTORY_SETTINGS.recyclerInput }]) &&
+          sameStock(job.inputs, [{ item: 'scrap', quantity: FACTORY_SETTINGS.recyclerInput }]) &&
           machine.random.cursor > 0 &&
-          signature(job.outputs) ===
-            signature(RECYCLER_OUTCOMES[machine.random.sequence[machine.random.cursor - 1]]),
+          sameStock(
+            job.outputs,
+            RECYCLER_OUTCOMES[machine.random.sequence[machine.random.cursor - 1]],
+          ),
         'Invalid recycler job',
       );
     } else if (kind === 'extractor') {
@@ -211,8 +215,8 @@ export function assertFactorySnapshot(save: SimulationSnapshot): void {
           recipe &&
           job.recipe === recipe.id &&
           job.remaining <= recipe.seconds &&
-          signature(job.inputs) === signature(recipe.inputs) &&
-          signature(job.outputs) === signature(recipe.outputs),
+          sameStock(job.inputs, recipe.inputs) &&
+          sameStock(job.outputs, recipe.outputs),
         'Invalid fabrication job',
       );
   }

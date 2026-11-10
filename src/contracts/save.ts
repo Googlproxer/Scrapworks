@@ -35,7 +35,21 @@ export interface SaveSnapshot extends SaveMetadata {
   readonly world: SimulationSnapshot;
 }
 
+export interface SaveCatalogIssue {
+  /** Adapter-owned identity for deliberate cleanup; never a playable revision token. */
+  readonly id: string;
+  readonly label: string;
+  readonly message: string;
+}
+
+export interface SaveCatalog {
+  readonly revisions: readonly SaveMetadata[];
+  readonly issues: readonly SaveCatalogIssue[];
+}
+
 export interface SaveRepository {
+  catalog(): Promise<SaveCatalog>;
+  deleteDamaged(id: string): Promise<void>;
   /** All retained metadata, newest first; payload corruption cannot hide history. */
   list(): Promise<readonly SaveMetadata[]>;
   load(token?: string): Promise<SaveSnapshot | undefined>;

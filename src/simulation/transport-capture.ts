@@ -9,6 +9,7 @@ import {
 import { requireInvariant as check, type SimulationSnapshot } from '@contracts/simulation';
 import { MACHINE_COLLISION } from '@content/factory';
 import { materialConnectionValid } from './transport';
+import { sameData } from '@core/data-equality';
 
 function record(value: unknown, keys: readonly string[]): void {
   check(
@@ -42,13 +43,13 @@ export function assertTransportSnapshot(save: SimulationSnapshot): void {
     check(
       b.footprint.width === 1 &&
         b.footprint.depth === 1 &&
-        JSON.stringify(e.transform?.position) === JSON.stringify(b.position),
+        sameData(e.transform?.position, b.position),
       'Invalid transport geometry',
     );
     check(
       b.buildingId === 'conveyor'
         ? b.collision === undefined
-        : JSON.stringify(b.collision) === JSON.stringify(MACHINE_COLLISION),
+        : sameData(b.collision, MACHINE_COLLISION),
       'Invalid transport collision',
     );
     record(t, ['turn', 'filters', 'units', 'status']);

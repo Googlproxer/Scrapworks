@@ -1,5 +1,11 @@
 import { Subject } from 'rxjs';
-import type { SaveKind, SaveMetadata, SaveRepository, SaveSnapshot } from '@contracts/save';
+import type {
+  SaveKind,
+  SaveMetadata,
+  SaveRepository,
+  SaveSnapshot,
+  SaveCatalogIssue,
+} from '@contracts/save';
 import type { SimulationSnapshot } from '@contracts/simulation';
 import { createSave, decodeSave, parseBackup, saveMetadata } from './save-codec';
 import { SaveConflictError } from './revision-policy';
@@ -33,6 +39,7 @@ export interface SaveStatus {
   readonly message: string;
   readonly slot: SaveMetadata | null;
   readonly revisions: readonly SaveMetadata[];
+  readonly issues: readonly SaveCatalogIssue[];
   readonly legacy: boolean;
   readonly inspected: SaveMetadata | null;
 }
@@ -53,6 +60,7 @@ export class SaveCoordinator {
     message: 'Checking local saves…',
     slot: null,
     revisions: [],
+    issues: [],
     legacy: false,
     inspected: null,
   };
@@ -179,10 +187,10 @@ export class SaveCoordinator {
   }
 
   private async readCatalog(selected = this.status.slot?.token): Promise<void> {
-    const revisions = await this.repository.list(),
+    const { revisions, issues } = await this.repository.catalog(),
       legacy = await this.repository.legacy();
     const slot = revisions.find((m) => m.token === selected) ?? revisions[0] ?? null;
-    this.status = { ...this.status, revisions, slot, legacy };
+    this.status = { ...this.status, revisions, issues, slot, legacy };
   }
 
   public refresh(): Promise<void> {
@@ -356,7 +364,7 @@ export class SaveCoordinator {
         }
         this.valid(binding);
         // Read the head before replacement. A later concurrent commit still fails the write CAS.
-        const revisions = fresh ? this.status.revisions : await this.repository.list();
+        const { revisions, issues } = fresh ? this.status : await this.repository.catalog();
         this.valid(binding);
         await this.host.replace(save ?? null);
         this.committed = fresh ? null : this.host.binding();
@@ -373,6 +381,7 @@ export class SaveCoordinator {
         } else this.name = 'Untitled run';
         this.update('idle', fresh ? 'New game started.' : 'Game loaded.', {
           revisions,
+          issues,
           slot: save ? saveMetadata(save) : this.status.slot,
         });
       } finally {
@@ -436,6 +445,29 @@ export class SaveCoordinator {
       if (this.closed) return;
       await this.repository.deleteLegacy();
       this.update('idle', 'Pre-M9 saves deleted.', { legacy: false });
+    });
+  }
+
+  public deleteDamaged(id: string): Promise<void> {
+    const issue = this.status.issues.find((value) => value.id === id);
+    this.cancelAutomatic();
+    return this.queue(async () => {
+      if (!issue) throw new SaveConflictError();
+      const release = this.host.hold();
+      try {
+        if (
+          !(await this.confirm(
+            `Permanently delete ${issue.label}? Only this unreadable revision will be removed. Healthy revisions and your current game remain available.`,
+          ))
+        )
+          return;
+        if (this.closed) return;
+        await this.repository.deleteDamaged(issue.id);
+        await this.readCatalog();
+        this.update('idle', 'Unreadable revision deleted. Healthy revisions were kept.');
+      } finally {
+        release();
+      }
     });
   }
 

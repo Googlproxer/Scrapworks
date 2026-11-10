@@ -17,6 +17,7 @@ import { SaveCoordinator } from '../../../persistence/save-coordinator';
 import { GameRuntimeService } from '../game/game-runtime.service';
 import { SaveConfirmationComponent } from './save-confirmation/save-confirmation.component';
 import { backupFilename, MAX_SAVE_BYTES } from '../../../persistence/save-codec';
+import { UiDialogRegistry } from '../ui/ui-dialog-registry';
 
 export const GAMEPLAY_SAVE_REPOSITORY = new InjectionToken<SaveRepository>(
   'Gameplay save repository',
@@ -26,6 +27,7 @@ export const GAMEPLAY_SAVE_REPOSITORY = new InjectionToken<SaveRepository>(
 export class GameplaySaveService {
   private readonly runtime = inject(GameRuntimeService);
   private readonly dialog = inject(Dialog);
+  private readonly dialogRegistry = inject(UiDialogRegistry);
   private readonly injector = inject(Injector);
   private confirmation?: DialogRef<boolean, SaveConfirmationComponent>;
   private cancelStage?: () => void;
@@ -168,6 +170,10 @@ export class GameplaySaveService {
     return this.operation(() => this.coordinator.deleteLegacy());
   }
 
+  public deleteDamaged(id: string): Promise<void> {
+    return this.operation(() => this.coordinator.deleteDamaged(id));
+  }
+
   public import(): Promise<void> {
     return this.operation(() => this.coordinator.import(this.importName().name));
   }
@@ -245,20 +251,26 @@ export class GameplaySaveService {
   }
 
   private async confirm(message: string): Promise<boolean> {
-    const ref = this.dialog.open<boolean, string, SaveConfirmationComponent>(
-      SaveConfirmationComponent,
-      {
-        data: message,
-        role: 'alertdialog',
-        ariaLabelledBy: 'save-confirm-title',
-        restoreFocus: true,
-      },
-    );
-    this.confirmation = ref;
+    const release = this.runtime.holdForSaveConfirmation();
+    let unregister: (() => void) | undefined;
+    let ref: DialogRef<boolean, SaveConfirmationComponent> | undefined;
     try {
+      ref = this.dialog.open<boolean, string, SaveConfirmationComponent>(
+        SaveConfirmationComponent,
+        {
+          data: message,
+          role: 'alertdialog',
+          ariaLabelledBy: 'save-confirm-title',
+          restoreFocus: true,
+        },
+      );
+      this.confirmation = ref;
+      unregister = this.dialogRegistry.register(ref);
       return !!(await firstValueFrom(ref.closed));
     } finally {
       if (this.confirmation === ref) this.confirmation = undefined;
+      unregister?.();
+      release();
     }
   }
 

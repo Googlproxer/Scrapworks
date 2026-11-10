@@ -16,6 +16,8 @@ The envelope records slot/run/token, display name, manual/auto kind, monotonic p
 
 `save-migrations.ts` defines a detached sequential pipeline with an identity path for schema 2. There is no real older M9 schema to migrate yet. Labelled synthetic tests exercise ordering, missing steps, intermediate validation and failures without claiming historical support. Database upgrades, envelope migrations, known content conversion and exact map/native compatibility remain separate checks.
 
+Object member order has no gameplay meaning. Geometry, positions, body definitions and committed ingredients use structural comparisons; array ordering remains significant where required. Reordering JSON object keys cannot invalidate an otherwise identical backup or change its continuation.
+
 ## Snapshot field audit
 
 `Simulation.capture()` copies the complete resources/components and native capture at a completed boundary. The following inventory covers the current contracts; it is not a second serialization whitelist. New fields must be added to the owning contract validator and its continuation fixture.
@@ -43,6 +45,8 @@ The durable world excludes command queues/acknowledgement ledgers, ECS/native ha
 ## Commit, recovery and operation rules
 
 - A run's latest commit token and sequence protect both save kinds. In one transaction, compare that head, add immutable metadata/payload, advance the run head and delete only revisions beyond **5 autosaves / 3 manual revisions**, including each kind's head. Abort rolls everything back. Metadata listing never reads payloads.
+- Catalog reads isolate malformed/unsupported metadata into visible unreadable-revision diagnostics while healthy history remains selectable and exportable. Ordinary retention leaves unreadable records intact. Cleanup requires confirmation and rechecks the stored row transactionally so a concurrent repair cannot be deleted. Removing an unreadable head repairs its pointer to the newest retained healthy revision in the same transaction.
+- Saved/unsaved state uses a session-local durable-state revision, independent of presentation publication numbers. Completed steps and actual handcraft cancellation/refunds change it; unchanged pause/resume and full resynchronization do not. Pending commands remain separately unsaved. This counter is not a new durable save field or migration.
 - Autosave receives completed simulation time (`tick` differences multiplied by `stepSeconds`), every **120 active seconds**. No published progress means no timer progress. Explicit replacement suppresses scheduling; resumption never catches up on hidden/paused time. Successful manual/autosaves reset the active interval; unchanged boundaries are skipped.
 - One operation executes at a time. Explicit requests precede at most one coalesced pending autosave. Bind captures/results to the original run/session generation, cancel queued autosaves for replacement, and finish an already detached commit against its original run. A conflict stops automatic writes until deliberate loading; refreshing metadata alone does not authorize an obsolete capture to overwrite a newer head.
 - Selecting history writes nothing. Full worker/scene/UI preparation must succeed before activation. Recovery retains its source and later revisions until ordinary retention permits pruning; new saves append from the latest head and record the recovered source. Autosaves do not change a history selection being inspected.
@@ -52,6 +56,8 @@ The durable world excludes command queues/acknowledgement ledgers, ECS/native ha
 - Blocked upgrades/version changes close the adapter; close other tabs and reload to reconnect. Rejected operations cannot later run hidden writes. Storage estimates/persistence APIs are optional, advisory and browser-owned; request persistence only from a player action. Site-data deletion/eviction still requires external JSON backups.
 
 Status/preview areas reserve space. Autosaves do not disable focused controls, disclosures have unique labels across the HUD and pause dialog, and pause actions stay above the bounded scrolling save panel. Keyboard/controller input continues through the existing UI ownership layer. Tests include AXE, focus, stale file reads and desktop/mobile production acceptance.
+
+Save confirmations share top-dialog targeting with other UI dialogs. A scoped UI-only input permission allows controller navigation, Submit and Cancel while the non-destructive save hold still prevents simulation credits and gameplay commands. Closing a prompt restores the enclosing hold, prior menu/pause permission and focus; it does not refund invested handcraft work.
 
 ## Performance and scope
 

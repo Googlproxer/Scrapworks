@@ -623,6 +623,30 @@ describe('GameRuntimeService', () => {
     expect(callback).toHaveBeenCalledOnce();
   });
 
+  it('scopes confirmation actions to UI and restores the enclosing save hold after close', async () => {
+    const { game, options, bridge } = await mountWorld();
+    const listener = vi.fn();
+    service.subscribeActions(listener);
+    const release = service.holdForSave();
+    const confirmation = service.holdForSaveConfirmation();
+    expect(game.input.setContext).toHaveBeenLastCalledWith('ui');
+    options.actions.dispatch(actionFrame);
+    expect(listener).not.toHaveBeenCalled();
+    const uiFrame: ActionFrame = { context: 'ui', revision: 1, states: {} };
+    options.actions.dispatch(uiFrame);
+    expect(listener).toHaveBeenCalledExactlyOnceWith(uiFrame);
+    expect(service.command({ type: 'research', enabled: false }).status).toBe('unavailable');
+    expect(render(bridge, 0.25, { x: 1, z: 0 }, false, true).tick).toBe(0);
+    confirmation();
+    confirmation();
+    expect(game.input.setContext).toHaveBeenLastCalledWith(null);
+    listener.mockClear();
+    options.actions.dispatch(uiFrame);
+    expect(listener).not.toHaveBeenCalled();
+    release();
+    expect(service.command({ type: 'research', enabled: false }).status).toBe('queued');
+  });
+
   it('observes preference changes even if its initial effect ran before mounting', async () => {
     TestBed.tick();
     const { game } = await mountWorld();

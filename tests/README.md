@@ -23,6 +23,8 @@ yarn test:game src/simulation
 
 Foundation tests exercise actual opening commands and production player/deposit/pile schemas. Detached packet fixtures cover growth/malformed transport without arbitrary simulation mutation hooks. Shared inline controls live under `tools/testing`; current-game benchmark captures belong to [tools/game-bench](../tools/game-bench/README.md).
 
+Save regressions include reordered JSON object members with exact native continuation, publication-independent dirty tracking, and isolated malformed metadata with healthy history/export and transactional cleanup. The controller confirmation integration uses the real runtime, session, CDK dialogs and UI adapter with a controlled client action port: cancellation/confirmation and stacked-menu focus remain usable while authority is held. Catalogue-wide toolbar tests cover visible labels and narrow-layout anchors. Restoration fixtures preserve idle, pollution-only, capped and order-independent outcomes; performance measurements remain local/manual.
+
 [Physics boundary regressions](../src/simulation/physics/physics-boundaries.test.ts) cover native/ECS configuration disagreement without replacing the active world, terrain/entity identity separation, elevated salvage overflow capture/continuation/pickup, and independent presentation collection invalidation. Native corruption fixtures edit detached bytes through Rapier's public API; they add no simulation mutation hooks. The renderer ground-item tests cover elevation, stable meshes, removal and skipped scans for unchanged arrays.
 
 ## Waiting for asynchronous work

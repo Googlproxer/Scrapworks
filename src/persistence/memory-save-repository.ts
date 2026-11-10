@@ -1,4 +1,4 @@
-import type { SaveRepository, SaveSnapshot } from '@contracts/save';
+import type { SaveRepository, SaveSnapshot, SaveCatalog } from '@contracts/save';
 import { decodeSave, saveMetadata } from './save-codec';
 import {
   assertAppend,
@@ -25,6 +25,15 @@ export class MemorySaveRepository implements SaveRepository {
     return orderedRevisions([...this.values.values()].map(saveMetadata)).map((m) =>
       structuredClone(m),
     );
+  }
+
+  public async catalog(): Promise<SaveCatalog> {
+    return { revisions: await this.list(), issues: [] };
+  }
+
+  public async deleteDamaged(): Promise<void> {
+    this.check();
+    throw new SaveConflictError();
   }
 
   public async load(token?: string) {

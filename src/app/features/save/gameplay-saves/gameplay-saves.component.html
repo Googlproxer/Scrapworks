@@ -127,6 +127,21 @@
         <button type="button" class="button" (click)="saves.refresh()">Check saves again</button>
       </div>
     </fieldset>
+    @if (saves.status().issues.length) {
+      <fieldset [disabled]="saves.busy()">
+        <legend>Unreadable saved revisions</legend>
+        <p>
+          These revisions have been kept. Healthy runs above remain available for recovery and
+          export.
+        </p>
+        @for (issue of saves.status().issues; track issue.id) {
+          <p>{{ issue.label }}: {{ issue.message }}</p>
+          <button type="button" class="button" (click)="saves.deleteDamaged(issue.id)">
+            Delete {{ issue.label }}
+          </button>
+        }
+      </fieldset>
+    }
     <fieldset [disabled]="saves.busy()">
       <legend>Restore a JSON backup</legend>
       <label [attr.for]="id + '-import'">Choose backup to validate</label>

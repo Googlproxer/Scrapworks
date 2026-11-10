@@ -59,6 +59,12 @@ export class GameSession {
     return this.cache.version;
   }
 
+  private stateRevisionValue = 0;
+
+  public get stateRevision(): number {
+    return this.stateRevisionValue;
+  }
+
   private readonly acknowledgementValues: CommandAcknowledgement[] = [];
 
   public get acknowledgements(): readonly CommandAcknowledgement[] {
@@ -207,6 +213,7 @@ export class GameSession {
       'Stale/disposed session reply',
     );
     check(reply.ok, reply.error ?? 'Simulation failed');
+    this.stateRevisionValue = Math.max(this.stateRevisionValue, reply.stateRevision);
     this.nextCommand = Math.max(this.nextCommand, reply.ledger.accepted);
     this.runtimePending = reply.ledger.accepted - reply.ledger.applied - reply.ledger.cancelled;
     this.appliedInput = reply.appliedInput;

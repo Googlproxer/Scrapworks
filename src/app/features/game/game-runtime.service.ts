@@ -56,6 +56,7 @@ export class GameRuntimeService {
   private unsubscribe?: () => void;
   private readonly sessions = new GameSessionOwner(this.createSimulationPort, !!environment.dev);
   private saveHolds = 0;
+  private saveConfirmationInputs = 0;
   private readonly savePreview = signal<import('@contracts/world').WorldView | null>(null);
   public readonly preparingSave = computed(() => this.savePreview() !== null);
   private sessionBridge?: WorldSessionBridge;
@@ -247,7 +248,7 @@ export class GameRuntimeService {
         debugDrawSettings: this.debugDrawSettings(),
         actions: {
           dispatch: (frame) => {
-            if (this.saveHolds) return;
+            if (this.saveHolds && (!this.saveConfirmationInputs || frame.context !== 'ui')) return;
             if (generation !== this.generation || this.inspectorActive()) return;
             const revision = this.inputCoordinator.revision;
             if (frame.context === 'gameplay') {
@@ -670,14 +671,16 @@ export class GameRuntimeService {
 
   private updateInputContext(): void {
     this.inputCoordinator.setContext(
-      this.inspectorActive() || this.saveHolds > 0
+      this.inspectorActive() || (this.saveHolds > 0 && !this.saveConfirmationInputs)
         ? null
-        : !this.inputCoordinator.enabledRequested ||
-            this.inputCoordinator.uiFocused ||
-            this.currentSceneKey() !== 'Game' ||
-            this.state().phase !== 'ready'
+        : this.saveConfirmationInputs
           ? 'ui'
-          : 'gameplay',
+          : !this.inputCoordinator.enabledRequested ||
+              this.inputCoordinator.uiFocused ||
+              this.currentSceneKey() !== 'Game' ||
+              this.state().phase !== 'ready'
+            ? 'ui'
+            : 'gameplay',
     );
   }
 
@@ -787,7 +790,7 @@ export class GameRuntimeService {
       ? {
           runId,
           generation: session.generation,
-          version: session.publication,
+          version: session.stateRevision,
           pending: session.hasPendingInput,
         }
       : null;
@@ -813,6 +816,23 @@ export class GameRuntimeService {
       this.updateInputContext();
       release?.();
       if (!this.saveHolds) this.focusPreparedWorld();
+    };
+  }
+
+  /** Keep authority held while allowing the top save dialog to receive UI-only actions. */
+  public holdForSaveConfirmation(): () => void {
+    const release = this.holdForSave();
+    this.saveConfirmationInputs++;
+    this.inputCoordinator.invalidate();
+    this.updateInputContext();
+    let ended = false;
+    return () => {
+      if (ended) return;
+      ended = true;
+      this.saveConfirmationInputs--;
+      this.inputCoordinator.invalidate();
+      this.updateInputContext();
+      release();
     };
   }
 

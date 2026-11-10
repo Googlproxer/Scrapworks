@@ -5,6 +5,7 @@ import { assertSnapshot } from './capture';
 import { upgradeOpeningSave } from './legacy-opening-save';
 import { assertFactoryResearch } from './factory-capture';
 import { emptyToolbar } from '@contracts/toolbar';
+import { sameData } from '@core/data-equality';
 
 /** Additional invariants for untrusted durable saves; internal laboratory captures remain separate. */
 export function preparePlayerSave(value: unknown): SimulationSnapshot {
@@ -70,7 +71,7 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
         original &&
           entity.deposit.kind === original.kind &&
           entity.deposit.quantity <= original.quantity &&
-          JSON.stringify(original.position) === JSON.stringify(p),
+          sameData(original.position, p),
         'Invalid saved deposit.',
       );
     }

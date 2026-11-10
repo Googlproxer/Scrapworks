@@ -310,6 +310,35 @@ test('frontier saturates nearby cells before spending excess farther out and hea
   assert.equal(ring[0], 19);
   assert.equal(ring[2], 100);
 });
+test('idle utilities leave health unchanged and do not alter pollution-only or mixed restoration', () => {
+  const idle = Array.from({ length: 50 }, (_, cell) => ({
+    id: `idle-${cell}`,
+    cell,
+    positive: 0,
+    negative: 0,
+  }));
+  const untouched = [0, 25, 50, 75, 100, 30, 60, 90, 10];
+  const original = [...untouched];
+  restoreCells(untouched, 3, idle);
+  assert.deepEqual(untouched, original);
+  for (const active of [
+    [{ id: 'coal', cell: 4, positive: 0, negative: 18 }],
+    [
+      { id: 'green', cell: 4, positive: 20, negative: 0 },
+      { id: 'coal', cell: 4, positive: 0, negative: 18 },
+    ],
+  ]) {
+    const expected = [...original],
+      actual = [...original];
+    restoreCells(expected, 3, active);
+    restoreCells(actual, 3, [...idle, ...active].reverse());
+    assert.deepEqual(actual, expected);
+  }
+  const polluted = Array<number>(9).fill(50);
+  restoreCells(polluted, 3, [{ id: 'coal', cell: 4, positive: 0, negative: 18 }]);
+  assert.deepEqual(polluted, Array<number>(9).fill(48));
+});
+
 test('overlapping contributors share capped gaps without minting influence or depending on input order', () => {
   const input = [
       { id: 'a', cell: 1, positive: 8, negative: 0 },

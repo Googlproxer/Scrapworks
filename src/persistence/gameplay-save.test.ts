@@ -13,6 +13,18 @@ import { MemorySaveRepository, SaveConflictError } from './memory-save-repositor
 import { SaveCoordinator, type SaveBinding, type SaveHost } from './save-coordinator';
 import { migrateEnvelope } from './save-migrations';
 import { parseBackup } from './save-codec';
+import { sameData } from '../core/data-equality';
+
+function sortedMembers(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(sortedMembers);
+  if (value && typeof value === 'object')
+    return Object.fromEntries(
+      Object.entries(value)
+        .sort(([a], [b]) => b.localeCompare(a))
+        .map(([key, child]) => [key, sortedMembers(child)]),
+    );
+  return value;
+}
 
 const still = { x: 0, z: 0, sprint: false };
 const owned: { dispose(): void }[] = [];
@@ -21,8 +33,8 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function simulation(work = false): Simulation {
-  const initial = new Simulation(worldFixture());
+function simulation(work = false, definition = worldFixture()): Simulation {
+  const initial = new Simulation(definition);
   owned.push(initial);
   if (!work) return initial;
   const snapshot = initial.capture(),
@@ -49,6 +61,135 @@ function envelope(sim: Simulation, runId = 'run-a', token = 'token-a'): SaveSnap
   const world = sim.capture();
   return saveFixture(world, runId, token, '2026-11-08T00:00:00.000Z');
 }
+
+test('JSON member order does not affect machine, deposit, physical-body or committed-job validation and continuation', () => {
+  const original = simulation(true, {
+    ...worldFixture(),
+    bodies: [
+      {
+        id: 'crate',
+        motion: 'dynamic',
+        mass: 1,
+        rotation: 0,
+        position: { x: 7, y: 1, z: 7 },
+        collision: { shape: 'box', width: 1, depth: 1, height: 1 },
+      },
+    ],
+  });
+  original.clearInput();
+  const seed = original.capture();
+  const player = seed.entities.find((entity) => entity.kind === 'player')!;
+  player.inventory!.slots[1] = { item: 'solar-panel', quantity: 1 };
+  const placed = new Simulation(seed.definition, { snapshot: seed });
+  owned.push(placed);
+  assert(
+    placed.step(still, [
+      { type: 'factory-place', equipment: 'solar-panel', cell: { column: 4, row: 5 }, rotation: 0 },
+    ]).commandResults[0].accepted,
+  );
+  assert(
+    placed
+      .step(still, [
+        { type: 'handcraft-ui', visible: true },
+        { type: 'craft', recipe: 'metal-plate', quantity: 3 },
+      ])
+      .commandResults.every((result) => result.accepted),
+  );
+  const save = envelope(placed);
+  const reordered = decodeSave(sortedMembers(save));
+  assert(sameData(save, reordered));
+  const restored = new Simulation(save.world.definition, {
+    snapshot: preparePlayerSave(reordered.world),
+  });
+  owned.push(restored);
+  for (let step = 0; step < 20; step++) {
+    placed.step(still);
+    restored.step(still);
+  }
+  assert(sameData(placed.capture(), restored.capture()));
+  const changed = structuredClone(reordered.world);
+  changed.entities.find((entity) => entity.building)!.building!.collision!.height += 0.1;
+  assert.throws(() => preparePlayerSave(changed), /geometry/);
+  assert(
+    !sameData(
+      [
+        { item: 'scrap', quantity: 1 },
+        { item: 'wire', quantity: 1 },
+      ],
+      [
+        { item: 'wire', quantity: 1 },
+        { item: 'scrap', quantity: 1 },
+      ],
+    ),
+  );
+});
+
+test('restored pause and full resync remain clean, but steps, pending commands and actual handcraft refunds are dirty', async () => {
+  const source = simulation(true);
+  const repository = new MemorySaveRepository();
+  let session = new GameSession(source.definition, {
+    portFactory: () => new InlineSimulationPort(),
+  });
+  let serial = 0;
+  const coordinator = new SaveCoordinator(
+    repository,
+    {
+      binding: () => ({
+        runId: 'run-a',
+        generation: session.generation,
+        version: session.stateRevision,
+        pending: session.hasPendingInput,
+      }),
+      hold: () => session.hold(),
+      capture: async () => (await session.capture()).world,
+      validate: async () => undefined,
+      replace: async (save) => {
+        session.dispose();
+        session = new GameSession(source.definition, {
+          portFactory: () => new InlineSimulationPort(),
+          playerSave: !!save,
+          capture: save
+            ? {
+                world: save.world,
+                ledger: { accepted: 0, applied: 0, cancelled: 0, lastApplied: 0 },
+                pending: [],
+              }
+            : undefined,
+        });
+        await session.ready;
+      },
+    },
+    async () => true,
+    () => `dirty-${++serial}`,
+    () => '2026-11-10T00:00:00.000Z',
+  );
+  try {
+    await session.ready;
+    const work = envelope(source, 'run-a', 'work-revision');
+    await repository.save(work, null);
+    await coordinator.refresh();
+    await coordinator.load(work.token);
+    assert.equal(coordinator.dirty, false);
+    session.setPaused(true);
+    await session.resynchronize();
+    assert.equal(coordinator.dirty, false);
+    session.setPaused(false);
+    assert.equal(coordinator.dirty, false);
+    session.advance(0.05);
+    assert.equal(coordinator.dirty, true);
+    await coordinator.save();
+    assert.equal(coordinator.dirty, false);
+    session.clearInput(); // Refunding the invested unit is a real durable mutation without a tick.
+    assert.equal(coordinator.dirty, true);
+    await coordinator.save();
+    assert.equal(coordinator.dirty, false);
+    session.enqueue({ type: 'research', enabled: false });
+    assert.equal(coordinator.dirty, true);
+  } finally {
+    coordinator.dispose();
+    session.dispose();
+  }
+});
 
 function harness(repository = new MemorySaveRepository(), approve = true) {
   let sim = simulation(true),

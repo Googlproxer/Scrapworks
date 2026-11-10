@@ -11,6 +11,7 @@ import { planTransaction } from './domain/inventory';
 import { handcraftBagOutput } from './domain/work';
 import { TOOLBAR_SLOTS } from '@contracts/toolbar';
 import { isPlaceable } from '@content/factory';
+import { sameData } from '@core/data-equality';
 
 /** Validate the complete opening component before replacing a healthy authority. */
 export function assertOpening(
@@ -115,7 +116,7 @@ export function assertOpening(
       job = record(state['handcraft'], ['id', 'recipe', 'remaining', 'inputs', 'unitsLeft']);
     stacks(job['inputs']);
     check(
-      JSON.stringify(job['inputs']) === JSON.stringify(recipe.inputs) &&
+      sameData(job['inputs'], recipe.inputs) &&
         number(job['unitsLeft'], true) > 0 &&
         Number(job['unitsLeft']) <=
           (recipe.outputs[0] ? OPENING_CONTENT.items[recipe.outputs[0].item].stackLimit : 1) &&

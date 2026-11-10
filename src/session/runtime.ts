@@ -117,6 +117,7 @@ export class SimulationRuntime {
   private inputSequence = 0;
   private appliedInput = 0;
   private eventSerial = 0;
+  private stateRevision = 0;
 
   private accept(commands: readonly SequencedCommand[]): void {
     for (const command of commands) {
@@ -162,6 +163,7 @@ export class SimulationRuntime {
       revision: this.revision,
       ledger: { ...this.ledger },
       appliedInput: this.appliedInput,
+      stateRevision: this.stateRevision,
     });
 
     const finish = (): RuntimeReply => {
@@ -246,6 +248,7 @@ export class SimulationRuntime {
         );
         this.watched = new Set();
         this.eventSerial = 0;
+        this.stateRevision = 0;
         reply.packet = next.publish(this.watched, true);
         return finish();
       }
@@ -285,8 +288,12 @@ export class SimulationRuntime {
         this.input = { x: 0, z: 0, sprint: false };
         this.inputSequence = 0;
         if (!this.failed) {
-          for (const value of this.world.clearInput(r.preserveWork === true))
+          for (const value of this.world.clearInput(r.preserveWork === true)) {
+            // Activity normally clears only transient input/UI. Refunding a unit changes stock.
+            if (value.kind === 'handcraft-ended' && value.reason === 'cancelled')
+              this.stateRevision++;
             event(this.world.tick, value);
+          }
           reply.packet = this.world.publish(this.watched);
         }
         return finish();
@@ -329,6 +336,7 @@ export class SimulationRuntime {
           this.input,
           commands.map((c) => c.command),
         );
+        this.stateRevision++;
         for (let i = 0; i < commands.length; i++) {
           const c = commands[i];
           this.ledger.applied++;

@@ -1,6 +1,13 @@
 import { Dexie, type Table } from 'dexie';
 import { fromEventPattern, Subject, Subscription } from 'rxjs';
-import { type SaveRepository, type SaveSnapshot, type SaveMetadata } from '@contracts/save';
+import {
+  type SaveRepository,
+  type SaveSnapshot,
+  type SaveMetadata,
+  type SaveCatalog,
+  type SaveCatalogIssue,
+} from '@contracts/save';
+import { sameData } from '@core/data-equality';
 import { decodeSave, saveMetadata, decodeMetadata } from './save-codec';
 import { SaveConflictError } from './memory-save-repository';
 import {
@@ -20,6 +27,16 @@ export class IndexedDbSaveRepository implements SaveRepository {
   private readonly lifetime = new Subscription();
   private readonly blocked = new Subject<never>();
   private closed = false;
+  private issueSerial = 0;
+  private damaged = new Map<string, IDBValidKey>();
+
+  private metadata(value: unknown): SaveMetadata | undefined {
+    try {
+      return decodeMetadata(value);
+    } catch {
+      return undefined;
+    }
+  }
 
   public constructor(name = 'ScrapworksGameplaySaves') {
     this.db = new Dexie(name);
@@ -69,13 +86,72 @@ export class IndexedDbSaveRepository implements SaveRepository {
   }
 
   public async list() {
+    return (await this.catalog()).revisions;
+  }
+
+  public async catalog(): Promise<SaveCatalog> {
     // Standalone Dexie readonly queries resolve on request success, before transaction completion.
     // Keep lifecycle close/delete safe by settling only after the native read has finished.
-    return this.access(() =>
-      this.db.transaction('r', this.revisions, async () =>
-        orderedRevisions((await this.revisions.toArray()).map(decodeMetadata)),
-      ),
+    const revisions: SaveMetadata[] = [],
+      issues: SaveCatalogIssue[] = [];
+    const damaged = new Map<string, IDBValidKey>();
+    await this.access(() =>
+      this.db.transaction('r', this.revisions, async () => {
+        await this.db.table<unknown, IDBValidKey>('revisions').each((row, cursor) => {
+          try {
+            revisions.push(decodeMetadata(row));
+          } catch (error) {
+            const id =
+              [...this.damaged].find(
+                ([, key]) => indexedDB.cmp(key, cursor.primaryKey) === 0,
+              )?.[0] ?? `damaged-${++this.issueSerial}`;
+            damaged.set(id, cursor.primaryKey);
+            issues.push({
+              id,
+              label:
+                typeof cursor.primaryKey === 'string'
+                  ? `Revision ${cursor.primaryKey.slice(0, 80)}`
+                  : 'Unreadable revision',
+              message: error instanceof Error ? error.message : 'This revision cannot be read.',
+            });
+          }
+        });
+      }),
     );
+    this.damaged = damaged;
+    return { revisions: orderedRevisions(revisions), issues };
+  }
+
+  public async deleteDamaged(id: string): Promise<void> {
+    const key = this.damaged.get(id);
+    if (key === undefined) throw new SaveConflictError();
+    await this.access(() =>
+      this.db.transaction('rw', this.revisions, this.payloads, this.runs, async () => {
+        const raw = this.db.table<unknown, IDBValidKey>('revisions');
+        const current = await raw.get(key);
+        // A concurrent repair/commit must never be erased by an old damaged-row prompt.
+        if (current === undefined || this.metadata(current)) throw new SaveConflictError();
+        await raw.delete(key);
+        await this.db.table<unknown, IDBValidKey>('payloads').delete(key);
+        for (const head of await this.runs.toArray()) {
+          if (head.token !== key) continue;
+          const retained = orderedRevisions(
+            (await this.revisions.where('runId').equals(head.runId).toArray()).flatMap((row) => {
+              const valid = this.metadata(row);
+              return valid ? [valid] : [];
+            }),
+          )[0];
+          if (retained)
+            await this.runs.put({
+              runId: head.runId,
+              token: retained.token,
+              sequence: retained.sequence,
+            });
+          else await this.runs.delete(head.runId);
+        }
+      }),
+    );
+    this.damaged.delete(id);
   }
 
   public async load(token?: string): Promise<SaveSnapshot | undefined> {
@@ -92,7 +168,7 @@ export class IndexedDbSaveRepository implements SaveRepository {
           'This revision payload is missing. Choose a previous revision for recovery.',
         );
       const save = decodeSave(rows.data.payload);
-      if (JSON.stringify(saveMetadata(save)) !== JSON.stringify(decodeMetadata(rows.metadata)))
+      if (!sameData(saveMetadata(save), decodeMetadata(rows.metadata)))
         throw new Error('Save metadata disagrees with its payload. Choose a previous revision.');
       return save;
     });
@@ -108,7 +184,10 @@ export class IndexedDbSaveRepository implements SaveRepository {
         await this.payloads.add({ token: next.token, payload: next });
         await this.runs.put({ runId: next.runId, token: next.token, sequence: next.sequence });
         const prune = prunedTokens(
-          await this.revisions.where('slot').equals(next.slot).toArray(),
+          (await this.revisions.where('slot').equals(next.slot).toArray()).flatMap((row) => {
+            const valid = this.metadata(row);
+            return valid ? [valid] : [];
+          }),
           next,
         );
         await this.revisions.bulkDelete(prune);

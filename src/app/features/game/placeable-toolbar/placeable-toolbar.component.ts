@@ -2,6 +2,7 @@ import { Component, computed, ElementRef, inject } from '@angular/core';
 import { GameRuntimeService } from '../game-runtime.service';
 import { ITEM_NAMES } from '@content/opening';
 import { TOOLBAR_SLOTS } from '@contracts/toolbar';
+import type { EquipmentId } from '@contracts/factory';
 
 @Component({
   selector: 'app-placeable-toolbar',
@@ -18,7 +19,7 @@ export class PlaceableToolbarComponent {
       item: this.runtime.toolbar()?.slots[index] ?? null,
     })),
   );
-  public readonly shortNames: Readonly<Record<string, string>> = {
+  public readonly shortNames: Readonly<Record<EquipmentId, string>> = {
     'power-connection': 'Power',
     'solar-panel': 'Solar',
     'wind-turbine': 'Wind',
@@ -27,6 +28,18 @@ export class PlaceableToolbarComponent {
     'medium-fabricator': 'Medium',
     extractor: 'Extract',
     laboratory: 'Lab',
+    conveyor: 'Belt',
+    sorter: 'Sorter',
+    'water-pump': 'Pump',
+    pipe: 'Pipe',
+    'pipe-junction': 'Junction',
+    'water-treatment': 'Filter',
+    'water-tank': 'Tank',
+    'water-return': 'Return',
+    greenhouse: 'Plants',
+    battery: 'Battery',
+    'coal-generator': 'Coal',
+    'air-scrubber': 'Air',
   };
   public readonly active = computed(() => this.runtime.toolbar()?.active ?? 0);
 

@@ -228,6 +228,8 @@ export type RuntimeReply = Envelope & {
   events: RuntimeEvent[];
   ledger: CommandLedger;
   appliedInput: number;
+  /** Session-local durable changes, independent of presentation publications and transient input. */
+  stateRevision: number;
 } & CompleteFields<ResultData, 'packet' | 'watch' | 'details' | 'capture' | 'error'>;
 
 export const PRESENTATION_STRIDE = 8;
@@ -303,6 +305,10 @@ export function assertRuntimeReply(value: unknown): asserts value is RuntimeRepl
     'Invalid command ledger',
   );
   check(Number.isSafeInteger(reply.appliedInput), 'Invalid applied input');
+  check(
+    Number.isSafeInteger(reply.stateRevision) && reply.stateRevision! >= 0,
+    'Invalid state revision',
+  );
   if (!reply.ok) {
     check(typeof reply.error === 'string', 'Missing reply error');
     return;

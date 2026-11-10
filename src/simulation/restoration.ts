@@ -11,15 +11,19 @@ export function restoreCells(
   columns: number,
   influences: readonly CellInfluence[],
 ): void {
+  const active = influences.filter((source) => source.positive > 0 || source.negative > 0);
+  if (!active.length) return;
+
   const distance = (a: number, b: number) =>
     Math.abs((a % columns) - (b % columns)) +
     Math.abs(Math.floor(a / columns) - Math.floor(b / columns));
 
   const negative = health.map(() => 0);
-  const contributors = [...influences]
-    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+  const ordered = active.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  const contributors = ordered
+    .filter((source) => source.positive > 0)
     .map((s) => ({ ...s, remaining: s.positive }));
-  for (const source of contributors) {
+  for (const source of ordered) {
     if (!source.negative) continue;
     const cells = health.map((_, i) => i).filter((i) => distance(i, source.cell) <= 3);
     for (const cell of cells) negative[cell] += source.negative / cells.length;
@@ -28,7 +32,9 @@ export function restoreCells(
   const added = health.map(() => 0);
   const maximum = columns + Math.ceil(health.length / columns);
   for (let radius = 0; radius <= maximum; radius++) {
+    if (!contributors.some((source) => source.remaining > 1e-9)) break;
     for (let round = 0; round <= health.length; round++) {
+      if (!contributors.some((source) => source.remaining > 1e-9)) break;
       const candidates = contributors.map((s) =>
         health.map((_, i) => i).filter((i) => needs[i] > 1e-9 && distance(i, s.cell) === radius),
       );
