@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="64" viewBox="0 0 96 64">
+  <title>Continuous chamfered progress track, nine-slice at 16 units</title>
+  <path fill="#142C40" d="M15 0h67l14 14v35L81 64H14L0 50V15Z"/>
+  <path fill="#7393A3" d="M16 2h65l13 13v33L80 62H15L2 49V16Z"/>
+  <path fill="#091D2C" d="M16 7h64l9 9v32l-9 9H16l-9-9V16Z"/>
+  <path fill="#20394C" d="M16 10h64l6 6v32l-6 6H16l-6-6V16Z"/>
+</svg>

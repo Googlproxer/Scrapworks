@@ -1,0 +1,20 @@
+:root {
+  color-scheme: dark;
+  --scrap-cream: #f1e1bd;
+  --scrap-highlight: #fff1cf;
+  --scrap-navy: #142c40;
+  --scrap-steel: #31495d;
+  --scrap-coral: #f08a65;
+  --scrap-leaf: #8fa653;
+  --scrap-shadow: #091d2c;
+  --scrap-inset: #20394c;
+  --scrap-focus: #fff1cf;
+  --scrap-frame: 20px;
+  --scrap-control-edge: 14px;
+  --scrap-title-flair: 76px;
+  --scrap-title-rotation: -1.5deg;
+  --scrap-well-edge: 6px;
+  --scrap-target: 48px;
+  --scrap-gap: 16px;
+  --scrap-body: 1rem;
+}

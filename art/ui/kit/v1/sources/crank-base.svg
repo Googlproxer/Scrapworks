@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <title>Hand-crank housing with bolts at twelve, three, six and nine</title>
+  <defs>
+    <g id="bolt">
+      <path fill="#091D2C" d="m-7-9 12-1 9 8-2 12-12 5-10-8Z"/>
+      <path fill="#142C40" d="m-7-11 12 0 7 8-3 11-12 3-8-8Z"/>
+      <path fill="#C3D0D2" d="m-5-8 9 0 5 6-2 8-9 2-6-6Z"/>
+      <path fill="#7393A3" d="m-4-4 7-1 3 4-1 5-6 1-5-4Z"/>
+      <path fill="#31495D" d="m-6 1 5 4 6-1 2-3-1 5-9 2-5-6Z"/>
+    </g>
+  </defs>
+  <circle cx="136" cy="139" r="110" fill="#091D2C"/>
+  <circle cx="131" cy="133" r="110" fill="#142C40"/>
+  <circle cx="128" cy="128" r="109" fill="#52758A"/>
+  <circle cx="128" cy="128" r="105" fill="#31495D"/>
+  <path fill="#20394C" d="M23 128a105 105 0 0 0 210 0l-5 4a100 100 0 0 1-200 0Z"/>
+  <path fill="#20394C" d="M57 53a105 105 0 0 1 148 144c-24-8-35-35-49-62-26-52-59-63-99-82Z"/>
+  <path d="M29 101a103 103 0 0 1 95-75" fill="none" stroke="#7393A3" stroke-width="2" stroke-linecap="round"/>
+  <use href="#bolt" x="128" y="38"/>
+  <use href="#bolt" x="218" y="128"/>
+  <use href="#bolt" x="128" y="218"/>
+  <use href="#bolt" x="38" y="128"/>
+  <circle cx="133" cy="134" r="27" fill="#091D2C"/>
+  <circle cx="128" cy="128" r="27" fill="#142C40"/>
+  <circle cx="128" cy="128" r="22" fill="#7393A3"/>
+  <circle cx="128" cy="128" r="17" fill="#20394C"/>
+</svg>

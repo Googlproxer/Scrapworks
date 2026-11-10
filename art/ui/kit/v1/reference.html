@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scrapworks reusable UI pieces</title>
+    <link rel="stylesheet" href="./kit.css" />
+    <style>
+      .board {
+        max-inline-size: 1600px;
+        margin-inline: auto;
+        padding: 52px;
+        display: grid;
+        gap: 28px;
+      }
+      .sheet-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+      }
+      .sheet-head img {
+        inline-size: 420px;
+        max-inline-size: 40%;
+        block-size: auto;
+      }
+      .sheet-head h1 {
+        margin-block-end: 12px;
+      }
+      .palette {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .swatch {
+        border-block-start: 32px solid var(--swatch);
+        padding-block-start: 8px;
+      }
+      .swatch strong {
+        display: block;
+      }
+      .sheet-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .sheet-panel {
+        padding: 16px;
+        display: grid;
+        align-content: start;
+        gap: 22px;
+      }
+      .sheet-panel h2 {
+        font-size: 1.6rem;
+      }
+      .full {
+        grid-column: 1 / -1;
+      }
+      .scales {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr 2fr;
+        gap: 24px;
+        align-items: start;
+      }
+      .scale {
+        min-block-size: 140px;
+        padding: 12px;
+        display: grid;
+        gap: 8px;
+        align-content: center;
+        position: relative;
+      }
+      .scale .repair {
+        position: absolute;
+        right: -8px;
+        bottom: -8px;
+      }
+      .parts {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 24px;
+      }
+      .parts img {
+        inline-size: 64px;
+        block-size: 64px;
+        object-fit: contain;
+      }
+      .states {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .state {
+        display: grid;
+        gap: 8px;
+        justify-items: start;
+      }
+      .state small {
+        padding-inline-start: 8px;
+      }
+      .input-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .sample-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .sheet-panel .title-plate {
+        font-size: 1.4rem;
+      }
+      .sample-slots {
+        max-inline-size: 340px;
+      }
+      .notification {
+        padding: 12px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .crank-showcase {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 40px;
+      }
+      .crank-showcase .crank {
+        --crank-size: 320px;
+      }
+      .crank-lighting {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+      }
+      .crank-lighting figure {
+        margin: 0;
+        display: grid;
+        justify-items: center;
+        gap: 8px;
+      }
+      .crank-lighting .crank {
+        --crank-size: 224px;
+      }
+      .crank-notes {
+        flex: 1 1 300px;
+        display: grid;
+        gap: 16px;
+      }
+      .crank-parts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .crank-parts img {
+        inline-size: 96px;
+        block-size: 96px;
+      }
+      .rule {
+        font-size: 1rem;
+        color: #c1cdd3;
+      }
+      @media (max-width: 800px) {
+        .board {
+          padding: 20px;
+        }
+        .sheet-head {
+          flex-direction: column;
+          align-items: start;
+          gap: 20px;
+        }
+        .sheet-head img {
+          max-inline-size: 100%;
+        }
+        .palette {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .sheet-grid,
+        .scales,
+        .input-pair {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <header class="sheet-head">
+        <div>
+          <h1>Scrapworks UI kit</h1>
+          <p>Uneven cuts. Crooked titles. Reinforced seams. Flexible layouts.</p>
+        </div>
+        <img src="../../../branding/title-logo-v1.png" alt="Scrapworks" />
+      </header>
+      <section class="palette" aria-label="Shared palette">
+        <div class="swatch" style="--swatch: #f1e1bd">
+          <strong>Cream</strong><span>#F1E1BD · face</span>
+        </div>
+        <div class="swatch" style="--swatch: #fff1cf">
+          <strong>Highlight</strong><span>#FFF1CF · focus</span>
+        </div>
+        <div class="swatch" style="--swatch: #142c40">
+          <strong>Navy</strong><span>#142C40 · body</span>
+        </div>
+        <div class="swatch" style="--swatch: #31495d">
+          <strong>Steel</strong><span>#31495D · bevel</span>
+        </div>
+        <div class="swatch" style="--swatch: #f08a65">
+          <strong>Coral</strong><span>#F08A65 · action</span>
+        </div>
+        <div class="swatch" style="--swatch: #8fa653">
+          <strong>Leaf</strong><span>#8FA653 · progress</span>
+        </div>
+      </section>
+      <div class="sheet-grid">
+        <section class="sheet-panel frame full">
+          <h2>Hand crank</h2>
+          <div class="crank-showcase">
+            <div class="crank" aria-hidden="true">
+              <span class="crank-caster"
+                ><span class="crank-moving"
+                  ><span class="crank-arm"></span><span class="crank-grip"></span></span
+              ></span>
+            </div>
+            <div class="crank-notes">
+              <p>
+                Four rim bolts at 12, 3, 6 and 9. A raised metal arm, central bearing and
+                cylindrical grip with end caps and grip ribs.
+              </p>
+              <p class="rule">
+                Housing, arm and grip remain separate registered layers. The crank has no repair
+                patch.
+              </p>
+              <div class="crank-parts">
+                <img src="./sources/crank-base.svg" alt="Fixed crank housing" /><img
+                  src="./sources/crank-arm.svg"
+                  alt="Raised crank arm and axle"
+                /><img src="./sources/crank-grip.svg" alt="Cylindrical crank grip" />
+              </div>
+            </div>
+          </div>
+          <div
+            class="crank-lighting"
+            role="group"
+            aria-label="Crank shadow at four rotation angles"
+          >
+            <figure>
+              <div class="crank" style="--crank-angle: 0deg" aria-hidden="true">
+                <span class="crank-caster"
+                  ><span class="crank-moving"
+                    ><span class="crank-arm"></span><span class="crank-grip"></span></span
+                ></span>
+              </div>
+              <figcaption>0°</figcaption>
+            </figure>
+            <figure>
+              <div class="crank" style="--crank-angle: 90deg" aria-hidden="true">
+                <span class="crank-caster"
+                  ><span class="crank-moving"
+                    ><span class="crank-arm"></span><span class="crank-grip"></span></span
+                ></span>
+              </div>
+              <figcaption>90°</figcaption>
+            </figure>
+            <figure>
+              <div class="crank" style="--crank-angle: 180deg" aria-hidden="true">
+                <span class="crank-caster"
+                  ><span class="crank-moving"
+                    ><span class="crank-arm"></span><span class="crank-grip"></span></span
+                ></span>
+              </div>
+              <figcaption>180°</figcaption>
+            </figure>
+            <figure>
+              <div class="crank" style="--crank-angle: 270deg" aria-hidden="true">
+                <span class="crank-caster"
+                  ><span class="crank-moving"
+                    ><span class="crank-arm"></span><span class="crank-grip"></span></span
+                ></span>
+              </div>
+              <figcaption>270°</figcaption>
+            </figure>
+          </div>
+        </section>
+        <section class="sheet-panel frame full">
+          <div class="row">
+            <h2>Dialog shell</h2>
+            <span class="rule">Fixed corner shoes + repeating lap joints</span>
+          </div>
+          <div class="scales">
+            <div class="scale frame shell">
+              <strong>Compact</strong><span>Different corner cuts</span>
+            </div>
+            <div class="scale frame shell">
+              <strong>Standard</strong><span>Pattern repeats at its native size</span>
+            </div>
+            <div class="scale frame shell">
+              <strong>Workbench</strong><span>Reinforced shoes stay in proportion</span>
+            </div>
+          </div>
+          <div class="parts">
+            <img src="./sources/dialog-frame.svg" alt="Nine-slice shell source" /><img
+              src="./sources/repair-coral.svg"
+              alt="Separate repair patch"
+            /><img src="./sources/fastener.svg" alt="Separate fastener" />
+            <p class="rule">
+              The shell owns its stepped border, unequal corner shoes and deep navy sides.<br />Content
+              reflows inside it; ornamental pieces retain their proportions.
+            </p>
+          </div>
+        </section>
+        <section class="sheet-panel frame">
+          <h2>Buttons and states</h2>
+          <div class="actions">
+            <button class="button primary" type="button">Handcraft 1</button
+            ><button class="button" type="button">Close</button
+            ><button class="button steel" type="button">+ Bind</button>
+          </div>
+          <div class="states">
+            <div class="state">
+              <button class="button primary hover" type="button">Save</button><small>Hover</small>
+            </div>
+            <div class="state">
+              <button class="button primary pressed" type="button">Save</button
+              ><small>Pressed face</small>
+            </div>
+            <div class="state">
+              <button class="button primary focus-sample" type="button">Save</button
+              ><small>Keyboard focus</small>
+            </div>
+            <div class="state">
+              <button class="button" type="button" disabled>Save</button><small>Disabled</small>
+            </div>
+          </div>
+          <p class="rule">
+            One square upper-right corner; three different clipped cuts. Deep lower edge.
+          </p>
+        </section>
+        <section class="sheet-panel frame">
+          <h2>Title plates and tabs</h2>
+          <div class="actions">
+            <span class="plate title-plate">Field kit</span
+            ><span class="plate title-plate title-alt">Controls</span>
+          </div>
+          <div class="sample-tabs">
+            <span class="tab active">Inventory &amp; Crafting</span><span class="tab">Research</span
+            ><span class="tab">Factory</span>
+          </div>
+          <p class="rule">
+            Titles rotate with their plates. Oversized coral wings repair the title ends; coral caps
+            also mark selected tabs. Body copy stays level.
+          </p>
+        </section>
+        <section class="sheet-panel frame inputs-showcase">
+          <h2>Inputs and progress</h2>
+          <div class="input-pair">
+            <label class="field">Run name<input class="input light" value="Untitled run" /></label
+            ><label class="field"
+              >Recipe<span class="select-surface"
+                ><select class="input">
+                  <option>Scrap prybar</option>
+                  <option>Pipe</option>
+                </select></span
+              ></label
+            >
+          </div>
+          <div class="input-pair">
+            <div class="stack">
+              <span class="small">Empty</span>
+              <div
+                class="progress"
+                role="progressbar"
+                aria-label="Empty progress sample"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <span style="width: 0%"></span>
+              </div>
+            </div>
+            <div class="stack">
+              <span class="small">Complete</span>
+              <div
+                class="progress"
+                role="progressbar"
+                aria-label="Complete progress sample"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="100"
+              >
+                <span style="width: 100%"></span>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <span class="small" id="sample-charge">Boost · 24 / 60 seconds</span>
+            <div
+              class="progress"
+              role="progressbar"
+              aria-labelledby="sample-charge"
+              aria-valuemin="0"
+              aria-valuemax="60"
+              aria-valuenow="24"
+            >
+              <span style="width: 40%"></span>
+            </div>
+          </div>
+          <p class="rule">Value and meaning accompany colour. Unfilled track stays neutral.</p>
+        </section>
+        <section class="sheet-panel frame">
+          <h2>Slots, wells and status</h2>
+          <div class="slot-grid sample-slots">
+            <div class="slot inset"><span class="number">1</span><span>Empty</span></div>
+            <div class="slot inset">
+              <span class="number">2</span><span class="item">Pipe</span><strong>2</strong>
+            </div>
+            <div class="slot inset selected">
+              <span class="number">3</span><span class="item">Mixed scrap</span><strong>100</strong>
+            </div>
+            <div class="slot inset"><span class="number">4</span><span>Empty</span></div>
+          </div>
+          <div class="notification inset">
+            <span class="check" aria-hidden="true">✓</span
+            ><span
+              >Game saved.<br /><span class="small muted"
+                >Reserved status space keeps actions anchored.</span
+              ></span
+            >
+          </div>
+          <p class="rule">One inset surface for slots, recipe wells and status plates.</p>
+        </section>
+        <section class="sheet-panel frame full">
+          <h2>Different jobs, different repairs</h2>
+          <div class="parts">
+            <img src="./sources/title-repair.svg" alt="Folded title wing" />
+            <img src="./sources/tab-repair.svg" alt="Selected tab cap" />
+            <img src="./sources/repair-edge.svg" alt="Side splice" />
+            <img src="./sources/corner-top-left.svg" alt="Long upper-left clamp" />
+            <img src="./sources/corner-top-right.svg" alt="Short upper-right clamp" />
+            <img src="./sources/corner-bottom-left.svg" alt="Folded lower-left shoe" />
+            <img src="./sources/corner-bottom-right.svg" alt="Coral lower-right reinforcement" />
+            <img src="./sources/fastener.svg" alt="Steel fastener" />
+          </div>
+          <p class="rule">
+            One material language, varied silhouettes. Keep the display edges busy and the reading
+            areas quiet.
+          </p>
+        </section>
+      </div>
+      <footer class="row">
+        <p class="rule">
+          Scrapworks UI kit v1 · Style revision 10 · Field Kit concept as the main reference
+        </p>
+        <a href="./responsive.html">Open resizable field kit reference</a>
+      </footer>
+    </main>
+  </body>
+</html>

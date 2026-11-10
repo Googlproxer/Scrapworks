@@ -1,0 +1,9 @@
+{
+  "viewport": [
+    1600,
+    1000
+  ],
+  "build": "dist/scrapworks/browser",
+  "checkpoint": "L:\\Angular\\scrapworks\\docs\\reports\\milestone-10\\2026-11-10\\earned-route\\earned-green-checkpoint.json",
+  "errors": []
+}

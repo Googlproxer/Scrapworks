@@ -1,12 +1,14 @@
 # Scrapworks Art Document
 
-Updated 23 October 2026. Active production direction: fully 3D world and character with the established flat painted finish.
+Updated 11 November 2026. Active production direction: fully 3D world and character with the established flat painted finish.
 
 This document owns visual identity, camera/readability, and 3D asset preparation. The [GDD](../design/GDD.md) owns gameplay; the [TDD](../design/TDD.md) owns architecture.
 
 Art projects, source assets, references and provenance are organised under the root [art/ directory](../../art/README.md). This document contains visual guidance.
 
 ## Current repository assets
+
+- The user-accepted [UI screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) establish the cream, navy and coral scrappy interface direction. The [reusable UI kit guide](ui-kit.md) owns shared pieces, fixed-corner construction and responsive dialog rules; [editable sources and preview pages](../../art/ui/kit/v1/README.md) remain separate from the current runtime UI.
 
 - The menu and loading screens use responsive WebP logo derivatives (320/640/1024 pixels) and a WebP backdrop. Original PNGs and conversion provenance remain under `art/branding/` and `art/ui/`. Reproduce them with `node tools/art/prepare-menu-images.ts`; the logo retains its transparent padding and aspect ratio.
 

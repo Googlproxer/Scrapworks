@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="72" viewBox="0 0 48 72">
+  <title>Coral selected-tab cap, preserve aspect ratio</title>
+  <path fill="#091D2C" d="M25 3h23L30 28v18l17 26H4V27Z"/>
+  <path fill="#142C40" d="M23 0h21L27 24v20l15 24H0V24Z"/>
+  <path fill="#FFBD93" d="M25 5h11L22 24v21l10 18H5V26Z"/>
+  <path fill="#F08A65" d="M26 10h3L17 24v22l8 12H10V28Z"/>
+  <path fill="#C16148" d="M5 52h12l15 11H5Z"/>
+  <path fill="#142C40" d="m23 19 6-2-2 5-5 2Z"/>
+</svg>

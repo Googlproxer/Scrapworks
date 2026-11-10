@@ -1,0 +1,365 @@
+{
+  "date": "2026-11-10",
+  "timezone": "Australia/Sydney",
+  "status": "Reference kit with a screen-space crank cast shadow and interactive local demo; production integration pending",
+  "ownerGuide": "../../../../docs/art/ui-kit.md",
+  "direction": "Field Kit and pause/save concepts; independent inset dialog fill and alpha-cutout edges define the outer silhouette, preserving the current controls and dimensional crank",
+  "references": [
+    "../../../branding/title-logo-v1.png",
+    "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+    "../../concepts/2026-11-10/redesigns/02-controls.png",
+    "../../concepts/2026-11-10/redesigns/03-gameplay-hud.png",
+    "../../concepts/2026-11-10/redesigns/04-pause-save.png",
+    "../../concepts/2026-11-10/redesigns/05-main-menu.png",
+    "../../concepts/2026-11-10/redesigns/06-research-factory.png"
+  ],
+  "screenConceptPrompts": "../../concepts/2026-11-10/generation.json",
+  "creation": {
+    "sources": "Twenty-six editable SVG pieces, including two mirrored edge derivatives; not raster extractions or exact pixel crops of the generated screen concepts",
+    "sourceTool": "Codex vector/source authoring",
+    "bitmapExports": "Sharp rasterization at twice each SVG's intrinsic width and height; transparent backgrounds preserved",
+    "previewTool": "Local Playwright Chromium rendering of reference.html and responsive.html",
+    "fonts": "Local display stack: Arial Black, Segoe UI Black, Trebuchet MS, sans-serif. Body: Trebuchet MS, Segoe UI, sans-serif. No fonts bundled or downloaded.",
+    "externalArt": "No additional external artwork imported",
+    "finishLimit": "Revised vector construction surfaces; the accepted Field Kit PNG remains the painted finish reference and this kit revision awaits user review",
+    "derivedEdges": [
+      {
+        "source": "sources/edge-horizontal.svg",
+        "output": "sources/edge-bottom.svg",
+        "transform": "translate(0 24) scale(1 -1)"
+      },
+      {
+        "source": "sources/edge-vertical.svg",
+        "output": "sources/edge-right.svg",
+        "transform": "translate(24 0) scale(-1 1)"
+      }
+    ],
+    "crankDemo": {
+      "source": "crank-demo.ts",
+      "bundle": "crank-demo.js",
+      "buildTool": "../../../../tools/art/build-ui-kit-demo.ts",
+      "typecheck": "tsconfig.json",
+      "angularTravelSource": "../../../../src/core/winding-travel.ts",
+      "events": "RxJS fromEvent with a Subscription per mounted control",
+      "bundleFormat": "Classic standalone IIFE for file URL previews",
+      "dependencyLicense": "crank-demo.LICENSE.txt"
+    },
+    "crankShadow": {
+      "method": "CSS drop-shadow on a stationary outer crank-caster wrapper, containing the rotated arm/grip group",
+      "offsetAsFractionOfCrankSize": [0.027, 0.036],
+      "blurCssPx": 0,
+      "colour": "#091D2C",
+      "removedBakedCastShadows": true,
+      "housingShadow": "Unchanged; fixed housing artwork"
+    }
+  },
+  "pieces": [
+    {
+      "source": "sources/corner-bottom-left.svg",
+      "raster": "rasters/corner-bottom-left.png",
+      "sourceDimensions": [120, 80],
+      "cssSizes": [[90, 60]],
+      "stretch": false,
+      "innerFace": "Navy infill matched to the reinforcement diagonal; overlaps central fill beneath content"
+    },
+    {
+      "source": "sources/corner-bottom-right.svg",
+      "raster": "rasters/corner-bottom-right.png",
+      "sourceDimensions": [144, 104],
+      "cssSizes": [[108, 78]],
+      "stretch": false,
+      "innerFace": "Navy infill matched to the reinforcement diagonal; overlaps central fill beneath content"
+    },
+    {
+      "source": "sources/corner-top-left.svg",
+      "raster": "rasters/corner-top-left.png",
+      "sourceDimensions": [96, 96],
+      "cssSizes": [[72, 72]],
+      "stretch": false,
+      "innerFace": "Navy infill matched to the reinforcement diagonal; overlaps central fill beneath content"
+    },
+    {
+      "source": "sources/corner-top-right.svg",
+      "raster": "rasters/corner-top-right.png",
+      "sourceDimensions": [96, 80],
+      "cssSizes": [[72, 60]],
+      "stretch": false,
+      "innerFace": "Navy infill matched to the reinforcement diagonal; overlaps central fill beneath content"
+    },
+    {
+      "source": "sources/crank-arm.svg",
+      "raster": "rasters/crank-arm.png",
+      "stretch": false,
+      "sourceDimensions": [256, 256],
+      "cssSizes": [
+        [224, 224],
+        [152, 152],
+        [200, 200]
+      ],
+      "detailCssSize": [320, 320],
+      "registrationPivot": [128, 128],
+      "layer": "arm"
+    },
+    {
+      "source": "sources/crank-base.svg",
+      "raster": "rasters/crank-base.png",
+      "stretch": false,
+      "sourceDimensions": [256, 256],
+      "cssSizes": [
+        [224, 224],
+        [152, 152],
+        [200, 200]
+      ],
+      "detailCssSize": [320, 320],
+      "registrationPivot": [128, 128],
+      "layer": "base"
+    },
+    {
+      "source": "sources/crank-grip.svg",
+      "raster": "rasters/crank-grip.png",
+      "stretch": false,
+      "sourceDimensions": [256, 256],
+      "cssSizes": [
+        [224, 224],
+        [152, 152],
+        [200, 200]
+      ],
+      "detailCssSize": [320, 320],
+      "registrationPivot": [128, 128],
+      "layer": "grip"
+    },
+    {
+      "source": "sources/dialog-frame.svg",
+      "raster": "rasters/dialog-frame.png",
+      "sourceDimensions": [256, 256],
+      "svgSlice": 64,
+      "rasterSlice": 128,
+      "cssBorderWidth": 20
+    },
+    {
+      "source": "sources/dropdown-face.svg",
+      "raster": "rasters/dropdown-face.png",
+      "sourceDimensions": [128, 112],
+      "svgSlice": 32,
+      "rasterSlice": 64,
+      "cssBorderWidth": 8
+    },
+    {
+      "source": "sources/edge-bottom.svg",
+      "raster": "rasters/edge-bottom.png",
+      "sourceDimensions": [320, 24],
+      "repeat": "x",
+      "cssTileDimensions": [320, 24],
+      "stretch": false,
+      "derivedFrom": "sources/edge-horizontal.svg",
+      "transform": "translate(0 24) scale(1 -1)"
+    },
+    {
+      "source": "sources/edge-horizontal.svg",
+      "raster": "rasters/edge-horizontal.png",
+      "sourceDimensions": [320, 24],
+      "repeat": "x",
+      "cssTileDimensions": [320, 24],
+      "stretch": false
+    },
+    {
+      "source": "sources/edge-right.svg",
+      "raster": "rasters/edge-right.png",
+      "sourceDimensions": [24, 320],
+      "repeat": "y",
+      "cssTileDimensions": [24, 320],
+      "stretch": false,
+      "derivedFrom": "sources/edge-vertical.svg",
+      "transform": "translate(24 0) scale(-1 1)"
+    },
+    {
+      "source": "sources/edge-vertical.svg",
+      "raster": "rasters/edge-vertical.png",
+      "sourceDimensions": [24, 320],
+      "repeat": "y",
+      "cssTileDimensions": [24, 320],
+      "stretch": false
+    },
+    {
+      "source": "sources/fastener.svg",
+      "raster": "rasters/fastener.png",
+      "sourceDimensions": [32, 32],
+      "cssSizes": [[24, 24]],
+      "stretch": false
+    },
+    {
+      "source": "sources/input-face.svg",
+      "raster": "rasters/input-face.png",
+      "sourceDimensions": [96, 96],
+      "svgSlice": 24,
+      "rasterSlice": 48,
+      "cssBorderWidth": 8
+    },
+    {
+      "source": "sources/inset.svg",
+      "raster": "rasters/inset.png",
+      "sourceDimensions": [64, 64],
+      "svgSlice": 12,
+      "rasterSlice": 24,
+      "cssBorderWidth": 6
+    },
+    {
+      "source": "sources/plate-coral.svg",
+      "raster": "rasters/plate-coral.png",
+      "sourceDimensions": [256, 192],
+      "svgSlice": 64,
+      "rasterSlice": 128,
+      "cssBorderWidth": 14
+    },
+    {
+      "source": "sources/plate-cream.svg",
+      "raster": "rasters/plate-cream.png",
+      "sourceDimensions": [256, 192],
+      "svgSlice": 64,
+      "rasterSlice": 128,
+      "cssBorderWidth": 14
+    },
+    {
+      "source": "sources/plate-steel.svg",
+      "raster": "rasters/plate-steel.png",
+      "sourceDimensions": [256, 192],
+      "svgSlice": 64,
+      "rasterSlice": 128,
+      "cssBorderWidth": 14
+    },
+    {
+      "source": "sources/progress-track.svg",
+      "raster": "rasters/progress-track.png",
+      "sourceDimensions": [96, 64],
+      "svgSlice": 16,
+      "rasterSlice": 32,
+      "cssBorderWidth": 4
+    },
+    {
+      "source": "sources/repair-coral.svg",
+      "raster": "rasters/repair-coral.png",
+      "sourceDimensions": [72, 48],
+      "cssSizes": [[54, 36]],
+      "stretch": false
+    },
+    {
+      "source": "sources/repair-edge.svg",
+      "raster": "rasters/repair-edge.png",
+      "sourceDimensions": [48, 96],
+      "cssSizes": [[32, 64]],
+      "stretch": false
+    },
+    {
+      "source": "sources/select-arrow.svg",
+      "raster": "rasters/select-arrow.png",
+      "sourceDimensions": [24, 18],
+      "cssSizes": [[16, 12]],
+      "stretch": false
+    },
+    {
+      "source": "sources/tab-repair.svg",
+      "raster": "rasters/tab-repair.png",
+      "sourceDimensions": [48, 72],
+      "cssSizes": [
+        [36, 54],
+        [30, 45],
+        [20, 30]
+      ],
+      "stretch": false
+    },
+    {
+      "source": "sources/title-face.svg",
+      "raster": "rasters/title-face.png",
+      "sourceDimensions": [256, 160],
+      "svgSlice": 48,
+      "rasterSlice": 96,
+      "cssBorderWidth": 20
+    },
+    {
+      "source": "sources/title-repair.svg",
+      "raster": "rasters/title-repair.png",
+      "sourceDimensions": [96, 96],
+      "cssSizes": [
+        [76, 76],
+        [64, 64],
+        [56, 56]
+      ],
+      "stretch": false
+    }
+  ],
+  "validation": {
+    "record": "../../../../docs/reports/ui-art-2026-11-10/kit-validation.json",
+    "scope": "Isolated art/layout reference and local crank interaction demo; not production gameplay",
+    "wideViewport": [1440, 900],
+    "mediumViewport": [900, 760],
+    "compactViewport": [390, 844],
+    "smallViewport": [320, 568],
+    "shortViewport": [1280, 480],
+    "noBodyScroll": ["wide", "medium", "compact"],
+    "bodyScrollOnlyWhenNeeded": ["small", "short"],
+    "fixedFrameBorderCssPx": 20,
+    "horizontalOverflow": false,
+    "axeViolations": 0,
+    "axeOptions": "preload:false for file:// previews; computed-style and contrast checks remain enabled",
+    "runtimeErrors": [],
+    "failedRequests": [],
+    "limitations": [
+      "Local headless Chromium only; no production dialog or gameplay acceptance claim",
+      "Crank and compact work-area selection are interactive; other game buttons remain visual samples.",
+      "Final display font, painted detailing, browser zoom, other engines and production modal integration remain to be qualified"
+    ],
+    "titleRepairSizesCssPx": {
+      "wide": 76,
+      "intermediate": 64,
+      "compact": 56
+    },
+    "titleRotationDegrees": {
+      "default": -1.5,
+      "alternate": 1
+    },
+    "borderPatternPeriodCssPx": 320,
+    "crankCanvasSizesCssPx": {
+      "wide": 224,
+      "intermediate": 152,
+      "compact": 200
+    },
+    "crankBolts": ["12", "3", "6", "9"],
+    "crankRepairPatch": false,
+    "crankRim": "One restrained steel bevel with a muted partial highlight; four bolts and cast shadow retained",
+    "progressSamples": [0, 40, 100],
+    "progressCorners": "Complete chamfered SVG track; no clipping of a rectangular border",
+    "formControls": "Native input and select elements, with decorative surfaces and non-interactive select arrow",
+    "surfaceCorners": "Deeper unequal chamfers on text inputs and dropdowns, and deeper continuous progress-track corners; slice sizes and control footprints preserved",
+    "silhouette": {
+      "backgroundInsetCssPx": 24,
+      "decorativeLayerOnly": true,
+      "outerAlpha": 0,
+      "contentCentreAlpha": 255,
+      "probesPerViewport": 6,
+      "viewports": 5,
+      "transparentExport": "previews/dialog-transparent.png",
+      "cornerJoinAlpha": 255,
+      "cornerJoinProbesPerViewport": 6,
+      "cornerFacesPaintBelowContent": true
+    },
+    "crankInteraction": {
+      "record": "../../../../docs/reports/ui-art-2026-11-10/crank-interaction.json",
+      "initialCharge": 24,
+      "capacity": 60,
+      "turnsFromEmptyToFull": 5,
+      "resetKey": "Home",
+      "keyboard": "Arrow keys; Space/Enter or assistive activation turns a quarter turn",
+      "storage": false,
+      "simulation": false
+    },
+    "crankShadow": {
+      "record": "../../../../docs/reports/ui-art-2026-11-10/crank-shadow.json",
+      "angles": [0, 90, 180, 270],
+      "referenceSizeCssPx": 256,
+      "expectedOffsetCssPx": [6.912, 9.216],
+      "passed": true
+    }
+  },
+  "updatedDate": "2026-11-11",
+  "revision": 10
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="112" viewBox="0 0 128 112">
+  <title>Raised steel dropdown face, nine-slice at 32 units</title>
+  <path fill="#091D2C" d="M30 9h77l21 21v60l-21 22H20L5 96V34Z"/>
+  <path fill="#142C40" d="M25 1h77l21 21v60l-20 21H14L0 89V26Z"/>
+  <path fill="#7393A3" d="M27 5h73l19 19v56l-18 18H16L5 87V28Z"/>
+  <path fill="#31495D" d="M30 12h68l15 14v52L99 91H20l-8-8V31Z"/>
+  <path fill="#52758A" d="m27 5 5 5h66l2-5Z"/>
+  <path fill="#20394C" d="m12 81 9 3h76l16-13v7L99 91H20l-8-8Z"/>
+</svg>

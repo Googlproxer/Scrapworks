@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80">
+  <title>Folded lower-left steel shoe, preserve aspect ratio</title>
+  <path fill="#142C40" d="M20 0h100v34H47Z"/>
+  <path fill="#091D2C" d="m0 4 24 1 28 35h68v22l-20 18H37L0 45Z"/>
+  <path fill="#142C40" d="m0 0 21 0 27 32h67v23L96 72H32L0 40Z"/>
+  <path fill="#7393A3" d="M6 5h12l28 33h62v14L93 65H35L6 37Z"/>
+  <path fill="#52758A" d="m10 10 5 0 28 33h60v7L91 60H38L10 34Z"/>
+  <path fill="#31495D" d="m10 34 28 26h53l12-10v8L93 65H35L6 37Z"/>
+  <path fill="#20394C" d="m68 43 24 0-7 7H63Z"/>
+</svg>

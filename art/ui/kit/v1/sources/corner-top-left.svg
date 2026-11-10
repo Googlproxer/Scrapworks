@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <title>Long angled upper-left reinforcement, preserve aspect ratio</title>
+  <path fill="#142C40" d="M49 20h47v76H20V49Z"/>
+  <path fill="#091D2C" d="M5 43 44 5h52v24H55L29 55v41H5Z"/>
+  <path fill="#142C40" d="M0 38 38 0h53v21H50L21 50v41H0Z"/>
+  <path fill="#7393A3" d="M5 40 40 5h45v10H47L15 47v38H5Z"/>
+  <path fill="#52758A" d="M10 42 42 10h43v5H47L15 47v38h-5Z"/>
+  <path fill="#31495D" d="M15 47 47 15h38v6H50L21 50v35h-6Z"/>
+</svg>

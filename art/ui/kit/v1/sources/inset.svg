@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>Scrapworks inset well, nine-slice at 12 units</title>
+  <path fill="#7393A3" d="M8 0H56L64 8V56L56 64H8L0 56V8Z"/>
+  <path fill="#091D2C" d="M9 2H55L62 9V55L55 62H9L2 55V9Z"/>
+  <path fill="#20394C" d="M10 6H54L58 10V54L54 58H10L6 54V10Z"/>
+  <path fill="#142C40" d="M10 6H54L58 10V13H6v-3Z"/>
+</svg>

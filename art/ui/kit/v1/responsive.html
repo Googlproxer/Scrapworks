@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scrapworks responsive field kit art reference</title>
+    <link rel="stylesheet" href="./kit.css" />
+    <script src="./crank-demo.js" defer></script>
+  </head>
+  <body>
+    <main class="stage">
+      <section class="frame shell dialog" aria-labelledby="kit-title">
+        <input
+          class="compact-control visually-hidden"
+          type="radio"
+          name="work-area"
+          id="work-inventory"
+          checked
+          aria-label="Inventory work area"
+        />
+        <input
+          class="compact-control visually-hidden"
+          type="radio"
+          name="work-area"
+          id="work-craft"
+          aria-label="Crafting work area"
+        />
+        <input
+          class="compact-control visually-hidden"
+          type="radio"
+          name="work-area"
+          id="work-fab"
+          aria-label="MiniFab work area"
+        />
+        <header class="dialog-head">
+          <h1 class="plate title-plate" id="kit-title">Field kit</h1>
+          <div class="actions">
+            <button class="button primary" type="button">Save progress</button>
+            <button class="button" type="button">Close</button>
+          </div>
+        </header>
+        <nav class="tabs" aria-label="Field kit sections (visual reference)">
+          <button class="tab active" type="button" aria-current="page">
+            Inventory &amp; Crafting
+          </button>
+          <button class="tab" type="button">Research</button>
+          <button class="tab" type="button">Factory</button>
+          <button class="tab" type="button">Field manual</button>
+        </nav>
+        <div class="dialog-body" tabindex="0" role="region" aria-label="Field kit contents">
+          <fieldset class="compact-switch">
+            <legend class="visually-hidden">Choose a work area using its radio control</legend>
+            <label class="tab" for="work-inventory">Inventory</label>
+            <label class="tab" for="work-craft">Crafting</label>
+            <label class="tab" for="work-fab">MiniFab</label>
+          </fieldset>
+          <div class="workbench">
+            <section class="work-panel inventory" aria-labelledby="inventory-title">
+              <div class="row">
+                <h2 id="inventory-title">Inventory</h2>
+                <span class="small">6/24 slots</span>
+              </div>
+              <div class="slot-grid" aria-label="24 inventory slots">
+                <div class="slot inset"><span class="number">1</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">2</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">3</span><span>Empty</span></div>
+                <div class="slot inset">
+                  <span class="number">4</span><span class="item">Pipe</span><strong>2</strong>
+                </div>
+                <div class="slot inset"><span class="number">5</span><span>Empty</span></div>
+                <div class="slot inset">
+                  <span class="number">6</span><span class="item">Mixed scrap</span
+                  ><strong>72</strong>
+                </div>
+                <div class="slot inset">
+                  <span class="number">7</span><span class="item">Mixed scrap</span
+                  ><strong>100</strong>
+                </div>
+                <div class="slot inset">
+                  <span class="number">8</span><span class="item">Mixed scrap</span
+                  ><strong>100</strong>
+                </div>
+                <div class="slot inset">
+                  <span class="number">9</span><span class="item">Mixed scrap</span
+                  ><strong>100</strong>
+                </div>
+                <div class="slot inset"><span class="number">10</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">11</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">12</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">13</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">14</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">15</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">16</span><span>Empty</span></div>
+                <div class="slot inset">
+                  <span class="number">17</span><span class="item">Power</span><strong>7</strong>
+                </div>
+                <div class="slot inset"><span class="number">18</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">19</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">20</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">21</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">22</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">23</span><span>Empty</span></div>
+                <div class="slot inset"><span class="number">24</span><span>Empty</span></div>
+              </div>
+            </section>
+            <section class="work-panel crafting" aria-labelledby="crafting-title">
+              <h2 id="crafting-title">Handcrafting</h2>
+              <p class="small">Keep the field kit open while crafting.</p>
+              <label class="field"
+                >Recipe<span class="select-surface"
+                  ><select class="input">
+                    <option>Scrap prybar</option>
+                  </select></span
+                ></label
+              >
+              <p class="small">4 Mixed scrap → 1 Scrap prybar<br />4 s per unit</p>
+              <div class="actions">
+                <label class="field small"
+                  >Batch size<span class="select-surface"
+                    ><select class="input">
+                      <option>1</option>
+                      <option>5</option>
+                    </select></span
+                  ></label
+                >
+                <button class="button primary" type="button">Handcraft 1</button>
+              </div>
+              <p class="status inset">No handcraft in progress</p>
+            </section>
+            <section
+              class="work-panel fabricator"
+              aria-labelledby="fabricator-title"
+              data-crank-demo
+            >
+              <h2 id="fabricator-title">Mini Fabricator</h2>
+              <p class="status"><span class="check" aria-hidden="true">✓</span>Request completed</p>
+              <p class="small">Power-free baseline · 2× charged speed</p>
+              <span class="small" id="boost-label" data-crank-readout
+                >24.0 / 60 active boost seconds</span
+              >
+              <div
+                class="progress"
+                role="progressbar"
+                aria-labelledby="boost-label"
+                aria-valuemin="0"
+                aria-valuemax="60"
+                aria-valuenow="24"
+                data-crank-progress
+              >
+                <span style="width: 40%"></span>
+              </div>
+              <div class="crank-row">
+                <button
+                  class="crank crank-control"
+                  type="button"
+                  data-crank-handle
+                  aria-label="Wind MiniFab handle"
+                  aria-describedby="winding-help"
+                  title="Drag around the pivot or use arrow keys. Home resets charge."
+                >
+                  <span class="crank-caster" aria-hidden="true"
+                    ><span class="crank-moving"
+                      ><span class="crank-arm"></span><span class="crank-grip"></span></span
+                  ></span>
+                </button>
+                <p class="small" id="winding-help">
+                  Drag / arrow keys<span class="visually-hidden"
+                    >. Either direction adds charge. Space or Enter winds a quarter turn. Home
+                    resets charge. Holding still adds none.</span
+                  >
+                </p>
+                <span
+                  class="visually-hidden"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  data-crank-announcement
+                ></span>
+              </div>
+            </section>
+          </div>
+        </div>
+        <footer class="dialog-foot">
+          <p class="status small muted">
+            <span class="wide-note">Local crank demo · Other buttons are visual references.</span
+            ><span class="compact-note">Crank demo</span>
+          </p>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>
