@@ -10,6 +10,8 @@ Art projects, source assets, references and provenance are organised under the r
 
 - The user-accepted [UI screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) establish the cream, navy and coral scrappy interface direction. The [reusable UI kit guide](ui-kit.md) owns shared pieces, fixed-corner construction and responsive dialog rules; [editable sources and preview pages](../../art/ui/kit/v1/README.md) remain separate from the current runtime UI.
 
+- The first [UI sprite set](../../art/ui/sprites/v1/README.md) covers all 28 current inventory items/placeables, the MiniFab, and two water-quality indicators. [Generated originals and exact prompts](../../art/ui/sprites/v1/generation.json), transparent PNG sizes, an atlas and a local review gallery remain under `art/ui/sprites/v1/`. This image-only pass awaits user review and is not integrated into runtime UI.
+
 - The menu and loading screens use responsive WebP logo derivatives (320/640/1024 pixels) and a WebP backdrop. Original PNGs and conversion provenance remain under `art/branding/` and `art/ui/`. Reproduce them with `node tools/art/prepare-menu-images.ts`; the logo retains its transparent padding and aspect ratio.
 
 - The retained [modelling references](../../art/characters/References/) and model sources preserve character identity. The approved flat finish is described below; the earlier south-idle illustration has been retired, with its exact edit prompt retained in the [generation log](../../art/generation.json).

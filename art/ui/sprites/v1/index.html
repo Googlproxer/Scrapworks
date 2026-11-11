@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Scrapworks UI sprites — first pass</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #102838;
+        color: #fff1cf;
+        font:
+          16px/1.5 'Segoe UI',
+          Arial,
+          sans-serif;
+      }
+      main {
+        max-width: 1600px;
+        margin: auto;
+        padding: 32px;
+      }
+      h1 {
+        font-size: clamp(26px, 4vw, 46px);
+        line-height: 1.15;
+        margin: 0 0 12px;
+      }
+      header {
+        border-left: 8px solid #f08a65;
+        padding-left: 24px;
+        margin-bottom: 32px;
+      }
+      p {
+        max-width: 80ch;
+      }
+      a {
+        color: #fff1cf;
+        text-underline-offset: 4px;
+      }
+      a:focus-visible {
+        outline: 3px solid #f08a65;
+        outline-offset: 4px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+        gap: 20px;
+      }
+      article {
+        background: #203c4e;
+        border: 1px solid #718a98;
+        padding: 20px;
+      }
+      h2 {
+        font-size: 20px;
+        line-height: 1.3;
+        min-height: 52px;
+        margin: 0;
+      }
+      code {
+        color: #c3d5dc;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+      .large {
+        display: grid;
+        place-items: center;
+        height: 156px;
+        margin: 12px 0;
+        background: #142c40;
+      }
+      .large img {
+        display: block;
+        object-fit: contain;
+      }
+      .samples {
+        display: flex;
+        gap: 8px;
+        justify-content: space-between;
+      }
+      figure {
+        margin: 0;
+        text-align: center;
+        flex: 1;
+      }
+      .swatch {
+        height: 76px;
+        display: grid;
+        place-items: center;
+        border: 1px solid #718a98;
+      }
+      .swatch-0 {
+        background: #142c40;
+      }
+      .swatch-1 {
+        background: #f1e1bd;
+      }
+      .swatch-2 {
+        background: #45634b;
+      }
+      figcaption {
+        font-size: 14px;
+        margin-top: 5px;
+      }
+      footer {
+        margin-top: 32px;
+      }
+      @media (max-width: 480px) {
+        main {
+          padding: 16px;
+        }
+        header {
+          padding-left: 16px;
+        }
+        .grid {
+          gap: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Scrapworks / UI sprites</h1>
+        <p>
+          31 transparent sprites. Resources, components, the prybar, all current placeables, the
+          MiniFab, and two water indicators. First art pass for review.
+        </p>
+        <p>
+          <a href="contact-sheet.png">Full contact sheet</a> ·
+          <a href="atlas.png">Transparent atlas</a> · <a href="README.md">Asset guide</a>
+        </p>
+        <p>
+          Each card shows 128 px, then 32 px on navy, 48 px on cream, and 64 px on green. Select the
+          large illustration to open its untouched original.
+        </p>
+      </header>
+      <section class="grid" aria-label="Sprite catalogue">
+        <article>
+          <h2>Mixed scrap</h2>
+          <code>scrap</code
+          ><a class="large" href="sources/scrap.png" aria-label="Open original Mixed scrap"
+            ><img src="png/128/scrap.png" alt="Mixed scrap" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/scrap.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/scrap.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/scrap.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Coal</h2>
+          <code>coal</code
+          ><a class="large" href="sources/coal.png" aria-label="Open original Coal"
+            ><img src="png/128/coal.png" alt="Coal" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/coal.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/coal.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/coal.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Metal plate</h2>
+          <code>plate</code
+          ><a class="large" href="sources/plate.png" aria-label="Open original Metal plate"
+            ><img src="png/128/plate.png" alt="Metal plate" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/plate.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/plate.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/plate.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Recovered wire</h2>
+          <code>wire</code
+          ><a class="large" href="sources/wire.png" aria-label="Open original Recovered wire"
+            ><img src="png/128/wire.png" alt="Recovered wire" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/wire.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/wire.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/wire.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Mechanical part</h2>
+          <code>mechanical-part</code
+          ><a
+            class="large"
+            href="sources/mechanical-part.png"
+            aria-label="Open original Mechanical part"
+            ><img src="png/128/mechanical-part.png" alt="Mechanical part" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/mechanical-part.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/mechanical-part.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/mechanical-part.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Electrical part</h2>
+          <code>electrical-part</code
+          ><a
+            class="large"
+            href="sources/electrical-part.png"
+            aria-label="Open original Electrical part"
+            ><img src="png/128/electrical-part.png" alt="Electrical part" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/electrical-part.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/electrical-part.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/electrical-part.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Basic research kit</h2>
+          <code>research-kit</code
+          ><a
+            class="large"
+            href="sources/research-kit.png"
+            aria-label="Open original Basic research kit"
+            ><img src="png/128/research-kit.png" alt="Basic research kit" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/research-kit.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/research-kit.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/research-kit.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Scrap prybar</h2>
+          <code>prybar</code
+          ><a class="large" href="sources/prybar.png" aria-label="Open original Scrap prybar"
+            ><img src="png/128/prybar.png" alt="Scrap prybar" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/prybar.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/prybar.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/prybar.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Mini Fabricator</h2>
+          <code>mini-fabricator</code
+          ><a
+            class="large"
+            href="sources/mini-fabricator.png"
+            aria-label="Open original Mini Fabricator"
+            ><img src="png/128/mini-fabricator.png" alt="Mini Fabricator" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/mini-fabricator.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/mini-fabricator.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/mini-fabricator.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Basic Fabricator</h2>
+          <code>basic-fabricator</code
+          ><a
+            class="large"
+            href="sources/basic-fabricator.png"
+            aria-label="Open original Basic Fabricator"
+            ><img
+              src="png/128/basic-fabricator.png"
+              alt="Basic Fabricator"
+              width="128"
+              height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/basic-fabricator.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/basic-fabricator.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/basic-fabricator.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Medium Fabricator</h2>
+          <code>medium-fabricator</code
+          ><a
+            class="large"
+            href="sources/medium-fabricator.png"
+            aria-label="Open original Medium Fabricator"
+            ><img
+              src="png/128/medium-fabricator.png"
+              alt="Medium Fabricator"
+              width="128"
+              height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/medium-fabricator.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/medium-fabricator.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/medium-fabricator.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Mixed-output recycler</h2>
+          <code>recycler</code
+          ><a
+            class="large"
+            href="sources/recycler.png"
+            aria-label="Open original Mixed-output recycler"
+            ><img src="png/128/recycler.png" alt="Mixed-output recycler" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/recycler.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/recycler.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/recycler.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Extractor</h2>
+          <code>extractor</code
+          ><a class="large" href="sources/extractor.png" aria-label="Open original Extractor"
+            ><img src="png/128/extractor.png" alt="Extractor" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/extractor.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/extractor.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/extractor.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Laboratory</h2>
+          <code>laboratory</code
+          ><a class="large" href="sources/laboratory.png" aria-label="Open original Laboratory"
+            ><img src="png/128/laboratory.png" alt="Laboratory" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/laboratory.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/laboratory.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/laboratory.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Solar panel</h2>
+          <code>solar-panel</code
+          ><a class="large" href="sources/solar-panel.png" aria-label="Open original Solar panel"
+            ><img src="png/128/solar-panel.png" alt="Solar panel" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/solar-panel.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/solar-panel.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/solar-panel.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Wind turbine</h2>
+          <code>wind-turbine</code
+          ><a class="large" href="sources/wind-turbine.png" aria-label="Open original Wind turbine"
+            ><img src="png/128/wind-turbine.png" alt="Wind turbine" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/wind-turbine.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/wind-turbine.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/wind-turbine.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Power connection</h2>
+          <code>power-connection</code
+          ><a
+            class="large"
+            href="sources/power-connection.png"
+            aria-label="Open original Power connection"
+            ><img
+              src="png/128/power-connection.png"
+              alt="Power connection"
+              width="128"
+              height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/power-connection.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/power-connection.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/power-connection.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Grid battery</h2>
+          <code>battery</code
+          ><a class="large" href="sources/battery.png" aria-label="Open original Grid battery"
+            ><img src="png/128/battery.png" alt="Grid battery" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/battery.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/battery.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/battery.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Coal generator</h2>
+          <code>coal-generator</code
+          ><a
+            class="large"
+            href="sources/coal-generator.png"
+            aria-label="Open original Coal generator"
+            ><img src="png/128/coal-generator.png" alt="Coal generator" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/coal-generator.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/coal-generator.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/coal-generator.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Conveyor</h2>
+          <code>conveyor</code
+          ><a class="large" href="sources/conveyor.png" aria-label="Open original Conveyor"
+            ><img src="png/128/conveyor.png" alt="Conveyor" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/conveyor.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/conveyor.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/conveyor.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Sorter</h2>
+          <code>sorter</code
+          ><a class="large" href="sources/sorter.png" aria-label="Open original Sorter"
+            ><img src="png/128/sorter.png" alt="Sorter" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/sorter.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/sorter.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/sorter.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Water pump</h2>
+          <code>water-pump</code
+          ><a class="large" href="sources/water-pump.png" aria-label="Open original Water pump"
+            ><img src="png/128/water-pump.png" alt="Water pump" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/water-pump.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/water-pump.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/water-pump.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Pipe</h2>
+          <code>pipe</code
+          ><a class="large" href="sources/pipe.png" aria-label="Open original Pipe"
+            ><img src="png/128/pipe.png" alt="Pipe" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/pipe.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/pipe.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/pipe.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Pipe junction</h2>
+          <code>pipe-junction</code
+          ><a
+            class="large"
+            href="sources/pipe-junction.png"
+            aria-label="Open original Pipe junction"
+            ><img src="png/128/pipe-junction.png" alt="Pipe junction" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/pipe-junction.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/pipe-junction.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/pipe-junction.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Water treatment</h2>
+          <code>water-treatment</code
+          ><a
+            class="large"
+            href="sources/water-treatment.png"
+            aria-label="Open original Water treatment"
+            ><img src="png/128/water-treatment.png" alt="Water treatment" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/water-treatment.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/water-treatment.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/water-treatment.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Water tank</h2>
+          <code>water-tank</code
+          ><a class="large" href="sources/water-tank.png" aria-label="Open original Water tank"
+            ><img src="png/128/water-tank.png" alt="Water tank" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/water-tank.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/water-tank.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/water-tank.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Water return</h2>
+          <code>water-return</code
+          ><a class="large" href="sources/water-return.png" aria-label="Open original Water return"
+            ><img src="png/128/water-return.png" alt="Water return" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/water-return.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/water-return.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/water-return.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Greenhouse</h2>
+          <code>greenhouse</code
+          ><a class="large" href="sources/greenhouse.png" aria-label="Open original Greenhouse"
+            ><img src="png/128/greenhouse.png" alt="Greenhouse" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/greenhouse.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/greenhouse.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/greenhouse.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Air scrubber</h2>
+          <code>air-scrubber</code
+          ><a class="large" href="sources/air-scrubber.png" aria-label="Open original Air scrubber"
+            ><img src="png/128/air-scrubber.png" alt="Air scrubber" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/air-scrubber.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/air-scrubber.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/air-scrubber.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Untreated water</h2>
+          <code>water-untreated</code
+          ><a
+            class="large"
+            href="sources/water-untreated.png"
+            aria-label="Open original Untreated water"
+            ><img src="png/128/water-untreated.png" alt="Untreated water" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/water-untreated.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/water-untreated.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/water-untreated.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+        <article>
+          <h2>Clean water</h2>
+          <code>water-clean</code
+          ><a class="large" href="sources/water-clean.png" aria-label="Open original Clean water"
+            ><img src="png/128/water-clean.png" alt="Clean water" width="128" height="128"
+          /></a>
+          <div class="samples" aria-label="Size and background comparison">
+            <figure>
+              <div class="swatch swatch-0">
+                <img src="png/64/water-clean.png" alt="" width="32" height="32" />
+              </div>
+              <figcaption>32 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-1">
+                <img src="png/64/water-clean.png" alt="" width="48" height="48" />
+              </div>
+              <figcaption>48 px</figcaption>
+            </figure>
+            <figure>
+              <div class="swatch swatch-2">
+                <img src="png/64/water-clean.png" alt="" width="64" height="64" />
+              </div>
+              <figcaption>64 px</figcaption>
+            </figure>
+          </div>
+        </article>
+      </section>
+      <footer>
+        Generated artwork for UI use. Names and counts stay in UI text. Sources, prompts and
+        preparation instructions are kept with this set.
+      </footer>
+    </main>
+  </body>
+</html>

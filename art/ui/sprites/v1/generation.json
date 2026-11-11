@@ -1,0 +1,550 @@
+{
+  "version": 1,
+  "date": "2026-11-11",
+  "tool": "built-in image_gen",
+  "use": "UI inventory, crafting, toolbar and inspection illustrations only",
+  "status": "First sprite pass, awaiting user review; no runtime integration",
+  "styleReferences": [
+    "../../../branding/title-logo-v1.png",
+    "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+    "sources/scrap.png"
+  ],
+  "catalogueSources": [
+    "../../../../src/content/opening.ts",
+    "../../../../src/content/first-factory.ts",
+    "../../../../src/content/environment.ts"
+  ],
+  "scope": "All 28 current item/placeable IDs, the non-inventory MiniFab, and two water-quality indicators. The prybar is the only currently implemented equipable tool. No speculative future items or 3D/world assets.",
+  "assets": [
+    {
+      "id": "scrap",
+      "name": "Mixed scrap",
+      "group": "materials",
+      "subject": "One compact clustered pile of 4–5 recovered pieces, with a bent cream sheet-metal plate, chunky blue-steel gear fragment, one short pipe and a small coral metal offcut. Clearly separate broad material shapes. This is loose salvage, not a machine or a toolbox. Large clean facets, minimal markings.",
+      "source": "sources/scrap.png",
+      "exports": ["png/64/scrap.png", "png/128/scrap.png", "png/256/scrap.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nSubject: MIXED SCRAP. One compact clustered pile of 4–5 recovered pieces, with a bent cream sheet-metal plate, chunky blue-steel gear fragment, one short pipe and a small coral metal offcut. Clearly separate broad material shapes. This is loose salvage, not a machine or a toolbox. Large clean facets, minimal markings.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-694e873b-1d2b-4c93-a012-9a089f41be52.png"
+    },
+    {
+      "id": "coal",
+      "name": "Coal",
+      "group": "materials",
+      "subject": "A compact asymmetric cluster of three large angular lumps of charcoal-black COAL, blue-navy deep facets and a few muted steel-gray highlights. Recognizably coal fuel, not shiny gemstones or metal scrap. No coral, cream, leaves or green crystal facets on the coal itself.",
+      "source": "sources/coal.png",
+      "exports": ["png/64/coal.png", "png/128/coal.png", "png/256/coal.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: A compact asymmetric cluster of three large angular lumps of charcoal-black COAL, blue-navy deep facets and a few muted steel-gray highlights. Recognizably coal fuel, not shiny gemstones or metal scrap. No coral, cream, leaves or green crystal facets on the coal itself.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-aa2a54e7-9690-4058-b322-ca84595ca1d6.png"
+    },
+    {
+      "id": "plate",
+      "name": "Metal plate",
+      "group": "materials",
+      "subject": "A short staggered stack of THREE broad flat cut METAL PLATES, warm cream upper surface, blue-steel thickness and dark navy lower edges. Squared geometry with one clipped corner, one simple bolt hole near a corner, no ornate decoration. Must clearly read as sheet metal stock, not a box or papers.",
+      "source": "sources/plate.png",
+      "exports": ["png/64/plate.png", "png/128/plate.png", "png/256/plate.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: A short staggered stack of THREE broad flat cut METAL PLATES, warm cream upper surface, blue-steel thickness and dark navy lower edges. Squared geometry with one clipped corner, one simple bolt hole near a corner, no ornate decoration. Must clearly read as sheet metal stock, not a box or papers.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-8cb01e0a-e9af-43be-93f6-13328af013db.png"
+    },
+    {
+      "id": "wire",
+      "name": "Recovered wire",
+      "group": "materials",
+      "subject": "One compact looped coil of recovered COPPER WIRE, with a short curved exposed end and a simple coral retaining strap. Copper muted warm orange, cream edge glints, deep navy shadows; chunky loops visible, enough thickness to read at 48px. No spool, socket, plug or power cable; this is thin crafting material, not finished electrical equipment.",
+      "source": "sources/wire.png",
+      "exports": ["png/64/wire.png", "png/128/wire.png", "png/256/wire.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One compact looped coil of recovered COPPER WIRE, with a short curved exposed end and a simple coral retaining strap. Copper muted warm orange, cream edge glints, deep navy shadows; chunky loops visible, enough thickness to read at 48px. No spool, socket, plug or power cable; this is thin crafting material, not finished electrical equipment.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-8c25942e-6d62-4169-b362-53b846d88405.png"
+    },
+    {
+      "id": "mechanical-part",
+      "name": "Mechanical part",
+      "group": "components",
+      "subject": "One chunky recovered MECHANICAL GEAR ASSEMBLY: a blue-steel six-tooth cog with a large central hole and a short visible axle/collar behind it, one small cream bearing detail and tiny coral accent. Compact diagonal three-quarter composition. Clearly a mechanical component, not a machine or a gear-logo badge.",
+      "source": "sources/mechanical-part.png",
+      "exports": [
+        "png/64/mechanical-part.png",
+        "png/128/mechanical-part.png",
+        "png/256/mechanical-part.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One chunky recovered MECHANICAL GEAR ASSEMBLY: a blue-steel six-tooth cog with a large central hole and a short visible axle/collar behind it, one small cream bearing detail and tiny coral accent. Compact diagonal three-quarter composition. Clearly a mechanical component, not a machine or a gear-logo badge.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-bf22dbfa-cbfc-4c70-a7bc-b8aad4e5852e.png"
+    },
+    {
+      "id": "electrical-part",
+      "name": "Electrical part",
+      "group": "components",
+      "subject": "One compact ELECTRICAL COMPONENT module: a small navy/leaf-green circuit board, two chunky cream ceramic blocks, a visible copper coil and a coral connector. Only four or five large readable features, thick simplified circuit marks. A physical crafting component, not a complete computer or machine. No text or letters.",
+      "source": "sources/electrical-part.png",
+      "exports": [
+        "png/64/electrical-part.png",
+        "png/128/electrical-part.png",
+        "png/256/electrical-part.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One compact ELECTRICAL COMPONENT module: a small navy/leaf-green circuit board, two chunky cream ceramic blocks, a visible copper coil and a coral connector. Only four or five large readable features, thick simplified circuit marks. A physical crafting component, not a complete computer or machine. No text or letters.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-434c7e6b-5ab1-4902-9036-a42321e891ff.png"
+    },
+    {
+      "id": "research-kit",
+      "name": "Basic research kit",
+      "group": "components",
+      "subject": "One small portable BASIC RESEARCH KIT: a partly open cream instrument case with dark navy base, coral corner guards, two large sample vials (one muted green and one blue), and a simple visible gauge. Compact coherent object, no floating symbols, no papers with writing. Clear physical kit silhouette, distinct from laboratory machinery.",
+      "source": "sources/research-kit.png",
+      "exports": [
+        "png/64/research-kit.png",
+        "png/128/research-kit.png",
+        "png/256/research-kit.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One small portable BASIC RESEARCH KIT: a partly open cream instrument case with dark navy base, coral corner guards, two large sample vials (one muted green and one blue), and a simple visible gauge. Compact coherent object, no floating symbols, no papers with writing. Clear physical kit silhouette, distinct from laboratory machinery.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-c11598f7-378c-42c8-93ba-927971f6bad6.png"
+    },
+    {
+      "id": "prybar",
+      "name": "Scrap prybar",
+      "group": "tools",
+      "subject": "One improvised SCRAP PRYBAR made from a single bent blue-steel bar: a clearly hooked split crowfoot at the upper-right end, broad flattened chisel tip at lower-left, wrapped coral grip at middle. Entire long diagonal tool fully visible with generous margin. Recognizable crowbar, heavy functional steel, no extra tools, no badge or patch behind it.",
+      "source": "sources/prybar.png",
+      "exports": ["png/64/prybar.png", "png/128/prybar.png", "png/256/prybar.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One improvised SCRAP PRYBAR made from a single bent blue-steel bar: a clearly hooked split crowfoot at the upper-right end, broad flattened chisel tip at lower-left, wrapped coral grip at middle. Entire long diagonal tool fully visible with generous margin. Recognizable crowbar, heavy functional steel, no extra tools, no badge or patch behind it.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-f7f2405d-367f-4890-a219-4ee4416556f5.png"
+    },
+    {
+      "id": "mini-fabricator",
+      "name": "Mini Fabricator",
+      "group": "fabrication",
+      "subject": "One portable MINI FABRICATOR, a small improvised tabletop fabrication box: cream compact housing, navy open working cavity with one chunky tiny clamp/nozzle, coral corner guard, carry handle on top and prominent hand-crank wheel on right side. Much smaller and more portable in design than an industrial fabricator. No table, no person, no tools outside the machine.",
+      "source": "sources/mini-fabricator.png",
+      "exports": [
+        "png/64/mini-fabricator.png",
+        "png/128/mini-fabricator.png",
+        "png/256/mini-fabricator.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One portable MINI FABRICATOR, a small improvised tabletop fabrication box: cream compact housing, navy open working cavity with one chunky tiny clamp/nozzle, coral corner guard, carry handle on top and prominent hand-crank wheel on right side. Much smaller and more portable in design than an industrial fabricator. No table, no person, no tools outside the machine.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-a66f6f09-9fe3-4ebd-9e06-ef7a516ecdc1.png"
+    },
+    {
+      "id": "basic-fabricator",
+      "name": "Basic Fabricator",
+      "group": "fabrication",
+      "subject": "One BASIC FABRICATOR machine: simple stout open C-frame mechanical press/workbench, cream angled upper arm and flat bed, blue-steel base, one large vertical ram centered in the open gap, coral corner reinforcement. Chunky salvage construction. Fully visible with clear empty working aperture. Open mechanical design, no glass enclosure; distinct from an advanced enclosed fabricator.",
+      "source": "sources/basic-fabricator.png",
+      "exports": [
+        "png/64/basic-fabricator.png",
+        "png/128/basic-fabricator.png",
+        "png/256/basic-fabricator.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One BASIC FABRICATOR machine: simple stout open C-frame mechanical press/workbench, cream angled upper arm and flat bed, blue-steel base, one large vertical ram centered in the open gap, coral corner reinforcement. Chunky salvage construction. Fully visible with clear empty working aperture. Open mechanical design, no glass enclosure; distinct from an advanced enclosed fabricator.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-c59ccd01-f38e-45a2-ac38-2f1211662661.png"
+    },
+    {
+      "id": "medium-fabricator",
+      "name": "Medium Fabricator",
+      "group": "fabrication",
+      "subject": "One MEDIUM FABRICATOR machine: squat enclosed cream fabrication cabinet with angled top, large dark navy front working window showing a simple gantry/nozzle, blue-steel reinforced base, small coral side control panel and a broad output lip. More robust and enclosed than a basic open press. Single machine, large uncluttered shapes; no letters, no floating gear symbol.",
+      "source": "sources/medium-fabricator.png",
+      "exports": [
+        "png/64/medium-fabricator.png",
+        "png/128/medium-fabricator.png",
+        "png/256/medium-fabricator.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One MEDIUM FABRICATOR machine: squat enclosed cream fabrication cabinet with angled top, large dark navy front working window showing a simple gantry/nozzle, blue-steel reinforced base, small coral side control panel and a broad output lip. More robust and enclosed than a basic open press. Single machine, large uncluttered shapes; no letters, no floating gear symbol.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-68001e59-6e8b-42da-9d18-0478aecd9550.png"
+    },
+    {
+      "id": "recycler",
+      "name": "Mixed-output recycler",
+      "group": "fabrication",
+      "subject": "One MIXED-OUTPUT RECYCLER machine: squat blue-steel salvage crusher with large angled hopper above, two chunky visible toothed rollers in the hopper, cream side panels, one small coral guard and a broad lower output chute with a couple of metal offcuts at its mouth. Strong asymmetric silhouette and visible recycling function. No recycling arrows or text.",
+      "source": "sources/recycler.png",
+      "exports": ["png/64/recycler.png", "png/128/recycler.png", "png/256/recycler.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One MIXED-OUTPUT RECYCLER machine: squat blue-steel salvage crusher with large angled hopper above, two chunky visible toothed rollers in the hopper, cream side panels, one small coral guard and a broad lower output chute with a couple of metal offcuts at its mouth. Strong asymmetric silhouette and visible recycling function. No recycling arrows or text.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-6a4a7fb0-d742-43e7-ba84-ac97e53dcd89.png"
+    },
+    {
+      "id": "extractor",
+      "name": "Extractor",
+      "group": "fabrication",
+      "subject": "One RESOURCE EXTRACTOR machine: compact braced blue-steel drilling rig, stout cream A-frame with a large vertical dark auger between supports, coral motor housing on one side, two sturdy feet. Entire drill mechanism visible and chunky, no scenery, no ground tile, no rocks beneath, no thin fragile aerials.",
+      "source": "sources/extractor.png",
+      "exports": ["png/64/extractor.png", "png/128/extractor.png", "png/256/extractor.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One RESOURCE EXTRACTOR machine: compact braced blue-steel drilling rig, stout cream A-frame with a large vertical dark auger between supports, coral motor housing on one side, two sturdy feet. Entire drill mechanism visible and chunky, no scenery, no ground tile, no rocks beneath, no thin fragile aerials.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-d7c8a433-bfad-4a66-a9df-df4a729bb2ae.png"
+    },
+    {
+      "id": "laboratory",
+      "name": "Laboratory",
+      "group": "fabrication",
+      "subject": "One LABORATORY building/machine: compact cream scientific work cabinet with an angled blue glazed window showing two oversized sample chambers, one coral access panel, blue-steel base and one short roof instrument. Broad flat painted shapes. Recognizable research facility distinct from a hand-held research case; avoid giant chimney, text, symbols or chemistry diagrams.",
+      "source": "sources/laboratory.png",
+      "exports": ["png/64/laboratory.png", "png/128/laboratory.png", "png/256/laboratory.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One LABORATORY building/machine: compact cream scientific work cabinet with an angled blue glazed window showing two oversized sample chambers, one coral access panel, blue-steel base and one short roof instrument. Broad flat painted shapes. Recognizable research facility distinct from a hand-held research case; avoid giant chimney, text, symbols or chemistry diagrams.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-ba590668-479a-4971-86fd-59f9ffc53b2c.png"
+    },
+    {
+      "id": "solar-panel",
+      "name": "Solar panel",
+      "group": "power",
+      "subject": "One SOLAR PANEL assembly: a tilted navy-blue photovoltaic panel in a chunky cream rim supported by a simple triangular blue-steel stand, one coral clamp or corner fastener, six to nine large rectangular cells indicated with thin restrained cream lines. Full stand visible; no sun symbol, wires trailing out of frame or ground tile.",
+      "source": "sources/solar-panel.png",
+      "exports": ["png/64/solar-panel.png", "png/128/solar-panel.png", "png/256/solar-panel.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One SOLAR PANEL assembly: a tilted navy-blue photovoltaic panel in a chunky cream rim supported by a simple triangular blue-steel stand, one coral clamp or corner fastener, six to nine large rectangular cells indicated with thin restrained cream lines. Full stand visible; no sun symbol, wires trailing out of frame or ground tile.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-91920555-4626-40e0-b41a-9175ab311210.png"
+    },
+    {
+      "id": "wind-turbine",
+      "name": "Wind turbine",
+      "group": "power",
+      "subject": "One compact WIND TURBINE with THREE broad cream blades radiating from a coral hub, short sturdy navy tower with steel base. Complete blades and base clearly visible. Bold simplified silhouette scaled to square inventory icon; generous margin around blade tips. Functional turbine, not a flower, pinwheel toy or propeller plane. No background wind marks.",
+      "source": "sources/wind-turbine.png",
+      "exports": [
+        "png/64/wind-turbine.png",
+        "png/128/wind-turbine.png",
+        "png/256/wind-turbine.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One compact WIND TURBINE with THREE broad cream blades radiating from a coral hub, short sturdy navy tower with steel base. Complete blades and base clearly visible. Bold simplified silhouette scaled to square inventory icon; generous margin around blade tips. Functional turbine, not a flower, pinwheel toy or propeller plane. No background wind marks.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-b0ee6425-fb79-446c-84b7-118584dc8a61.png"
+    },
+    {
+      "id": "power-connection",
+      "name": "Power connection",
+      "group": "power",
+      "subject": "One crafted POWER CONNECTION cable: a single heavy dark navy electrical cable coiled in one broad loop, two chunky cream industrial plug ends with coral collars, visible simple connector prongs. Distinguish clearly from bare recovered copper crafting wire. All connectors attached to the same cable; no wall sockets, lightning symbol, badge or loose unrelated pieces.",
+      "source": "sources/power-connection.png",
+      "exports": [
+        "png/64/power-connection.png",
+        "png/128/power-connection.png",
+        "png/256/power-connection.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One crafted POWER CONNECTION cable: a single heavy dark navy electrical cable coiled in one broad loop, two chunky cream industrial plug ends with coral collars, visible simple connector prongs. Distinguish clearly from bare recovered copper crafting wire. All connectors attached to the same cable; no wall sockets, lightning symbol, badge or loose unrelated pieces.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-bff090db-9537-446e-8bc1-0fa33bf32cb2.png"
+    },
+    {
+      "id": "battery",
+      "name": "Grid battery",
+      "group": "power",
+      "subject": "One industrial BATTERY storage unit: stout squat blue-steel rectangular housing, cream angular top, TWO large copper terminals, coral removable side panel and a small green charge window with three broad segments. Chunky reinforced corners, no lettering, numbers, lightning bolts or warning labels. A physical power-storage machine, not a single AA battery.",
+      "source": "sources/battery.png",
+      "exports": ["png/64/battery.png", "png/128/battery.png", "png/256/battery.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One industrial BATTERY storage unit: stout squat blue-steel rectangular housing, cream angular top, TWO large copper terminals, coral removable side panel and a small green charge window with three broad segments. Chunky reinforced corners, no lettering, numbers, lightning bolts or warning labels. A physical power-storage machine, not a single AA battery.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-f1e760e2-0b6e-45b2-9f4d-bd1db5e4af29.png"
+    },
+    {
+      "id": "coal-generator",
+      "name": "Coal generator",
+      "group": "power",
+      "subject": "One COAL GENERATOR: compact cream boiler body on blue-steel base, large dark front firebox with restrained warm coral glow, a short stout smokestack, one large side flywheel/generator drum and broad simple pipe connection. Clear coal-fired steam generator silhouette. No smoke cloud, no ground, no big flames or labels; machine only.",
+      "source": "sources/coal-generator.png",
+      "exports": [
+        "png/64/coal-generator.png",
+        "png/128/coal-generator.png",
+        "png/256/coal-generator.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One COAL GENERATOR: compact cream boiler body on blue-steel base, large dark front firebox with restrained warm coral glow, a short stout smokestack, one large side flywheel/generator drum and broad simple pipe connection. Clear coal-fired steam generator silhouette. No smoke cloud, no ground, no big flames or labels; machine only.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-dfc61c9a-d91d-4e6a-bc97-436fde4f8557.png"
+    },
+    {
+      "id": "conveyor",
+      "name": "Conveyor",
+      "group": "logistics",
+      "subject": "One short straight CONVEYOR BELT section in three-quarter view: four or five chunky blue-steel rollers in cream side rails, dark navy belt/slats, one coral end guard. Compact diagonal rectangular silhouette, clear open mechanical belt transport. No packages riding on it, no curved route, no arrows, no terrain base.",
+      "source": "sources/conveyor.png",
+      "exports": ["png/64/conveyor.png", "png/128/conveyor.png", "png/256/conveyor.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One short straight CONVEYOR BELT section in three-quarter view: four or five chunky blue-steel rollers in cream side rails, dark navy belt/slats, one coral end guard. Compact diagonal rectangular silhouette, clear open mechanical belt transport. No packages riding on it, no curved route, no arrows, no terrain base.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-73d62546-2f8d-4794-adc1-390b69a411cc.png"
+    },
+    {
+      "id": "sorter",
+      "name": "Sorter",
+      "group": "logistics",
+      "subject": "One compact item SORTER machine: blue-steel junction housing with a cream central hinged diverter and THREE short distinct output chutes branching left, front and right; one coral actuator and one short input belt at the back. Clear branching sorting silhouette, uncluttered large geometry. No floating arrows, no labels, no scenery or crates.",
+      "source": "sources/sorter.png",
+      "exports": ["png/64/sorter.png", "png/128/sorter.png", "png/256/sorter.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One compact item SORTER machine: blue-steel junction housing with a cream central hinged diverter and THREE short distinct output chutes branching left, front and right; one coral actuator and one short input belt at the back. Clear branching sorting silhouette, uncluttered large geometry. No floating arrows, no labels, no scenery or crates.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-9635fd2a-b658-4036-9c04-8f3e64b639e5.png"
+    },
+    {
+      "id": "water-pump",
+      "name": "Water pump",
+      "group": "water",
+      "subject": "One WATER PUMP: chunky blue-steel cylindrical centrifugal pump housing attached to a cream compact electric motor, large short curved intake elbow and obvious flanged outlet, coral mounting brace. Functional compact industrial pump, two clear pipe ports, broad simplified shapes. No water splash, ground, text or disconnected pipes.",
+      "source": "sources/water-pump.png",
+      "exports": ["png/64/water-pump.png", "png/128/water-pump.png", "png/256/water-pump.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One WATER PUMP: chunky blue-steel cylindrical centrifugal pump housing attached to a cream compact electric motor, large short curved intake elbow and obvious flanged outlet, coral mounting brace. Functional compact industrial pump, two clear pipe ports, broad simplified shapes. No water splash, ground, text or disconnected pipes.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-9ce72dee-450b-4e55-8675-f10943c581d1.png"
+    },
+    {
+      "id": "pipe",
+      "name": "Pipe",
+      "group": "water",
+      "subject": "One short straight PIPE segment set diagonally from lower-left to upper-right: thick blue-steel tube with large cream-rimmed flanges at BOTH ends, visible dark hollow opening at front, one restrained coral coupling band near the middle. Clean heavy industrial fitting, distinguishable from bent water-return outlet and crossed junction. Entire object visible.",
+      "source": "sources/pipe.png",
+      "exports": ["png/64/pipe.png", "png/128/pipe.png", "png/256/pipe.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One short straight PIPE segment set diagonally from lower-left to upper-right: thick blue-steel tube with large cream-rimmed flanges at BOTH ends, visible dark hollow opening at front, one restrained coral coupling band near the middle. Clean heavy industrial fitting, distinguishable from bent water-return outlet and crossed junction. Entire object visible.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-e49723c8-592a-464f-9649-e714746b187d.png"
+    },
+    {
+      "id": "pipe-junction",
+      "name": "Pipe junction",
+      "group": "water",
+      "subject": "One four-way PIPE JUNCTION fitting: four chunky blue-steel tubes branching in a simple cross, cream flanged rims, large hollow openings on two visible ends and a central coral valve collar. Compact single connected industrial fitting, not loose pipes. Readable four-way connectivity, no arrows, ground or labels.",
+      "source": "sources/pipe-junction.png",
+      "exports": [
+        "png/64/pipe-junction.png",
+        "png/128/pipe-junction.png",
+        "png/256/pipe-junction.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One four-way PIPE JUNCTION fitting: four chunky blue-steel tubes branching in a simple cross, cream flanged rims, large hollow openings on two visible ends and a central coral valve collar. Compact single connected industrial fitting, not loose pipes. Readable four-way connectivity, no arrows, ground or labels.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-3c9842ec-616b-4ab6-abae-95c2384e3e62.png"
+    },
+    {
+      "id": "water-treatment",
+      "name": "Water treatment",
+      "group": "water",
+      "subject": "One WATER TREATMENT unit: two stout upright cream filter vessels linked by one broad blue-steel top manifold and a small central blue settling chamber, coral valve wheel near front and two clear short port stubs. Coherent single compact purification machine. No water splash, scenery, tiny hoses, letters or floating droplet symbols.",
+      "source": "sources/water-treatment.png",
+      "exports": [
+        "png/64/water-treatment.png",
+        "png/128/water-treatment.png",
+        "png/256/water-treatment.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One WATER TREATMENT unit: two stout upright cream filter vessels linked by one broad blue-steel top manifold and a small central blue settling chamber, coral valve wheel near front and two clear short port stubs. Coherent single compact purification machine. No water splash, scenery, tiny hoses, letters or floating droplet symbols.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-0e3c63b2-3c4a-4d55-99f4-2dbec5514a48.png"
+    },
+    {
+      "id": "water-tank",
+      "name": "Water tank",
+      "group": "water",
+      "subject": "One WATER TANK: a single large squat cylindrical cream storage vessel, blue-steel bands, flat slightly beveled top, small coral valve at lower front and a narrow blue vertical level gauge. Short sturdy base, one visible side connection. Big simple tank silhouette distinct from the paired filter towers of treatment. No writing or scenic base.",
+      "source": "sources/water-tank.png",
+      "exports": ["png/64/water-tank.png", "png/128/water-tank.png", "png/256/water-tank.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One WATER TANK: a single large squat cylindrical cream storage vessel, blue-steel bands, flat slightly beveled top, small coral valve at lower front and a narrow blue vertical level gauge. Short sturdy base, one visible side connection. Big simple tank silhouette distinct from the paired filter towers of treatment. No writing or scenic base.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-d39f58fd-7a8f-41fa-b9ff-7d81fb641e17.png"
+    },
+    {
+      "id": "water-return",
+      "name": "Water return",
+      "group": "water",
+      "subject": "One WATER RETURN outlet device: stout blue-steel elbow pipe bending down into a broad cream flared outfall mouth, a small coral manual gate/valve housing on top, cream reinforced mounting collar at the rear. Downward discharge design, distinct from a straight pipe or electric pump. No liquid jet, no water body, no terrain or background.",
+      "source": "sources/water-return.png",
+      "exports": [
+        "png/64/water-return.png",
+        "png/128/water-return.png",
+        "png/256/water-return.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One WATER RETURN outlet device: stout blue-steel elbow pipe bending down into a broad cream flared outfall mouth, a small coral manual gate/valve housing on top, cream reinforced mounting collar at the rear. Downward discharge design, distinct from a straight pipe or electric pump. No liquid jet, no water body, no terrain or background.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-b27d843f-0dcd-4dd3-a7d4-0f013912ca3d.png"
+    },
+    {
+      "id": "greenhouse",
+      "name": "Greenhouse",
+      "group": "ecology",
+      "subject": "One small GREENHOUSE structure: simple angular A-frame cream ribs and broad blue translucent glass panes, two LARGE readable leaf-green plants visible inside, coral door brace, navy low base. Compact three-quarter building silhouette, entire roof and base visible. Flat painted glass reflections only, no landscape, no ground tile or text.",
+      "source": "sources/greenhouse.png",
+      "exports": ["png/64/greenhouse.png", "png/128/greenhouse.png", "png/256/greenhouse.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One small GREENHOUSE structure: simple angular A-frame cream ribs and broad blue translucent glass panes, two LARGE readable leaf-green plants visible inside, coral door brace, navy low base. Compact three-quarter building silhouette, entire roof and base visible. Flat painted glass reflections only, no landscape, no ground tile or text.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-566db27f-c349-4653-8b1e-ff4faa313d36.png"
+    },
+    {
+      "id": "air-scrubber",
+      "name": "Air scrubber",
+      "group": "ecology",
+      "subject": "One AIR SCRUBBER machine: stout cream rectangular filtration tower with a large navy circular intake fan on its front, four broad fan blades, blue-steel lower filter canister, coral access-panel corner and one short clean exhaust hood at top. Bold compact industrial filter silhouette. No clouds, smoke, air arrows, leaves, text or scenic base.",
+      "source": "sources/air-scrubber.png",
+      "exports": [
+        "png/64/air-scrubber.png",
+        "png/128/air-scrubber.png",
+        "png/256/air-scrubber.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One AIR SCRUBBER machine: stout cream rectangular filtration tower with a large navy circular intake fan on its front, four broad fan blades, blue-steel lower filter canister, coral access-panel corner and one short clean exhaust hood at top. Bold compact industrial filter silhouette. No clouds, smoke, air arrows, leaves, text or scenic base.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-2c118628-6493-4934-a864-337fc205515b.png"
+    },
+    {
+      "id": "water-untreated",
+      "name": "Untreated water",
+      "group": "fluids",
+      "subject": "One large bold WATER DROPLET inventory symbol, rendered as a physical flat-painted stylized droplet with an angular contour and dimensional navy edge. Muted murky blue-green/olive fill, one broad cream reflection, two simple dark sediment flecks near its lower half. Clearly untreated water, not oil, slime or a gemstone. Single isolated teardrop only, no container, badge or text.",
+      "source": "sources/water-untreated.png",
+      "exports": [
+        "png/64/water-untreated.png",
+        "png/128/water-untreated.png",
+        "png/256/water-untreated.png"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One large bold WATER DROPLET inventory symbol, rendered as a physical flat-painted stylized droplet with an angular contour and dimensional navy edge. Muted murky blue-green/olive fill, one broad cream reflection, two simple dark sediment flecks near its lower half. Clearly untreated water, not oil, slime or a gemstone. Single isolated teardrop only, no container, badge or text.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-f8cf0635-ff84-4671-b1b0-f9dea4c6eca3.png"
+    },
+    {
+      "id": "water-clean",
+      "name": "Clean water",
+      "group": "fluids",
+      "subject": "One large bold CLEAN WATER DROPLET inventory symbol, rendered as a physical flat-painted stylized droplet with an angular contour and dimensional navy edge. Clear soft turquoise/blue fill, one broad cream reflection and one pale blue shadow plane. Pure clean water with no particles, leaves or checkmark. Single isolated teardrop only, no container, badge or text.",
+      "source": "sources/water-clean.png",
+      "exports": ["png/64/water-clean.png", "png/128/water-clean.png", "png/256/water-clean.png"],
+      "prompt": "Use case: stylized-concept.\nAsset type: one production UI inventory sprite for Scrapworks, a scrappy factory restoration game.\nInput images: Image 1 (title logo) is the material, contour, palette and flat painted finish reference. Image 2 (Field Kit concept) is the UI context reference, especially its tiny inventory object illustrations. Generate a NEW standalone object, not a UI screenshot.\nStyle: polished hand-painted game inventory illustration, bold chunky angular silhouette, simple broad flat color planes with only one or two hard shadow tones per material, restrained bevel highlights, dark navy contour and lower-right dimensional edge. Three-quarter view from slightly above, coherent top-left lighting. Salvaged but functional construction, sparse bolts or a small repair panel when appropriate. Strong small-size readability at 48–64px, with only a few large details. Not pixel art, not photoreal, not a glossy 3D render, no grain or tiny scratches.\nPalette: warm cream #F1E1BD and #FFF1CF highlights, blue steel #31495D and navy #142C40, coral #F08A65 accent, muted leaf #8FA653 when appropriate. Preserve material-specific color only where needed to identify the item.\nComposition: exactly ONE centered icon composition on a square transparent canvas; main silhouette occupies about 75–82% of canvas leaving ample clear padding on ALL sides. Entire object visible. No circular badge, tile, frame, scenery, floor, cast ground shadow, text, letters, numbers, watermark, UI labels or checkerboard pattern. Transparent negative spaces and background, clean antialiased alpha. Substantial outline, crisp silhouette; avoid protruding hairline details.\nImage 3: the newly generated mixed-scrap sprite is the cohesion reference for outline weight, volume, illustration finish and detail density. Match its painted object style without copying its pile of objects. Keep silhouettes simple.\nSubject: One large bold CLEAN WATER DROPLET inventory symbol, rendered as a physical flat-painted stylized droplet with an angular contour and dimensional navy edge. Clear soft turquoise/blue fill, one broad cream reflection and one pale blue shadow plane. Pure clean water with no particles, leaves or checkmark. Single isolated teardrop only, no container, badge or text.",
+      "references": [
+        "../../../branding/title-logo-v1.png",
+        "../../concepts/2026-11-10/redesigns/01-field-kit.png",
+        "sources/scrap.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1c566-d2c9-7251-ba87-9c97ddd52455\\exec-71e7c74d-873d-40bf-a225-3e25c1e0632a.png"
+    }
+  ],
+  "preparation": {
+    "tool": "../../../../tools/art/prepare-ui-sprites.ts",
+    "method": "Untouched generated sources; crop transparent padding only, resize proportionally and center on real-alpha square canvases at 84% maximum silhouette extent.",
+    "sizes": [64, 128, 256],
+    "atlas": "atlas.png",
+    "atlasMetadata": "atlas.json",
+    "preview": "contact-sheet.png",
+    "gallery": "index.html",
+    "generationCalls": 31
+  }
+}

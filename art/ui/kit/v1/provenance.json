@@ -1,7 +1,7 @@
 {
   "date": "2026-11-10",
   "timezone": "Australia/Sydney",
-  "status": "Reference kit with a screen-space crank cast shadow and interactive local demo; production integration pending",
+  "status": "Reference kit with generated UI sprites and interactive recipe, batch and crank previews; production integration pending",
   "ownerGuide": "../../../../docs/art/ui-kit.md",
   "direction": "Field Kit and pause/save concepts; independent inset dialog fill and alpha-cutout edges define the outer silhouette, preserving the current controls and dimensional crank",
   "references": [
@@ -11,7 +11,8 @@
     "../../concepts/2026-11-10/redesigns/03-gameplay-hud.png",
     "../../concepts/2026-11-10/redesigns/04-pause-save.png",
     "../../concepts/2026-11-10/redesigns/05-main-menu.png",
-    "../../concepts/2026-11-10/redesigns/06-research-factory.png"
+    "../../concepts/2026-11-10/redesigns/06-research-factory.png",
+    "../../sprites/v1/README.md"
   ],
   "screenConceptPrompts": "../../concepts/2026-11-10/generation.json",
   "creation": {
@@ -289,7 +290,7 @@
   ],
   "validation": {
     "record": "../../../../docs/reports/ui-art-2026-11-10/kit-validation.json",
-    "scope": "Isolated art/layout reference and local crank interaction demo; not production gameplay",
+    "scope": "Isolated art/layout reference, recipe/batch sprite preview and local crank demo; not production gameplay",
     "wideViewport": [1440, 900],
     "mediumViewport": [900, 760],
     "compactViewport": [390, 844],
@@ -305,7 +306,7 @@
     "failedRequests": [],
     "limitations": [
       "Local headless Chromium only; no production dialog or gameplay acceptance claim",
-      "Crank and compact work-area selection are interactive; other game buttons remain visual samples.",
+      "Recipe and batch previews, crank and compact work-area selection are interactive; other game buttons remain visual samples.",
       "Final display font, painted detailing, browser zoom, other engines and production modal integration remain to be qualified"
     ],
     "titleRepairSizesCssPx": {
@@ -358,8 +359,43 @@
       "referenceSizeCssPx": 256,
       "expectedOffsetCssPx": [6.912, 9.216],
       "passed": true
+    },
+    "spritePreview": {
+      "record": "../../../../docs/reports/ui-art-2026-11-10/sprite-demo.json",
+      "recipes": 27,
+      "viewports": 5,
+      "states": 135,
+      "missingImages": 0,
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "craftButtonAnchored": true,
+      "compactRecipeStatePreserved": true
     }
   },
   "updatedDate": "2026-11-11",
-  "revision": 10
+  "revision": 11,
+  "spritePreview": {
+    "source": "../../sprites/v1/",
+    "promptRecord": "../../sprites/v1/generation.json",
+    "controller": "sprite-demo.ts",
+    "bundle": "sprite-demo.js",
+    "catalogue": "../../../../src/content/opening.ts",
+    "handcraftRecipes": 27,
+    "inventory": {
+      "slots": 24,
+      "occupied": 20
+    },
+    "pngSourceSize": 128,
+    "inventoryMaxCssPx": 48,
+    "resultCssPx": 64,
+    "ingredientCssPx": 28,
+    "recipeInputRowsReserved": 2,
+    "simulationCommands": false,
+    "storage": false,
+    "previews": [
+      "previews/sprites-inventory-crafting.png",
+      "previews/sprites-medium.png",
+      "previews/sprites-compact-crafting.png"
+    ]
+  }
 }

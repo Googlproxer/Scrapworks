@@ -1,0 +1,914 @@
+{
+  "image": "atlas.png",
+  "size": {
+    "width": 2048,
+    "height": 1024
+  },
+  "cellSize": 256,
+  "columns": 8,
+  "normalizedOccupancy": 0.84,
+  "catalogueCount": 28,
+  "supplementalIds": ["mini-fabricator", "water-clean", "water-untreated"],
+  "preparation": "Ignore generator alpha=1 padding noise when finding bounds; crop padding, proportionally resize into 84% of each square and center with real alpha. Pixel colors and in-bound alpha are retained. Generated sources are unchanged.",
+  "sprites": [
+    {
+      "id": "scrap",
+      "name": "Mixed scrap",
+      "group": "materials",
+      "source": "sources/scrap.png",
+      "sourceSha256": "a38b8bd6ed605d24da99764b7f75e2c14cfd9bbf3da9413658ce11a521c1f731",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 87,
+        "top": 228,
+        "width": 1073,
+        "height": 845
+      },
+      "transparentFraction": 0.5969,
+      "png": {
+        "64": "png/64/scrap.png",
+        "128": "png/128/scrap.png",
+        "256": "png/256/scrap.png"
+      },
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "coal",
+      "name": "Coal",
+      "group": "materials",
+      "source": "sources/coal.png",
+      "sourceSha256": "cd91e204a0f54a65b11012bed236709b8badfb9c4d6dceba889f721c38bb5020",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 139,
+        "top": 228,
+        "width": 951,
+        "height": 849
+      },
+      "transparentFraction": 0.6423,
+      "png": {
+        "64": "png/64/coal.png",
+        "128": "png/128/coal.png",
+        "256": "png/256/coal.png"
+      },
+      "frame": {
+        "x": 256,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "plate",
+      "name": "Metal plate",
+      "group": "materials",
+      "source": "sources/plate.png",
+      "sourceSha256": "17893197dca3635f8153e08e11174199e5b7922ccafe6a8efb6a1bfb452b7393",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 119,
+        "top": 212,
+        "width": 1023,
+        "height": 846
+      },
+      "transparentFraction": 0.5668,
+      "png": {
+        "64": "png/64/plate.png",
+        "128": "png/128/plate.png",
+        "256": "png/256/plate.png"
+      },
+      "frame": {
+        "x": 512,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "wire",
+      "name": "Recovered wire",
+      "group": "materials",
+      "source": "sources/wire.png",
+      "sourceSha256": "7c8ab2729d80b8c342dbecb7a56f8f241d15023fd717900e7a336903f5235ad7",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 131,
+        "top": 271,
+        "width": 992,
+        "height": 777
+      },
+      "transparentFraction": 0.6312,
+      "png": {
+        "64": "png/64/wire.png",
+        "128": "png/128/wire.png",
+        "256": "png/256/wire.png"
+      },
+      "frame": {
+        "x": 768,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "mechanical-part",
+      "name": "Mechanical part",
+      "group": "components",
+      "source": "sources/mechanical-part.png",
+      "sourceSha256": "a2d222da2cfc8a3765e3d92ac2f394e01659b959d5d5ce7f01114a5e05e6a8a0",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 121,
+        "top": 238,
+        "width": 1012,
+        "height": 851
+      },
+      "transparentFraction": 0.6377,
+      "png": {
+        "64": "png/64/mechanical-part.png",
+        "128": "png/128/mechanical-part.png",
+        "256": "png/256/mechanical-part.png"
+      },
+      "frame": {
+        "x": 1024,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "electrical-part",
+      "name": "Electrical part",
+      "group": "components",
+      "source": "sources/electrical-part.png",
+      "sourceSha256": "4140e17a405b18da2666103f7f5bc5e340e536dc050c8cad416fa9597d3d8f40",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 110,
+        "top": 213,
+        "width": 1031,
+        "height": 916
+      },
+      "transparentFraction": 0.585,
+      "png": {
+        "64": "png/64/electrical-part.png",
+        "128": "png/128/electrical-part.png",
+        "256": "png/256/electrical-part.png"
+      },
+      "frame": {
+        "x": 1280,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "research-kit",
+      "name": "Basic research kit",
+      "group": "components",
+      "source": "sources/research-kit.png",
+      "sourceSha256": "c1b36e05064376a9853217787ae931c411e099e839e262ed0a00d6629d54422f",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 145,
+        "top": 108,
+        "width": 966,
+        "height": 1057
+      },
+      "transparentFraction": 0.4841,
+      "png": {
+        "64": "png/64/research-kit.png",
+        "128": "png/128/research-kit.png",
+        "256": "png/256/research-kit.png"
+      },
+      "frame": {
+        "x": 1536,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "prybar",
+      "name": "Scrap prybar",
+      "group": "tools",
+      "source": "sources/prybar.png",
+      "sourceSha256": "6c0de9a9cae181dd0d512b3c70337496cf13636db012172720c20af19cdd6c5a",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 78,
+        "top": 135,
+        "width": 1116,
+        "height": 1039
+      },
+      "transparentFraction": 0.8257,
+      "png": {
+        "64": "png/64/prybar.png",
+        "128": "png/128/prybar.png",
+        "256": "png/256/prybar.png"
+      },
+      "frame": {
+        "x": 1792,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "mini-fabricator",
+      "name": "Mini Fabricator",
+      "group": "fabrication",
+      "source": "sources/mini-fabricator.png",
+      "sourceSha256": "c615b9c429da08bfd81ad2eaf825bc078868891a0f8371f56a9e07a140a44348",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 136,
+        "top": 185,
+        "width": 1035,
+        "height": 923
+      },
+      "transparentFraction": 0.5674,
+      "png": {
+        "64": "png/64/mini-fabricator.png",
+        "128": "png/128/mini-fabricator.png",
+        "256": "png/256/mini-fabricator.png"
+      },
+      "frame": {
+        "x": 0,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "basic-fabricator",
+      "name": "Basic Fabricator",
+      "group": "fabrication",
+      "source": "sources/basic-fabricator.png",
+      "sourceSha256": "a67cd40d1ab8fc66c165182bed12edb2f1eb957b3b1172da04e134c9fb3074c4",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 177,
+        "top": 95,
+        "width": 898,
+        "height": 1089
+      },
+      "transparentFraction": 0.5658,
+      "png": {
+        "64": "png/64/basic-fabricator.png",
+        "128": "png/128/basic-fabricator.png",
+        "256": "png/256/basic-fabricator.png"
+      },
+      "frame": {
+        "x": 256,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "medium-fabricator",
+      "name": "Medium Fabricator",
+      "group": "fabrication",
+      "source": "sources/medium-fabricator.png",
+      "sourceSha256": "b1079816c945b75182ee4464cf39b501c8fe80015dd2e3b6a7d2bced561b6a7d",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 120,
+        "top": 149,
+        "width": 1014,
+        "height": 993
+      },
+      "transparentFraction": 0.4857,
+      "png": {
+        "64": "png/64/medium-fabricator.png",
+        "128": "png/128/medium-fabricator.png",
+        "256": "png/256/medium-fabricator.png"
+      },
+      "frame": {
+        "x": 512,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "recycler",
+      "name": "Mixed-output recycler",
+      "group": "fabrication",
+      "source": "sources/recycler.png",
+      "sourceSha256": "d4c001c76aff4624c2fa66c4e0508f6ecb4c0d85fc934b815ace8b547e2217e6",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 101,
+        "top": 168,
+        "width": 1047,
+        "height": 967
+      },
+      "transparentFraction": 0.4979,
+      "png": {
+        "64": "png/64/recycler.png",
+        "128": "png/128/recycler.png",
+        "256": "png/256/recycler.png"
+      },
+      "frame": {
+        "x": 768,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "extractor",
+      "name": "Extractor",
+      "group": "fabrication",
+      "source": "sources/extractor.png",
+      "sourceSha256": "00ec6cd39f71f6203f0ed1ddba43f18b527017f4ef3d35aa1551166b3b7c1753",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 90,
+        "top": 118,
+        "width": 1043,
+        "height": 1084
+      },
+      "transparentFraction": 0.5319,
+      "png": {
+        "64": "png/64/extractor.png",
+        "128": "png/128/extractor.png",
+        "256": "png/256/extractor.png"
+      },
+      "frame": {
+        "x": 1024,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "laboratory",
+      "name": "Laboratory",
+      "group": "fabrication",
+      "source": "sources/laboratory.png",
+      "sourceSha256": "12a3504274e2a4c076be5b984c22a9d3b61a2fea1b7b41d61c32079cb93a0e8d",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 130,
+        "top": 75,
+        "width": 993,
+        "height": 1115
+      },
+      "transparentFraction": 0.5274,
+      "png": {
+        "64": "png/64/laboratory.png",
+        "128": "png/128/laboratory.png",
+        "256": "png/256/laboratory.png"
+      },
+      "frame": {
+        "x": 1280,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "solar-panel",
+      "name": "Solar panel",
+      "group": "power",
+      "source": "sources/solar-panel.png",
+      "sourceSha256": "acd119b4116a3e58117347a04502a3ab1195d02a9fa9faafb407e775e22b752d",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 120,
+        "top": 217,
+        "width": 1027,
+        "height": 913
+      },
+      "transparentFraction": 0.558,
+      "png": {
+        "64": "png/64/solar-panel.png",
+        "128": "png/128/solar-panel.png",
+        "256": "png/256/solar-panel.png"
+      },
+      "frame": {
+        "x": 1536,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "wind-turbine",
+      "name": "Wind turbine",
+      "group": "power",
+      "source": "sources/wind-turbine.png",
+      "sourceSha256": "09721937bd1c27fd476c12507c24f093673c8806f57e078295fb8d99c81b9639",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 185,
+        "top": 85,
+        "width": 849,
+        "height": 1096
+      },
+      "transparentFraction": 0.7234,
+      "png": {
+        "64": "png/64/wind-turbine.png",
+        "128": "png/128/wind-turbine.png",
+        "256": "png/256/wind-turbine.png"
+      },
+      "frame": {
+        "x": 1792,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "power-connection",
+      "name": "Power connection",
+      "group": "power",
+      "source": "sources/power-connection.png",
+      "sourceSha256": "7a4453f4cd71185a07ea8ba4a71bccaba10e106567d8ff51b8605ffdaaab57b6",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 72,
+        "top": 224,
+        "width": 1130,
+        "height": 893
+      },
+      "transparentFraction": 0.6187,
+      "png": {
+        "64": "png/64/power-connection.png",
+        "128": "png/128/power-connection.png",
+        "256": "png/256/power-connection.png"
+      },
+      "frame": {
+        "x": 0,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "battery",
+      "name": "Grid battery",
+      "group": "power",
+      "source": "sources/battery.png",
+      "sourceSha256": "d2ba626b03544af1e9195a91781d6083ece947bece206467128eabd2feee8f2d",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 131,
+        "top": 178,
+        "width": 981,
+        "height": 937
+      },
+      "transparentFraction": 0.5372,
+      "png": {
+        "64": "png/64/battery.png",
+        "128": "png/128/battery.png",
+        "256": "png/256/battery.png"
+      },
+      "frame": {
+        "x": 256,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "coal-generator",
+      "name": "Coal generator",
+      "group": "power",
+      "source": "sources/coal-generator.png",
+      "sourceSha256": "7664be2907a39d2c92407c7b6708a0d2dc9433a07e72e9987c63f7e542ab3269",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 109,
+        "top": 135,
+        "width": 1037,
+        "height": 1029
+      },
+      "transparentFraction": 0.508,
+      "png": {
+        "64": "png/64/coal-generator.png",
+        "128": "png/128/coal-generator.png",
+        "256": "png/256/coal-generator.png"
+      },
+      "frame": {
+        "x": 512,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "conveyor",
+      "name": "Conveyor",
+      "group": "logistics",
+      "source": "sources/conveyor.png",
+      "sourceSha256": "471975af2909c956b67e187b42424e25d2101fb2f7fd4c907147b8f005a150f5",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 72,
+        "top": 239,
+        "width": 1114,
+        "height": 794
+      },
+      "transparentFraction": 0.66,
+      "png": {
+        "64": "png/64/conveyor.png",
+        "128": "png/128/conveyor.png",
+        "256": "png/256/conveyor.png"
+      },
+      "frame": {
+        "x": 768,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "sorter",
+      "name": "Sorter",
+      "group": "logistics",
+      "source": "sources/sorter.png",
+      "sourceSha256": "67e5a4f674496e3684d6185edb7dd2cc1297f18363b36f4b45b09be05fa03e6a",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 58,
+        "top": 151,
+        "width": 1118,
+        "height": 972
+      },
+      "transparentFraction": 0.5497,
+      "png": {
+        "64": "png/64/sorter.png",
+        "128": "png/128/sorter.png",
+        "256": "png/256/sorter.png"
+      },
+      "frame": {
+        "x": 1024,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "water-pump",
+      "name": "Water pump",
+      "group": "water",
+      "source": "sources/water-pump.png",
+      "sourceSha256": "5a962855c34dba52b0c33c1389935b1bbeb013949fc9ce2ba3dea8b57ae09f23",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 122,
+        "top": 183,
+        "width": 1018,
+        "height": 962
+      },
+      "transparentFraction": 0.5553,
+      "png": {
+        "64": "png/64/water-pump.png",
+        "128": "png/128/water-pump.png",
+        "256": "png/256/water-pump.png"
+      },
+      "frame": {
+        "x": 1280,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "pipe",
+      "name": "Pipe",
+      "group": "water",
+      "source": "sources/pipe.png",
+      "sourceSha256": "524f3cfbc77cb9541f8c9475c2bb0967f8ed1c72f993c1336a6c6f2d7b0745b5",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 96,
+        "top": 178,
+        "width": 1059,
+        "height": 944
+      },
+      "transparentFraction": 0.6733,
+      "png": {
+        "64": "png/64/pipe.png",
+        "128": "png/128/pipe.png",
+        "256": "png/256/pipe.png"
+      },
+      "frame": {
+        "x": 1536,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "pipe-junction",
+      "name": "Pipe junction",
+      "group": "water",
+      "source": "sources/pipe-junction.png",
+      "sourceSha256": "c4e3e2ae7560f2dbc5c5b0aa91e19359c77b3d4a76630dd2f07aea83dde260ad",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 105,
+        "top": 169,
+        "width": 1023,
+        "height": 959
+      },
+      "transparentFraction": 0.5294,
+      "png": {
+        "64": "png/64/pipe-junction.png",
+        "128": "png/128/pipe-junction.png",
+        "256": "png/256/pipe-junction.png"
+      },
+      "frame": {
+        "x": 1792,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "water-treatment",
+      "name": "Water treatment",
+      "group": "water",
+      "source": "sources/water-treatment.png",
+      "sourceSha256": "775433bcaea4c3b74bd7d39f7f399de8b15a78f76049dbd9f74b40a500c59807",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 90,
+        "top": 153,
+        "width": 1074,
+        "height": 1006
+      },
+      "transparentFraction": 0.4396,
+      "png": {
+        "64": "png/64/water-treatment.png",
+        "128": "png/128/water-treatment.png",
+        "256": "png/256/water-treatment.png"
+      },
+      "frame": {
+        "x": 0,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "water-tank",
+      "name": "Water tank",
+      "group": "water",
+      "source": "sources/water-tank.png",
+      "sourceSha256": "0babccb44b9bc12e2d80a7d58147861b5d2b85d77dfeef0448560581e241d691",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 151,
+        "top": 82,
+        "width": 992,
+        "height": 1126
+      },
+      "transparentFraction": 0.4644,
+      "png": {
+        "64": "png/64/water-tank.png",
+        "128": "png/128/water-tank.png",
+        "256": "png/256/water-tank.png"
+      },
+      "frame": {
+        "x": 256,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "water-return",
+      "name": "Water return",
+      "group": "water",
+      "source": "sources/water-return.png",
+      "sourceSha256": "40b71c0c127d86317823abec30e91c3d490806610ee4fc88e0e18f93c1d5f44b",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 123,
+        "top": 120,
+        "width": 993,
+        "height": 1067
+      },
+      "transparentFraction": 0.6085,
+      "png": {
+        "64": "png/64/water-return.png",
+        "128": "png/128/water-return.png",
+        "256": "png/256/water-return.png"
+      },
+      "frame": {
+        "x": 512,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "greenhouse",
+      "name": "Greenhouse",
+      "group": "ecology",
+      "source": "sources/greenhouse.png",
+      "sourceSha256": "60c9547269223f0c37f6fa51aa5c9006ec7f4d8c77262c57b03d231679ac33c1",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 102,
+        "top": 161,
+        "width": 1049,
+        "height": 967
+      },
+      "transparentFraction": 0.5142,
+      "png": {
+        "64": "png/64/greenhouse.png",
+        "128": "png/128/greenhouse.png",
+        "256": "png/256/greenhouse.png"
+      },
+      "frame": {
+        "x": 768,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "air-scrubber",
+      "name": "Air scrubber",
+      "group": "ecology",
+      "source": "sources/air-scrubber.png",
+      "sourceSha256": "d7084e06a98cf97c33c424161f25314f3b9281b0716910f37231ad2e6ee933c3",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 255,
+        "top": 58,
+        "width": 728,
+        "height": 1161
+      },
+      "transparentFraction": 0.5639,
+      "png": {
+        "64": "png/64/air-scrubber.png",
+        "128": "png/128/air-scrubber.png",
+        "256": "png/256/air-scrubber.png"
+      },
+      "frame": {
+        "x": 1024,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "water-untreated",
+      "name": "Untreated water",
+      "group": "fluids",
+      "source": "sources/water-untreated.png",
+      "sourceSha256": "e8cd6d222d57c52e8608f43cd228cab2ee22840b462f373b1a8a1f28c8c11c59",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 253,
+        "top": 152,
+        "width": 743,
+        "height": 1009
+      },
+      "transparentFraction": 0.6858,
+      "png": {
+        "64": "png/64/water-untreated.png",
+        "128": "png/128/water-untreated.png",
+        "256": "png/256/water-untreated.png"
+      },
+      "frame": {
+        "x": 1280,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    {
+      "id": "water-clean",
+      "name": "Clean water",
+      "group": "fluids",
+      "source": "sources/water-clean.png",
+      "sourceSha256": "2d9c7ef503ef276b646bd7c82d7182c9329d59fe4146381c2a875e2654e4c6fb",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "sourceBounds": {
+        "left": 242,
+        "top": 117,
+        "width": 754,
+        "height": 1057
+      },
+      "transparentFraction": 0.6628,
+      "png": {
+        "64": "png/64/water-clean.png",
+        "128": "png/128/water-clean.png",
+        "256": "png/256/water-clean.png"
+      },
+      "frame": {
+        "x": 1536,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    }
+  ]
+}

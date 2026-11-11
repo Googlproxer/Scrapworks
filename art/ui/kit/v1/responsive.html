@@ -6,6 +6,7 @@
     <title>Scrapworks responsive field kit art reference</title>
     <link rel="stylesheet" href="./kit.css" />
     <script src="./crank-demo.js" defer></script>
+    <script src="./sprite-demo.js" defer></script>
   </head>
   <body>
     <main class="stage">
@@ -58,49 +59,322 @@
             <section class="work-panel inventory" aria-labelledby="inventory-title">
               <div class="row">
                 <h2 id="inventory-title">Inventory</h2>
-                <span class="small">6/24 slots</span>
+                <span class="small">20/24 slots</span>
               </div>
               <div class="slot-grid" aria-label="24 inventory slots">
-                <div class="slot inset"><span class="number">1</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">2</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">3</span><span>Empty</span></div>
-                <div class="slot inset">
-                  <span class="number">4</span><span class="item">Pipe</span><strong>2</strong>
+                <div
+                  class="slot sprite-slot inset selected"
+                  role="group"
+                  aria-label="Slot 1"
+                  title="Scrap prybar (1)"
+                >
+                  <span class="number" aria-hidden="true">1</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/prybar.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Scrap prybar</span><strong>1</strong>
                 </div>
-                <div class="slot inset"><span class="number">5</span><span>Empty</span></div>
-                <div class="slot inset">
-                  <span class="number">6</span><span class="item">Mixed scrap</span
-                  ><strong>72</strong>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 2"
+                  title="Mixed scrap (72)"
+                >
+                  <span class="number" aria-hidden="true">2</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/scrap.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Mixed scrap</span><strong>72</strong>
                 </div>
-                <div class="slot inset">
-                  <span class="number">7</span><span class="item">Mixed scrap</span
-                  ><strong>100</strong>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 3"
+                  title="Metal plate (24)"
+                >
+                  <span class="number" aria-hidden="true">3</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/plate.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Metal plate</span><strong>24</strong>
                 </div>
-                <div class="slot inset">
-                  <span class="number">8</span><span class="item">Mixed scrap</span
-                  ><strong>100</strong>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 4"
+                  title="Recovered wire (18)"
+                >
+                  <span class="number" aria-hidden="true">4</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/wire.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Recovered wire</span><strong>18</strong>
                 </div>
-                <div class="slot inset">
-                  <span class="number">9</span><span class="item">Mixed scrap</span
-                  ><strong>100</strong>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 5"
+                  title="Coal (32)"
+                >
+                  <span class="number" aria-hidden="true">5</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/coal.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Coal</span><strong>32</strong>
                 </div>
-                <div class="slot inset"><span class="number">10</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">11</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">12</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">13</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">14</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">15</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">16</span><span>Empty</span></div>
-                <div class="slot inset">
-                  <span class="number">17</span><span class="item">Power</span><strong>7</strong>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 6"
+                  title="Mechanical part (8)"
+                >
+                  <span class="number" aria-hidden="true">6</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/mechanical-part.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Mechanical part</span><strong>8</strong>
                 </div>
-                <div class="slot inset"><span class="number">18</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">19</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">20</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">21</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">22</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">23</span><span>Empty</span></div>
-                <div class="slot inset"><span class="number">24</span><span>Empty</span></div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 7"
+                  title="Electrical part (6)"
+                >
+                  <span class="number" aria-hidden="true">7</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/electrical-part.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Electrical part</span><strong>6</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 8"
+                  title="Basic research kit (3)"
+                >
+                  <span class="number" aria-hidden="true">8</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/research-kit.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Basic research kit</span><strong>3</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 9"
+                  title="Power connection (7)"
+                >
+                  <span class="number" aria-hidden="true">9</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/power-connection.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Power connection</span><strong>7</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 10"
+                  title="Pipe (12)"
+                >
+                  <span class="number" aria-hidden="true">10</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/pipe.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Pipe</span><strong>12</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 11"
+                  title="Pipe junction (2)"
+                >
+                  <span class="number" aria-hidden="true">11</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/pipe-junction.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Pipe junction</span><strong>2</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 12"
+                  title="Conveyor (8)"
+                >
+                  <span class="number" aria-hidden="true">12</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/conveyor.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Conveyor</span><strong>8</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 13"
+                  title="Sorter (1)"
+                >
+                  <span class="number" aria-hidden="true">13</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/sorter.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Sorter</span><strong>1</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 14"
+                  title="Solar panel (1)"
+                >
+                  <span class="number" aria-hidden="true">14</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/solar-panel.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Solar panel</span><strong>1</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 15"
+                  title="Wind turbine (1)"
+                >
+                  <span class="number" aria-hidden="true">15</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/wind-turbine.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Wind turbine</span><strong>1</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 16"
+                  title="Mixed-output recycler (1)"
+                >
+                  <span class="number" aria-hidden="true">16</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/recycler.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Mixed-output recycler</span
+                  ><strong>1</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 17"
+                  title="Basic Fabricator (1)"
+                >
+                  <span class="number" aria-hidden="true">17</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/basic-fabricator.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Basic Fabricator</span><strong>1</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 18"
+                  title="Water pump (1)"
+                >
+                  <span class="number" aria-hidden="true">18</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/water-pump.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Water pump</span><strong>1</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 19"
+                  title="Greenhouse (1)"
+                >
+                  <span class="number" aria-hidden="true">19</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/greenhouse.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Greenhouse</span><strong>1</strong>
+                </div>
+                <div
+                  class="slot sprite-slot inset"
+                  role="group"
+                  aria-label="Slot 20"
+                  title="Grid battery (1)"
+                >
+                  <span class="number" aria-hidden="true">20</span
+                  ><img
+                    class="item-sprite"
+                    src="../../sprites/v1/png/128/battery.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  /><span class="item visually-hidden">Grid battery</span><strong>1</strong>
+                </div>
+                <div class="slot sprite-slot inset" role="group" aria-label="Slot 21">
+                  <span class="number" aria-hidden="true">21</span><span>Empty</span>
+                </div>
+                <div class="slot sprite-slot inset" role="group" aria-label="Slot 22">
+                  <span class="number" aria-hidden="true">22</span><span>Empty</span>
+                </div>
+                <div class="slot sprite-slot inset" role="group" aria-label="Slot 23">
+                  <span class="number" aria-hidden="true">23</span><span>Empty</span>
+                </div>
+                <div class="slot sprite-slot inset" role="group" aria-label="Slot 24">
+                  <span class="number" aria-hidden="true">24</span><span>Empty</span>
+                </div>
               </div>
             </section>
             <section class="work-panel crafting" aria-labelledby="crafting-title">
@@ -108,22 +382,38 @@
               <p class="small">Keep the field kit open while crafting.</p>
               <label class="field"
                 >Recipe<span class="select-surface"
-                  ><select class="input">
-                    <option>Scrap prybar</option>
-                  </select></span
-                ></label
-              >
-              <p class="small">4 Mixed scrap → 1 Scrap prybar<br />4 s per unit</p>
+                  ><select class="input" data-sprite-recipe></select></span
+              ></label>
+              <figure class="recipe-output inset">
+                <img
+                  class="item-sprite"
+                  src="../../sprites/v1/png/128/prybar.png"
+                  width="64"
+                  height="64"
+                  alt=""
+                  data-recipe-image
+                />
+                <figcaption>
+                  <strong data-recipe-name>Scrap prybar</strong
+                  ><span class="small muted" data-recipe-quantity>Makes 1</span>
+                </figcaption>
+              </figure>
+              <ul
+                class="recipe-ingredients"
+                aria-label="Recipe ingredients"
+                data-recipe-ingredients
+              ></ul>
+              <p class="small" data-recipe-duration>4 s total</p>
               <div class="actions">
                 <label class="field small"
                   >Batch size<span class="select-surface"
-                    ><select class="input">
+                    ><select class="input" data-sprite-batch>
                       <option>1</option>
                       <option>5</option>
                     </select></span
                   ></label
                 >
-                <button class="button primary" type="button">Handcraft 1</button>
+                <button class="button primary" type="button" data-craft-button>Handcraft 1</button>
               </div>
               <p class="status inset">No handcraft in progress</p>
             </section>
@@ -132,8 +422,26 @@
               aria-labelledby="fabricator-title"
               data-crank-demo
             >
-              <h2 id="fabricator-title">Mini Fabricator</h2>
-              <p class="status"><span class="check" aria-hidden="true">✓</span>Request completed</p>
+              <h2 class="item-heading" id="fabricator-title">
+                <img
+                  class="item-sprite"
+                  src="../../sprites/v1/png/128/mini-fabricator.png"
+                  width="40"
+                  height="40"
+                  alt=""
+                />Mini Fabricator
+              </h2>
+              <p class="status fab-result">
+                <span class="check" aria-hidden="true">✓</span
+                ><img
+                  class="item-sprite"
+                  src="../../sprites/v1/png/128/prybar.png"
+                  width="40"
+                  height="40"
+                  alt=""
+                  data-fab-image
+                /><span data-fab-name>1 Scrap prybar ready</span>
+              </p>
               <p class="small">Power-free baseline · 2× charged speed</p>
               <span class="small" id="boost-label" data-crank-readout
                 >24.0 / 60 active boost seconds</span
@@ -182,8 +490,9 @@
         </div>
         <footer class="dialog-foot">
           <p class="status small muted">
-            <span class="wide-note">Local crank demo · Other buttons are visual references.</span
-            ><span class="compact-note">Crank demo</span>
+            <span class="wide-note"
+              >Recipe preview &amp; crank demo · Other buttons are visual references.</span
+            ><span class="compact-note">Recipe &amp; crank preview</span>
           </p>
         </footer>
       </section>

@@ -1,6 +1,6 @@
 # Scrapworks reusable UI kit
 
-Updated 11 November 2026, style revision 10. The user accepted the [six screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) as the visual direction and requested reusable pieces with responsive dialogs. The kit follows the [Field Kit concept](../../art/ui/concepts/2026-11-10/redesigns/01-field-kit.png). The current pass makes the dialog background independent of its edge artwork so transparent cutouts expose the scene. This document owns the component and resizing rules. The [Art Document](README.md) owns the wider painted finish.
+Updated 11 November 2026, style revision 11. The user accepted the [six screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) as the visual direction and requested reusable pieces with responsive dialogs. The kit follows the [Field Kit concept](../../art/ui/concepts/2026-11-10/redesigns/01-field-kit.png). The current pass makes the dialog background independent of its edge artwork so transparent cutouts expose the scene. This document owns the component and resizing rules. The [Art Document](README.md) owns the wider painted finish.
 
 This delivery contains reference artwork and an isolated layout proof. It does not integrate the new appearance into the game. The geometric SVG sources deliberately separate construction from painted detail; retain the accepted PNG concepts as the finish reference. The preview uses local system fonts; a final licensed display face has not been selected.
 
@@ -8,6 +8,7 @@ This delivery contains reference artwork and an isolated layout proof. It does n
 
 - [Component sheet](../../art/ui/kit/v1/previews/components.png), [editable component reference](../../art/ui/kit/v1/reference.html), and [resizable field kit reference](../../art/ui/kit/v1/responsive.html).
 - [Original screen captures](../../art/ui/concepts/2026-11-10/before/), [accepted screen concepts](../../art/ui/concepts/2026-11-10/redesigns/), and their [exact image-generation prompts](../../art/ui/concepts/2026-11-10/generation.json).
+- [UI sprite sources and prompts](../../art/ui/sprites/v1/README.md); [inventory/crafting preview](../../art/ui/kit/v1/previews/sprites-inventory-crafting.png) with selectable recipe and batch illustrations.
 - [Kit sources and provenance](../../art/ui/kit/v1/README.md), [shared tokens](../../art/ui/kit/v1/tokens.css), and [layout proof styles](../../art/ui/kit/v1/kit.css).
 
 ## Construction
@@ -109,8 +110,8 @@ Prefer fitting and reflow before scrolling: use available width, move columns, s
 
 | Available dialog content width | Field kit arrangement                                                            | Scrolling policy                                                                       |
 | ------------------------------ | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| At least 896 CSS px            | Inventory, Handcrafting, Mini Fabricator in three columns                        | Natural height; no scrolling when content fits                                         |
-| 608–895 CSS px                 | Inventory left; Handcrafting and Mini Fabricator stacked right                   | Use width before adding vertical length                                                |
+| At least 768 CSS px            | Inventory, Handcrafting, Mini Fabricator in three columns                        | Natural height; no scrolling when content fits                                         |
+| 608–767 CSS px                 | Inventory left; Handcrafting and Mini Fabricator stacked right                   | Use width before adding vertical length                                                |
 | Below 608 CSS px               | One selected work area: Inventory, Crafting or MiniFab; retain all main sections | Single body scroll region when needed; do not stack every work area into one long page |
 | Any width, short viewport      | Compact outer spacing and header, same text/control sizes                        | Body scrolls while header/navigation/footer remain available                           |
 
@@ -128,6 +129,8 @@ Production integration must preserve modal focus trapping/restoration, Escape be
 
 ## Reference validation
 
-Rendered images live under [kit previews](../../art/ui/kit/v1/previews/); detailed [local validation records](../reports/ui-art-2026-11-10/kit-validation.json) remain ignored under `docs/reports/`. Revision 10 local headless Chromium checks passed at 1440×900, 900×760, 390×844, 320×568 and 1280×480. The first three layouts fit without content scrolling; the last two scroll only inside the body. No document/horizontal overflow occurred, header/footer remained inside the viewport, frame borders stayed at 20 CSS px, and title patches used their declared 76/64/56 CSS px sizes. The title transform and repeating border layers were also recorded. AXE found zero violations on the component board, the five default viewport states and both additional compact work-area states. Local file previews disable AXE's redundant CSS preloading, while leaving computed-style and contrast checks enabled. The record also contains zero page errors and failed requests.
+Rendered images live under [kit previews](../../art/ui/kit/v1/previews/); detailed [local validation records](../reports/ui-art-2026-11-10/kit-validation.json) remain ignored under `docs/reports/`. Revision 11 local headless Chromium checks passed at 1440×900, 900×760, 390×844, 320×568 and 1280×480. The first three layouts fit without content scrolling; the last two scroll only inside the body. No document/horizontal overflow occurred, header/footer remained inside the viewport, frame borders stayed at 20 CSS px, and title patches used their declared 76/64/56 CSS px sizes. The title transform and repeating border layers were also recorded. AXE found zero violations on the component board, the five default viewport states and both additional compact work-area states. Local file previews disable AXE's redundant CSS preloading, while leaving computed-style and contrast checks enabled. The record also contains zero page errors and failed requests.
+
+The [local sprite-preview check](../reports/ui-art-2026-11-10/sprite-demo.json) also passed all 27 handcraft recipes at five widths (135 states), with loaded PNGs, correct batch quantities, fixed craft-button placement, no horizontal overflow and no wide/medium body scrolling. AXE passed the representative machine recipe in each viewport; compact work-area changes preserved the selected recipe, and the crank still charged correctly. Twenty populated inventory slots retain item names through accessible text and native hover titles. Result/ingredient images are decorative beside their visible names; counts and selection outlines remain live HTML. Sources use the shared 128 px PNG exports with fixed aspect ratios and declared dimensions.
 
 This validates the isolated art/layout proof; each real dialog still needs integration checks after implementation. Browser zoom, other engines, final type and painted detailing remain unqualified.

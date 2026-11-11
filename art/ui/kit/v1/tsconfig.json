@@ -7,6 +7,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "files": ["crank-demo.ts"],
+  "files": ["crank-demo.ts", "sprite-demo.ts"],
   "references": []
 }

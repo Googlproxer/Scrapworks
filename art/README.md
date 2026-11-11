@@ -2,18 +2,18 @@
 
 Editable art projects, source assets, references, exact prompts and provenance live here. The [Art Document](../docs/art/README.md) owns the current visual direction.
 
-| Directory or record                | Contents                                                                                                                                               |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [characters/](characters/)         | Character identity/finish references, editable model sources and the [current v3 animated runtime derivative](characters/Protag/v3/runtime/README.md). |
-| [world/](world/)                   | Environmental progression concepts.                                                                                                                    |
-| [machinery/](machinery/)           | Machine and production progression concepts.                                                                                                           |
-| [branding/](branding/)             | Logo source, exact prompt and preparation record.                                                                                                      |
-| [ui/](ui/)                         | Cursor and menu backdrop sources; accepted UI screen concepts; [reusable UI kit sources and responsive references](ui/kit/v1/README.md).                  |
-| [generation.json](generation.json) | Exact generation prompts and input/output provenance for the retained concepts.                                                                        |
+| Directory or record                | Contents                                                                                                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [characters/](characters/)         | Character identity/finish references, editable model sources and the [current v3 animated runtime derivative](characters/Protag/v3/runtime/README.md).                   |
+| [world/](world/)                   | Environmental progression concepts.                                                                                                                                      |
+| [machinery/](machinery/)           | Machine and production progression concepts.                                                                                                                             |
+| [branding/](branding/)             | Logo source, exact prompt and preparation record.                                                                                                                        |
+| [ui/](ui/)                         | Cursor and menu backdrop sources; accepted UI screen concepts; [reusable UI kit](ui/kit/v1/README.md); [UI resource, tool and machine sprites](ui/sprites/v1/README.md). |
+| [generation.json](generation.json) | Exact generation prompts and input/output provenance for the retained concepts.                                                                                          |
 
 Keep project files, source textures, previews, available licensing and provenance together. Preserve original sources when making runtime derivatives and document their preparation. Current automation lives in [tools/art/](../tools/art/). Active Editor scenes/imports remain in `assets/`, live runtime derivatives in `public/assets/`, and generated scene exports in ignored `public/scene/`.
 
-The world/machinery images and retained modelling references guide the 3D design; the Art Document describes the approved flat finish. The south-idle illustrations have been retired. Sprite sheets and terrain atlases were retired in the [28 October cleanup](../docs/plans/3d-cleanup.md). Their original prompts remain only where they explain the generation chain of retained concepts; `generation.json` identifies the retired inputs and their Git recovery commit.
+The world/machinery images and retained modelling references guide the 3D design; the Art Document describes the approved flat finish. The south-idle illustrations have been retired. World sprite sheets and terrain atlases were retired in the [28 October cleanup](../docs/plans/3d-cleanup.md). Their original prompts remain only where they explain the generation chain of retained concepts; `generation.json` identifies the retired inputs and their Git recovery commit. The current [UI sprite set](ui/sprites/v1/README.md) supplies interface illustrations only.
 
 ## Opening the Blender protagonist
 

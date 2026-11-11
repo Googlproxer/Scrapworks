@@ -412,14 +412,49 @@
         <section class="sheet-panel frame">
           <h2>Slots, wells and status</h2>
           <div class="slot-grid sample-slots">
-            <div class="slot inset"><span class="number">1</span><span>Empty</span></div>
-            <div class="slot inset">
-              <span class="number">2</span><span class="item">Pipe</span><strong>2</strong>
+            <div class="slot sprite-slot inset" role="group" aria-label="Slot 1">
+              <span class="number" aria-hidden="true">1</span><span>Empty</span>
             </div>
-            <div class="slot inset selected">
-              <span class="number">3</span><span class="item">Mixed scrap</span><strong>100</strong>
+            <div class="slot sprite-slot inset" role="group" aria-label="Slot 2" title="Pipe (2)">
+              <span class="number" aria-hidden="true">2</span
+              ><img
+                class="item-sprite"
+                src="../../sprites/v1/png/128/pipe.png"
+                width="48"
+                height="48"
+                alt=""
+              /><span class="item visually-hidden">Pipe</span><strong>2</strong>
             </div>
-            <div class="slot inset"><span class="number">4</span><span>Empty</span></div>
+            <div
+              class="slot sprite-slot inset selected"
+              role="group"
+              aria-label="Slot 3"
+              title="Mixed scrap (100)"
+            >
+              <span class="number" aria-hidden="true">3</span
+              ><img
+                class="item-sprite"
+                src="../../sprites/v1/png/128/scrap.png"
+                width="48"
+                height="48"
+                alt=""
+              /><span class="item visually-hidden">Mixed scrap</span><strong>100</strong>
+            </div>
+            <div
+              class="slot sprite-slot inset"
+              role="group"
+              aria-label="Slot 4"
+              title="Scrap prybar (1)"
+            >
+              <span class="number" aria-hidden="true">4</span
+              ><img
+                class="item-sprite"
+                src="../../sprites/v1/png/128/prybar.png"
+                width="48"
+                height="48"
+                alt=""
+              /><span class="item visually-hidden">Scrap prybar</span><strong>1</strong>
+            </div>
           </div>
           <div class="notification inset">
             <span class="check" aria-hidden="true">✓</span
