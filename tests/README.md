@@ -63,6 +63,10 @@ Playwright locator actionability and document/navigation events remain appropria
 and loading assertions. Negative pause/reload assertions observe an acknowledged boundary
 followed by subsequent renderer frames; a finite observation does not prove indefinite absence.
 
+## Research tree and machine-inspection smoke check
+
+After a production build with `--stats-json`, run `node tests/acceptance/research-inspection-browser.ts` locally. It creates an explicitly prepared save with a nearby powered recycler, then checks new-game research defaults, prerequisite colours/gates, nearby keyboard/click inspection, live production with blocked movement, shared inventory-slot buffers, desktop/mobile AXE and save/reload. Screenshots and a receipt are written under ignored `tmp/research-inspection-browser/`. This is a local manual diagnostic and refuses CI; it is not an earned gameplay playthrough.
+
 ## Coverage
 
 `yarn test:coverage` runs the normal tooling suites plus both game environments and creates two reports. Use `yarn test:coverage:game` for Angular/Chromium and Node game coverage, or `yarn test:coverage:tools` for tooling coverage. Coverage is opt-in locally; ordinary test commands stay available. Both coverage commands keep the existing strict typechecks.

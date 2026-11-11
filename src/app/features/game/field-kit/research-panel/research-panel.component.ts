@@ -1,13 +1,15 @@
-import { Component, computed, ElementRef, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, linkedSignal, untracked, viewChild } from '@angular/core';
 import { OpeningPanel } from '../opening-panel';
 import { EQUIPMENT_BLUEPRINTS, RESEARCH_LAB_RULES, RESEARCH_ROADMAP } from '@content/first-factory';
 import type { OpeningCommand } from '@contracts/opening';
 
 import type { OpeningTechnology } from '@content/opening';
+import { researchPrerequisitesMet } from '@core/research-prerequisites';
+import { TechnologyTreeComponent } from './technology-tree/technology-tree.component';
 
 @Component({
   selector: 'app-research-panel',
-  imports: [],
+  imports: [TechnologyTreeComponent],
   templateUrl: './research-panel.component.html',
   styleUrl: './research-panel.component.scss',
   host: { role: 'region', 'aria-labelledby': 'research-title' },
@@ -23,9 +25,44 @@ export class ResearchPanelComponent extends OpeningPanel {
       this.technologies.find((technology) => technology.id === id)!,
     ),
   );
-  public readonly active = computed(() => this.queue()[0] ?? null);
+  public readonly active = computed(() => this.queue().at(0) ?? null);
+  public readonly selectedId = linkedSignal({
+    source: () => this.runtime.restoreRevision?.() ?? 0,
+    computation: () =>
+      untracked(
+        () =>
+          this.active()?.id ??
+          this.technologies.find((technology) => this.availability(technology) === 'available')
+            ?.id ??
+          this.technologies[0].id,
+      ),
+  });
+  public readonly selected = computed(() =>
+    this.technologies.find((technology) => technology.id === this.selectedId())!,
+  );
+
+  public prerequisitesMet(technology: OpeningTechnology): boolean {
+    return researchPrerequisitesMet(technology, this.opening()?.ledgers ?? {});
+  }
+
+  public availability(technology: OpeningTechnology): 'researched' | 'available' | 'locked' {
+    return this.opening()?.ledgers[technology.id]?.unlocked
+      ? 'researched'
+      : this.prerequisitesMet(technology)
+        ? 'available'
+        : 'locked';
+  }
 
   public queueCommand(command: OpeningCommand): void {
+    if (command.type === 'research-queue' && command.action === 'add') {
+      const technology = this.technologies.find((entry) => entry.id === command.technology);
+      if (
+        !technology ||
+        this.availability(technology) !== 'available' ||
+        this.queued(technology.id)
+      )
+        return;
+    }
     this.runtime.command(command);
     this.queueHeading()?.nativeElement.focus();
   }
@@ -60,7 +97,7 @@ export class ResearchPanelComponent extends OpeningPanel {
     const opening = this.opening();
     return (
       !!opening &&
-      technology.requires.every((id) => opening.ledgers[id]?.unlocked) &&
+      this.prerequisitesMet(technology) &&
       technology.eligibility.every(
         (cost) =>
           (cost.item === 'scrap'
@@ -78,14 +115,13 @@ export class ResearchPanelComponent extends OpeningPanel {
     if (position > 0) return `Queued ${position + 1}; only the first task can progress`;
     if (position === -1) {
       if (ledger?.work) return 'Progress retained; queue to resume';
-      if (!technology.requires.every((id) => opening?.ledgers[id]?.unlocked))
-        return 'Locked: prerequisite technologies; may be queued';
+      if (!this.prerequisitesMet(technology))
+        return 'Locked: research prerequisite technologies first';
       return this.technologyReady(technology)
         ? 'Available; not queued'
         : 'Needs cumulative extraction / production; may be queued';
     }
-    if (!technology.requires.every((id) => opening?.ledgers[id]?.unlocked))
-      return 'Waiting for prerequisite technologies';
+    if (!this.prerequisitesMet(technology)) return 'Waiting for prerequisite technologies';
     if (!this.technologyReady(technology)) return 'Waiting for cumulative extraction / production';
     if (!opening?.state.fieldEnabled) return 'Field contributions paused; no bag withdrawals';
     const waiting = technology.costs.some(

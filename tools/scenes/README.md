@@ -40,6 +40,8 @@ For an asset loaded dynamically by a presentation script and absent from the sce
 
 Angular's `public` asset-copy rule matches `excludedPublicAssets` exactly; the current list is empty because obsolete public copies were removed. Live assets are the Angular background/logo, cursor and animated protagonist derivative. Character source projects remain outside deployment. See [retired-source recovery](../../docs/plans/3d-cleanup.md#recovery). Keep policy consumers and Angular configuration aligned when changing runtime assets.
 
+The policy also retains the favicon and menu-linked `attributions.html`. Production builds copy Angular's generated `3rdpartylicenses.txt` from beside `browser/` into the browser deployment root and include the project `LICENSE.txt` before compression. This keeps asset/software notices reachable and present in copied portable artifacts. The [M10 audit decisions](../../docs/art/runtime-asset-decisions.md) distinguish the completed backdrop/credit fixes from remaining world-art and final qualification work.
+
 The exporter compiles saved Game marker metadata into `public/scene/worlds/game.json` before packing, then publishes it with the same scene generation. See [world-marker authoring](../world/README.md). Invalid markers retain all last-working output. The export audit explicitly requires this world file, validates its schema, compares it with saved markers and checks its assets-list registration.
 
 ## Repeat the audit

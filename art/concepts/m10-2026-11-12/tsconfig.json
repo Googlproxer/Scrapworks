@@ -1,0 +1,6 @@
+{
+  "extends": "../../../tools/tsconfig.json",
+  "include": ["./prepare-gallery.ts"],
+  "files": [],
+  "references": []
+}

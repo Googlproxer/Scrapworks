@@ -1,0 +1,294 @@
+{
+  "generatedAt": "2026-11-11T14:16:18.199Z",
+  "complete": true,
+  "images": [
+    {
+      "id": "solar-panel",
+      "file": "assets/solar-panel.png",
+      "bytes": 1482644,
+      "sha256": "7c5d7570681039418a81463332c41f81fadad7862d52839f6b4219ffe1026a6c",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "wind-turbine",
+      "file": "assets/wind-turbine.png",
+      "bytes": 1399959,
+      "sha256": "b486df40873aa26e88038cd67159247f5ddb1829368f31e084024835c3ee8d55",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "recycler",
+      "file": "assets/recycler.png",
+      "bytes": 1636369,
+      "sha256": "34ece3efe03932bad9be764f5e0529a7407ad23bd02ec97c625f767e328cd6a9",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "basic-fabricator",
+      "file": "assets/basic-fabricator.png",
+      "bytes": 1346104,
+      "sha256": "fc60d7cff745d928f18f8e2c34d3e45acbec68f4008053c92c690d75adf994f9",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "medium-fabricator",
+      "file": "assets/medium-fabricator.png",
+      "bytes": 1414070,
+      "sha256": "8193f344f04cbb7051f2eb78e25cd7066460ffcb7750063d0957804e6a8887eb",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "extractor",
+      "file": "assets/extractor.png",
+      "bytes": 1626372,
+      "sha256": "a913833667a1274153447c4663ff3bdcd942ff4ab7538d14b92b4f9883a108c7",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "laboratory",
+      "file": "assets/laboratory.png",
+      "bytes": 1497655,
+      "sha256": "5bbe377e0f26a6bba7726bfb4aa2f0c6c8946517219fb6883e8e60f25868e69c",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "battery",
+      "file": "assets/battery.png",
+      "bytes": 1602981,
+      "sha256": "b6d8858b04b6288470efa1639e10bc8551203913a806a5b62576e53e3d736d44",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "coal-generator",
+      "file": "assets/coal-generator.png",
+      "bytes": 1556724,
+      "sha256": "3b6b5423fc50fdcd34b6a5de93d3784c51992335093d1e208a597cd9baeb612a",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "air-scrubber",
+      "file": "assets/air-scrubber.png",
+      "bytes": 1503990,
+      "sha256": "f614f51b0a06b8deb9dd2b4afb2dae0dd9f30075c4f0aed54c82379abe25501a",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "greenhouse",
+      "file": "assets/greenhouse.png",
+      "bytes": 1564156,
+      "sha256": "23f81452ef312db862026c346c3422444784b18e3ff0abb612767ac0ee3da911",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "water-pump",
+      "file": "assets/water-pump.png",
+      "bytes": 1445188,
+      "sha256": "0f931dbfe6b3f2f6cfd3d10070473942ea624a17889e7c230d6d17328c361a19",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "pipe",
+      "file": "assets/pipe.png",
+      "bytes": 1352755,
+      "sha256": "d0a0713e193a59b20c653bb52956d3496fe8ff7a92d63c77e7eeff15c5f9b618",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "pipe-junction",
+      "file": "assets/pipe-junction.png",
+      "bytes": 1564000,
+      "sha256": "2029884b236d8ee2c15b355f67ccb6dee5a897d9fb30247da72f43db6d5def57",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "water-treatment",
+      "file": "assets/water-treatment.png",
+      "bytes": 1672091,
+      "sha256": "a36a4ef993a3a8a5e4a9b666f9a2a851762c206473fb8a7f7560d0f0b1b31711",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "water-tank",
+      "file": "assets/water-tank.png",
+      "bytes": 1548334,
+      "sha256": "0d8eaa33688fcec89cbb136ad74ed489b28076248bee47d267bb1625f67a1179",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "water-return",
+      "file": "assets/water-return.png",
+      "bytes": 1496556,
+      "sha256": "29c57552bf1ba720b93fcc788621a3115766157f0bf9b434c00ff79faaa95f71",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "conveyor",
+      "file": "assets/conveyor.png",
+      "bytes": 1605808,
+      "sha256": "15a677802725cd82ca7063f27f77f7201f1022889542880406dd60d95a7ec7a2",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "sorter",
+      "file": "assets/sorter.png",
+      "bytes": 1592275,
+      "sha256": "f02143977a12b2acfbf9888949d6c5c5b12718e94f278a15246608242f32b1ed",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "id": "protagonist-finish",
+      "file": "assets/protagonist-finish.png",
+      "bytes": 2105572,
+      "sha256": "ce756fe78e45879e3c110ac7fcfc16307e4b2f778198efec5f5b5b07861013af",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "terrain",
+      "file": "assets/terrain.png",
+      "bytes": 1455541,
+      "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "water",
+      "file": "assets/water.png",
+      "bytes": 1603016,
+      "sha256": "8b2f5913d5adb0f996c3e3297db1d848e58d3c1d898e7911a517b0a6e981f26c",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "vegetation",
+      "file": "assets/vegetation.png",
+      "bytes": 1575436,
+      "sha256": "ec73a5f8c4d404b7ef263c57d4b1cef52a8cb7df0d66bb41e4fcfbc7d407712f",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "scrap-deposit",
+      "file": "assets/scrap-deposit.png",
+      "bytes": 1591116,
+      "sha256": "24ffe5b9d60df84110284f25a64773deb92f9468103bf46211af55cc738104f8",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "coal-deposit",
+      "file": "assets/coal-deposit.png",
+      "bytes": 1408414,
+      "sha256": "a2505c104e117c6a261b5aba08cd01a3a7fb1d34fb489dfc15196fe3ba8d24b0",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "rock-blocker",
+      "file": "assets/rock-blocker.png",
+      "bytes": 1670563,
+      "sha256": "772ea8dc21cbed79e27f154f25a1209885ce3fe591f07d3f41a547c29080c969",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "connections",
+      "file": "assets/connections.png",
+      "bytes": 1736822,
+      "sha256": "16e74259789f175db0640027c2af4beefa5bb2e07b3cab13ef33f0c58e250f25",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "placement-feedback",
+      "file": "assets/placement-feedback.png",
+      "bytes": 1783539,
+      "sha256": "c1975187d5463b5598687ddebeacc72d16e2751ff4b63e806290de7264754fa2",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "crate-family",
+      "file": "assets/crate-family.png",
+      "bytes": 1955886,
+      "sha256": "1f4749b62b6668ebe6c86f797da718089d31884ca753d8f0cd543aab5e18ad3e",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "barrel",
+      "file": "assets/barrel.png",
+      "bytes": 1432450,
+      "sha256": "b9941bc0b4fdf567ba5a3878750a9b047408ded2f0b6562a640979d41eadeb2d",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "moving-platform",
+      "file": "assets/moving-platform.png",
+      "bytes": 1528092,
+      "sha256": "6b014f84d8a09d03ddaa617a962ec13494105a149787e47d2216a0ba89c7d713",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "favicon",
+      "file": "assets/favicon.png",
+      "bytes": 1324466,
+      "sha256": "9a0748de85612c5f67c7f0f40210ffda45c811825f4810d392c49160ce7bc2e7",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "01-opening",
+      "file": "gameplay/01-opening.png",
+      "bytes": 1750460,
+      "sha256": "2645ddbe9f655c0b57ed6437eb252b591c0ffb691b3cd6df99c1a53621dba207",
+      "width": 1585,
+      "height": 992
+    },
+    {
+      "id": "02-factory",
+      "file": "gameplay/02-factory.png",
+      "bytes": 2120417,
+      "sha256": "e5a578ccfae4492c7708f92ece91a6318292a006ee523aec846914a57d303591",
+      "width": 1585,
+      "height": 992
+    },
+    {
+      "id": "03-restored-waterworks",
+      "file": "gameplay/03-restored-waterworks.png",
+      "bytes": 1912693,
+      "sha256": "9d7a5c080eb87302c382c03bfc2cedb56dba8ac1ebabb2cedb2ca8f8755d8bd7",
+      "width": 1586,
+      "height": 992
+    },
+    {
+      "id": "04-construction",
+      "file": "gameplay/04-construction.png",
+      "bytes": 1976754,
+      "sha256": "fa7f6e724db6acce839f2eadb15db79962791977e1384f9af1990b8972402a8b",
+      "width": 1585,
+      "height": 992
+    }
+  ]
+}

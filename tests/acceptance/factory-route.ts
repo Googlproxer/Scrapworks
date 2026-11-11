@@ -1,3 +1,4 @@
+import { interactWithMachine } from './machine-interaction.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -193,11 +194,21 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     throw new Error(`Cannot point at world footprint ${x},${z}`);
   };
   const open = async (tab = 'Factory') => {
+    const inspectionClose = page.getByRole('button', {
+      name: 'Close machine inspection',
+      exact: true,
+    });
+    if (await inspectionClose.isVisible()) await inspectionClose.click();
     if (!(await page.locator('#field-kit').isVisible()))
       await page.getByRole('button', { name: /Open field kit/ }).click();
     await page.getByRole('tab', { name: tab, exact: true }).click();
   };
   const close = async () => {
+    const inspectionClose = page.getByRole('button', {
+      name: 'Close machine inspection',
+      exact: true,
+    });
+    if (await inspectionClose.isVisible()) await inspectionClose.click();
     if (await page.locator('#field-kit').isVisible()) {
       await page.getByRole('button', { name: 'Close', exact: true }).focus();
       await page.keyboard.press('Enter');
@@ -446,16 +457,14 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
     await walk(-5, -2.8);
     await place('solar-panel', 3, 5);
   }
+  const inspect = async (building: BuildingView) => {
+    await close();
+    await interactWithMachine(page, engineChunk, building);
+  };
   const select = async (kind: MachineKind, index = 0) => {
     const m = placed.filter((b) => b.kind === kind)[index];
-    await open();
-    await page
-      .getByRole('button', {
-        name: new RegExp(
-          `^${kind === 'basic-fabricator' ? 'Basic Fabricator' : kind === 'medium-fabricator' ? 'Medium Fabricator' : kind === 'laboratory' ? 'Laboratory' : kind === 'recycler' ? 'Mixed-output recycler' : kind === 'extractor' ? 'Extractor' : kind === 'solar-panel' ? 'Solar panel' : 'Wind turbine'} · ${m.column}, ${m.row}$`,
-        ),
-      })
-      .click();
+    const building = (await read()).buildings!.find((b) => b.id === m.id)!;
+    await inspect(building);
     await page.getByRole('button', { name: 'Disable machine', exact: true }).waitFor();
     return m;
   };
@@ -509,6 +518,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
   if (ports.resumeRestoration || ports.restorationDirect) {
     await checkRestorationRoute({
       page,
+      inspect,
       read,
       until,
       craft,
@@ -628,6 +638,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
       await load('research-kit', 2);
     }
     await open('Research');
+    await page.locator('[data-technology="sorting-logistics"]').click();
     await page.getByRole('button', { name: 'Queue Sorting and conveyors', exact: true }).click();
     await until(
       (p) => !!p.opening.ledgers['sorting-logistics']?.unlocked,
@@ -640,6 +651,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
   const transportProof = ports.transport
     ? await checkTransportRoute({
         page,
+        inspect,
         read,
         until,
         craft,
@@ -763,6 +775,7 @@ export async function checkFactoryRoute(ports: RoutePorts): Promise<void> {
   if (ports.restoration)
     await checkRestorationRoute({
       page,
+      inspect,
       read,
       until,
       craft,

@@ -1,0 +1,13 @@
+<ol class="bag" [attr.aria-label]="label()">
+  @for (slot of slots(); track $index) {
+    <li [class.occupied]="!!slot">
+      <span class="slot-number">{{ $index + 1 }}</span>
+      @if (slot) {
+        <span>{{ name(slot.item) }}</span
+        ><strong>{{ slot.quantity }}</strong>
+      } @else {
+        <span class="empty">Empty</span>
+      }
+    </li>
+  }
+</ol>

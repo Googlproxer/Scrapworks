@@ -1,0 +1,135 @@
+@use '../../field-kit.component';
+:host {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+}
+.tree-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+.tree-viewport {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.tree-viewport {
+  border: 1px solid #738e83;
+  background: #0c1713;
+}
+.tech-tree {
+  position: relative;
+}
+svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.prerequisite-edge {
+  stroke: #a2b8ad;
+  stroke-width: 2;
+  fill: none;
+}
+marker path {
+  fill: #a2b8ad;
+}
+.tech-node {
+  position: absolute;
+  width: 184px;
+  height: 88px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  text-align: left;
+  line-height: 1.2;
+  border-width: 2px;
+}
+.tech-node[aria-pressed='true'] {
+  outline: 3px solid #f1f5f3;
+  outline-offset: 3px;
+}
+.tech-node:focus-visible {
+  outline: 3px solid #66d5dc;
+  outline-offset: 5px;
+  z-index: 1;
+}
+.tech-node.researched {
+  background: #164b32;
+  border-color: #69d795;
+}
+.tech-node.available {
+  background: #554711;
+  border-color: #f1d369;
+}
+.tech-node.locked {
+  background: #582b2b;
+  border-color: #f39797;
+}
+.tree-legend .researched {
+  color: #8be6ae;
+}
+.tree-legend .available {
+  color: #f1d369;
+}
+.tree-legend .locked {
+  color: #ffb0b0;
+}
+.tech-state {
+  font-size: 0.8rem;
+}
+.queue-badge {
+  min-height: 1em;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tree-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding-bottom: 8px;
+}
+.tree-tools button {
+  min-width: 40px;
+  min-height: 40px;
+  margin: 0;
+}
+.zoom-level {
+  min-width: 5ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.pan-help {
+  font-size: 0.8rem;
+  color: #c4d2ca;
+}
+.tree-viewport {
+  cursor: grab;
+  user-select: none;
+}
+.tree-viewport.dragging,
+.tree-viewport.dragging .tech-node {
+  cursor: grabbing;
+}
+.tech-tree {
+  transform-origin: top left;
+}
+.tree-space {
+  position: relative;
+  overflow: hidden;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

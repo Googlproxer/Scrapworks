@@ -26,6 +26,7 @@ interface TransportRoutePorts {
   ): Promise<FactoryRouteProbe>;
   craft(recipe: string, count: number): Promise<void>;
   open(tab?: string): Promise<void>;
+  inspect(building: BuildingView): Promise<void>;
   close(): Promise<void>;
   walk(x: number, z: number): Promise<void>;
   place(kind: PlaceableKind, column: number, row: number, rotation?: QuarterTurn): Promise<void>;
@@ -117,14 +118,7 @@ export async function checkTransportRoute(
     throw Error('No reachable transport interaction at ' + JSON.stringify([a, b]));
   };
   const select = async (b: BuildingView) => {
-    await open();
-    const name = p.recipes.find((r) => r.id === `assemble-${b.buildingId}`)!.name;
-    await page
-      .getByRole('button', {
-        name: `${name} · ${b.cell.column + 1}, ${b.cell.row + 1}`,
-        exact: true,
-      })
-      .click();
+    await p.inspect(b);
     await until((v) => !!v.details?.some((d) => d.id === b.id), 'transport inspection');
   };
   const ensure = async (item: string, needed: number): Promise<void> => {

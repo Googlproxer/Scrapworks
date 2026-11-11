@@ -18,6 +18,8 @@ import { GameRuntimeService } from '../game/game-runtime.service';
 import { SaveConfirmationComponent } from './save-confirmation/save-confirmation.component';
 import { backupFilename, MAX_SAVE_BYTES } from '../../../persistence/save-codec';
 import { UiDialogRegistry } from '../ui/ui-dialog-registry';
+import { UiService } from '../ui/ui.service';
+import { OPENING_TECHNOLOGIES } from '@content/opening';
 
 export const GAMEPLAY_SAVE_REPOSITORY = new InjectionToken<SaveRepository>(
   'Gameplay save repository',
@@ -26,6 +28,7 @@ export const GAMEPLAY_SAVE_REPOSITORY = new InjectionToken<SaveRepository>(
 @Service({ autoProvided: false })
 export class GameplaySaveService {
   private readonly runtime = inject(GameRuntimeService);
+  private readonly ui = inject(UiService, { optional: true });
   private readonly dialog = inject(Dialog);
   private readonly dialogRegistry = inject(UiDialogRegistry);
   private readonly injector = inject(Injector);
@@ -63,6 +66,14 @@ export class GameplaySaveService {
     this.status().revisions.filter((m) => m.runId === this.status().slot?.runId),
   );
   public readonly status = this.statusValue.asReadonly();
+  public readonly loadAdjustment = computed(() => {
+    const removed = this.status().removedResearch;
+    if (!removed.length) return '';
+    const names = removed.map(
+      (id) => OPENING_TECHNOLOGIES.find((technology) => technology.id === id)?.name ?? id,
+    );
+    return `Removed queued research with unmet prerequisites: ${names.join(', ')}. All research investment and progress remain. Save to keep the adjusted queue.`;
+  });
   public readonly busy = computed(
     () =>
       this.pending() > 0 ||
@@ -83,6 +94,13 @@ export class GameplaySaveService {
   public constructor() {
     const subscription = this.coordinator.changes$.subscribe((status) => {
       this.statusValue.set(status);
+      if (status.removedResearch.length)
+        this.ui?.openNotification({
+          key: 'research-queue-adjusted',
+          title: 'Research queue updated',
+          message: this.loadAdjustment(),
+          tone: 'warning',
+        });
       if (status.message === 'Game loaded.' || status.message === 'New game started.')
         this.runName.set({ name: this.coordinator.name });
     });

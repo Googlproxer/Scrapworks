@@ -22,7 +22,12 @@ export interface SaveHost {
   hold(): () => void;
   capture(): Promise<SimulationSnapshot>;
   validate(save: SaveSnapshot): Promise<void>;
-  replace(save: SaveSnapshot | null): Promise<void>;
+  replace(save: SaveSnapshot | null): Promise<SaveReplacementResult | void>;
+}
+
+/** Transient load adjustments; source revisions and the durable envelope remain unchanged. */
+export interface SaveReplacementResult {
+  readonly removedResearch: readonly string[];
 }
 
 export interface SaveStatus {
@@ -42,6 +47,7 @@ export interface SaveStatus {
   readonly issues: readonly SaveCatalogIssue[];
   readonly legacy: boolean;
   readonly inspected: SaveMetadata | null;
+  readonly removedResearch: readonly string[];
 }
 
 interface Operation {
@@ -63,6 +69,7 @@ export class SaveCoordinator {
     issues: [],
     legacy: false,
     inspected: null,
+    removedResearch: [],
   };
   public name = 'Untitled run';
   private readonly operations: Operation[] = [];
@@ -110,7 +117,7 @@ export class SaveCoordinator {
     patch: Partial<SaveStatus> = {},
   ): void {
     if (this.closed) return;
-    this.status = { ...this.status, phase, message, ...patch };
+    this.status = { ...this.status, removedResearch: [], phase, message, ...patch };
     this.source.next(this.status);
   }
 
@@ -366,8 +373,9 @@ export class SaveCoordinator {
         // Read the head before replacement. A later concurrent commit still fails the write CAS.
         const { revisions, issues } = fresh ? this.status : await this.repository.catalog();
         this.valid(binding);
-        await this.host.replace(save ?? null);
-        this.committed = fresh ? null : this.host.binding();
+        const replacement = await this.host.replace(save ?? null);
+        const removedResearch = replacement?.removedResearch ?? [];
+        this.committed = fresh || removedResearch.length ? null : this.host.binding();
         this.committedToken = save?.token ?? null;
         this.recoveredFrom = save?.token ?? null;
         this.inspectingHistory = false;
@@ -380,6 +388,7 @@ export class SaveCoordinator {
           this.disabledAutosaves.delete(save.runId);
         } else this.name = 'Untitled run';
         this.update('idle', fresh ? 'New game started.' : 'Game loaded.', {
+          removedResearch,
           revisions,
           issues,
           slot: save ? saveMetadata(save) : this.status.slot,

@@ -1,6 +1,6 @@
 # Scrapworks Art Document
 
-Updated 11 November 2026. Active production direction: fully 3D world and character with the established flat painted finish.
+Updated 12 November 2026. Active production direction: fully 3D world and character with the established flat painted finish.
 
 This document owns visual identity, camera/readability, and 3D asset preparation. The [GDD](../design/GDD.md) owns gameplay; the [TDD](../design/TDD.md) owns architecture.
 
@@ -8,11 +8,17 @@ Art projects, source assets, references and provenance are organised under the r
 
 ## Current repository assets
 
+- The [M10 runtime asset decisions](runtime-asset-decisions.md) record the completed 11–12 November audit, all 19 placeable kinds, selected replacements/polish, provenance gaps and final qualification work. Detailed screenshots and measurements remain local.
+
+- The user-approved [gear-and-leaf favicon](../../art/branding/favicon.json) is applied at 16/32/64 px with transparency and explicit browser icon sizes. Source, exact extraction prompt and hashes are retained under `art/branding/`; reproduce with `node tools/art/prepare-favicon.ts`.
+
+- The new [M10 concept set and gallery](../../art/concepts/m10-2026-11-12/README.md) supplies four full gameplay proposals and 32 individual asset/group sheets covering every audited replacement/polish area. These are image-only concepts for review, with exact prompts/reference provenance. They target both asset work and the required renderer/shader pass; they do not establish implemented models, shaders or final qualification.
+
 - The user-accepted [UI screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) establish the cream, navy and coral scrappy interface direction. The [reusable UI kit guide](ui-kit.md) owns shared pieces, fixed-corner construction and responsive dialog rules; [editable sources and preview pages](../../art/ui/kit/v1/README.md) remain separate from the current runtime UI.
 
 - The first [UI sprite set](../../art/ui/sprites/v1/README.md) covers all 28 current inventory items/placeables, the MiniFab, and two water-quality indicators. [Generated originals and exact prompts](../../art/ui/sprites/v1/generation.json), transparent PNG sizes, an atlas and a local review gallery remain under `art/ui/sprites/v1/`. This image-only pass awaits user review and is not integrated into runtime UI.
 
-- The menu and loading screens use responsive WebP logo derivatives (320/640/1024 pixels) and a WebP backdrop. Original PNGs and conversion provenance remain under `art/branding/` and `art/ui/`. Reproduce them with `node tools/art/prepare-menu-images.ts`; the logo retains its transparent padding and aspect ratio.
+- The menu and loading screens use responsive WebP logo derivatives (320/640/1024 pixels) and an original flat-painted restoration landscape. The user requested discarding the previous blue/green backdrop during the audit; its source was removed and its possible Phaser origin remains unverified. New [source, exact prompt and conversion provenance](../../art/ui/menu-backdrop.json) remain under `art/ui/`; logo originals remain under `art/branding/`. Reproduce them with `node tools/art/prepare-menu-images.ts`; the logo retains its transparent padding and aspect ratio. The main menu links the shipped [asset credits](../../public/attributions.html), including the confirmed free-plan Meshy model's CC BY 4.0 notice and separate Mixamo credit.
 
 - The retained [modelling references](../../art/characters/References/) and model sources preserve character identity. The approved flat finish is described below; the earlier south-idle illustration has been retired, with its exact edit prompt retained in the [generation log](../../art/generation.json).
 - The retired [MPFB character experiment](../../art/README.md#recovering-retired-mpfb-sources) is recoverable from Git with its editable Blender/rigged GLB sources, licensing and original validation. Its source mesh statistics are distinct from the separately authored runtime model.
@@ -36,6 +42,8 @@ The authored perspective camera starts at 45 degrees and a 12 metre radius with 
 Gameplay dimensions are metres; Editor scene coordinates are centimetres. Logical footprints and ground-plane positions remain independent of rendered mesh bounds. Character scale, pivots, occlusion, and selection must be checked in the browser, including at different camera rotations and viewport sizes.
 
 Translate the preferred flat finish into 3D geometry, material response, textures, and controlled lighting. Check the finish across camera rotations. UI images and bitmap textures remain valid assets.
+
+The user clarified on 12 November 2026 that flat shading requires **renderer/shader work as well as 3D assets**. Plan a deliberate stylised lighting/material/shader pass; replacing geometry or repainting textures alone does not establish the target finish. The concept art is the shared visual target for both asset preparation and shader development.
 
 ## Preferred finish across all artwork
 

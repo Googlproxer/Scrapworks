@@ -1,0 +1,196 @@
+<header>
+  <h2 id="machine-inspection-title" tabindex="-1">
+    {{ selected() ? name(selected()!.building!.buildingId) : 'Machine inspection' }}
+  </h2>
+  <button type="button" (click)="close()" aria-label="Close machine inspection">Close</button>
+</header>
+<div class="inspection-content">
+  @if (selected(); as entity) {
+    @if (entity.machine?.utility) {
+      <app-utility-inspection />
+    }
+    @if (entity.machine; as machine) {
+      <p class="machine-summary">
+        <strong>{{ name(entity.building!.buildingId) }}</strong>
+        <span>{{ machine.status }}</span>
+        <span>{{ seconds(machine.allocated) }}/{{ seconds(machine.requested) }} W</span>
+      </p>
+      <button type="button" (click)="configure(!machine.enabled, machine.recipe)">
+        {{ machine.enabled ? 'Disable machine' : 'Enable machine' }}
+      </button>
+      <div class="stable-summary machine-advice">
+        @for (text of adviceExamples; track text) {
+          <p class="layout-reservation" aria-hidden="true">{{ text }}</p>
+        }
+        <p data-machine-advice>{{ nextAction() }}</p>
+      </div>
+      <ng-template #workText let-job>
+        Work: <span class="work-time">{{ seconds(job.remaining) }}</span> s remaining at full power.
+        Committed ingredients: {{ materials(job.inputs) }}. Pending result:
+        {{ materials(job.outputs) }}.
+      </ng-template>
+      @if (workExamples().length) {
+        <div class="stable-summary machine-work">
+          @for (example of workExamples(); track $index) {
+            <p class="layout-reservation" aria-hidden="true">
+              <ng-container
+                [ngTemplateOutlet]="workText"
+                [ngTemplateOutletContext]="{ $implicit: example }"
+              />
+            </p>
+          }
+          <p
+            data-machine-work
+            [style.visibility]="machine.job ? 'visible' : 'hidden'"
+            [attr.aria-hidden]="!machine.job"
+          >
+            <ng-container
+              [ngTemplateOutlet]="workText"
+              [ngTemplateOutletContext]="{ $implicit: machine.job ?? emptyWork }"
+            />
+          </p>
+        </div>
+      }
+      @if (entity.building!.buildingId === 'recycler') {
+        <p>
+          Eight scrap per batch. Random plates/wire with scrap remainder; both refined materials
+          within three batches. Returned scrap is not new production.
+        </p>
+      }
+      @if (entity.building!.buildingId === 'laboratory') {
+        <p>
+          One shared research queue. This lab uses its own complete bundles at up to 4× field speed.
+          Inputs: four slots. Queue edits retain technology progress.
+        </p>
+      }
+      @if (eligibleRecipes().length) {
+        <label for="factory-recipe">Fabrication recipe</label
+        ><select id="factory-recipe" [formField]="fields.recipe">
+          <option value="">Select recipe</option>
+          @for (r of eligibleRecipes(); track r.id) {
+            <option [value]="r.id">{{ r.name }} · {{ materials(r.inputs) }}</option>
+          }
+        </select>
+        <button
+          type="button"
+          [disabled]="!model().recipe || !!machine.job"
+          (click)="configure(machine.enabled, model().recipe)"
+        >
+          Set recipe
+        </button>
+        <p>
+          Active recipe: {{ machine.recipe ? recipeName(machine.recipe) : 'None' }}.
+          {{ entity.building!.buildingId === 'basic-fabricator' ? 'One' : 'Two' }} distinct input
+          {{ entity.building!.buildingId === 'basic-fabricator' ? 'type' : 'types' }} per recipe;
+          the four buffer slots store stacks. Changing recipes waits until the current operation
+          finishes; existing stock stays collectable.
+        </p>
+      }
+      <h3>Local buffers</h3>
+      <div class="buffer-grid">
+        <section aria-labelledby="machine-input-title">
+          <h4 id="machine-input-title">Input · {{ machine.input.slots.length }} slots</h4>
+          <app-inventory-slots [slots]="machine.input.slots" label="Machine input slots" />
+          @if (!machine.input.slots.length) {
+            <p>No input buffer.</p>
+          }
+        </section>
+        <section aria-labelledby="machine-output-title">
+          <h4 id="machine-output-title">Output · {{ machine.output.slots.length }} slots</h4>
+          <app-inventory-slots [slots]="machine.output.slots" label="Machine output slots" />
+          @if (!machine.output.slots.length) {
+            <p>No output buffer.</p>
+          }
+        </section>
+      </div>
+      <label for="factory-item">Material</label
+      ><select id="factory-item" [formField]="fields.item">
+        @for (entry of loadMaterials(); track entry.item) {
+          <option [value]="entry.item">
+            {{ name(entry.item) }} · {{ entry.quantity }} available
+          </option>
+        } @empty {
+          <option value="">No input materials</option>
+        }
+      </select>
+      <label>Transfer quantity <input type="number" [formField]="fields.count" /></label>
+      <div class="transfer-controls">
+        <div>
+          @if (machine.output.slots.length) {
+            <button
+              type="button"
+              [disabled]="!hasOutput()"
+              (click)="send({ type: 'factory-collect-output', target: entity.id })"
+            >
+              Collect all output
+            </button>
+          }
+          <button type="button" [disabled]="!canLoadInput()" (click)="transfer('input', 'load')">
+            Load input from bag
+          </button>
+          @for (bufferName of ['input', 'output']; track bufferName) {
+            @for (
+              item of bufferName === 'input' ? bufferItems().input : bufferItems().output;
+              track 'material:' + item
+            ) {
+              <button
+                type="button"
+                [disabled]="
+                  !hasValidTransferQuantity() ||
+                  stock(bufferName === 'input' ? machine.input.slots : machine.output.slots, item) <
+                    model().count
+                "
+                (click)="transfer(bufferName === 'input' ? 'input' : 'output', 'unload', item)"
+              >
+                Collect {{ name(item) }} from {{ bufferName }}
+              </button>
+            }
+          }
+        </div>
+        <div class="layout-reservation" aria-hidden="true">
+          @if (machine.output.slots.length) {
+            <button type="button" disabled>Collect all output</button>
+          }
+          <button type="button" disabled>Load input from bag</button>
+          @for (bufferName of ['input', 'output']; track bufferName) {
+            @for (
+              item of bufferName === 'input'
+                ? bufferLayoutItems().input
+                : bufferLayoutItems().output;
+              track 'material:' + item
+            ) {
+              <button type="button" disabled>Collect {{ name(item) }} from {{ bufferName }}</button>
+            }
+          }
+        </div>
+      </div>
+      <h3 id="factory-wiring">Wired power</h3>
+      <p>
+        Assign Power connection to the toolbar, press B, then click two machines to connect. Click
+        the first cell again to cancel without spending a connector.
+      </p>
+      @for (c of world()?.factory?.connections ?? []; track c.id) {
+        @if (c.from === entity.id || c.to === entity.id) {
+          <p>
+            {{ c.from }} ↔ {{ c.to }}
+            <button type="button" (click)="send({ type: 'factory-disconnect', connection: c.id })">
+              Disconnect {{ c.id }}
+            </button>
+          </p>
+        }
+      }
+      <h3>Full recovery</h3>
+      <p>
+        Recovers embodied scrap and intact contents. All returns must fit your bag; otherwise the
+        machine, work and wires stay in place.
+      </p>
+      <button type="button" (click)="send({ type: 'factory-dismantle', target: entity.id })">
+        Dismantle machine
+      </button>
+    }
+    <app-transport-panel />
+  } @else {
+    <p>Loading machine details…</p>
+  }
+</div>
+<p class="request-status" role="status">{{ lastRequest() }}</p>

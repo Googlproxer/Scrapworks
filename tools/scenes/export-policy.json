@@ -4,6 +4,22 @@
   "excludedPublicAssets": [],
   "retainedPublicAssets": [
     {
+      "path": "attributions.html",
+      "consumer": "src/app/features/game/game-page/game-page.component.html"
+    },
+    {
+      "path": "favicon.png",
+      "consumer": "src/index.html"
+    },
+    {
+      "path": "favicon-16.png",
+      "consumer": "src/index.html"
+    },
+    {
+      "path": "favicon-64.png",
+      "consumer": "src/index.html"
+    },
+    {
       "path": "assets/bg.webp",
       "consumer": "src/app/shared/loading/_loading.scss"
     },

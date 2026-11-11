@@ -12,6 +12,7 @@
       [attr.aria-live]="compact() ? null : 'polite'"
     >
       {{ saves.status().message }}
+      {{ saves.loadAdjustment() }}
     </p>
     <p class="progress">
       {{

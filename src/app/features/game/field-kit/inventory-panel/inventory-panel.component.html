@@ -2,19 +2,7 @@
   <h3 id="bag-title">
     Inventory <span>{{ usedSlots() }}/24 slots</span>
   </h3>
-  <ol class="bag" aria-label="Bag slots">
-    @for (slot of opening.bag.slots; track $index) {
-      <li [class.occupied]="!!slot">
-        <span class="slot-number">{{ $index + 1 }}</span>
-        @if (slot) {
-          <span>{{ name(slot.item) }}</span
-          ><strong>{{ slot.quantity }}</strong>
-        } @else {
-          <span class="empty">Empty</span>
-        }
-      </li>
-    }
-  </ol>
+  <app-inventory-slots [slots]="opening.bag.slots" label="Bag slots" />
   <app-equipable-panel />
   <details>
     <summary>Recover materials</summary>

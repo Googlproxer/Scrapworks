@@ -191,6 +191,40 @@ test('restored pause and full resync remain clean, but steps, pending commands a
   }
 });
 
+test('adjusted research loads report removed entries, stay dirty and preserve immutable revision provenance', async () => {
+  const h = harness(),
+    original = simulation().capture();
+  const player = original.entities.find((entity) => entity.kind === 'player')!;
+  player.opening!.fieldEnabled = false;
+  player.opening!.researchQueue = ['improvised-tools', 'material-recovery'];
+  original.resources.extractionTotals['scrap'] = 100;
+  original.resources.research['improvised-tools'] = {
+    consumed: { scrap: 2 },
+    work: 3.5,
+    unlocked: false,
+  };
+  const save = saveFixture(original, 'old-run', 'old-token', '2026-11-08T00:00:00.000Z');
+  await h.repository.save(save, null);
+  await h.coordinator.refresh();
+  await h.coordinator.load(save.token);
+  assert.deepEqual(h.coordinator.status.removedResearch, ['material-recovery']);
+  assert.equal(h.coordinator.dirty, true);
+  assert.deepEqual(await h.repository.load(save.token), save);
+  assert.deepEqual(h.current().view.opening!.state.researchQueue, ['improvised-tools']);
+  assert.deepEqual(
+    h.current().view.opening!.ledgers['improvised-tools'],
+    original.resources.research['improvised-tools'],
+  );
+  await h.coordinator.save();
+  assert.equal(h.coordinator.dirty, false);
+  const saved = await h.repository.load();
+  assert.equal(saved!.recoveredFrom, save.token);
+  assert.deepEqual(
+    saved!.world.entities.find((entity) => entity.kind === 'player')!.opening!.researchQueue,
+    ['improvised-tools'],
+  );
+});
+
 function harness(repository = new MemorySaveRepository(), approve = true) {
   let sim = simulation(true),
     generation = 1,
@@ -219,6 +253,14 @@ function harness(repository = new MemorySaveRepository(), approve = true) {
       generation++;
       version = 1;
       runId = save?.runId ?? 'run-new';
+      const original =
+        save?.world.entities.find((entity) => entity.kind === 'player')!.opening!.researchQueue ??
+        [];
+      return {
+        removedResearch: original.filter(
+          (id) => !sim.view.opening!.state.researchQueue.includes(id),
+        ),
+      };
     },
   };
   let serial = 0;

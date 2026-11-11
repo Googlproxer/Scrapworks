@@ -25,6 +25,7 @@ class AlternateDialog {}
 describe('UiService', () => {
   let service: UiService;
   let dialog: Dialog;
+  const setUiFocused = vi.fn();
   let setInputEnabled: ReturnType<typeof vi.fn<(on: boolean) => void>>;
 
   beforeEach(async () => {
@@ -40,6 +41,10 @@ describe('UiService', () => {
             events$: EMPTY,
             errorMessage: signal(null),
             setInputEnabled,
+            setUiFocused,
+            closeMachineInspection: vi.fn(),
+            fieldKitOpen: signal(false),
+            isReady: signal(false),
             requestWorkExit: (continuation: () => void) => continuation(),
           },
         },
@@ -63,6 +68,20 @@ describe('UiService', () => {
 
     dialog.openDialogs[0].close();
     expect(dialog.openDialogs).toHaveLength(0);
+    expect(setInputEnabled.mock.calls).toEqual([[false], [true]]);
+  });
+
+  it('keeps live dialogs running while a stacked pause dialog owns simulation suspension', () => {
+    service.openUIDialog('machine-inspection', TestDialog, undefined, 'live');
+    expect(setInputEnabled).not.toHaveBeenCalled();
+    expect(setUiFocused).toHaveBeenLastCalledWith(true);
+    service.openUIDialog('controls', AlternateDialog);
+    expect(setInputEnabled).toHaveBeenCalledExactlyOnceWith(false);
+    service.closeTopDialog();
+    expect(dialog.openDialogs).toHaveLength(1);
+    expect(setInputEnabled.mock.calls).toEqual([[false], [true]]);
+    // This generic policy test leaves machine-target ownership to the runtime tests.
+    dialog.openDialogs[0].close();
     expect(setInputEnabled.mock.calls).toEqual([[false], [true]]);
   });
 

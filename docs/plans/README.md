@@ -282,7 +282,7 @@ flowchart TB
 
 ### Research transaction diagram
 
-The implemented shared queue has one active head for Field Research and future labs. Queue edits are authoritative commands and retain per-technology contributions/partial work even when the current task is removed. After manual/current-handcraft and requested MiniFab spending, the research phase revalidates the head and source-local complete bundle before advancing bounded cycle work and paying once. Completion removes the head and the next technology starts on the next step; blocked heads wait in order. Lab scaling and deterministic source ordering use the same plain rules in fixtures; physical labs remain Milestone 6.
+The implemented shared queue has one active head for Field Research and powered supplied labs. New games enable Field Research with an empty queue. Adding a task requires already-researched prerequisites; stock/history waits do not prevent queuing. Older player-save queues are validated before locked entries are filtered, preserving all ledgers and reporting the adjustment on load. Queue edits are authoritative commands and retain per-technology contributions/partial work even when the current task is removed. After manual/current-handcraft and requested MiniFab spending, the research phase revalidates the head and source-local complete bundle before advancing bounded cycle work and paying once. Completion removes the head and the next technology starts on the next step; blocked heads wait in order. Lab scaling and deterministic source ordering use the same plain rules in fixtures; physical labs remain Milestone 6.
 
 [SVG image](../diagrams/research-transaction.svg) / [PNG image](../diagrams/research-transaction.png) / [Mermaid source](../diagrams/src/research-transaction.mmd)
 

@@ -17,6 +17,8 @@ import {
 import type { WorldDefinition } from '@contracts/world';
 import { ControlSettingsService } from '../controls/control-settings.service';
 import { GameSession } from '../../../session/game-session';
+import { newMachine } from '@simulation/factory';
+import type { Inspection } from '@contracts/simulation';
 import { InlineSimulationPort } from '../../../../tools/testing/inline-simulation-port';
 import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 import type { GameState } from '@contracts/game-state';
@@ -973,6 +975,99 @@ describe('GameRuntimeService', () => {
     command.mockClear();
     notifications(options).selection$.next({ kind: 'entity', id: 'ground-test' });
     expect(command).not.toHaveBeenCalled();
+  });
+
+  it('opens nearby machines from world interaction, keeps time running and releases stale details across reopen/removal', async () => {
+    const { options, bridge, game } = await mountWorld();
+    const initial = render(bridge, 0, { x: 0, z: 0 }, false, true);
+    const building = {
+      id: 'machine-one',
+      buildingId: 'recycler' as const,
+      cell: { column: 6, row: 5 },
+      position: { x: 3, y: 0, z: 1 },
+      rotation: 0 as const,
+      footprint: { width: 1, depth: 1 },
+    };
+    const world = signal({ ...initial, buildings: [building] });
+    vi.spyOn(service, 'world').mockImplementation(() => world());
+    const detail: Inspection = {
+      id: building.id,
+      tick: 0,
+      entity: {
+        id: building.id,
+        kind: 'building',
+        building,
+        machine: newMachine('recycler', building.id, null),
+      },
+    };
+    const callbacks: ((value: Inspection | null) => void)[] = [],
+      removals: ReturnType<typeof vi.fn>[] = [];
+    vi.spyOn(GameSession.prototype, 'subscribeDetails').mockImplementation((_id, callback) => {
+      callbacks.push(callback);
+      callback(detail);
+      const remove = vi.fn();
+      removals.push(remove);
+      return remove;
+    });
+    notifications(options).selection$.next({ kind: 'entity', id: building.id });
+    expect(service.machineInspectionId()).toBe(building.id);
+    expect(game.input.setContext).toHaveBeenLastCalledWith('ui');
+    expect(service.inspection()).toEqual(detail);
+    service.toggleFieldKit();
+    expect(service.fieldKitOpen()).toBe(false);
+    const live = render(bridge, 0.1, { x: 1, z: 0 }, false, true, true);
+    expect(live.tick).toBe(2);
+    expect(live.player.position).toEqual(definition.spawn);
+    service.closeMachineInspection();
+    service.focusViewport();
+    expect(removals[0]).toHaveBeenCalledOnce();
+    notifications(options).selection$.next({ kind: 'entity', id: building.id });
+    expect(callbacks).toHaveLength(2);
+    callbacks[0](null);
+    expect(service.inspection()).toEqual(detail);
+    world.update((view) => ({ ...view, buildings: [] }));
+    TestBed.tick();
+    expect(service.machineInspectionId()).toBeNull();
+    expect(service.inspection()).toBeNull();
+    expect(removals[1]).toHaveBeenCalledOnce();
+  });
+
+  it('reports distant inspection, closes when reach is lost and clears inspection on unmount', async () => {
+    const { options, bridge } = await mountWorld();
+    const initial = render(bridge, 0, { x: 0, z: 0 }, false, true);
+    const building = {
+      id: 'machine-one',
+      buildingId: 'recycler' as const,
+      cell: { column: 9, row: 9 },
+      position: { x: 9, y: 0, z: 9 },
+      rotation: 0 as const,
+      footprint: { width: 1, depth: 1 },
+    };
+    const world = signal({ ...initial, buildings: [building] });
+    vi.spyOn(service, 'world').mockImplementation(() => world());
+    const message = vi.fn();
+    const subscription = service.interactionMessages$.subscribe(message);
+    notifications(options).selection$.next({ kind: 'entity', id: building.id });
+    expect(service.machineInspectionId()).toBeNull();
+    expect(message).toHaveBeenCalledWith('Move within two metres to inspect this machine.');
+    world.update((view) => ({
+      ...view,
+      player: { ...view.player, position: { x: 7, y: 0, z: 9 } },
+    }));
+    service.openMachineInspection(building.id);
+    expect(service.machineInspectionId()).toBe(building.id);
+    world.update((view) => ({ ...view, player: initial.player }));
+    TestBed.tick();
+    expect(service.machineInspectionId()).toBeNull();
+    service.focusViewport();
+    world.update((view) => ({
+      ...view,
+      player: { ...view.player, position: { x: 7, y: 0, z: 9 } },
+    }));
+    service.openMachineInspection(building.id);
+    service.unmount();
+    expect(service.machineInspectionId()).toBeNull();
+    subscription.unsubscribe();
   });
 
   it('gives error/loading/paused lifecycle screens the UI context for controller recovery', async () => {

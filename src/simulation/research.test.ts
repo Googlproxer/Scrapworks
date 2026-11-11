@@ -64,6 +64,7 @@ function prepared(bootstrap = false): Simulation {
     snapshot = first.capture();
   const player = snapshot.entities.find((entity) => entity.kind === 'player')!;
   player.inventory!.slots[0] = { item: 'scrap', quantity: 100 };
+  player.opening!.fieldEnabled = false;
   snapshot.resources.extractionTotals['scrap'] = 100;
   if (bootstrap) {
     for (const technology of OPENING_TECHNOLOGIES.slice(0, 5))
@@ -80,46 +81,85 @@ function prepared(bootstrap = false): Simulation {
   return own(new Simulation(snapshot.definition, { snapshot }));
 }
 
-test('queue edits include the current task and retain partial investment through removal, re-addition and save/load', () => {
-  const sim = prepared();
-  act(sim, queue('improvised-tools'), queue('material-recovery'), {
+test('new games enable field research with an empty queue and reject locked additions atomically', () => {
+  const sim = own(new Simulation(worldFixture()));
+  assert.equal(sim.view.opening!.state.fieldEnabled, true);
+  assert.deepEqual(sim.view.opening!.state.researchQueue, []);
+  const before = structuredClone(sim.view.opening);
+  assert.equal(act(sim, queue('material-recovery'))[0].reason, 'locked');
+  assert.deepEqual(sim.view.opening, before);
+  assert(act(sim, queue('improvised-tools'))[0].accepted); // No stock or extraction history required.
+  assert.equal(act(sim, queue('material-recovery'))[0].reason, 'locked'); // A queued parent is insufficient.
+  assert.deepEqual(sim.view.opening!.state.researchQueue, ['improvised-tools']);
+  assert.equal(sim.view.opening!.ledgers['material-recovery'], undefined);
+});
+
+test('eligible queue edits retain each technology investment and resume after save/load', () => {
+  const snapshot = prepared(true).capture();
+  for (const id of ['mechanical-assembly', 'electrical-assembly', 'mini-fabrication'])
+    delete snapshot.resources.research[id];
+  const sim = own(new Simulation(snapshot.definition, { snapshot }));
+  act(sim, queue('mechanical-assembly'), queue('electrical-assembly'), {
     type: 'research',
     enabled: true,
   });
-  run(sim, 2);
+  run(sim, 5);
   act(sim, { type: 'research', enabled: false });
-  const invested = structuredClone(sim.view.opening!.ledgers['improvised-tools']);
-  assert(invested.work > 0 && invested.consumed['scrap'] > 0);
+  const invested = structuredClone(sim.view.opening!.ledgers['mechanical-assembly']);
+  assert(invested.work > 0 && invested.consumed['plate'] > 0);
   assert(
     act(sim, {
       type: 'research-queue',
       action: 'move',
-      technology: 'material-recovery',
+      technology: 'electrical-assembly',
       index: 0,
     })[0].accepted,
   );
   act(sim, { type: 'research', enabled: true });
-  run(sim, 10); // The blocked head does not silently skip or advance the unfinished prerequisite.
-  assert.deepEqual(sim.view.opening!.ledgers['improvised-tools'], invested);
-  assert.equal(sim.view.opening!.ledgers['material-recovery'].work, 0);
+  run(sim, 5);
+  assert.deepEqual(sim.view.opening!.ledgers['mechanical-assembly'], invested);
+  assert(sim.view.opening!.ledgers['electrical-assembly'].work > 0);
   act(
     sim,
     { type: 'research', enabled: false },
-    { type: 'research-queue', action: 'remove', technology: 'material-recovery' },
-    { type: 'research-queue', action: 'remove', technology: 'improvised-tools' },
+    { type: 'research-queue', action: 'remove', technology: 'electrical-assembly' },
+    { type: 'research-queue', action: 'remove', technology: 'mechanical-assembly' },
   );
   const saved = preparePlayerSave(sim.capture()),
     restored = own(new Simulation(saved.definition, { snapshot: saved }));
+  assert.equal(restored.view.opening!.state.fieldEnabled, false);
   assert.deepEqual(restored.view.opening!.state.researchQueue, []);
-  assert.deepEqual(restored.view.opening!.ledgers['improvised-tools'], invested);
-  act(restored, queue('improvised-tools'), queue('material-recovery'));
-  assert.deepEqual(restored.view.opening!.ledgers['improvised-tools'], invested);
+  assert.deepEqual(restored.view.opening!.ledgers['mechanical-assembly'], invested);
+  act(restored, queue('mechanical-assembly'), queue('electrical-assembly'));
+  assert.deepEqual(restored.view.opening!.ledgers['mechanical-assembly'], invested);
   act(restored, { type: 'research', enabled: true });
-  run(restored, 20);
+  run(restored, 40);
   assert.deepEqual(restored.view.opening!.state.researchQueue, []);
-  assert.equal(restored.view.inventory['scrap'], 88);
-  assert.equal(restored.view.opening!.ledgers['improvised-tools'].work, 6);
-  assert.equal(restored.view.opening!.ledgers['material-recovery'].work, 12);
+  assert.equal(restored.view.inventory['plate'], 92);
+  assert.equal(restored.view.inventory['wire'], 94);
+});
+
+test('player-load normalization filters blocked queue entries only after validation and preserves ledgers', () => {
+  const snapshot = prepared(true).capture(),
+    player = snapshot.entities.find((entity) => entity.kind === 'player')!;
+  player.opening!.researchQueue = ['electrical-engineering', 'solar-power', 'basic-fabrication'];
+  snapshot.resources.research['electrical-engineering'] = {
+    consumed: { 'mechanical-part': 1, 'electrical-part': 1 },
+    work: 15,
+    unlocked: false,
+  };
+  snapshot.resources.research['solar-power'] = { consumed: {}, work: 0, unlocked: false };
+  const before = structuredClone(snapshot),
+    normalized = preparePlayerSave(snapshot);
+  assert.deepEqual(snapshot, before);
+  assert.deepEqual(
+    normalized.entities.find((entity) => entity.kind === 'player')!.opening!.researchQueue,
+    ['electrical-engineering', 'basic-fabrication'],
+  );
+  assert.deepEqual(normalized.resources.research, before.resources.research);
+  assert.deepEqual(preparePlayerSave(normalized), normalized);
+  player.opening!.researchQueue.push('solar-power');
+  assert.throws(() => preparePlayerSave(snapshot), /research queue/);
 });
 
 test('duplicate, unknown, completed and invalid move requests cannot mutate research or spend stock', () => {
@@ -217,11 +257,12 @@ test('catalogue reaches paid renewable/factory research and handcraftable kits w
     )[1].reason,
     'locked',
   );
-  act(sim, ...OPENING_TECHNOLOGIES.slice(5, 14).map((tech) => queue(tech.id)), {
-    type: 'research',
-    enabled: true,
-  });
-  run(sim, 310);
+  act(sim, { type: 'research', enabled: true });
+  for (const technology of OPENING_TECHNOLOGIES.slice(5, 13)) {
+    assert(act(sim, queue(technology.id))[0].accepted);
+    run(sim, technology.seconds + 0.1);
+  }
+  assert(act(sim, queue('sorting-logistics'))[0].accepted);
   assert(sim.view.research.includes('solar-power') && sim.view.research.includes('wind-power'));
   assert(sim.view.research.includes('laboratory-research'));
   assert.deepEqual(sim.view.opening!.state.researchQueue, ['sorting-logistics']);
@@ -255,6 +296,7 @@ test('kit crafting works through power-free MiniFab precursors and factory fixtu
   player.opening!.minifab.owned = true;
   player.inventory!.slots = emptyInventory().slots;
   player.inventory!.slots[0] = { item: 'scrap', quantity: 100 };
+  player.opening!.fieldEnabled = false;
   const mini = own(new Simulation(snapshot.definition, { snapshot }));
   assert(act(mini, { type: 'minifab', recipe: 'basic-research-kit', quantity: 2 })[0].accepted);
   run(mini, 80);

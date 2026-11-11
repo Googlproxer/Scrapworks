@@ -63,7 +63,7 @@ try {
       unlocked: true,
     };
   const player = snapshot.entities.find((entity) => entity.kind === 'player')!;
-  if (factoryMode) player.opening!.fieldEnabled = true;
+  player.opening!.fieldEnabled = !researchMode;
   // Research mode funds only the unfinished tool payment, keeping its queued successor
   // inspectable even when save/UI automation exceeds the successor's research duration.
   for (const [i, [item, quantity]] of (

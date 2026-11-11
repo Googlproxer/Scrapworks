@@ -1,0 +1,56 @@
+{
+  "source": "favicon-v1.png",
+  "tool": "built-in image_gen",
+  "generatedSource": "C:\\Users\\googl\\.codex\\generated_images\\01a1caaa-b895-71e3-840d-bf786b8d455b\\exec-bb92bd00-8fe9-4502-a5d5-6a64470657b7.png",
+  "generatedDate": "2026-11-12",
+  "acceptedDate": "2026-11-12",
+  "timezone": "Australia/Sydney",
+  "prompt": "favicon-v1-prompt.txt",
+  "concept": "../concepts/m10-2026-11-12/assets/favicon.png",
+  "conceptProvenance": "../concepts/m10-2026-11-12/generation.json",
+  "transparentBackground": true,
+  "preparation": "node tools/art/prepare-favicon.ts; crop transparent padding at alpha > 8, proportionally resize within 87.5% of each square, preserve transparent margins and original colours.",
+  "runtime": [
+    "../../public/favicon-16.png",
+    "../../public/favicon.png",
+    "../../public/favicon-64.png"
+  ],
+  "usage": "Browser-tab favicon: approved cream gear, navy centre/outline, coral sector and two olive leaves. Versions are 16, 32 and 64 pixels with explicit document icon sizes.",
+  "retiredRuntime": {
+    "path": "public/favicon.png",
+    "sha256": "1fa4c9d8f65746bbcc2df6ff66c5620f691250c6e4360e4a43b7393a9f8dabaa",
+    "recoveryCommit": "9e2a7dc7ad916c0b47d299c47cd4025f5298b7ff",
+    "reason": "Replaced at the user's explicit request; legacy author/source record was not established."
+  },
+  "sourceDimensions": [
+    1254,
+    1254
+  ],
+  "sourceSha256": "ecc3c1bd15941658b947742e91be9841f72cfe7fa56206a9e1f20988b9df53ad",
+  "cropBounds": {
+    "left": 264,
+    "top": 77,
+    "width": 718,
+    "height": 1104
+  },
+  "outputs": [
+    {
+      "file": "favicon-16.png",
+      "size": 16,
+      "bytes": 561,
+      "sha256": "4cfdd4921131bfa675f98ada83f2b32f41796673e8861652a3343bf9292f4c02"
+    },
+    {
+      "file": "favicon.png",
+      "size": 32,
+      "bytes": 1613,
+      "sha256": "34ce9f77060da983d5767bd3c0522fb0bd03301daf764262811ad2c12bae9177"
+    },
+    {
+      "file": "favicon-64.png",
+      "size": 64,
+      "bytes": 4489,
+      "sha256": "b16be03032b9c59ec4a943008def45f3da896a0952a26bed2829ead55996a596"
+    }
+  ]
+}

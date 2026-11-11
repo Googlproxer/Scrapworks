@@ -26,6 +26,7 @@ interface Ports {
   craft(recipe: string, count: number): Promise<void>;
   research(name: string, id: string): Promise<void>;
   open(tab?: string): Promise<void>;
+  inspect(building: BuildingView): Promise<void>;
   close(): Promise<void>;
   walk(x: number, z: number): Promise<void>;
   place(kind: PlaceableKind, column: number, row: number, rotation?: QuarterTurn): Promise<void>;
@@ -38,6 +39,7 @@ export async function checkRestorationRoute(p: Ports): Promise<void> {
   const research = async (name: string, id: string) => {
     if ((await read()).opening.ledgers[id]?.unlocked) return;
     await open('Research');
+    await page.locator(`[data-technology="${id}"]`).click();
     await page.getByRole('button', { name: `Queue ${name}`, exact: true }).click();
     const enable = page.getByRole('button', { name: 'Enable field research', exact: true });
     if (await enable.count()) await enable.click();
@@ -143,13 +145,7 @@ export async function checkRestorationRoute(p: Ports): Promise<void> {
     throw Error('No restoration approach ' + JSON.stringify([a, b]));
   };
   const select = async (b: BuildingView) => {
-    await open();
-    await page
-      .getByRole('button', {
-        name: `${p.recipes.find((r) => r.id === `assemble-${b.buildingId}`)!.name} · ${b.cell.column + 1}, ${b.cell.row + 1}`,
-        exact: true,
-      })
-      .click();
+    await p.inspect(b);
     await until((v) => !!v.details?.some((d) => d.id === b.id), 'restoration inspection');
   };
   const setEnabled = async (b: BuildingView, enabled: boolean) => {

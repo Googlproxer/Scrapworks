@@ -1,0 +1,116 @@
+<h4 id="technologies-title">Technology tree</h4>
+<p class="tree-legend">
+  <span class="researched">Green: Researched</span><span class="available">Yellow: Available</span
+  ><span class="locked">Red: Locked</span>
+</p>
+<div class="tree-tools" role="group" aria-label="Technology tree view">
+  <button
+    type="button"
+    aria-label="Zoom out"
+    [disabled]="zoom() <= minimumZoom"
+    (click)="changeZoom(-1)"
+  >
+    −
+  </button>
+  <span class="zoom-level" aria-live="polite">{{ zoomPercent() }}%</span>
+  <button
+    type="button"
+    aria-label="Zoom in"
+    [disabled]="zoom() >= maximumZoom"
+    (click)="changeZoom(1)"
+  >
+    +
+  </button>
+  <button type="button" (click)="fit()">Fit tree</button>
+  <button type="button" (click)="resetZoom()">100%</button>
+  <span class="pan-help">Drag to pan · Scroll to zoom</span>
+</div>
+<div
+  #treeViewport
+  class="tree-viewport"
+  role="region"
+  aria-label="Technology tree. Drag to pan, scroll to zoom. Arrows point from prerequisites to their technologies."
+  tabindex="0"
+  [class.dragging]="dragging()"
+  (pointerdown)="panStart($event)"
+>
+  <div
+    class="tree-space"
+    [style.width.px]="tree().width * zoom()"
+    [style.height.px]="tree().height * zoom()"
+  >
+    <div
+      class="tech-tree"
+      [style.width.px]="tree().width"
+      [style.height.px]="tree().height"
+      [style.transform]="'scale(' + zoom() + ')'"
+    >
+      <svg
+        [attr.width]="tree().width"
+        [attr.height]="tree().height"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          <marker
+            id="prerequisite-arrow"
+            viewBox="0 0 10 10"
+            refX="10"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+        @for (edge of tree().edges; track edge.from + ':' + edge.to) {
+          <path
+            class="prerequisite-edge"
+            [attr.data-prerequisite]="edge.from"
+            [attr.data-dependent]="edge.to"
+            [attr.d]="edge.path"
+            marker-end="url(#prerequisite-arrow)"
+          />
+        }
+      </svg>
+      @for (node of tree().nodes; track node.technology.id) {
+        <button
+          type="button"
+          class="tech-node"
+          [class.researched]="availability(node.technology) === 'researched'"
+          [class.available]="availability(node.technology) === 'available'"
+          [class.locked]="availability(node.technology) === 'locked'"
+          [style.left.px]="node.x"
+          [style.top.px]="node.y"
+          [attr.data-technology]="node.technology.id"
+          [attr.aria-pressed]="selectedId() === node.technology.id"
+          aria-controls="technology-details"
+          [attr.aria-describedby]="'prerequisites-' + node.technology.id"
+          (click)="select(node.technology.id)"
+          (focus)="nodeFocus($event)"
+          (keydown)="nodeKey($event, node.technology.id)"
+        >
+          <strong>{{ node.technology.name }}</strong>
+          <span class="tech-state">{{
+            availability(node.technology) === 'researched'
+              ? 'Researched'
+              : availability(node.technology) === 'available'
+                ? 'Available'
+                : 'Locked'
+          }}</span>
+          <span class="queue-badge">{{
+            queue().at(0) === node.technology.id
+              ? 'Active'
+              : queue().includes(node.technology.id)
+                ? 'Queued'
+                : ''
+          }}</span>
+          <span class="visually-hidden" [id]="'prerequisites-' + node.technology.id"
+            >Prerequisites: {{ prerequisiteNames(node.technology) }}</span
+          >
+        </button>
+      }
+    </div>
+  </div>
+</div>

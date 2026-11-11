@@ -11,8 +11,10 @@ import {
 } from './notifications';
 import { OpeningFeedback } from './opening-feedback';
 import { UiDialogRegistry } from './ui-dialog-registry';
+import { MachineInspectionComponent } from '../game/machine-inspection/machine-inspection.component';
 
-export type DialogKey = 'controls' | 'game-menu';
+export type DialogKey = 'controls' | 'game-menu' | 'machine-inspection';
+export type DialogSimulationPolicy = 'paused' | 'live';
 
 @Service({ autoProvided: false })
 export class UiService {
@@ -29,8 +31,35 @@ export class UiService {
   private readonly openDialogKeys = new Set<DialogKey>();
 
   private readonly openDialogs = new Set<Pick<DialogRef, 'close'>>();
+  private readonly pausingDialogs = new Set<Pick<DialogRef, 'close'>>();
+  private machineDialog?: DialogRef<unknown, MachineInspectionComponent>;
 
   constructor() {
+    this.gameRuntimeService.interactionMessages$?.pipe(takeUntilDestroyed()).subscribe((message) =>
+      this.openNotification({
+        key: 'machine-interaction',
+        title: 'Machine inspection',
+        message,
+        tone: 'warning',
+      }),
+    );
+    effect(() => {
+      const id = this.gameRuntimeService.machineInspectionId?.();
+      untracked(() => {
+        if (id && !this.machineDialog) {
+          this.machineDialog = this.openDialog(
+            'machine-inspection',
+            MachineInspectionComponent,
+            {
+              ariaLabelledBy: 'machine-inspection-title',
+              autoFocus: '#machine-inspection-title',
+              restoreFocus: false,
+            },
+            'live',
+          );
+        } else if (!id) this.machineDialog?.close();
+      });
+    });
     this.gameRuntimeService.events$
       .pipe(takeUntilDestroyed())
       .subscribe((event) => this.openingFeedback.handle(event));
@@ -61,20 +90,23 @@ export class UiService {
     key: DialogKey,
     component: ComponentType<C>,
     config?: DialogConfig<D, DialogRef<unknown, C>>,
+    policy: DialogSimulationPolicy = 'paused',
   ): void {
-    this.gameRuntimeService.requestWorkExit(() => this.openDialog(key, component, config));
+    this.gameRuntimeService.requestWorkExit(() => this.openDialog(key, component, config, policy));
   }
 
   private openDialog<C, D = unknown>(
     key: DialogKey,
     component: ComponentType<C>,
     config?: DialogConfig<D, DialogRef<unknown, C>>,
-  ): void {
+    policy: DialogSimulationPolicy = 'paused',
+  ): DialogRef<unknown, C> | undefined {
     // Keys prevent duplicates; refs determine input ownership.
     if (this.openDialogKeys.has(key)) return;
     this.openDialogKeys.add(key);
 
-    this.gameRuntimeService.setInputEnabled(false);
+    if (policy === 'paused') this.gameRuntimeService.setInputEnabled(false);
+    else this.gameRuntimeService.setUiFocused(true);
     try {
       const dialog = this.dialog.open<unknown, D, C>(component, {
         injector: this.injector,
@@ -82,17 +114,37 @@ export class UiService {
         ...config,
       });
       this.openDialogs.add(dialog);
+      if (policy === 'paused') this.pausingDialogs.add(dialog);
       this.dialogRegistry.register(dialog);
 
       dialog.closed.pipe(take(1)).subscribe(() => {
         this.openDialogKeys.delete(key);
         this.openDialogs.delete(dialog);
-        //  only release input once last dialog closed
-        if (this.openDialogs.size === 0) this.gameRuntimeService.setInputEnabled(true);
+        this.pausingDialogs.delete(dialog);
+        if (policy === 'paused' && this.pausingDialogs.size === 0)
+          this.gameRuntimeService.setInputEnabled(true);
+        if (key === 'machine-inspection') {
+          this.machineDialog = undefined;
+          this.gameRuntimeService.closeMachineInspection();
+          if (
+            !this.openDialogs.size &&
+            !this.gameRuntimeService.fieldKitOpen() &&
+            this.gameRuntimeService.isReady() &&
+            this.gameRuntimeService.currentSceneKey() === 'Game'
+          )
+            this.gameRuntimeService.focusViewport();
+        }
       });
+      return dialog;
     } catch {
       this.openDialogKeys.delete(key);
-      if (this.openDialogs.size === 0) this.gameRuntimeService.setInputEnabled(true);
+      if (policy === 'paused' && this.pausingDialogs.size === 0)
+        this.gameRuntimeService.setInputEnabled(true);
+      if (key === 'machine-inspection') {
+        this.gameRuntimeService.closeMachineInspection();
+        this.gameRuntimeService.focusViewport();
+      }
+      return undefined;
     }
   }
 

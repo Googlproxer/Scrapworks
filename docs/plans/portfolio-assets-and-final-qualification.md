@@ -1,6 +1,6 @@
 # Portfolio assets and final qualification
 
-Created 10 November 2026 after the user split the asset audit out of the [Milestone 10 delivery plan](milestone-10-portfolio-prototype.md). Status: **Planned; tackle after M10 Steps 2–7**. This is a separate work plan within M10's existing scope, not a new numbered milestone or implementation credit.
+Created 10 November 2026 after the user split the asset audit out of the [Milestone 10 delivery plan](milestone-10-portfolio-prototype.md). Updated 12 November: **Step A audited; selected world-art work and final qualification pending**. This is a separate work plan within M10's existing scope, not a new numbered milestone. The user's later human pacing playtest remains deferred.
 
 The existing Fibery **M10.1** task owns this follow-up and retains Source ID `milestone.10.step.01.open`. Its dependency is **M10.7**, the current-asset local handoff. M10.4 owns the earlier current-asset performance baseline and portable test; it must not wait for this asset work. M10 remains incomplete until this follow-up supplies final asset-dependent qualification and refreshes the delivered artifact/material.
 
@@ -13,9 +13,11 @@ The existing Fibery **M10.1** task owns this follow-up and retains Source ID `mi
 
 ## Step A Audit and choose asset work
 
-- [ ] Audit normal-camera views of damaged/restored terrain, water/vegetation, every available machine, transport/ports and the protagonist; compare them with the [approved flat finish](../art/README.md#preferred-finish-across-all-artwork).
-- [ ] Record a keep/polish/replace decision per asset or coherent group, with screenshots, readability issues, expected benefit and source/licence/provenance. Select concrete replacements from this audit before model work; wholesale replacement is not assumed.
-- [ ] Preserve the complete protagonist mesh and existing identity/scale; polygon optimisation remains with the user. Identify required action clips only where a demonstrated demo interaction needs them.
+- [x] Audit normal-camera views of damaged/restored terrain, water/vegetation, every available machine, transport/ports and the protagonist; compare them with the [approved flat finish](../art/README.md#preferred-finish-across-all-artwork).
+- [x] Record a keep/polish/replace decision per asset or coherent group, with screenshots, readability issues, expected benefit and source/licence/provenance. Select concrete replacements from this audit before model work; wholesale replacement is not assumed.
+- [x] Preserve the complete protagonist mesh and existing identity/scale; polygon optimisation remains with the user. Identify required action clips only where a demonstrated demo interaction needs them.
+
+The [12 November asset decisions](../art/runtime-asset-decisions.md) record all 19 placeable kinds and coherent environment/character/UI groups; the [detailed evidence and gallery](../reports/asset-audit/2026-11-11/README.md) stay local. Selected world replacements are deposit/blocker placeholders, crossed-plane vegetation and the greenhouse shell; other machine silhouettes are retained for polish. The subsequently approved gear-and-leaf favicon is now applied with retained provenance. No new action clip is required. The user explicitly requested discarding the old backdrop during the audit, so its original replacement and provenance are delivered, along with Meshy/Mixamo asset credits and included distribution notices. The remaining world assets, narrow-view readability and final performance/artifact work below are not complete. Fibery scope was read; its external task state was not changed.
 
 ## Step B Deliver the selected presentation work
 

@@ -40,36 +40,20 @@ export async function checkResearchRoute(
     await page.locator('.research-queue .research-requirements').first().innerText(),
     /4 Mixed scrap.*6 s field work/s,
   );
-  await page.getByRole('button', { name: 'Queue Material recovery', exact: true }).click();
-  const move = page.getByRole('button', { name: 'Move down: Improvised tools', exact: true });
-  await page.bringToFront();
-  // Queue acknowledgement is asynchronous. Focusing a still-disabled button is ignored
-  // in Firefox; wait for native actionability while keeping activation keyboard-only.
-  await move.click({ trial: true });
-  await move.focus();
-  assert(await page.evaluate(() => document.hasFocus()), 'Research page must own keyboard focus');
+  await page.locator('[data-technology="material-recovery"]').click();
   assert(
-    await move.evaluate((element) => element === document.activeElement),
-    'Move control must own focus',
+    await page.getByRole('button', { name: 'Queue Material recovery', exact: true }).isDisabled(),
   );
-  await page.keyboard.press('Enter');
-  await current.filter({ hasText: 'Waiting for prerequisite technologies' }).waitFor();
-  assert.equal(
-    await page.locator('#queue-title').evaluate((heading) => heading === document.activeElement),
-    true,
-  );
+  await page.locator('[data-technology="improvised-tools"]').click();
   await page
     .getByRole('button', { name: 'Remove Improvised tools from queue', exact: true })
     .click();
-  await page
-    .locator('[aria-labelledby="technology-improvised-tools"]')
-    .getByText('Progress retained; queue to resume', { exact: true })
-    .waitFor();
+  await current.filter({ hasText: 'No active research' }).waitFor();
   const removed = await save(),
     owner = removed.world.entities.find((entity) => entity.kind === 'player')!;
   assert.equal(removed.contentVersion, contentVersion);
   assert.equal(removed.runId, 'fixture-run');
-  assert.deepEqual(owner.opening!.researchQueue, ['material-recovery']);
+  assert.deepEqual(owner.opening!.researchQueue, []);
   assert.deepEqual(removed.world.resources.research['improvised-tools'], {
     consumed: { scrap: 2 },
     work: 3.5,
@@ -78,9 +62,7 @@ export async function checkResearchRoute(
   await page.reload();
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await openResearch();
-  await current.filter({ hasText: 'Current: Material recovery' }).waitFor();
   await page.getByRole('button', { name: 'Queue Improvised tools', exact: true }).click();
-  await page.getByRole('button', { name: 'Move up: Improvised tools', exact: true }).click();
   await current.filter({ hasText: 'Current: Improvised tools' }).waitFor();
   const resumed = await save();
   assert.equal(resumed.world.resources.research['improvised-tools'].work, 3.5);
@@ -89,14 +71,13 @@ export async function checkResearchRoute(
     .locator('[aria-labelledby="technology-improvised-tools"]')
     .getByText('Complete', { exact: true })
     .waitFor({ timeout: 15000 });
-  const finished = await save();
-  assert.equal(
-    await page
-      .locator('.research-queue ol > li')
-      .first()
-      .evaluate((entry) => (entry as HTMLLIElement).value),
-    1,
+  await page.locator('[data-technology="material-recovery"]').click();
+  assert(
+    await page.getByRole('button', { name: 'Queue Material recovery', exact: true }).isEnabled(),
   );
+  await page.getByRole('button', { name: 'Queue Material recovery', exact: true }).click();
+  await current.filter({ hasText: 'Current: Material recovery' }).waitFor();
+  const finished = await save();
   assert.equal(finished.world.resources.research['improvised-tools'].work, 6);
   assert.equal(finished.world.resources.research['improvised-tools'].consumed['scrap'], 4);
   assert.equal(finished.world.resources.research['material-recovery']?.unlocked ?? false, false);
@@ -105,9 +86,8 @@ export async function checkResearchRoute(
     ['material-recovery'],
   );
   const bag = finished.world.entities.find((entity) => entity.kind === 'player')!.inventory!.slots;
-  const stock = bag.reduce((sum, item) => sum + (item?.item === 'scrap' ? item.quantity : 0), 0);
   assert.equal(
-    stock + (finished.world.resources.research['material-recovery']?.consumed['scrap'] ?? 0),
+    bag.reduce((sum, slot) => sum + (slot?.item === 'scrap' ? slot.quantity : 0), 0),
     0,
   );
   await page.getByRole('button', { name: 'Pause field research', exact: true }).click();
@@ -138,7 +118,7 @@ export async function checkResearchRoute(
   assert.deepEqual(await page.evaluate(async () => (await axe.run()).violations), []);
   await page.screenshot({ path: path.join(output, 'research-large.png'), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByText('Requirements and unlocks for Material recovery', { exact: true }).click();
+  await page.locator('[data-technology="material-recovery"]').click();
   assert.deepEqual(await page.evaluate(async () => (await axe.run()).violations), []);
   await page.screenshot({ path: path.join(output, 'research-mobile.png'), fullPage: true });
   assert.equal(page.workers().length, 1);

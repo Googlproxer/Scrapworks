@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  color: #f1f5f3;
+}
+.health-table {
+  max-block-size: 18rem;
+  overflow: auto;
+}
+table {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+th,
+td {
+  padding: 0.35rem;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.stable-status {
+  min-block-size: 3lh;
+  font-variant-numeric: tabular-nums;
+}
+[data-fluid-buffer] {
+  min-block-size: 8lh;
+}
+[data-hydraulic-status] {
+  min-block-size: 6lh;
+}
+@media (min-width: 48rem) {
+  [data-fluid-buffer],
+  [data-hydraulic-status] {
+    min-block-size: 3lh;
+  }
+}
+progress {
+  inline-size: 100%;
+}
+fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 0.75rem;
+}
+select {
+  max-inline-size: 100%;
+  color: #f1f5f3;
+  background: #182c24;
+  border: 1px solid #a2b8ad;
+  font: inherit;
+}
+button,
+select {
+  min-block-size: 2.75rem;
+}
+button {
+  color: #f1f5f3;
+  background: #223d31;
+  border: 1px solid #a2b8ad;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font: inherit;
+}
+button:disabled {
+  opacity: 0.6;
+}
+:is(button, select, summary, .health-table):focus-visible {
+  outline: 3px solid #66d5dc;
+  outline-offset: 2px;
+}

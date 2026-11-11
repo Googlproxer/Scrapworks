@@ -132,7 +132,9 @@
         aria-labelledby="research-tab"
         [hidden]="activeTab() !== 'research'"
       >
-        <app-research-panel />
+        @if (activeTab() === 'research') {
+          <app-research-panel />
+        }
       </div>
       <div
         id="factory-panel"

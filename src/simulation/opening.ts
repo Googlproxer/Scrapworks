@@ -17,6 +17,7 @@ import { emptyToolbar, TOOLBAR_SLOTS } from '@contracts/toolbar';
 import { isPlaceable } from '@content/factory';
 import { handcraftBagOutput } from './domain/work';
 import { advanceResearch, type ResearchSource } from './domain/research';
+import { researchPrerequisitesMet } from '@core/research-prerequisites';
 import type { OpeningContext, SimulationEntity } from './opening-context';
 
 const copy = (items: readonly ItemStack[]): ItemStack[] => items.map((item) => ({ ...item }));
@@ -47,7 +48,7 @@ export function newOpening(): OpeningData {
     handcraftVisible: false,
     handcraftSuspended: false,
     researchQueue: [],
-    fieldEnabled: false,
+    fieldEnabled: true,
     moved: false,
     minifab: {
       owned: false,
@@ -214,7 +215,10 @@ export class OpeningSystem {
         if (!technology) return this.result('invalid-request');
         const index = state.researchQueue.indexOf(technology.id);
         if (command.action === 'add') {
-          if (this.context.resources.research[technology.id]?.unlocked)
+          if (
+            this.context.resources.research[technology.id]?.unlocked ||
+            !researchPrerequisitesMet(technology, this.context.resources.research)
+          )
             return this.result('locked');
           if (index !== -1) return this.result('busy');
           state.researchQueue.push(technology.id);

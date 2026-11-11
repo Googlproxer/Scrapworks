@@ -70,35 +70,6 @@ describe('Environmental inspection', () => {
       providers: [{ provide: GameRuntimeService, useValue: runtime }],
     });
   });
-  it('keeps a pipe draft through publications, validates adjacent ports and routes edits through work-exit protection', async () => {
-    const fixture = TestBed.createComponent(EnvironmentPanelComponent);
-    await fixture.whenStable();
-    const component = fixture.componentInstance;
-    component.link.update((d) => ({ ...d, target: 'tank', output: 'right', input: 'left' }));
-    await fixture.whenStable();
-    expect(component.validLink()).toBe(true);
-    inspection.update((d) => ({ ...d!, tick: 1, entity: structuredClone(d!.entity) }));
-    await fixture.whenStable();
-    expect(component.link().target).toBe('tank');
-    component.connect();
-    expect(runtime.requestWorkExit).toHaveBeenCalledOnce();
-    expect(runtime.command).toHaveBeenCalledWith({
-      type: 'fluid-connect',
-      from: 'junction',
-      output: 'right',
-      to: 'tank',
-      input: 'left',
-    });
-    component.overflow('west');
-    expect(runtime.command).toHaveBeenLastCalledWith({
-      type: 'fluid-overflow',
-      target: 'junction',
-      direction: 'west',
-    });
-    component.link.update((d) => ({ ...d, input: 'front' }));
-    await fixture.whenStable();
-    expect(component.validLink()).toBe(false);
-  });
   it('shows source quality, persistent health, weather and completion without color-only feedback and passes AXE', async () => {
     const fixture = TestBed.createComponent(EnvironmentPanelComponent);
     await fixture.whenStable();
@@ -106,7 +77,7 @@ describe('Environmental inspection', () => {
     expect(root.textContent).toContain('Health persists');
     expect(root.textContent).toContain('1000.0 L in');
     expect(root.textContent).toContain('quality 0.0%');
-    expect(root.querySelectorAll('button[aria-pressed]').length).toBe(5);
+    expect(root.querySelectorAll('button, input, select').length).toBe(0);
     expect((await axe.run(root)).violations).toEqual([]);
     const view = editableView(world()!);
     view.factory!.environment!.completed = true;

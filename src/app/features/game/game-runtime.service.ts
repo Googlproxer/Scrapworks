@@ -23,6 +23,8 @@ import type { WorldCommand } from '@contracts/world';
 import type { EquipmentId } from '@contracts/factory';
 import { validateFactoryPlacement } from '@simulation/factory-placement';
 import { machineAtCell, validatePowerConnection } from '@simulation/power-connection';
+import { distanceToCell } from '@core/world-grid';
+import { OPENING_SETTINGS } from '@content/opening';
 import type { Inspection } from '@contracts/simulation';
 import { environment } from '@environments/environment';
 import { assertSameAuthoredMap } from '@core/authored-map';
@@ -35,9 +37,9 @@ import type { LoadingStatus } from '@contracts/loading';
 import { SIMULATION_PORT_FACTORY } from './simulation-port-factory';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
 import type { SaveSnapshot } from '@contracts/save';
-import type { SaveBinding } from '../../../persistence/save-coordinator';
+import type { SaveBinding, SaveReplacementResult } from '../../../persistence/save-coordinator';
 import type { WorldSessionBridge } from '@contracts/game-client';
-import { filter, firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom, Subject } from 'rxjs';
 
 @Service({ autoProvided: false })
 export class GameRuntimeService {
@@ -189,7 +191,12 @@ export class GameRuntimeService {
   public readonly debugDrawStatus = this.debugDrawStatusValue.asReadonly();
   private readonly inspectionValue = signal<Inspection | null>(null);
   public readonly inspection = this.inspectionValue.asReadonly();
+  private readonly machineInspectionValue = signal<string | null>(null);
+  public readonly machineInspectionId = this.machineInspectionValue.asReadonly();
+  private readonly interactionMessages = new Subject<string>();
+  public readonly interactionMessages$ = this.interactionMessages.asObservable();
   private unsubscribeInspection?: () => void;
+  private inspectionRevision = 0;
   public readonly controllers = this.inputCoordinator.controllers;
   public readonly selectedController = this.inputCoordinator.selectedController;
   public readonly capturingBinding = this.inputCoordinator.capturing;
@@ -206,6 +213,22 @@ export class GameRuntimeService {
   private retainingRendererSession = false;
 
   constructor() {
+    effect(() => {
+      const id = this.machineInspectionId();
+      if (!id) return;
+      const world = this.world();
+      const building = world?.buildings.find((entry) => entry.id === id);
+      if (
+        !building ||
+        !world ||
+        !this.definition ||
+        distanceToCell(this.definition.grid, world.player.position, building.cell) >
+          OPENING_SETTINGS.reach + 1e-9 ||
+        this.currentSceneKey() !== 'Game' ||
+        !!this.errorMessage()
+      )
+        this.closeMachineInspection();
+    });
     effect(() => {
       // Read even while unmounted so later preference changes remain observed.
       const profile = this.settings.profile();
@@ -227,6 +250,7 @@ export class GameRuntimeService {
       this.disposed = true;
       this.unmount();
       failures.unsubscribe();
+      this.interactionMessages.complete();
       this.sessions.destroy();
       this.resources.dispose();
     });
@@ -268,6 +292,7 @@ export class GameRuntimeService {
           dispatch: (frame) => {
             if (this.saveHolds && (!this.saveConfirmationInputs || frame.context !== 'ui')) return;
             if (generation !== this.generation || this.inspectorActive()) return;
+            if (frame.context === 'gameplay' && !this.gameplayAllowed()) return;
             const revision = this.inputCoordinator.revision;
             if (frame.context === 'gameplay') {
               const salvage = frame.states['salvage'];
@@ -424,9 +449,19 @@ export class GameRuntimeService {
 
       const onSelection = (selection: WorldSelection) => {
         if (generation !== this.generation) return;
+        if (!this.gameplayAllowed()) return;
         const entityId = selection?.kind === 'entity' ? selection.id : null;
         const previousId = this.selectedEntityId();
         this.selectionValue.set(selection);
+        if (
+          entityId &&
+          this.world()?.buildings.some(
+            (building) => building.id === entityId && building.buildingId !== 'test-building',
+          )
+        ) {
+          this.openMachineInspection(entityId);
+          return;
+        }
         // World interaction stays available after removing gathering from the field kit.
         if (
           selection &&
@@ -545,6 +580,7 @@ export class GameRuntimeService {
     this.cancelPaint = undefined;
     this.pendingScene = undefined;
     this.loadingValue.set(null);
+    this.closeMachineInspection();
     this.openingUi.reset();
     this.renderer.invalidate();
     this.inputCoordinator.invalidate();
@@ -596,6 +632,7 @@ export class GameRuntimeService {
   public setScene(key: SceneKey): void {
     if (!this.client || !this.isReady()) return;
     if (key === this.currentSceneKey()) return;
+    this.closeMachineInspection();
     this.inputCoordinator.invalidate();
     this.session?.setPaused(true);
     this.pendingScene = key;
@@ -781,20 +818,49 @@ export class GameRuntimeService {
     this.openingUi.salvageNearby();
   }
 
-  public inspectFactory(id: string): void {
+  public openMachineInspection(id: string): void {
+    const world = this.world(),
+      building = world?.buildings.find((entry) => entry.id === id);
+    if (!this.gameplayAllowed() || !world || !building || !this.definition) return;
+    if (
+      distanceToCell(this.definition.grid, world.player.position, building.cell) >
+      OPENING_SETTINGS.reach + 1e-9
+    ) {
+      this.interactionMessages.next('Move within two metres to inspect this machine.');
+      return;
+    }
+    this.setUiFocused(true);
+    const revision = ++this.inspectionRevision;
+    const session = this.session;
+    this.machineInspectionValue.set(id);
     this.unsubscribeInspection?.();
     this.unsubscribeInspection = undefined;
-    this.selectionValue.set(id ? { kind: 'entity', id } : null);
+    this.selectionValue.set({ kind: 'entity', id });
     this.inspectionValue.set(null);
     const generation = this.generation;
-    if (id && this.session)
-      this.unsubscribeInspection = this.session.subscribeDetails(id, (value) => {
-        if (generation === this.generation && this.selectedEntityId() === id)
+    if (session)
+      this.unsubscribeInspection = session.subscribeDetails(id, (value) => {
+        if (
+          generation === this.generation &&
+          this.session === session &&
+          revision === this.inspectionRevision &&
+          this.machineInspectionId() === id
+        )
           this.inspectionValue.set(value);
       });
   }
 
+  public closeMachineInspection(): void {
+    if (!this.machineInspectionId()) return;
+    ++this.inspectionRevision;
+    this.machineInspectionValue.set(null);
+    this.unsubscribeInspection?.();
+    this.unsubscribeInspection = undefined;
+    this.inspectionValue.set(null);
+  }
+
   public toggleFieldKit(): void {
+    if (this.machineInspectionId()) return;
     this.openingUi.toggleFieldKit();
   }
 
@@ -890,7 +956,7 @@ export class GameRuntimeService {
   public async replaceForSave(
     save: SaveSnapshot | null,
     stageUi: () => Promise<void>,
-  ): Promise<void> {
+  ): Promise<SaveReplacementResult> {
     const client = this.client,
       bridge = this.sessionBridge,
       generation = this.generation;
@@ -916,7 +982,7 @@ export class GameRuntimeService {
       this.setScene('Game');
       const state = await ready;
       if (state.phase !== 'ready') throw new Error('The new game could not be prepared.');
-      return;
+      return { removedResearch: [] };
     }
     if (!client.prepareWorld) throw new Error('The viewport cannot prepare a restored world.');
     const release = this.holdForSave();
@@ -961,6 +1027,11 @@ export class GameRuntimeService {
       if (this.disposed || generation !== this.generation || this.client !== client)
         throw new Error('The viewport changed while loading.');
       const staged = candidate!;
+      const originalQueue =
+        save?.world.entities.find((entity) => entity.id === save.world.resources.playerId)?.opening
+          ?.researchQueue ?? [];
+      const restoredQueue = staged.readView().opening?.state.researchQueue ?? [];
+      const removedResearch = originalQueue.filter((id) => !restoredQueue.includes(id));
       const craft = !!staged.readView().opening?.state.handcraft;
       this.savePreview.set(staged.readView());
       this.openingUi.restoreCrafting(craft);
@@ -969,6 +1040,7 @@ export class GameRuntimeService {
       if (this.disposed || generation !== this.generation || this.client !== client)
         throw new Error('The viewport changed while preparing the crafting panel.');
       // Both prepared owners are ready; no asynchronous work crosses this commit boundary.
+      this.closeMachineInspection();
       presentation.commit();
       if (this.disposed || generation !== this.generation || this.client !== client)
         throw new Error('The viewport changed while committing the saved world.');
@@ -983,6 +1055,7 @@ export class GameRuntimeService {
       committed = true;
       this.updateInputContext();
       this.pendingSaveFocus = { session: staged, craft };
+      return { removedResearch };
     } catch (error) {
       cancelled = true;
       if (!committed) {

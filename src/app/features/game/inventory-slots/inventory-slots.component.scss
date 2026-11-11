@@ -1,0 +1,46 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+.bag {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+.bag li {
+  position: relative;
+  height: 66px;
+  box-sizing: border-box;
+  border: 1px solid #526a61;
+  padding: 14px 4px 4px;
+  background: #17281f;
+  color: #f1f5f3;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-wrap: anywhere;
+}
+.bag li.occupied {
+  border-color: #94ada0;
+  background: #233b31;
+}
+.slot-number {
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  font-size: 0.6rem;
+  color: #c4d2ca;
+}
+.empty {
+  color: #b1c0b7;
+}
+.bag strong {
+  text-align: right;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}

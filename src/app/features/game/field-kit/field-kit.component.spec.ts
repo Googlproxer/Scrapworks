@@ -67,7 +67,7 @@ describe('Field kit opening UI', () => {
     expect(getComputedStyle(root.querySelector('#research-panel')!).display).toBe('none');
     root.querySelector<HTMLButtonElement>('#research-tab')!.click();
     await fixture.whenStable();
-    expect(root.querySelector('[aria-pressed]')?.getAttribute('aria-pressed')).toBe('false');
+    expect(root.querySelector('[aria-pressed]')?.getAttribute('aria-pressed')).toBe('true');
     expect((await axe.run(root)).violations).toEqual([]);
   });
 
@@ -102,9 +102,15 @@ describe('Field kit opening UI', () => {
 
   it('exposes one active queue, keyboard reorder/removal controls, retained progress and stable focus', async () => {
     const view = editableView(world()!);
-    view.opening!.state.researchQueue = ['improvised-tools', 'material-recovery'];
+    for (const technology of OPENING_TECHNOLOGIES.slice(0, 2))
+      view.opening!.ledgers[technology.id] = {
+        consumed: {},
+        work: technology.seconds,
+        unlocked: true,
+      };
+    view.opening!.state.researchQueue = ['mechanical-assembly', 'electrical-assembly'];
     view.opening!.state.fieldEnabled = true;
-    view.opening!.ledgers['improvised-tools'] = {
+    view.opening!.ledgers['mechanical-assembly'] = {
       consumed: { scrap: 1 },
       work: 2,
       unlocked: false,
@@ -116,46 +122,47 @@ describe('Field kit opening UI', () => {
     root.querySelector<HTMLButtonElement>('#research-tab')!.click();
     await fixture.whenStable();
     expect(root.querySelector('.research-queue [role="status"]')?.textContent).toContain(
-      'Current: Improvised tools',
+      'Current: Mechanical assembly',
     );
     expect(root.querySelector('.research-queue .research-requirements')?.textContent).toContain(
-      '4 Mixed scrap',
+      '4 Metal plate',
     );
     expect(
-      root.querySelector('[aria-labelledby="technology-improvised-tools"] .research-requirements')
-        ?.textContent,
-    ).toContain('6 s fully supplied');
+      root.querySelector(
+        '[aria-labelledby="technology-mechanical-assembly"] .research-requirements',
+      )?.textContent,
+    ).toContain('15 s fully supplied');
     const move = root.querySelector<HTMLButtonElement>(
-      '[aria-label="Move down: Improvised tools"]',
+      '[aria-label="Move down: Mechanical assembly"]',
     )!;
     move.focus();
     move.click();
     expect(runtime.command).toHaveBeenLastCalledWith({
       type: 'research-queue',
       action: 'move',
-      technology: 'improvised-tools',
+      technology: 'mechanical-assembly',
       index: 1,
     });
     expect(document.activeElement?.id).toBe('queue-title');
     root
-      .querySelector<HTMLButtonElement>('[aria-label="Remove Improvised tools from queue"]')!
+      .querySelector<HTMLButtonElement>('[aria-label="Remove Mechanical assembly from queue"]')!
       .click();
     expect(runtime.command).toHaveBeenLastCalledWith({
       type: 'research-queue',
       action: 'remove',
-      technology: 'improvised-tools',
+      technology: 'mechanical-assembly',
     });
     const updated = editableView(world()!);
-    updated.opening!.state.researchQueue = ['material-recovery'];
+    updated.opening!.state.researchQueue = ['electrical-assembly'];
     world.set(updated);
     await fixture.whenStable();
     expect(root.querySelector('.research-queue [role="status"]')?.textContent).toContain(
-      'Waiting for prerequisite technologies',
+      'Waiting for cumulative extraction / production',
     );
     expect(
-      root.querySelector('[aria-labelledby="technology-improvised-tools"]')?.textContent,
+      root.querySelector('[aria-labelledby="technology-mechanical-assembly"]')?.textContent,
     ).toContain('Progress retained; queue to resume');
-    expect(world()!.opening!.ledgers['improvised-tools'].work).toBe(2);
+    expect(world()!.opening!.ledgers['mechanical-assembly'].work).toBe(2);
     expect(document.activeElement?.id).toBe('queue-title');
     expect((await axe.run(root)).violations).toEqual([]);
   });

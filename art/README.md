@@ -7,9 +7,10 @@ Editable art projects, source assets, references, exact prompts and provenance l
 | [characters/](characters/)         | Character identity/finish references, editable model sources and the [current v3 animated runtime derivative](characters/Protag/v3/runtime/README.md).                   |
 | [world/](world/)                   | Environmental progression concepts.                                                                                                                                      |
 | [machinery/](machinery/)           | Machine and production progression concepts.                                                                                                                             |
-| [branding/](branding/)             | Logo source, exact prompt and preparation record.                                                                                                                        |
+| [branding/](branding/)             | Logo and approved gear-and-leaf favicon sources, exact prompts and preparation records.                                                                                  |
 | [ui/](ui/)                         | Cursor and menu backdrop sources; accepted UI screen concepts; [reusable UI kit](ui/kit/v1/README.md); [UI resource, tool and machine sprites](ui/sprites/v1/README.md). |
 | [generation.json](generation.json) | Exact generation prompts and input/output provenance for the retained concepts.                                                                                          |
+| [M10 concepts](concepts/m10-2026-11-12/README.md) | Four gameplay proposals and 32 individual world/machine/character/feedback/prop concepts, exact prompts, references and a local review gallery; implementation and approval remain separate. |
 
 Keep project files, source textures, previews, available licensing and provenance together. Preserve original sources when making runtime derivatives and document their preparation. Current automation lives in [tools/art/](../tools/art/). Active Editor scenes/imports remain in `assets/`, live runtime derivatives in `public/assets/`, and generated scene exports in ignored `public/scene/`.
 

@@ -6,6 +6,7 @@ import { upgradeOpeningSave } from './legacy-opening-save';
 import { assertFactoryResearch } from './factory-capture';
 import { emptyToolbar } from '@contracts/toolbar';
 import { sameData } from '@core/data-equality';
+import { researchPrerequisitesMet } from '@core/research-prerequisites';
 
 /** Additional invariants for untrusted durable saves; internal laboratory captures remain separate. */
 export function preparePlayerSave(value: unknown): SimulationSnapshot {
@@ -187,6 +188,13 @@ export function preparePlayerSave(value: unknown): SimulationSnapshot {
   const copy = structuredClone(save),
     owner = copy.entities.find((entity) => entity.id === copy.resources.playerId)!;
   owner.opening!.toolbar ??= emptyToolbar();
+  // Normalize only after validating the entire save; malformed queues must still be rejected.
+  owner.opening!.researchQueue = owner.opening!.researchQueue.filter((id) =>
+    researchPrerequisitesMet(
+      OPENING_TECHNOLOGIES.find((technology) => technology.id === id)!,
+      copy.resources.research,
+    ),
+  );
   owner.transform!.moving = owner.transform!.sprinting = false;
   owner.opening!.salvage = null;
   owner.opening!.handcraftVisible = !!owner.opening!.handcraft;

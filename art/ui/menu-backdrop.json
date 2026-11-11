@@ -1,8 +1,21 @@
 {
-  "source": "menu-backdrop-v1.png",
-  "sourceLocation": "Moved unchanged from public/assets/bg.png on 2026-11-04; earlier authorship is not recorded here.",
-  "sourceDimensions": [1024, 768],
+  "source": "menu-backdrop-v2.png",
+  "tool": "built-in image_gen",
+  "generatedDate": "2026-11-12",
+  "timezone": "Australia/Sydney",
+  "prompt": "menu-backdrop-v2-prompt.txt",
+  "transparentBackground": false,
+  "generationSource": "C:/Users/googl/.codex/generated_images/01a1caaa-b895-71e3-840d-bf786b8d455b/exec-3885fc86-9415-4e05-980b-dff5f47a7712.png",
+  "sourceDimensions": [1672, 941],
   "runtime": "../../public/assets/bg.webp",
-  "preparation": "node tools/art/prepare-menu-images.ts; original dimensions, WebP quality 85, alpha quality 100, effort 6.",
-  "usage": "Angular menu and loading-screen backdrop."
+  "preparation": "node tools/art/prepare-menu-images.ts; maximum width 1920 without enlargement; WebP quality 85, alpha quality 100, effort 6. Current output retains 1672 by 941 pixels.",
+  "runtimeBytes": 116522,
+  "usage": "Angular menu and loading-screen illustration; concept landscape, not a gameplay screenshot or authored-map definition.",
+  "retiredSource": {
+    "path": "menu-backdrop-v1.png",
+    "sourceSha256": "868de612a0040e2a25e14f8b983d1c9fc96f0ac8cc6ed93dba9a74366b6c82e1",
+    "runtimeSha256": "729b0a9a7a611ffc3379f46f2ac3d1d756c08e173505fe4671f42a967adc102d",
+    "recoveryCommit": "9e2a7dc7ad916c0b47d299c47cd4025f5298b7ff",
+    "reason": "User requested discarding it during the M10 asset audit; possible Phaser origin was recalled but not established. Original removed from checkout and runtime bytes replaced."
+  }
 }

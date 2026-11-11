@@ -2,7 +2,7 @@
 
 Scrapworks is a browser-first factory and restoration prototype. Start empty-handed on a damaged small map, salvage and research useful equipment, build renewable-powered industry, automate supply and sorting, and bring clean water to greenhouses. Restore every land and water cell to full health once, then keep playing. Coal offers another production choice with local pollution and recoverable environmental costs; there is no game-over state.
 
-This delivery uses the existing procedural terrain/machines and protagonist. The separate [asset plan](../plans/portfolio-assets-and-final-qualification.md) remains deferred. Its final presentation/performance approval is separate from the current-asset baseline. The target for a new player's first restoration run is 30–60 minutes; **human pacing remains provisional pending the user's later playtest**.
+The original delivery uses procedural terrain/machines and the retained protagonist. The separate [asset plan](../plans/portfolio-assets-and-final-qualification.md) now has a completed [audit and selected asset decisions](../art/runtime-asset-decisions.md); world-art implementation and final presentation/performance approval remain open. The current checkout additionally replaces the old menu backdrop and legacy favicon and ships asset/software credits; the earlier ZIP below remains the historical pre-audit artifact. The target for a new player's first restoration run is 30–60 minutes; **human pacing remains provisional pending the user's later playtest**.
 
 ## Run the local artifact
 
@@ -86,6 +86,6 @@ For the later human test, start a new run without grants or prior unlocks. Recor
 
 ## Scope and provenance
 
-The prototype includes the opening, shared research/labs, paid machines, direct/conveyor/sorter transport, renewable variability/storage, water/restoration, optional coal/mitigation and resilient local persistence. Current presentation is functional prototype art. Source projects/provenance remain under [art](../../art/README.md), including [procedural machine provenance](../../art/machinery/runtime-prototypes.md) and [protagonist runtime preparation](../../art/characters/Protag/v3/runtime/README.md). The existing asset plan owns the later complete presentation/attribution audit.
+The prototype includes the opening, shared research/labs, paid machines, direct/conveyor/sorter transport, renewable variability/storage, water/restoration, optional coal/mitigation and resilient local persistence. Current world presentation is functional prototype art. Source projects/provenance remain under [art](../../art/README.md), including [procedural machine provenance](../../art/machinery/runtime-prototypes.md) and [protagonist runtime preparation](../../art/characters/Protag/v3/runtime/README.md). The [audit decisions](../art/runtime-asset-decisions.md) identify selected presentation work and remaining source-provenance gaps. Final qualification and refreshed portfolio material remain with the asset plan.
 
 No second/lower-end device, mobile/touch gameplay, other engines, final assets, public hosting, accounts/cloud sync, remote control, extra maps/tiers, personal MiniFab upgrades or multi-worker architecture is claimed by this delivery.

@@ -13,7 +13,8 @@ for (const width of [320, 640, 1024]) {
     .toFile(path.join(output, file));
   results.push({ file, bytes: result.size });
 }
-const background = await sharp(path.join(root, 'art/ui/menu-backdrop-v1.png'))
+const background = await sharp(path.join(root, 'art/ui/menu-backdrop-v2.png'))
+  .resize({ width: 1920, withoutEnlargement: true })
   .webp({ quality: 85, alphaQuality: 100, effort: 6 })
   .toFile(path.join(output, 'bg.webp'));
 results.push({ file: 'bg.webp', bytes: background.size });

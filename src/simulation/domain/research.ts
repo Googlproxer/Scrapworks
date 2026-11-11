@@ -2,6 +2,7 @@ import { OPENING_CONTENT, OPENING_TECHNOLOGIES, type OpeningTechnology } from '@
 import type { InventoryData, WorldResources } from '@contracts/simulation';
 import { requireInvariant as check } from '@contracts/simulation';
 import { available, transact } from './inventory';
+import { researchPrerequisitesMet } from '@core/research-prerequisites';
 
 export type ResearchLedgers = WorldResources['research'];
 
@@ -21,7 +22,7 @@ export function researchReady(
   history: (item: string) => number,
 ): boolean {
   return (
-    technology.requires.every((id) => ledgers[id]?.unlocked) &&
+    researchPrerequisitesMet(technology, ledgers) &&
     technology.eligibility.every((cost) => history(cost.item) >= cost.quantity)
   );
 }

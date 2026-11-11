@@ -24,17 +24,17 @@ export const GUIDE_STEPS = [
   [
     'industry',
     'Build a renewable workshop',
-    'Research solar/wind power, recycling, fabrication and laboratories. Craft the equipment, assign it under Equipable, choose its toolbar slot and press B to build. Connect crafted power cables with two clicks; click the first endpoint again to cancel. Supply machines in Factory.',
+    'Research solar/wind power, recycling, fabrication and laboratories. Craft the equipment, assign it under Equipable, choose its toolbar slot and press B to build. Connect crafted power cables with two clicks; click the first endpoint again to cancel. Interact with a nearby machine using E / click to configure it and transfer materials.',
   ],
   [
     'transport',
     'Connect your production',
-    'Research Sorting and conveyors. Build extraction, conveyors and a sorter; connect facing neighbouring ports in Factory. Route plates, wire and returned scrap separately. Transport needs no power; a blocked destination keeps its items.',
+    'Research Sorting and conveyors. Build extraction, conveyors and a sorter; interact with equipment to connect facing neighbouring ports. Route plates, wire and returned scrap separately. Transport needs no power; a blocked destination keeps its items.',
   ],
   [
     'water',
     'Bring water to the land',
-    'Research Energy storage and Water treatment, then Greenhouse restoration. Place a pump at the lake edge, treatment and a tank. Connect facing water ports in Factory, then supply powered greenhouses with clean water.',
+    'Research Energy storage and Water treatment, then Greenhouse restoration. Place a pump at the lake edge, treatment and a tank. Interact with utility machines to connect facing water ports, then supply powered greenhouses with clean water.',
   ],
   [
     'restoration',
@@ -75,7 +75,7 @@ export function guideStep(world: WorldView | null): (typeof GUIDE_STEPS)[number]
 export const FIELD_MANUAL = [
   {
     title: 'Move, salvage and build',
-    text: 'WASD / left stick moves; Shift / stick press sprints. Right drag / right stick orbits. Approach scrap within two metres; hold F or toggle G to salvage. E / click picks up ground items. Tab opens the field kit. Assign crafted placeables under Equipable, select 1–8, B builds and R rotates. Use Controls to review or rebind your inputs.',
+    text: 'WASD / left stick moves; Shift / stick press sprints. Right drag / right stick orbits. Approach scrap within two metres; hold F or toggle G to salvage. E / click inspects nearby machines and picks up ground items. Tab opens the field kit. Assign crafted placeables under Equipable, select 1–8, B builds and R rotates. Use Controls to review or rebind your inputs.',
   },
   {
     title: 'Crafting and the MiniFab',
@@ -83,11 +83,11 @@ export const FIELD_MANUAL = [
   },
   {
     title: 'Research payments and shared work',
-    text: 'Historical extraction/production totals establish eligibility; they are not spendable materials. Field Research pays from available bag stock; labs pay from their own input buffers. Contributed materials are spent permanently. Field work and powered, supplied labs advance one shared queue. Reordering/removing a technology retains its payments and partial work; queue it again to resume.',
+    text: 'Historical extraction/production totals establish eligibility; they are not spendable materials. Field Research pays from available bag stock; labs pay from their own input buffers. Contributed materials are spent permanently. Field work and powered, supplied labs advance one shared queue. Field Research starts enabled. Queue only technologies whose prerequisites are researched; yellow means those prerequisites are met even when inputs are missing. Reordering/removing a technology retains its payments and partial work; queue it again to resume.',
   },
   {
     title: 'Machine and transport recovery',
-    text: 'Missing input: load the selected recipe’s materials. No power: connect a generator and check supply/demand. Blocked: collect output or make room downstream. Disabled: enable the machine. Idle: choose a researched recipe supported by its input count. Depleted: use another deposit. Facing adjacent ports are required for materials/water. Sorter filters are strict: matched stock waits for its own destination while other routes continue within their capacity. Dismantling returns solid value and unconsumed infrastructure water to its sources.',
+    text: 'Interact with a machine within two metres to open its controls; Factory shows global statistics. Missing input: load the selected recipe’s materials. No power: connect a generator and check supply/demand. Blocked: collect output or make room downstream. Disabled: enable the machine. Idle: choose a researched recipe supported by its input count. Depleted: use another deposit. Facing adjacent ports are required for materials/water. Sorter filters are strict: matched stock waits for its own destination while other routes continue within their capacity. Dismantling returns solid value and unconsumed infrastructure water to its sources.',
   },
   {
     title: 'Water, weather and peaceful restoration',

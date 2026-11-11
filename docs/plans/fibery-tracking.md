@@ -6,6 +6,8 @@ Implementation update, 10 November 2026: M1–M9 remain Completed; M10 is In Pro
 
 ## Working views
 
+Local update, 12 November 2026: the user requested the deferred audit. [Step A is complete](portfolio-assets-and-final-qualification.md#step-a-audit-and-choose-asset-work), with [durable asset decisions](../art/runtime-asset-decisions.md) and local screenshot evidence. The requested backdrop replacement, free-plan Meshy attribution and distribution notices are delivered. Selected world-art work/final qualification and the human playtest remain open. Fibery was read to verify M10.1 scope; this audit made no external tracker writes, so the existing M10.1 Open state is not a new completion claim.
+
 | View                                                                    | Use                                                                                                     |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | [Projects](https://scrapworks.fibery.io/Project_Tracking/52)            | Open the Scrapworks project for its summary, roadmap, catalogue links and related work                  |

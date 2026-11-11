@@ -43,6 +43,9 @@
   @if (gameRuntimeService.currentSceneKey() !== 'Game') {
     <div class="menu-backdrop" aria-hidden="true"></div>
     <app-menu-logo />
+    <a class="asset-credits" href="attributions.html" target="_blank" rel="noopener">
+      Asset credits<span class="visually-hidden"> (opens in a new tab)</span>
+    </a>
   }
 
   @if (!gameRuntimeService.errorMessage() && gameRuntimeService.currentSceneKey() !== 'Game') {
@@ -83,11 +86,6 @@
       <p class="preload-status" role="status" aria-live="polite" aria-atomic="true">
         {{ gameRuntimeService.preloadMessage() }}
       </p>
-    </div>
-  }
-  @if (developer && gameRuntimeService.state(); as state) {
-    <div class="top-left">
-      <pre>{{ state | json }}</pre>
     </div>
   }
 
@@ -131,14 +129,18 @@
     !gameRuntimeService.errorMessage()
   ) {
     <app-field-kit />
-    @if (!gameRuntimeService.fieldKitOpen()) {
+    @if (!gameRuntimeService.fieldKitOpen() && !gameRuntimeService.machineInspectionId()) {
       <app-placeable-toolbar />
     }
-    <div class="game-help" [hidden]="gameRuntimeService.fieldKitOpen()">
+    <div
+      class="game-help"
+      [hidden]="gameRuntimeService.fieldKitOpen() || !!gameRuntimeService.machineInspectionId()"
+    >
       <p>
         WASD / left stick to move · Shift / stick press to sprint · Right drag / right stick to
-        orbit · F to hold salvage · G to toggle salvage · E / click ground items to pick up · Tab
-        for field kit · 1–8 selects a placeable · B builds · R rotates · Escape for menu
+        orbit · F to hold salvage · G to toggle salvage · E / click to inspect nearby machines or
+        pick up ground items · Tab for field kit · 1–8 selects a placeable · B builds · R rotates ·
+        Escape for menu
       </p>
       @if (gameRuntimeService.selectionLabel(); as selection) {
         <p aria-live="polite">{{ selection }}</p>
