@@ -17,7 +17,7 @@ export const WORKLOADS = ['renewable', 'mixed', 'stress'] as const;
 export type Workload = (typeof WORKLOADS)[number];
 
 /** Controlled diagnostic state, never earned progress. Uses the unchanged authored map/native bodies. */
-export function portfolioFixture(definition: WorldDefinition, workload: Workload) {
+export function portfolioFixture(definition: WorldDefinition, workload: Workload, machineCount?: number) {
   const initial = new Simulation(definition);
   const snapshot = initial.capture();
   initial.dispose();
@@ -72,7 +72,7 @@ export function portfolioFixture(definition: WorldDefinition, workload: Workload
     'water-tank',
     ...(workload === 'renewable' ? [] : ['coal-generator' as const, 'air-scrubber' as const]),
   ];
-  const count = Math.min(safe.length, workload === 'stress' ? 96 : 24);
+  const count = Math.min(safe.length, machineCount ?? (workload === 'stress' ? 96 : 24));
   const machines: EntityData[] = [];
   for (let i = 0; i < count; i++) {
     const kind = kinds[i % kinds.length],
