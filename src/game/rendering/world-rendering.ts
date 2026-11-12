@@ -145,10 +145,14 @@ export class WorldRendering extends PresentationBehavior {
         }
       }
       const character = this.characterMeshes.has(mesh);
-      const ground = mesh.name === 'environment-cells';
+      const ground = mesh.name === 'environment-cells' || mesh.name === 'environment-water';
+      const metadata: unknown = mesh.metadata;
+      const scatter =
+        !!metadata && typeof metadata === 'object' && 'environmentScatter' in metadata;
       const solid =
         entity ||
         character ||
+        scatter ||
         mesh.name.startsWith('physics:') ||
         mesh.name === 'environment-vegetation';
       if (solid || ground) mesh.receiveShadows = true;

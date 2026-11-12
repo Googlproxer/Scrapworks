@@ -1,0 +1,57 @@
+{
+  "checked": "2026-11-12",
+  "status": "Potential sources researched on creator pages; no models downloaded or imported.",
+  "selectionNote": "Prefer existing suitable assets to additional AI generation. Review small samples against the protagonist finish before selecting a pack.",
+  "countEvidence": "Counts are creator-published, not locally measured.",
+  "candidates": [
+    {
+      "name": "KayKit Forest Nature Pack",
+      "author": "Kay Lousberg",
+      "url": "https://kaylousberg.itch.io/kaykit-forest",
+      "licence": "Creator lists CC0",
+      "cost": "Free tier: 100+ models",
+      "formats": "glTF, FBX, OBJ",
+      "use": "Grass, bushes and small rock variations",
+      "notes": "Best broad starting candidate. Shared palette/gradient atlas; includes an unshaded grass version. Check individual triangle counts and blade geometry before dense scattering.",
+      "counts": "Per-model counts not published on the reviewed page.",
+      "rank": 1
+    },
+    {
+      "name": "Low-poly Forest Kit",
+      "author": "Toolbench",
+      "url": "https://toolbenchdev.com/gamedev/cc0-game-assets/low-poly-forest-kit/",
+      "licence": "Creator lists CC0 1.0",
+      "cost": "Free",
+      "formats": "GLB, FBX, OBJ",
+      "use": "Measured-budget grass, rocks and bushes",
+      "notes": "Useful budget comparison. FBX contains both LODs; GLB is LOD0. Grass uses paired thin surfaces, and several material slots may need consolidation.",
+      "counts": "Published LOD0/LOD1: grass 90/10, small rock 80/20, bush 320/60 triangles.",
+      "rank": 2
+    },
+    {
+      "name": "Ultimate Nature Pack",
+      "author": "Quaternius",
+      "url": "https://quaternius.com/packs/ultimatenature.html",
+      "downloadPage": "https://quaternius.itch.io/150-lowpoly-nature-models",
+      "licence": "Creator lists CC0",
+      "cost": "Free / optional donation",
+      "formats": "Blend, FBX, OBJ",
+      "use": "Large library of faceted nature shapes and rock/plant variants",
+      "notes": "150 models. Editable Blender files help recolouring/simplification; export selected models to GLB. Inspect actual small-prop counts and materials.",
+      "counts": "Per-model counts not published on the reviewed page.",
+      "rank": 3
+    },
+    {
+      "name": "Quiet Grove Low-Poly Nature Kit",
+      "author": "polyhangar",
+      "url": "https://polyhangar.itch.io/quiet-grove-low-poly-nature-kit-cc0",
+      "licence": "Creator lists CC0 1.0",
+      "cost": "Free / pay what you want",
+      "formats": "GLB, OBJ/MTL",
+      "use": "Small rock and shrub supplement",
+      "notes": "Eight flat-colour assets with ground-centred pivots. No grass, UVs or LODs listed; the evergreen bush and basalt rock are the relevant pieces.",
+      "counts": "Published: basalt rock 80, rock cluster 240, evergreen bush 240 triangles.",
+      "rank": 4
+    }
+  ]
+}

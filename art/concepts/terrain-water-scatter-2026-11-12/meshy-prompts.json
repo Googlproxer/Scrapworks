@@ -1,0 +1,157 @@
+{
+  "date": "2026-11-12",
+  "purpose": "User-operated Meshy generation; no external generation was submitted.",
+  "budgetMeaning": "Proposed final triangulated Blender targets, not guaranteed Meshy counts.",
+  "assets": [
+    {
+      "id": "R1",
+      "name": "Squat pebble",
+      "group": "Rocks",
+      "concept": "04-rock-scatter",
+      "size": "0.12–0.20 m across",
+      "triangles": "24–40",
+      "priority": "First batch",
+      "prompt": "One small squat asymmetrical pebble, slightly flattened rounded wedge, just a few broad polygon planes. Warm grey and muted blue-slate stone, broad irregular facets, non-metallic, no pores, cracks, moss or crystals. Flat stable underside suitable for slight burial, complete sides and underside. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "R2",
+      "name": "Chipped wedge stone",
+      "group": "Rocks",
+      "concept": "04-rock-scatter",
+      "size": "0.20–0.35 m across",
+      "triangles": "32–64",
+      "priority": "First batch",
+      "prompt": "One low asymmetrical wedge-shaped stone, pointed at one end, blunt chipped corner at the other, low triangular silhouette. Warm grey and muted blue-slate stone, broad irregular facets, non-metallic, no pores, cracks, moss or crystals. Flat stable underside suitable for slight burial, complete sides and underside. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "R3",
+      "name": "Flat notched stone",
+      "group": "Rocks",
+      "concept": "04-rock-scatter",
+      "size": "0.25–0.45 m across",
+      "triangles": "32–64",
+      "priority": "First batch",
+      "prompt": "One thin broad flat shale-like stone, irregular polygon outline, one shallow notch along an edge, simple wide top plane, very low height. Warm grey and muted blue-slate stone, broad irregular facets, non-metallic, no pores, cracks, moss or crystals. Flat stable underside suitable for slight burial, complete sides and underside. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "R4",
+      "name": "Twin-lobed stone",
+      "group": "Rocks",
+      "concept": "04-rock-scatter",
+      "size": "0.25–0.40 m across",
+      "triangles": "48–80",
+      "priority": "Expansion",
+      "prompt": "One low twin-lobed angular rock, two unequal joined rounded polygon masses with a shallow groove, asymmetrical flatter top. Warm grey and muted blue-slate stone, broad irregular facets, non-metallic, no pores, cracks, moss or crystals. Flat stable underside suitable for slight burial, complete sides and underside. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "R5",
+      "name": "Compact pebble cluster",
+      "group": "Rocks",
+      "concept": "04-rock-scatter",
+      "size": "0.40–0.65 m across total",
+      "triangles": "96–160 total",
+      "priority": "Expansion",
+      "prompt": "One compact cluster of four close-set low stones: one taller squat stone and three smaller varied pebbles beside it. Four simple solid stone components in one reusable game asset; no connecting soil plinth or gravel bed. Warm grey and muted blue-slate stone, broad irregular facets, non-metallic, no pores, cracks, moss or crystals. Flat stable underside suitable for slight burial, complete sides and underside. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "R6",
+      "name": "Loose chip cluster",
+      "group": "Rocks",
+      "concept": "04-rock-scatter",
+      "size": "0.30–0.50 m across total",
+      "triangles": "48–96 total",
+      "priority": "Expansion",
+      "prompt": "One reusable loose cluster of four tiny stone chips, uneven sizes and irregular spacing, low angular silhouettes. Four separate solid chips grouped as one asset, no connecting ground slab, no filler gravel. Warm grey and muted blue-slate stone, broad irregular facets, non-metallic, no pores, cracks, moss or crystals. Flat stable underside suitable for slight burial, complete sides and underside. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "P1",
+      "name": "Pioneer sprout",
+      "group": "Plants",
+      "concept": "05-vegetation-scatter",
+      "size": "0.10–0.18 m tall",
+      "triangles": "12–24",
+      "priority": "First batch",
+      "prompt": "One tiny pioneer grass sprout with exactly three broad simple blades of unequal height, open asymmetric silhouette, gently folded blade centres. Muted olive and sage greens, matte opaque surfaces. Real simple folded or wedge-shaped leaf geometry, no alpha cards, crossed billboards or hairlike strands. No pot, soil disk, rocks, flowers or tall stems. Gathered ground-level root origin. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "P2",
+      "name": "Asymmetric fan tuft",
+      "group": "Plants",
+      "concept": "05-vegetation-scatter",
+      "size": "0.18–0.28 m tall",
+      "triangles": "24–40",
+      "priority": "First batch",
+      "prompt": "One short asymmetric grass fan with five broad tapered folded blades, an off-centre tallest blade and two low outward side blades. No dense mass of fine leaves. Muted olive and sage greens, matte opaque surfaces. Real simple folded or wedge-shaped leaf geometry, no alpha cards, crossed billboards or hairlike strands. No pot, soil disk, rocks, flowers or tall stems. Gathered ground-level root origin. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "P3",
+      "name": "Full grass clump",
+      "group": "Plants",
+      "concept": "05-vegetation-scatter",
+      "size": "0.22–0.35 m tall",
+      "triangles": "36–64",
+      "priority": "Expansion",
+      "prompt": "One squat full grass clump with seven broad tapered folded blades, varied heights and lean directions, clear open spaces between large leaf shapes, compact root footprint. Muted olive and sage greens, matte opaque surfaces. Real simple folded or wedge-shaped leaf geometry, no alpha cards, crossed billboards or hairlike strands. No pot, soil disk, rocks, flowers or tall stems. Gathered ground-level root origin. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "P4",
+      "name": "Dry and green tuft",
+      "group": "Plants",
+      "concept": "05-vegetation-scatter",
+      "size": "0.18–0.30 m tall",
+      "triangles": "24–48",
+      "priority": "Expansion",
+      "prompt": "One irregular transition grass tuft with five broad simple folded blades, two muted straw-colour blades and three olive-green blades, asymmetric low fan silhouette. Muted olive and sage greens, matte opaque surfaces. Real simple folded or wedge-shaped leaf geometry, no alpha cards, crossed billboards or hairlike strands. No pot, soil disk, rocks, flowers or tall stems. Gathered ground-level root origin. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "P5",
+      "name": "Compact low shrub",
+      "group": "Plants",
+      "concept": "05-vegetation-scatter",
+      "size": "0.30–0.45 m tall; 0.45–0.65 m wide",
+      "triangles": "80–140",
+      "priority": "First batch",
+      "prompt": "One squat compact shrub made of only six to eight broad chunky angular leaf forms around a short mostly hidden stem. Unequal leaf masses, rounded low silhouette, wider than tall. No dozens of individual tiny leaves. Muted olive and sage greens, matte opaque surfaces. Real simple folded or wedge-shaped leaf geometry, no alpha cards, crossed billboards or hairlike strands. No pot, soil disk, rocks, flowers or tall stems. Gathered ground-level root origin. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "P6",
+      "name": "Groundcover rosette",
+      "group": "Plants",
+      "concept": "05-vegetation-scatter",
+      "size": "0.08–0.15 m tall; 0.30–0.50 m wide",
+      "triangles": "30–60",
+      "priority": "First batch",
+      "prompt": "One low spreading groundcover rosette with six broad simple faceted leaf forms, arranged asymmetrically close to the ground, much wider than tall, varied leaf lengths. Muted olive and sage greens, matte opaque surfaces. Real simple folded or wedge-shaped leaf geometry, no alpha cards, crossed billboards or hairlike strands. No pot, soil disk, rocks, flowers or tall stems. Gathered ground-level root origin. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "S1",
+      "name": "Straight bank shape study",
+      "group": "Shoreline studies",
+      "concept": "03-water-levels",
+      "size": "Approx. 2 m long; profile fitted in Blender",
+      "triangles": "80–160",
+      "priority": "Optional shape exploration",
+      "prompt": "One simple low-poly straight earthen shoreline segment. A level ground lip at the back, a chamfered ochre soil edge, a broad gentle sloped bank descending to a low flat basin-floor strip in front. Constant shallow profile along its length, flat ends, no isolated floating pieces. Ochre dry soil and muted umber earth, very simple broad planes. No water surface, foam, plants, rocks, cliff towers or complete lake. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "S2",
+      "name": "Outside bank corner shape study",
+      "group": "Shoreline studies",
+      "concept": "03-water-levels",
+      "size": "Approx. 2 × 2 m; joints fitted in Blender",
+      "triangles": "120–220",
+      "priority": "Optional shape exploration",
+      "prompt": "One simple low-poly convex outside corner of an earthen shoreline: a low land corner projecting into a basin, with sloped banks along two adjacent sides meeting around the projecting corner. Level land top, chamfered soil lip, shallow lower basin-floor apron. Match a simple straight-bank profile. Matte ochre and umber soil planes. No water surface, foam, vegetation, rocks or complete lake. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    },
+    {
+      "id": "S3",
+      "name": "Inside bank corner shape study",
+      "group": "Shoreline studies",
+      "concept": "03-water-levels",
+      "size": "Approx. 2 × 2 m; joints fitted in Blender",
+      "triangles": "120–220",
+      "priority": "Optional shape exploration",
+      "prompt": "One simple low-poly concave inside corner of an earthen shoreline: a recessed basin corner where two gently sloping earth banks meet at a right angle around a low basin-floor area. Level ground rim, chamfered lip, shallow continuous slopes. Match a simple straight-bank profile. Matte ochre and umber soil planes. No water surface, foam, vegetation, rocks or complete lake. Stylized very low-poly 3D game asset for an angled-overhead restoration game. Broad matte colour areas, simple flat facets, clean edges and minimal geometry. One isolated asset, centered, neutral background, no text, no display base, no baked lighting or cast shadows, no realistic surface noise."
+    }
+  ]
+}

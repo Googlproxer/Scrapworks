@@ -28,7 +28,7 @@ class OwnedCellMaterial extends CustomMaterial {
 export function featheredCell(
   name: string,
   scene: Scene,
-  texture: BaseTexture,
+  texture: BaseTexture | null,
   colour: Color3,
   halfWidth: number,
   backFaceCulling: boolean,

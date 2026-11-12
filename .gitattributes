@@ -2,3 +2,6 @@
 *.ts text eol=lf
 *.html text eol=lf
 *.scss text eol=lf
+
+# Preserve imported KayKit source bytes, including upstream whitespace.
+art/world/kaykit-forest-v1/source/* -text -whitespace

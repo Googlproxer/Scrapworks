@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-12",
+  "timezone": "Australia/Sydney",
+  "tool": "built-in image_gen",
+  "sourceRevision": "c53c49f620cd454954a8529dfcc761c07b4741ec",
+  "status": "Complete: six concept boards and fifteen copyable Meshy prompts. No runtime implementation or generated 3D models.",
+  "outputs": [
+    {
+      "id": "01-layered-terrain",
+      "title": "Layered terrain and multi-scale scatter",
+      "file": "images/01-layered-terrain.png",
+      "sha256": "fca0e6c8bcf2c3cb8213f6e166e46eafb41ee86b9de60df0db577706858a5968",
+      "references": [
+        {
+          "file": "../m10-2026-11-12/assets/terrain.png",
+          "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+        },
+        {
+          "file": "../m10-2026-11-12/assets/vegetation.png",
+          "sha256": "ec73a5f8c4d404b7ef263c57d4b1cef52a8cb7df0d66bb41e4fcfbc7d407712f"
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Create a new development concept sheet for Scrapworks, derived from the attached earlier art direction. Broad matte painted colour planes, a few restrained softly stepped shadow tones like the approved protagonist; muted ochre soil, olive/sage greens, warm grey blue-slate stones, quiet teal water. Fully 3D game geometry appearance; angled overhead browser-game readability. Cream presentation background, dark navy headings with small coral accents. These are CONCEPT ART, not implemented game captures. Avoid photorealism, noisy surface detail, tiny high-frequency marks, glossy plastic, thick black outlines and tall trees.\nExtend the terrain concept into a landscape-format art-direction board titled 'Layered terrain'. Left two-thirds: one coherent 12 metre square restored ground patch viewed at a 45 degree overhead angle, subtly irregular soil/grass coverage, many tiny real 3D faceted stones and simple low folded-blade grass tufts, a few low shrubs. Organic clusters separated by clear ground and a quiet empty 2 metre building footprint. No visible square borders or tuft-per-cell pattern. Patches cross invisible cell boundaries. Stones have little raised silhouettes and short contact shadows; they are decorative small stones, not harvestable boulders. Upper right: an exploded schematic of three translucent schematic sampling sheets lifted ABOVE the same unbroken terrain, connected by thin dotted lines. Each sheet has a different spacing and offset; points are jittered inside the cells and cluster irregularly, never sitting on every grid intersection. Label only 'Base tiles', 'Broad patches', '3D scatter'. These elevated sheets are explanatory overlays, NOT floating physical slabs in the final world. Bottom right: small side-by-side damaged/recovering/restored insets of the same patch, fixed rocks and changing plant coverage. Sparse vegetation when damaged; abundant low 3D tufts at full health, still with empty gaps. Make the final world look irregular and natural rather than like three literal stacked boards. Small visible 'CONCEPT ART' label. No invented gameplay HUD.",
+      "referencedImagePaths": [
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\terrain.png",
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\vegetation.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1caaa-b895-71e3-840d-bf786b8d455b\\exec-7dcb8479-43c6-48b4-af9b-72b4b16e2be9.png"
+    },
+    {
+      "id": "02-ground-variants",
+      "title": "Rotatable base surfaces and broad patch variation",
+      "file": "images/02-ground-variants.png",
+      "sha256": "7db3739d8da0e9f923f44479c91bf77c3e9e883a2b89b3a35e1817a1d4ca965c",
+      "references": [
+        {
+          "file": "../m10-2026-11-12/assets/terrain.png",
+          "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Create a new development concept sheet for Scrapworks, derived from the attached earlier art direction. Broad matte painted colour planes, a few restrained softly stepped shadow tones like the approved protagonist; muted ochre soil, olive/sage greens, warm grey blue-slate stones, quiet teal water. Fully 3D game geometry appearance; angled overhead browser-game readability. Cream presentation background, dark navy headings with small coral accents. These are CONCEPT ART, not implemented game captures. Avoid photorealism, noisy surface detail, tiny high-frequency marks, glossy plastic, thick black outlines and tall trees.\nDevelop a landscape-format ground-surface concept board titled 'Ground variation'. Upper half: twelve equal square orthographic top-down swatches in a 4 by 3 table, thin cream gutters. Row 1: four related dry ochre earth variations. Row 2: four related restored muted olive/sage groundcover variations. Row 3: two damp umber soil studies and two quiet warm grey mineral-soil studies. Every swatch has broad subtle irregular paint shapes, non-directional colour, neutral compatible perimeter tones, no sun/shadow direction, no raised rocks or grass blades, no baked object shadows, no unique centered emblem, no baked square bevel or border. Groundcover is flat paint coverage, NOT individual 3D vegetation. Bottom half: one large continuous top-down mosaic example using rotated and shuffled earth/green variants with broad irregular patches spanning multiple base cells, and sparse separate 3D stone/grass scatter crossing cell boundaries. The resulting patch should read as continuous landscape without a checkerboard, repeated dark cracks, cloned clusters, or conspicuous individual tile outlines. Three small rotation arrows near one sample suggest 0/90/180/270 degrees without changing light direction. This is an illustrative texture-direction study, not a claim of technically seam-verified production textures. Small visible 'CONCEPT ART' label. No numbered interface or game HUD.",
+      "referencedImagePaths": [
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\terrain.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1caaa-b895-71e3-840d-bf786b8d455b\\exec-c486a423-0c3b-4291-81db-30fc5bb106cb.png"
+    },
+    {
+      "id": "03-water-levels",
+      "title": "Shaped shoreline and readable water depletion",
+      "file": "images/03-water-levels.png",
+      "sha256": "4a7657796fd7d83b1cc51a3d213c5b223b8415d09504fb11d396d959e8bf7a96",
+      "references": [
+        {
+          "file": "../m10-2026-11-12/assets/water.png",
+          "sha256": "8b2f5913d5adb0f996c3e3297db1d848e58d3c1d898e7911a517b0a6e981f26c"
+        },
+        {
+          "file": "../m10-2026-11-12/assets/terrain.png",
+          "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Create a new development concept sheet for Scrapworks, derived from the attached earlier art direction. Broad matte painted colour planes, a few restrained softly stepped shadow tones like the approved protagonist; muted ochre soil, olive/sage greens, warm grey blue-slate stones, quiet teal water. Fully 3D game geometry appearance; angled overhead browser-game readability. Cream presentation background, dark navy headings with small coral accents. These are CONCEPT ART, not implemented game captures. Avoid photorealism, noisy surface detail, tiny high-frequency marks, glossy plastic, thick black outlines and tall trees.\nExtend the shoreline concept into a landscape-format board titled 'Water level and shaped banks'. Top row: THREE equally sized 45-degree-overhead views of exactly the SAME compact asymmetrical shallow lake basin on flat ground, same camera, same irregular outline, same little shoreline rocks and tiny grass positions. Label the panels exactly 'Full', 'Low', 'Empty'. The first has calm clear blue-teal water near the upper shore. The second has much LOWER water elevation and a visibly SMALLER connected blue pool inside the basin, exposing a broad band of damp sloped earth and rock shelf. The third has NO blue water at all, showing the full dry ochre/umber basin floor, exposed little stones and a darker receding wet-soil strip. Land health and water colour stay constant across the comparison; VOLUME is changing, not pollution. Keep dry and wet material shapes readable without relying only on a blue hue change. True low-poly 3D banks descend into the basin: chamfered soil lip, low sloped earth face, shallow stone ledges, a few modest protruding rocks. Do not draw a lake as a flat blue tile flush with the terrain or a raised container with giant rock walls. Bottom left: a clean enlarged cutaway of the same basin showing the sloped 3D shore, water plane at low height, exposed shelf, continuous bowl floor and a dashed higher former waterline. Bottom right: a small shoreline geometry study with straight bank, outside corner, inside corner and submerged shelf as simple faceted clay meshes. These are geometry ideas, not exact modular-fit engineering. No pipes, pumps, waterfalls, ocean waves, trees or new buildings. Small visible 'CONCEPT ART' label.",
+      "referencedImagePaths": [
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\water.png",
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\terrain.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1caaa-b895-71e3-840d-bf786b8d455b\\exec-cd13a851-4ae9-474b-abb5-3ada3f4f4fa5.png"
+    },
+    {
+      "id": "04-rock-scatter",
+      "title": "Tiny rock and pebble mesh family",
+      "file": "images/04-rock-scatter.png",
+      "sha256": "a88e2b9a54e372eeec0294f82b3c4dbb50ba80882141389eec74ecb41f7638a9",
+      "references": [
+        {
+          "file": "../m10-2026-11-12/assets/terrain.png",
+          "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+        },
+        {
+          "file": "../m10-2026-11-12/assets/water.png",
+          "sha256": "8b2f5913d5adb0f996c3e3297db1d848e58d3c1d898e7911a517b0a6e981f26c"
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Create a new development concept sheet for Scrapworks, derived from the attached earlier art direction. Broad matte painted colour planes, a few restrained softly stepped shadow tones like the approved protagonist; muted ochre soil, olive/sage greens, warm grey blue-slate stones, quiet teal water. Fully 3D game geometry appearance; angled overhead browser-game readability. Cream presentation background, dark navy headings with small coral accents. These are CONCEPT ART, not implemented game captures. Avoid photorealism, noisy surface detail, tiny high-frequency marks, glossy plastic, thick black outlines and tall trees.\nCreate a landscape-format 3D scatter-rock concept sheet titled 'Small rocks — real geometry'. Six clearly separated catalog cells, two rows of three. Each cell shows one large three-quarter view and a smaller rear/top view of the SAME asset. Use short labels R1 through R6 only. R1: small squat rounded angular pebble, a handful of broad facets. R2: chipped wedge stone, asymmetrical low silhouette. R3: flat shale-like stone, wide and thin, one notched edge. R4: low twin-lobed angular rock with a slightly flatter top. R5: compact cluster of THREE close-set varied pebbles, no connecting soil plinth. R6: loose cluster of FIVE tiny chips arranged unevenly, no connecting ground slab. Natural asymmetry and shallow embedded-looking undersides suitable for slight burial. Warm grey top planes and muted blue-slate side planes, broad flat matte colour, extremely simple low-poly geometry, no sculpted pores, no gravel noise, no moss, no vegetation, no crystal forms or tall boulders. These are roughly palm-sized to boot-sized decorative stones, 0.1 to 0.6 metres across including clusters, rather than giant resource deposits. Bottom strip: the six pieces scattered irregularly in a subtle 2 metre square soil patch beside a simple neutral adult boot-size scale silhouette, with visible tiny cast shadows and clear negative spaces. Do NOT add permanent circular display bases beneath the isolated models; only a faint neutral presentation shadow. Small visible 'CONCEPT ART' label.",
+      "referencedImagePaths": [
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\terrain.png",
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\water.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1caaa-b895-71e3-840d-bf786b8d455b\\exec-252a9186-746b-4790-95c0-86c8a98266d9.png"
+    },
+    {
+      "id": "05-vegetation-scatter",
+      "title": "Grass and low shrubs with minimal real geometry",
+      "file": "images/05-vegetation-scatter.png",
+      "sha256": "052fd2b7fa822135ae0e795b8538610936712182ac7ccaef9ffc1e3f782aeaba",
+      "references": [
+        {
+          "file": "../m10-2026-11-12/assets/vegetation.png",
+          "sha256": "ec73a5f8c4d404b7ef263c57d4b1cef52a8cb7df0d66bb41e4fcfbc7d407712f"
+        },
+        {
+          "file": "../m10-2026-11-12/assets/terrain.png",
+          "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Create a new development concept sheet for Scrapworks, derived from the attached earlier art direction. Broad matte painted colour planes, a few restrained softly stepped shadow tones like the approved protagonist; muted ochre soil, olive/sage greens, warm grey blue-slate stones, quiet teal water. Fully 3D game geometry appearance; angled overhead browser-game readability. Cream presentation background, dark navy headings with small coral accents. These are CONCEPT ART, not implemented game captures. Avoid photorealism, noisy surface detail, tiny high-frequency marks, glossy plastic, thick black outlines and tall trees.\nRefine the existing grass/shrub sheet for very low polygon, fully 3D browser-game scatter. Landscape board titled 'Low-poly growth'. Six clearly separated catalog cells in two rows of three, labels P1 through P6 only. P1: pioneer sprout, THREE broad slightly folded wedge-shaped blades, low and open. P2: asymmetric fan tuft, FIVE broad folded blades. P3: squat full grass clump, SEVEN broad blades, not many thin hairs. P4: uneven dry/green transition tuft, FIVE to SIX broad simple blades, straw and olive planes. P5: low compact shrub made from only SIX to EIGHT chunky angular leaf masses on a short mostly hidden stem; recognizable shrub silhouette, no dozens of individually modeled tiny leaves. P6: spreading low groundcover rosette, FIVE to SEVEN broad low faceted leaf forms. Each cell includes a large 3/4 view and a small side/rear view. Real minimal folded or wedge leaf geometry with shallow thickness/volume, no crossed alpha billboards, no flat painted foliage cards, no individual hair strands. Earthy sage/olive palette, top planes lighter, restrained matte shade steps. No flowers, thorns, tall reeds, trees, pot, soil disk, permanent rock/soil pedestal or equipment. Bottom strip shows the same ground and rocks at damaged, recovering, full-health density with increasing low grass/groundcover and a few shrubs, irregular clusters and visible walking/building gaps, never one plant per square. Do not show one plant mutating into a tree. Small visible 'CONCEPT ART' label.",
+      "referencedImagePaths": [
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\vegetation.png",
+        "L:\\Angular\\scrapworks\\art\\concepts\\m10-2026-11-12\\assets\\terrain.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1caaa-b895-71e3-840d-bf786b8d455b\\exec-7e71dad9-d14e-490f-a939-da220b76a154.png"
+    },
+    {
+      "id": "06-gameplay-proposal",
+      "title": "Combined terrain, low water and 3D scatter gameplay concept",
+      "file": "images/06-gameplay-proposal.png",
+      "sha256": "9a52c128d6bb3f21b2abaf18b58d25dcb87c1a626ddea2aec72003a75ca8840f",
+      "references": [
+        {
+          "file": "images/01-layered-terrain.png",
+          "sha256": "fca0e6c8bcf2c3cb8213f6e166e46eafb41ee86b9de60df0db577706858a5968"
+        },
+        {
+          "file": "images/03-water-levels.png",
+          "sha256": "4a7657796fd7d83b1cc51a3d213c5b223b8415d09504fb11d396d959e8bf7a96"
+        },
+        {
+          "file": "images/05-vegetation-scatter.png",
+          "sha256": "052fd2b7fa822135ae0e795b8538610936712182ac7ccaef9ffc1e3f782aeaba"
+        },
+        {
+          "file": "references/approved-protagonist-I-game.png",
+          "sha256": "0f371573d1359106141d5c29a8c90a06ad19cbe7fa1013aeb9c6b8ed0dec1524"
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Create a new development concept sheet for Scrapworks, derived from the attached earlier art direction. Broad matte painted colour planes, a few restrained softly stepped shadow tones like the approved protagonist; muted ochre soil, olive/sage greens, warm grey blue-slate stones, quiet teal water. Fully 3D game geometry appearance; angled overhead browser-game readability. Cream presentation background, dark navy headings with small coral accents. These are CONCEPT ART, not implemented game captures. Avoid photorealism, noisy surface detail, tiny high-frequency marks, glossy plastic, thick black outlines and tall trees.\nCreate one wide full gameplay-view CONCEPT ART proposal, no UI redesign and no invented panels. The first three images are environmental art references. The fourth image is the real protagonist/material and perspective reference: preserve the adult female engineer's proportions, brown hair bun with blue tie, white tank top, orange jumpsuit lowered and tied around her waist, navy lower legs and dark boots, empty hands. Match her broad matte softly stepped finish closely; do not redesign, supply tools, weapons or a backpack. View the world from the real game's approximate 45 degree overhead perspective at a useful medium play zoom. Ground is a coherent flat walkable restoration landscape, not a floating diorama or tall cliff island. Compose a shallow irregular pond with visibly LOW teal water on the right half: a broad exposed sloped damp bank, real 3D low-poly earth lip and low stone shelf above the water, continuous bowl visible through simple calm water. Healthy muted grass-covered ground surrounds it; low water and healthy land must coexist. Left/centre: engineer on quiet earth beside a clear 2 metre building footprint marked only by four thin cream corner brackets. Warm ochre soil and muted sage groundcover flow in varied broad patches across the invisible logical grid; many tiny low-poly rocks add modest depth, short real shadows and distinct silhouettes. Low folded-blade grass tufts and a few squat shrubs scatter in clumps with empty breathing room and variation in orientation/size, no rows, no every-cell clone pattern, no square soil/grass checkerboard. The many small rocks should be particularly appealing and readable but remain secondary to the protagonist. Keep terrain contrast quieter than clothing. No new buildings, no tall trees, no resource boulder replacing the small stones, no painted-on fake plant decals, no photorealistic water, no labels except a small legible 'CONCEPT ART' corner label.",
+      "referencedImagePaths": [
+        "L:\\Angular\\scrapworks\\art\\concepts\\terrain-water-scatter-2026-11-12\\images\\01-layered-terrain.png",
+        "L:\\Angular\\scrapworks\\art\\concepts\\terrain-water-scatter-2026-11-12\\images\\03-water-levels.png",
+        "L:\\Angular\\scrapworks\\art\\concepts\\terrain-water-scatter-2026-11-12\\images\\05-vegetation-scatter.png",
+        "L:\\Angular\\scrapworks\\art\\concepts\\terrain-water-scatter-2026-11-12\\references\\approved-protagonist-I-game.png"
+      ],
+      "generatedOriginal": "C:\\Users\\googl\\.codex\\generated_images\\01a1caaa-b895-71e3-840d-bf786b8d455b\\exec-71d5dfc5-4952-4dfb-86b8-0593e1c34f71.png"
+    }
+  ],
+  "referencePreservation": [
+    {
+      "original": "L:\\Angular\\scrapworks\\docs\\reports\\rendering\\2026-11-12\\production-I\\chromium-game-high.png",
+      "copy": "references/approved-protagonist-I-game.png",
+      "role": "Approved full-model protagonist shader and current perspective reference, preserved from an ignored local report."
+    }
+  ],
+  "reviewNotes": [
+    "All six originals were inspected. They are concept art, not runtime captures, verified tile textures, topology or modular-fit evidence.",
+    "The rock-sheet R5 and R6 images contain four-stone arrangements; the final Meshy prompts follow those delivered arrangements rather than the initial prompt's requested three/five counts.",
+    "Image measurements and triangle budgets are illustrative/proposed. The prompt pack separates final Blender targets from Meshy generation controls."
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-13",
+  "author": "Kay Lousberg",
+  "pack": "KayKit Forest Nature Pack 1.0 FREE",
+  "source": "https://kaylousberg.itch.io/kaykit-forest",
+  "licence": "CC0; exact supplied notice in source/License.txt",
+  "archive": "art/KayKit_Forest_Nature_Pack_1.0_FREE.zip",
+  "archiveSha256": "2ee83e63bb7695f2d884ec27ddf6fce020789a452e7d5c5b0bbdfc4f6ea1fc8c",
+  "preparation": "Selected original positions/normals/topology retained. Centre X/Z, set bottom to Y=0 and mirror Z for Babylon LH, retaining index order for its front-face convention. Runtime uses shared flat colours instead of the source atlas. Scene metre-to-centimetre conversion happens at binding.",
+  "meshes": [
+    {
+      "id": "Rock_2_A_Color1",
+      "kind": "rock",
+      "vertices": 24,
+      "triangles": 12,
+      "gltfSha256": "bbe5254a4c13be7f4aa017297a9458db441e99234028af378d29207d80be4696",
+      "binarySha256": "ffee05221dda59936ba6c94112b65bb3c8a38e938fbb219a2808a1590daab050"
+    },
+    {
+      "id": "Rock_1_A_Color1",
+      "kind": "rock",
+      "vertices": 80,
+      "triangles": 48,
+      "gltfSha256": "ca24326b9c24556227c68df64933122f34a972cd38b6e95c53353fefa97dbc80",
+      "binarySha256": "1c94027b4b01e479f14c6a0288445f2ec74c4971bd5154095c4ea261ddea5b95"
+    },
+    {
+      "id": "Rock_1_B_Color1",
+      "kind": "rock",
+      "vertices": 78,
+      "triangles": 48,
+      "gltfSha256": "749f2de085a5cee1c91c5953cf04cf243d9b61d847e6006cf3d4eeef5a35985a",
+      "binarySha256": "782cef58cf202c5ed3f121219aa7492c36857f1d00c9bd2bce13c8c6c8147d7e"
+    },
+    {
+      "id": "Rock_1_C_Color1",
+      "kind": "rock",
+      "vertices": 82,
+      "triangles": 48,
+      "gltfSha256": "af4bc788060d4e6d33cec02ce910a3a409a54dd5e8720a9b0371ea635d766895",
+      "binarySha256": "39a1e7da9638240fbcb7a2b7ca96f692161de11a0af67ed97d96b13701472481"
+    },
+    {
+      "id": "Grass_1_SingleSided_Mesh",
+      "kind": "grass",
+      "vertices": 18,
+      "triangles": 14,
+      "gltfSha256": "ca23d90eb3aa3360bd9bc4545c83bb04079552a7edb4b143fd32b355bfd9ac1d",
+      "binarySha256": "fef56f6fce74391d4f8c76990f561aedd6ab1789b36f6e6fd6702376a0a947bb"
+    },
+    {
+      "id": "Grass_2_SingleSided_Mesh",
+      "kind": "grass",
+      "vertices": 18,
+      "triangles": 14,
+      "gltfSha256": "b9343e52cab22f857798ac7f60777bd4487261aad8f112ac96da64833bc98810",
+      "binarySha256": "1d13ca7efcc9889653b5f4d5de5eedc7c13d6226c3f12069c31db2f933e2a5d3"
+    },
+    {
+      "id": "Bush_2_A_Color1",
+      "kind": "shrub",
+      "vertices": 24,
+      "triangles": 44,
+      "gltfSha256": "c41284ba3191bdda026380527edf9fb0dcf03b5dd26c8779ed056edb6526c444",
+      "binarySha256": "156a986b87b097725a1c675ea20eeaf3f788014742dbf4b8f0fd2c69f27cad98"
+    },
+    {
+      "id": "Bush_4_A_Color1",
+      "kind": "shrub",
+      "vertices": 24,
+      "triangles": 44,
+      "gltfSha256": "56b56b9187350ad1222a4bd61112ed3c2a839a49ad876ca6e01ef17b426f3d02",
+      "binarySha256": "e6716cb3d232d0f24f719ef9edf61fb1218e570f3767228c4dc155eaf7e2f56f"
+    }
+  ]
+}

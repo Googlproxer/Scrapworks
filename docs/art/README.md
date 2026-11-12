@@ -14,6 +14,10 @@ Art projects, source assets, references and provenance are organised under the r
 
 - The new [M10 concept set and gallery](../../art/concepts/m10-2026-11-12/README.md) supplies four full gameplay proposals and 32 individual asset/group sheets covering every audited replacement/polish area. These are image-only concepts for review, with exact prompts/reference provenance. They target both asset work and the required renderer/shader pass; they do not establish implemented models, shaders or final qualification.
 
+- The [terrain, water and small-scatter follow-up](../../art/concepts/terrain-water-scatter-2026-11-12/README.md) develops the user's layered-terrain brief with six additional boards and fifteen Meshy prompts. It explores rotatable base variants, independent patch/scatter layers, simple real 3D stones/plants and shaped banks that expose the basin as simulation water volume falls. The gameplay view is concept art; this follow-up changes no runtime presentation or gameplay.
+
+- On 13 November the user supplied KayKit's free nature pack and requested the first layered-terrain integration, deferring water. [Selected sources, actual mesh counts and runtime preparation](../../art/world/kaykit-forest-v1/README.md) now support procedural ground patterns, irregular small stones and health-dependent grass/shrubs. These are real production-renderer changes; [local prepared-state screenshots](../reports/rendering/2026-11-13/layered-terrain/) remain separate from the earlier generated concepts. Final density/palette review and hardware qualification remain open.
+
 - The user-accepted [UI screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) establish the cream, navy and coral scrappy interface direction. The [reusable UI kit guide](ui-kit.md) owns shared pieces, fixed-corner construction and responsive dialog rules; [editable sources and preview pages](../../art/ui/kit/v1/README.md) remain separate from the current runtime UI.
 
 - The first [UI sprite set](../../art/ui/sprites/v1/README.md) covers all 28 current inventory items/placeables, the MiniFab, and two water-quality indicators. [Generated originals and exact prompts](../../art/ui/sprites/v1/generation.json), transparent PNG sizes, an atlas and a local review gallery remain under `art/ui/sprites/v1/`. This image-only pass awaits user review and is not integrated into runtime UI.
@@ -37,7 +41,7 @@ Art projects, source assets, references and provenance are organised under the r
 
 ## Camera and painted finish
 
-The authored perspective camera starts at 45 degrees and a 12 metre radius with field of view 0.8 radians. Pitch is bounded to 20–75 degrees, radius to 6–24 metres; right dragging rotates and free panning is disabled. Compare orthographic projection in the same fixture when assessing placement/readability; it remains a 3D option. The two-metre construction grid uses a subdued soil palette.
+The authored perspective camera starts at 45 degrees and a 12 metre radius with field of view 0.8 radians. Pitch is bounded to 20–75 degrees, radius to 6–24 metres; right dragging rotates and free panning is disabled. Compare orthographic projection in the same fixture when assessing placement/readability; it remains a 3D option. The two-metre construction grid is invisible in gameplay; only the player's cursor highlights a cell. Surface detail must cross cell boundaries without lines, border fades or per-cell colour seams.
 
 Gameplay dimensions are metres; Editor scene coordinates are centimetres. Logical footprints and ground-plane positions remain independent of rendered mesh bounds. Character scale, pivots, occlusion, and selection must be checked in the browser, including at different camera rotations and viewport sizes.
 
@@ -69,6 +73,16 @@ Volume should remain clear through perspective, overlapping forms, and deliberat
 | Interface artwork and icons | Simple colour areas and consistent contours that remain readable at small sizes               |
 
 Smooth environmental recovery should still come from gradual changes to ground coverage, colour, plant density, water condition, and air clarity. Runtime blending and opacity changes can preserve those transitions while individual assets retain the preferred flatter finish.
+
+### Terrain shoreline and small scatter
+
+The user's 12 November direction calls for layered terrain with multiple rotated/shuffled base surfaces on the existing two-metre grid, plus independent broader sampling layers for patches and small detail. Break up repetition with offset/jittered placement, variable occupancy and compatible texture boundaries; a larger aligned grid alone would still reveal a pattern. Keep the candidate layout stable while local health changes plant coverage.
+
+For this environment pass, the user prefers finding suitable existing low-poly assets to reduce AI generation. The user selected and supplied KayKit's free pack on 13 November; the [first land/scatter implementation](../../art/world/kaykit-forest-v1/README.md) uses eight selected source meshes. The other [nature-pack candidates](../../art/concepts/terrain-water-scatter-2026-11-12/existing-assets.md) remain alternatives, with Meshy prompts retained for missing shapes.
+
+Small decorative rocks, grass and low shrubs should be real, very low-poly meshes, with abundant low growth at full health and enough clear ground for footprints, interaction and readability. Use simple folded/wedge grass blades and chunky shrub forms. Keep tiny rocks visible through shallow silhouette/shadow depth and separate them from resource deposits. The [concept brief and Meshy targets](../../art/concepts/terrain-water-scatter-2026-11-12/meshy-prompts.md) propose final Blender triangle budgets for review; they are not measured performance tiers.
+
+Water needs a shaped 3D shore and basin. Drive its visible elevation and wetted area from the existing connected source's simulation volume, exposing damp slopes, fixed stones and the floor as it falls. Keep volume independent of health/clarity, use one coherent level per connected source, and keep the moving water surface separate from the bank geometry. The current grid/collision/buildability rules remain authoritative. The [water-level concept and presentation notes](../../art/concepts/terrain-water-scatter-2026-11-12/README.md#water-volume-and-shaped-banks) describe a future implementation; these features are not yet applied to the game.
 
 Future generation briefs should use the approved protagonist as a finish reference. Earlier world and machinery concepts remain useful for composition and design, but their more heavily shaded treatment should be brought into the preferred style when those assets are next revised.
 

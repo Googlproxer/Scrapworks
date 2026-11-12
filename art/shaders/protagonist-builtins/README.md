@@ -4,6 +4,8 @@
 
 The [rendering research/quality proposal](../../../docs/plans/stylized-rendering-and-quality.md) supplies the context. The [protagonist finish concept](../../concepts/m10-2026-11-12/assets/protagonist-finish.png) is the broad style target, without requiring a pixel-perfect match. Character identity, mesh, UVs and skin weights remain those of the [runtime v3 asset](../../characters/Protag/v3/runtime/README.md); its provenance and attribution remain unchanged.
 
+The 13 November [layered-terrain/KayKit pass](../../world/kaykit-forest-v1/README.md) also reuses this lighting function for untextured ground/scatter materials. A null texture selects native untextured StandardMaterial handling. Terrain-specific procedural colour and diffuse headroom remain in its separate binding; the approved protagonist parameters are unchanged.
+
 ## Review outputs
 
 The local report contains [the full review gallery](../../../docs/reports/rendering/2026-11-12/protagonist-builtins/index.html), [close comparison](../../../docs/reports/rendering/2026-11-12/protagonist-builtins/comparison-close.png), [overhead comparison](../../../docs/reports/rendering/2026-11-12/protagonist-builtins/comparison-overhead.png) and [capture manifest](../../../docs/reports/rendering/2026-11-12/protagonist-builtins/manifest.json). Reports are intentionally ignored and can be regenerated from this tracked source.

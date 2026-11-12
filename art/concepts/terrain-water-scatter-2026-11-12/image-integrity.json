@@ -1,0 +1,120 @@
+[
+  {
+    "id": "01-layered-terrain",
+    "file": "images/01-layered-terrain.png",
+    "bytes": 1804949,
+    "sha256": "fca0e6c8bcf2c3cb8213f6e166e46eafb41ee86b9de60df0db577706858a5968",
+    "width": 1536,
+    "height": 1024,
+    "promptSha256": "4be91d9caefbf7e5f4f492cc02a32e4cd480c98a17903da093c8b0fd83c9b1d9",
+    "references": [
+      {
+        "file": "../m10-2026-11-12/assets/terrain.png",
+        "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+      },
+      {
+        "file": "../m10-2026-11-12/assets/vegetation.png",
+        "sha256": "ec73a5f8c4d404b7ef263c57d4b1cef52a8cb7df0d66bb41e4fcfbc7d407712f"
+      }
+    ]
+  },
+  {
+    "id": "02-ground-variants",
+    "file": "images/02-ground-variants.png",
+    "bytes": 1434674,
+    "sha256": "7db3739d8da0e9f923f44479c91bf77c3e9e883a2b89b3a35e1817a1d4ca965c",
+    "width": 1536,
+    "height": 1024,
+    "promptSha256": "4846933ac2e656014391669dfc2c48b2cf05a85edd9b982988b28240a4c2e4f0",
+    "references": [
+      {
+        "file": "../m10-2026-11-12/assets/terrain.png",
+        "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+      }
+    ]
+  },
+  {
+    "id": "03-water-levels",
+    "file": "images/03-water-levels.png",
+    "bytes": 1682607,
+    "sha256": "4a7657796fd7d83b1cc51a3d213c5b223b8415d09504fb11d396d959e8bf7a96",
+    "width": 1536,
+    "height": 1024,
+    "promptSha256": "bc534924a1da9e0d23e07e375f4148961fddaab7d4cb435e82820f8d2596a7b2",
+    "references": [
+      {
+        "file": "../m10-2026-11-12/assets/water.png",
+        "sha256": "8b2f5913d5adb0f996c3e3297db1d848e58d3c1d898e7911a517b0a6e981f26c"
+      },
+      {
+        "file": "../m10-2026-11-12/assets/terrain.png",
+        "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+      }
+    ]
+  },
+  {
+    "id": "04-rock-scatter",
+    "file": "images/04-rock-scatter.png",
+    "bytes": 1497014,
+    "sha256": "a88e2b9a54e372eeec0294f82b3c4dbb50ba80882141389eec74ecb41f7638a9",
+    "width": 1536,
+    "height": 1024,
+    "promptSha256": "c831ac723708e9ac1dc2fcf3f78ebf1a746d1de9a7dd779db865052eb9790a99",
+    "references": [
+      {
+        "file": "../m10-2026-11-12/assets/terrain.png",
+        "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+      },
+      {
+        "file": "../m10-2026-11-12/assets/water.png",
+        "sha256": "8b2f5913d5adb0f996c3e3297db1d848e58d3c1d898e7911a517b0a6e981f26c"
+      }
+    ]
+  },
+  {
+    "id": "05-vegetation-scatter",
+    "file": "images/05-vegetation-scatter.png",
+    "bytes": 1715298,
+    "sha256": "052fd2b7fa822135ae0e795b8538610936712182ac7ccaef9ffc1e3f782aeaba",
+    "width": 1536,
+    "height": 1024,
+    "promptSha256": "8d9ed6ed62f0c6de2f82c364a4dd14d4a2b70207bf6e9dfc0057c94df3cdd6fb",
+    "references": [
+      {
+        "file": "../m10-2026-11-12/assets/vegetation.png",
+        "sha256": "ec73a5f8c4d404b7ef263c57d4b1cef52a8cb7df0d66bb41e4fcfbc7d407712f"
+      },
+      {
+        "file": "../m10-2026-11-12/assets/terrain.png",
+        "sha256": "b057afa62dd9efa64b052d04611c4b23e048e08b7d66560e44bb2f8cbbea1558"
+      }
+    ]
+  },
+  {
+    "id": "06-gameplay-proposal",
+    "file": "images/06-gameplay-proposal.png",
+    "bytes": 1691789,
+    "sha256": "9a52c128d6bb3f21b2abaf18b58d25dcb87c1a626ddea2aec72003a75ca8840f",
+    "width": 1672,
+    "height": 941,
+    "promptSha256": "e7290658d5bb608439114bbfdadfabfe036d8a1549f38d90884635137627869a",
+    "references": [
+      {
+        "file": "images/01-layered-terrain.png",
+        "sha256": "fca0e6c8bcf2c3cb8213f6e166e46eafb41ee86b9de60df0db577706858a5968"
+      },
+      {
+        "file": "images/03-water-levels.png",
+        "sha256": "4a7657796fd7d83b1cc51a3d213c5b223b8415d09504fb11d396d959e8bf7a96"
+      },
+      {
+        "file": "images/05-vegetation-scatter.png",
+        "sha256": "052fd2b7fa822135ae0e795b8538610936712182ac7ccaef9ffc1e3f782aeaba"
+      },
+      {
+        "file": "references/approved-protagonist-I-game.png",
+        "sha256": "0f371573d1359106141d5c29a8c90a06ad19cbe7fa1013aeb9c6b8ed0dec1524"
+      }
+    ]
+  }
+]
