@@ -159,6 +159,44 @@
   }
 }
 @media (max-height: 480px) {
+  .main-menu {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+  }
+  .main-menu .top-right {
+    display: flex;
+    align-items: start;
+    position: static;
+    align-self: end;
+    flex-shrink: 0;
+    max-inline-size: 100%;
+    order: 1;
+  }
+  .main-menu .top-right button {
+    font-size: 0.75rem;
+    padding-inline: 8px;
+  }
+  .main-menu .centre {
+    position: static;
+    transform: none;
+    inline-size: min(600px, 100%);
+    min-block-size: 0;
+    margin-block-start: auto;
+    overflow: auto;
+    overscroll-behavior: contain;
+    order: 2;
+  }
+  .main-menu .asset-credits {
+    position: static;
+    align-self: end;
+    flex-shrink: 0;
+    order: 3;
+  }
   .centre {
     inset-block-start: auto;
     inset-block-end: 8px;

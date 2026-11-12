@@ -92,7 +92,7 @@ async function covered(page: Page) {
         bounds.top === 0 &&
         bounds.width === innerWidth &&
         bounds.height === innerHeight &&
-        getComputedStyle(cover).backgroundColor === 'rgb(12, 19, 19)' &&
+        getComputedStyle(cover).backgroundColor === 'rgb(9, 29, 44)' &&
         host.inert &&
         !document.querySelector('.game-help')
       );

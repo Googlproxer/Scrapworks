@@ -8,6 +8,8 @@ Implemented 13 November 2026 from the accepted [UI kit](ui-kit.md), [Field Kit r
 
 Dialog bodies scroll inside fixed frames without stretching artwork. Separate SVG edge tiles and corner pieces preserve their original silhouettes and inner corner joins. The navy fill is inset behind them; transparent exterior cuts expose the game/backdrop. Controls and Graphics retain fixed headers/actions while their content scrolls. Compact Controls uses stacked binding rows.
 
+On short windows, the main menu lays out settings, game actions and credits in separate flow regions. Its actions scroll when needed so Save/Load cannot cover New Game or Resume after Retry.
+
 The Field Kit uses three work columns when its content width is at least 768 px, then two columns before switching to a focused work area below 640 px. Inventory, Crafting and MiniFab share the existing component state; choosing a compact area does not cancel crafting or reset selections. Main section changes and closing still use the existing unfinished-work confirmation. Limits remain configurable in [variables.scss](../../src/variables.scss).
 
 The runtime crank uses a 192 px nominal desktop canvas, 152 px in intermediate layouts and 200 px in compact layouts, with proportional artwork. Native controls retain a minimum 44 px target; the taller standalone proof remains a visual construction reference.

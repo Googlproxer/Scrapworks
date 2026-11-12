@@ -37,6 +37,8 @@
 }
 
 <div
+  class="game-ui"
+  [class.main-menu]="gameRuntimeService.currentSceneKey() !== 'Game'"
   [hidden]="gameRuntimeService.inspectorState().phase === 'open'"
   [inert]="gameRuntimeService.isBusy() || !!gameRuntimeService.errorMessage()"
 >

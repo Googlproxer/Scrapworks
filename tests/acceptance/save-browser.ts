@@ -309,6 +309,7 @@ try {
       null,
     );
     stage = 'pause menu load and confirmations';
+    await page.locator('#field-kit').getByRole('button', { name: 'Close', exact: true }).click();
     await page.getByRole('button', { name: 'Menu', exact: true }).click();
     await page
       .getByRole('dialog')

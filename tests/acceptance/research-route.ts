@@ -100,16 +100,18 @@ export async function checkResearchRoute(
   ]) {
     await page.setViewportSize(viewport);
     const box = (await page.locator('#field-kit').boundingBox())!;
-    assert(Math.abs(box.width - viewport.width / 2) < 1);
-    assert(Math.abs(box.height - viewport.height / 2) < 1);
+    assert(Math.abs(box.width - 1180) < 1, 'Large windows retain the readable kit width');
+    assert(Math.abs(box.height - 840) < 1, 'Large windows retain the kit height');
+    assert(box.x >= 0 && box.x + box.width <= viewport.width);
+    assert(box.y >= 0 && box.y + box.height <= viewport.height);
   }
   await page.evaluate(() => {
-    document.documentElement.style.setProperty('--field-kit-max-width', '60vw');
-    document.documentElement.style.setProperty('--field-kit-max-height', '60dvh');
+    document.documentElement.style.setProperty('--field-kit-max-width', '960px');
+    document.documentElement.style.setProperty('--field-kit-max-height', '640px');
   });
   const overridden = (await page.locator('#field-kit').boundingBox())!;
-  assert(Math.abs(overridden.width - 3840 * 0.6) < 1);
-  assert(Math.abs(overridden.height - 2160 * 0.6) < 1);
+  assert(Math.abs(overridden.width - 960) < 1);
+  assert(Math.abs(overridden.height - 640) < 1);
   await page.evaluate(() => {
     document.documentElement.style.removeProperty('--field-kit-max-width');
     document.documentElement.style.removeProperty('--field-kit-max-height');
