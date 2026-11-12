@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <title>Raised hand-crank arm and central axle, pivot at 128 128</title>
+  <path fill="#142C40" d="M108 136v-16l66-65h15l16 17v15l-67 61h-17Z"/>
+  <path fill="#FFF1CF" d="M114 132v-10l63-61h9l13 13v10l-64 57h-11Z"/>
+  <path fill="#F1E1BD" d="m122 126 57-57h5l7 7v5l-60 53h-5Z"/>
+  <path fill="#C8B28B" d="m114 132 10 9h11l64-57v-9l-68 59h-5l-4-8Z"/>
+  <path fill="#FFF1CF" d="m137 110 36-36 6-2-36 37Z"/>
+  <circle cx="185" cy="70" r="16" fill="#142C40"/>
+  <circle cx="185" cy="70" r="12" fill="#7393A3"/>
+  <circle cx="185" cy="70" r="7" fill="#F1E1BD"/>
+  <circle cx="128" cy="128" r="23" fill="#142C40"/>
+  <circle cx="128" cy="128" r="18" fill="#FFF1CF"/>
+  <path fill="#C8B28B" d="M111 130a18 18 0 0 0 34 0c-12 6-23 6-34 0Z"/>
+  <path fill="#31495D" d="m123 119 10 0 6 9-5 10h-12l-5-10Z"/>
+  <path fill="#7393A3" d="m125 122 6 0 4 6-3 6h-8l-3-6Z"/>
+  <path d="m125 126 6 4" stroke="#20394C" stroke-width="2"/>
+</svg>

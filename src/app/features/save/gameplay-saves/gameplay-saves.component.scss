@@ -1,16 +1,15 @@
 :host {
   display: block;
   max-width: min(26rem, calc(100vw - 2rem));
-  color: #fff;
+  color: var(--sw-cream);
   font:
-    14px / 1.5 system-ui,
+    14px / 1.5 'Trebuchet MS',
     sans-serif;
 }
 section {
   padding: 0.65rem;
   background: rgba(16, 25, 31, 0.96);
-  border: 1px solid #8ba0ad;
-  border-radius: 0.4rem;
+  border: 1px solid var(--sw-line);
   font-size: 0.8rem;
   max-height: var(--gameplay-save-max-height, min(78vh, 48rem));
   overflow: auto;
@@ -26,13 +25,12 @@ p {
   overflow-wrap: anywhere;
 }
 small {
-  color: #d9e4eb;
+  color: var(--sw-muted);
 }
 summary {
   padding: 0.35rem 0.6rem;
-  background: #19242b;
-  border: 1px solid #8ba0ad;
-  border-radius: 0.3rem;
+  background: var(--sw-navy);
+  border: 1px solid var(--sw-line);
   cursor: pointer;
 }
 .compact-feedback {
@@ -41,12 +39,12 @@ summary {
   overflow: hidden;
   margin: 0.15rem 0;
   font-size: 0.75rem;
-  background: #19242b;
+  background: var(--sw-navy);
 }
 fieldset {
   margin: 0 0 0.7rem;
   padding: 0.5rem;
-  border: 1px solid #8ba0ad;
+  border: 1px solid var(--sw-line);
   min-width: 0;
 }
 label,
@@ -61,10 +59,6 @@ select {
   box-sizing: border-box;
   min-height: 2.5rem;
   margin: 0.2rem 0 0.45rem;
-  color: #fff;
-  background: #19242b;
-  border: 1px solid #8ba0ad;
-  border-radius: 0.25rem;
 }
 .status,
 .import-preview,
@@ -84,6 +78,21 @@ select {
   min-height: 2.5rem;
 }
 :focus-visible {
-  outline: 2px solid #f7db8b;
+  outline: 3px solid var(--sw-focus);
   outline-offset: 2px;
+}
+section {
+  background: transparent;
+  border: 6px solid transparent;
+  border-image: url('/assets/ui/kit/v1/inset.svg') 12 fill / 6px / 0 stretch;
+  padding: 10px;
+}
+fieldset {
+  border-color: var(--sw-line);
+}
+.compact-feedback {
+  color: var(--sw-cream);
+  border: 4px solid transparent;
+  border-image: url('/assets/ui/kit/v1/inset.svg') 12 fill / 4px / 0 stretch;
+  background: transparent;
 }

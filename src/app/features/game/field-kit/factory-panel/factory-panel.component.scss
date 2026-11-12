@@ -3,7 +3,7 @@
   height: 100%;
   overflow: auto;
   padding-right: 8px;
-  color: #f1f5f3;
+  color: var(--sw-cream);
   scrollbar-gutter: stable;
 }
 h3 {
@@ -13,7 +13,7 @@ h4 {
   font-size: 1rem;
 }
 .power-summary {
-  border-left: 3px solid #66d5dc;
+  border-left: 3px solid var(--sw-coral);
   padding-left: 10px;
 }
 .power-value {

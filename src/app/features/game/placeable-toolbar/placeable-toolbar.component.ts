@@ -4,7 +4,10 @@ import { ITEM_NAMES } from '@content/opening';
 import { TOOLBAR_SLOTS } from '@contracts/toolbar';
 import type { EquipmentId } from '@contracts/factory';
 
+import { ItemSprite } from '@app/shared/item-sprite/item-sprite';
+
 @Component({
+  imports: [ItemSprite],
   selector: 'app-placeable-toolbar',
   templateUrl: './placeable-toolbar.component.html',
   styleUrl: './placeable-toolbar.component.scss',

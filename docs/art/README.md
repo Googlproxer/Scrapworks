@@ -1,6 +1,6 @@
 # Scrapworks Art Document
 
-Updated 12 November 2026. Active production direction: fully 3D world and character with the established flat painted finish.
+Updated 13 November 2026. Active production direction: fully 3D world and character with the established flat painted finish.
 
 This document owns visual identity, camera/readability, and 3D asset preparation. The [GDD](../design/GDD.md) owns gameplay; the [TDD](../design/TDD.md) owns architecture.
 
@@ -18,7 +18,7 @@ Art projects, source assets, references and provenance are organised under the r
 
 - On 13 November the user supplied KayKit's free nature pack and requested the first layered-terrain integration, deferring water. [Selected sources, actual mesh counts and runtime preparation](../../art/world/kaykit-forest-v1/README.md) now support procedural ground patterns, irregular small stones and health-dependent grass/shrubs. These are real production-renderer changes; [local prepared-state screenshots](../reports/rendering/2026-11-13/layered-terrain/) remain separate from the earlier generated concepts. Final density/palette review and hardware qualification remain open.
 
-- The user-accepted [UI screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) establish the cream, navy and coral scrappy interface direction. The [reusable UI kit guide](ui-kit.md) owns shared pieces, fixed-corner construction and responsive dialog rules; [editable sources and preview pages](../../art/ui/kit/v1/README.md) remain separate from the current runtime UI.
+- The user-accepted [UI screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) establish the cream, navy and coral scrappy interface direction. The [reusable UI kit guide](ui-kit.md) owns shared pieces, fixed-corner construction and responsive dialog rules; [editable sources and preview pages](../../art/ui/kit/v1/README.md) remain in art/. The [runtime UI integration](ui-runtime.md) now applies the kit across the application, using a shared theme and the resource/tool/machine sprites.
 
 - The first [UI sprite set](../../art/ui/sprites/v1/README.md) covers all 28 current inventory items/placeables, the MiniFab, and two water-quality indicators. [Generated originals and exact prompts](../../art/ui/sprites/v1/generation.json), transparent PNG sizes, an atlas and a local review gallery remain under `art/ui/sprites/v1/`. This image-only pass awaits user review and is not integrated into runtime UI.
 

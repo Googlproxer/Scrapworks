@@ -3,20 +3,23 @@
     Inventory <span>{{ usedSlots() }}/24 slots</span>
   </h3>
   <app-inventory-slots [slots]="opening.bag.slots" label="Bag slots" />
-  <app-equipable-panel />
   <details>
-    <summary>Recover materials</summary>
-    <p>Disassembly returns solid material value. It needs room for the complete return.</p>
-    @for (item of ['prybar', 'plate', 'wire', 'mechanical-part', 'electrical-part']; track item) {
-      @if (amount(item) || opening.tool === item) {
-        <button
-          type="button"
-          [disabled]="!!opening.state.handcraft"
-          (click)="runtime.command({ type: 'dismantle', item })"
-        >
-          Dismantle one {{ name(item) }}
-        </button>
+    <summary>Equipable and material recovery</summary>
+    <app-equipable-panel />
+    <details>
+      <summary>Recover materials</summary>
+      <p>Disassembly returns solid material value. It needs room for the complete return.</p>
+      @for (item of ['prybar', 'plate', 'wire', 'mechanical-part', 'electrical-part']; track item) {
+        @if (amount(item) || opening.tool === item) {
+          <button
+            type="button"
+            [disabled]="!!opening.state.handcraft"
+            (click)="runtime.command({ type: 'dismantle', item })"
+          >
+            Dismantle one {{ name(item) }}
+          </button>
+        }
       }
-    }
+    </details>
   </details>
 }

@@ -53,6 +53,7 @@ export class WindingHandleComponent {
       merge(
         fromEvent(document, 'visibilitychange'),
         fromEvent(document.defaultView!, 'blur'),
+        fromEvent(document.defaultView!, 'resize'),
       ).subscribe(() => this.release()),
     );
     inject(DestroyRef).onDestroy(() => {
@@ -89,7 +90,11 @@ export class WindingHandleComponent {
   }
 
   public release(): void {
+    const pointer = this.pointer;
     this.pointer = null;
+    const handle = this.element.nativeElement.querySelector('button');
+    if (pointer !== null && handle?.hasPointerCapture(pointer))
+      handle.releasePointerCapture(pointer);
     this.keyboardHeld = false;
     this.travel.reset();
   }

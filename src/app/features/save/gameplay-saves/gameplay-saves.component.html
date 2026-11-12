@@ -30,7 +30,7 @@
       <div class="actions">
         <button
           type="button"
-          class="button"
+          class="button sw-primary"
           (click)="saves.save()"
           [disabled]="!saves.hasSession() || nameForm().invalid()"
         >
@@ -53,38 +53,42 @@
     <fieldset [disabled]="saves.busy()">
       <legend>Saved runs and recovery</legend>
       <label [attr.for]="id + '-run'">Saved run</label>
-      <select
-        [id]="id + '-run'"
-        data-save-run
-        [value]="saves.status().slot?.runId ?? ''"
-        (change)="chooseRun($event)"
-        [disabled]="!saves.runs().length"
+      <span class="sw-select"
+        ><select
+          [id]="id + '-run'"
+          data-save-run
+          [value]="saves.status().slot?.runId ?? ''"
+          (change)="chooseRun($event)"
+          [disabled]="!saves.runs().length"
+        >
+          @if (!saves.runs().length) {
+            <option value="">No saved runs</option>
+          }
+          @for (run of saves.runs(); track run.runId) {
+            <option [value]="run.runId">{{ run.name }} · {{ run.savedAt | date: 'short' }}</option>
+          }
+        </select></span
       >
-        @if (!saves.runs().length) {
-          <option value="">No saved runs</option>
-        }
-        @for (run of saves.runs(); track run.runId) {
-          <option [value]="run.runId">{{ run.name }} · {{ run.savedAt | date: 'short' }}</option>
-        }
-      </select>
       <label [attr.for]="id + '-revision'">Revision to inspect or recover</label>
-      <select
-        [id]="id + '-revision'"
-        data-save-revision
-        [value]="saves.status().slot?.token ?? ''"
-        (change)="chooseRevision($event)"
-        [disabled]="!saves.history().length"
+      <span class="sw-select"
+        ><select
+          [id]="id + '-revision'"
+          data-save-revision
+          [value]="saves.status().slot?.token ?? ''"
+          (change)="chooseRevision($event)"
+          [disabled]="!saves.history().length"
+        >
+          @if (!saves.history().length) {
+            <option value="">No revisions</option>
+          }
+          @for (revision of saves.history(); track revision.token) {
+            <option [value]="revision.token">
+              {{ revision.kind === 'auto' ? 'Autosave' : 'Manual' }} {{ revision.sequence }} ·
+              {{ revision.savedAt | date: 'short' }}
+            </option>
+          }
+        </select></span
       >
-        @if (!saves.history().length) {
-          <option value="">No revisions</option>
-        }
-        @for (revision of saves.history(); track revision.token) {
-          <option [value]="revision.token">
-            {{ revision.kind === 'auto' ? 'Autosave' : 'Manual' }} {{ revision.sequence }} ·
-            {{ revision.savedAt | date: 'short' }}
-          </option>
-        }
-      </select>
       <p class="revision-detail">
         {{
           saves.status().slot

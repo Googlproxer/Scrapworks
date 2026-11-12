@@ -1,8 +1,10 @@
 import { Component, input } from '@angular/core';
 import { ITEM_NAMES } from '@content/opening';
 import type { ItemStack } from '@contracts/simulation';
+import { ItemSprite } from '@app/shared/item-sprite/item-sprite';
 
 @Component({
+  imports: [ItemSprite],
   selector: 'app-inventory-slots',
   templateUrl: './inventory-slots.component.html',
   styleUrl: './inventory-slots.component.scss',

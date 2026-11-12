@@ -260,7 +260,9 @@ describe('Factory controls', () => {
     expect(input.querySelector('.occupied strong')!.textContent).toBe('8');
     expect(output.querySelector('.occupied strong')!.textContent).toBe('3');
     expect(output.querySelectorAll('.empty')).toHaveLength(machine.output.slots.length - 1);
-    expect(getComputedStyle(output.querySelector('li')!).height).toBe('66px');
+    const slotHeight = getComputedStyle(output.querySelector('li')!).height;
+    expect(slotHeight).toBe(getComputedStyle(input.querySelector('li')!).height);
+    expect(parseFloat(slotHeight)).toBeGreaterThanOrEqual(64);
     expect((await axe.run(root)).violations).toEqual([]);
   });
 

@@ -1,57 +1,67 @@
 :host {
+  --crank-size: 192px;
   display: grid;
-  grid-template-columns: 100px 1fr;
-  align-items: center;
-  gap: 1rem;
+  justify-items: center;
+  gap: 6px;
+  min-inline-size: 0;
+  margin-block: 10px;
 }
 .crank {
+  display: block;
   position: relative;
-  width: 96px;
-  height: 96px;
+  inline-size: min(100%, var(--crank-size));
+  block-size: auto;
+  aspect-ratio: 1;
+  border: 0;
+  border-image: none;
+  padding: 0;
   border-radius: 50%;
-  border: 2px solid #738e83;
-  background: #152821;
+  background: url('/assets/ui/kit/v1/crank-base.svg') center / contain no-repeat;
   touch-action: none;
+  user-select: none;
   cursor: grab;
 }
 .crank:active {
   cursor: grabbing;
+  translate: none;
 }
-.crank:focus-visible {
-  outline: 3px solid #0ec3c9;
-  outline-offset: 4px;
+.caster,
+.moving,
+.arm,
+.grip {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.caster {
+  filter: drop-shadow(
+    calc(var(--crank-size) * 0.027) calc(var(--crank-size) * 0.036) 0 var(--sw-shadow)
+  );
+}
+.moving {
+  transform-origin: 50% 50%;
 }
 .arm {
-  position: absolute;
-  left: 50%;
-  top: calc(50% - 4px);
-  width: 36px;
-  height: 8px;
-  background: #b9c7c0;
-  transform-origin: 0 50%;
-  border-radius: 4px;
+  background-image: url('/assets/ui/kit/v1/crank-arm.svg');
 }
-.arm span {
-  position: absolute;
-  right: -6px;
-  top: -5px;
-  width: 18px;
-  height: 18px;
-  background: #0ec3c9;
-  border-radius: 50%;
-}
-.pivot {
-  position: absolute;
-  left: calc(50% - 9px);
-  top: calc(50% - 9px);
-  width: 18px;
-  height: 18px;
-  background: #dce9e1;
-  border-radius: 50%;
+.grip {
+  background-image: url('/assets/ui/kit/v1/crank-grip.svg');
 }
 p {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: #c4d2ca;
   margin: 0;
+  font-size: 0.85rem;
+  color: var(--sw-muted);
+}
+@container (width < 56rem) {
+  :host {
+    --crank-size: 152px;
+  }
+}
+@media (max-width: 600px) {
+  :host {
+    --crank-size: 200px;
+  }
 }

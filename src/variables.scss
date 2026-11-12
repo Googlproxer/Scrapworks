@@ -1,5 +1,5 @@
 // Large-display field-kit limits. Compact layouts retain their usable viewport sizing.
 :root {
-  --field-kit-max-width: 50vw;
-  --field-kit-max-height: 50dvh;
+  --field-kit-max-width: 1180px;
+  --field-kit-max-height: calc(100dvh - 32px);
 }

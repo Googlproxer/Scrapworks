@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <title>Cream inset text field, nine-slice at 24 units</title>
+  <path fill="#142C40" d="M17 1h66l12 12v64L77 95H13L1 83V17Z"/>
+  <path fill="#C8B28B" d="M18 4h64l10 10v62L76 92H14L4 82V18Z"/>
+  <path fill="#FFF1CF" d="M19 6h62l9 9v60L75 90H15L6 81V19Z"/>
+  <path fill="#A78F6C" d="M20 10h60l6 6v58L74 86H16l-6-6V20Z"/>
+  <path fill="#F1E1BD" d="M22 14h56l4 4v54L72 82H18l-4-4V22Z"/>
+  <path fill="#FFF1CF" d="m15 85 3-3h54l3 3v5H15Z"/>
+  <path fill="#DBC399" d="M22 14h56v3H22Z"/>
+</svg>

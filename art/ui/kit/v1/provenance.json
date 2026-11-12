@@ -372,7 +372,7 @@
       "compactRecipeStatePreserved": true
     }
   },
-  "updatedDate": "2026-11-11",
+  "updatedDate": "2026-11-13",
   "revision": 11,
   "spritePreview": {
     "source": "../../sprites/v1/",
@@ -397,5 +397,20 @@
       "previews/sprites-medium.png",
       "previews/sprites-compact-crafting.png"
     ]
+  },
+  "runtimeIntegration": {
+    "date": "2026-11-13",
+    "guide": "../../../../docs/art/ui-runtime.md",
+    "preparation": "../../../../tools/art/prepare-ui-kit.ts",
+    "record": "runtime.json",
+    "screenshots": "previews/runtime/README.md",
+    "validation": "previews/runtime/validation.json",
+    "theme": "../../../../src/styles/_ui-kit.scss",
+    "svgPieces": 26,
+    "sprites": 31,
+    "sourcePngSize": 128,
+    "bytes": 671840,
+    "scope": "All application-owned UI; existing gameplay, saves, research, transport and input ownership retained",
+    "prototypeRevision": 11
   }
 }

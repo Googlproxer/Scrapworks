@@ -1,5 +1,8 @@
 <header>
-  <h2 id="machine-inspection-title" tabindex="-1">
+  <h2 class="sw-title" id="machine-inspection-title" tabindex="-1">
+    @if (selected(); as entity) {
+      <app-item-sprite [item]="entity.building!.buildingId" [size]="36" />
+    }
     {{ selected() ? name(selected()!.building!.buildingId) : 'Machine inspection' }}
   </h2>
   <button type="button" (click)="close()" aria-label="Close machine inspection">Close</button>
@@ -65,12 +68,14 @@
       }
       @if (eligibleRecipes().length) {
         <label for="factory-recipe">Fabrication recipe</label
-        ><select id="factory-recipe" [formField]="fields.recipe">
-          <option value="">Select recipe</option>
-          @for (r of eligibleRecipes(); track r.id) {
-            <option [value]="r.id">{{ r.name }} · {{ materials(r.inputs) }}</option>
-          }
-        </select>
+        ><span class="sw-select"
+          ><select id="factory-recipe" [formField]="fields.recipe">
+            <option value="">Select recipe</option>
+            @for (r of eligibleRecipes(); track r.id) {
+              <option [value]="r.id">{{ r.name }} · {{ materials(r.inputs) }}</option>
+            }
+          </select></span
+        >
         <button
           type="button"
           [disabled]="!model().recipe || !!machine.job"
@@ -104,15 +109,17 @@
         </section>
       </div>
       <label for="factory-item">Material</label
-      ><select id="factory-item" [formField]="fields.item">
-        @for (entry of loadMaterials(); track entry.item) {
-          <option [value]="entry.item">
-            {{ name(entry.item) }} · {{ entry.quantity }} available
-          </option>
-        } @empty {
-          <option value="">No input materials</option>
-        }
-      </select>
+      ><span class="sw-select"
+        ><select id="factory-item" [formField]="fields.item">
+          @for (entry of loadMaterials(); track entry.item) {
+            <option [value]="entry.item">
+              {{ name(entry.item) }} · {{ entry.quantity }} available
+            </option>
+          } @empty {
+            <option value="">No input materials</option>
+          }
+        </select></span
+      >
       <label>Transfer quantity <input type="number" [formField]="fields.count" /></label>
       <div class="transfer-controls">
         <div>

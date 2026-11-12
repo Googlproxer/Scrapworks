@@ -1,9 +1,14 @@
 <ol class="bag" [attr.aria-label]="label()">
   @for (slot of slots(); track $index) {
-    <li [class.occupied]="!!slot">
-      <span class="slot-number">{{ $index + 1 }}</span>
+    <li
+      class="sw-inset"
+      [class.occupied]="!!slot"
+      [title]="slot ? name(slot.item) + ' (' + slot.quantity + ')' : 'Empty slot'"
+    >
+      <span class="slot-number" aria-hidden="true">{{ $index + 1 }}</span>
       @if (slot) {
-        <span>{{ name(slot.item) }}</span
+        <app-item-sprite [item]="slot.item" [size]="48" />
+        <span class="sw-visually-hidden">{{ name(slot.item) }}</span
         ><strong>{{ slot.quantity }}</strong>
       } @else {
         <span class="empty">Empty</span>

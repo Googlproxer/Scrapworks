@@ -7,6 +7,7 @@ import { UiService } from '../ui.service';
 import { GameplaySavesComponent } from '../../save/gameplay-saves/gameplay-saves.component';
 
 @Component({
+  host: { class: 'sw-shell sw-dialog' },
   imports: [GameplaySavesComponent],
   selector: 'app-game-menu',
   templateUrl: './game-menu.component.html',

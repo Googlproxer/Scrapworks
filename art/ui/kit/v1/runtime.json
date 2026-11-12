@@ -1,0 +1,348 @@
+{
+  "tool": "tools/art/prepare-ui-kit.ts",
+  "preparation": "Exact copies of the 26 kit SVGs and 31 square 128px transparent UI sprite derivatives. Original source artwork remains under art/.",
+  "exports": [
+    {
+      "source": "art/ui/kit/v1/sources/corner-bottom-left.svg",
+      "target": "public/assets/ui/kit/v1/corner-bottom-left.svg",
+      "sha256": "479565ebb6c7d552463113798ee3cbf15c03846892db285f646b47f4bf56fc89",
+      "bytes": 589
+    },
+    {
+      "source": "art/ui/kit/v1/sources/corner-bottom-right.svg",
+      "target": "public/assets/ui/kit/v1/corner-bottom-right.svg",
+      "sha256": "375344fdc6fbe4672a0693dfc0716b30f0058e0e4dae0e3708aebbd3caf42eb0",
+      "bytes": 915
+    },
+    {
+      "source": "art/ui/kit/v1/sources/corner-top-left.svg",
+      "target": "public/assets/ui/kit/v1/corner-top-left.svg",
+      "sha256": "91095147326c184e94fb54bdbe3f627ef6ccf2fb5a81a5bb13ad13e7b777682c",
+      "bytes": 526
+    },
+    {
+      "source": "art/ui/kit/v1/sources/corner-top-right.svg",
+      "target": "public/assets/ui/kit/v1/corner-top-right.svg",
+      "sha256": "708de92a8eece967141cca29f2690705e824961f269069f9d5e73094e6603152",
+      "bytes": 530
+    },
+    {
+      "source": "art/ui/kit/v1/sources/crank-arm.svg",
+      "target": "public/assets/ui/kit/v1/crank-arm.svg",
+      "sha256": "dac25885be5350d057e9b8e29563a34570042571c440fc0735f1338b1c774b1a",
+      "bytes": 1012
+    },
+    {
+      "source": "art/ui/kit/v1/sources/crank-base.svg",
+      "target": "public/assets/ui/kit/v1/crank-base.svg",
+      "sha256": "bb50524b4ce6fcc6616c3506fc862799c472141dd7df7abe019fbcf7a36d9c7d",
+      "bytes": 1390
+    },
+    {
+      "source": "art/ui/kit/v1/sources/crank-grip.svg",
+      "target": "public/assets/ui/kit/v1/crank-grip.svg",
+      "sha256": "f7dcbe44abc2069a49d7cf9616d0968987d108636e15af02571c362c44c51dce",
+      "bytes": 1163
+    },
+    {
+      "source": "art/ui/kit/v1/sources/dialog-frame.svg",
+      "target": "public/assets/ui/kit/v1/dialog-frame.svg",
+      "sha256": "6d6cbb74fbf7059fc75b560266caa8b0450bae9a0dc2cff4a560cbe81ef65f2d",
+      "bytes": 646
+    },
+    {
+      "source": "art/ui/kit/v1/sources/dropdown-face.svg",
+      "target": "public/assets/ui/kit/v1/dropdown-face.svg",
+      "sha256": "50030b0277e47273110ba1faa55949ca4634949537541591fbd53bc47c2a441d",
+      "bytes": 540
+    },
+    {
+      "source": "art/ui/kit/v1/sources/edge-bottom.svg",
+      "target": "public/assets/ui/kit/v1/edge-bottom.svg",
+      "sha256": "b848447faabdd92069e04147f82329f08d48d4eafc8d07873935c510847ceb72",
+      "bytes": 592
+    },
+    {
+      "source": "art/ui/kit/v1/sources/edge-horizontal.svg",
+      "target": "public/assets/ui/kit/v1/edge-horizontal.svg",
+      "sha256": "1bf196578b0c2a1c0b4faac455a12316de60fc35abbfd159d8a9806287d3a175",
+      "bytes": 533
+    },
+    {
+      "source": "art/ui/kit/v1/sources/edge-right.svg",
+      "target": "public/assets/ui/kit/v1/edge-right.svg",
+      "sha256": "8741191a168765adb43dac48c950c7fb8e0f9799ebeb125e6d8ca608aa54ea3d",
+      "bytes": 589
+    },
+    {
+      "source": "art/ui/kit/v1/sources/edge-vertical.svg",
+      "target": "public/assets/ui/kit/v1/edge-vertical.svg",
+      "sha256": "ed344e54b7afddfdc23b0727c1935a0cb26aefddba4617e2339d63d9b3a41876",
+      "bytes": 531
+    },
+    {
+      "source": "art/ui/kit/v1/sources/fastener.svg",
+      "target": "public/assets/ui/kit/v1/fastener.svg",
+      "sha256": "2988f38418c236993ac98cdcddc7b5af8fa3c676242c5a901cab40633df9d568",
+      "bytes": 441
+    },
+    {
+      "source": "art/ui/kit/v1/sources/input-face.svg",
+      "target": "public/assets/ui/kit/v1/input-face.svg",
+      "sha256": "efeaff8e4114aa253637a8c17bb9a15eccbf74810dccc3b228418ccd3e6e3a6f",
+      "bytes": 574
+    },
+    {
+      "source": "art/ui/kit/v1/sources/inset.svg",
+      "target": "public/assets/ui/kit/v1/inset.svg",
+      "sha256": "d29b554770185edf09c552aaaf3806d952f157030792a7ef43f1f8df3df4579b",
+      "bytes": 394
+    },
+    {
+      "source": "art/ui/kit/v1/sources/plate-coral.svg",
+      "target": "public/assets/ui/kit/v1/plate-coral.svg",
+      "sha256": "b882e9183e6aa8766d31a4f261ea88ff25b3e14f69f2cb57852189657d821721",
+      "bytes": 561
+    },
+    {
+      "source": "art/ui/kit/v1/sources/plate-cream.svg",
+      "target": "public/assets/ui/kit/v1/plate-cream.svg",
+      "sha256": "3f5213c18f5025bf00ed7ff1fcb8effd1078955ddaa6c7c9eadf3f22fc6e9a16",
+      "bytes": 561
+    },
+    {
+      "source": "art/ui/kit/v1/sources/plate-steel.svg",
+      "target": "public/assets/ui/kit/v1/plate-steel.svg",
+      "sha256": "bb6312a63c2a175a9887d6fa5029f07c4462d1a64a2135776a82ed3a02b75deb",
+      "bytes": 561
+    },
+    {
+      "source": "art/ui/kit/v1/sources/progress-track.svg",
+      "target": "public/assets/ui/kit/v1/progress-track.svg",
+      "sha256": "5f086fb54aa64d58215d9137993a800891bbe8114e872c1c82b3661c4d21b742",
+      "bytes": 423
+    },
+    {
+      "source": "art/ui/kit/v1/sources/repair-coral.svg",
+      "target": "public/assets/ui/kit/v1/repair-coral.svg",
+      "sha256": "3dd737ffb95e4bb23d5e65d8040afa1964644e9f391a59a63ddc60ab8307e810",
+      "bytes": 498
+    },
+    {
+      "source": "art/ui/kit/v1/sources/repair-edge.svg",
+      "target": "public/assets/ui/kit/v1/repair-edge.svg",
+      "sha256": "f7933b5f0fe4630a4f14dd50665efd1dae597d404f7bc15262f3867228e230b6",
+      "bytes": 479
+    },
+    {
+      "source": "art/ui/kit/v1/sources/select-arrow.svg",
+      "target": "public/assets/ui/kit/v1/select-arrow.svg",
+      "sha256": "f26049f02e24bf20ff60fe876f904d37cfa1f9471af2ea0f9e6901a616e6f7e3",
+      "bytes": 287
+    },
+    {
+      "source": "art/ui/kit/v1/sources/tab-repair.svg",
+      "target": "public/assets/ui/kit/v1/tab-repair.svg",
+      "sha256": "0b1f0ad93bd3971595ba0d8f80fa032c1ea86573c50793e2d8373257a2420c20",
+      "bytes": 486
+    },
+    {
+      "source": "art/ui/kit/v1/sources/title-face.svg",
+      "target": "public/assets/ui/kit/v1/title-face.svg",
+      "sha256": "0125ccae0bd41d9770e2da9d8ddb47d71edd930c82205364413ab1d6871d1323",
+      "bytes": 638
+    },
+    {
+      "source": "art/ui/kit/v1/sources/title-repair.svg",
+      "target": "public/assets/ui/kit/v1/title-repair.svg",
+      "sha256": "ec6e7917498ee34b9fed62d5b5a93cc173501a97b5ae1272324af4192086dcbd",
+      "bytes": 665
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/air-scrubber.png",
+      "target": "public/assets/ui/items/air-scrubber.png",
+      "sha256": "f543dcca34398c5a98a1e9bdf04a7df1dbfd179e0561baeddf72a9e7832f6fcd",
+      "bytes": 18564
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/basic-fabricator.png",
+      "target": "public/assets/ui/items/basic-fabricator.png",
+      "sha256": "7642374a2c07e3224ce9286f0e4362fcdc5a3c835a17f5a23ff1dc41d21357c4",
+      "bytes": 19782
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/battery.png",
+      "target": "public/assets/ui/items/battery.png",
+      "sha256": "c68bf3fbf2d1ef2ec3baf2ba41fb67224d6c118fd31cd74695d9d0426e7848ac",
+      "bytes": 26132
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/coal-generator.png",
+      "target": "public/assets/ui/items/coal-generator.png",
+      "sha256": "c057e9388ab28494a4b99171ef106c219ce2bf107001c883c5e851d3fda43b2c",
+      "bytes": 26960
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/coal.png",
+      "target": "public/assets/ui/items/coal.png",
+      "sha256": "1f45786cc3c80c484b814969c7767c408edf2859bcd6e4d6e6f2237707192f78",
+      "bytes": 16174
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/conveyor.png",
+      "target": "public/assets/ui/items/conveyor.png",
+      "sha256": "f52fab322743be90499fa86a0677d967e79dbe72765d7fbb1b0c22ede3c1f6d9",
+      "bytes": 15947
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/electrical-part.png",
+      "target": "public/assets/ui/items/electrical-part.png",
+      "sha256": "cf45cd969c9652e7225c3e7edb08b3f6019e9d3a612868c3c2c94089e186786d",
+      "bytes": 23222
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/extractor.png",
+      "target": "public/assets/ui/items/extractor.png",
+      "sha256": "8786e6e39b48234d424a2ec45de4dc000c3b23fe475efa2ea43090a217b695d9",
+      "bytes": 24575
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/greenhouse.png",
+      "target": "public/assets/ui/items/greenhouse.png",
+      "sha256": "0324c2bc48a8d0f71982c092e045dfab00d5b35c41e9ded15d4a697988db0b7f",
+      "bytes": 26958
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/laboratory.png",
+      "target": "public/assets/ui/items/laboratory.png",
+      "sha256": "b53beecd40d7bd6927899b12e13c73b3f41493bd337162387826337a13fe00f1",
+      "bytes": 23031
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/mechanical-part.png",
+      "target": "public/assets/ui/items/mechanical-part.png",
+      "sha256": "b6372438545ff3d14f53c423f1d6bea707ebb297e72cd5aa1505ccf488191402",
+      "bytes": 19515
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/medium-fabricator.png",
+      "target": "public/assets/ui/items/medium-fabricator.png",
+      "sha256": "fe57c8a94a35ab8bda2d771332b45a984563c628c923f6d97ac8648f754069ac",
+      "bytes": 27590
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/mini-fabricator.png",
+      "target": "public/assets/ui/items/mini-fabricator.png",
+      "sha256": "084fe1271fadf3bdd83973381e681478f04c8bf01b0da2199abc379efe372dca",
+      "bytes": 23865
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/pipe-junction.png",
+      "target": "public/assets/ui/items/pipe-junction.png",
+      "sha256": "f9dfde873cb2dc27ead586444796a7977b46b6db5e20d1d5d9beb046c66a067f",
+      "bytes": 25546
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/pipe.png",
+      "target": "public/assets/ui/items/pipe.png",
+      "sha256": "894020200482736cdc58c8feba16773d6b91d13beee9c555b1be54956a347476",
+      "bytes": 17018
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/plate.png",
+      "target": "public/assets/ui/items/plate.png",
+      "sha256": "fa8f504e4b62c739ea534cffee4a21b163c2dc85f619d493a5859aa0034d5abd",
+      "bytes": 18828
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/power-connection.png",
+      "target": "public/assets/ui/items/power-connection.png",
+      "sha256": "09d442885f0b08ddf91fb66d22a4e6d886a8970450baa7b4d9b8165e0af8e561",
+      "bytes": 17929
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/prybar.png",
+      "target": "public/assets/ui/items/prybar.png",
+      "sha256": "a31acaf4cfe4ff550b2c4b9b24826430ef6cf1773c0df61ddd96f9f652676cc4",
+      "bytes": 9638
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/recycler.png",
+      "target": "public/assets/ui/items/recycler.png",
+      "sha256": "e0537c8ba7e99b1fc4020d191004eca902274653ddad0026347142a6f20f7382",
+      "bytes": 26400
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/research-kit.png",
+      "target": "public/assets/ui/items/research-kit.png",
+      "sha256": "bd86035406f594658a7181986ce8aacfba01ddbcb6c039d67d75356cabdeb23d",
+      "bytes": 26306
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/scrap.png",
+      "target": "public/assets/ui/items/scrap.png",
+      "sha256": "c0e8f5c9334cde42b0f2bee26cb605e071d1911bc496f17d1b23e45163891bc0",
+      "bytes": 19433
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/solar-panel.png",
+      "target": "public/assets/ui/items/solar-panel.png",
+      "sha256": "2d9bc8e018ad1385666ca84f6d063d40f4b295e874bef56ed92121d8d1dad487",
+      "bytes": 23284
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/sorter.png",
+      "target": "public/assets/ui/items/sorter.png",
+      "sha256": "ee557fa88e9a48af09dc6da378036b309b12bba9ce8d40ebaffb5d5e17bb0fb6",
+      "bytes": 21796
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/water-clean.png",
+      "target": "public/assets/ui/items/water-clean.png",
+      "sha256": "3b9aa09f55b7d8142238cd486fd92da3e2b0d4700b8bd5cac2e3599b2d066542",
+      "bytes": 11292
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/water-pump.png",
+      "target": "public/assets/ui/items/water-pump.png",
+      "sha256": "b0da9506a6b668c991f7b1500cd8e88c3e6eb3faa0f4b395cffc3677d1026a4f",
+      "bytes": 25080
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/water-return.png",
+      "target": "public/assets/ui/items/water-return.png",
+      "sha256": "07791dd38b07fd5b2ded9337e3d979ccd7db207dcd2105baeb78840718cc7613",
+      "bytes": 20145
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/water-tank.png",
+      "target": "public/assets/ui/items/water-tank.png",
+      "sha256": "2d1385272e697e8c6410a5889d9df20a8b144da35d7c11861e90c85b405db273",
+      "bytes": 23090
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/water-treatment.png",
+      "target": "public/assets/ui/items/water-treatment.png",
+      "sha256": "83d76d5981ebd0cf846d67d53781bff3b4540ce734705d1a39b5f01043a345a2",
+      "bytes": 27901
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/water-untreated.png",
+      "target": "public/assets/ui/items/water-untreated.png",
+      "sha256": "a59e6e5314f9b12dd8ec7a28dd4a77d51ef46b79795d543b6aaf6f52c8c07f27",
+      "bytes": 13055
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/wind-turbine.png",
+      "target": "public/assets/ui/items/wind-turbine.png",
+      "sha256": "5dadd8ed556838b4ebdd8d11622dcd8bfad20d11911988423439171335a03c9f",
+      "bytes": 14532
+    },
+    {
+      "source": "art/ui/sprites/v1/png/128/wire.png",
+      "target": "public/assets/ui/items/wire.png",
+      "sha256": "4f6e29a6070a39809c9dd6488e538db15542c8b896d605b366fc05bdce8ff043",
+      "bytes": 22128
+    }
+  ]
+}

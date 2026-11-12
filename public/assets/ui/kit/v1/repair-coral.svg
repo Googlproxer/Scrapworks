@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="48" viewBox="0 0 72 48">
+  <title>Coral repair patch, keep aspect ratio</title>
+  <path fill="#091D2C" d="m6 35 26-29h29l11 11v22l-9 9H0Z"/>
+  <path fill="#142C40" d="M0 32 29 0h29l10 10v24l-10 10H0Z"/>
+  <path fill="#FFBA91" d="M8 31 31 4h25l8 8v20l-8 8H5Z"/>
+  <path fill="#F08A65" d="M14 29 33 8h21l6 6v16l-6 6H8Z"/>
+  <path fill="#142C40" d="m40 15 7-4 7 4v8l-7 4-7-4Z"/>
+  <path fill="#7393A3" d="m43 17 4-3 4 3v4l-4 3-4-3Z"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="320" viewBox="0 0 24 320">
+  <title>Right border, horizontal reflection of the vertical edge tile</title>
+  <g transform="translate(24 0) scale(-1 1)">
+  <path fill="#091D2C" d="M5 0h19v320H6v-66l7-10V146l-7-9Z"/>
+  <path fill="#52758A" d="M1 0h17v135l6 10v103l-7 11v61H1v-65l7-10V146l-7-9Z"/>
+  <path fill="#31495D" d="M5 0h10v137l6 10v99l-7 11v63H5v-63l7-10V144l-7-9Z"/>
+  <path fill="#7393A3" d="M1 0h3v135l7 10v101l-7 10v64H1v-65l7-10V146l-7-9Z"/>
+  <path fill="#20394C" d="M14 156h4v81l-4 5ZM6 17h4v24l-4-6Z"/>
+  </g>
+</svg>

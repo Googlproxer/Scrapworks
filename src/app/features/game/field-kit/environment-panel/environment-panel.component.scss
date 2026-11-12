@@ -1,6 +1,6 @@
 :host {
   display: block;
-  color: #f1f5f3;
+  color: var(--sw-cream);
 }
 .health-table {
   max-block-size: 18rem;
@@ -44,27 +44,11 @@ fieldset {
 }
 select {
   max-inline-size: 100%;
-  color: #f1f5f3;
-  background: #182c24;
-  border: 1px solid #a2b8ad;
-  font: inherit;
 }
 button,
 select {
   min-block-size: 2.75rem;
 }
 button {
-  color: #f1f5f3;
-  background: #223d31;
-  border: 1px solid #a2b8ad;
-  border-radius: 4px;
   padding: 8px 12px;
-  font: inherit;
-}
-button:disabled {
-  opacity: 0.6;
-}
-:is(button, select, summary, .health-table):focus-visible {
-  outline: 3px solid #66d5dc;
-  outline-offset: 2px;
 }

@@ -1,14 +1,14 @@
 <section aria-labelledby="controls-title">
   <header>
     <div>
-      <h2 id="controls-title">Controls</h2>
+      <h2 class="sw-title" id="controls-title">Controls</h2>
       <p>Choose a binding to change it. Changes apply when saved.</p>
     </div>
     <button type="button" data-capture-cancel (click)="close()" aria-label="Close controls">
       Close
     </button>
   </header>
-  <div class="tabs" role="tablist" aria-label="Control devices">
+  <div class="tabs sw-tabs" role="tablist" aria-label="Control devices">
     <button
       type="button"
       role="tab"
@@ -64,26 +64,30 @@
               <div class="controller-settings">
                 <label
                   >Controller
-                  <select aria-label="Selected controller" (change)="selectController($event)">
-                    <option value="" [selected]="selectedController() === null">Automatic</option>
-                    @for (controller of runtime.controllers(); track controller.id) {
-                      <option
-                        [value]="controller.id"
-                        [selected]="selectedController() === controller.id"
-                      >
-                        {{ controller.name }}
-                      </option>
-                    }
-                  </select>
+                  <span class="sw-select"
+                    ><select aria-label="Selected controller" (change)="selectController($event)">
+                      <option value="" [selected]="selectedController() === null">Automatic</option>
+                      @for (controller of runtime.controllers(); track controller.id) {
+                        <option
+                          [value]="controller.id"
+                          [selected]="selectedController() === controller.id"
+                        >
+                          {{ controller.name }}
+                        </option>
+                      }
+                    </select></span
+                  >
                 </label>
                 <label
                   >Button names
-                  <select [value]="labelStyle()" (change)="selectLabelStyle($event)">
-                    <option value="automatic">Automatic</option>
-                    <option value="xbox">Xbox</option>
-                    <option value="dualshock">DualShock</option>
-                    <option value="dualsense">DualSense</option>
-                  </select>
+                  <span class="sw-select"
+                    ><select [value]="labelStyle()" (change)="selectLabelStyle($event)">
+                      <option value="automatic">Automatic</option>
+                      <option value="xbox">Xbox</option>
+                      <option value="dualshock">DualShock</option>
+                      <option value="dualsense">DualSense</option>
+                    </select></span
+                  >
                 </label>
               </div>
               <div class="stick-settings">
@@ -247,18 +251,20 @@
                             @if (tab() === 'gamepad') {
                               <label
                                 >Input
-                                <select
-                                  [value]="
-                                    binding.kind === 'stick2d' ? binding.stick : 'directions'
-                                  "
-                                  [disabled]="!loaded()"
-                                  [attr.aria-label]="label(row.name) + ' input'"
-                                  (change)="changeVectorType(context, row.name, index, $event)"
+                                <span class="sw-select"
+                                  ><select
+                                    [value]="
+                                      binding.kind === 'stick2d' ? binding.stick : 'directions'
+                                    "
+                                    [disabled]="!loaded()"
+                                    [attr.aria-label]="label(row.name) + ' input'"
+                                    (change)="changeVectorType(context, row.name, index, $event)"
+                                  >
+                                    <option value="left">{{ labels.stick('left') }}</option>
+                                    <option value="right">{{ labels.stick('right') }}</option>
+                                    <option value="directions">Direction buttons</option>
+                                  </select></span
                                 >
-                                  <option value="left">{{ labels.stick('left') }}</option>
-                                  <option value="right">{{ labels.stick('right') }}</option>
-                                  <option value="directions">Direction buttons</option>
-                                </select>
                               </label>
                             }
                             @if (binding.kind === 'buttons2d') {

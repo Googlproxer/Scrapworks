@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <title>Steel fastener, keep aspect ratio</title>
+  <path fill="#091D2C" d="m5 11 9-7h9l9 9v10l-9 9H13l-9-9Z"/>
+  <path fill="#FFF1CF" d="m0 9 9-9h10l9 9v10l-9 9H9l-9-9Z"/>
+  <path fill="#142C40" d="m3 10 7-7h8l7 7v8l-7 7h-8l-7-7Z"/>
+  <path fill="#7393A3" d="m6 11 5-5h6l5 5v6l-5 5h-6l-5-5Z"/>
+  <path fill="#31495D" d="M6 15h16v2l-5 5h-6l-5-5Z"/>
+</svg>

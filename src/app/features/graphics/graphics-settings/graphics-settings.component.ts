@@ -19,6 +19,7 @@ function model(settings: GraphicsSettings) {
 }
 
 @Component({
+  host: { class: 'sw-shell sw-dialog' },
   imports: [FormField],
   selector: 'app-graphics-settings',
   styleUrl: './graphics-settings.component.scss',

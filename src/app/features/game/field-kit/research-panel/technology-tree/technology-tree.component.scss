@@ -1,4 +1,4 @@
-@use '../../field-kit.component';
+@use '../../panel';
 :host {
   display: grid;
   min-width: 0;
@@ -18,8 +18,8 @@
   scrollbar-gutter: stable;
 }
 .tree-viewport {
-  border: 1px solid #738e83;
-  background: #0c1713;
+  border: 1px solid var(--sw-line);
+  background: var(--sw-navy);
 }
 .tech-tree {
   position: relative;
@@ -30,12 +30,12 @@ svg {
   pointer-events: none;
 }
 .prerequisite-edge {
-  stroke: #a2b8ad;
+  stroke: var(--sw-line);
   stroke-width: 2;
   fill: none;
 }
 marker path {
-  fill: #a2b8ad;
+  fill: var(--sw-line);
 }
 .tech-node {
   position: absolute;
@@ -51,25 +51,29 @@ marker path {
   border-width: 2px;
 }
 .tech-node[aria-pressed='true'] {
-  outline: 3px solid #f1f5f3;
+  outline: 3px solid var(--sw-cream);
   outline-offset: 3px;
 }
 .tech-node:focus-visible {
-  outline: 3px solid #66d5dc;
+  outline: 3px solid var(--sw-focus);
   outline-offset: 5px;
   z-index: 1;
 }
 .tech-node.researched {
-  background: #164b32;
-  border-color: #69d795;
+  background: var(--sw-steel);
+  --sw-button-face: url('/assets/ui/kit/v1/plate-steel.svg');
+  color: var(--sw-highlight);
+  box-shadow: inset 0 -5px var(--sw-leaf);
 }
 .tech-node.available {
-  background: #554711;
-  border-color: #f1d369;
+  background: var(--sw-cream);
+  --sw-button-face: url('/assets/ui/kit/v1/plate-cream.svg');
+  color: var(--sw-navy);
 }
 .tech-node.locked {
-  background: #582b2b;
-  border-color: #f39797;
+  background: var(--sw-steel);
+  --sw-button-face: url('/assets/ui/kit/v1/plate-steel.svg');
+  color: var(--sw-muted);
 }
 .tree-legend .researched {
   color: #8be6ae;
@@ -108,7 +112,7 @@ marker path {
 }
 .pan-help {
   font-size: 0.8rem;
-  color: #c4d2ca;
+  color: var(--sw-muted);
 }
 .tree-viewport {
   cursor: grab;

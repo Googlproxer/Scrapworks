@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="160" viewBox="0 0 256 160">
+  <title>Uneven cream title plate, nine-slice at 48 units</title>
+  <path fill="#091D2C" d="M25 12H240L256 32V120L219 160H17L6 143V36Z"/>
+  <path fill="#142C40" d="M19 1H229L246 20V108L208 146H12L0 130V24Z"/>
+  <path fill="#FFF1CF" d="M22 6H226L240 23V105L205 140H15L6 127V27Z"/>
+  <path fill="#F1E1BD" d="M25 15H221L231 28V102L200 132H19L14 123V31Z"/>
+  <path fill="#E3CDA4" d="m14 113 8 10h175l34-32v11l-31 30H19l-5-9Z"/>
+  <path fill="#FFF1CF" d="m22 6 8 4h191l5-4Z"/>
+  <path fill="#C8B28B" d="m30 27 10-3-3 3-5 2Zm169 92 12-7-3 5-7 4Z"/>
+</svg>

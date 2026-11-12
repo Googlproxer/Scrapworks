@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <title>Uneven stepped dialog shell, nine-slice at 64 units</title>
+  <path fill="#091D2C" d="M42 9h181l33 25v182l-41 40H29L9 230V44Z"/>
+  <path fill="#142C40" d="M33 0h181l33 25v181l-41 41H20L0 221V33Z"/>
+  <path fill="#52758A" d="M36 7h176l28 23v173l-37 37H24L7 218V36Z"/>
+  <path fill="#31495D" d="M40 15h169l23 19v166l-32 32H28l-13-18V40Z"/>
+  <path fill="#142C40" d="M48 28h156l15 12v153l-26 26H35l-7-12V48Z"/>
+  <path fill="#7393A3" d="m36 7 5 7h168l23 20 8-4-28-23Z"/>
+  <path fill="#20394C" d="m15 198 13 16h166l38-34v20l-32 32H28l-13-18Z"/>
+</svg>

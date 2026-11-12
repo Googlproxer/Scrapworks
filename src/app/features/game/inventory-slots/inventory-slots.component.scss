@@ -1,10 +1,10 @@
 :host {
   display: block;
-  min-width: 0;
+  min-inline-size: 0;
 }
 .bag {
   list-style: none;
-  margin: 12px 0;
+  margin: 10px 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -12,35 +12,38 @@
 }
 .bag li {
   position: relative;
-  height: 66px;
-  box-sizing: border-box;
-  border: 1px solid #526a61;
-  padding: 14px 4px 4px;
-  background: #17281f;
-  color: #f1f5f3;
-  font-size: 0.7rem;
+  min-inline-size: 0;
+  block-size: 72px;
+  padding: 4px;
+  color: var(--sw-cream);
+  font-size: 0.75rem;
   line-height: 1.2;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow-wrap: anywhere;
-}
-.bag li.occupied {
-  border-color: #94ada0;
-  background: #233b31;
+  display: grid;
+  place-items: center;
 }
 .slot-number {
   position: absolute;
-  left: 4px;
-  top: 1px;
-  font-size: 0.6rem;
-  color: #c4d2ca;
+  inset-inline-start: 2px;
+  inset-block-start: 0;
+  font-size: 0.65rem;
+  color: var(--sw-muted);
 }
 .empty {
-  color: #b1c0b7;
+  color: var(--sw-muted);
 }
 .bag strong {
-  text-align: right;
-  font-size: 0.85rem;
+  position: absolute;
+  inset-inline-end: 1px;
+  inset-block-end: 0;
+  font-size: 0.9rem;
+  color: var(--sw-highlight);
+  text-shadow:
+    1px 1px 0 var(--sw-shadow),
+    -1px -1px 0 var(--sw-shadow);
   font-variant-numeric: tabular-nums;
+}
+@media (max-width: 600px) {
+  .bag li {
+    block-size: 64px;
+  }
 }

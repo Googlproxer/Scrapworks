@@ -8,10 +8,10 @@
       :root {
         color-scheme: dark;
         font:
-          1rem/1.65 system-ui,
+          1rem/1.65 'Trebuchet MS',
           sans-serif;
-        background: #101916;
-        color: #f1f5f3;
+        background: #142c40;
+        color: #f1e1bd;
       }
       body {
         max-width: 68ch;
@@ -19,11 +19,11 @@
         padding: 2rem 1.25rem;
       }
       a {
-        color: #9ee1ce;
+        color: #fff1cf;
         text-underline-offset: 0.2em;
       }
       a:focus-visible {
-        outline: 3px solid #9ee1ce;
+        outline: 3px solid #fff1cf;
         outline-offset: 4px;
       }
       h1,
@@ -32,6 +32,37 @@
       }
       h2 {
         margin-top: 2rem;
+      }
+      h1 {
+        background: #f1e1bd;
+        background-clip: content-box;
+        position: relative;
+        isolation: isolate;
+        display: inline-block;
+        padding: 16px 64px 20px 20px;
+        color: #142c40;
+        transform: rotate(-1.5deg);
+      }
+      h1::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        border: 20px solid transparent;
+        border-image: url('assets/ui/kit/v1/title-face.svg') 48 fill / 20px / 0 stretch;
+      }
+      h1::after {
+        content: '';
+        position: absolute;
+        right: -6px;
+        bottom: -3px;
+        width: 64px;
+        height: 64px;
+        background: url('assets/ui/kit/v1/title-repair.svg') center / contain no-repeat;
+      }
+      h2 {
+        padding-bottom: 8px;
+        border-bottom: 2px solid #f08a65;
       }
       code {
         overflow-wrap: anywhere;

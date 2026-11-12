@@ -9,6 +9,7 @@
     <button
       type="button"
       [attr.data-slot]="slot.index"
+      [title]="slot.item ? names[slot.item] : 'Empty slot'"
       [class.active]="active() === slot.index"
       [attr.aria-pressed]="active() === slot.index"
       [tabIndex]="active() === slot.index ? 0 : -1"
@@ -20,6 +21,9 @@
       "
       (click)="runtime.selectPlaceable(slot.index)"
     >
+      @if (slot.item) {
+        <app-item-sprite [item]="slot.item" [size]="40" />
+      }
       <kbd>{{ slot.index + 1 }}</kbd>
       <span class="item-name">{{
         slot.item ? (shortNames[slot.item] ?? names[slot.item]) : 'Empty'

@@ -183,6 +183,32 @@ describe('Field kit opening UI', () => {
     expect(runtime.resolveWorkExit).toHaveBeenCalledWith(true);
   });
 
+  it('retains crafting choices and worker state when switching compact work areas', async () => {
+    const fixture = TestBed.createComponent(FieldKitComponent);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const recipe = root.querySelector<HTMLSelectElement>('#recipe')!;
+    recipe.value = 'mechanical-part';
+    recipe.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    const batch = root.querySelector<HTMLSelectElement>('#batch')!;
+    batch.value = '5';
+    batch.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    const before = structuredClone(world());
+    for (const area of ['MiniFab', 'Inventory', 'Crafting']) {
+      [...root.querySelectorAll<HTMLButtonElement>('.work-areas button')]
+        .find((button) => button.textContent?.trim() === area)!
+        .click();
+      await fixture.whenStable();
+    }
+    expect(root.querySelector('#recipe')).toBe(recipe);
+    expect(recipe.value).toBe('mechanical-part');
+    expect(batch.value).toBe('5');
+    expect(runtime.command).not.toHaveBeenCalled();
+    expect(world()).toEqual(before);
+  });
+
   it('supports tab keys and reserves work geometry through craft start/completion', async () => {
     const fixture = TestBed.createComponent(FieldKitComponent);
     await fixture.whenStable();
@@ -238,6 +264,13 @@ describe('Field kit opening UI', () => {
     const handle = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
       '[data-winding]',
     )!;
+    const miniFabArea = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
+        '.work-areas button',
+      ),
+    ].find((button) => button.textContent?.trim() === 'MiniFab')!;
+    miniFabArea.click();
+    await fixture.whenStable();
     handle.focus();
     for (const code of ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp']) {
       handle.dispatchEvent(new KeyboardEvent('keydown', { code, bubbles: true, cancelable: true }));

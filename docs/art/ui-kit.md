@@ -1,8 +1,8 @@
 # Scrapworks reusable UI kit
 
-Updated 11 November 2026, style revision 11. The user accepted the [six screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) as the visual direction and requested reusable pieces with responsive dialogs. The kit follows the [Field Kit concept](../../art/ui/concepts/2026-11-10/redesigns/01-field-kit.png). The current pass makes the dialog background independent of its edge artwork so transparent cutouts expose the scene. This document owns the component and resizing rules. The [Art Document](README.md) owns the wider painted finish.
+Updated 13 November 2026. Reference style revision 11 is now integrated into the game. The user accepted the [six screen concepts](../../art/ui/concepts/2026-11-10/redesigns/) as the visual direction and requested reusable pieces with responsive dialogs. The kit follows the [Field Kit concept](../../art/ui/concepts/2026-11-10/redesigns/01-field-kit.png). The current pass makes the dialog background independent of its edge artwork so transparent cutouts expose the scene. This document owns the component and resizing rules. The [Art Document](README.md) owns the wider painted finish.
 
-This delivery contains reference artwork and an isolated layout proof. It does not integrate the new appearance into the game. The geometric SVG sources deliberately separate construction from painted detail; retain the accepted PNG concepts as the finish reference. The preview uses local system fonts; a final licensed display face has not been selected.
+The [runtime integration guide](ui-runtime.md) owns the Angular theme, asset preparation and production screen coverage. The HTML pages remain isolated art/layout proofs for design comparison. The geometric SVG sources deliberately separate construction from painted detail; retain the accepted PNG concepts as the finish reference. The preview uses local system fonts; a final licensed display face has not been selected.
 
 ## Sources and reference images
 

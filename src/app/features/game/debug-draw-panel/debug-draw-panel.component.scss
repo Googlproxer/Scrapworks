@@ -2,10 +2,9 @@
   display: block;
   margin-top: 0.5rem;
   max-width: 19rem;
-  color: #f1f5f3;
-  background: #101916;
-  border: 1px solid #879a91;
-  border-radius: 0.25rem;
+  color: var(--sw-cream);
+  background: var(--sw-navy);
+  border: 1px solid var(--sw-line);
 }
 
 summary {
@@ -16,7 +15,7 @@ summary {
 fieldset {
   margin: 0.5rem;
   padding: 0.5rem;
-  border: 1px solid #879a91;
+  border: 1px solid var(--sw-line);
 }
 
 label {
@@ -26,13 +25,8 @@ label {
   min-height: 2rem;
   cursor: pointer;
 }
-
-input {
-  accent-color: #00cfcf;
-}
-
-summary:focus-visible,
-input:focus-visible {
-  outline: 3px solid #80ffff;
-  outline-offset: 3px;
+:host {
+  background: transparent;
+  border: 6px solid transparent;
+  border-image: url('/assets/ui/kit/v1/inset.svg') 12 fill / 6px / 0 stretch;
 }

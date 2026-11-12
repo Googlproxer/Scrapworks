@@ -1,0 +1,19 @@
+<figure class="result sw-inset" [class.compact]="!showIngredients()">
+  <app-item-sprite [item]="result().item" [size]="showIngredients() ? 56 : 40" />
+  <figcaption>
+    <strong>{{ resultName() }}</strong
+    ><span>Makes {{ result().quantity * quantity() }}</span>
+  </figcaption>
+</figure>
+@if (showIngredients()) {
+  <ul class="ingredients" aria-label="Recipe ingredients">
+    @for (input of recipe().inputs; track input.item) {
+      <li class="sw-inset">
+        <app-item-sprite [item]="input.item" [size]="28" />
+        <span
+          ><strong>{{ input.quantity * quantity() }}</strong> {{ name(input.item) }}</span
+        >
+      </li>
+    }
+  </ul>
+}

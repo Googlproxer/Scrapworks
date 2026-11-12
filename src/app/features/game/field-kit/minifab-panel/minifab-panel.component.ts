@@ -1,5 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { chargeCapacity, OPENING_CONTENT } from '@content/opening';
+import { ItemSprite } from '@app/shared/item-sprite/item-sprite';
+import { RecipePreview } from '../../recipe-preview/recipe-preview';
 import { OpeningPanel } from '../opening-panel';
 
 import { minifabStatus } from '../../../ui/opening-labels';
@@ -7,9 +9,9 @@ import { WindingHandleComponent } from '../../winding-handle/winding-handle.comp
 
 @Component({
   selector: 'app-minifab-panel',
-  imports: [WindingHandleComponent],
+  imports: [WindingHandleComponent, ItemSprite, RecipePreview],
   templateUrl: './minifab-panel.component.html',
-  styleUrl: '../field-kit.component.scss',
+  styleUrl: '../panel.scss',
   host: { role: 'region', 'aria-labelledby': 'minifab-title' },
 })
 export class MiniFabPanelComponent extends OpeningPanel {

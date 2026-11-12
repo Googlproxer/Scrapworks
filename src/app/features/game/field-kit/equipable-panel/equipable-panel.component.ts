@@ -5,9 +5,11 @@ import { isPlaceable } from '@content/factory';
 import { TOOLBAR_SLOTS } from '@contracts/toolbar';
 import { OpeningPanel } from '../opening-panel';
 
+import { ItemSprite } from '@app/shared/item-sprite/item-sprite';
+
 @Component({
   selector: 'app-equipable-panel',
-  imports: [FormField],
+  imports: [ItemSprite, FormField],
   templateUrl: './equipable-panel.component.html',
   styleUrl: './equipable-panel.component.scss',
 })

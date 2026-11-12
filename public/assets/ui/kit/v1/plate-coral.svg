@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="192" viewBox="0 0 256 192">
+  <title>Asymmetric coral plate, one square top-right corner, nine-slice at 64 units</title>
+  <path fill="#091D2C" d="M42 22h214v128l-44 42H30l-16-14V58Z"/>
+  <path fill="#142C40" d="M26 2h208v126l-40 44H12L2 158V28Z"/>
+  <path fill="#FFBA91" d="M29 8h199v117l-33 41H16l-8-11V31Z"/>
+  <path fill="#F08A65" d="M34 20h180v98l-18 36H24l-6-6V36Z"/>
+  <path fill="#BB5B42" d="m18 132 10 12h165l21-30v4l-18 36H24l-6-6Z"/>
+  <path fill="#FFBA91" d="m29 8 8 5h177l14-5Z"/>
+</svg>

@@ -1,0 +1,100 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  color: var(--sw-cream);
+  font: inherit;
+}
+h3 {
+  font-size: 1.15rem;
+  margin: 8px 0 10px;
+}
+h3 span {
+  float: right;
+  font-size: 0.85rem;
+  color: var(--sw-muted);
+  font-weight: 400;
+}
+h4 {
+  font-size: 1rem;
+  margin: 8px 0;
+}
+p {
+  margin: 8px 0;
+}
+label {
+  display: block;
+  margin-block: 6px 2px;
+}
+select {
+  max-inline-size: 100%;
+}
+button {
+  margin: 3px 4px 3px 0;
+}
+.equipment-action {
+  min-block-size: 44px;
+}
+.handcraft-status {
+  min-block-size: 120px;
+  margin-block-start: 12px;
+}
+.handcraft-status p {
+  min-block-size: 3em;
+}
+.operation-status {
+  min-block-size: 108px;
+}
+.operation-status p {
+  min-block-size: 3em;
+}
+.buffer {
+  min-block-size: 3em;
+  overflow-wrap: anywhere;
+}
+.batch-actions {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-block: 8px;
+}
+.batch-actions label {
+  margin: 0;
+  inline-size: 86px;
+}
+.batch-actions button {
+  margin: 0;
+}
+.minifab-status {
+  min-block-size: 3em;
+}
+.charge-readout {
+  font-variant-numeric: tabular-nums;
+  min-block-size: 1.5em;
+}
+.crafting-help {
+  min-block-size: 3em;
+}
+.batch-actions .batch-field {
+  inline-size: 86px;
+  flex: 0 0 auto;
+}
+.minifab-power {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 192px;
+  align-items: center;
+  gap: 6px;
+}
+.charge-stats {
+  overflow-wrap: anywhere;
+}
+@container (width < 56rem) {
+  .minifab-power {
+    grid-template-columns: minmax(0, 1fr) 152px;
+  }
+}
+@media (max-width: 600px) {
+  .minifab-power {
+    grid-template-columns: minmax(0, 1fr) 200px;
+  }
+}

@@ -13,13 +13,15 @@
   (keydown)="key($event)"
   (keyup)="key($event)"
 >
-  <span class="arm" [style.transform]="'rotate(' + angle() + 'deg)'" aria-hidden="true"
-    ><span></span
+  <span class="caster" aria-hidden="true"
+    ><span class="moving" [style.transform]="'rotate(' + (angle() + 45) + 'deg)'"
+      ><span class="arm"></span><span class="grip"></span></span
   ></span>
-  <span class="pivot" aria-hidden="true"></span>
 </button>
 <p id="winding-help">
-  Drag around the pivot, rotate the selected right stick, or press your winding direction keys while
-  focused here. Five turns fill the battery; either direction works. Holding still adds no charge.
-  Winding is optional.
+  Turn to charge.<span class="sw-visually-hidden">
+    Drag around the pivot, rotate the selected right stick, or press your winding direction keys
+    while focused here. Five turns fill the battery; either direction works. Holding still adds no
+    charge. Winding is optional.</span
+  >
 </p>

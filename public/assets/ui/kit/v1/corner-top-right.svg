@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="80" viewBox="0 0 96 80">
+  <title>Short stepped upper-right reinforcement, preserve aspect ratio</title>
+  <path fill="#142C40" d="M0 24h48l17 15v41H0Z"/>
+  <path fill="#091D2C" d="M0 6h57l39 30v44H68V45L51 32H0Z"/>
+  <path fill="#142C40" d="M0 0h53l35 27v47H63V40L47 26H0Z"/>
+  <path fill="#7393A3" d="M0 5h51l31 25v38H69V37L49 20H0Z"/>
+  <path fill="#52758A" d="M0 10h49l28 23v35h-8V37L49 20H0Z"/>
+  <path fill="#31495D" d="M10 20h39l20 17v31h-6V40L47 26H10Z"/>
+</svg>

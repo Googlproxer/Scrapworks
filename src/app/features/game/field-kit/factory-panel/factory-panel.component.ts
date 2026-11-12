@@ -3,9 +3,11 @@ import { FACTORY_SETTINGS } from '@content/factory';
 import { OpeningPanel } from '../opening-panel';
 import { EnvironmentPanelComponent } from '../environment-panel/environment-panel.component';
 
+import { ItemSprite } from '@app/shared/item-sprite/item-sprite';
+
 @Component({
   selector: 'app-factory-panel',
-  imports: [EnvironmentPanelComponent],
+  imports: [ItemSprite, EnvironmentPanelComponent],
   templateUrl: './factory-panel.component.html',
   styleUrl: './factory-panel.component.scss',
 })

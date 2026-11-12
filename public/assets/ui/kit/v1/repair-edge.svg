@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="96" viewBox="0 0 48 96">
+  <title>Coral side splice, preserve aspect ratio</title>
+  <path fill="#091D2C" d="M8 0h10l30 29v39L11 96H4V12Z"/>
+  <path fill="#142C40" d="M2 0h10l30 25v37L5 90H0V10Z"/>
+  <path fill="#FFBD93" d="m7 8 29 20v30L7 81Z"/>
+  <path fill="#F08A65" d="m11 17 20 14v24L11 71Z"/>
+  <path fill="#142C40" d="m17 39 7-3 6 5-1 8-7 4-6-5Z"/>
+  <path fill="#7393A3" d="m20 41 4-2 3 3-1 5-4 2-3-3Z"/>
+</svg>

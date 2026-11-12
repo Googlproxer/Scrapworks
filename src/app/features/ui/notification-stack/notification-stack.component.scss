@@ -11,23 +11,21 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  color: #f1f5f3;
+  color: var(--sw-cream);
   font:
-    14px/1.45 system-ui,
+    14px/1.45 'Trebuchet MS',
     sans-serif;
 }
 .notification {
-  --notice-accent: #66d5dc;
+  --notice-accent: var(--sw-coral);
   pointer-events: auto;
   display: grid;
   grid-template-columns: 24px 1fr 32px;
   gap: 10px;
   padding: 14px 10px 14px 14px;
-  background: #14231f;
-  border: 1px solid #738e83;
+  background: var(--sw-navy);
+  border: 1px solid var(--sw-line);
   border-left: 4px solid var(--notice-accent);
-  border-radius: 10px;
-  box-shadow: 0 8px 28px #0006;
   overflow-wrap: anywhere;
 }
 .success {
@@ -53,22 +51,30 @@ p {
 }
 button {
   align-self: start;
-  color: #f1f5f3;
-  background: #233b31;
-  border: 1px solid #738e83;
-  border-radius: 50%;
   min-width: 30px;
   min-height: 30px;
   cursor: pointer;
   font-size: 20px;
 }
-button:focus-visible {
-  outline: 3px solid #66d5dc;
-  outline-offset: 2px;
-}
 .queued {
   align-self: end;
   padding: 4px 10px;
-  border-radius: 10px;
-  background: #14231f;
+  background: var(--sw-navy);
+}
+.notification {
+  grid-template-columns: 24px minmax(0, 1fr) 44px;
+  border: 6px solid transparent;
+  border-image: url('/assets/ui/kit/v1/inset.svg') 12 fill / 6px / 0 stretch;
+  border-inline-start: 4px solid var(--notice-accent);
+  background: transparent;
+  padding: 10px;
+}
+button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: 8px;
+}
+.queued {
+  border: 4px solid transparent;
+  border-image: url('/assets/ui/kit/v1/inset.svg') 12 fill / 4px / 0 stretch;
 }

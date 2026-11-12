@@ -7,9 +7,11 @@ import type { OpeningTechnology } from '@content/opening';
 import { researchPrerequisitesMet } from '@core/research-prerequisites';
 import { TechnologyTreeComponent } from './technology-tree/technology-tree.component';
 
+import { ItemSprite } from '@app/shared/item-sprite/item-sprite';
+
 @Component({
   selector: 'app-research-panel',
-  imports: [TechnologyTreeComponent],
+  imports: [ItemSprite, TechnologyTreeComponent],
   templateUrl: './research-panel.component.html',
   styleUrl: './research-panel.component.scss',
   host: { role: 'region', 'aria-labelledby': 'research-title' },

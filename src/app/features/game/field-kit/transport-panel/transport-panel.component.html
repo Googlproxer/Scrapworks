@@ -17,11 +17,13 @@
       </p>
       @if (entity.building!.buildingId === 'conveyor') {
         <label for="conveyor-path">Conveyor path</label>
-        <select id="conveyor-path" [formField]="configFields.turn">
-          @for (turn of turns; track turn) {
-            <option [value]="turn">{{ turn }}</option>
-          }
-        </select>
+        <span class="sw-select"
+          ><select id="conveyor-path" [formField]="configFields.turn">
+            @for (turn of turns; track turn) {
+              <option [value]="turn">{{ turn }}</option>
+            }
+          </select></span
+        >
         <p>
           Back input → {{ config().turn === 'straight' ? 'front' : config().turn }} output.
           Disconnect the old output before changing its side. Held units stay on this belt.
@@ -33,19 +35,23 @@
           fill.
         </p>
         <label for="sorter-left">Left output filter</label>
-        <select id="sorter-left" [formField]="configFields.left">
-          <option value="">No filter</option>
-          @for (item of items; track item) {
-            <option [value]="item">{{ name(item) }}</option>
-          }
-        </select>
+        <span class="sw-select"
+          ><select id="sorter-left" [formField]="configFields.left">
+            <option value="">No filter</option>
+            @for (item of items; track item) {
+              <option [value]="item">{{ name(item) }}</option>
+            }
+          </select></span
+        >
         <label for="sorter-right">Right output filter</label>
-        <select id="sorter-right" [formField]="configFields.right">
-          <option value="">No filter</option>
-          @for (item of items; track item) {
-            <option [value]="item">{{ name(item) }}</option>
-          }
-        </select>
+        <span class="sw-select"
+          ><select id="sorter-right" [formField]="configFields.right">
+            <option value="">No filter</option>
+            @for (item of items; track item) {
+              <option [value]="item">{{ name(item) }}</option>
+            }
+          </select></span
+        >
         <p class="transport-feedback">
           {{
             validFilters()
@@ -91,27 +97,33 @@
     }
     @if (ports().output.length) {
       <label for="material-output">Source output port</label>
-      <select id="material-output" [formField]="linkFields.output">
-        @for (port of ports().output; track port) {
-          <option [value]="port">{{ port }}</option>
-        }
-      </select>
+      <span class="sw-select"
+        ><select id="material-output" [formField]="linkFields.output">
+          @for (port of ports().output; track port) {
+            <option [value]="port">{{ port }}</option>
+          }
+        </select></span
+      >
       <label for="material-destination">Destination</label>
-      <select id="material-destination" [formField]="linkFields.target">
-        <option value="">Choose a neighbouring input</option>
-        @for (target of targets(); track target.id) {
-          <option [value]="target.id">
-            {{ name(target.buildingId) }} · {{ target.cell.column + 1 }},
-            {{ target.cell.row + 1 }}
-          </option>
-        }
-      </select>
+      <span class="sw-select"
+        ><select id="material-destination" [formField]="linkFields.target">
+          <option value="">Choose a neighbouring input</option>
+          @for (target of targets(); track target.id) {
+            <option [value]="target.id">
+              {{ name(target.buildingId) }} · {{ target.cell.column + 1 }},
+              {{ target.cell.row + 1 }}
+            </option>
+          }
+        </select></span
+      >
       <label for="material-input">Destination input port</label>
-      <select id="material-input" [formField]="linkFields.input">
-        @for (port of inputs(); track port) {
-          <option [value]="port">{{ port }}</option>
-        }
-      </select>
+      <span class="sw-select"
+        ><select id="material-input" [formField]="linkFields.input">
+          @for (port of inputs(); track port) {
+            <option [value]="port">{{ port }}</option>
+          }
+        </select></span
+      >
       <p class="transport-feedback" role="status">
         {{ link().output }} → {{ link().input }}:
         {{

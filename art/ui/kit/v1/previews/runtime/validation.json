@@ -1,0 +1,402 @@
+{
+  "date": "2026-11-13",
+  "scope": "Local manual review of application-owned UI, using temporary browser profiles and an existing earned checkpoint. No gameplay playthrough or CI route added.",
+  "browser": "158.0.8127.18",
+  "builds": ["production, including scene export and Brotli compression", "development"],
+  "focusedUiTests": {
+    "files": 28,
+    "passed": 217
+  },
+  "staticChecks": [
+    "ESLint src and changed TypeScript tooling",
+    "Strict tools TypeScript check",
+    "Documentation links and diagram consistency",
+    "git diff --check"
+  ],
+  "accessibility": {
+    "developmentStates": 19,
+    "productionStates": 19,
+    "violations": 0,
+    "runtimeErrors": 0,
+    "loading": "Actual JavaScript-disabled screenshot; AXE inspects the same bootstrap with application scripts withheld so AXE timers can run."
+  },
+  "responsiveViewports": [
+    [1440, 900],
+    [900, 760],
+    [390, 844],
+    [320, 568],
+    [1280, 480]
+  ],
+  "development": [
+    {
+      "name": "01-main-menu.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "02-controls.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "02b-graphics.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "03-opening-hud.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "04-inventory-crafting.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "05-research.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "06-pause-saves.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "07-advanced-hud.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "08-advanced-inventory.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "09-factory.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "10-compact-controls.png",
+      "viewport": [390, 844],
+      "documentWidth": 390,
+      "axeViolations": 0
+    },
+    {
+      "name": "11-compact-inventory.png",
+      "viewport": [390, 844],
+      "documentWidth": 390,
+      "axeViolations": 0
+    },
+    {
+      "name": "12-compact-crafting.png",
+      "viewport": [390, 844],
+      "documentWidth": 390,
+      "axeViolations": 0
+    },
+    {
+      "name": "13-compact-minifab.png",
+      "viewport": [390, 844],
+      "documentWidth": 390,
+      "axeViolations": 0
+    },
+    {
+      "name": "14-water-inspection.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "15-notifications.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "16-save-confirmation.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "17-work-exit.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    },
+    {
+      "name": "18-credits.png",
+      "viewport": [1600, 1000],
+      "documentWidth": 1600,
+      "axeViolations": 0
+    }
+  ],
+  "production": [
+    {
+      "name": "main-menu",
+      "viewport": [1440, 900],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "compact-main-menu",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "controls",
+      "viewport": [1440, 900],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "compact-graphics",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "game-hud",
+      "viewport": [1440, 900],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-1440x900",
+      "viewport": [1440, 900],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-900x760",
+      "viewport": [900, 760],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-390x844",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-390-Crafting",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-390-MiniFab",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-320x568",
+      "viewport": [320, 568],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-320-Crafting",
+      "viewport": [320, 568],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-320-MiniFab",
+      "viewport": [320, 568],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "field-kit-1280x480",
+      "viewport": [1280, 480],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "compact-research",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "compact-factory",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "compact-pause",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "compact-credits",
+      "viewport": [390, 844],
+      "missingImages": [],
+      "axeViolations": 0
+    },
+    {
+      "name": "loading-fallback",
+      "axeViolations": 0
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "main-menu.png",
+      "label": "Main menu",
+      "source": "docs/reports/ui-kit-2026-11-13/production/main-menu.png",
+      "bytes": 1090298,
+      "sha256": "a185fe7ef7c8475fc20ddaffb0eaeacd7ed0637f4d805be8b8fc8520abe5766d"
+    },
+    {
+      "file": "hud.png",
+      "label": "HUD and sprite toolbar",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/07-advanced-hud.png",
+      "bytes": 658192,
+      "sha256": "9fea74149de42f88242d0e8fbdc080ffd25af5d0f7b61a0df7cc8db60a2bcc4f"
+    },
+    {
+      "file": "field-kit.png",
+      "label": "Inventory, crafting and MiniFab",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/08-advanced-inventory.png",
+      "bytes": 398121,
+      "sha256": "4718e2a962308e780af5bbdad0e489418e105d9801ae068a0c97faa50b926e52"
+    },
+    {
+      "file": "field-kit-compact-inventory.png",
+      "label": "Compact inventory",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/11-compact-inventory.png",
+      "bytes": 79115,
+      "sha256": "7ba0ccde5533e50d6d60443aafd3e2a07a817113c0cb0d780f7959f1eb62d101"
+    },
+    {
+      "file": "field-kit-compact-crafting.png",
+      "label": "Compact crafting",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/12-compact-crafting.png",
+      "bytes": 68975,
+      "sha256": "aa6ddf5942cdb2018e4864d09e0af13e13cc074dbfc444555c4d87f06fb2d4b3"
+    },
+    {
+      "file": "field-kit-compact-minifab.png",
+      "label": "Compact MiniFab and crank",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/13-compact-minifab.png",
+      "bytes": 85178,
+      "sha256": "691de30bf6703dd10509c68ee54723f6dc0024deb79b5fe7495fdadff1fb4ce5"
+    },
+    {
+      "file": "field-kit-small.png",
+      "label": "320 by 568 window",
+      "source": "docs/reports/ui-kit-2026-11-13/production/field-kit-320x568.png",
+      "bytes": 56873,
+      "sha256": "769a2fc1b1612e5a8e7880f8daac28f36995411de21ffb8871cac00122a9946c"
+    },
+    {
+      "file": "field-kit-short.png",
+      "label": "1280 by 480 window",
+      "source": "docs/reports/ui-kit-2026-11-13/production/field-kit-1280x480.png",
+      "bytes": 133813,
+      "sha256": "83c20eb305b69dd94dbaa599b1159d17098a7890af85f3feb9d34df500b101ed"
+    },
+    {
+      "file": "research.png",
+      "label": "Research tree and queue",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/05-research.png",
+      "bytes": 183118,
+      "sha256": "fdca3e345faa3284aae004d9ef98baf892cc85fa8baa233d8b45440a1cf1a5d8"
+    },
+    {
+      "file": "factory.png",
+      "label": "Factory and environment",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/09-factory.png",
+      "bytes": 346980,
+      "sha256": "b082a7ac5f60bbb7036cc95d11746808c051ef034ca344ff5c8d0ceb626dd853"
+    },
+    {
+      "file": "controls.png",
+      "label": "Controls",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/02-controls.png",
+      "bytes": 596671,
+      "sha256": "75b7bd75096e50906dbbe5ede21ebadceb4f57d2895139ea34c0411f8d93bcf0"
+    },
+    {
+      "file": "controls-compact.png",
+      "label": "Compact Controls",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/10-compact-controls.png",
+      "bytes": 57782,
+      "sha256": "2441e1d463713f3005bbf82e835061360a00dd14e205fc9642a13ecb41d780a2"
+    },
+    {
+      "file": "graphics.png",
+      "label": "Graphics settings",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/02b-graphics.png",
+      "bytes": 937874,
+      "sha256": "ac276a6bbaecf8ed0a8907bc8bd42b5a5e30c9503f58dc85116410f462107988"
+    },
+    {
+      "file": "pause-saves.png",
+      "label": "Pause and saves",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/06-pause-saves.png",
+      "bytes": 166300,
+      "sha256": "a86adb5a809253d0c31d7ab6ad346a7d843b84bc931fac356b1b6ea174b2b096"
+    },
+    {
+      "file": "machine-inspection.png",
+      "label": "Live machine and water inspection",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/14-water-inspection.png",
+      "bytes": 328516,
+      "sha256": "c42e9552a7fa6305dffc83c10087c44e9ed8bc31189c66e57c32082368fe28f2"
+    },
+    {
+      "file": "notifications.png",
+      "label": "Notification tones",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/15-notifications.png",
+      "bytes": 619441,
+      "sha256": "2b93dca5923a106514c4133db4121bd5477023fa1969bcff067757c9237ec438"
+    },
+    {
+      "file": "save-confirmation.png",
+      "label": "Save confirmation",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/16-save-confirmation.png",
+      "bytes": 240806,
+      "sha256": "eb6e977fcb5bbba47e32323a3e2ff2f07cf2edc6428d9c4cb984c941dbd23361"
+    },
+    {
+      "file": "unfinished-work.png",
+      "label": "Unfinished work confirmation",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/17-work-exit.png",
+      "bytes": 326563,
+      "sha256": "fbe3a8ba3ae2bb12b8e7cceb67939ea31fac67cd099f712c7201b6edd1075abc"
+    },
+    {
+      "file": "credits.png",
+      "label": "Asset credits",
+      "source": "docs/reports/ui-kit-2026-11-13/screens/18-credits.png",
+      "bytes": 85959,
+      "sha256": "656113e5e9141c2c651519ba985f2aee48424532a81ceabba7cc29a6fd42b795"
+    },
+    {
+      "file": "loading.png",
+      "label": "Loading fallback with JavaScript disabled",
+      "source": "docs/reports/ui-kit-2026-11-13/production/loading-fallback.png",
+      "bytes": 571549,
+      "sha256": "5e5e8bb18daba8890cce0c03377a5c3c1e7ae3abd95a5f57998b89f80988a80f"
+    }
+  ]
+}

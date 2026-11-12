@@ -1,32 +1,45 @@
 :host {
   display: block;
-  padding: 16px;
-  max-height: calc(100dvh - 2rem);
-  max-width: calc(100vw - 2rem);
-  box-sizing: border-box;
-  overflow: auto;
-  --gameplay-save-max-height: min(42rem, calc(100dvh - 15rem));
-  border: 1px solid #9db2a9;
-  border-radius: 12px;
-  background: #172020;
-  color: #edf2ef;
+  inline-size: min(920px, calc(100vw - 16px));
+  padding: 4px 12px 12px;
+  --gameplay-save-max-height: none;
 }
 section {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  max-block-size: calc(100dvh - 72px);
 }
 h2 {
-  margin: 0 0 12px;
+  flex: 0 0 auto;
 }
-.button {
-  width: auto;
-  margin: 0;
+.pause-content {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.65fr) minmax(0, 1.5fr);
+  gap: 16px;
+  min-block-size: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
 }
 .menu-actions {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
 }
+app-gameplay-saves {
+  max-inline-size: none;
+  min-inline-size: 0;
+}
+@media (max-width: 650px) {
+  :host {
+    padding-inline: 4px;
+  }
+  .pause-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .menu-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.menu-actions { position: sticky; inset-block-start: 0; align-self: start; background: var(--sw-navy); }

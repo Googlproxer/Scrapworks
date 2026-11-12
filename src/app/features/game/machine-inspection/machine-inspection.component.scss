@@ -1,12 +1,11 @@
 :host {
   font:
-    14px/1.5 system-ui,
+    14px/1.5 'Trebuchet MS',
     sans-serif;
   display: block;
-  overflow: auto;
   height: 100%;
   padding-right: 8px;
-  color: #f1f5f3;
+  color: var(--sw-cream);
 }
 .factory-layout {
   display: grid;
@@ -69,29 +68,14 @@ input {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  color: #f1f5f3;
-  background: #182c24;
-  border: 1px solid #a2b8ad;
-  padding: 8px;
-  font: inherit;
 }
 button {
-  font: inherit;
-  color: #f1f5f3;
-  background: #223d31;
-  border: 1px solid #a2b8ad;
-  border-radius: 4px;
   padding: 8px 12px;
   margin: 4px 6px 4px 0;
   cursor: pointer;
 }
 button:disabled {
-  opacity: 0.6;
   cursor: default;
-}
-:is(button, input, select):focus-visible {
-  outline: 3px solid #66d5dc;
-  outline-offset: 2px;
 }
 .coordinates {
   display: grid;
@@ -106,7 +90,7 @@ p {
 }
 .power-summary,
 .placement-feedback {
-  border-left: 3px solid #66d5dc;
+  border-left: 3px solid var(--sw-coral);
   padding-left: 10px;
 }
 @media (max-width: 650px) {
@@ -127,13 +111,7 @@ p {
   grid-template-rows: auto minmax(0, 1fr) auto;
   width: min(820px, calc(100vw - 32px));
   height: min(760px, calc(100dvh - 48px));
-  padding: 0 20px;
   box-sizing: border-box;
-  overflow: hidden;
-  background: #101e19;
-  border: 1px solid #738e83;
-  border-radius: 6px;
-  box-shadow: 0 6px 24px #0008;
 }
 header {
   display: flex;
@@ -169,4 +147,30 @@ h2 {
   .buffer-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+:host {
+  inline-size: min(900px, calc(100vw - 16px));
+  block-size: min(800px, calc(100dvh - 16px));
+  padding: 0 10px;
+}
+header {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+h2 {
+  max-inline-size: 100%;
+}
+@media (max-width: 600px) {
+  :host {
+    padding-inline: 2px;
+  }
+  .inspection-content {
+    padding-inline: 2px;
+  }
+}
+header h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

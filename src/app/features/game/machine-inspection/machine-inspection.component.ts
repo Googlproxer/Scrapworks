@@ -12,8 +12,12 @@ import { UtilityInspectionComponent } from './utility-inspection/utility-inspect
 import { InventorySlotsComponent } from '../inventory-slots/inventory-slots.component';
 import { MACHINE_ADVICE, machineAdvice } from '../field-kit/machine-advice';
 
+import { ItemSprite } from '@app/shared/item-sprite/item-sprite';
+
 @Component({
+  host: { class: 'sw-shell sw-dialog' },
   imports: [
+    ItemSprite,
     FormField,
     NgTemplateOutlet,
     TransportPanelComponent,

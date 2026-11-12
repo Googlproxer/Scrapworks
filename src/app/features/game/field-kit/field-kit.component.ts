@@ -43,6 +43,7 @@ export class FieldKitComponent {
   public readonly guidance = computed(() => this.guide()[2]);
   public readonly guideNumber = computed(() => GUIDE_STEPS.indexOf(this.guide()) + 1);
   public readonly guideCollapsed = signal(false);
+  public readonly workArea = signal<'inventory' | 'craft' | 'minifab'>('inventory');
   public readonly manual = FIELD_MANUAL;
 
   public toggleGuide(): void {

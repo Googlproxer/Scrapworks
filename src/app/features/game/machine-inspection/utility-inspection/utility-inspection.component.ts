@@ -6,8 +6,10 @@ import { facingPorts } from '@content/transport';
 import { ENVIRONMENT_SETTINGS, UTILITIES, isUtilityKind, fluidPorts } from '@content/environment';
 import { OpeningPanel } from '../../field-kit/opening-panel';
 
+import { ItemSprite } from '@app/shared/item-sprite/item-sprite';
+
 @Component({
-  imports: [FormField],
+  imports: [ItemSprite, FormField],
   selector: 'app-utility-inspection',
   styleUrl: './utility-inspection.component.scss',
   templateUrl: './utility-inspection.component.html',

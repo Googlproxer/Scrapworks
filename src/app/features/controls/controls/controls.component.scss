@@ -1,12 +1,8 @@
 :host {
   display: block;
-  color: #edf2ef;
-  background: #172020;
-  border: 1px solid #8faaa0;
+  color: var(--sw-cream);
   width: min(900px, calc(100vw - 32px));
-  border-radius: 12px;
-  overflow: hidden;
-  font-family: system-ui, sans-serif;
+  font-family: 'Trebuchet MS', sans-serif;
   font-size: 14px;
 }
 section {
@@ -23,7 +19,7 @@ footer {
   padding: 18px 24px;
 }
 header p {
-  color: #bdcec6;
+  color: var(--sw-muted);
   font-size: 0.9rem;
   margin: 6px 0 0;
 }
@@ -35,48 +31,27 @@ p {
   line-height: 1.5;
 }
 button,
-select,
-input {
-  font: inherit;
-}
-button,
 select {
-  color: #edf2ef;
-  background: #22342f;
-  border: 1px solid #829f92;
-  border-radius: 5px;
   padding: 8px 12px;
   cursor: pointer;
 }
-button:hover:not(:disabled) {
-  background: #36584c;
-}
 button:disabled {
-  opacity: 0.6;
   cursor: default;
 }
 :focus-visible {
-  outline: 3px solid #6fe6cf;
+  outline: 3px solid var(--sw-focus);
   outline-offset: 3px;
 }
 .tabs {
   display: flex;
   gap: 8px;
   padding: 0 24px;
-  border-bottom: 1px solid #536b61;
+  border-bottom: 1px solid var(--sw-line);
 }
 .tabs button {
-  border: 0;
-  border-radius: 4px 4px 0 0;
-  background: transparent;
   padding: 12px 16px;
-  color: #bdcec6;
-  border-bottom: 3px solid transparent;
 }
 .tabs [aria-selected='true'] {
-  color: #edf2ef;
-  border-bottom-color: #92c5aa;
-  background: #283d33;
   font-weight: 600;
 }
 .content {
@@ -84,7 +59,7 @@ button:disabled {
   padding: 12px 24px 20px;
 }
 .hint {
-  color: #bdcec6;
+  color: var(--sw-muted);
   font-size: 0.88rem;
   margin: 6px 0 14px;
 }
@@ -132,15 +107,14 @@ label {
 }
 .deadzone output {
   font-variant-numeric: tabular-nums;
-  color: #bdcec6;
+  color: var(--sw-muted);
 }
 .deadzone input {
   width: 100%;
   margin: 0;
-  accent-color: #92c5aa;
 }
 .deadzone small {
-  color: #bdcec6;
+  color: var(--sw-muted);
 }
 .table-scroll {
   overflow-x: auto;
@@ -161,13 +135,13 @@ th,
 td {
   text-align: left;
   padding: 8px 12px;
-  border-bottom: 1px solid #3d554a;
+  border-bottom: 1px solid var(--sw-line);
 }
 thead th {
   font-size: 0.8rem;
-  color: #bdcec6;
+  color: var(--sw-muted);
   font-weight: 500;
-  background: #1e2b25;
+  background: var(--sw-steel);
 }
 th:first-child {
   padding-left: 8px;
@@ -194,27 +168,20 @@ td {
   white-space: nowrap;
 }
 .remove {
-  background: transparent;
-  border-color: transparent;
-  color: #bdcec6;
   font-size: 1.15rem;
   padding: 4px 8px;
 }
 .add-binding {
-  border-style: dashed;
-  border-color: #738b7c;
-  background: transparent;
-  color: #bdcec6;
   font-size: 0.85rem;
 }
 .empty {
-  color: #91a799;
+  color: var(--sw-muted);
 }
 .additional {
   margin-top: 6px;
 }
 .binding-editor td {
-  background: #24382f;
+  background: var(--sw-steel);
   padding: 14px;
 }
 .editor-heading {
@@ -238,7 +205,7 @@ td {
 }
 .direction-bindings span {
   font-size: 0.8rem;
-  color: #bdcec6;
+  color: var(--sw-muted);
 }
 .capture-status {
   display: flex;
@@ -246,8 +213,8 @@ td {
   align-items: center;
   gap: 16px;
   padding: 12px 24px;
-  background: #344838;
-  border-bottom: 1px solid #8ca47d;
+  background: var(--sw-steel);
+  border-bottom: 1px solid var(--sw-line);
   font-size: 0.9rem;
 }
 .capture-status button {
@@ -258,7 +225,7 @@ td {
   margin: 10px 24px;
 }
 .conflicts {
-  color: #bdcec6;
+  color: var(--sw-muted);
   font-size: 0.87rem;
 }
 .conflicts summary {
@@ -269,14 +236,10 @@ td {
   margin: 6px 0;
 }
 footer {
-  border-top: 1px solid #536b61;
+  border-top: 1px solid var(--sw-line);
 }
 .save {
-  background: #395b46;
   font-weight: 600;
-}
-.reset {
-  background: transparent;
 }
 .visually-hidden {
   position: absolute;
@@ -316,5 +279,63 @@ footer {
   }
   header {
     align-items: flex-start;
+  }
+}
+
+:host {
+  inline-size: min(980px, calc(100vw - 16px));
+}
+section {
+  max-block-size: calc(100dvh - 60px);
+}
+.content {
+  min-block-size: 0;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+header,
+footer {
+  padding: 8px 12px;
+  flex-wrap: wrap;
+}
+.tabs {
+  padding-inline: 8px;
+  flex-wrap: wrap;
+}
+.controller-settings,
+.stick-settings {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+}
+@media (max-width: 600px) {
+  header,
+  footer,
+  .capture-status,
+  .content {
+    padding: 8px;
+  }
+  .tabs {
+    padding-inline: 4px;
+  }
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+    min-inline-size: 0;
+    inline-size: 100%;
+  }
+  thead {
+    display: none;
+  }
+  .binding-cell {
+    flex-wrap: wrap;
+  }
+  .binding-value {
+    white-space: normal;
+  }
+  .direction-bindings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

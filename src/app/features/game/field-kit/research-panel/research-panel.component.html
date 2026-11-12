@@ -66,7 +66,9 @@
           <ul class="research-costs">
             @for (cost of technology.costs; track cost.item) {
               <li>
-                <strong>{{ name(cost.item) }}</strong>
+                <strong class="sw-item-line"
+                  ><app-item-sprite [item]="cost.item" [size]="28" />{{ name(cost.item) }}</strong
+                >
                 <span
                   >Lifetime {{ cost.item === 'scrap' ? 'extracted' : 'produced' }}:
                   {{ history(cost.item) }} / {{ eligibility(technology, cost.item) }}</span

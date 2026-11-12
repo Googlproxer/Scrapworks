@@ -1,0 +1,14 @@
+:host {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 0;
+  flex: 0 0 auto;
+  max-inline-size: 100%;
+  aspect-ratio: 1;
+}
+img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+}

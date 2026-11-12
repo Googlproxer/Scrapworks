@@ -28,7 +28,7 @@ interface BindingEditor {
 @Component({
   selector: 'app-controls',
   providers: [BindingLabels],
-  host: { '(keydown.escape)': 'cancelCapture($event)' },
+  host: { class: 'sw-shell sw-dialog', '(keydown.escape)': 'cancelCapture($event)' },
   templateUrl: './controls.component.html',
   styleUrl: './controls.component.scss',
 })

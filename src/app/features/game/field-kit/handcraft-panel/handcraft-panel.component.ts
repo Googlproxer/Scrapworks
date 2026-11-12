@@ -1,12 +1,13 @@
 import { Component, computed, linkedSignal, untracked } from '@angular/core';
+import { RecipePreview } from '../../recipe-preview/recipe-preview';
 import { OpeningPanel } from '../opening-panel';
 import { OPENING_CONTENT } from '@content/opening';
 
 @Component({
   selector: 'app-handcraft-panel',
-  imports: [],
+  imports: [RecipePreview],
   templateUrl: './handcraft-panel.component.html',
-  styleUrl: '../field-kit.component.scss',
+  styleUrl: '../panel.scss',
   host: { role: 'region', 'aria-labelledby': 'craft-title' },
 })
 export class HandcraftPanelComponent extends OpeningPanel {

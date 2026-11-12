@@ -6,6 +6,7 @@ import { attachedScripts, exportProject } from './export-project.ts';
 import { exportQueue, watchAuthoring } from './watch.ts';
 import { stopProcessTree } from './processes.ts';
 import { errorMessage } from '../shared.ts';
+import { prepareUiKit } from '../art/prepare-ui-kit.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const controller = new AbortController();
@@ -26,6 +27,7 @@ const stop = () => {
 process.once('SIGINT', stop);
 process.once('SIGTERM', stop);
 try {
+  await prepareUiKit(root);
   stopWatching = watchAuthoring(root, {
     changed: () => queue.request(),
     scripts: () => scripts,

@@ -1,4 +1,4 @@
-@use '../field-kit.component';
+@use '../panel';
 :host {
   display: grid;
   height: 100%;
@@ -29,7 +29,7 @@
   scrollbar-gutter: stable;
 }
 .technology-details {
-  border-left: 1px solid #526a61;
+  border-left: 1px solid var(--sw-line);
   padding: 0 12px;
 }
 .technology {
@@ -55,7 +55,7 @@
 }
 .research-queue {
   max-height: 180px;
-  border-top: 1px solid #738e83;
+  border-top: 1px solid var(--sw-line);
   padding-top: 8px;
 }
 .research-queue > p {
@@ -102,7 +102,7 @@
     max-height: 380px;
     border-left: 0;
     padding: 12px 4px;
-    border-top: 1px solid #526a61;
+    border-top: 1px solid var(--sw-line);
   }
   .research-queue {
     max-height: 220px;

@@ -4,12 +4,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { compressBuild, printCompression } from './compress.ts';
 import { hasCode } from '../shared.ts';
+import { prepareUiKit } from '../art/prepare-ui-kit.ts';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const require = createRequire(import.meta.url);
 const cli = path.join(path.dirname(require.resolve('@angular/cli/package.json')), 'bin/ng.js');
 const args = process.argv.slice(2);
 const help = args.includes('--help') || args.includes('-h');
+if (!help) await prepareUiKit(root);
 const commands = [
   ...(help ? [] : [[path.join(root, 'tools/scenes/export.ts')]]),
   [cli, 'build', ...args],

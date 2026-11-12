@@ -35,17 +35,24 @@
     </p>
   </aside>
   @if (runtime.fieldKitOpen()) {
-    <section id="field-kit" class="field-kit" aria-labelledby="field-kit-title">
+    <section id="field-kit" class="field-kit sw-shell" aria-labelledby="field-kit-title">
       <header>
-        <h2 id="field-kit-title" data-kit-heading tabindex="-1">Field kit</h2>
-        @if (saves) {
-          <button type="button" (click)="saves.save()" [disabled]="saves.busy()">
-            Save progress
-          </button>
-        }
-        <button type="button" (click)="runtime.toggleFieldKit()">Close</button>
+        <h2 class="sw-title" id="field-kit-title" data-kit-heading tabindex="-1">Field kit</h2>
+        <div class="actions">
+          @if (saves) {
+            <button
+              class="sw-primary"
+              type="button"
+              (click)="saves.save()"
+              [disabled]="saves.busy()"
+            >
+              Save progress
+            </button>
+          }
+          <button type="button" (click)="runtime.toggleFieldKit()">Close</button>
+        </div>
       </header>
-      <div class="tabs" role="tablist" aria-label="Field kit sections">
+      <div class="tabs sw-tabs" role="tablist" aria-label="Field kit sections">
         <button
           id="inventory-tab"
           type="button"
@@ -119,11 +126,32 @@
         aria-labelledby="inventory-tab"
         [hidden]="activeTab() !== 'inventory'"
       >
-        <app-inventory-panel />
-
-        <app-handcraft-panel />
-
-        <app-minifab-panel />
+        <div class="work-areas sw-tabs" role="group" aria-label="Inventory work area">
+          <button
+            type="button"
+            [attr.aria-pressed]="workArea() === 'inventory'"
+            (click)="workArea.set('inventory')"
+          >
+            Inventory
+          </button>
+          <button
+            type="button"
+            [attr.aria-pressed]="workArea() === 'craft'"
+            (click)="workArea.set('craft')"
+          >
+            Crafting
+          </button>
+          <button
+            type="button"
+            [attr.aria-pressed]="workArea() === 'minifab'"
+            (click)="workArea.set('minifab')"
+          >
+            MiniFab
+          </button>
+        </div>
+        <app-inventory-panel [class.work-hidden]="workArea() !== 'inventory'" />
+        <app-handcraft-panel [class.work-hidden]="workArea() !== 'craft'" />
+        <app-minifab-panel [class.work-hidden]="workArea() !== 'minifab'" />
       </div>
       <div
         id="research-panel"
@@ -152,6 +180,7 @@
   @if (runtime.workExitWarning()) {
     <div class="warning-backdrop">
       <section
+        class="sw-shell"
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="exit-title"
@@ -159,7 +188,7 @@
         cdkTrapFocus
         [cdkTrapFocusAutoCapture]="true"
       >
-        <h2 id="exit-title">Cancel unfinished handcrafting?</h2>
+        <h2 class="sw-title" id="exit-title">Cancel unfinished handcrafting?</h2>
         <p id="exit-description">
           Completed items remain. The unfinished unit’s original ingredients return to your bag; its
           partial work is discarded.

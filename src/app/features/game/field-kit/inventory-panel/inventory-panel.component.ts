@@ -7,7 +7,7 @@ import { InventorySlotsComponent } from '../../inventory-slots/inventory-slots.c
   selector: 'app-inventory-panel',
   imports: [EquipablePanelComponent, InventorySlotsComponent],
   templateUrl: './inventory-panel.component.html',
-  styleUrl: '../field-kit.component.scss',
+  styleUrl: '../panel.scss',
   host: { role: 'region', 'aria-labelledby': 'bag-title' },
 })
 export class InventoryPanelComponent extends OpeningPanel {}

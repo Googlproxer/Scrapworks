@@ -4,7 +4,11 @@ import { assertConsoleMessages, installConsoleCapture } from './console-policy';
 
 // Capture module-import diagnostics as well as messages from test bodies.
 installConsoleCapture();
-beforeEach(installConsoleCapture);
+beforeEach(() => {
+  installConsoleCapture();
+  // TestBed fixtures sit outside app-root; opt them into the production UI theme.
+  document.body.classList.add('sw-ui');
+});
 afterEach(async () => {
   // Capture Angular service destruction before checking this test's diagnostics.
   installConsoleCapture();
