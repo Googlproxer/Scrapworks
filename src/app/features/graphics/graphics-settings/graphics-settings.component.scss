@@ -1,0 +1,139 @@
+:host {
+  display: block;
+  width: min(560px, calc(100vw - 24px));
+  color: #edf2ef;
+  background: #172020;
+  border: 1px solid #8faaa0;
+  border-radius: 12px;
+  overflow: hidden;
+  font:
+    14px system-ui,
+    sans-serif;
+}
+section {
+  display: flex;
+  flex-direction: column;
+  max-height: 90dvh;
+}
+header,
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  flex-shrink: 0;
+}
+header {
+  border-bottom: 1px solid #536b61;
+}
+h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+header p {
+  margin: 6px 0 0;
+  color: #bdcec6;
+}
+.content {
+  padding: 16px 24px 0;
+  overflow: auto;
+  min-height: 0;
+}
+p {
+  line-height: 1.5;
+}
+.intro {
+  margin: 0 0 20px;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.setting {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 20px;
+}
+label {
+  font-weight: 600;
+}
+.setting p {
+  grid-column: 1/-1;
+  color: #bdcec6;
+  margin: 0;
+  font-size: 0.9rem;
+}
+button,
+select {
+  font: inherit;
+  color: #edf2ef;
+  background: #22342f;
+  border: 1px solid #829f92;
+  border-radius: 5px;
+  padding: 9px 12px;
+  min-height: 40px;
+}
+button {
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  background: #36584c;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.primary {
+  background: #315349;
+}
+:focus-visible {
+  outline: 3px solid #6fe6cf;
+  outline-offset: 3px;
+}
+.status {
+  display: flow-root;
+  min-height: 120px;
+}
+.status p {
+  margin: 0;
+  min-height: 24px;
+}
+.status .device-notice {
+  margin-top: 4px;
+  color: #bdcec6;
+}
+.error {
+  color: #ffb8ab;
+}
+footer {
+  border-top: 1px solid #536b61;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 400px) {
+  header,
+  footer {
+    padding: 16px;
+  }
+  .content {
+    padding: 16px 16px 0;
+  }
+  .setting {
+    grid-template-columns: minmax(0, 1fr) 110px;
+    gap: 8px;
+  }
+}

@@ -92,6 +92,7 @@
   <div class="top-right">
     <div>
       <button class="button" type="button" data-controls (click)="openControls()">Controls</button>
+      <button class="button" type="button" data-graphics (click)="openGraphics()">Graphics</button>
       @if (gameRuntimeService.currentSceneKey() === 'Game') {
         <button class="button" type="button" (click)="inputAdapter.openMenu()">Menu</button>
       }

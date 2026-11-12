@@ -31,6 +31,12 @@ import { assertSameAuthoredMap } from '@core/authored-map';
 import { MACHINE_FOOTPRINT } from '@content/factory';
 import { TOOLBAR_SLOTS } from '@contracts/toolbar';
 import { ControlSettingsService } from '../controls/control-settings.service';
+import { GraphicsSettingsService } from '../graphics/graphics-settings.service';
+import {
+  defaultGraphicsSettings,
+  resolveGraphicsSettings,
+  type GraphicsStatus,
+} from '@contracts/graphics';
 import { GAME_CLIENT_LOADER, type GameClientFactory } from './game-client-factory';
 import { AFTER_PAINT } from '../../shared/loading/after-paint';
 import type { LoadingStatus } from '@contracts/loading';
@@ -206,6 +212,11 @@ export class GameRuntimeService {
     ['loading', 'open'].includes(this.inspectorState().phase),
   );
   public readonly settings = inject(ControlSettingsService);
+  public readonly graphicsPreferences = inject(GraphicsSettingsService);
+  private readonly graphicsStatusValue = signal<GraphicsStatus>(
+    resolveGraphicsSettings(defaultGraphicsSettings, 2048),
+  );
+  public readonly graphicsStatus = this.graphicsStatusValue.asReadonly();
   private readonly tickSubscriptions = new Set<() => void>();
   private inspectorReturnFocus?: HTMLElement;
 
@@ -213,6 +224,12 @@ export class GameRuntimeService {
   private retainingRendererSession = false;
 
   constructor() {
+    effect(() => {
+      const settings = this.graphicsPreferences.settings();
+      this.graphicsStatusValue.set(
+        this.renderer.configureGraphics(settings) ?? resolveGraphicsSettings(settings, 2048),
+      );
+    });
     effect(() => {
       const id = this.machineInspectionId();
       if (!id) return;
@@ -286,6 +303,7 @@ export class GameRuntimeService {
         resources: this.resources,
         onMenuReady: () => this.preloadMenu(generation),
         bindings: this.settings.profile(),
+        graphicsSettings: this.graphicsPreferences.settings(),
         developerFixture: !!environment.dev,
         debugDrawSettings: this.debugDrawSettings(),
         actions: {
@@ -506,6 +524,7 @@ export class GameRuntimeService {
         client.destroy();
         return;
       }
+      this.graphicsStatusValue.set(client.setGraphicsSettings(this.graphicsPreferences.settings()));
       const unsubscribe = this.renderer.connect({
         loading: (status) => {
           // Lifecycle readiness owns dismissal, including a pause before the first frame.

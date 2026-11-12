@@ -1,4 +1,5 @@
 import type { Subject } from 'rxjs';
+import type { GraphicsSettings } from '@contracts/graphics';
 import type {
   PlacementPort,
   PlacementFeedback,
@@ -11,6 +12,7 @@ export interface WorldScenePorts {
   readonly session: WorldSessionBridge;
   readonly placement?: PlacementPort;
   readonly developerFixture?: boolean;
+  readonly graphicsSettings?: GraphicsSettings;
   readonly selection: Subject<WorldSelection>;
   readonly placementFeedback: Subject<PlacementFeedback | null>;
 }

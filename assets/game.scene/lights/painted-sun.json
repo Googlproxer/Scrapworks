@@ -1,0 +1,21 @@
+{
+    "tags": null,
+    "position": [-985.276, 1970.552, 1182.331],
+    "direction": [0.3940552031195503, -0.7881104062391006, -0.4728662437434603],
+    "diffuse": [1, 0.96, 0.9],
+    "specular": [1, 0.96, 0.9],
+    "intensity": 0.85,
+    "intensityMode": 0,
+    "shadowEnabled": true,
+    "shadowMinZ": 100,
+    "shadowMaxZ": 5000,
+    "shadowFrustumSize": 2000,
+    "name": "painted-sun",
+    "id": "painted-sun",
+    "type": 1,
+    "state": "",
+    "metadata": {},
+    "animations": [],
+    "ranges": [],
+    "isEnabled": true
+}

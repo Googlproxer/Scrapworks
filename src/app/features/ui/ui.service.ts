@@ -13,7 +13,7 @@ import { OpeningFeedback } from './opening-feedback';
 import { UiDialogRegistry } from './ui-dialog-registry';
 import { MachineInspectionComponent } from '../game/machine-inspection/machine-inspection.component';
 
-export type DialogKey = 'controls' | 'game-menu' | 'machine-inspection';
+export type DialogKey = 'controls' | 'graphics' | 'game-menu' | 'machine-inspection';
 export type DialogSimulationPolicy = 'paused' | 'live';
 
 @Service({ autoProvided: false })

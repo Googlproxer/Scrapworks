@@ -27,6 +27,13 @@ import type { DebugDrawSettings } from '@contracts/debug-draw';
 import { debugDrawForScene } from './debug/draw/debug-draw';
 import type { SceneDebugDraw } from './debug/draw/types';
 import { loadingProgress, type LoadingStatus } from '@contracts/loading';
+import {
+  defaultGraphicsSettings,
+  resolveGraphicsSettings,
+  validateGraphicsSettings,
+  type GraphicsSettings,
+  type GraphicsStatus,
+} from '@contracts/graphics';
 
 export class BabylonGameClient implements GameClient {
   private readonly loadingSource = new BehaviorSubject<LoadingStatus | null>({
@@ -66,6 +73,8 @@ export class BabylonGameClient implements GameClient {
   private currentScene?: Scene;
   private currentAssets?: AssetContainer;
   private world?: WorldScene;
+  private graphicsSettings: GraphicsSettings = defaultGraphicsSettings;
+  private graphicsStatus: GraphicsStatus = { shadows: 'medium', renderScale: 100, notice: null };
   private sceneDebug?: SceneDebugDraw;
   private unsubscribeDebug?: () => void;
   private debugSettings: DebugDrawSettings = { enabled: false, disabledCategories: [] };
@@ -113,6 +122,9 @@ export class BabylonGameClient implements GameClient {
     private readonly loadCharacterFn: CharacterLoader = loadCharacter,
   ) {
     this.ownerDocument = host.ownerDocument;
+    this.graphicsSettings = validateGraphicsSettings(
+      options.graphicsSettings ?? defaultGraphicsSettings,
+    );
     this.debugSettings = options.debugDrawSettings ?? this.debugSettings;
     const ownerWindow = host.ownerDocument.defaultView;
     if (!ownerWindow) throw new Error('The viewport document has no window.');
@@ -124,6 +136,7 @@ export class BabylonGameClient implements GameClient {
     host.append(this.canvas);
     try {
       this.engine = new Engine(this.canvas, true);
+      this.setGraphicsSettings(this.graphicsSettings);
       this.engine.canvasTabIndex = 0;
       this.browserActivity = new BrowserActivity(this.ownerDocument);
       this.inputManager = new InputManager(this.engine, options.bindings, this.ownerDocument);
@@ -245,6 +258,24 @@ export class BabylonGameClient implements GameClient {
     this.inspectorSource.complete();
     this.debugSource.complete();
     this.loadingSource.complete();
+  }
+
+  public setGraphicsSettings(value: GraphicsSettings): GraphicsStatus {
+    if (this.destroyed) return this.graphicsStatus;
+    const settings = validateGraphicsSettings(value);
+    this.graphicsSettings = settings;
+    this.engine.setHardwareScalingLevel(100 / settings.renderScale);
+    this.world?.rendering.applySettings(settings);
+    const effective = resolveGraphicsSettings(settings, this.engine.getCaps().maxTextureSize);
+    this.graphicsStatus = {
+      ...effective,
+      notice:
+        effective.notice ??
+        (effective.shadows !== 'off' && this.engine.webGLVersion < 2
+          ? 'Simplified shadow filtering is active on this device.'
+          : null),
+    };
+    return this.graphicsStatus;
   }
 
   private cleanup(): void {
@@ -372,6 +403,7 @@ export class BabylonGameClient implements GameClient {
           session,
           placement: this.options.placement,
           developerFixture: this.options.developerFixture,
+          graphicsSettings: this.graphicsSettings,
           selection: this.selectionSource,
           placementFeedback: this.placementSource,
         },
@@ -403,6 +435,7 @@ export class BabylonGameClient implements GameClient {
           this.currentScene = scene;
           this.currentAssets = assets;
           this.world = world;
+          world?.rendering.applySettings(this.graphicsSettings);
           this.definition = definition;
           this.scenePrepared = true;
           this.pointer = undefined;
@@ -527,6 +560,7 @@ export class BabylonGameClient implements GameClient {
             session: this.options.session,
             placement: this.options.placement,
             developerFixture: this.options.developerFixture,
+            graphicsSettings: this.graphicsSettings,
             selection: this.selectionSource,
             placementFeedback: this.placementSource,
           },

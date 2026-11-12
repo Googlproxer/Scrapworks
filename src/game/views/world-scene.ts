@@ -20,6 +20,7 @@ import type { DebugAttachment } from '../debug/draw/types';
 import { PLAYER_RADIUS } from '@simulation/world-rules';
 import { OPENING_SETTINGS } from '@content/opening';
 import { EnvironmentViews } from './environment-views';
+import { WorldRendering } from '../rendering/world-rendering';
 
 /** Composition only: native Babylon hooks invoke ordered behaviors during scene.render(). */
 export class WorldScene {
@@ -29,6 +30,7 @@ export class WorldScene {
   public readonly entities: EntityViews;
   public readonly selection: SelectionController;
   public readonly placement: PlacementController;
+  public readonly rendering: WorldRendering;
   private readonly frame: WorldFrame;
   private readonly owner: TransformNode;
   private readonly scripts: PresentationBehavior[] = [];
@@ -80,6 +82,9 @@ export class WorldScene {
       );
       const driver = own(new SessionDriver(this.owner, this.frame));
       const environment = own(new EnvironmentViews(this.owner, definition, this.frame));
+      this.rendering = own(
+        new WorldRendering(this.owner, player, character, this.frame, options.graphicsSettings),
+      );
       // Numeric phase order, deliberately independent of construction/array order.
       // Native update: controls -> input -> session -> player/entities.
       // Native late: camera follow -> selection -> placement, all before drawing.
@@ -92,6 +97,7 @@ export class WorldScene {
         { script: environment, order: 55 },
         { script: this.selection, order: 60 },
         { script: this.placement, order: 70 },
+        { script: this.rendering, order: 80 },
       ]);
     } catch (error) {
       for (const attachment of this.debugAttachments) attachment.dispose();

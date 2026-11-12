@@ -1,9 +1,9 @@
 {
     "tags": null,
     "groundColor": [
-        0,
-        0,
-        0
+        0.6,
+        0.55,
+        0.5
     ],
     "direction": [
         0,
@@ -15,8 +15,8 @@
     "radius": 0.00001,
     "diffuse": [
         1,
-        1,
-        1
+        0.98,
+        0.94
     ],
     "specular": [
         1,
@@ -24,9 +24,9 @@
         1
     ],
     "falloffType": 0,
-    "intensity": 1,
+    "intensity": 0.75,
     "_renderPriority": 0,
-    "shadowEnabled": true,
+    "shadowEnabled": false,
     "excludeWithLayerMask": 0,
     "includeOnlyWithLayerMask": 0,
     "lightmapMode": 0,

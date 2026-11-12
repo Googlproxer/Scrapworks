@@ -19,6 +19,9 @@ export const loadCharacter: CharacterLoader = (scene, onProgress, source) =>
       ).href,
     scene,
     {
+      // Approved Cell lighting expects gamma-encoded texture samples, not a
+      // hardware-decoded sRGB buffer. The GLB/image bytes remain unchanged.
+      pluginOptions: { gltf: { useSRGBBuffers: false } },
       ...(source ? { rootUrl: source.rootUrl, name: source.name, pluginExtension: '.glb' } : {}),
       onProgress: (event) => {
         if (event.lengthComputable && event.total > 0) onProgress?.(event.loaded / event.total);

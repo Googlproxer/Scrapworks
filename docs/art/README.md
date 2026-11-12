@@ -45,6 +45,12 @@ Translate the preferred flat finish into 3D geometry, material response, texture
 
 The user clarified on 12 November 2026 that flat shading requires **renderer/shader work as well as 3D assets**. Plan a deliberate stylised lighting/material/shader pass; replacing geometry or repainting textures alone does not establish the target finish. The concept art is the shared visual target for both asset preparation and shader development.
 
+The [stylised rendering and graphics quality implementation](../plans/stylized-rendering-and-quality.md) records the existing-shader research, comparisons and shipped protagonist presentation/quality controls. The user approved I on 12 November: five Cell lighting levels with narrow 0.025 half-width transitions, G's warm fill/sun and restrained cast shadows. Graphics presets and independent shadow/resolution settings are available from the main controls and pause menu.
+
+The first [protagonist built-in material tests](../../art/shaders/protagonist-builtins/README.md) preserve the original/matte PBR, diffuse StandardMaterial and stock CellMaterial comparisons that led to the selection. The full mesh and source textures are retained. The protagonist is the visual acceptance benchmark; other objects' materials remain part of the user's ongoing asset updates.
+
+The [narrow-band blending comparison](../../art/shaders/protagonist-builtins/band-softening.md) retains G's tones/lighting and records H/I/J. Its zero-width control matches G pixel-for-pixel in the tested views. The runtime reuses that exact editable material source for approved I; native Babylon handles skinning, textures, fog and shadow integration. Keep the finish at every graphics preset, including with cast shadows off.
+
 ## Preferred finish across all artwork
 
 The approved flatter colour treatment is the preferred finish for the whole game, including characters, machines, terrain, vegetation, water, effects, and interface artwork.

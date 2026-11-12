@@ -31,7 +31,7 @@
   "fov": 0.8,
   "projectionPlaneTilt": 0,
   "minZ": 100,
-  "maxZ": 1000000,
+  "maxZ": 10000,
   "layerMask": 268435455,
   "fovMode": 0,
   "cameraRigMode": 0,

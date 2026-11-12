@@ -10,6 +10,7 @@ import type {
   WorldSessionBridge,
 } from '@contracts/game-client';
 import type { GameClientOptions } from '@game/client-api';
+import { resolveGraphicsSettings, type GraphicsSettings } from '@contracts/graphics';
 
 /** Required capabilities for tests that never create a gameplay world. */
 export function menuClientOptions(): GameClientOptions {
@@ -30,6 +31,7 @@ export function menuClientOptions(): GameClientOptions {
 
 export function clientNotifications() {
   return {
+    setGraphicsSettings: (settings: GraphicsSettings) => resolveGraphicsSettings(settings, 2048),
     loading$: new BehaviorSubject<LoadingStatus | null>(null),
     state$: new BehaviorSubject<GameState>({
       phase: 'loading',

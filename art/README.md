@@ -11,6 +11,7 @@ Editable art projects, source assets, references, exact prompts and provenance l
 | [ui/](ui/)                         | Cursor and menu backdrop sources; accepted UI screen concepts; [reusable UI kit](ui/kit/v1/README.md); [UI resource, tool and machine sprites](ui/sprites/v1/README.md). |
 | [generation.json](generation.json) | Exact generation prompts and input/output provenance for the retained concepts.                                                                                          |
 | [M10 concepts](concepts/m10-2026-11-12/README.md) | Four gameplay proposals and 32 individual world/machine/character/feedback/prop concepts, exact prompts, references and a local review gallery; implementation and approval remain separate. |
+| [Shader/material source and tests](shaders/protagonist-builtins/README.md) | Approved I material source and attribution, original built-in/blending comparisons, and local WebGL review renders. The runtime reuses I for the protagonist; world objects remain in their separate asset pass. |
 
 Keep project files, source textures, previews, available licensing and provenance together. Preserve original sources when making runtime derivatives and document their preparation. Current automation lives in [tools/art/](../tools/art/). Active Editor scenes/imports remain in `assets/`, live runtime derivatives in `public/assets/`, and generated scene exports in ignored `public/scene/`.
 

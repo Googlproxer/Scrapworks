@@ -24,6 +24,8 @@ Current player character, prepared on 2 November 2026 from the user's [rigged Mi
 
 The user explicitly requested the full mesh and retains later polygon optimisation. This version therefore exceeds the previous 40, 000-triangle and 5 MiB targets. Those targets are reported in validation rather than enforced by removing geometry or skin weights.
 
+On 12 November the user approved [finish I](../../../../shaders/protagonist-builtins/band-softening.md) for presentation. The GLB still contains the original PBR material and all three source images. Runtime loading uses gamma-encoded image samples and binds the approved Cell lighting extension to the protagonist, retaining the full geometry, UVs and eight skin influences. The [graphics implementation](../../../../../docs/plans/stylized-rendering-and-quality.md) keeps that finish at every quality preset; only optional shadows and render resolution vary.
+
 Mixamo returned the metre-valued OBJ at centimetre scale. The converter measures the source Blender height and restores the resulting factor of approximately 100. Before export, rigged bind-pose vertices match the edited Blender geometry within 0.7 micrometres. It preserves the authored horizontal offset rather than recentering the bounding box. The full Blender material restores normal/metallic/roughness channels absent from the diffuse-only Mixamo export; the imported UV layer is named `UVMap` to match that graph.
 
 ## Animation contract

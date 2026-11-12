@@ -6,6 +6,8 @@ The complete local [report](../reports/asset-audit/2026-11-11/README.md), [scree
 
 The user subsequently requested [concept art for all selected assets and gameplay views](../../art/concepts/m10-2026-11-12/README.md). That first-pass set provides four gameplay proposals and 32 individual asset/group sheets, awaiting review. It establishes visual references for later asset and renderer/shader work, not Step B implementation credit.
 
+The subsequent [shader and graphics-quality implementation](../plans/stylized-rendering-and-quality.md) follows the existing-material comparisons and user approval of I. The protagonist now uses that finish, with shared authored lighting and independently adjustable shadows/render resolution. The user specified the protagonist as the benchmark while other objects are updated separately; those materials/assets and final qualification remain open.
+
 ## Review boundary
 
 - Fresh production builds and 52 world captures: damaged, fully restored and mixed-health prepared states; all **19** placeable kinds; water, vegetation, deposits, blockers, protagonist and connections.

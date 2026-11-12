@@ -25,6 +25,8 @@ export class CameraController extends PresentationBehavior {
         `Game requires an authored ArcRotateCamera; received ${camera?.getClassName() ?? 'no active camera'}.`,
       );
     this.camera = camera;
+    // The authored 40 m world fits comfortably within 100 m at every allowed zoom.
+    camera.maxZ = 10000;
     camera.lowerBetaLimit = Math.PI / 9;
     camera.upperBetaLimit = (Math.PI * 5) / 12;
     camera.lowerRadiusLimit = 600;

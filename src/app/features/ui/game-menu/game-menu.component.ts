@@ -1,6 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
 import { ControlsComponent } from '../../controls/controls/controls.component';
+import { GraphicsSettingsComponent } from '../../graphics/graphics-settings/graphics-settings.component';
 import { GameRuntimeService } from '../../game/game-runtime.service';
 import { UiService } from '../ui.service';
 import { GameplaySavesComponent } from '../../save/gameplay-saves/gameplay-saves.component';
@@ -30,5 +31,11 @@ export class GameMenuComponent {
   public mainMenu(): void {
     this.ref.close();
     this.runtime.setScene('MainMenu');
+  }
+
+  public graphics(): void {
+    this.ui.openUIDialog('graphics', GraphicsSettingsComponent, {
+      ariaLabel: 'Graphics',
+    });
   }
 }

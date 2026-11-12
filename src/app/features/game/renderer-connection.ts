@@ -5,6 +5,7 @@ import type { GameState } from '@contracts/game-state';
 import type { WorldSelection, PlacementFeedback, InspectorState } from '@contracts/game-client';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
 import type { LoadingStatus } from '@contracts/loading';
+import type { GraphicsSettings, GraphicsStatus } from '@contracts/graphics';
 
 interface RendererNotifications {
   state(value: GameState): void;
@@ -81,6 +82,10 @@ export class RendererConnection {
 
   public configureDebug(settings: DebugDrawSettings): void {
     this.clientValue?.setDebugDrawSettings(settings);
+  }
+
+  public configureGraphics(settings: GraphicsSettings): GraphicsStatus | undefined {
+    return this.clientValue?.setGraphicsSettings(settings);
   }
 
   public unmount(): void {

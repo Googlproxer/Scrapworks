@@ -14,6 +14,7 @@ import type { GameState, SceneKey } from '@contracts/game-state';
 import type { DebugDrawSettings, DebugDrawStatus } from '@contracts/debug-draw';
 import type { WorldDefinition } from '@contracts/world';
 import type { StartupResources } from './startup-resources';
+import type { GraphicsSettings, GraphicsStatus } from '@contracts/graphics';
 
 export interface PreparedWorld {
   commit(): void;
@@ -28,6 +29,7 @@ export interface GameClientOptions {
   readonly bindings?: BindingProfile;
   readonly developerFixture?: boolean;
   readonly debugDrawSettings?: DebugDrawSettings;
+  readonly graphicsSettings?: GraphicsSettings;
   readonly resources?: StartupResources;
   readonly onMenuReady?: () => void;
 }
@@ -44,6 +46,7 @@ export interface GameClient {
   setScene(key: SceneKey): void;
   setInputEnabled(on: boolean): void;
   setDebugDrawSettings(settings: DebugDrawSettings): void;
+  setGraphicsSettings(settings: GraphicsSettings): GraphicsStatus;
   toggleInspector(): Promise<void>;
   prepareWorld?(
     definition: WorldDefinition,

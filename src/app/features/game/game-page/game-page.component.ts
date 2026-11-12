@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import {
   afterRenderEffect,
   AfterViewInit,
@@ -9,24 +8,24 @@ import {
   viewChild,
 } from '@angular/core';
 import { ControlsComponent } from '@app/features/controls/controls/controls.component';
+import { GraphicsSettingsComponent } from '@app/features/graphics/graphics-settings/graphics-settings.component';
 import { UiInputAdapterService } from '@app/features/ui/ui-input-adapter.service';
 import { UiService } from '@app/features/ui/ui.service';
 import { environment } from '@environments/environment';
-import { GameRuntimeService } from '../game-runtime.service';
-import { DebugDrawPanelComponent } from '../debug-draw-panel/debug-draw-panel.component';
-import { FieldKitComponent } from '../field-kit/field-kit.component';
-import { NotificationStackComponent } from '../../ui/notification-stack/notification-stack.component';
+import { IndexedDbSaveRepository } from '../../../../persistence/indexeddb-save-repository';
 import { LoadingIndicatorComponent } from '../../../shared/loading/loading-indicator/loading-indicator.component';
 import { LoadingScreenComponent } from '../../../shared/loading/loading-screen/loading-screen.component';
 import { MenuLogoComponent } from '../../../shared/loading/menu-logo/menu-logo.component';
-import { GameplaySaveService, GAMEPLAY_SAVE_REPOSITORY } from '../../save/gameplay-save.service';
-import { IndexedDbSaveRepository } from '../../../../persistence/indexeddb-save-repository';
+import { GAMEPLAY_SAVE_REPOSITORY, GameplaySaveService } from '../../save/gameplay-save.service';
 import { GameplaySavesComponent } from '../../save/gameplay-saves/gameplay-saves.component';
+import { NotificationStackComponent } from '../../ui/notification-stack/notification-stack.component';
+import { DebugDrawPanelComponent } from '../debug-draw-panel/debug-draw-panel.component';
+import { FieldKitComponent } from '../field-kit/field-kit.component';
+import { GameRuntimeService } from '../game-runtime.service';
 import { PlaceableToolbarComponent } from '../placeable-toolbar/placeable-toolbar.component';
 
 @Component({
   imports: [
-    JsonPipe,
     MenuLogoComponent,
     GameplaySavesComponent,
     DebugDrawPanelComponent,
@@ -95,6 +94,12 @@ export class GamePageComponent implements AfterViewInit, OnDestroy {
   public openControls(): void {
     this.uiService.openUIDialog('controls', ControlsComponent, {
       ariaLabelledBy: 'controls-title',
+    });
+  }
+
+  public openGraphics(): void {
+    this.uiService.openUIDialog('graphics', GraphicsSettingsComponent, {
+      ariaLabel: 'Graphics',
     });
   }
 }
