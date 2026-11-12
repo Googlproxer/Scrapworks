@@ -30,7 +30,9 @@ div.game-container {
   padding: 0.5rem 0.75rem;
   background: #101916;
   color: #f1f5f3;
-  font: 0.875rem/1.5 system-ui, sans-serif;
+  font:
+    0.875rem/1.5 system-ui,
+    sans-serif;
   text-underline-offset: 0.2em;
 }
 
@@ -106,6 +108,17 @@ div.centre {
   .centre .preload-status {
     min-height: 1.4em;
     margin-top: 0;
+  }
+
+  .top-right > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .top-right .button {
+    width: auto;
+    margin: 4px;
   }
 }
 

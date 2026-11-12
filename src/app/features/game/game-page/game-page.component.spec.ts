@@ -11,6 +11,7 @@ import { GameRuntimeService } from '../game-runtime.service';
 import { GamePageComponent } from './game-page.component';
 import { AFTER_PAINT } from '../../../shared/loading/after-paint';
 import { waitForSignal } from '../../../../testing/wait-for-state';
+import { page as browserPage } from 'vitest/browser';
 
 describe('GamePageComponent integration', () => {
   let fixture: ComponentFixture<GamePageComponent>;
@@ -231,24 +232,37 @@ describe('GamePageComponent integration', () => {
     expect(button()).toBeUndefined();
   });
 
-  it('fills small and large hosts and keeps the Play Game control inside the viewport', async () => {
+  it('fills small and large viewports and keeps New Game visible and reachable by pointer', async () => {
     states.next({ phase: 'ready', sceneKey: 'MainMenu', errorMessage: null });
     await fixture.whenStable();
     const page = fixture.nativeElement as HTMLElement;
     const host = page.querySelector<HTMLElement>('.game-container')!;
-    for (const [width, height] of [
-      [320, 240],
-      [1280, 720],
-    ]) {
-      page.style.width = `${width}px`;
-      page.style.height = `${height}px`;
-      const bounds = host.getBoundingClientRect();
-      expect(bounds.width).toBe(width);
-      expect(bounds.height).toBe(height);
-      const playBounds = button()!.getBoundingClientRect();
-      expect(playBounds.left).toBeGreaterThanOrEqual(bounds.left);
-      expect(playBounds.right).toBeLessThanOrEqual(bounds.right);
-      expect(playBounds.bottom).toBeLessThanOrEqual(bounds.bottom);
+    const originalViewport = [innerWidth, innerHeight] as const;
+    try {
+      for (const [width, height] of [
+        [320, 240],
+        [1280, 720],
+      ]) {
+        await browserPage.viewport(width, height);
+        page.style.width = `${width}px`;
+        page.style.height = `${height}px`;
+        const bounds = host.getBoundingClientRect();
+        expect(bounds.width).toBe(width);
+        expect(bounds.height).toBe(height);
+        const play = button()!;
+        const playBounds = play.getBoundingClientRect();
+        expect(playBounds.left).toBeGreaterThanOrEqual(bounds.left);
+        expect(playBounds.right).toBeLessThanOrEqual(bounds.right);
+        expect(playBounds.bottom).toBeLessThanOrEqual(bounds.bottom);
+        expect(
+          document.elementFromPoint(
+            playBounds.left + playBounds.width / 2,
+            playBounds.top + playBounds.height / 2,
+          ),
+        ).toBe(play);
+      }
+    } finally {
+      await browserPage.viewport(...originalViewport);
     }
     expect(factory).toHaveBeenCalledOnce();
   });
