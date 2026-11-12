@@ -46,8 +46,11 @@ try {
     'public/assets',
     'tools/scenes',
     'tools/world',
+    'tools/art',
     'art/shaders/protagonist-builtins',
     'art/world/kaykit-forest-v1/runtime',
+    'art/ui/kit/v1/sources',
+    'art/ui/sprites/v1/png/128',
   ])
     await fs.cp(path.join(projectRoot, directory), path.join(fixture, directory), {
       recursive: true,
