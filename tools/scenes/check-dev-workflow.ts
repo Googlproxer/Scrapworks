@@ -38,7 +38,17 @@ let server: ChildProcess | undefined;
 let browser: Browser | undefined;
 let logs = '';
 try {
-  for (const directory of ['assets', 'src', 'public/assets', 'tools/scenes', 'tools/world'])
+  // Rendering imports these art-owned runtime sources; keep the fixture complete
+  // without copying the large artwork archives and design galleries.
+  for (const directory of [
+    'assets',
+    'src',
+    'public/assets',
+    'tools/scenes',
+    'tools/world',
+    'art/shaders/protagonist-builtins',
+    'art/world/kaykit-forest-v1/runtime',
+  ])
     await fs.cp(path.join(projectRoot, directory), path.join(fixture, directory), {
       recursive: true,
     });
