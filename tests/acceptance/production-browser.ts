@@ -1,4 +1,5 @@
 import type { Worker } from 'playwright';
+import { assertLocalDiagnostic } from '../../tools/testing/local-only.ts';
 import type { RuntimeReply } from '../../src/contracts/simulation.ts';
 import type { EngineStore } from '@babylonjs/core';
 import { readJson, type BuildMetadata } from '../../tools/shared.ts';
@@ -26,6 +27,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { chromium, firefox } from 'playwright';
 const root = path.resolve(import.meta.dirname, '../..');
+assertLocalDiagnostic('Production browser acceptance');
 const firefoxMode = process.argv.includes('--firefox');
 const renderDelayMs = Number(
   process.argv.find((arg) => arg.startsWith('--render-delay-ms='))?.split('=')[1] ?? 0,

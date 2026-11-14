@@ -1,4 +1,5 @@
 import { readManualSave, readSavedHistory, seedSave, corruptNewestSave } from './manual-save.ts';
+import { assertLocalDiagnostic } from '../../tools/testing/local-only.ts';
 import { saveFixture } from '../support/save-fixture.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -14,6 +15,7 @@ import { checkFactoryRoute, type FactoryRouteProbe } from './factory-route.ts';
 import type { RuntimeReply } from '../../src/contracts/simulation.ts';
 import { readJson, type BuildMetadata } from '../../tools/shared.ts';
 
+assertLocalDiagnostic('Save, research and factory browser diagnostics');
 const researchMode = process.argv.includes('--research');
 const firefoxMode = process.argv.includes('--firefox');
 const factoryMode = process.argv.includes('--factory-controls');

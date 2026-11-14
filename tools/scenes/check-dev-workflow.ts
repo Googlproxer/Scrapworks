@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { assertLocalDiagnostic } from '../testing/local-only.ts';
 import type { ChildProcess } from 'node:child_process';
 import type { Browser } from 'playwright';
 import { spawn } from 'node:child_process';
@@ -15,6 +16,7 @@ import { waitForProcessLog } from './process-log.ts';
 
 // Exercise the real watcher, CLI and Angular/Vite in an isolated project copy.
 // No live Editor scene or user-owned source is changed by this probe.
+assertLocalDiagnostic('Development reload and export recovery');
 const reportDirectory = path.join(projectRoot, 'tmp/workflow-browser');
 await fs.mkdir(reportDirectory, { recursive: true });
 const temporary = await fs.realpath(path.join(projectRoot, 'tmp'));

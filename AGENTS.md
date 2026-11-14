@@ -10,6 +10,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ## CI runtime budget
 
 * Do NOT add virtual or full gameplay playthroughs to any CI/GitHub Actions workflow, including opening/factory routes or accelerated-clock variants. Keep these diagnostics local and manually invoked. CI runtime and cost are a hard user constraint; use focused unit/component tests and fixture-based integration checks for CI coverage.
+* Real-renderer integration suites and the longer production loading/stall, save/research and development-reload browser diagnostics are also local/manual only. CI uses `test:ci` for focused Chromium/AXE/IndexedDB coverage and `test:worker:smoke` for the bounded built-worker fixture. Keep local-only guards intact; do not replace them with manual GitHub Actions jobs.
 
 ## Event handling
 

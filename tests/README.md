@@ -69,7 +69,9 @@ After a production build with `--stats-json`, run `node tests/acceptance/researc
 
 ## Coverage
 
-`yarn test:coverage` runs the normal tooling suites plus both game environments and creates two reports. Use `yarn test:coverage:game` for Angular/Chromium and Node game coverage, or `yarn test:coverage:tools` for tooling coverage. Coverage is opt-in locally; ordinary test commands stay available. Both coverage commands keep the existing strict typechecks.
+`yarn test:coverage` locally runs the normal tooling suites plus both game environments, including real-renderer integration, and creates two reports. Use `yarn test:coverage:game` for complete Angular/Chromium and Node game coverage, or `yarn test:coverage:tools` for tooling coverage. Full game coverage rejects CI/GitHub Actions. Coverage is opt-in locally; ordinary test commands stay available. Both coverage commands keep the existing strict typechecks.
+
+CI runs `yarn test:game --coverage` plus `yarn test:ci` for the game report. The latter combines Angular's `unit,coverage` configurations to exclude the six real-renderer integration suites while collecting coverage from the remaining browser suites. IndexedDB transactions, save/import/confirmation UI, research UI, focus, AXE, input and worker/session lifecycle regressions remain covered by focused tests. All maintained source files remain in the coverage denominator, so CI totals can be lower than the full local report; the report is scoped evidence, not a full-renderer qualification.
 
 Open `coverage/game/index.html` and `coverage/tooling/index.html` for source-level reports. Each directory also contains `lcov.info`, `coverage-final.json` and `coverage-summary.json`. `yarn coverage:report` regenerates both reports from the collected inputs and prints a table of lines, statements, functions and branches, including covered/total counts. It fails if a required suite's input is missing or invalid. Group coverage commands clear that group's old inputs and reports before testing; each Vitest collection also cleans its own output.
 
@@ -81,9 +83,20 @@ Normal CI collects coverage during its existing test runs, prints separate Game 
 
 ## Browser acceptance
 
-**CI runtime budget:** virtual and full gameplay playthroughs must never run in CI/GitHub Actions. Opening/factory routes, accelerated-clock variants and the prepared factory-controls route are local, manually invoked diagnostics only. The user cannot afford their hosted-runner time. Use focused unit/component tests and fixture-based integration checks in CI; see [AGENTS.md](../AGENTS.md#ci-runtime-budget).
+**CI runtime budget:** virtual/full gameplay, real-renderer integration, production loading/stall profiles, save/research browser acceptance and development reload/recovery are local, manually invoked diagnostics only. Their entry points reject `CI` or `GITHUB_ACTIONS` before launching browsers or writing reports. Opening/factory routes, accelerated-clock variants and the prepared factory-controls route must never run in CI/GitHub Actions. Use focused unit/component tests and fixture-based integration checks in CI; see [AGENTS.md](../AGENTS.md#ci-runtime-budget).
 
-Built-worker acceptance requires a fresh production build and Playwright's installed Chromium:
+CI keeps `yarn test:worker:smoke` after the production build. This small fixture uses the real compiled worker and WASM through a same-origin static server/CSP, without loading the application or creating a renderer. It checks warmup, transferred numeric rows, exactly two simulation ticks, pause, capture/restore and disposal, with a 30-second probe bound and five-second reply timeouts. Detailed worker failure/restart, malformed-message, timeout and scheduling assertions remain in the Node worker/session suites. UI persistence, legacy-save migration and research behavior remain in focused browser/Node tests.
+
+Run the diagnostics removed from CI together locally:
+
+```sh
+yarn test:setup
+yarn test:browser:diagnostics
+```
+
+That command runs real-renderer integration, builds fresh production output with stats, then runs normal and delayed-frame acceptance, save/history/import acceptance, research/legacy-save acceptance and isolated development reload/recovery. It does not run a full gameplay playthrough. Individual commands remain available: `yarn test:renderer`, `yarn test:acceptance`, `yarn test:acceptance --render-delay-ms=1000`, `yarn test:saves`, `yarn test:research` and `yarn test:workflow`. Built-output probes require a fresh `yarn build:prod:stats`; reports stay under ignored `tmp/` directories.
+
+The longer local production-browser acceptance requires a fresh production build and Playwright's installed Chromium:
 
 ```sh
 yarn build:prod:stats
@@ -92,7 +105,7 @@ yarn test:acceptance
 
 The [production acceptance probe](acceptance/production-browser.ts) checks the worker URL under a non-root base path, same-origin CSP, movement, menu pause, crash/Retry and teardown. Results remain in ignored `tmp/production-worker-browser/`.
 
-For the primary Firefox engine, append `--firefox` to `production-browser.ts`, `save-browser.ts` (including `--research`) or `opening-browser.ts`. Firefox receipts use a separate `firefox/` output directory. Chromium-specific CDP loading/throttle checks are explicitly skipped in Firefox; its normal renderer/worker/storage/input path still runs. Append `--headed` to the opening route for a visible hardware-rendered local check. The defaults and existing CI scope are unchanged.
+For the primary Firefox engine, append `--firefox` to `production-browser.ts`, `save-browser.ts` (including `--research`) or `opening-browser.ts`. Firefox receipts use a separate `firefox/` output directory. Chromium-specific CDP loading/throttle checks are explicitly skipped in Firefox; its normal renderer/worker/storage/input path still runs. Append `--headed` to the opening route for a visible hardware-rendered local check. These are local-only commands in either browser.
 
 The local-only [portfolio diagnostic](../tools/portfolio/run.ts) provides three warmed 30-second samples, twelve UI save/load observations, real autosave observation, controlled workload fixtures and shareable hardware/build/asset metadata for Chromium/Firefox. Its `--save` option accepts an earned current-map checkpoint without grants; provenance remains separate. See the [portable protocol and limits](../docs/portfolio/README.md#portable-browser-and-hardware-diagnostic). Neither this diagnostic nor any full/virtual gameplay route belongs in CI.
 

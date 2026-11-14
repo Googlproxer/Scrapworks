@@ -21,15 +21,15 @@ jobs:
   validate:
     name: Lint, test and build
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
           persist-credentials: false
-          fetch-depth: 0
 
       - name: Set up Node.js
+        id: node
         uses: actions/setup-node@v7
         with:
           node-version: 26
@@ -40,6 +40,21 @@ jobs:
           corepack enable
           yarn --version
 
+      # Native packages must not cross OS images or Node versions. Package manifests
+      # include the local portal dependency; no stale-key fallback is used here.
+      - name: Identify runner image
+        id: platform
+        run: echo "image=${ImageOS}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore installed dependencies
+        id: dependencies
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            node_modules
+            .yarn/install-state.gz
+          key: installed-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.platform.outputs.image }}-node-${{ steps.node.outputs.node-version }}-${{ hashFiles('yarn.lock', '.yarnrc.yml', 'package.json', 'tools/editor-mcp/package.json', '.yarn/patches/**') }}
+
       # setup-node queries Yarn for its cache directory, so enable Corepack first.
       - name: Restore Yarn download cache
         uses: actions/setup-node@v7
@@ -49,6 +64,17 @@ jobs:
 
       - name: Install locked dependencies
         run: yarn install --immutable
+
+      # Save immediately after a verified install, before tools can change the tree.
+      # Only master seeds this large cache; PRs can reuse it without duplicating it.
+      - name: Save installed dependencies
+        if: steps.dependencies.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            node_modules
+            .yarn/install-state.gz
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
 
       - name: Install Chromium and Linux browser dependencies
         run: yarn playwright install --with-deps chromium --only-shell
@@ -69,8 +95,8 @@ jobs:
       - name: Typecheck and test game simulation and sessions
         run: yarn test:game --coverage
 
-      - name: Run Chromium application and accessibility tests
-        run: yarn test --configuration=coverage
+      - name: Run focused Chromium application and accessibility coverage
+        run: yarn test:ci
 
       - name: Build production application
         run: yarn build:prod:stats
@@ -82,23 +108,13 @@ jobs:
           node tools/ecs-bench/verify-production.ts
           node tools/architecture/bundle.ts
 
-      # Virtual/full gameplay playthroughs are local-only; never add them to CI (AGENTS.md).
-      - name: Exercise the built simulation worker and failure Retry
-        run: |
-          yarn test:acceptance
-          yarn test:acceptance --render-delay-ms=1000
-
-      - name: Verify gameplay saves through IndexedDB and page reload
-        run: yarn test:saves
-
-      - name: Verify research queue and legacy save continuation
-        run: yarn test:research
+      # Real-renderer, loading/stall, save/research and dev-reload diagnostics are
+      # local-only. Keep this bounded worker fixture; never add gameplay routes.
+      - name: Smoke-test the built simulation worker with a small fixture
+        run: yarn test:worker:smoke
 
       - name: Verify exported and built assets
         run: yarn assets:check --build
-
-      - name: Verify development reload and export recovery
-        run: yarn test:workflow
 
       - name: Summarize game and tooling coverage
         run: yarn coverage:report
@@ -119,17 +135,12 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Upload browser diagnostics
-        if: ${{ !cancelled() }}
+      - name: Upload failed focused browser tests
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: browser-diagnostics
-          path: |
-            tmp/workflow-browser/
-            .vitest/
-            tmp/production-worker-browser/
-            tmp/save-browser/
-            tmp/research-browser/
+          name: browser-test-failures
+          path: .vitest/
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
