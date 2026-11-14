@@ -126,7 +126,7 @@ footer {
   inline-size: min(640px, calc(100vw - 16px));
 }
 section {
-  max-block-size: calc(100dvh - 60px);
+  max-block-size: calc(100dvh - 60px - var(--sw-dialog-footer-floor));
 }
 header,
 footer {
@@ -145,5 +145,17 @@ footer {
   footer,
   .content {
     padding: 6px;
+  }
+}
+@media (max-height: 420px) {
+  section {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  section > * {
+    flex-shrink: 0;
+  }
+  .content {
+    overflow: visible;
   }
 }

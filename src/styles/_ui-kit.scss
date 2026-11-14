@@ -1,5 +1,4 @@
 :root {
-  color-scheme: dark;
   --sw-cream: #f1e1bd;
   --sw-highlight: #fff1cf;
   --sw-navy: #142c40;
@@ -13,27 +12,27 @@
   --sw-focus: #fff1cf;
 }
 
-html,
-body {
+html {
+  font-size: 16px;
+}
+// Opt in only owned UI. Babylon mounts its Inspector inside the renderer under app-root.
+:where(.sw-ui, .cdk-overlay-container) {
+  color-scheme: dark;
   color: var(--sw-cream);
   font:
     14px/1.5 'Trebuchet MS',
     'Segoe UI',
     sans-serif;
-}
-html {
-  font-size: 16px;
-}
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-[hidden] {
-  display: none !important;
-}
-// CDK dialogs live outside app-root; previews and fixtures can explicitly opt in.
-:where(app-root, .cdk-overlay-container, .sw-ui) {
+  &,
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  &[hidden],
+  [hidden] {
+    display: none !important;
+  }
   button,
   input,
   select,
@@ -322,6 +321,24 @@ html {
     max-inline-size: calc(100vw - 16px);
     max-block-size: calc(100dvh - 16px);
   }
+  // Keep the reserved floor outside scroll regions so actions cannot scroll over the shoes.
+  .sw-shell:has(.sw-dialog-actions) {
+    --sw-dialog-footer-floor: 52px;
+    padding-block-end: var(--sw-dialog-footer-floor);
+  }
+  .sw-shell .sw-dialog-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    gap: 8px;
+    padding: 12px 16px 0;
+  }
+  .sw-shell .sw-dialog-actions > button {
+    min-inline-size: min-content;
+    overflow-wrap: normal;
+  }
   .sw-dialog header {
     flex-wrap: wrap;
     min-inline-size: 0;
@@ -391,6 +408,9 @@ html {
     background: rgb(9 29 44 / 64%);
   }
   @media (max-width: 600px) {
+    .sw-shell .sw-dialog-actions > button {
+      padding-inline: 12px;
+    }
     .sw-dialog {
       max-inline-size: calc(100vw - 12px);
       max-block-size: calc(100dvh - 12px);
@@ -413,6 +433,14 @@ html {
     *::before,
     *::after {
       scroll-behavior: auto !important;
+    }
+  }
+  @media (max-height: 420px) {
+    .sw-shell:has(.sw-dialog-actions) {
+      --sw-dialog-footer-floor: 60px;
+    }
+    .sw-shell .sw-dialog-actions {
+      padding-inline: 12px;
     }
   }
 }

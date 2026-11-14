@@ -3,23 +3,15 @@
   max-width: 30rem;
   color: var(--sw-cream);
 }
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
 
 :host {
   inline-size: min(520px, calc(100vw - 16px));
-  padding: 4px 12px 12px;
+  padding: 4px 12px 0;
 }
 section {
-  max-block-size: calc(100dvh - 80px);
+  max-block-size: calc(100dvh - 80px - var(--sw-dialog-footer-floor));
   overflow: auto;
 }
 h2 {
   margin-block: 6px 14px;
-}
-.actions {
-  gap: 6px;
 }

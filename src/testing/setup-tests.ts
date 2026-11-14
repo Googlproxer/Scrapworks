@@ -6,7 +6,7 @@ import { assertConsoleMessages, installConsoleCapture } from './console-policy';
 installConsoleCapture();
 beforeEach(() => {
   installConsoleCapture();
-  // TestBed fixtures sit outside app-root; opt them into the production UI theme.
+  // TestBed fixtures need the same explicit theme opt-in as production UI surfaces.
   document.body.classList.add('sw-ui');
 });
 afterEach(async () => {

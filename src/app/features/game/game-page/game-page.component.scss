@@ -11,6 +11,7 @@
   block-size: 100%;
 }
 .inspector-close {
+  min-block-size: 32px;
   position: absolute;
   inset-block-start: 8px;
   inset-inline-start: 50%;

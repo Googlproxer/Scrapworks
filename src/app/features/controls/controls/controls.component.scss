@@ -286,7 +286,7 @@ footer {
   inline-size: min(980px, calc(100vw - 16px));
 }
 section {
-  max-block-size: calc(100dvh - 60px);
+  max-block-size: calc(100dvh - 60px - var(--sw-dialog-footer-floor));
 }
 .content {
   min-block-size: 0;
@@ -337,5 +337,17 @@ footer {
   }
   .direction-bindings {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-height: 420px) {
+  section {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  section > * {
+    flex-shrink: 0;
+  }
+  .content {
+    overflow: visible;
   }
 }

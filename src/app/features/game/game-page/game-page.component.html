@@ -6,7 +6,7 @@
   [attr.aria-busy]="gameRuntimeService.isBusy()"
   [inert]="gameRuntimeService.isBusy() || !!gameRuntimeService.errorMessage()"
 ></div>
-<app-notification-stack [attr.inert]="gameRuntimeService.isBusy() ? '' : null" />
+<app-notification-stack class="sw-ui" [attr.inert]="gameRuntimeService.isBusy() ? '' : null" />
 
 @if (gameRuntimeService.errorMessage(); as errorMessage) {
   <app-loading-screen>
@@ -27,17 +27,13 @@
 }
 
 @if (developer && gameRuntimeService.inspectorState().phase === 'open') {
-  <button
-    class="button inspector-close"
-    type="button"
-    (click)="gameRuntimeService.toggleInspector()"
-  >
+  <button class="inspector-close" type="button" (click)="gameRuntimeService.toggleInspector()">
     Close Inspector
   </button>
 }
 
 <div
-  class="game-ui"
+  class="game-ui sw-ui"
   [class.main-menu]="gameRuntimeService.currentSceneKey() !== 'Game'"
   [hidden]="gameRuntimeService.inspectorState().phase === 'open'"
   [inert]="gameRuntimeService.isBusy() || !!gameRuntimeService.errorMessage()"

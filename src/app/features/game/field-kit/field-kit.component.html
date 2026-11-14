@@ -188,14 +188,19 @@
         cdkTrapFocus
         [cdkTrapFocusAutoCapture]="true"
       >
-        <h2 class="sw-title" id="exit-title">Cancel unfinished handcrafting?</h2>
-        <p id="exit-description">
-          Completed items remain. The unfinished unit’s original ingredients return to your bag; its
-          partial work is discarded.
-        </p>
-        <button type="button" data-stay (click)="runtime.resolveWorkExit(false)">
-          Stay and continue</button
-        ><button type="button" (click)="runtime.resolveWorkExit(true)">Cancel and leave</button>
+        <div class="warning-content">
+          <h2 class="sw-title" id="exit-title">Cancel unfinished handcrafting?</h2>
+          <p id="exit-description">
+            Completed items remain. The unfinished unit’s original ingredients return to your bag;
+            its partial work is discarded.
+          </p>
+          <div class="sw-dialog-actions">
+            <button type="button" data-stay (click)="runtime.resolveWorkExit(false)">
+              Stay and continue
+            </button>
+            <button type="button" (click)="runtime.resolveWorkExit(true)">Cancel and leave</button>
+          </div>
+        </div>
       </section>
     </div>
   }

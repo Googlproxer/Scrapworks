@@ -87,7 +87,7 @@
       <p class="device-notice">{{ runtime.graphicsStatus().notice }}</p>
     </div>
   </div>
-  <footer>
+  <footer class="sw-dialog-actions">
     <button type="button" (click)="reset()" [disabled]="!loaded() || saving()">
       Restore defaults
     </button>

@@ -4,9 +4,13 @@ Implemented 13 November 2026 from the accepted [UI kit](ui-kit.md), [Field Kit r
 
 ## Shared presentation
 
-[src/styles/_ui-kit.scss](../../src/styles/_ui-kit.scss) owns the cream/navy/steel/coral palette, local display/body font stacks, angled buttons, selected-tab coral caps, native input/dropdown surfaces, continuous progress tracks, inset wells, reinforced dialog shells and rotated title plates. [src/styles.scss](../../src/styles.scss) loads it once. Its controls and surfaces are scoped to the application root and CDK overlay container; `.sw-ui` explicitly enables the same theme for test fixtures or standalone previews. Component styles own their layout and state-specific presentation.
+[src/styles/_ui-kit.scss](../../src/styles/_ui-kit.scss) owns the cream/navy/steel/coral palette, local display/body font stacks, angled buttons, selected-tab coral caps, native input/dropdown surfaces, continuous progress tracks, inset wells, reinforced dialog shells and rotated title plates. [src/styles.scss](../../src/styles.scss) loads it once. Controls, typography and resets are scoped to explicit `.sw-ui` surfaces and the CDK overlay container. The game overlay, notifications and loading screens opt in; the renderer host and development-only Babylon Inspector do not. Do not scope the theme to `app-root` or `body`: the Inspector mounts inside the renderer under that root. `.sw-ui` also enables the theme for test fixtures or standalone previews. Component styles own their layout and state-specific presentation.
 
-Dialog bodies scroll inside fixed frames without stretching artwork. Separate SVG edge tiles and corner pieces preserve their original silhouettes and inner corner joins. The navy fill is inset behind them; transparent exterior cuts expose the game/backdrop. Controls and Graphics retain fixed headers/actions while their content scrolls. Compact Controls uses stacked binding rows.
+Dialog bodies scroll inside fixed frames without stretching artwork. Separate SVG edge tiles and corner pieces preserve their original silhouettes and inner corner joins. The navy fill is inset behind them; transparent exterior cuts expose the game/backdrop. Controls and Graphics normally retain fixed headers/actions while their content scrolls. Compact Controls uses stacked binding rows.
+
+Footer button pairs use `.sw-dialog-actions`. Their shells reserve a 52 px lower inset outside the scrolling region, while action rows use matching 16 px left/right insets and place their buttons at either end. This keeps the right action close to the edge while clearing the larger lower-right reinforcement. Keep this shared spacing instead of overriding it with component footer padding. At window heights up to 420 px, the lower reservation increases to 60 px, while the inner content and actions can scroll together. Labels wrap at word boundaries within their buttons, preserving left/right controller navigation between the paired actions. Save and unfinished-work confirmations use the same treatment.
+
+The [footer comparison captures](../../art/ui/kit/v1/previews/footer-spacing/README.md) show this spacing in a wide dialog and a 320×240 window.
 
 On short windows, the main menu lays out settings, game actions and credits in separate flow regions. Its actions scroll when needed so Save/Load cannot cover New Game or Resume after Retry.
 
@@ -49,7 +53,7 @@ The [runtime screenshot index](../../art/ui/kit/v1/previews/runtime/README.md) c
 
 The [validation record](../../art/ui/kit/v1/previews/runtime/validation.json) records 217 passing focused UI tests in 28 files, successful development/production builds, ESLint and strict tooling TypeScript checks. All 19 reviewed development states and 19 production states passed AXE with zero violations and no runtime errors. Production checks also verified loaded images and horizontal overflow, with Field Kit frames contained at 1440×900, 900×760, 390×844, 320×568 and 1280×480. Small and short windows scroll inside their frames.
 
-The loading reference was captured with JavaScript disabled. Its AXE audit uses the bootstrap with application scripts withheld, allowing the audit's own timers to run. Third-party Babylon Inspector controls retain their SDK theme; the application-owned inspector controls and status messages use the kit.
+The loading reference was captured with JavaScript disabled. Its AXE audit uses the bootstrap with application scripts withheld, allowing the audit's own timers to run. The development-only Babylon Inspector retains its SDK theme, and its separate Close Inspector control uses native button styling. The game's Inspector launcher remains part of the themed HUD.
 
 Detailed diagnostics remain in the ignored [local UI review](../reports/ui-kit-2026-11-13/). They use temporary browser profiles and an existing earned checkpoint, are manually invoked, and are not CI gameplay routes.
 

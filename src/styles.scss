@@ -17,7 +17,7 @@ app-root {
   height: 100dvh;
 }
 
-.game-container canvas {
+.game-container > canvas {
   display: block;
   cursor:
     url('../public/assets/ui/cursor.png') 6 4,
