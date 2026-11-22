@@ -48,7 +48,7 @@ jobs:
 
       - name: Restore installed dependencies
         id: dependencies
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: |
             node_modules
@@ -69,7 +69,7 @@ jobs:
       # Only master seeds this large cache; PRs can reuse it without duplicating it.
       - name: Save installed dependencies
         if: steps.dependencies.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@v6
         with:
           path: |
             node_modules
