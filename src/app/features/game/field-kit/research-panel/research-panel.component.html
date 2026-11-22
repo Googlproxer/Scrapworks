@@ -1,204 +1,221 @@
 @if (opening(); as opening) {
-  <div class="research-intro">
-    <h3 id="research-title">Research</h3>
-    <p>
-      One technology at a time. Field Research and powered supplied laboratories contribute to the
-      same task.
-    </p>
-    <p>
-      Enabled field work uses uncommitted bag stock in the background. Removing or moving a task
-      keeps invested materials and partial work; queue it again to resume. Paid materials cannot be
-      reclaimed.
-    </p>
-    <button
-      type="button"
-      [attr.aria-pressed]="opening.state.fieldEnabled"
-      (click)="runtime.command({ type: 'research', enabled: !opening.state.fieldEnabled })"
-    >
-      {{ opening.state.fieldEnabled ? 'Pause field research' : 'Enable field research' }}
-    </button>
-  </div>
-  <section class="research-workspace" aria-labelledby="technologies-title">
-    <app-technology-tree
-      [technologies]="technologies"
-      [ledgers]="opening.ledgers"
-      [queue]="opening.state.researchQueue"
-      [(selectedId)]="selectedId"
-    />
-    <div
-      id="technology-details"
-      class="technology-details"
-      role="region"
-      aria-label="Selected technology details"
-      tabindex="0"
-    >
-      @let technology = selected();
-      <article class="technology" [attr.aria-labelledby]="'technology-' + technology.id">
-        <h5 [id]="'technology-' + technology.id">{{ technology.name }}</h5>
-        <p>{{ researchStatus(technology) }}</p>
-        <progress
-          [value]="opening.ledgers[technology.id]?.work ?? 0"
-          [max]="technology.seconds"
-          [attr.aria-label]="technology.name + ' research progress'"
-        ></progress>
-        <p class="research-requirements">
-          Inputs: {{ materials(technology.costs) }} · {{ technology.seconds }} s fully supplied
-          field work
-        </p>
-        <button
-          type="button"
-          [disabled]="queued(technology.id) || availability(technology) !== 'available'"
-          (click)="
-            queueCommand({ type: 'research-queue', action: 'add', technology: technology.id })
-          "
+  <div class="research-layout">
+    <div class="research-intro">
+      <h3 id="research-title">Research</h3>
+      <button
+        type="button"
+        [attr.aria-pressed]="opening.state.fieldEnabled"
+        (click)="runtime.command({ type: 'research', enabled: !opening.state.fieldEnabled })"
+      >
+        {{ opening.state.fieldEnabled ? 'Pause field research' : 'Enable field research' }}
+      </button>
+      <details class="research-help">
+        <summary>Research help</summary>
+        <div
+          class="help-copy sw-scroll-region"
+          role="region"
+          aria-label="Research help"
+          tabindex="0"
         >
-          Queue {{ technology.name }}
-        </button>
-        <section aria-label="Requirements and unlocks">
           <p>
-            Prerequisites:
-            @for (id of technology.requires; track id; let last = $last) {
-              {{ technologyName(id) }}{{ last ? '' : ', ' }}
-            } @empty {
-              None
-            }
+            One technology at a time. Field Research and powered supplied laboratories contribute to
+            the same task.
           </p>
-          <ul class="research-costs">
-            @for (cost of technology.costs; track cost.item) {
-              <li>
-                <strong class="sw-item-line"
-                  ><app-item-sprite [item]="cost.item" [size]="28" />{{ name(cost.item) }}</strong
-                >
-                <span
-                  >Lifetime {{ cost.item === 'scrap' ? 'extracted' : 'produced' }}:
-                  {{ history(cost.item) }} / {{ eligibility(technology, cost.item) }}</span
-                >
-                <span
-                  >Bag: {{ amount(cost.item) }} · Invested:
-                  {{ opening.ledgers[technology.id]?.consumed?.[cost.item] ?? 0 }} /
-                  {{ cost.quantity }}</span
-                >
-              </li>
-            }
-          </ul>
           <p>
-            History establishes eligibility; research permanently consumes the listed investment.
-            Supplied inputs still require timed work.
+            Enabled field work uses uncommitted bag stock in the background. Removing or moving a
+            task keeps invested materials and partial work; queue it again to resume. Paid materials
+            cannot be reclaimed.
           </p>
-          @for (recipe of unlockedRecipes(technology.id); track recipe.id) {
-            <p>
-              Unlocks {{ recipe.name }}. Separate crafting cost: {{ materials(recipe.inputs) }}.
-            </p>
-          }
-          @for (blueprint of equipment(technology.id); track blueprint.id) {
-            <p>
-              {{ blueprint.name }} blueprint · Separate construction cost:
-              {{ materials(blueprint.inputs) }}. Craft and place equipment separately after
-              researching its blueprint.
-            </p>
-          }
-          @if (technology.id === 'sorting-logistics') {
-            <p>Unlocks sorting and conveyors.</p>
-          }
-        </section>
-      </article>
-      <aside class="research-future" aria-labelledby="future-research-title">
-        <h4 id="future-research-title">Laboratories and later branches</h4>
-        <p>
-          Every technology supports Field Research. Powered supplied laboratories work at
-          {{ labRate }}× the field rate each when locally supplied and powered, all on the same
-          queue head. Craft laboratories in Inventory &amp; Crafting and place them with the toolbar
-          after their research. Interact with a nearby lab to supply it.
-        </p>
-        <p>
-          Basic fabrication accepts exactly one ingredient type, Medium exactly two, and future
-          Advanced three or four. Safe research kits remain handcraftable and MiniFab-compatible.
-          Personal scrap recovery and mixed-output recycling have separate rules.
-        </p>
-        <details>
-          <summary>Planned branches — costs undecided, unavailable</summary>
-          <ul>
-            @for (entry of roadmap; track entry.id) {
-              <li>
-                <strong>{{ entry.name }}</strong> — {{ entry.note }}
-              </li>
-            }
-          </ul>
-        </details>
-      </aside>
+          <p>
+            Only the first task advances. Missing materials or production history pause it; reorder
+            the queue to work on something else. Prerequisite technologies must be researched before
+            adding a task.
+          </p>
+        </div>
+      </details>
     </div>
-  </section>
-  <section class="research-queue" aria-labelledby="queue-title">
-    <h4 id="queue-title" #queueHeading tabindex="-1">Research queue</h4>
-    <p role="status">
-      @if (active(); as active) {
-        Current: {{ active.name }}. {{ researchStatus(active) }}
-      } @else {
-        No active research. Select a technology in the tree to queue it.
-      }
-    </p>
-    <ol>
-      @for (technology of queue(); track technology.id; let index = $index) {
-        <li [value]="index + 1">
-          <strong>{{ technology.name }}</strong>
-          <span>{{ index === 0 ? 'Current task' : 'Waiting in queue' }}</span>
-          <span class="research-requirements"
-            >Inputs: {{ materials(technology.costs) }} ·
-            {{ seconds(opening.ledgers[technology.id]?.work ?? 0) }} / {{ technology.seconds }} s
-            field work</span
-          >
-          <div class="queue-actions">
+    <section class="research-workspace" aria-labelledby="technologies-title">
+      <app-technology-tree
+        [technologies]="technologies"
+        [ledgers]="opening.ledgers"
+        [queue]="opening.state.researchQueue"
+        [(selectedId)]="selectedId"
+      />
+      <div class="research-sidebar">
+        <div
+          id="technology-details"
+          class="technology-details"
+          role="region"
+          aria-label="Selected technology details"
+          tabindex="0"
+        >
+          @let technology = selected();
+          <article class="technology" [attr.aria-labelledby]="'technology-' + technology.id">
+            <h5 [id]="'technology-' + technology.id">{{ technology.name }}</h5>
+            <p>{{ researchStatus(technology) }}</p>
+            <progress
+              [value]="opening.ledgers[technology.id]?.work ?? 0"
+              [max]="technology.seconds"
+              [attr.aria-label]="technology.name + ' research progress'"
+            ></progress>
+            <p class="research-requirements">
+              Inputs: {{ materials(technology.costs) }} · {{ technology.seconds }} s fully supplied
+              field work
+            </p>
             <button
               type="button"
-              [disabled]="index === 0"
-              [attr.aria-label]="'Move up: ' + technology.name"
+              [disabled]="queued(technology.id) || availability(technology) !== 'available'"
               (click)="
-                queueCommand({
-                  type: 'research-queue',
-                  action: 'move',
-                  technology: technology.id,
-                  index: index - 1,
-                })
+                queueCommand({ type: 'research-queue', action: 'add', technology: technology.id })
               "
             >
-              Move up
+              Queue {{ technology.name }}
             </button>
-            <button
-              type="button"
-              [disabled]="index === queue().length - 1"
-              [attr.aria-label]="'Move down: ' + technology.name"
-              (click)="
-                queueCommand({
-                  type: 'research-queue',
-                  action: 'move',
-                  technology: technology.id,
-                  index: index + 1,
-                })
-              "
-            >
-              Move down
-            </button>
-            <button
-              type="button"
-              [attr.aria-label]="'Remove ' + technology.name + ' from queue'"
-              (click)="
-                queueCommand({
-                  type: 'research-queue',
-                  action: 'remove',
-                  technology: technology.id,
-                })
-              "
-            >
-              Remove
-            </button>
-          </div>
-        </li>
-      }
-    </ol>
-    <p>
-      Only the first task advances. Missing materials or production history pause it; reorder the
-      queue to work on something else. Prerequisite technologies must be researched before adding a
-      task.
-    </p>
-  </section>
+            <section aria-label="Requirements and unlocks">
+              <p>
+                Prerequisites:
+                @for (id of technology.requires; track id; let last = $last) {
+                  {{ technologyName(id) }}{{ last ? '' : ', ' }}
+                } @empty {
+                  None
+                }
+              </p>
+              <ul class="research-costs">
+                @for (cost of technology.costs; track cost.item) {
+                  <li>
+                    <strong class="sw-item-line"
+                      ><app-item-sprite [item]="cost.item" [size]="28" />{{
+                        name(cost.item)
+                      }}</strong
+                    >
+                    <span
+                      >Lifetime {{ cost.item === 'scrap' ? 'extracted' : 'produced' }}:
+                      {{ history(cost.item) }} / {{ eligibility(technology, cost.item) }}</span
+                    >
+                    <span
+                      >Bag: {{ amount(cost.item) }} · Invested:
+                      {{ opening.ledgers[technology.id]?.consumed?.[cost.item] ?? 0 }} /
+                      {{ cost.quantity }}</span
+                    >
+                  </li>
+                }
+              </ul>
+              <p>
+                History establishes eligibility; research permanently consumes the listed
+                investment. Supplied inputs still require timed work.
+              </p>
+              @for (recipe of unlockedRecipes(technology.id); track recipe.id) {
+                <p>
+                  Unlocks {{ recipe.name }}. Separate crafting cost: {{ materials(recipe.inputs) }}.
+                </p>
+              }
+              @for (blueprint of equipment(technology.id); track blueprint.id) {
+                <p>
+                  {{ blueprint.name }} blueprint · Separate construction cost:
+                  {{ materials(blueprint.inputs) }}. Craft and place equipment separately after
+                  researching its blueprint.
+                </p>
+              }
+              @if (technology.id === 'sorting-logistics') {
+                <p>Unlocks sorting and conveyors.</p>
+              }
+            </section>
+          </article>
+          <aside class="research-future" aria-labelledby="future-research-title">
+            <h4 id="future-research-title">Laboratories and later branches</h4>
+            <p>
+              Every technology supports Field Research. Powered supplied laboratories work at
+              {{ labRate }}× the field rate each when locally supplied and powered, all on the same
+              queue head. Craft laboratories in Inventory &amp; Crafting and place them with the
+              toolbar after their research. Interact with a nearby lab to supply it.
+            </p>
+            <p>
+              Basic fabrication accepts exactly one ingredient type, Medium exactly two, and future
+              Advanced three or four. Safe research kits remain handcraftable and
+              MiniFab-compatible. Personal scrap recovery and mixed-output recycling have separate
+              rules.
+            </p>
+            <details>
+              <summary>Planned branches — costs undecided, unavailable</summary>
+              <ul>
+                @for (entry of roadmap; track entry.id) {
+                  <li>
+                    <strong>{{ entry.name }}</strong> — {{ entry.note }}
+                  </li>
+                }
+              </ul>
+            </details>
+          </aside>
+        </div>
+        <section class="research-queue" aria-labelledby="queue-title">
+          <h4 id="queue-title" #queueHeading tabindex="-1">Research queue</h4>
+          <p role="status">
+            @if (active(); as active) {
+              Current: {{ active.name }}. {{ researchStatus(active) }}
+            } @else {
+              No active research. Select a technology in the tree to queue it.
+            }
+          </p>
+          <ol>
+            @for (technology of queue(); track technology.id; let index = $index) {
+              <li [value]="index + 1">
+                <strong>{{ technology.name }}</strong>
+                <span>{{ index === 0 ? 'Current task' : 'Waiting in queue' }}</span>
+                <span class="research-requirements"
+                  >Inputs: {{ materials(technology.costs) }} ·
+                  {{ seconds(opening.ledgers[technology.id]?.work ?? 0) }} /
+                  {{ technology.seconds }} s field work</span
+                >
+                <div class="queue-actions">
+                  <button
+                    type="button"
+                    [disabled]="index === 0"
+                    [attr.aria-label]="'Move up: ' + technology.name"
+                    (click)="
+                      queueCommand({
+                        type: 'research-queue',
+                        action: 'move',
+                        technology: technology.id,
+                        index: index - 1,
+                      })
+                    "
+                  >
+                    Move up
+                  </button>
+                  <button
+                    type="button"
+                    [disabled]="index === queue().length - 1"
+                    [attr.aria-label]="'Move down: ' + technology.name"
+                    (click)="
+                      queueCommand({
+                        type: 'research-queue',
+                        action: 'move',
+                        technology: technology.id,
+                        index: index + 1,
+                      })
+                    "
+                  >
+                    Move down
+                  </button>
+                  <button
+                    type="button"
+                    [attr.aria-label]="'Remove ' + technology.name + ' from queue'"
+                    (click)="
+                      queueCommand({
+                        type: 'research-queue',
+                        action: 'remove',
+                        technology: technology.id,
+                      })
+                    "
+                  >
+                    Remove
+                  </button>
+                </div>
+              </li>
+            }
+          </ol>
+        </section>
+      </div>
+    </section>
+  </div>
 }

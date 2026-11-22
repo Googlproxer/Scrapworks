@@ -48,6 +48,7 @@ describe('Field kit opening UI', () => {
     simulation.dispose();
     runtime.fieldKitOpen.set(true);
     runtime.workExitWarning.set(false);
+    runtime.restoreRevision.set(0);
     profile.set(structuredClone(defaultProfile));
     vi.clearAllMocks();
     TestBed.configureTestingModule({
@@ -196,7 +197,7 @@ describe('Field kit opening UI', () => {
     batch.dispatchEvent(new Event('change'));
     await fixture.whenStable();
     const before = structuredClone(world());
-    for (const area of ['MiniFab', 'Inventory', 'Crafting']) {
+    for (const area of ['Inventory', 'Crafting']) {
       [...root.querySelectorAll<HTMLButtonElement>('.work-areas button')]
         .find((button) => button.textContent?.trim() === area)!
         .click();
@@ -207,6 +208,89 @@ describe('Field kit opening UI', () => {
     expect(batch.value).toBe('5');
     expect(runtime.command).not.toHaveBeenCalled();
     expect(world()).toEqual(before);
+  });
+
+  it('replaces handcrafting with MiniFab on ownership changes without changing worker state', async () => {
+    const fixture = TestBed.createComponent(FieldKitComponent);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const kit = root.querySelector('#field-kit');
+    expect(root.querySelector('app-handcraft-panel')).not.toBeNull();
+    expect(root.querySelector('app-minifab-panel')).toBeNull();
+    fixture.componentInstance.workArea.set('craft');
+    await fixture.whenStable();
+    root.querySelector<HTMLSelectElement>('#recipe')!.focus();
+    const owned = editableView(world()!);
+    owned.opening!.state.minifab.owned = true;
+    world.set(owned);
+    await fixture.whenStable();
+    expect(root.querySelector('#field-kit')).toBe(kit);
+    expect(root.querySelector('app-handcraft-panel')).toBeNull();
+    expect(root.querySelector('app-minifab-panel')).not.toBeNull();
+    expect(fixture.componentInstance.workArea()).toBe('craft');
+    expect(document.activeElement?.id).toBe('minifab-title');
+    expect((await axe.run(root)).violations).toEqual([]);
+    const dismantled = editableView(world()!);
+    dismantled.opening!.state.minifab.owned = false;
+    world.set(dismantled);
+    await fixture.whenStable();
+    expect(root.querySelector('app-handcraft-panel')).not.toBeNull();
+    expect(root.querySelector('app-minifab-panel')).toBeNull();
+    expect(runtime.command).not.toHaveBeenCalled();
+    expect(world()).toEqual(dismantled);
+  });
+
+  it('restores a MiniFab request, retains compact choices and leaves existing handcraft recoverable', async () => {
+    const view = editableView(world()!);
+    view.opening!.state.minifab.owned = true;
+    view.opening!.state.minifab.request = { recipe: 'mechanical-part', left: 7 };
+    view.opening!.state.handcraft = {
+      id: 'restored-job',
+      recipe: 'metal-plate',
+      remaining: 1,
+      inputs: [{ item: 'scrap', quantity: 2 }],
+      unitsLeft: 2,
+    };
+    world.set(view);
+    const before = structuredClone(view);
+    const fixture = TestBed.createComponent(FieldKitComponent);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const recipe = root.querySelector<HTMLSelectElement>('#minifab-recipe')!;
+    const batch = root.querySelector<HTMLSelectElement>('#minifab-batch')!;
+    expect(recipe.value).toBe('mechanical-part');
+    expect(batch.value).toBe('7');
+    expect(recipe.disabled).toBe(true);
+    expect(root.querySelector('.retained-handcraft')?.textContent).toContain(
+      'Finishing handcraft: Metal plate',
+    );
+    expect(runtime.command).not.toHaveBeenCalled();
+    expect(world()).toEqual(before);
+    const idle = editableView(world()!);
+    idle.opening!.state.minifab.request = null;
+    idle.opening!.ledgers['mechanical-assembly'] = { consumed: {}, work: 15, unlocked: true };
+    world.set(idle);
+    await fixture.whenStable();
+    batch.value = '5';
+    batch.dispatchEvent(new Event('change'));
+    fixture.componentInstance.workArea.set('inventory');
+    await fixture.whenStable();
+    fixture.componentInstance.workArea.set('craft');
+    await fixture.whenStable();
+    expect(root.querySelector('#minifab-recipe')).toBe(recipe);
+    expect(batch.value).toBe('5');
+    [...root.querySelectorAll<HTMLButtonElement>('button')]
+      .find((button) => button.textContent?.trim() === 'Request 5 from MiniFab')!
+      .click();
+    expect(runtime.command).toHaveBeenLastCalledWith({
+      type: 'minifab',
+      recipe: 'mechanical-part',
+      quantity: 5,
+    });
+    root.querySelector<HTMLButtonElement>('.retained-handcraft button')!.click();
+    expect(runtime.requestWorkExit).toHaveBeenCalled();
+    expect(runtime.command).toHaveBeenLastCalledWith({ type: 'handcraft-ui', visible: false });
+    expect(world()).toEqual(idle);
   });
 
   it('supports tab keys and reserves work geometry through craft start/completion', async () => {
@@ -268,7 +352,7 @@ describe('Field kit opening UI', () => {
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
         '.work-areas button',
       ),
-    ].find((button) => button.textContent?.trim() === 'MiniFab')!;
+    ].find((button) => button.textContent?.trim() === 'Crafting')!;
     miniFabArea.click();
     await fixture.whenStable();
     handle.focus();

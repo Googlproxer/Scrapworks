@@ -279,17 +279,21 @@ footer {
   }
   header {
     align-items: flex-start;
+    padding-inline: var(--sw-shell-content-inline);
   }
 }
 
 :host {
   inline-size: min(980px, calc(100vw - 16px));
+  padding-block-start: var(--sw-shell-content-top);
 }
 section {
-  max-block-size: calc(100dvh - 60px - var(--sw-dialog-footer-floor));
+  max-block-size: var(--sw-shell-content-max-height);
 }
 .content {
   min-block-size: 0;
+  margin-inline: var(--sw-shell-content-inline);
+  padding: 8px;
   scrollbar-gutter: stable;
   overscroll-behavior: contain;
 }
@@ -312,6 +316,9 @@ footer {
   .capture-status,
   .content {
     padding: 8px;
+  }
+  header {
+    padding-inline: var(--sw-shell-content-inline);
   }
   .tabs {
     padding-inline: 4px;
@@ -341,6 +348,7 @@ footer {
 }
 @media (max-height: 420px) {
   section {
+    margin-inline: var(--sw-shell-content-inline);
     overflow: auto;
     overscroll-behavior: contain;
   }
@@ -349,5 +357,9 @@ footer {
   }
   .content {
     overflow: visible;
+    margin-inline: 0;
+  }
+  :host .sw-dialog-actions {
+    padding-inline: 0;
   }
 }

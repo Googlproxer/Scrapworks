@@ -4,176 +4,190 @@
     [class.kit-open]="runtime.fieldKitOpen()"
     aria-label="Opening guidance"
   >
-    <button
-      type="button"
-      class="guide-toggle"
-      aria-controls="objective-copy"
-      [attr.aria-expanded]="!guideCollapsed()"
-      (click)="toggleGuide()"
-    >
-      {{ guideCollapsed() ? 'Show objective guide' : 'Hide objective guide' }}
-    </button>
-    <div id="objective-copy" [hidden]="guideCollapsed()">
-      <h2 data-objective-title aria-live="polite" aria-atomic="true">{{ guide()[1] }}</h2>
-      <p class="guide-copy">{{ guidance() }}</p>
-      <p class="guide-stage">Stage {{ guideNumber() }} of 9 · Restore every land and water cell.</p>
+    <div class="guide-content sw-scroll-region">
+      <button
+        type="button"
+        class="guide-toggle"
+        aria-controls="objective-copy"
+        [attr.aria-expanded]="!guideCollapsed()"
+        (click)="toggleGuide()"
+      >
+        {{ guideCollapsed() ? 'Show objective guide' : 'Hide objective guide' }}
+      </button>
+      <div id="objective-copy" [hidden]="guideCollapsed()">
+        <h2 data-objective-title aria-live="polite" aria-atomic="true">{{ guide()[1] }}</h2>
+        <p class="guide-copy">{{ guidance() }}</p>
+        <p class="guide-stage">
+          Stage {{ guideNumber() }} of 9 · Restore every land and water cell.
+        </p>
+      </div>
+      <button
+        type="button"
+        (click)="runtime.toggleFieldKit()"
+        [attr.aria-expanded]="runtime.fieldKitOpen()"
+        aria-controls="field-kit"
+      >
+        Open field kit · {{ usedSlots() }}/24 slots
+      </button>
+      <p class="salvage-progress">
+        {{
+          opening.state.salvage
+            ? 'Salvaging · ' + seconds(opening.state.salvage.remaining) + ' s to next resource'
+            : 'Approach a deposit to salvage in the world.'
+        }}
+      </p>
     </div>
-    <button
-      type="button"
-      (click)="runtime.toggleFieldKit()"
-      [attr.aria-expanded]="runtime.fieldKitOpen()"
-      aria-controls="field-kit"
-    >
-      Open field kit · {{ usedSlots() }}/24 slots
-    </button>
-    <p class="salvage-progress">
-      {{
-        opening.state.salvage
-          ? 'Salvaging · ' + seconds(opening.state.salvage.remaining) + ' s to next resource'
-          : 'Approach a deposit to salvage in the world.'
-      }}
-    </p>
   </aside>
   @if (runtime.fieldKitOpen()) {
     <section id="field-kit" class="field-kit sw-shell" aria-labelledby="field-kit-title">
-      <header>
-        <h2 class="sw-title" id="field-kit-title" data-kit-heading tabindex="-1">Field kit</h2>
-        <div class="actions">
-          @if (saves) {
-            <button
-              class="sw-primary"
-              type="button"
-              (click)="saves.save()"
-              [disabled]="saves.busy()"
-            >
-              Save progress
-            </button>
+      <div class="kit-content">
+        <header>
+          <h2 class="sw-title" id="field-kit-title" data-kit-heading tabindex="-1">Field kit</h2>
+          <div class="actions">
+            @if (saves) {
+              <button
+                class="sw-primary"
+                type="button"
+                (click)="saves.save()"
+                [disabled]="saves.busy()"
+              >
+                Save progress
+              </button>
+            }
+            <button type="button" (click)="runtime.toggleFieldKit()">Close</button>
+          </div>
+        </header>
+        <div class="tabs sw-tabs" role="tablist" aria-label="Field kit sections">
+          <button
+            id="inventory-tab"
+            type="button"
+            role="tab"
+            aria-controls="inventory-panel"
+            [attr.aria-selected]="activeTab() === 'inventory'"
+            [tabIndex]="activeTab() === 'inventory' ? 0 : -1"
+            (keydown)="tabKey($event)"
+            (click)="selectTab('inventory')"
+          >
+            Inventory &amp; Crafting
+          </button>
+          <button
+            id="research-tab"
+            type="button"
+            role="tab"
+            aria-controls="research-panel"
+            [attr.aria-selected]="activeTab() === 'research'"
+            [tabIndex]="activeTab() === 'research' ? 0 : -1"
+            (keydown)="tabKey($event)"
+            (click)="selectTab('research')"
+          >
+            Research
+          </button>
+          <button
+            id="factory-tab"
+            type="button"
+            role="tab"
+            aria-controls="factory-panel"
+            [attr.aria-selected]="activeTab() === 'factory'"
+            [tabIndex]="activeTab() === 'factory' ? 0 : -1"
+            (keydown)="tabKey($event)"
+            (click)="selectTab('factory')"
+          >
+            Factory
+          </button>
+          <button
+            id="guide-tab"
+            type="button"
+            role="tab"
+            aria-controls="guide-panel"
+            [attr.aria-selected]="activeTab() === 'guide'"
+            [tabIndex]="activeTab() === 'guide' ? 0 : -1"
+            (keydown)="tabKey($event)"
+            (click)="selectTab('guide')"
+          >
+            Field manual
+          </button>
+        </div>
+        <div
+          id="guide-panel"
+          tabindex="0"
+          class="tab-panel manual-panel sw-scroll-region"
+          role="tabpanel"
+          aria-labelledby="guide-tab"
+          [hidden]="activeTab() !== 'guide'"
+        >
+          <h3>{{ guide()[1] }}</h3>
+          <p class="manual-objective">{{ guidance() }}</p>
+          @for (entry of manual; track entry.title) {
+            <section>
+              <h4>{{ entry.title }}</h4>
+              <p>{{ entry.text }}</p>
+            </section>
           }
-          <button type="button" (click)="runtime.toggleFieldKit()">Close</button>
         </div>
-      </header>
-      <div class="tabs sw-tabs" role="tablist" aria-label="Field kit sections">
-        <button
-          id="inventory-tab"
-          type="button"
-          role="tab"
-          aria-controls="inventory-panel"
-          [attr.aria-selected]="activeTab() === 'inventory'"
-          [tabIndex]="activeTab() === 'inventory' ? 0 : -1"
-          (keydown)="tabKey($event)"
-          (click)="selectTab('inventory')"
+        <div
+          id="inventory-panel"
+          class="tab-panel workbench"
+          role="tabpanel"
+          aria-labelledby="inventory-tab"
+          [hidden]="activeTab() !== 'inventory'"
         >
-          Inventory &amp; Crafting
-        </button>
-        <button
-          id="research-tab"
-          type="button"
-          role="tab"
-          aria-controls="research-panel"
-          [attr.aria-selected]="activeTab() === 'research'"
-          [tabIndex]="activeTab() === 'research' ? 0 : -1"
-          (keydown)="tabKey($event)"
-          (click)="selectTab('research')"
-        >
-          Research
-        </button>
-        <button
-          id="factory-tab"
-          type="button"
-          role="tab"
-          aria-controls="factory-panel"
-          [attr.aria-selected]="activeTab() === 'factory'"
-          [tabIndex]="activeTab() === 'factory' ? 0 : -1"
-          (keydown)="tabKey($event)"
-          (click)="selectTab('factory')"
-        >
-          Factory
-        </button>
-        <button
-          id="guide-tab"
-          type="button"
-          role="tab"
-          aria-controls="guide-panel"
-          [attr.aria-selected]="activeTab() === 'guide'"
-          [tabIndex]="activeTab() === 'guide' ? 0 : -1"
-          (keydown)="tabKey($event)"
-          (click)="selectTab('guide')"
-        >
-          Field manual
-        </button>
-      </div>
-      <div
-        id="guide-panel"
-        tabindex="0"
-        class="tab-panel manual-panel"
-        role="tabpanel"
-        aria-labelledby="guide-tab"
-        [hidden]="activeTab() !== 'guide'"
-      >
-        <h3>{{ guide()[1] }}</h3>
-        <p class="manual-objective">{{ guidance() }}</p>
-        @for (entry of manual; track entry.title) {
-          <section>
-            <h4>{{ entry.title }}</h4>
-            <p>{{ entry.text }}</p>
-          </section>
-        }
-      </div>
-      <div
-        id="inventory-panel"
-        class="tab-panel workbench"
-        role="tabpanel"
-        aria-labelledby="inventory-tab"
-        [hidden]="activeTab() !== 'inventory'"
-      >
-        <div class="work-areas sw-tabs" role="group" aria-label="Inventory work area">
-          <button
-            type="button"
-            [attr.aria-pressed]="workArea() === 'inventory'"
-            (click)="workArea.set('inventory')"
+          <div class="work-areas sw-tabs" role="group" aria-label="Inventory work area">
+            <button
+              type="button"
+              aria-controls="kit-inventory-work"
+              [attr.aria-pressed]="workArea() === 'inventory'"
+              (click)="workArea.set('inventory')"
+            >
+              Inventory
+            </button>
+            <button
+              type="button"
+              aria-controls="kit-crafting-work"
+              [attr.aria-pressed]="workArea() === 'craft'"
+              (click)="workArea.set('craft')"
+            >
+              Crafting
+            </button>
+          </div>
+          <app-inventory-panel
+            id="kit-inventory-work"
+            class="work-pane sw-scroll-region"
+            [class.work-hidden]="workArea() !== 'inventory'"
+          />
+          <div
+            id="kit-crafting-work"
+            class="work-pane crafting-pane sw-scroll-region"
+            [class.work-hidden]="workArea() !== 'craft'"
           >
-            Inventory
-          </button>
-          <button
-            type="button"
-            [attr.aria-pressed]="workArea() === 'craft'"
-            (click)="workArea.set('craft')"
-          >
-            Crafting
-          </button>
-          <button
-            type="button"
-            [attr.aria-pressed]="workArea() === 'minifab'"
-            (click)="workArea.set('minifab')"
-          >
-            MiniFab
-          </button>
+            @if (miniFabAvailable()) {
+              <app-minifab-panel />
+            } @else {
+              <app-handcraft-panel />
+            }
+          </div>
         </div>
-        <app-inventory-panel [class.work-hidden]="workArea() !== 'inventory'" />
-        <app-handcraft-panel [class.work-hidden]="workArea() !== 'craft'" />
-        <app-minifab-panel [class.work-hidden]="workArea() !== 'minifab'" />
-      </div>
-      <div
-        id="research-panel"
-        class="tab-panel research-panel"
-        role="tabpanel"
-        aria-labelledby="research-tab"
-        [hidden]="activeTab() !== 'research'"
-      >
-        @if (activeTab() === 'research') {
-          <app-research-panel />
-        }
-      </div>
-      <div
-        id="factory-panel"
-        class="tab-panel"
-        role="tabpanel"
-        aria-labelledby="factory-tab"
-        [hidden]="activeTab() !== 'factory'"
-      >
-        @if (activeTab() === 'factory') {
-          <app-factory-panel />
-        }
+        <div
+          id="research-panel"
+          class="tab-panel research-panel sw-scroll-region"
+          role="tabpanel"
+          aria-labelledby="research-tab"
+          [hidden]="activeTab() !== 'research'"
+        >
+          @if (activeTab() === 'research') {
+            <app-research-panel />
+          }
+        </div>
+        <div
+          id="factory-panel"
+          class="tab-panel factory-panel"
+          role="tabpanel"
+          aria-labelledby="factory-tab"
+          [hidden]="activeTab() !== 'factory'"
+        >
+          @if (activeTab() === 'factory') {
+            <app-factory-panel class="sw-scroll-region" />
+          }
+        </div>
       </div>
     </section>
   }
@@ -188,7 +202,7 @@
         cdkTrapFocus
         [cdkTrapFocusAutoCapture]="true"
       >
-        <div class="warning-content">
+        <div class="warning-content sw-scroll-region">
           <h2 class="sw-title" id="exit-title">Cancel unfinished handcrafting?</h2>
           <p id="exit-description">
             Completed items remain. The unfinished unit’s original ingredients return to your bag;

@@ -1,5 +1,5 @@
 :host {
-  --crank-size: 192px;
+  --crank-size: var(--sw-crafting-crank-size, 192px);
   display: grid;
   justify-items: center;
   gap: 6px;
@@ -37,6 +37,8 @@
   background-repeat: no-repeat;
 }
 .caster {
+  // Transparent corners of the rotating square must not enlarge ancestor scroll areas.
+  overflow: clip;
   filter: drop-shadow(
     calc(var(--crank-size) * 0.027) calc(var(--crank-size) * 0.036) 0 var(--sw-shadow)
   );
@@ -54,14 +56,4 @@ p {
   margin: 0;
   font-size: 0.85rem;
   color: var(--sw-muted);
-}
-@container (width < 56rem) {
-  :host {
-    --crank-size: 152px;
-  }
-}
-@media (max-width: 600px) {
-  :host {
-    --crank-size: 200px;
-  }
 }

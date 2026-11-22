@@ -37,13 +37,14 @@ export class FieldKitComponent {
   public readonly runtime = inject(GameRuntimeService);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   public readonly opening = computed(() => this.runtime.world()?.opening);
+  public readonly miniFabAvailable = computed(() => !!this.opening()?.state.minifab.owned);
 
   public readonly usedSlots = computed(() => this.opening()?.bag.slots.filter(Boolean).length ?? 0);
   public readonly guide = computed(() => guideStep(this.runtime.world()));
   public readonly guidance = computed(() => this.guide()[2]);
   public readonly guideNumber = computed(() => GUIDE_STEPS.indexOf(this.guide()) + 1);
   public readonly guideCollapsed = signal(false);
-  public readonly workArea = signal<'inventory' | 'craft' | 'minifab'>('inventory');
+  public readonly workArea = signal<'inventory' | 'craft'>('inventory');
   public readonly manual = FIELD_MANUAL;
 
   public toggleGuide(): void {
@@ -51,6 +52,7 @@ export class FieldKitComponent {
   }
 
   public constructor() {
+    let previousMiniFab: boolean | undefined;
     effect(() => {
       this.runtime.restoreRevision?.();
       untracked(() => this.activeTab.set('inventory'));
@@ -60,6 +62,18 @@ export class FieldKitComponent {
         this.element.nativeElement.querySelector<HTMLButtonElement>('[data-stay]')?.focus();
       else if (this.runtime.fieldKitOpen() && (this.runtime.canFocusCrafting?.() ?? true))
         this.element.nativeElement.querySelector<HTMLElement>('[data-kit-heading]')?.focus();
+    });
+    afterRenderEffect(() => {
+      const available = this.miniFabAvailable();
+      if (previousMiniFab !== undefined && previousMiniFab !== available) {
+        const pane = this.element.nativeElement.querySelector<HTMLElement>('#kit-crafting-work');
+        if (pane) {
+          pane.scrollTop = 0;
+          if (pane.offsetWidth && pane.ownerDocument.activeElement === pane.ownerDocument.body)
+            pane.querySelector<HTMLElement>('[data-craft-heading]')?.focus({ preventScroll: true });
+        }
+      }
+      previousMiniFab = available;
     });
   }
 

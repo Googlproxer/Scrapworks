@@ -35,6 +35,23 @@ describe('Technology tree', () => {
     return { fixture, root, world, command };
   }
 
+  it('gives the graph most of the research workspace even with a full queue', async () => {
+    const { fixture, root, world } = setup();
+    await fixture.whenStable();
+    const viewport = root.querySelector<HTMLElement>('.tree-viewport')!;
+    const initial = viewport.getBoundingClientRect();
+    expect(initial.width).toBeGreaterThan(root.clientWidth * 0.65);
+    expect(initial.height).toBeGreaterThan(root.clientHeight * 0.7);
+    const queued = editableView(world());
+    queued.opening!.state.researchQueue = OPENING_TECHNOLOGIES.map((technology) => technology.id);
+    world.set(queued);
+    await fixture.whenStable();
+    expect(viewport.getBoundingClientRect().height).toBe(initial.height);
+    const queue = root.querySelector<HTMLElement>('.research-queue')!;
+    expect(queue.scrollHeight).toBeGreaterThan(queue.clientHeight);
+    expect((await axe.run(root)).violations).toEqual([]);
+  });
+
   it('zooms around the pointer, fits the graph and restores readable scale without changing selection', async () => {
     const { fixture, root } = setup();
     await fixture.whenStable();

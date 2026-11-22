@@ -1,13 +1,13 @@
 :host {
   display: block;
   inline-size: min(920px, calc(100vw - 16px));
-  padding: 4px 12px 12px;
+  padding: var(--sw-shell-content-top) var(--sw-shell-content-inline) var(--sw-shell-content-bottom);
   --gameplay-save-max-height: none;
 }
 section {
   display: flex;
   flex-direction: column;
-  max-block-size: calc(100dvh - 72px);
+  max-block-size: var(--sw-shell-content-max-height);
 }
 h2 {
   flex: 0 0 auto;
@@ -31,9 +31,6 @@ app-gameplay-saves {
   min-inline-size: 0;
 }
 @media (max-width: 650px) {
-  :host {
-    padding-inline: 4px;
-  }
   .pause-content {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -42,4 +39,6 @@ app-gameplay-saves {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-.menu-actions { position: sticky; inset-block-start: 0; align-self: start; background: var(--sw-navy); }
+.menu-actions {
+  align-self: start;
+}

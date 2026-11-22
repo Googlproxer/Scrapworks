@@ -6,11 +6,16 @@
 
 :host {
   inline-size: min(520px, calc(100vw - 16px));
-  padding: 4px 12px 0;
+  padding: var(--sw-shell-content-top) var(--sw-shell-content-inline) 0;
 }
 section {
-  max-block-size: calc(100dvh - 80px - var(--sw-dialog-footer-floor));
+  max-block-size: var(--sw-shell-content-max-height);
   overflow: auto;
+  overscroll-behavior: contain;
+  padding: 8px;
+}
+:host .sw-dialog-actions {
+  padding-inline: 0;
 }
 h2 {
   margin-block: 6px 14px;

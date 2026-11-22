@@ -3,17 +3,18 @@
   font: inherit;
 }
 .opening-guide {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   z-index: 2;
   inset-inline-start: 16px;
   inset-block-start: 100px;
   inline-size: min(320px, calc(100vw - 32px));
-  padding: 10px;
+  padding: 2px;
   max-block-size: calc(100dvh - 240px);
-  overflow: auto;
+  overflow: hidden;
   border: 6px solid transparent;
   border-image: url('/assets/ui/kit/v1/inset.svg') 12 fill / 6px / 0 stretch;
-  scrollbar-gutter: stable;
 }
 .opening-guide h2 {
   font-size: 1rem;
@@ -46,9 +47,15 @@
   inline-size: min(var(--field-kit-max-width), calc(100vw - 24px));
   block-size: min(840px, var(--field-kit-max-height));
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   container-type: inline-size;
-  padding: 0 10px 8px;
+  padding: var(--sw-shell-content-top) var(--sw-shell-content-inline) var(--sw-shell-content-bottom);
+}
+.kit-content {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  min-inline-size: 0;
+  min-block-size: 0;
 }
 header {
   display: flex;
@@ -79,37 +86,21 @@ header .actions {
 }
 .workbench {
   display: grid;
-  grid-template-columns: 1.05fr 1fr 1.08fr;
-  gap: 16px;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 20px;
   align-items: stretch;
-  overflow: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
 }
-.workbench > app-inventory-panel,
-.workbench > app-handcraft-panel,
-.workbench > app-minifab-panel {
+.work-pane {
   min-inline-size: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  padding: 0 6px 8px 0;
+  min-block-size: 0;
 }
-.workbench > app-handcraft-panel,
-.workbench > app-minifab-panel {
+.crafting-pane {
   border-inline-start: 1px solid var(--sw-line);
-  padding-inline-start: 12px;
+  overflow-x: hidden;
 }
 .work-areas {
   display: none;
-}
-.manual-panel,
-.research-panel {
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-}
-.manual-panel {
-  padding: 0 10px;
 }
 .manual-panel section {
   max-inline-size: 75ch;
@@ -138,30 +129,15 @@ header .actions {
   display: flex;
   flex-direction: column;
   inline-size: min(500px, calc(100vw - 16px));
-  padding-block-start: 8px;
-  padding-inline: 12px;
+  padding-block-start: var(--sw-shell-content-top);
+  padding-inline: var(--sw-shell-content-inline);
   max-block-size: calc(100dvh - 16px);
 }
 .warning-content {
   min-block-size: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
 }
-@container (width < 48rem) {
-  .workbench {
-    grid-template-columns: 1fr 1fr;
-  }
-  .workbench > app-minifab-panel {
-    grid-column: 1 / -1;
-    border-inline-start: 0;
-    border-block-start: 1px solid var(--sw-line);
-    padding-block-start: 10px;
-  }
-  .workbench > app-inventory-panel,
-  .workbench > app-handcraft-panel,
-  .workbench > app-minifab-panel {
-    overflow: visible;
-  }
+.warning-content > .sw-dialog-actions {
+  padding-inline: 0;
 }
 @container (width < 40rem) {
   header .sw-title {
@@ -179,14 +155,12 @@ header .actions {
     font-size: 0.85rem;
   }
   .workbench {
-    display: block;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
   }
   .work-areas {
-    position: sticky;
-    inset-block-start: 0;
-    z-index: 1;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 3px;
     background: var(--sw-navy);
     margin-block-end: 8px;
@@ -195,10 +169,9 @@ header .actions {
     font-size: 0.8rem;
     padding-inline: 8px;
   }
-  .workbench > app-inventory-panel,
-  .workbench > app-handcraft-panel,
-  .workbench > app-minifab-panel {
-    padding: 0 4px 8px 0;
+  .work-pane {
+    grid-row: 2;
+    grid-column: 1;
     border: 0;
   }
   .workbench > .work-hidden {
@@ -209,13 +182,36 @@ header .actions {
   .field-kit {
     inline-size: calc(100vw - 12px);
     block-size: calc(100dvh - 12px);
-    padding-inline: 2px;
   }
   .opening-guide {
     inset-inline-start: 8px;
     inset-block-start: 140px;
     inline-size: min(280px, calc(100vw - 16px));
     max-block-size: calc(100dvh - 300px);
+  }
+}
+@media (max-height: 480px) {
+  .kit-content {
+    grid-template-rows: auto auto auto;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: 8px;
+  }
+  .tab-panel {
+    min-block-size: 220px;
+  }
+  .workbench {
+    overflow: visible;
+    grid-template-rows: auto auto;
+  }
+  .work-pane {
+    block-size: max-content;
+    overflow: visible;
+    scrollbar-gutter: auto;
+  }
+  .crafting-pane {
+    overflow-x: hidden;
   }
 }
 @media (max-height: 540px) {

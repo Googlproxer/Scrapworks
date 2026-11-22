@@ -1,0 +1,84 @@
+{
+  "reviewed": "2026-11-16 to 2026-11-17 Australia/Sydney",
+  "scope": "Local manual application UI audit using isolated profiles and prepared saves",
+  "componentTests": { "passed": 140, "files": 22, "configuration": "unit" },
+  "developmentBuild": "passed",
+  "productionBuild": "passed",
+  "eslint": "passed with zero warnings",
+  "productionAdvisory": "Existing eventery CommonJS optimization warning",
+  "browser": "Playwright Chromium 159 headless",
+  "mainViewports": [
+    [1600, 1000],
+    [1220, 870],
+    [900, 760],
+    [640, 700],
+    [390, 844],
+    [320, 568],
+    [1280, 480],
+    [320, 320]
+  ],
+  "additionalCraftingViewports": [
+    [640, 844],
+    [390, 844],
+    [320, 844]
+  ],
+  "auditedViews": {
+    "mainDevelopment": 95,
+    "unfinishedWorkConfirmation": 8,
+    "expandedAndErrorStates": 19,
+    "production": 13,
+    "total": 135
+  },
+  "results": {
+    "axeViolations": 0,
+    "applicationPageErrors": 0,
+    "horizontalDocumentOverflow": 0,
+    "visibleControlsIntersectingFrameDecoration": 0,
+    "expandedControlsOverlappingWithinTheirSurface": 0
+  },
+  "winding": {
+    "horizontalCraftingOverflow": "hidden",
+    "visualAngles": [0, 30, 45, 60, 90, 135, 180, 225, 270, 315, 360],
+    "visualWidths": [640, 390, 320],
+    "productionPointerTurnDegrees": [45, 90, 135, 180, 225, 270, 315, 360],
+    "scrollableWidthAndHeight": "unchanged throughout rotation",
+    "productionArmTransform": "changed during real pointer input"
+  },
+  "coveredSurfaces": [
+    "Main menu and expanded Save/Load",
+    "Controls, gamepad tab and binding editor",
+    "Graphics",
+    "Field Kit inventory, handcrafting and MiniFab",
+    "Expanded equipment and MiniFab recovery",
+    "Research, factory and field manual",
+    "Pause and expanded save/storage controls",
+    "Save confirmation and unfinished-work confirmation",
+    "Water and greenhouse inspection",
+    "Notifications, objective guide and debug drawing controls",
+    "Loading error and Retry"
+  ],
+  "researchFollowUp": {
+    "reviewed": "2026-11-17 Australia/Sydney",
+    "focusedTests": 15,
+    "developmentBuild": "passed",
+    "eslint": "passed",
+    "window": [1234, 898],
+    "graphViewport": [775, 439],
+    "graphShareOfTabHeight": "77% with help collapsed",
+    "responsiveWidths": [1234, 1600, 900, 640, 390, 320, 1280],
+    "browserViews": 9,
+    "axeViolations": 0,
+    "queueGrowth": "does not shrink graph",
+    "interactions": [
+      "Zoom",
+      "Fit tree",
+      "100% scale",
+      "Keyboard Home/End",
+      "Technology selection",
+      "Research help"
+    ],
+    "diagnostics": "docs/reports/research-layout-2026-11-17/ (local/manual only)"
+  },
+  "diagnostics": "docs/reports/dialog-audit-2026-11-16/ (ignored local/manual scripts and detailed measurements)",
+  "limits": "Chromium layout and accessibility checks; no other browser-engine qualification or human gameplay playthrough. CI workflows unchanged. Babylon Inspector SDK styling excluded."
+}

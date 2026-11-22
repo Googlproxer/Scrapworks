@@ -1,0 +1,94 @@
+@use '../panel';
+
+:host {
+  container-type: inline-size;
+}
+.craft-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-block-size: 64px;
+}
+.craft-heading h3 {
+  margin-block: 4px;
+}
+.craft-heading .minifab-status {
+  display: grid;
+  align-content: center;
+  margin: 0;
+}
+.minifab-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(152px, 34cqw, 224px);
+  align-items: start;
+  gap: 16px;
+}
+.minifab-recipe,
+.minifab-power {
+  min-inline-size: 0;
+}
+.minifab-power {
+  --sw-crafting-crank-size: clamp(152px, 34cqw, 224px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.minifab-power > app-winding-handle {
+  inline-size: 100%;
+  margin: 0;
+}
+.charge-stats p {
+  margin-block: 4px;
+}
+.charge-readout {
+  min-block-size: 3em;
+}
+.recipe-time,
+.precursor-help {
+  color: var(--sw-muted);
+  font-size: 0.85rem;
+}
+.precursor-help {
+  min-block-size: 3em;
+}
+.retained-handcraft {
+  border-block-end: 1px solid var(--sw-line);
+  padding-block-end: 8px;
+}
+@container (width < 420px) {
+  .minifab-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .minifab-power {
+    --sw-crafting-crank-size: 176px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 176px;
+    align-items: center;
+    grid-row: 1;
+    gap: 8px;
+  }
+  .minifab-power > app-winding-handle {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .charge-stats {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .minifab-recipe {
+    grid-row: 2;
+  }
+}
+@container (width < 300px) {
+  .minifab-power {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .minifab-power > app-winding-handle {
+    grid-column: 1;
+    justify-self: center;
+  }
+  .charge-stats {
+    grid-row: 2;
+  }
+}

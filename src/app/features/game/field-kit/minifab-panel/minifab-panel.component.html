@@ -1,89 +1,102 @@
 @if (opening(); as opening) {
-  <h3 class="sw-item-line" id="minifab-title">
-    <app-item-sprite item="mini-fabricator" [size]="36" />Mini Fabricator
-  </h3>
+  <div class="craft-heading">
+    <h3 class="sw-item-line" id="minifab-title" data-craft-heading tabindex="-1">
+      <app-item-sprite item="mini-fabricator" [size]="36" />Mini Fabricator
+    </h3>
+    @if (opening.state.minifab.owned) {
+      <p class="minifab-status" role="status">{{ minifabStatus(opening.state.minifab) }}</p>
+    }
+  </div>
   @if (opening.state.minifab.owned) {
-    <p class="minifab-status">{{ minifabStatus(opening.state.minifab) }}</p>
-    <div class="minifab-power">
-      <div class="charge-stats">
-        <p>
-          Power-free baseline ·
-          {{ opening.state.minifab.charge > 0 ? '2x charged speed' : '1x baseline speed' }}
-        </p>
-        <p class="charge-readout">
-          {{ seconds(opening.state.minifab.charge) }} / {{ capacity() }} active boost seconds
-        </p>
-        <progress
-          [value]="opening.state.minifab.charge"
-          [max]="capacity()"
-          aria-label="MiniFab charge"
-        ></progress>
-      </div>
-      <app-winding-handle />
-    </div>
-    <label for="minifab-recipe">MiniFab recipe</label>
-    <span class="sw-select"
-      ><select
-        id="minifab-recipe"
-        [value]="miniRecipeId()"
-        (change)="chooseMiniRecipe($event)"
-        [disabled]="!!opening.state.minifab.request"
-      >
-        @for (recipe of recipes; track recipe.id) {
-          @if (recipe.minifab) {
-            <option [value]="recipe.id" [selected]="miniRecipeId() === recipe.id">
-              {{ recipe.name }}{{ recipeUnlocked(recipe) ? '' : ' (research required)' }}
-            </option>
-          }
-        }
-      </select></span
-    >
-    <app-recipe-preview
-      [recipe]="miniRecipe()"
-      [quantity]="miniBatch()"
-      [showIngredients]="false"
-    />
-    <div class="batch-actions">
-      <div class="batch-field">
-        <label for="minifab-batch">MiniFab batch size</label>
-        <span class="sw-select"
-          ><select
-            id="minifab-batch"
-            [value]="miniBatch()"
-            (change)="chooseMiniBatch($event)"
+    <div class="minifab-layout">
+      <div class="minifab-recipe">
+        <label for="minifab-recipe">MiniFab recipe</label>
+        <span class="sw-select">
+          <select
+            id="minifab-recipe"
+            [value]="miniRecipeId()"
+            (change)="chooseMiniRecipe($event)"
             [disabled]="!!opening.state.minifab.request"
           >
-            <option [value]="1">1</option>
-            @if (miniRecipe().id !== 'scrap-prybar') {
-              @if (batchLimit() >= 5) {
-                <option [value]="5">5</option>
-              }
-              @if (batchLimit() >= 10) {
-                <option [value]="10">10</option>
-              }
-              @if (batchLimit() >= 25) {
-                <option [value]="25">25</option>
-              }
-              @if (batchLimit() >= 100) {
-                <option [value]="100">100</option>
+            @for (recipe of recipes; track recipe.id) {
+              @if (recipe.minifab) {
+                <option [value]="recipe.id" [selected]="miniRecipeId() === recipe.id">
+                  {{ recipe.name }}{{ recipeUnlocked(recipe) ? '' : ' (research required)' }}
+                </option>
               }
             }
-          </select></span
-        >
+          </select>
+        </span>
+        <app-recipe-preview [recipe]="miniRecipe()" [quantity]="miniBatch()" />
+        <p class="recipe-time">{{ miniRecipe().seconds }} s per unit at baseline</p>
+        <div class="batch-actions">
+          <div class="batch-field">
+            <label for="minifab-batch">MiniFab batch size</label>
+            <span class="sw-select">
+              <select
+                id="minifab-batch"
+                [value]="miniBatch()"
+                (change)="chooseMiniBatch($event)"
+                [disabled]="!!opening.state.minifab.request"
+              >
+                @for (quantity of batchOptions(); track quantity) {
+                  <option [value]="quantity" [selected]="miniBatch() === quantity">
+                    {{ quantity }}
+                  </option>
+                }
+              </select>
+            </span>
+          </div>
+          <button
+            class="sw-primary"
+            type="button"
+            [disabled]="!recipeUnlocked(miniRecipe()) || !!opening.state.minifab.request"
+            (click)="
+              runtime.command({ type: 'minifab', recipe: miniRecipeId(), quantity: miniBatch() })
+            "
+          >
+            Request {{ miniBatch() }} from MiniFab
+          </button>
+        </div>
       </div>
-      <button
-        class="sw-primary"
-        type="button"
-        [disabled]="!recipeUnlocked(miniRecipe()) || !!opening.state.minifab.request"
-        (click)="
-          runtime.command({ type: 'minifab', recipe: miniRecipeId(), quantity: miniBatch() })
-        "
-      >
-        Request {{ miniBatch() }} from MiniFab
-      </button>
+      <div class="minifab-power">
+        <app-winding-handle />
+        <div class="charge-stats">
+          <p>
+            Power-free baseline ·
+            {{ opening.state.minifab.charge > 0 ? '2x charged speed' : '1x baseline speed' }}
+          </p>
+          <p class="charge-readout">
+            {{ seconds(opening.state.minifab.charge) }} / {{ capacity() }} active boost seconds
+          </p>
+          <progress
+            [value]="opening.state.minifab.charge"
+            [max]="capacity()"
+            aria-label="MiniFab charge"
+          ></progress>
+        </div>
+      </div>
     </div>
+    <p class="precursor-help">Missing compatible precursors are made first.</p>
     <details>
       <summary>Operation, buffers and recovery</summary>
+      @if (opening.state.handcraft; as handcraft) {
+        <div class="retained-handcraft">
+          <p>
+            Finishing handcraft: {{ recipeName(handcraft.recipe) }} ·
+            {{ handcraft.unitsLeft }} units remaining · {{ seconds(handcraft.remaining) }} s on this
+            unit
+          </p>
+          <progress
+            [value]="retainedHandcraftProgress()"
+            max="1"
+            aria-label="Handcraft progress"
+          ></progress>
+          <button type="button" (click)="runtime.requestWorkExit(cancelHandcraft)">
+            Cancel unfinished work
+          </button>
+        </div>
+      }
       <div class="operation-status">
         @if (opening.state.minifab.request; as request) {
           <p>Target: {{ recipeName(request.recipe) }} · {{ request.left }} remaining</p>
@@ -101,7 +114,6 @@
       </div>
       <p class="buffer">Input buffer: {{ materials(opening.state.minifab.input) }}</p>
       <p class="buffer">Output buffer: {{ materials(opening.state.minifab.output) }}</p>
-      <p>Missing compatible precursors are made first.</p>
       <button
         type="button"
         (click)="runtime.command({ type: 'minifab', recipe: null, quantity: 0 })"

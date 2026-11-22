@@ -79,22 +79,6 @@ button {
   inline-size: 86px;
   flex: 0 0 auto;
 }
-.minifab-power {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 192px;
-  align-items: center;
-  gap: 6px;
-}
 .charge-stats {
   overflow-wrap: anywhere;
-}
-@container (width < 56rem) {
-  .minifab-power {
-    grid-template-columns: minmax(0, 1fr) 152px;
-  }
-}
-@media (max-width: 600px) {
-  .minifab-power {
-    grid-template-columns: minmax(0, 1fr) 200px;
-  }
 }

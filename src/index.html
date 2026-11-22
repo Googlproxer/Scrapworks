@@ -39,22 +39,24 @@
           />
         </div>
         <div class="loading-content">
-          <div class="loading-indicator">
-            <p id="startup-task" class="loading-task" role="status">Starting Scrapworks…</p>
-            <div
-              id="startup-progress"
-              class="loading-track loading-indeterminate"
-              role="progressbar"
-              aria-label="Starting Scrapworks"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              <span class="loading-fill" aria-hidden="true"></span>
+          <div class="loading-scroll">
+            <div class="loading-indicator">
+              <p id="startup-task" class="loading-task" role="status">Starting Scrapworks…</p>
+              <div
+                id="startup-progress"
+                class="loading-track loading-indeterminate"
+                role="progressbar"
+                aria-label="Starting Scrapworks"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <span class="loading-fill" aria-hidden="true"></span>
+              </div>
+              <span class="loading-percentage" aria-hidden="true"></span>
+              <a id="startup-reload" class="button" href="" hidden>Reload</a>
             </div>
-            <span class="loading-percentage" aria-hidden="true"></span>
-            <a id="startup-reload" class="button" href="" hidden>Reload</a>
+            <noscript>Scrapworks needs JavaScript to run. Please enable it and reload.</noscript>
           </div>
-          <noscript>Scrapworks needs JavaScript to run. Please enable it and reload.</noscript>
         </div>
       </main>
     </app-root>

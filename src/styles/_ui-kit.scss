@@ -280,6 +280,13 @@ html {
     background: transparent;
   }
   .sw-shell {
+    --sw-shell-content-inline: 20px;
+    --sw-shell-content-top: 8px;
+    --sw-shell-content-bottom: var(--sw-dialog-footer-floor, 52px);
+    // The frame takes 40 px vertically; keep another 16 px outside the dialog.
+    --sw-shell-content-max-height: calc(
+      100dvh - 56px - var(--sw-shell-content-top) - var(--sw-shell-content-bottom)
+    );
     position: relative;
     isolation: isolate;
     border: 20px solid transparent;
@@ -320,6 +327,15 @@ html {
   .sw-dialog {
     max-inline-size: calc(100vw - 16px);
     max-block-size: calc(100dvh - 16px);
+  }
+  .sw-scroll-region {
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scroll-padding: 8px;
+    padding: 8px;
   }
   // Keep the reserved floor outside scroll regions so actions cannot scroll over the shoes.
   .sw-shell:has(.sw-dialog-actions) {
@@ -436,6 +452,9 @@ html {
     }
   }
   @media (max-height: 420px) {
+    .sw-shell {
+      --sw-shell-content-bottom: 60px;
+    }
     .sw-shell:has(.sw-dialog-actions) {
       --sw-dialog-footer-floor: 60px;
     }

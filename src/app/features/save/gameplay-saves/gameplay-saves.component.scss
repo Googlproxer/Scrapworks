@@ -12,8 +12,9 @@ section {
   border: 1px solid var(--sw-line);
   font-size: 0.8rem;
   max-height: var(--gameplay-save-max-height, min(78vh, 48rem));
-  overflow: auto;
-  scrollbar-gutter: stable;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .actions {
   display: flex;
@@ -85,7 +86,7 @@ section {
   background: transparent;
   border: 6px solid transparent;
   border-image: url('/assets/ui/kit/v1/inset.svg') 12 fill / 6px / 0 stretch;
-  padding: 10px;
+  padding: 2px;
 }
 fieldset {
   border-color: var(--sw-line);

@@ -1,15 +1,27 @@
 @use '../../panel';
 :host {
+  container-type: inline-size;
   display: grid;
   min-width: 0;
   min-height: 0;
-  grid-template-rows: auto auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 8px;
+}
+.tree-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+.tree-heading h4 {
+  margin: 0;
 }
 .tree-legend {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   font-size: 0.85rem;
+  margin: 0;
 }
 .tree-viewport {
   min-height: 0;
@@ -98,7 +110,6 @@ marker path {
   flex-wrap: wrap;
   align-items: center;
   gap: 4px;
-  padding-bottom: 8px;
 }
 .tree-tools button {
   min-width: 40px;
@@ -113,6 +124,11 @@ marker path {
 .pan-help {
   font-size: 0.8rem;
   color: var(--sw-muted);
+}
+@container (width < 640px) {
+  .pan-help {
+    display: none;
+  }
 }
 .tree-viewport {
   cursor: grab;

@@ -92,6 +92,13 @@
 .top-right:has(app-gameplay-saves.expanded) {
   z-index: 3;
 }
+.main-menu .top-right {
+  max-block-size: calc(100dvh - 92px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 8px;
+}
 .top-centre {
   position: absolute;
   inset-block-start: 16px;
@@ -170,12 +177,14 @@
     padding: 8px;
   }
   .main-menu .top-right {
-    display: flex;
-    align-items: start;
+    display: grid;
     position: static;
     align-self: end;
     flex-shrink: 0;
     max-inline-size: 100%;
+    inline-size: min(416px, 100%);
+    max-block-size: calc(100dvh - 148px);
+    min-block-size: 44px;
     order: 1;
   }
   .main-menu .top-right button {
