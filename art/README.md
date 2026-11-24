@@ -12,6 +12,7 @@ Editable art projects, source assets, references, exact prompts and provenance l
 | [ui/](ui/)                         | Cursor and menu backdrop sources; accepted UI screen concepts; [reusable UI kit](ui/kit/v1/README.md); [UI resource, tool and machine sprites](ui/sprites/v1/README.md). |
 | [generation.json](generation.json) | Exact generation prompts and input/output provenance for the retained concepts.                                                                                          |
 | [M10 concepts](concepts/m10-2026-11-12/README.md) | Four gameplay proposals and 32 individual world/machine/character/feedback/prop concepts, exact prompts, references and a local review gallery; implementation and approval remain separate. |
+| [Extractor upgrade progression](concepts/extractor-upgrade-progression-v1/README.md) | Accepted five-stage stationary extractor overview and Blender modelling references; the [machinery design language](../docs/art/README.md#machinery-progression) governs future machine families. |
 | [Terrain, water and small scatter](concepts/terrain-water-scatter-2026-11-12/README.md) | Six follow-up concepts, a layered-terrain/water-volume brief and fifteen Meshy prompts for low-poly rocks, plants and optional bank shape studies. |
 | [Shader/material source and tests](shaders/protagonist-builtins/README.md) | Approved I material source and attribution, original built-in/blending comparisons, and local WebGL review renders. The runtime reuses I for the protagonist; world objects remain in their separate asset pass. |
 

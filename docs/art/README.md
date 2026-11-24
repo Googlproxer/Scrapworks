@@ -1,6 +1,6 @@
 # Scrapworks Art Document
 
-Updated 13 November 2026. Active production direction: fully 3D world and character with the established flat painted finish.
+Updated 24 November 2026. Active production direction: fully 3D world and character with the established flat painted finish.
 
 This document owns visual identity, camera/readability, and 3D asset preparation. The [GDD](../design/GDD.md) owns gameplay; the [TDD](../design/TDD.md) owns architecture.
 
@@ -88,16 +88,36 @@ Future generation briefs should use the approved protagonist as a finish referen
 
 ## Machinery progression
 
-| Stage               | Agreed appearance                                                           | Proposed material and construction cues                                                        |
-| ------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Improvised salvage  | Hacked together from mismatched parts, exposed random wiring, and duct tape | Rust, repair patches, irregular panels, bolts, and improvised connections                      |
-| Modern industrial   | Purpose-built, robust industrial machinery                                  | Steel housings, pipes, guards, deliberate assemblies, and limited safety markings              |
-| Refined industrial  | Clean, sleek, smooth industrial forms                                       | Painted panels, rounded edges, enclosed wiring, orderly connections, and restrained indicators |
-| Advanced technology | Seamless, exceptionally sleek, ultra-modern technology                      | Continuous pale shells, integrated joints, recessed channels, and subtle cool status lights    |
+The user approved a five-stage visual progression on 24 November 2026, superseding the earlier four-stage concept. The [accepted scrap extractor progression and Blender model sheets](../../art/concepts/extractor-upgrade-progression-v1/README.md) establish the first machine-family reference. Apply the same technological progression to subsequent machine concepts, beginning with the mixed-output recycler.
 
-The same machine function should remain recognisable across generations. Preserve its footprint, input and output ports, orientation, and main functional silhouette in the comparison images. Refinement comes from shape, construction quality, materials, and detailing, expressed through the same flat painted finish at every stage. Keep advanced lighting compact enough to preserve geometry.
+| Stage | Design language | Construction and material cues |
+| --- | --- | --- |
+| 1 — Improvised salvage | Crusty, barely functional, assembled from whatever could be recovered | Mismatched welded plates, crude repairs, exposed mechanisms, restrained rust and irregular paint; mechanically plausible despite the rough appearance |
+| 2 — Reinforced salvage | The original machine made sturdier and more reliable | Braced frames, stronger joints, better fasteners, tidier cables/pipes, partial guards and fewer improvised repairs |
+| 3 — Manufactured industrial | Purpose-built, dependable factory equipment | Standardised components, deliberate panel breaks, modular housings, painted steel, protected working parts and organised connections |
+| 4 — Refined industrial | Professionally engineered, clean and sleek without losing mechanical mass | Integrated housings, cleaner structural forms, recessed fasteners, enclosed routing, controlled safety markings and minimal wear |
+| 5 — Advanced technology | Ultra-modern, highly integrated, visibly sophisticated | Smooth cream/navy shells, precise joints, restrained coral accents, recessed channels and small cool/cyan status indicators; no excessive sci-fi glow |
 
-The proposed approach keeps technological appearance and ecological health independent. Advanced machinery does not automatically restore its surroundings, and a healthy area can still contain older equipment. Existing machinery keeps its generation until upgraded or replaced; researching a technology should not instantly restyle the entire factory.
+### Machine-family identity and heavy industry
+
+- Heavy machines such as extractors and recyclers should look solid, substantial and grounded: load-bearing frames, thick structural sections, credible foundations, and mechanisms appropriate to their actual work.
+- Use a subtle steampunk influence, particularly in early stages: exposed mechanical assemblies, bolted plates, practical gauges, copper/brass accents and functional piping where appropriate. Avoid decorative gears, fantasy boilers, ornamental excess and a full steampunk aesthetic. As construction improves, integrate or simplify those details.
+- Preserve each machine's distinctive functional silhouette, stationary or mobile role, existing logical footprint, orientation, material ports and separate power connection across all five stages. Do not turn stationary buildings into vehicles or add unrelated functions. The extractor's fixed vertical auger and four supports are specific to that machine, not a template to copy onto every machine.
+- Upgrades should read as improvements to one recognisable machine family, not five unrelated designs or merely five recolours. Evolve structural quality, mechanism protection, material finish, routing and integration while keeping the working function legible.
+- Keep the established flat-painted 3D finish at every stage: broad colour planes, restrained highlights, simple shadow shapes and readable silhouettes at the normal overhead gameplay scale. Use cream, navy/blue-grey and coral as the shared palette, with earthy salvage metals and restrained rust early on, cleaner manufactured surfaces later, and small cyan status accents at the advanced end. Avoid photorealistic grunge and noisy micro-detail.
+- Use the actual [Scrapworks title logo](../../art/branding/title-logo-v1.png) when branding finished concept sheets; do not invent replacement wordmarks.
+
+### Concept and modelling workflow
+
+1. Review the existing machine concept, runtime silhouette and authoritative gameplay contracts before proposing upgrades.
+2. Create a five-stage comparison sheet with consistent scale, camera angle, footprint and functional features. Review the lineage and visual progression before locking the direction.
+3. After approval, create an individual modelling sheet for each stage, with a three-quarter view, front/side/rear/top references, key component details and material palette. Generated views are illustrative, not dimensionally authoritative; reconcile inconsistencies before modelling in Blender.
+4. Preserve the accepted overview, individual sheets and a short provenance/decision README together under `art/concepts/`. Keep the prior references rather than silently replacing them.
+5. Use a CI-skip marker such as `[skip ci]` (or `[actions skip]`) for commits limited to documentation and concept art. Do not apply this convention to runtime code, build/test configuration or other changes requiring CI validation.
+
+Technological appearance and ecological health remain independent. Advanced machinery does not automatically restore its surroundings, and a healthy area can still contain older equipment. Existing machinery keeps its generation until upgraded or replaced; researching a technology should not instantly restyle the entire factory.
+
+This is an accepted **visual design language**, not an implementation commitment for five gameplay tiers, new recipes, rates, footprints, animations or port mechanics. Existing gameplay contracts remain authoritative until separately revised.
 
 ## Environmental restoration
 
